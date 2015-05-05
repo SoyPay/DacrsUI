@@ -68,6 +68,7 @@ BEGIN_MESSAGE_MAP(CDacrsUIDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_WM_CREATE()
+	ON_MESSAGE(MSG_TITLE_LBUTTON_DOWN, &CDacrsUIDlg::OnBeginMoveWnd)
 	ON_BN_CLICKED(IDC_BUTTON_MAIN_UI, &CDacrsUIDlg::OnBnClickedButtonMainUI)
 	ON_BN_CLICKED(IDC_BUTTON_SEND, &CDacrsUIDlg::OnBnClickedButtonSend)
 	ON_BN_CLICKED(IDC_BUTTON_RECE, &CDacrsUIDlg::OnBnClickedButtonRece)
@@ -165,7 +166,11 @@ HCURSOR CDacrsUIDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
-
+LRESULT CDacrsUIDlg::OnBeginMoveWnd(WPARAM wParam, LPARAM lParam)
+{
+	PostMessage(WM_NCLBUTTONDOWN,wParam,lParam);
+	return 1 ;
+}
 
 int CDacrsUIDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
@@ -193,6 +198,7 @@ int CDacrsUIDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		m_pStatusBar->Create(this, IDD_DIALOG_STATUS,CBRS_ALIGN_BOTTOM | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_HIDE_INPLACE,2) ;
 		m_pStatusBar->SetWindowPos(NULL , 0 , rect.Height() - 32  , rect.Width() ,32 , SWP_SHOWWINDOW) ;
 		m_pStatusBar->ShowWindow(SW_SHOW) ;
+		m_pStatusBar->LoadGifing(TRUE);
 	}
 	if( NULL == m_pMainDlg ){
 		m_pMainDlg = new CMainDlg ;
@@ -204,7 +210,7 @@ int CDacrsUIDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_dlgMap.insert( std::map<UINT , CDialog *>::value_type( IDD_DIALOG_MAIN , m_pMainDlg)) ; 
 
 	//显示主界面
-	ShowDialog(IDD_DIALOG_MAIN) ;
+	ShowDialog(CMainDlg::IDD) ;
 
 	return 0;
 }
@@ -225,41 +231,46 @@ void CDacrsUIDlg::ShowDialog(UINT dlgid)
 	}
 	p_CurSelDlg = m_dlgMap[dlgid] ;  //当前选择对话框指针
 }
+void CDacrsUIDlg::ShowStateTip(UINT nButtonID)
+{
+	if ( NULL == m_pTitleBar  ) return ;
+	m_pTitleBar->MobileTip(nButtonID);
+}
 //主界面
 void CDacrsUIDlg::OnBnClickedButtonMainUI()
 {
-	
-    AfxMessageBox("主界面!") ;
+	ShowDialog(CMainDlg::IDD) ;
+	ShowStateTip(IDC_BUTTON_MAIN_UI);
 }
 //发送
 void CDacrsUIDlg::OnBnClickedButtonSend()
 {
-	AfxMessageBox("发送!") ;
+	ShowStateTip(IDC_BUTTON_SEND);
 }
 //接收
 void CDacrsUIDlg::OnBnClickedButtonRece()
 {
-	AfxMessageBox("接收!") ;
+	ShowStateTip(IDC_BUTTON_RECE);
 }
 //交易详情
 void CDacrsUIDlg::OnBnClickedButtonTrad()
 {
-	AfxMessageBox("交易详情!") ;
+	ShowStateTip(IDC_BUTTON_TRAD_INFO);
 }
 //P2P掷色子
 void CDacrsUIDlg::OnBnClickedButtonP2P()
 {
-	AfxMessageBox("P2P掷色子!") ;
+	ShowStateTip(IDC_BUTTON_P2P);
 }
 //抵押交易
 void CDacrsUIDlg::OnBnClickedButtonMortgage()
 {
-	AfxMessageBox("抵押交易!") ;
+	ShowStateTip(IDC_BUTTON_MORTGAGE);
 }
 //IPO领币
 void CDacrsUIDlg::OnBnClickedButtonDeals()
 {
-	AfxMessageBox("IPO领币!") ;
+	ShowStateTip(IDC_BUTTON_IPO);
 }
 void CDacrsUIDlg::OnBnClickedButtonClose()
 {

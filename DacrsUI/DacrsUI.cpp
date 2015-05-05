@@ -13,7 +13,7 @@
 #define new DEBUG_NEW
 #endif
 
-
+#include "GdiPlusInit.h"
 // CDacrsUIApp
 
 BEGIN_MESSAGE_MAP(CDacrsUIApp, CWinApp)
@@ -110,6 +110,23 @@ BOOL CDacrsUIApp::InitInstance()
 		theApp.m_blockSock = nSocket ;
 		theApp.StartblockThrd();  //¿ªÆôBlockÏß³Ì
 	}
+	//gif
+	m_ProgressGifFile =   str_InsPath + _T("\\progress.gif\0") ;
+	GdiplusStartupInput gdiplusStartupInput;
+	ULONG_PTR gdiplusToken;
+	Status state = GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL) ;
+	if( Ok != state ) {
+		switch( state )
+		{
+		case OutOfMemory :
+			{
+				::MessageBox( NULL , "OutOfMemory" , "Error" , MB_ICONERROR) ;
+			}
+			break;
+		}
+		return FALSE ;
+	}
+	////
 	CDacrsUIDlg dlg;
 	m_pMainWnd = &dlg;
 	INT_PTR nResponse = dlg.DoModal();

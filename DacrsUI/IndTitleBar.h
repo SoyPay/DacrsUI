@@ -31,6 +31,8 @@ public:
 	CToolTipCtrl     m_tooltip;			// 提示信息
 	HBITMAP		     m_pBmp; 
 	void		     SetBkBmpNid( UINT nBitmapIn ) ;
+	UINT             nButtonID                     ;
+	void             MobileTip(UINT nButtonID);
 public:
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 public:
@@ -41,4 +43,5 @@ public:
 	virtual BOOL Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID);
 public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 };
