@@ -15,6 +15,7 @@ IMPLEMENT_DYNAMIC(CProgStatusBar, CDialogBar)
 {
 	m_pBmp = NULL ;
 	m_bProgressType = false;
+	m_ProgressWnd = NULL ;
 }
 
 CProgStatusBar::~CProgStatusBar()
@@ -23,12 +24,16 @@ CProgStatusBar::~CProgStatusBar()
 		DeleteObject(m_pBmp) ;
 		m_pBmp = NULL ;
 	}
+	if ( NULL != m_ProgressWnd ) {
+		delete m_ProgressWnd ;
+		m_ProgressWnd = NULL ;
+	}
 }
 
 void CProgStatusBar::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogBar::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_STATIC_SHOW	    , m_strShowInfo);
+	DDX_Control(pDX, IDC_STATIC_SHOW , m_strShowInfo);
 	DDX_Control(pDX, IDC_PROGRESS, m_progress);
 }
 
@@ -55,7 +60,25 @@ void CProgStatusBar::SetBkBmpNid( UINT nBitmapIn )
 		m_pBmp = (HBITMAP)::LoadImage(hInstResource, MAKEINTRESOURCE(nBitmapIn), IMAGE_BITMAP, 0, 0, 0);
 	}
 }
-
+void CProgStatusBar::LoadGifing( BOOL bState )
+{
+	if( NULL != m_ProgressWnd ) {
+		if( m_ProgressWnd->GetSafeHwnd() ) {
+			if( TRUE == bState ) {
+				if( TRUE == ((CGIFControl*)m_ProgressWnd)->Load(theApp.m_ProgressGifFile.GetBuffer()) ) {
+					CRect rc ;
+					GetClientRect( rc ) ;
+					Invalidate() ;
+					m_ProgressWnd->SetWindowPos( NULL , rc.Width()- 18 , (rc.Height()/2)-8 , 0 , 0 , \
+						SWP_SHOWWINDOW|SWP_NOSIZE ) ;
+					((CGIFControl*)m_ProgressWnd)->Play();
+				}
+			}else{
+				((CGIFControl*)m_ProgressWnd)->Stop() ;	
+			}
+		}
+	}
+}
 
 BOOL CProgStatusBar::OnEraseBkgnd(CDC* pDC)
 {
@@ -112,6 +135,12 @@ BOOL CProgStatusBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UIN
 		m_strShowInfo.SetFont(90, _T("宋体"));				//设置显示字体和大小
 		m_strShowInfo.SetTextColor(RGB(192,192,192));			//字体颜色
 		m_strShowInfo.SetWindowText(_T("网络同步中...")) ;
+
+		if ( NULL == m_ProgressWnd ) {
+			m_ProgressWnd = new CGIFControl ;
+			m_ProgressWnd->Create(_T("") , WS_CHILD | SS_OWNERDRAW | WS_VISIBLE | SS_NOTIFY , \
+				CRect(20,20,36,36) , this, 111 ) ;
+		}
 	}
 	return bRes ;
 }

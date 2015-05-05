@@ -39,7 +39,8 @@ public:
 public:
 	std::map< UINT , CDialog * >  m_dlgMap ; 
 	void       ShowDialog(UINT dlgid)  ;
-	CDialog			   *p_CurSelDlg   ;   //当前选择对话框指针
+	CDialog	   *p_CurSelDlg   ;   //当前选择对话框指针
+	void       ShowStateTip(UINT nButtonID);
 public:
 	afx_msg void OnBnClickedButtonMainUI();
 	afx_msg void OnBnClickedButtonSend();
@@ -53,4 +54,5 @@ public:
 	afx_msg void OnBnClickedButtonMin();
 public:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+	afx_msg LRESULT OnBeginMoveWnd(WPARAM wParam, LPARAM lParam);
 };

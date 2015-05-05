@@ -1,5 +1,6 @@
 #pragma once
-
+#include "RoundButton.h"
+#include "StaticTrans.h"
 
 // CMainDlg 对话框
 
@@ -18,6 +19,8 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
 
 	DECLARE_MESSAGE_MAP()
+public:
+	CStaticTrans     m_strTrading  ;   
 public:
 	afx_msg void OnBnClickedAlltxdetail();
 	virtual BOOL OnInitDialog();

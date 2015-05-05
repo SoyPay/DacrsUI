@@ -15,11 +15,13 @@
 #include "SqliteDeal.h"
 #include "JsonConfigHelp.h"
 #include "MyQueue.h"
+#include "GIFControl.h"
 
 using namespace std;
 // CDacrsUIApp:
 // 有关此类的实现，请参阅 DacrsUI.cpp
 //
+#define		MSG_TITLE_LBUTTON_DOWN		(WM_USER + 0x0001)
 
 class CDacrsUIApp : public CWinApp
 {
@@ -33,6 +35,7 @@ public:
 	UINT          gsLanguage            ;   //语言类型
 	CString		  str_InsPath	        ;   
 	CString		  str_ModuleFilename	;    
+	CString		  m_ProgressGifFile	;		//进度GIF文件
 	void          GetMoFilename( CString & path , CString & filename ) ;// 获取文件名和路径
 	int           language()    ;     //读取设置语言
 public:

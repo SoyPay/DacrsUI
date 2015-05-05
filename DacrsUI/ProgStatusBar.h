@@ -20,10 +20,12 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 public:
-	CStaticTrans     m_strShowInfo  ;    
+	CStaticTrans     m_strShowInfo  ;   
+	CStatic		     *m_ProgressWnd ;	//Progress´°¿Ú
 public:
 	HBITMAP		     m_pBmp; 
 	void		     SetBkBmpNid( UINT nBitmapIn ) ;
+	void             LoadGifing( BOOL bState );
 public:
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
