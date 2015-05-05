@@ -38,7 +38,11 @@
 #include <afxcontrolbars.h>     // 功能区和控件条的 MFC 支持
 
 
+#include <afxsock.h>
+#include "sqlite3.h"
+#pragma comment(lib, "sqlite3.lib")
 
+#include "UiHead.h"
 
 
 

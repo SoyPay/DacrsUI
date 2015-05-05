@@ -29,4 +29,10 @@ public:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	virtual BOOL Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID);
+public:
+	afx_msg LRESULT OnShowProgressCtrl(  WPARAM wParam, LPARAM lParam ) ;
+public:
+	BOOL        m_bProgressType;
+	int         m_ProgressMax  ;
+	CProgressCtrl m_progress;
 };

@@ -14,6 +14,7 @@ IMPLEMENT_DYNAMIC(CProgStatusBar, CDialogBar)
 	CProgStatusBar::CProgStatusBar()
 {
 	m_pBmp = NULL ;
+	m_bProgressType = false;
 }
 
 CProgStatusBar::~CProgStatusBar()
@@ -28,6 +29,7 @@ void CProgStatusBar::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogBar::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_STATIC_SHOW	    , m_strShowInfo);
+	DDX_Control(pDX, IDC_PROGRESS, m_progress);
 }
 
 
@@ -35,6 +37,7 @@ BEGIN_MESSAGE_MAP(CProgStatusBar, CDialogBar)
 	ON_WM_ERASEBKGND()
 	ON_WM_CREATE()
 	ON_WM_SIZE()
+	ON_MESSAGE(MSG_USER_UP_PROGRESS , &CProgStatusBar::OnShowProgressCtrl  )
 END_MESSAGE_MAP()
 
 
@@ -111,4 +114,43 @@ BOOL CProgStatusBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UIN
 		m_strShowInfo.SetWindowText(_T("网络同步中...")) ;
 	}
 	return bRes ;
+}
+
+LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam ) 
+{
+	SYSTEMTIME curTime ;
+	memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
+	GetLocalTime( &curTime ) ;
+	static int RecivetxTimeLast =0;
+	int tempTime= UiFun::SystemTimeToTimet(curTime);
+
+	CPostMsg postmsg;
+	if (!theApp.m_UimsgQueue.pop(postmsg))
+	{
+		//m_progress.SetRange32( 0 , 1 );    //设置进度条范围 只设置一次
+		//m_progress.SetPos( 1);
+		//m_bProgressType = TRUE ;
+		return 1;
+	}
+	uistruct::BLOCKCHANGED_t pBlockchanged;  //= (uistruct::BLOCKCHANGED_t *)wParam ;
+	string strTemp = postmsg.GetData();
+	pBlockchanged.JsonToStruct(strTemp.c_str());
+
+	//	if ( NULL != pBlockchanged ) {
+	if ( !m_bProgressType ) {
+		m_ProgressMax = pBlockchanged.time<=0?1 :pBlockchanged.time;
+		m_progress.SetRange32( 0 , m_ProgressMax );    //设置进度条范围 只设置一次
+		m_bProgressType = TRUE ;
+	}else{
+		if ((tempTime - pBlockchanged.time)<200)
+		{
+			m_progress.SetPos( m_ProgressMax);
+		}else{
+			m_progress.SetPos( m_ProgressMax - pBlockchanged.time );//设置进度条的值 
+		}
+
+	}
+	//	UpdateData(false);//实时更新主界面
+	//	}
+	return 1;
 }

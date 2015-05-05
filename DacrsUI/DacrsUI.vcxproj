@@ -55,6 +55,8 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OutputFile>..\bin\DacrsUI.exe</OutputFile>
+      <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -94,6 +96,9 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="json\json_internalarray.inl" />
+    <None Include="json\json_internalmap.inl" />
+    <None Include="json\json_valueiterator.inl" />
     <None Include="ReadMe.txt" />
     <None Include="res\DacrsUI.ico" />
     <None Include="res\DacrsUI.rc2" />
@@ -110,29 +115,71 @@
     <None Include="res\wndtitlebk.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CommonStruct.h" />
     <ClInclude Include="DacrsUI.h" />
     <ClInclude Include="DacrsUIDlg.h" />
     <ClInclude Include="IndTitleBar.h" />
+    <ClInclude Include="JsonConfigHelp.h" />
+    <ClInclude Include="json\assertions.h" />
+    <ClInclude Include="json\autolink.h" />
+    <ClInclude Include="json\config.h" />
+    <ClInclude Include="json\features.h" />
+    <ClInclude Include="json\forwards.h" />
+    <ClInclude Include="json\json.h" />
+    <ClInclude Include="json\json_batchallocator.h" />
+    <ClInclude Include="json\json_tool.h" />
+    <ClInclude Include="json\reader.h" />
+    <ClInclude Include="json\value.h" />
+    <ClInclude Include="json\version.h" />
+    <ClInclude Include="json\writer.h" />
+    <ClInclude Include="Language.h" />
+    <ClInclude Include="ListAddr.h" />
     <ClInclude Include="MainDlg.h" />
+    <ClInclude Include="MyMutex.h" />
+    <ClInclude Include="MyQueue.h" />
+    <ClInclude Include="PostMsg.h" />
     <ClInclude Include="ProgStatusBar.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="RoundButton.h" />
+    <ClInclude Include="RpcCmd.h" />
+    <ClInclude Include="SignAccountsDlg.h" />
+    <ClInclude Include="sqlite3.h" />
+    <ClInclude Include="SqliteDeal.h" />
     <ClInclude Include="StaticTrans.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="SynchronousSocket.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="Transfer.h" />
+    <ClInclude Include="UiHead.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CommonStruct.cpp" />
     <ClCompile Include="DacrsUI.cpp" />
     <ClCompile Include="DacrsUIDlg.cpp" />
     <ClCompile Include="IndTitleBar.cpp" />
+    <ClCompile Include="JsonConfigHelp.cpp" />
+    <ClCompile Include="json\json_reader.cpp" />
+    <ClCompile Include="json\json_value.cpp" />
+    <ClCompile Include="json\json_writer.cpp" />
+    <ClCompile Include="Language.cpp" />
+    <ClCompile Include="ListAddr.cpp" />
     <ClCompile Include="MainDlg.cpp" />
+    <ClCompile Include="MyMutex.cpp" />
+    <ClCompile Include="MyQueue.cpp" />
+    <ClCompile Include="PostMsg.cpp" />
     <ClCompile Include="ProgStatusBar.cpp" />
     <ClCompile Include="RoundButton.cpp" />
+    <ClCompile Include="RpcCmd.cpp" />
+    <ClCompile Include="SignAccountsDlg.cpp" />
+    <ClCompile Include="SqliteDeal.cpp" />
     <ClCompile Include="StaticTrans.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="SynchronousSocket.cpp" />
+    <ClCompile Include="Transfer.cpp" />
+    <ClCompile Include="UiHead.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DacrsUI.rc" />
@@ -140,4 +187,9 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties RESOURCE_FILE="DacrsUI.rc" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>
