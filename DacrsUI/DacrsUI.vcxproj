@@ -124,6 +124,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BmpBtn.h" />
+    <ClInclude Include="BtnST.h" />
+    <ClInclude Include="CeXDib.h" />
     <ClInclude Include="CommonStruct.h" />
     <ClInclude Include="DacrsUI.h" />
     <ClInclude Include="DacrsUIDlg.h" />
@@ -157,6 +159,7 @@
     <ClInclude Include="RoundButton.h" />
     <ClInclude Include="RpcCmd.h" />
     <ClInclude Include="SendDlg.h" />
+    <ClInclude Include="ShadeButtonST.h" />
     <ClInclude Include="SignAccountsDlg.h" />
     <ClInclude Include="sqlite3.h" />
     <ClInclude Include="SqliteDeal.h" />
@@ -169,6 +172,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BmpBtn.cpp" />
+    <ClCompile Include="BtnST.cpp" />
+    <ClCompile Include="CeXDib.cpp" />
     <ClCompile Include="CommonStruct.cpp" />
     <ClCompile Include="DacrsUI.cpp" />
     <ClCompile Include="DacrsUIDlg.cpp" />
@@ -192,6 +197,7 @@
     <ClCompile Include="RoundButton.cpp" />
     <ClCompile Include="RpcCmd.cpp" />
     <ClCompile Include="SendDlg.cpp" />
+    <ClCompile Include="ShadeButtonST.cpp" />
     <ClCompile Include="SignAccountsDlg.cpp" />
     <ClCompile Include="SqliteDeal.cpp" />
     <ClCompile Include="StaticTrans.cpp" />

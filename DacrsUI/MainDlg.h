@@ -1,5 +1,5 @@
 #pragma once
-#include "RoundButton.h"
+#include "ShadeButtonST.h"
 #include "StaticTrans.h"
 #include "CommonStruct.h"
 
@@ -27,7 +27,7 @@ public:
 	CStaticTrans     m_strTrading4  ;   
 	CStaticTrans     m_strTrading5  ;   
 
-	CRoundButton     m_rBtnAllTxdetail;
+	CShadeButtonST     m_rBtnAllTxdetail;
 public:
 	afx_msg void OnBnClickedAlltxdetail();
 	afx_msg LRESULT OnShowListCtorl(  WPARAM wParam, LPARAM lParam ) ;
