@@ -1455,6 +1455,7 @@ int	CSqliteDeal::FindDB(const CString strTabName , const CString strP, const CSt
 					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
 					root["blockhash"] = strValue.GetString();
 				}
+				break;
 			case 14:
 				{
 					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
