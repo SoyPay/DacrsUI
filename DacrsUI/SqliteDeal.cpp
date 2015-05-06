@@ -11,7 +11,7 @@ CSqliteDeal::CSqliteDeal(void)
 	m_nRow = -1 ;
 	m_nCol = -1 ;
 	//³õÊ¼»¯ÁÙ½ç
-	InitializeCriticalSection(&(cs_UpDataResult) ) ;
+//	InitializeCriticalSection(&(cs_UpDataResult) ) ;
 }
 
 CSqliteDeal::~CSqliteDeal(void)
@@ -49,7 +49,7 @@ int CSqliteDeal::FindDB(const CString strTabName ,const CString strP, const CStr
 	
 	CString strSql = _T("SELECT * FROM ") + strTabName + _T(" WHERE ") + strSource + _T(" ='") + strP + _T("'");
 
-	EnterCriticalSection( &cs_UpDataResult) ;
+//	EnterCriticalSection( &cs_UpDataResult) ;
 	int nResult = sqlite3_get_table(m_pSqlitedb,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
 	if ( nResult != SQLITE_OK ){
 		 sqlite3_close(m_pSqlitedb);  
@@ -58,7 +58,7 @@ int CSqliteDeal::FindDB(const CString strTabName ,const CString strP, const CStr
 		 return -1 ;
 	}
 	sqlite3_free_table(m_pResult);
-	LeaveCriticalSection (&cs_UpDataResult) ;
+//	LeaveCriticalSection (&cs_UpDataResult) ;
 	return m_nRow ;
 }
 int  CSqliteDeal::FindINTDB(const CString strTabName , const CString strP, const CString strSource ){
@@ -68,7 +68,7 @@ int  CSqliteDeal::FindINTDB(const CString strTabName , const CString strP, const
 
 	CString strSql = _T("SELECT * FROM ") + strTabName + _T(" WHERE ") + strSource + _T(" = ") + strP;
 
-	EnterCriticalSection( &cs_UpDataResult) ;
+//	EnterCriticalSection( &cs_UpDataResult) ;
 	int nResult = sqlite3_get_table(m_pSqlitedb,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
 	if ( nResult != SQLITE_OK ){
 		sqlite3_close(m_pSqlitedb);  
@@ -77,7 +77,7 @@ int  CSqliteDeal::FindINTDB(const CString strTabName , const CString strP, const
 		return -1 ;
 	}
 	sqlite3_free_table(m_pResult);
-	LeaveCriticalSection (&cs_UpDataResult) ;
+//	LeaveCriticalSection (&cs_UpDataResult) ;
 	return m_nRow ;
 }
 int CSqliteDeal::GetTableCount(const CString strTabName){
@@ -87,7 +87,7 @@ int CSqliteDeal::GetTableCount(const CString strTabName){
 
 	CString strSql = _T("SELECT * FROM ") + strTabName;
 
-	EnterCriticalSection( &cs_UpDataResult) ;
+//	EnterCriticalSection( &cs_UpDataResult) ;
 	int nResult = sqlite3_get_table(m_pSqlitedb,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
 	if ( nResult != SQLITE_OK ){
 		sqlite3_close(m_pSqlitedb);  
@@ -96,7 +96,7 @@ int CSqliteDeal::GetTableCount(const CString strTabName){
 		return -1 ;
 	}
 	sqlite3_free_table(m_pResult);
-	LeaveCriticalSection (&cs_UpDataResult) ;
+//	LeaveCriticalSection (&cs_UpDataResult) ;
 	return m_nRow ;
 }
 BOOL CSqliteDeal::DeleteData(const CString strTabName,const CString strSourceData , const CString strW){
@@ -106,7 +106,7 @@ BOOL CSqliteDeal::DeleteData(const CString strTabName,const CString strSourceDat
 
 	CString strSql = _T("delete from ") + strTabName + _T(" WHERE ") + strSourceData + _T(" ='") + strW + _T("'");
 
-	EnterCriticalSection( &cs_UpDataResult) ;
+//	EnterCriticalSection( &cs_UpDataResult) ;
 	int nResult = sqlite3_get_table(m_pSqlitedb,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
 	if ( nResult != SQLITE_OK ){
 		sqlite3_close(m_pSqlitedb);  
@@ -115,7 +115,7 @@ BOOL CSqliteDeal::DeleteData(const CString strTabName,const CString strSourceDat
 		return -1 ;
 	}
 	sqlite3_free_table(m_pResult);
-	LeaveCriticalSection (&cs_UpDataResult) ;
+//	LeaveCriticalSection (&cs_UpDataResult) ;
 	return m_nRow ;
 }
 BOOL  CSqliteDeal::CreateTabe(const CString strTabName,const CString strFiled){
@@ -126,7 +126,7 @@ BOOL  CSqliteDeal::CreateTabe(const CString strTabName,const CString strFiled){
 
 	CString strSql = _T("create table  ") + strTabName + _T("(") + strFiled + _T(");");
 
-	EnterCriticalSection( &cs_UpDataResult) ;
+//	EnterCriticalSection( &cs_UpDataResult) ;
 	int nResult = sqlite3_exec( m_pSqlitedb , strSql.GetBuffer() , NULL , NULL , &m_pzErrMsg );
 	if ( nResult != SQLITE_OK ){
 		sqlite3_close(m_pSqlitedb);  
@@ -134,7 +134,7 @@ BOOL  CSqliteDeal::CreateTabe(const CString strTabName,const CString strFiled){
 		m_pSqlitedb = NULL ;
 		return FALSE ;
 	}
-	LeaveCriticalSection (&cs_UpDataResult) ;
+//	LeaveCriticalSection (&cs_UpDataResult) ;
 	return TRUE ;
 }
 
@@ -145,7 +145,7 @@ BOOL  CSqliteDeal::IsExistTabe(const CString strTabName){
 	CString strSql = _T("select count(type) from sqlite_master where type='table' and name =");
 	strSql.AppendFormat("'%s'",strTabName);
 
-	EnterCriticalSection( &cs_UpDataResult) ;
+//	EnterCriticalSection( &cs_UpDataResult) ;
 	bool tableIsExisted = FALSE;
 	int nResult = sqlite3_get_table(m_pSqlitedb,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
 	if ( nResult != SQLITE_OK ){
@@ -159,7 +159,7 @@ BOOL  CSqliteDeal::IsExistTabe(const CString strTabName){
 	int result = atoi(m_pResult[nIndex] ) ;
 	tableIsExisted = result;
 	sqlite3_free_table(m_pResult);
-	LeaveCriticalSection (&cs_UpDataResult) ;
+//	LeaveCriticalSection (&cs_UpDataResult) ;
 	return tableIsExisted ;
 }
 int   CSqliteDeal::FindDB(const CString strTabName , const CString strP, const CString strSource,uistruct::P2P_BET_RECORD_t * p2pbetrecord ){
@@ -169,7 +169,7 @@ int   CSqliteDeal::FindDB(const CString strTabName , const CString strP, const C
 
 	CString strSql = _T("SELECT * FROM ") + strTabName + _T(" WHERE ") + strSource + _T(" ='") + strP + _T("'");
 
-	EnterCriticalSection( &cs_UpDataResult) ;
+//	EnterCriticalSection( &cs_UpDataResult) ;
 	int nResult = sqlite3_get_table(m_pSqlitedb,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
 	if ( nResult != SQLITE_OK ){
 		sqlite3_close(m_pSqlitedb);  
@@ -274,7 +274,7 @@ int   CSqliteDeal::FindDB(const CString strTabName , const CString strP, const C
 		++nIndex ;
 	}
 	sqlite3_free_table(m_pResult);
-	LeaveCriticalSection (&cs_UpDataResult) ;
+//	LeaveCriticalSection (&cs_UpDataResult) ;
 	return m_nRow ;
 }
 /***************************************
@@ -339,7 +339,7 @@ BOOL CSqliteDeal::GetListaddrData(uistruct::LISTADDRLIST *pListInfo)
 	pListInfo->clear() ;
 
 	CString strSql = _T("SELECT * FROM MYWALLET");
-	EnterCriticalSection( &cs_UpDataResult) ;
+//	EnterCriticalSection( &cs_UpDataResult) ;
 	int nResult = sqlite3_get_table(m_pSqlitedb,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
 	if ( nResult != SQLITE_OK ){
 		sqlite3_close(m_pSqlitedb);  
@@ -396,7 +396,7 @@ BOOL CSqliteDeal::GetListaddrData(uistruct::LISTADDRLIST *pListInfo)
 		pListInfo->push_back(listdata) ;
 	}
 	sqlite3_free_table(m_pResult);
-	LeaveCriticalSection (&cs_UpDataResult) ;
+//	LeaveCriticalSection (&cs_UpDataResult) ;
 	return TRUE ;
 }
 BOOL CSqliteDeal::GetRevtransactionDatta(uistruct::TRANSRECORDLIST* pListInfo)
@@ -408,7 +408,7 @@ BOOL CSqliteDeal::GetRevtransactionDatta(uistruct::TRANSRECORDLIST* pListInfo)
 	pListInfo->clear() ;
 
 	CString strSql = _T("SELECT * FROM revtransaction");
-	EnterCriticalSection( &cs_UpDataResult) ;
+//	EnterCriticalSection( &cs_UpDataResult) ;
 	int nResult = sqlite3_get_table(m_pSqlitedb,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
 	if ( nResult != SQLITE_OK ){
 		sqlite3_close(m_pSqlitedb);  
@@ -522,7 +522,7 @@ BOOL CSqliteDeal::GetRevtransactionDatta(uistruct::TRANSRECORDLIST* pListInfo)
 		pListInfo->push_back(listdata) ;
 	}
 	sqlite3_free_table(m_pResult);
-	LeaveCriticalSection (&cs_UpDataResult) ;
+//	LeaveCriticalSection (&cs_UpDataResult) ;
 	return TRUE ;
 
 }
@@ -535,7 +535,7 @@ BOOL  CSqliteDeal::GetRecorBetData(uistruct::P2PBETRECORDLIST* pListInfo)
 	pListInfo->clear() ;
 	
 	CString strSql = _T("SELECT * FROM p2p_bet_record");
-	EnterCriticalSection( &cs_UpDataResult) ;
+//	EnterCriticalSection( &cs_UpDataResult) ;
 	int nResult = sqlite3_get_table(m_pSqlitedb,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
 	if ( nResult != SQLITE_OK ){
 		sqlite3_close(m_pSqlitedb);  
@@ -647,7 +647,7 @@ BOOL  CSqliteDeal::GetRecorBetData(uistruct::P2PBETRECORDLIST* pListInfo)
 		pListInfo->push_back(p2pbetrecord) ;
 	}
 	sqlite3_free_table(m_pResult);
-	LeaveCriticalSection (&cs_UpDataResult) ;
+//	LeaveCriticalSection (&cs_UpDataResult) ;
 	return TRUE ;
 }
 BOOL  CSqliteDeal::UpdataP2pBetRecord()
@@ -803,7 +803,7 @@ BOOL   CSqliteDeal::GetRecorP2Pool(uistruct::P2PLIST* pListInfo)
 	pListInfo->clear() ;
 
 	CString strSql = _T("SELECT * FROM p2ppool");
-	EnterCriticalSection( &cs_UpDataResult) ;
+//	EnterCriticalSection( &cs_UpDataResult) ;
 	int nResult = sqlite3_get_table(m_pSqlitedb,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
 	if ( nResult != SQLITE_OK ){
 		sqlite3_close(m_pSqlitedb);  
@@ -839,7 +839,7 @@ BOOL   CSqliteDeal::GetRecorP2Pool(uistruct::P2PLIST* pListInfo)
 		pListInfo->push_back(p2pool) ;
 	}
 	sqlite3_free_table(m_pResult);
-	LeaveCriticalSection (&cs_UpDataResult) ;
+//	LeaveCriticalSection (&cs_UpDataResult) ;
 	return TRUE ;
 }
 BOOL  CSqliteDeal::GetRecorDarkData(uistruct::DARKRECORDLIST* pListInfo)
@@ -851,7 +851,7 @@ BOOL  CSqliteDeal::GetRecorDarkData(uistruct::DARKRECORDLIST* pListInfo)
 	pListInfo->clear() ;
 
 	CString strSql = _T("SELECT * FROM dark_record");
-	EnterCriticalSection( &cs_UpDataResult) ;
+//	EnterCriticalSection( &cs_UpDataResult) ;
 	int nResult = sqlite3_get_table(m_pSqlitedb,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
 	if ( nResult != SQLITE_OK ){
 		sqlite3_close(m_pSqlitedb);  
@@ -939,7 +939,7 @@ BOOL  CSqliteDeal::GetRecorDarkData(uistruct::DARKRECORDLIST* pListInfo)
 		pListInfo->push_back(darkrecord) ;
 	}
 	sqlite3_free_table(m_pResult);
-	LeaveCriticalSection (&cs_UpDataResult) ;
+//	LeaveCriticalSection (&cs_UpDataResult) ;
 	return TRUE ;
 }
 
@@ -1082,7 +1082,7 @@ int   CSqliteDeal::FindDB(const CString strTabName , const CString strP, const C
 
 	CString strSql = _T("SELECT * FROM ") + strTabName + _T(" WHERE ") + strSource + _T(" ='") + strP + _T("'");
 
-	EnterCriticalSection( &cs_UpDataResult) ;
+//	EnterCriticalSection( &cs_UpDataResult) ;
 	int nResult = sqlite3_get_table(m_pSqlitedb,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
 	if ( nResult != SQLITE_OK ){
 		sqlite3_close(m_pSqlitedb);  
@@ -1163,7 +1163,7 @@ int   CSqliteDeal::FindDB(const CString strTabName , const CString strP, const C
 		++nIndex ;
 	}
 	sqlite3_free_table(m_pResult);
-	LeaveCriticalSection (&cs_UpDataResult) ;
+	//LeaveCriticalSection (&cs_UpDataResult) ;
 	return m_nRow ;
 }
 BOOL   CSqliteDeal::isExistTx(CString tablename,CString filed ,CString txhash){
@@ -1195,7 +1195,7 @@ BOOL CSqliteDeal::isinBlock(){
 	}
 
 	CString strSql = _T("SELECT * FROM tip_block");
-	EnterCriticalSection( &cs_UpDataResult) ;
+//	EnterCriticalSection( &cs_UpDataResult) ;
 	int nResult = sqlite3_get_table(m_pSqlitedb,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
 	if ( nResult != SQLITE_OK ){
 		sqlite3_close(m_pSqlitedb);  
@@ -1234,7 +1234,7 @@ BOOL CSqliteDeal::isinBlock(){
 		}
 	}
 	sqlite3_free_table(m_pResult);
-	LeaveCriticalSection (&cs_UpDataResult) ;
+//	LeaveCriticalSection (&cs_UpDataResult) ;
 	return flag ;
 }
 void  CSqliteDeal::UpdataAllTableData(BOOL flag){
@@ -1354,7 +1354,7 @@ int	CSqliteDeal::FindDB(const CString strTabName , const CString strP, const CSt
 	CString strSql = _T("SELECT * FROM ") + strTabName + _T(" WHERE ") + strSource + _T(" =") + strP;
 
 	pListInfo->clear() ;
-	EnterCriticalSection( &cs_UpDataResult) ;
+//	EnterCriticalSection( &cs_UpDataResult) ;
 	int nResult = sqlite3_get_table(m_pSqlitedb,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
 	if ( nResult != SQLITE_OK ){
 		sqlite3_close(m_pSqlitedb);  
@@ -1468,7 +1468,7 @@ int	CSqliteDeal::FindDB(const CString strTabName , const CString strP, const CSt
 		pListInfo->push_back(listdata) ;
 	}
 	sqlite3_free_table(m_pResult);
-	LeaveCriticalSection (&cs_UpDataResult) ;
+	//LeaveCriticalSection (&cs_UpDataResult) ;
 	return TRUE ;
 
 }
