@@ -152,9 +152,18 @@ BOOL CMainDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 
 	BOOL bRes =  CDialogBar::Create(pParentWnd, nIDTemplate, nStyle, nID);
 	if ( bRes ) {
-		m_rBtnAllTxdetail.LoadBitmaps(IDB_BITMAP_BUTTON_BJ,IDB_BITMAP_BUTTON_BJ,IDB_BITMAP_BUTTON_BJ,IDB_BITMAP_BUTTON_BJ);
 		UpdateData(0);
 		SetCtrlText();
+
+		m_rBtnAllTxdetail.SetBitmaps( IDB_BITMAP_BUTTON_BJ , RGB(255, 255, 0) , IDB_BITMAP_BUTTON_BJ , RGB(255, 255, 255) );
+		m_rBtnAllTxdetail.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+		m_rBtnAllTxdetail.SetWindowText("全部交易详情") ;
+		m_rBtnAllTxdetail.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(255, 255, 255));
+		m_rBtnAllTxdetail.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+		m_rBtnAllTxdetail.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(255, 255, 255));
+		m_rBtnAllTxdetail.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
+		m_rBtnAllTxdetail.SizeToContent();
+
 		theApp.SubscribeMsg( theApp.GetMtHthrdId() , GetSafeHwnd() , MSG_USER_MAIN_UI ) ;
 	}
 	return bRes ;
