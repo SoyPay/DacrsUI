@@ -34,6 +34,7 @@ CDacrsUIApp::CDacrsUIApp()
 	m_darkScritptid =_T("");
 	m_blockSock  = INVALID_SOCKET ;
 	m_strServerCfgFileName = "dacrs.conf";
+	isStartMainDlg = false;
 }
 
 
@@ -125,6 +126,14 @@ BOOL CDacrsUIApp::InitInstance()
 			break;
 		}
 		return FALSE ;
+	}
+
+	while(1)
+	{
+		if (isStartMainDlg)
+		{
+			break;
+		}
 	}
 	////
 	CDacrsUIDlg dlg;
@@ -685,6 +694,7 @@ bool JsonCheck(CString strjson){
 	return true;
 }
 
+
 UINT __stdcall CDacrsUIApp::blockProc(LPVOID pParam)
 {
 	int m_bufferSize;
@@ -713,101 +723,115 @@ UINT __stdcall CDacrsUIApp::blockProc(LPVOID pParam)
 					{
 						continue;
 					}
-					if (!reader.parse(RevData.GetString(), root)) 
+
+					CString parseStr;
+					RevData.Replace("}","},");
+					RevData.TrimRight(',');
+					parseStr.Format("[%s]",RevData);
+					if (!reader.parse(parseStr.GetString(), root)) 
 						continue;
 
 					TRACE("Msg:%s\r\n",RevData);
-
-					int type = GetMsgType(RevData,root);
-
-					RevData = _T("");
-
-					switch(type)
+					 RevData = _T("");
+					int size = root.size();
+					string objstr;
+					for ( int index =0; index < size; ++index )
 					{
-					case ININTAL_TYPE:
-						{
+						Json::Value  msgroot = root[index];
+						 objstr = msgroot.toStyledString();
+						 int type = GetMsgType(objstr.c_str(),msgroot);
 
-							CPostMsg postmsg(MSG_USER_SHOW_INIT,0);
-							postmsg.SetStrType(root["type"].asCString());
-							CString msg = root["msg"].asCString();
-							TRACE("MEST:%s\r\n",msg);
-							postmsg.SetData(msg);
-							pUiDemeDlg->m_MsgQueue.push(postmsg);
-							TRACE("type: %s   mag: %s\r\n" , postmsg.GetStrType() ,msg);
-							break;
-						}
-					case REV_TRANSATION_TYPE:
-						{
-							const Json::Value& txArray = root["transation"]; 
-							//插入到数据库
-							CString strHash ;
-							strHash.Format(_T("%s") , txArray["hash"].asCString() );
-							theApp.cs_SqlData.Lock();
-							int nItem =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.FindDB(_T("revtransaction") ,strHash ,_T("hash") ) ;
-							theApp.cs_SqlData.Unlock();
-							strHash.Format(_T("'%s'") , txArray["hash"].asCString() );
-							if ( 0 == nItem ) {
-								CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_REVTRANSACTION);
-								postmsg.SetData(strHash);
-								pUiDemeDlg->m_MsgQueue.push(postmsg);
+						 switch(type)
+						 {
+						 case ININTAL_TYPE:
+							 {
 
-							}
-							break;
-						}
-					case BLOCK_CHANGE_TYPE:
-						{
+								 CPostMsg postmsg(MSG_USER_SHOW_INIT,0);
+								 postmsg.SetStrType(msgroot["type"].asCString());
+								 CString msg = msgroot["msg"].asCString();
+								 TRACE("MEST:%s\r\n",msg);
+								 if (!strcmp(msg,"initialize end"))
+								 {
+									 theApp.isStartMainDlg = true;
+								 }
+								 postmsg.SetData(msg);
+								 pUiDemeDlg->m_MsgQueue.push(postmsg);
+								 TRACE("type: %s   mag: %s\r\n" , postmsg.GetStrType() ,msg);
+								 break;
+							 }
+						 case REV_TRANSATION_TYPE:
+							 {
+								 const Json::Value& txArray = msgroot["transation"]; 
+								 //插入到数据库
+								 CString strHash ;
+								 strHash.Format(_T("%s") , txArray["hash"].asCString() );
+								 theApp.cs_SqlData.Lock();
+								 int nItem =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.FindDB(_T("revtransaction") ,strHash ,_T("hash") ) ;
+								 theApp.cs_SqlData.Unlock();
+								 strHash.Format(_T("'%s'") , txArray["hash"].asCString() );
+								 if ( 0 == nItem ) {
+									 CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_REVTRANSACTION);
+									 postmsg.SetData(strHash);
+									 pUiDemeDlg->m_MsgQueue.push(postmsg);
 
-							TRACE("change:%s\r\n","blockchanged");
-							uistruct::BLOCKCHANGED_t      m_Blockchanged ;
-							memset(&m_Blockchanged , 0 , sizeof(uistruct::BLOCKCHANGED_t));
-							m_Blockchanged.type = root["type"].asString();
-							m_Blockchanged.time = root["time"].asInt();
-							m_Blockchanged.high = root["high"].asInt64() ;
-							m_Blockchanged.hash = root["hash"].asString();
+								 }
+								 break;
+							 }
+						 case BLOCK_CHANGE_TYPE:
+							 {
 
-							static int ReciveBlockTimeLast =0;
-							int tempTime= m_Blockchanged.time;
+								 TRACE("change:%s\r\n","blockchanged");
+								 uistruct::BLOCKCHANGED_t      m_Blockchanged ;
+								 memset(&m_Blockchanged , 0 , sizeof(uistruct::BLOCKCHANGED_t));
+								 m_Blockchanged.type = msgroot["type"].asString();
+								 m_Blockchanged.time = msgroot["time"].asInt();
+								 m_Blockchanged.high = msgroot["high"].asInt64() ;
+								 m_Blockchanged.hash = msgroot["hash"].asString();
 
-							string strJson = m_Blockchanged.ToJson();
-							ReciveBlockTimeLast = tempTime;
-							CPostMsg postmsg(MSG_USER_UP_PROGRESS,0);
-							postmsg.SetData(strJson.c_str());
+								 static int ReciveBlockTimeLast =0;
+								 int tempTime= m_Blockchanged.time;
 
-							pUiDemeDlg->m_MsgQueue.pushFront(postmsg);
-							/// 更新tipblock hash
-							CPostMsg postblockmsg(MSG_USER_GET_UPDATABASE,WM_UP_BlLOCKTIP);
-							CString msg = root["hash"].asCString();
-							postblockmsg.SetData(msg);
-							pUiDemeDlg->m_MsgQueue.push(postblockmsg);  //.push(postblockmsg);
+								 string strJson = m_Blockchanged.ToJson();
+								 ReciveBlockTimeLast = tempTime;
+								 CPostMsg postmsg(MSG_USER_UP_PROGRESS,0);
+								 postmsg.SetData(strJson.c_str());
 
-							SYSTEMTIME curTime ;
-							memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
-							GetLocalTime( &curTime ) ;
-							static int RecivetxMsgTimeLast =0;
-							int tempTimemsg= UiFun::SystemTimeToTimet(curTime);
-							/// 更新钱包
-							CPostMsg postuimsg(MSG_USER_GET_UPDATABASE,WM_UP_ADDRESS);
-							if ((tempTimemsg - RecivetxMsgTimeLast)>10 || RecivetxMsgTimeLast == 0)
-							{	
-								pUiDemeDlg->m_MsgQueue.push(postuimsg);
-								postuimsg.SetType(MSG_USER_GET_UPDATABASE,WM_UP_BETPOOL);
-								pUiDemeDlg->m_MsgQueue.push(postuimsg);
+								 pUiDemeDlg->m_MsgQueue.pushFront(postmsg);
+								 /// 更新tipblock hash
+								 CPostMsg postblockmsg(MSG_USER_GET_UPDATABASE,WM_UP_BlLOCKTIP);
+								 CString msg = root["hash"].asCString();
+								 postblockmsg.SetData(msg);
+								 pUiDemeDlg->m_MsgQueue.push(postblockmsg);  //.push(postblockmsg);
 
-								postuimsg.SetType(MSG_USER_GET_UPDATABASE,WM_P2P_BET_RECORD);
-								pUiDemeDlg->m_MsgQueue.push(postuimsg);
+								 SYSTEMTIME curTime ;
+								 memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
+								 GetLocalTime( &curTime ) ;
+								 static int RecivetxMsgTimeLast =0;
+								 int tempTimemsg= UiFun::SystemTimeToTimet(curTime);
+								 /// 更新钱包
+								 CPostMsg postuimsg(MSG_USER_GET_UPDATABASE,WM_UP_ADDRESS);
+								 if ((tempTimemsg - RecivetxMsgTimeLast)>10 || RecivetxMsgTimeLast == 0)
+								 {	
+									 pUiDemeDlg->m_MsgQueue.push(postuimsg);
+									 postuimsg.SetType(MSG_USER_GET_UPDATABASE,WM_UP_BETPOOL);
+									 pUiDemeDlg->m_MsgQueue.push(postuimsg);
 
-								postuimsg.SetType(MSG_USER_GET_UPDATABASE,WM_DARK_RECORD);
-								pUiDemeDlg->m_MsgQueue.push(postuimsg);
-								RecivetxMsgTimeLast = tempTimemsg;
-							}
+									 postuimsg.SetType(MSG_USER_GET_UPDATABASE,WM_P2P_BET_RECORD);
+									 pUiDemeDlg->m_MsgQueue.push(postuimsg);
 
-							///更新block状态
-							postuimsg.SetType(MSG_USER_BLOCKSTATE_UI,m_Blockchanged.high);
-							pUiDemeDlg->m_MsgQueue.push(postuimsg);
-							break;
-						}
-					default:
-						break;
+									 postuimsg.SetType(MSG_USER_GET_UPDATABASE,WM_DARK_RECORD);
+									 pUiDemeDlg->m_MsgQueue.push(postuimsg);
+									 RecivetxMsgTimeLast = tempTimemsg;
+								 }
+
+								 ///更新block状态
+								 postuimsg.SetType(MSG_USER_BLOCKSTATE_UI,m_Blockchanged.high);
+								 pUiDemeDlg->m_MsgQueue.push(postuimsg);
+								 break;
+							 }
+						 default:
+							 break;
+						 }
 					}
 
 				}
@@ -1106,7 +1130,7 @@ void  CDacrsUIApp::CheckUpdate(){
 void CDacrsUIApp::UpdataUIData(){
 	CDacrsUIDlg *pDlg = (CDacrsUIDlg*)(((CDacrsUIApp*)this)->m_pMainWnd) ;
 	if (NULL != pDlg ) {
-		int DType = 0; // = pDlg->dlgType;
+		int DType = pDlg->dlgType;
 		switch(DType){
 		//case DIALOG_P2P_BET:
 		//	DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_BETPOOL_UI,0,0);
