@@ -57,14 +57,13 @@ void CReceiveDlg::ShowListInfo(){
 
 	if ( 0 == m_pListaddrInfo.size() ) return  ;
 
-	//清除ComBox控件
-	((CComboBox*)GetDlgItem(IDC_COMBO_ADDR_OUT))->ResetContent();
 	//加载到ComBox控件
 	int nSubIdx = 0 , i = 0 ;
 	CString strShowData = _T("");
 	std::vector<uistruct::LISTADDR_t>::const_iterator const_it;
 	for ( const_it = m_pListaddrInfo.begin() ; const_it != m_pListaddrInfo.end() ; const_it++ ) {
 		nSubIdx = 0;
+		strShowData.Format(_T("%s") ,const_it->Lebel) ;
 		int item = m_listCtrl.InsertItem( i , strShowData ) ;
 		m_listCtrl.SetItemData(item , (DWORD_PTR)&(*const_it)) ;
 
