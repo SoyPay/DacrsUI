@@ -235,7 +235,7 @@ namespace uistruct {
 			if(json.find("blockhash") >=0)
 			this->blockhash = root["blockhash"].asString()     ;
 			if(json.find("state") >=0)
-			root["state"] = state;
+			this->state = root["state"].asInt();
 			return true;
 		}
 	}REVTRANSACTION_t;
