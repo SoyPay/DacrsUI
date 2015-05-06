@@ -86,3 +86,7 @@ void CSignAccountsDlg::OnBnClickedButtonSend()
 	}
 
 }
+void CSignAccountsDlg::SetShowAddr(CString addr){
+
+	GetDlgItem(IDC_EDIT_ADDRESS)->SetWindowText(addr);
+}

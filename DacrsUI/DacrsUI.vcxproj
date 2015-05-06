@@ -144,11 +144,11 @@
     <ClInclude Include="json\version.h" />
     <ClInclude Include="json\writer.h" />
     <ClInclude Include="Language.h" />
-    <ClInclude Include="ListAddr.h" />
     <ClInclude Include="MainDlg.h" />
     <ClInclude Include="MortgageTardDlg.h" />
     <ClInclude Include="MyMutex.h" />
     <ClInclude Include="MyQueue.h" />
+    <ClInclude Include="NewAddressDlg.h" />
     <ClInclude Include="P2PDlg.h" />
     <ClInclude Include="PostMsg.h" />
     <ClInclude Include="ProgStatusBar.h" />
@@ -165,7 +165,6 @@
     <ClInclude Include="SynchronousSocket.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TradDlg.h" />
-    <ClInclude Include="Transfer.h" />
     <ClInclude Include="UiHead.h" />
   </ItemGroup>
   <ItemGroup>
@@ -181,11 +180,11 @@
     <ClCompile Include="json\json_value.cpp" />
     <ClCompile Include="json\json_writer.cpp" />
     <ClCompile Include="Language.cpp" />
-    <ClCompile Include="ListAddr.cpp" />
     <ClCompile Include="MainDlg.cpp" />
     <ClCompile Include="MortgageTardDlg.cpp" />
     <ClCompile Include="MyMutex.cpp" />
     <ClCompile Include="MyQueue.cpp" />
+    <ClCompile Include="NewAddressDlg.cpp" />
     <ClCompile Include="P2PDlg.cpp" />
     <ClCompile Include="PostMsg.cpp" />
     <ClCompile Include="ProgStatusBar.cpp" />
@@ -202,7 +201,6 @@
     </ClCompile>
     <ClCompile Include="SynchronousSocket.cpp" />
     <ClCompile Include="TradDlg.cpp" />
-    <ClCompile Include="Transfer.cpp" />
     <ClCompile Include="UiHead.cpp" />
   </ItemGroup>
   <ItemGroup>

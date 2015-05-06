@@ -62,6 +62,7 @@ CDacrsUIDlg::CDacrsUIDlg(CWnd* pParent /*=NULL*/)
 	m_pP2PDlg  = NULL  ;
 	m_pMortgageTardDlg  = NULL  ;
 	m_pIpoDlg  = NULL  ;
+	dlgType = 0;
 }
 
 void CDacrsUIDlg::DoDataExchange(CDataExchange* pDX)
@@ -280,6 +281,8 @@ void CDacrsUIDlg::ShowDialog(UINT dlgid)
 		}
 	}
 	p_CurSelDlg = m_dlgMap[dlgid] ;  //当前选择对话框指针
+	dlgType = dlgid;
+	theApp.UpdataUIData();
 }
 void CDacrsUIDlg::ShowStateTip(UINT nButtonID)
 {

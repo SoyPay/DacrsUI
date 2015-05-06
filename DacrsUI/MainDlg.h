@@ -1,6 +1,7 @@
 #pragma once
 #include "RoundButton.h"
 #include "StaticTrans.h"
+#include "CommonStruct.h"
 
 // CMainDlg ¶Ô»°¿ò
 
@@ -25,6 +26,7 @@ public:
 	CRoundButton     m_rBtnAllTxdetail;
 public:
 	afx_msg void OnBnClickedAlltxdetail();
+	afx_msg LRESULT OnShowListCtorl(  WPARAM wParam, LPARAM lParam ) ;
 public:
 	void SetCtrlText();
 	virtual BOOL Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID);

@@ -112,7 +112,7 @@ public:
 	CStringA				m_sendPreHeadstr;
 	CStringA				m_sendendHeadstr;
 	CStringA                m_uirpcport;
-	void UpdataLocalData();
+	void UpdataUIData();
 public:
 	CMyQueue m_MsgQueue;
 	CMyQueue m_UimsgQueue;
