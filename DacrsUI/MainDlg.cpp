@@ -13,11 +13,15 @@ IMPLEMENT_DYNAMIC(CMainDlg, CDialogBar)
 
 CMainDlg::CMainDlg()
 {
-
+	m_pBmp = NULL ;
 }
 
 CMainDlg::~CMainDlg()
 {
+	if( NULL != m_pBmp ) {
+		DeleteObject(m_pBmp) ;
+		m_pBmp = NULL ;
+	}
 }
 
 void CMainDlg::DoDataExchange(CDataExchange* pDX)
@@ -29,18 +33,44 @@ void CMainDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_TX_JY4 , m_strTrading3);
 	DDX_Control(pDX, IDC_TX_JY5 , m_strTrading4);
 	DDX_Control(pDX, IDC_TX_JY7 , m_strTrading5);
+
+	DDX_Control(pDX, IDC_TX1 , m_strTx1);
+	DDX_Control(pDX, IDC_TX2 , m_strTx2);
+	DDX_Control(pDX, IDC_TX3 , m_strTx3);
+	DDX_Control(pDX, IDC_TX4 , m_strTx4);
+	DDX_Control(pDX, IDC_TX5 , m_strTx5);
+
+	DDX_Control(pDX, IDC_STATIC_AMOUNT , m_strOver);
+	DDX_Control(pDX, IDC_STATIC_NOTCOF , m_strOking);
+	DDX_Control(pDX, IDC_STATIC_COUNT , m_strTranNum);
+	DDX_Control(pDX, IDC_STATIC_DW1 , m_strUnit1);
+	DDX_Control(pDX, IDC_STATIC_DW2 , m_strUnit2);
 }
 
 
 BEGIN_MESSAGE_MAP(CMainDlg, CDialogBar)
 	ON_BN_CLICKED(IDC_ALLTXDETAIL, &CMainDlg::OnBnClickedAlltxdetail)
 	ON_MESSAGE(MSG_USER_MAIN_UI , &CMainDlg::OnShowListCtorl )
+	ON_WM_CREATE()
+	ON_WM_ERASEBKGND()
 END_MESSAGE_MAP()
 
 
 // CMainDlg 消息处理程序
 
-
+void CMainDlg::SetBkBmpNid( UINT nBitmapIn ) 
+{
+	if( NULL != m_pBmp ) {
+		::DeleteObject( m_pBmp ) ;
+		m_pBmp = NULL ;
+	}
+	m_pBmp	= NULL ;
+	HINSTANCE	hInstResource = NULL;	
+	hInstResource = AfxFindResourceHandle(MAKEINTRESOURCE(nBitmapIn), RT_BITMAP);
+	if( NULL != hInstResource ) {
+		m_pBmp = (HBITMAP)::LoadImage(hInstResource, MAKEINTRESOURCE(nBitmapIn), IMAGE_BITMAP, 0, 0, 0);
+	}
+}
 
 void CMainDlg::OnBnClickedAlltxdetail()
 {
@@ -152,18 +182,9 @@ BOOL CMainDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 
 	BOOL bRes =  CDialogBar::Create(pParentWnd, nIDTemplate, nStyle, nID);
 	if ( bRes ) {
+		m_rBtnAllTxdetail.LoadBitmaps(IDB_BITMAP_ALLTRADE1,IDB_BITMAP_ALLTRADE1,IDB_BITMAP_ALLTRADE1,IDB_BITMAP_ALLTRADE1);
 		UpdateData(0);
 		SetCtrlText();
-
-		m_rBtnAllTxdetail.SetBitmaps( IDB_BITMAP_BUTTON_BJ , RGB(255, 255, 0) , IDB_BITMAP_BUTTON_BJ , RGB(255, 255, 255) );
-		m_rBtnAllTxdetail.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		m_rBtnAllTxdetail.SetWindowText("全部交易详情") ;
-		m_rBtnAllTxdetail.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(255, 255, 255));
-		m_rBtnAllTxdetail.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
-		m_rBtnAllTxdetail.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(255, 255, 255));
-		m_rBtnAllTxdetail.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
-		m_rBtnAllTxdetail.SizeToContent();
-
 		theApp.SubscribeMsg( theApp.GetMtHthrdId() , GetSafeHwnd() , MSG_USER_MAIN_UI ) ;
 	}
 	return bRes ;
@@ -173,4 +194,38 @@ LRESULT CMainDlg::OnShowListCtorl( WPARAM wParam, LPARAM lParam )
 	//更新数据
 	SetCtrlText();
 	return 0 ;
+}
+
+int CMainDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
+{
+	if (CDialogBar::OnCreate(lpCreateStruct) == -1)
+		return -1;
+
+	// TODO:  在此添加您专用的创建代码
+	SetBkBmpNid( IDB_BITMAP_MAINUI_BJ ) ;
+
+	return 0;
+}
+
+
+BOOL CMainDlg::OnEraseBkgnd(CDC* pDC)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	CRect   rect; 
+	GetClientRect(&rect); 
+
+	if(m_pBmp   !=   NULL) { 
+		BITMAP   bm; 
+		CDC   dcMem; 
+		::GetObject(m_pBmp,sizeof(BITMAP),   (LPVOID)&bm); 
+		dcMem.CreateCompatibleDC(NULL); 
+		HBITMAP     pOldBitmap   =(HBITMAP   )   dcMem.SelectObject(m_pBmp); 
+		pDC-> StretchBlt(rect.left,rect.top-1,rect.Width(),rect.Height(),   &dcMem,   0,   0,bm.bmWidth-1,bm.bmHeight-1,   SRCCOPY); 
+
+		dcMem.SelectObject(pOldBitmap);
+		dcMem.DeleteDC();
+	} else  
+		CWnd::OnEraseBkgnd(pDC); 
+
+	return 1;
 }
