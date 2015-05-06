@@ -23,12 +23,13 @@ public:
 	virtual BOOL Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID);
 	afx_msg void OnBnClickedCopyaddress();
 	afx_msg LRESULT OnShowListCtrl(  WPARAM wParam, LPARAM lParam ) ;
-public:
-	CListCtrl m_listCtrl;
 private:
 	CSignAccountsDlg *m_accountDlg;
 	CNewAddressDlg   *m_newaddrDlg;
+	CListCtrl m_listCtrl;
+	uistruct::LISTADDRLIST m_pListaddrInfo;
 public:
 	afx_msg void OnBnClickedButtonSignAccount();
 	afx_msg void OnBnClickedButtonNewaddress();
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };
