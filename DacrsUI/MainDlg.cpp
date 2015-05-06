@@ -9,10 +9,9 @@
 
 // CMainDlg 对话框
 
-IMPLEMENT_DYNAMIC(CMainDlg, CDialogEx)
+IMPLEMENT_DYNAMIC(CMainDlg, CDialogBar)
 
-CMainDlg::CMainDlg(CWnd* pParent /*=NULL*/)
-	: CDialogEx(CMainDlg::IDD, pParent)
+CMainDlg::CMainDlg()
 {
 
 }
@@ -23,12 +22,13 @@ CMainDlg::~CMainDlg()
 
 void CMainDlg::DoDataExchange(CDataExchange* pDX)
 {
-	CDialogEx::DoDataExchange(pDX);
+	CDialogBar::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_ALLTXDETAIL , m_rBtnAllTxdetail);
 	DDX_Control(pDX, IDC_TX_JY1 , m_strTrading);
 }
 
 
-BEGIN_MESSAGE_MAP(CMainDlg, CDialogEx)
+BEGIN_MESSAGE_MAP(CMainDlg, CDialogBar)
 	ON_BN_CLICKED(IDC_ALLTXDETAIL, &CMainDlg::OnBnClickedAlltxdetail)
 END_MESSAGE_MAP()
 
@@ -42,22 +42,8 @@ void CMainDlg::OnBnClickedAlltxdetail()
 	// TODO: 在此添加控件通知处理程序代码
 }
 
-
-BOOL CMainDlg::OnInitDialog()
+void CMainDlg::SetCtrlText()
 {
-	CDialogEx::OnInitDialog();
-	SetCtrlText();
-	// TODO:  在此添加额外的初始化
-
-	UpdateData(0);
-	m_strTrading.SetFont(90, _T("宋体"));				//设置显示字体和大小
-	m_strTrading.SetTextColor(RGB(255,0,0));			//字体颜色
-	m_strTrading.SetWindowText(_T("-3.5smc")) ;
-
-	return TRUE;  // return TRUE unless you set the focus to a control
-	// 异常: OCX 属性页应返回 FALSE
-}
-void CMainDlg::SetCtrlText(){
 	CString strCommand,strShowData;
 	strCommand.Format(_T("%s"),_T("getbalance"));
 	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
@@ -117,5 +103,20 @@ void CMainDlg::SetCtrlText(){
 			}
 		}
 	}
+}
 
+BOOL CMainDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
+{
+	// TODO: 在此添加专用代码和/或调用基类
+
+	BOOL bRes =  CDialogBar::Create(pParentWnd, nIDTemplate, nStyle, nID);
+	if ( bRes ) {
+		SetCtrlText();
+		m_rBtnAllTxdetail.LoadBitmaps(IDB_BITMAP_BUTTON_BJ,IDB_BITMAP_BUTTON_BJ,IDB_BITMAP_BUTTON_BJ,IDB_BITMAP_BUTTON_BJ);
+		UpdateData(0);
+		m_strTrading.SetFont(90, _T("宋体"));				//设置显示字体和大小
+		m_strTrading.SetTextColor(RGB(255,0,0));			//字体颜色
+		m_strTrading.SetWindowText(_T("-3.5smc")) ;
+	}
+	return bRes ;
 }
