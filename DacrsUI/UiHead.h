@@ -19,7 +19,8 @@ using namespace std;
 
 #define MSG_USER_ACCEPTRECOD_UI			    WM_USER+103	    //更新到AcceptBetRecod界面
 #define MSG_USER_DARK_UI			        WM_USER+104	    //更新到Dark界面
-#define MSG_USER_MYWALLET_UI			    WM_USER+105	    //更新到MyWallet界面
+#define MSG_USER_MAIN_UI			    WM_USER+105	    //更新到Mian界面
+
 #define MSG_USER_SENDRECOD_UI			    WM_USER+106	    //更新到SendRecord界面
 #define MSG_USER_SIGNACCEPT_UI			    WM_USER+107	    //更新到SignAccountsDlg界面 1131
 #define MSG_USER_TRANSRECORD_UI			    WM_USER+108	    //更新到TransRecord界面
@@ -37,7 +38,8 @@ using namespace std;
 #define MSG_USER_UPDATA_DATA                WM_USER+119	    //更新数据到数据库
 #define MSG_USER_BLOCKSTATE_UI			    WM_USER+120	    //更新到提现界面  1138
 #define MSG_USER_SIGUSER_UI			        WM_USER+121	    //更新到注册应用  1138
-#define MSG_USER_TRANSER_UI			        WM_USER+122    //更新到转账  1138
+#define MSG_USER_SEND_UI			        WM_USER+122    //更新到转账  1138
+#define MSG_USER_RECIVE_UI			        WM_USER+122    //更新到接受页面
 
 #define MSG_USER_QUITTHREAD			        WM_USER+200	    //退出线程
 

@@ -51,6 +51,7 @@ public:
 	std::map< UINT , CDialogBar * >  m_dlgMap ; 
 	void       ShowDialog(UINT dlgid)  ;
 	CDialogBar *p_CurSelDlg   ;   //当前选择对话框指针
+	int        dlgType;
 	void       ShowStateTip(UINT nButtonID);
 	void       DestroyDlg();
 public:

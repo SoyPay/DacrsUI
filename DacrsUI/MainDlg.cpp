@@ -30,6 +30,7 @@ void CMainDlg::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CMainDlg, CDialogBar)
 	ON_BN_CLICKED(IDC_ALLTXDETAIL, &CMainDlg::OnBnClickedAlltxdetail)
+	ON_MESSAGE(MSG_USER_MAIN_UI , &CMainDlg::OnShowListCtorl )
 END_MESSAGE_MAP()
 
 
@@ -119,4 +120,10 @@ BOOL CMainDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_strTrading.SetWindowText(_T("-3.5smc")) ;
 	}
 	return bRes ;
+}
+LRESULT CMainDlg::OnShowListCtorl( WPARAM wParam, LPARAM lParam ) 
+{
+	//更新数据
+	SetCtrlText();
+	return 0 ;
 }

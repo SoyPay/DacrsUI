@@ -563,11 +563,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 				uistruct::BLOCKCHANGED_t      m_Blockchanged;
 				m_Blockchanged.JsonToStruct(strTemp.c_str());
 				pUiDemeDlg->m_UimsgQueue.push(Postmsg);
-				//if (pDlg->dlgType == DIALOG_MYWALLET)
-				//{
-				//	theApp.DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_UP_PROGRESS , 0,0);
-				//	//::PostThreadMessage( theApp.GetMtHthrdId() , MSG_USER_UP_PROGRESS ,0, 0 ) ;
-				//}					
+				theApp.DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_UP_PROGRESS , 0,0);					
 			}
 			break;
 		case MSG_USER_BLOCKSTATE_UI:
@@ -593,6 +589,9 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 				}else if (!strcmp(pDatabase.strTabName.c_str() , _T("dark_record")) )
 				{
 					Postmsg.SetType(MSG_USER_INSERT_DATA,WM_DARK_RECORD);
+				}else if (!strcmp(pDatabase.strTabName.c_str() , _T("MYWALLET")))
+				{
+					Postmsg.SetType(MSG_USER_INSERT_DATA,WM_UP_ADDRESS);
 				}
 
 			}
@@ -774,12 +773,12 @@ UINT __stdcall CDacrsUIApp::blockProc(LPVOID pParam)
 							CPostMsg postmsg(MSG_USER_UP_PROGRESS,0);
 							postmsg.SetData(strJson.c_str());
 
-							pUiDemeDlg->m_MsgQueue.push(postmsg);
+							pUiDemeDlg->m_MsgQueue.pushFront(postmsg);
 							/// ¸üÐÂtipblock hash
 							CPostMsg postblockmsg(MSG_USER_GET_UPDATABASE,WM_UP_BlLOCKTIP);
 							CString msg = root["hash"].asCString();
 							postblockmsg.SetData(msg);
-							pUiDemeDlg->m_MsgQueue.pushFront(postblockmsg);  //.push(postblockmsg);
+							pUiDemeDlg->m_MsgQueue.push(postblockmsg);  //.push(postblockmsg);
 
 							SYSTEMTIME curTime ;
 							memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
@@ -910,7 +909,7 @@ void CDacrsUIApp::OnInitList()
 
 int CDacrsUIApp::SendPostThread(DWORD msgtype)
 {
-	/*CDacrsUIDlg *pDlg = (CDacrsUIDlg*)(((CDacrsUIApp*)this)->m_pMainWnd) ;
+	CDacrsUIDlg *pDlg = (CDacrsUIDlg*)(((CDacrsUIApp*)this)->m_pMainWnd) ;
 	if (pDlg == NULL)
 	{
 		return 0 ;
@@ -920,46 +919,42 @@ int CDacrsUIApp::SendPostThread(DWORD msgtype)
 	{
 	case WM_UP_ADDRESS:
 		{
-			if(pDlg->dlgType == DIALOG_MYWALLET)
-				DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_MYWALLET_UI , WM_UP_ADDRESS,0);
-			if(pDlg->dlgType == DIALOG_SIGN_ACCOUNTS)
-				DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_SIGNACCEPT_UI , WM_UP_ADDRESS,0);
-			if(pDlg->dlgType == DIALOG_SIGN_ACCOUNTS)
-				DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_SIGUSER_UI , WM_UP_ADDRESS,0);
-			if (pDlg->dlgType == DIALOG_TRANSFER)
-				DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_TRANSER_UI , WM_UP_ADDRESS,0);
+			if(pDlg->dlgType == CSendDlg::IDD)
+				DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_SEND_UI , WM_UP_ADDRESS,0);
+			if(pDlg->dlgType == CReceiveDlg::IDD)
+				DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_RECIVE_UI , 0,0);
 
 		}
 		break;
 	case WM_REVTRANSACTION:
 		{
-			if(pDlg->dlgType == DIALOG_TRANSFER_RECORD)
-				DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_TRANSRECORD_UI,0,0);
+			if(pDlg->dlgType == CMainDlg::IDD)
+				DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_MAIN_UI , 0,0);
 		}
 		break;
-	case WM_P2P_BET_RECORD:
-		{
-			if(pDlg->dlgType == DIALOG_ACCEPTBET_RECORD)
-				DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_ACCEPTRECOD_UI,0,0);
-			if(pDlg->dlgType == DIALOG_SEND_RECORD)
-				DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_SENDRECOD_UI,0,0);
-		}
-		break;
-	case WM_DARK_RECORD:
-		{
-			if(pDlg->dlgType == DIALOG_PRESS)
-				DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_DARK_UI,0,0);
-		}
-		break;
-	case WM_UP_BETPOOL:
-		{
-			if(pDlg->dlgType == DIALOG_P2P_BET)
-				DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_BETPOOL_UI,0,0);
-		}
-		break;
+	//case WM_P2P_BET_RECORD:
+	//	{
+	//		if(pDlg->dlgType == DIALOG_ACCEPTBET_RECORD)
+	//			DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_ACCEPTRECOD_UI,0,0);
+	//		if(pDlg->dlgType == DIALOG_SEND_RECORD)
+	//			DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_SENDRECOD_UI,0,0);
+	//	}
+	//	break;
+	//case WM_DARK_RECORD:
+	//	{
+	//		if(pDlg->dlgType == DIALOG_PRESS)
+	//			DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_DARK_UI,0,0);
+	//	}
+	//	break;
+	//case WM_UP_BETPOOL:
+	//	{
+	//		if(pDlg->dlgType == DIALOG_P2P_BET)
+	//			DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_BETPOOL_UI,0,0);
+	//	}
+	//	break;
 	default:
 		return 0;
-	}*/
+	}
 	return 1 ;
 }
 void  CDacrsUIApp::ParseUIConfigFile(const CStringA& strExeDir){
@@ -1108,38 +1103,37 @@ void  CDacrsUIApp::CheckUpdate(){
 	CloseHandle(::CreateThread(NULL,0,Update1,this,0,NULL));
 
 }
-void CDacrsUIApp::UpdataLocalData(){
+void CDacrsUIApp::UpdataUIData(){
 	CDacrsUIDlg *pDlg = (CDacrsUIDlg*)(((CDacrsUIApp*)this)->m_pMainWnd) ;
 	if (NULL != pDlg ) {
 		int DType = 0; // = pDlg->dlgType;
 		switch(DType){
-		case DIALOG_P2P_BET:
-			DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_BETPOOL_UI,0,0);
+		//case DIALOG_P2P_BET:
+		//	DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_BETPOOL_UI,0,0);
+		//	break;
+		//case DIALOG_TRANSFER_RECORD:
+		//	DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_TRANSRECORD_UI,0,0);
+		//	break;
+		//case DIALOG_PRESS:
+		//	DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_DARK_UI,0,0);
+		//	break;
+		//case DIALOG_SEND_RECORD:
+		//	DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_SENDRECOD_UI,0,0);
+		//	break;
+		//case DIALOG_ACCEPTBET_RECORD:
+		//	DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_ACCEPTRECOD_UI,0,0);
+		//	break;
+		case CMainDlg::IDD:
+			DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_MAIN_UI , 0,0);
 			break;
-		case DIALOG_TRANSFER_RECORD:
-			DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_TRANSRECORD_UI,0,0);
+		//case DIALOG_SIGN_ACCOUNTS:
+		//	DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_MYWALLET_UI , WM_UP_ADDRESS,0);
+		//	break;
+		case CReceiveDlg::IDD:
+			DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_RECIVE_UI , 0,0);
 			break;
-		case DIALOG_PRESS:
-			DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_DARK_UI,0,0);
-			break;
-		case DIALOG_SEND_RECORD:
-			DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_SENDRECOD_UI,0,0);
-			break;
-		case DIALOG_ACCEPTBET_RECORD:
-			DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_ACCEPTRECOD_UI,0,0);
-			break;
-		case DIALOG_MYWALLET:
-			DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_MYWALLET_UI , WM_UP_ADDRESS,0);
-			DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_UP_PROGRESS , 0,0);
-			break;
-		case DIALOG_SIGN_ACCOUNTS:
-			DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_MYWALLET_UI , WM_UP_ADDRESS,0);
-			break;
-		case DIALOG_SIGN_USE:
-			DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_MYWALLET_UI , WM_UP_ADDRESS,0);
-			break;
-		case DIALOG_TRANSFER:
-			DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_MYWALLET_UI , WM_UP_ADDRESS,0);
+		case CSendDlg::IDD:
+			DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_SEND_UI , WM_UP_ADDRESS,0);
 			break;
 		}
 	}

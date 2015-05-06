@@ -18,4 +18,13 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ö§³Ö
 
 	DECLARE_MESSAGE_MAP()
+public:
+	afx_msg void OnBnClickedSendtrnsfer();
+	afx_msg void OnCbnSelchangeCombo1();
+	afx_msg LRESULT OnShowListaddrData(  WPARAM wParam, LPARAM lParam ) ;
+private:
+	uistruct::LISTADDRLIST m_pListaddrInfo;
+public:
+	BOOL AddListaddrDataBox();
+	virtual BOOL Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID);
 };
