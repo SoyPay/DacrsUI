@@ -109,7 +109,7 @@ BOOL CReceiveDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT n
 		{"地址" , 140}  , 
 		{"激活状态" , 150}  , 
 		{"余额" , 140}  ,
-		{"支持冷挖矿" ,250} 
+		{"支持冷挖矿" ,100} 
 		};
 		for( int i = 0 ; i < 5 ; i++  ) {
 			m_listCtrl.InsertColumn(i,listcol[i].name,LVCFMT_CENTER,listcol[i].size);

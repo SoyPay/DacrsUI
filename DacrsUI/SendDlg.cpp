@@ -13,16 +13,21 @@ IMPLEMENT_DYNAMIC(CSendDlg, CDialogBar)
 
 CSendDlg::CSendDlg()
 {
-
+	m_pBmp = NULL ;
 }
 
 CSendDlg::~CSendDlg()
 {
+	if( NULL != m_pBmp ) {
+		DeleteObject(m_pBmp) ;
+		m_pBmp = NULL ;
+	}
 }
 
 void CSendDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogBar::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_BUTTON_ADDBOOK , m_rBtnAddbook);
 }
 
 
@@ -30,11 +35,26 @@ BEGIN_MESSAGE_MAP(CSendDlg, CDialogBar)
 	ON_BN_CLICKED(IDC_SENDTRNSFER, &CSendDlg::OnBnClickedSendtrnsfer)
 	ON_CBN_SELCHANGE(IDC_COMBO_ADDR_OUT, &CSendDlg::OnCbnSelchangeCombo1)
 	ON_MESSAGE(MSG_USER_SEND_UI , &CSendDlg::OnShowListaddrData  )
+	ON_WM_CREATE()
+	ON_WM_ERASEBKGND()
 END_MESSAGE_MAP()
 
 
 // CTransfer 消息处理程序
 
+void CSendDlg::SetBkBmpNid( UINT nBitmapIn ) 
+{
+	if( NULL != m_pBmp ) {
+		::DeleteObject( m_pBmp ) ;
+		m_pBmp = NULL ;
+	}
+	m_pBmp	= NULL ;
+	HINSTANCE	hInstResource = NULL;	
+	hInstResource = AfxFindResourceHandle(MAKEINTRESOURCE(nBitmapIn), RT_BITMAP);
+	if( NULL != hInstResource ) {
+		m_pBmp = (HBITMAP)::LoadImage(hInstResource, MAKEINTRESOURCE(nBitmapIn), IMAGE_BITMAP, 0, 0, 0);
+	}
+}
 
 void CSendDlg::OnBnClickedSendtrnsfer()
 {
@@ -161,12 +181,49 @@ BOOL CSendDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 	// TODO: 在此添加专用代码和/或调用基类
 
 	BOOL bRes =   CDialogBar::Create(pParentWnd, nIDTemplate, nStyle, nID);
-	if (bRes)
+	if (bRes) 
 	{
+		m_rBtnAddbook.LoadBitmaps(IDB_BITMAP_ADDBOOK,IDB_BITMAP_ADDBOOK,IDB_BITMAP_ADDBOOK,IDB_BITMAP_ADDBOOK);
+		UpdateData(0);
 		AddListaddrDataBox();
 		theApp.SubscribeMsg( theApp.GetMtHthrdId() , GetSafeHwnd() , MSG_USER_SEND_UI ) ;
 		((CComboBox*)GetDlgItem(IDC_COMBO2))->SetCurSel(0);
 		
 	}
 	return bRes;
+}
+
+
+int CSendDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
+{
+	if (CDialogBar::OnCreate(lpCreateStruct) == -1)
+		return -1;
+
+	// TODO:  在此添加您专用的创建代码
+	SetBkBmpNid(IDB_BITMAP_SENDUI_BJ);
+
+	return 0;
+}
+
+
+BOOL CSendDlg::OnEraseBkgnd(CDC* pDC)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	CRect   rect; 
+	GetClientRect(&rect); 
+
+	if(m_pBmp   !=   NULL) { 
+		BITMAP   bm; 
+		CDC   dcMem; 
+		::GetObject(m_pBmp,sizeof(BITMAP),   (LPVOID)&bm); 
+		dcMem.CreateCompatibleDC(NULL); 
+		HBITMAP     pOldBitmap   =(HBITMAP   )   dcMem.SelectObject(m_pBmp); 
+		pDC-> StretchBlt(rect.left,rect.top-1,rect.Width(),rect.Height(),   &dcMem,   0,   0,bm.bmWidth-1,bm.bmHeight-1,   SRCCOPY); 
+
+		dcMem.SelectObject(pOldBitmap);
+		dcMem.DeleteDC();
+	} else  
+		CWnd::OnEraseBkgnd(pDC); 
+
+	return 1;
 }
