@@ -83,7 +83,8 @@ void CMainDlg::SetCtrlText()
 	GetDlgItem(IDC_STATIC_COUNT)->SetWindowText(strCommand) ;
 
 	CString Where,strSource;
-	Where.Format(_T("'COMMON_TX' order by sign confirmedtime"));
+	//Where.Format(_T("'COMMON_TX' order by confirmedtime"));
+	Where.Format(_T("'CONTRACT_TX' order by confirmedtime"));
 	strSource.Format(_T("txtype"));
 	uistruct::TRANSRECORDLIST pTransaction;
 	theApp.cs_SqlData.Lock();
@@ -98,11 +99,11 @@ void CMainDlg::SetCtrlText()
 		int nSubIdx = 0 , i = 0 ;
 		CString strShowaddr ;
 		std::vector<uistruct::REVTRANSACTION_t>::const_iterator const_it;
-		for (const_it = pTransaction.begin() ; const_it != pTransaction.end(),i<6 ; const_it++ ) {
+		for (const_it = pTransaction.begin() ; const_it != pTransaction.end()&&i<6 ; const_it++ ) {
 			if (const_it->state == 1)
 			{
 				strSource.Format(_T("-%.8f"),const_it->money);
-				strShowaddr.Format(_T("%s "),const_it->addr);
+				strShowaddr.Format(_T("%s "),const_it->addr.c_str());
 				i++;
 			}else if (const_it->state == 2)
 			{
@@ -113,12 +114,31 @@ void CMainDlg::SetCtrlText()
 			GetDlgItem(item)->SetWindowText(strShowaddr) ;
 			if (const_it->state == 1)
 			{
+				if(i == 1)
 				m_strTrading.SetTextColor(RGB(255,0,0));			//字体颜色
+				if(i == 2)
+				m_strTrading2.SetTextColor(RGB(255,0,0));
+				if(i == 3)
+					m_strTrading3.SetTextColor(RGB(255,0,0));			//字体颜色
+				if(i == 4)
+					m_strTrading4.SetTextColor(RGB(255,0,0));
+				if(i == 5)
+					m_strTrading5.SetTextColor(RGB(255,0,0));
 			}else if (const_it->state == 2)
 			{
-				m_strTrading.SetTextColor(RGB(166,162,247));
+				if(i == 1)
+					m_strTrading.SetTextColor(RGB(166,162,247));			//字体颜色
+				if(i == 2)
+					m_strTrading2.SetTextColor(RGB(166,162,247));
+				if(i == 3)
+					m_strTrading3.SetTextColor(RGB(166,162,247));			//字体颜色
+				if(i == 4)
+					m_strTrading4.SetTextColor(RGB(166,162,247));
+				if(i == 5)
+					m_strTrading5.SetTextColor(RGB(166,162,247));
 
 			}
+
 			GetDlgItem(item1)->SetWindowText(strSource) ;
 			item++;
 			item1++;
@@ -132,12 +152,9 @@ BOOL CMainDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 
 	BOOL bRes =  CDialogBar::Create(pParentWnd, nIDTemplate, nStyle, nID);
 	if ( bRes ) {
-		SetCtrlText();
 		m_rBtnAllTxdetail.LoadBitmaps(IDB_BITMAP_BUTTON_BJ,IDB_BITMAP_BUTTON_BJ,IDB_BITMAP_BUTTON_BJ,IDB_BITMAP_BUTTON_BJ);
 		UpdateData(0);
-		m_strTrading.SetFont(90, _T("宋体"));				//设置显示字体和大小
-		m_strTrading.SetTextColor(RGB(255,0,0));			//字体颜色
-		m_strTrading.SetWindowText(_T("-3.5smc")) ;
+		SetCtrlText();
 		theApp.SubscribeMsg( theApp.GetMtHthrdId() , GetSafeHwnd() , MSG_USER_MAIN_UI ) ;
 	}
 	return bRes ;

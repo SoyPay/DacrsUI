@@ -113,7 +113,7 @@ BOOL CReceiveDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT n
 		for( int i = 0 ; i < 5 ; i++  ) {
 			m_listCtrl.InsertColumn(i,listcol[i].name,LVCFMT_CENTER,listcol[i].size);
 		}
-		m_listCtrl.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_HEADERDRAGDROP  |LVS_SINGLESEL  );
+		m_listCtrl.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_HEADERDRAGDROP );// |LVS_SINGLESEL  );
 
 		ShowListInfo();
 
@@ -175,22 +175,20 @@ LRESULT  CReceiveDlg::OnShowListCtrl(  WPARAM wParam, LPARAM lParam )
 void CReceiveDlg::OnBnClickedButtonSignAccount()
 {
 	// TODO: 在此添加控件通知处理程序代码
-
-	int nItem =m_listCtrl.GetSelectedColumn();
 	CString StrShow;
-	if (nItem <= 0)
-	{
+	POSITION pos = m_listCtrl.GetFirstSelectedItemPosition() ;
+	if ( pos ) {
+		int nRow = m_listCtrl.GetNextSelectedItem(pos) ;
+		uistruct::LISTADDR_t * pDbbetData = (uistruct::LISTADDR_t*)m_listCtrl.GetItemData(nRow) ;
+		m_accountDlg->SetShowAddr(pDbbetData->address);
+		CRect rcWindow;
+		GetWindowRect(&rcWindow);
+		m_accountDlg->MoveWindow(rcWindow.right/2+50,rcWindow.top+200,400,rcWindow.Height()/3);
+		m_accountDlg->ShowWindow(SW_SHOW);
+	}else{
 		StrShow.Format(_T("No items were selected!\n"));
 		::MessageBox( this->GetSafeHwnd() ,StrShow , _T("提示") , MB_ICONINFORMATION ) ;
-	}else
-	{
-			uistruct::LISTADDR_t * pDbbetData = (uistruct::LISTADDR_t*)m_listCtrl.GetItemData(nItem) ;
-			m_accountDlg->SetShowAddr(pDbbetData->address);
-			CRect rcWindow;
-			GetWindowRect(&rcWindow);
-			m_accountDlg->MoveWindow(rcWindow.right/2+50,rcWindow.top+200,400,rcWindow.Height()/3);
-			m_accountDlg->ShowWindow(SW_SHOW);
-	}	
+	}
 }
 
 
