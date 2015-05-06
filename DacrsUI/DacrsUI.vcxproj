@@ -57,6 +57,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <OutputFile>..\bin\DacrsUI.exe</OutputFile>
       <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -112,12 +114,16 @@
     <None Include="res\P2P.bmp" />
     <None Include="res\Receive.bmp" />
     <None Include="res\Send.bmp" />
+    <None Include="res\Tip.bmp" />
     <None Include="res\wndtitlebk.bmp" />
+    <None Include="res\xh_2.bmp" />
+    <None Include="res\xh_3.bmp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CommonStruct.h" />
     <ClInclude Include="DacrsUI.h" />
     <ClInclude Include="DacrsUIDlg.h" />
+    <ClInclude Include="GIFControl.h" />
     <ClInclude Include="IndTitleBar.h" />
     <ClInclude Include="JsonConfigHelp.h" />
     <ClInclude Include="json\assertions.h" />
@@ -156,6 +162,7 @@
     <ClCompile Include="CommonStruct.cpp" />
     <ClCompile Include="DacrsUI.cpp" />
     <ClCompile Include="DacrsUIDlg.cpp" />
+    <ClCompile Include="GIFControl.cpp" />
     <ClCompile Include="IndTitleBar.cpp" />
     <ClCompile Include="JsonConfigHelp.cpp" />
     <ClCompile Include="json\json_reader.cpp" />
