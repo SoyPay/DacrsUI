@@ -64,7 +64,7 @@ void CNewAddressDlg::OnBnClickedButton1()
 	strSourceData.Format(_T("'%s' , '%s' , '%.8f' , '%d' ,'%d','%s'") , addr ,"",0.0 ,nCold ,0,Leble) ;
 	uistruct::DATABASEINFO_t   pDatabase;
 	pDatabase.strSource = strSourceData.GetString();
-	pDatabase.strTabName =  _T("p2p_bet_record");
+	pDatabase.strTabName =  _T("MYWALLET");
 	CPostMsg postmsg(MSG_USER_INSERT_DATA,0);
 	string  strTemp = pDatabase.ToJson();
 	postmsg.SetData(strTemp.c_str());
