@@ -70,6 +70,8 @@ void CNewAddressDlg::OnBnClickedButton1()
 	postmsg.SetData(strTemp.c_str());
 	theApp.m_MsgQueue.push(postmsg);
 
+	strCommand.Format(_T("恭喜生成新地址%s"),addr);
+	::MessageBox( this->GetSafeHwnd() ,_T("恭喜生成新地址") , _T("提示") , MB_ICONINFORMATION ) ;
 }
 
 

@@ -48,9 +48,9 @@ END_MESSAGE_MAP()
 
 // CReceiveDlg 消息处理程序
 
-void CReceiveDlg::ShowListInfo(){
+void CReceiveDlg::ShowListInfo()
+{
 
-	uistruct::LISTADDRLIST m_pListaddrInfo;
 	theApp.cs_SqlData.Lock();
 	theApp.m_SqliteDeal.GetListaddrData(&m_pListaddrInfo);
 	theApp.cs_SqlData.Unlock();
@@ -66,6 +66,7 @@ void CReceiveDlg::ShowListInfo(){
 		strShowData.Format(_T("%s") ,const_it->Lebel) ;
 		int item = m_listCtrl.InsertItem( i , strShowData ) ;
 		m_listCtrl.SetItemData(item , (DWORD_PTR)&(*const_it)) ;
+
 
 		strShowData.Format(_T("%s") ,const_it->address) ;
 		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
@@ -139,28 +140,27 @@ BOOL CReceiveDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT n
 void CReceiveDlg::OnBnClickedCopyaddress()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	int nItem =m_listCtrl.GetSelectedColumn();
 	CString StrShow;
-	if (nItem <= 0)
-	{
-		StrShow.Format(_T("No items were selected!\n"));
-		::MessageBox( this->GetSafeHwnd() ,StrShow , _T("提示") , MB_ICONINFORMATION ) ;
-	}else
-	{
-		uistruct::LISTADDR_t * pDbbetData = (uistruct::LISTADDR_t*)m_listCtrl.GetItemData(nItem) ;
-		CString source =pDbbetData->address;
-		//文本内容保存在source变量中
-		if(OpenClipboard())
-		{
-			HGLOBAL clipbuffer;
-			char * buffer;
-			EmptyClipboard();
-			clipbuffer = GlobalAlloc(GMEM_DDESHARE, source.GetLength()+1);
-			buffer = (char*)GlobalLock(clipbuffer);
-			strcpy(buffer, LPCSTR(source));
-			GlobalUnlock(clipbuffer);
-			SetClipboardData(CF_TEXT,clipbuffer);
-			CloseClipboard();
+	POSITION pos = m_listCtrl.GetFirstSelectedItemPosition() ;
+	if ( pos ) {
+			int nRow = m_listCtrl.GetNextSelectedItem(pos) ;
+			uistruct::LISTADDR_t * pDbbetData = (uistruct::LISTADDR_t*)m_listCtrl.GetItemData(nRow) ;
+			CString source =pDbbetData->address;
+			//文本内容保存在source变量中
+			if(OpenClipboard())
+			{
+				HGLOBAL clipbuffer;
+				char * buffer;
+				EmptyClipboard();
+				clipbuffer = GlobalAlloc(GMEM_DDESHARE, source.GetLength()+1);
+				buffer = (char*)GlobalLock(clipbuffer);
+				strcpy(buffer, LPCSTR(source));
+				GlobalUnlock(clipbuffer);
+				SetClipboardData(CF_TEXT,clipbuffer);
+				CloseClipboard();
+		}else{
+			StrShow.Format(_T("请选择地址!\n"));
+			::MessageBox( this->GetSafeHwnd() ,StrShow , _T("提示") , MB_ICONINFORMATION ) ;
 		}
 	}
 }
@@ -183,10 +183,10 @@ void CReceiveDlg::OnBnClickedButtonSignAccount()
 		m_accountDlg->SetShowAddr(pDbbetData->address);
 		CRect rcWindow;
 		GetWindowRect(&rcWindow);
-		m_accountDlg->MoveWindow(rcWindow.right/2+50,rcWindow.top+200,400,rcWindow.Height()/3);
+		m_accountDlg->MoveWindow(rcWindow.right/2+50,rcWindow.top+200,400,rcWindow.Height()/2);
 		m_accountDlg->ShowWindow(SW_SHOW);
 	}else{
-		StrShow.Format(_T("No items were selected!\n"));
+		StrShow.Format(_T("请选择地址!\n"));
 		::MessageBox( this->GetSafeHwnd() ,StrShow , _T("提示") , MB_ICONINFORMATION ) ;
 	}
 }
@@ -199,4 +199,19 @@ void CReceiveDlg::OnBnClickedButtonNewaddress()
 	GetWindowRect(&rcWindow);
 	m_newaddrDlg->MoveWindow(rcWindow.right/2+50,rcWindow.top+200,400,rcWindow.Height()/2);
 	m_newaddrDlg->ShowWindow(SW_SHOW);
+}
+
+
+BOOL CReceiveDlg::PreTranslateMessage(MSG* pMsg)
+{
+	// TODO: 在此添加专用代码和/或调用基类
+	if (WM_KEYFIRST <= pMsg->message && pMsg->message <= WM_KEYLAST)
+	{
+		//判断是否按下键盘Enter键
+		if (pMsg->wParam == VK_CONTROL || pMsg->wParam == VK_ESCAPE ||pMsg->wParam == VK_SHIFT )
+		{
+			return true;
+		}
+	}
+	return CDialogBar::PreTranslateMessage(pMsg);
 }
