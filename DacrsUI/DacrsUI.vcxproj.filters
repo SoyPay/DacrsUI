@@ -1,0 +1,326 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="BmpBtn.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CommonStruct.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DacrsUI.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DacrsUIDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GIFControl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="IndTitleBar.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="IpoDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonConfigHelp.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Language.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MainDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MortgageTardDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="P2PDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ProgStatusBar.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ReceiveDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RoundButton.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RpcCmd.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SendDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SignAccountsDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SqliteDeal.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticTrans.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SynchronousSocket.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="TradDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="UiHead.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMutex.cpp">
+      <Filter>源文件\msg</Filter>
+    </ClCompile>
+    <ClCompile Include="MyQueue.cpp">
+      <Filter>源文件\msg</Filter>
+    </ClCompile>
+    <ClCompile Include="PostMsg.cpp">
+      <Filter>源文件\msg</Filter>
+    </ClCompile>
+    <ClCompile Include="json\json_reader.cpp">
+      <Filter>源文件\json</Filter>
+    </ClCompile>
+    <ClCompile Include="json\json_value.cpp">
+      <Filter>源文件\json</Filter>
+    </ClCompile>
+    <ClCompile Include="json\json_writer.cpp">
+      <Filter>源文件\json</Filter>
+    </ClCompile>
+    <ClCompile Include="NewAddressDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BmpBtn.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonStruct.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DacrsUI.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DacrsUIDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GIFControl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="IndTitleBar.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="IpoDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonConfigHelp.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Language.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MainDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MortgageTardDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="P2PDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ProgStatusBar.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="json\reader.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ReceiveDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RoundButton.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RpcCmd.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SendDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SignAccountsDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="sqlite3.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SqliteDeal.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticTrans.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SynchronousSocket.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="TradDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="UiHead.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="json\value.h">
+      <Filter>头文件\json</Filter>
+    </ClInclude>
+    <ClInclude Include="json\version.h">
+      <Filter>头文件\json</Filter>
+    </ClInclude>
+    <ClInclude Include="json\writer.h">
+      <Filter>头文件\json</Filter>
+    </ClInclude>
+    <ClInclude Include="PostMsg.h">
+      <Filter>头文件\msg</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMutex.h">
+      <Filter>头文件\msg</Filter>
+    </ClInclude>
+    <ClInclude Include="MyQueue.h">
+      <Filter>头文件\msg</Filter>
+    </ClInclude>
+    <ClInclude Include="json\json_batchallocator.h">
+      <Filter>头文件\json</Filter>
+    </ClInclude>
+    <ClInclude Include="json\json_tool.h">
+      <Filter>头文件\json</Filter>
+    </ClInclude>
+    <ClInclude Include="json\json.h">
+      <Filter>头文件\json</Filter>
+    </ClInclude>
+    <ClInclude Include="json\forwards.h">
+      <Filter>头文件\json</Filter>
+    </ClInclude>
+    <ClInclude Include="json\features.h">
+      <Filter>头文件\json</Filter>
+    </ClInclude>
+    <ClInclude Include="json\config.h">
+      <Filter>头文件\json</Filter>
+    </ClInclude>
+    <ClInclude Include="json\autolink.h">
+      <Filter>头文件\json</Filter>
+    </ClInclude>
+    <ClInclude Include="json\assertions.h">
+      <Filter>头文件\json</Filter>
+    </ClInclude>
+    <ClInclude Include="NewAddressDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+    <None Include="res\bitmap1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\button_black_ground.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\DacrsUI.ico">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\DacrsUI.rc2">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\Deals.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\IPO.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\Logo.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\MainUI.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\MainUI_1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\MainUI_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\Mortgage.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\P2P.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\Receive.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\Send.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\Tip.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\wndtitlebk.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\xh_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\xh_3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="json\json_valueiterator.inl">
+      <Filter>头文件\json</Filter>
+    </None>
+    <None Include="json\json_internalmap.inl">
+      <Filter>头文件\json</Filter>
+    </None>
+    <None Include="json\json_internalarray.inl">
+      <Filter>头文件\json</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{7bce047d-0467-4b28-bae6-a024331f6f6c}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{ec201e24-e86b-4607-aec9-7c2e8330d1fd}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="头文件\json">
+      <UniqueIdentifier>{5f004141-de15-4a3d-a974-cc6c48ec1bda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\msg">
+      <UniqueIdentifier>{faef8a66-4a98-46ca-b712-13f695c23e8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{cf59a430-779f-4c05-82f9-7d8ca97c04b4}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="源文件\json">
+      <UniqueIdentifier>{72cf6d76-d474-4653-8e7f-660e55cc2e1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\msg">
+      <UniqueIdentifier>{e14db1a3-5898-49c5-bcd1-acca1e49268e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="DacrsUI.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
