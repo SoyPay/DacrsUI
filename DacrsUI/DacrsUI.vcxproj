@@ -103,6 +103,8 @@
     <None Include="json\json_internalmap.inl" />
     <None Include="json\json_valueiterator.inl" />
     <None Include="ReadMe.txt" />
+    <None Include="res\address_book.bmp" />
+    <None Include="res\alltrade1.bmp" />
     <None Include="res\bitmap1.bmp" />
     <None Include="res\button_black_ground.bmp" />
     <None Include="res\DacrsUI.ico" />
@@ -113,10 +115,12 @@
     <None Include="res\MainUI.bmp" />
     <None Include="res\MainUI_1.bmp" />
     <None Include="res\MainUI_2.bmp" />
+    <None Include="res\main_ui_background.bmp" />
     <None Include="res\Mortgage.bmp" />
     <None Include="res\P2P.bmp" />
     <None Include="res\Receive.bmp" />
     <None Include="res\Send.bmp" />
+    <None Include="res\send_ui_blackgruond.bmp" />
     <None Include="res\Tip.bmp" />
     <None Include="res\wndtitlebk.bmp" />
     <None Include="res\xh_2.bmp" />

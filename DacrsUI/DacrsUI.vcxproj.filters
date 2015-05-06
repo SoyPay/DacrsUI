@@ -309,6 +309,18 @@
     <None Include="json\json_internalarray.inl">
       <Filter>头文件\json</Filter>
     </None>
+    <None Include="res\main_ui_background.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\alltrade1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\send_ui_blackgruond.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\address_book.bmp">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="资源文件">
