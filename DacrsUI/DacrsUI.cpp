@@ -314,8 +314,8 @@ void CDacrsUIApp::UpdataAddressData(){
 	{
 		theApp.cs_SqlData.Unlock();
 		return;
-	}*/
-	theApp.cs_SqlData.Unlock();
+	}
+	theApp.cs_SqlData.Unlock();*/
 	uistruct::LISTADDR_t listaddr;
 	for(int i = 0; i < root.size(); ++i){
 		memset(&listaddr , 0 , sizeof(uistruct::LISTADDR_t));
@@ -344,9 +344,11 @@ void CDacrsUIApp::UpdataAddressData(){
 		CString strSourceData,feild;
 		feild.Format(_T("address"));
 		strSourceData.Format(_T("%s"),listaddr.address);
+
 		theApp.cs_SqlData.Lock();
 		int item = m_SqliteDeal.FindDB(_T("MYWALLET") ,strSourceData, feild) ;
 		theApp.cs_SqlData.Unlock();
+
 		if (item == 0 )
 		{
 			strSourceData.Format(_T("'%s' , '%s' , '%.8f' , '%d' ,'%d','%s'") , listaddr.address ,listaddr.RegID ,listaddr.fMoney ,listaddr.nColdDig ,listaddr.bSign,listaddr.Lebel ) ;
@@ -355,7 +357,7 @@ void CDacrsUIApp::UpdataAddressData(){
 			theApp.cs_SqlData.Unlock();
 		}else{
 			CString strSourceData,strWhere;
-			strSourceData.Format(_T("regid = %s, money = '%.8f' ,coldig ='%d',sign ='%d'") ,listaddr.RegID ,listaddr.fMoney ,listaddr.nColdDig ,listaddr.bSign ) ;
+			strSourceData.Format(_T("regid = '%s', money = %.8f ,coldig =%d,sign =%d") ,listaddr.RegID ,listaddr.fMoney ,listaddr.nColdDig ,listaddr.bSign ) ;
 			strWhere.Format(_T("address = '%s'") , listaddr.address  ) ;
 			theApp.cs_SqlData.Lock();
 			if ( !m_SqliteDeal.Updatabase(_T("MYWALLET") , strSourceData , strWhere ) ){

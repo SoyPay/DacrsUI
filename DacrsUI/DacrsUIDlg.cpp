@@ -180,6 +180,13 @@ int CDacrsUIDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	CRect rect ;
 	GetClientRect( rect ) ;
 
+	//检测EXE文件所在路径是否包含中文或者空格
+	CheckPathValid( theApp.str_InsPath );
+
+	//初始化RPC Cmd
+	InitialRpcCmd();
+	LoadListDataInfo();//加载数据库信息
+
 	//TOP
 	if( NULL == m_pTitleBar ){
 		m_pTitleBar = new CIndTitleBar ;
@@ -272,4 +279,43 @@ void CDacrsUIDlg::OnBnClickedButtonClose()
 void CDacrsUIDlg::OnBnClickedButtonMin()
 {
 	ShowWindow(SW_SHOWMINIMIZED);
+}
+
+void CDacrsUIDlg::CheckPathValid(const CStringA& strDir)
+{
+	BOOL bExist = FALSE;
+	for(int i = 0;i <= strDir.GetLength();i++)
+	{
+		BYTE bchar = (BYTE)strDir.GetAt(i);
+		if(bchar == ' ')
+		{
+			bExist = TRUE;
+			break;
+		}
+	}
+
+	if (bExist)
+	{
+		MessageBox(_T("程序不可以放在含有空格的目录下\r\n"));
+		exit(0);
+	}
+}
+
+void CDacrsUIDlg::InitialRpcCmd()
+{
+	//ProductHttpHead(theApp.str_InsPath ,m_strServerCfgFileName,m_rpcport,m_sendPreHeadstr,m_sendendHeadstr);
+	CSoyPayHelp::getInstance()->InitialRpcCmd(theApp.m_sendPreHeadstr,theApp.m_sendendHeadstr,theApp.m_rpcport);
+}
+
+void  CDacrsUIDlg::LoadListDataInfo()
+{
+	//加载连表数据
+	theApp.cs_SqlData.Lock();
+	theApp.m_SqliteDeal.UpdataAllTable();
+	theApp.m_SqliteDeal.UpdataAllTableData(theApp.m_SqliteDeal.isinBlock());
+	theApp.cs_SqlData.Unlock();
+	//theApp.m_SqliteDeal.GetListaddrData(&theApp.m_listAddr);
+	//theApp.m_SqliteDeal.GetRevtransactionDatta(&theApp.m_RevtRansactionList);
+	//theApp.m_SqliteDeal.GetRecorBetData(&theApp.m_Transaction);
+	//theApp.m_SqliteDeal.GetRecorDarkData(&theApp.m_DarkTransaction);
 }
