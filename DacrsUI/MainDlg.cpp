@@ -24,7 +24,11 @@ void CMainDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogBar::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_ALLTXDETAIL , m_rBtnAllTxdetail);
-	DDX_Control(pDX, IDC_TX_JY1 , m_strTrading);
+	DDX_Control(pDX, IDC_TX_JY2 , m_strTrading);
+	DDX_Control(pDX, IDC_TX_JY3 , m_strTrading2);
+	DDX_Control(pDX, IDC_TX_JY4 , m_strTrading3);
+	DDX_Control(pDX, IDC_TX_JY5 , m_strTrading4);
+	DDX_Control(pDX, IDC_TX_JY7 , m_strTrading5);
 }
 
 
@@ -57,11 +61,11 @@ void CMainDlg::SetCtrlText()
 		{
 			double money = root["balance"].asDouble();
 			strCommand.Format(_T("%.8f"),money);
-			GetDlgItem(IDC_STATIC_AMOUNT)->GetWindowText(strCommand) ;
+			GetDlgItem(IDC_STATIC_AMOUNT)->SetWindowText(strCommand) ;
 		}
 	}else{
 		strCommand.Format(_T("0.0"));
-		GetDlgItem(IDC_STATIC_AMOUNT)->GetWindowText(strCommand) ;
+		GetDlgItem(IDC_STATIC_AMOUNT)->SetWindowText(strCommand) ;
 	}
 	strCommand.Format(_T("0"));
 	theApp.cs_SqlData.Lock();
@@ -69,14 +73,14 @@ void CMainDlg::SetCtrlText()
 	theApp.cs_SqlData.Unlock();
 
 	strCommand.Format(_T("%d"),nItem);
-	GetDlgItem(IDC_STATIC_NOTCOF)->GetWindowText(strCommand) ;
+	GetDlgItem(IDC_STATIC_NOTCOF)->SetWindowText(strCommand) ;
 
 	theApp.cs_SqlData.Lock();
 	nItem =  theApp.m_SqliteDeal.GetTableCount(_T("revtransaction")) ;
 	theApp.cs_SqlData.Unlock();
 
 	strCommand.Format(_T("%d"),nItem);
-	GetDlgItem(IDC_STATIC_COUNT)->GetWindowText(strCommand) ;
+	GetDlgItem(IDC_STATIC_COUNT)->SetWindowText(strCommand) ;
 
 	CString Where,strSource;
 	Where.Format(_T("'COMMON_TX' order by sign confirmedtime"));
@@ -88,20 +92,36 @@ void CMainDlg::SetCtrlText()
 
 	int i = 1;
 	strCommand.Format(_T("IDC_TX%d"),nItem);
+	int item = IDC_TX1;
+	int item1 = IDC_TX_JY2;
 	if (pTransaction.size() != 0  ) {
 		int nSubIdx = 0 , i = 0 ;
-		CString strShowData ;
+		CString strShowaddr ;
 		std::vector<uistruct::REVTRANSACTION_t>::const_iterator const_it;
 		for (const_it = pTransaction.begin() ; const_it != pTransaction.end(),i<6 ; const_it++ ) {
 			if (const_it->state == 1)
 			{
-				strSource.Format(_T("%s    -%.8f"),const_it->addr,const_it->money);
+				strSource.Format(_T("-%.8f"),const_it->money);
+				strShowaddr.Format(_T("%s "),const_it->addr);
 				i++;
 			}else if (const_it->state == 2)
 			{
-				strSource.Format(_T("%s    -%.8f"),const_it->desaddr,const_it->money);
+				strSource.Format(_T("+%.8f"),const_it->money);
+				strShowaddr.Format(_T("%s "),const_it->desaddr);
 				i++;
 			}
+			GetDlgItem(item)->SetWindowText(strShowaddr) ;
+			if (const_it->state == 1)
+			{
+				m_strTrading.SetTextColor(RGB(255,0,0));			//字体颜色
+			}else if (const_it->state == 2)
+			{
+				m_strTrading.SetTextColor(RGB(166,162,247));
+
+			}
+			GetDlgItem(item1)->SetWindowText(strSource) ;
+			item++;
+			item1++;
 		}
 	}
 }
@@ -118,6 +138,7 @@ BOOL CMainDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_strTrading.SetFont(90, _T("宋体"));				//设置显示字体和大小
 		m_strTrading.SetTextColor(RGB(255,0,0));			//字体颜色
 		m_strTrading.SetWindowText(_T("-3.5smc")) ;
+		theApp.SubscribeMsg( theApp.GetMtHthrdId() , GetSafeHwnd() , MSG_USER_MAIN_UI ) ;
 	}
 	return bRes ;
 }

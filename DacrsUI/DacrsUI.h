@@ -120,6 +120,9 @@ public:
 	void UpdataAddressData();
 	void InsertarevtransactionData(string hash);
 	void UpdatarevtransactionData(string hash);
+	void Jiexi(Json::Value &obj);
+public:
+	bool isStartMainDlg;
 };
 
 

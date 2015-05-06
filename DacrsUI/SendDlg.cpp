@@ -165,6 +165,8 @@ BOOL CSendDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 	{
 		AddListaddrDataBox();
 		theApp.SubscribeMsg( theApp.GetMtHthrdId() , GetSafeHwnd() , MSG_USER_SEND_UI ) ;
+		((CComboBox*)GetDlgItem(IDC_COMBO2))->SetCurSel(0);
+		
 	}
 	return bRes;
 }
