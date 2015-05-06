@@ -4,12 +4,12 @@
 
 // CMainDlg 对话框
 
-class CMainDlg : public CDialogEx
+class CMainDlg : public CDialogBar
 {
 	DECLARE_DYNAMIC(CMainDlg)
 
 public:
-	CMainDlg(CWnd* pParent = NULL);   // 标准构造函数
+	CMainDlg();   // 标准构造函数
 	virtual ~CMainDlg();
 
 // 对话框数据
@@ -21,9 +21,11 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	CStaticTrans     m_strTrading  ;   
+
+	CRoundButton     m_rBtnAllTxdetail;
 public:
 	afx_msg void OnBnClickedAlltxdetail();
-	virtual BOOL OnInitDialog();
 public:
 	void SetCtrlText();
+	virtual BOOL Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID);
 };

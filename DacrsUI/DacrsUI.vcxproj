@@ -102,6 +102,8 @@
     <None Include="json\json_internalmap.inl" />
     <None Include="json\json_valueiterator.inl" />
     <None Include="ReadMe.txt" />
+    <None Include="res\bitmap1.bmp" />
+    <None Include="res\button_black_ground.bmp" />
     <None Include="res\DacrsUI.ico" />
     <None Include="res\DacrsUI.rc2" />
     <None Include="res\Deals.bmp" />
@@ -120,11 +122,13 @@
     <None Include="res\xh_3.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BmpBtn.h" />
     <ClInclude Include="CommonStruct.h" />
     <ClInclude Include="DacrsUI.h" />
     <ClInclude Include="DacrsUIDlg.h" />
     <ClInclude Include="GIFControl.h" />
     <ClInclude Include="IndTitleBar.h" />
+    <ClInclude Include="IpoDlg.h" />
     <ClInclude Include="JsonConfigHelp.h" />
     <ClInclude Include="json\assertions.h" />
     <ClInclude Include="json\autolink.h" />
@@ -141,13 +145,17 @@
     <ClInclude Include="Language.h" />
     <ClInclude Include="ListAddr.h" />
     <ClInclude Include="MainDlg.h" />
+    <ClInclude Include="MortgageTardDlg.h" />
     <ClInclude Include="MyMutex.h" />
     <ClInclude Include="MyQueue.h" />
+    <ClInclude Include="P2PDlg.h" />
     <ClInclude Include="PostMsg.h" />
     <ClInclude Include="ProgStatusBar.h" />
+    <ClInclude Include="ReceiveDlg.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="RoundButton.h" />
     <ClInclude Include="RpcCmd.h" />
+    <ClInclude Include="SendDlg.h" />
     <ClInclude Include="SignAccountsDlg.h" />
     <ClInclude Include="sqlite3.h" />
     <ClInclude Include="SqliteDeal.h" />
@@ -155,15 +163,18 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SynchronousSocket.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="TradDlg.h" />
     <ClInclude Include="Transfer.h" />
     <ClInclude Include="UiHead.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BmpBtn.cpp" />
     <ClCompile Include="CommonStruct.cpp" />
     <ClCompile Include="DacrsUI.cpp" />
     <ClCompile Include="DacrsUIDlg.cpp" />
     <ClCompile Include="GIFControl.cpp" />
     <ClCompile Include="IndTitleBar.cpp" />
+    <ClCompile Include="IpoDlg.cpp" />
     <ClCompile Include="JsonConfigHelp.cpp" />
     <ClCompile Include="json\json_reader.cpp" />
     <ClCompile Include="json\json_value.cpp" />
@@ -171,12 +182,16 @@
     <ClCompile Include="Language.cpp" />
     <ClCompile Include="ListAddr.cpp" />
     <ClCompile Include="MainDlg.cpp" />
+    <ClCompile Include="MortgageTardDlg.cpp" />
     <ClCompile Include="MyMutex.cpp" />
     <ClCompile Include="MyQueue.cpp" />
+    <ClCompile Include="P2PDlg.cpp" />
     <ClCompile Include="PostMsg.cpp" />
     <ClCompile Include="ProgStatusBar.cpp" />
+    <ClCompile Include="ReceiveDlg.cpp" />
     <ClCompile Include="RoundButton.cpp" />
     <ClCompile Include="RpcCmd.cpp" />
+    <ClCompile Include="SendDlg.cpp" />
     <ClCompile Include="SignAccountsDlg.cpp" />
     <ClCompile Include="SqliteDeal.cpp" />
     <ClCompile Include="StaticTrans.cpp" />
@@ -185,6 +200,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="SynchronousSocket.cpp" />
+    <ClCompile Include="TradDlg.cpp" />
     <ClCompile Include="Transfer.cpp" />
     <ClCompile Include="UiHead.cpp" />
   </ItemGroup>

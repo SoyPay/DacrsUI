@@ -56,6 +56,12 @@ CDacrsUIDlg::CDacrsUIDlg(CWnd* pParent /*=NULL*/)
 	m_pTitleBar = NULL  ;
 	m_pStatusBar = NULL ;
 	m_pMainDlg  = NULL  ;
+	m_pSendDlg  = NULL  ;
+	m_pReceiveDlg  = NULL  ;
+	m_pTradDlg  = NULL  ;
+	m_pP2PDlg  = NULL  ;
+	m_pMortgageTardDlg  = NULL  ;
+	m_pIpoDlg  = NULL  ;
 }
 
 void CDacrsUIDlg::DoDataExchange(CDataExchange* pDX)
@@ -202,12 +208,49 @@ int CDacrsUIDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	}
 	if( NULL == m_pMainDlg ){
 		m_pMainDlg = new CMainDlg ;
-		m_pMainDlg->Create(IDD_DIALOG_MAIN , this) ;
+		m_pMainDlg->Create(this, CMainDlg::IDD, CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_HIDE_INPLACE,3) ;
 		m_pMainDlg->ShowWindow(SW_HIDE) ;
+	}
+	if( NULL == m_pSendDlg ){
+		m_pSendDlg = new CSendDlg ;
+		m_pSendDlg->Create(this, CSendDlg::IDD, CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_HIDE_INPLACE,4) ;
+		m_pSendDlg->ShowWindow(SW_HIDE) ;
+	}
+	//
+	if( NULL == m_pReceiveDlg ){
+		m_pReceiveDlg = new CReceiveDlg ;
+		m_pReceiveDlg->Create(this, CReceiveDlg::IDD, CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_HIDE_INPLACE,5) ;
+		m_pReceiveDlg->ShowWindow(SW_HIDE) ;
+	}
+	if( NULL == m_pTradDlg ){
+		m_pTradDlg = new CTradDlg ;
+		m_pTradDlg->Create(this, CTradDlg::IDD, CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_HIDE_INPLACE,6) ;
+		m_pTradDlg->ShowWindow(SW_HIDE) ;
+	}
+	if( NULL == m_pP2PDlg ){
+		m_pP2PDlg = new CP2PDlg ;
+		m_pP2PDlg->Create(this, CP2PDlg::IDD, CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_HIDE_INPLACE,7) ;
+		m_pP2PDlg->ShowWindow(SW_HIDE) ;
+	}
+	if( NULL == m_pMortgageTardDlg ){
+		m_pMortgageTardDlg = new CMortgageTardDlg ;
+		m_pMortgageTardDlg->Create(this, CMortgageTardDlg::IDD, CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_HIDE_INPLACE,8) ;
+		m_pMortgageTardDlg->ShowWindow(SW_HIDE) ;
+	}
+	if( NULL == m_pIpoDlg ){
+		m_pIpoDlg = new CIpoDlg ;
+		m_pIpoDlg->Create(this, CIpoDlg::IDD, CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_HIDE_INPLACE,9) ;
+		m_pIpoDlg->ShowWindow(SW_HIDE) ;
 	}
 
 	//加入到m_dlgMap
-	m_dlgMap.insert( std::map<UINT , CDialog *>::value_type( IDD_DIALOG_MAIN , m_pMainDlg)) ; 
+	m_dlgMap.insert( std::map<UINT , CDialogBar *>::value_type( CMainDlg::IDD , m_pMainDlg)) ; 
+	m_dlgMap.insert( std::map<UINT , CDialogBar *>::value_type( CSendDlg::IDD , m_pSendDlg)) ; 
+	m_dlgMap.insert( std::map<UINT , CDialogBar *>::value_type( CReceiveDlg::IDD , m_pReceiveDlg)) ;
+	m_dlgMap.insert( std::map<UINT , CDialogBar *>::value_type( CTradDlg::IDD , m_pTradDlg)) ;
+	m_dlgMap.insert( std::map<UINT , CDialogBar *>::value_type( CP2PDlg::IDD , m_pP2PDlg)) ;
+	m_dlgMap.insert( std::map<UINT , CDialogBar *>::value_type( CMortgageTardDlg::IDD , m_pMortgageTardDlg)) ;
+	m_dlgMap.insert( std::map<UINT , CDialogBar *>::value_type( CIpoDlg::IDD , m_pIpoDlg)) ;
 
 	//显示主界面
 	ShowDialog(CMainDlg::IDD) ;
@@ -218,7 +261,7 @@ void CDacrsUIDlg::ShowDialog(UINT dlgid)
 {
 	CRect rc , rt;
 	GetClientRect(&rc);
-	std::map< UINT , CDialog * >::iterator it ;
+	std::map< UINT , CDialogBar * >::iterator it ;
 	for( it = m_dlgMap.begin() ; it != m_dlgMap.end() ; it++ ) {
 		if ( NULL != it->second ) {
 			if ( dlgid == it->first ) {
@@ -236,6 +279,45 @@ void CDacrsUIDlg::ShowStateTip(UINT nButtonID)
 	if ( NULL == m_pTitleBar  ) return ;
 	m_pTitleBar->MobileTip(nButtonID);
 }
+void CDacrsUIDlg::DestroyDlg()
+{
+	if ( NULL != m_pTitleBar ) {
+		delete m_pTitleBar ;
+		m_pTitleBar = NULL ;
+	}
+	if ( NULL != m_pStatusBar ) {
+		delete m_pStatusBar ;
+		m_pStatusBar = NULL ;
+	}
+	if ( NULL != m_pMainDlg ) {
+		delete m_pMainDlg ;
+		m_pMainDlg = NULL ;
+	}
+	if ( NULL != m_pSendDlg ) {
+		delete m_pSendDlg ;
+		m_pSendDlg = NULL ;
+	}
+	if ( NULL != m_pReceiveDlg ) {
+		delete m_pReceiveDlg ;
+		m_pReceiveDlg = NULL ;
+	}
+	if ( NULL != m_pTradDlg ) {
+		delete m_pTradDlg ;
+		m_pTradDlg = NULL ;
+	}
+	if ( NULL != m_pP2PDlg ) {
+		delete m_pP2PDlg ;
+		m_pP2PDlg = NULL ;
+	}
+	if ( NULL != m_pMortgageTardDlg ) {
+		delete m_pMortgageTardDlg ;
+		m_pMortgageTardDlg = NULL ;
+	}
+	if ( NULL != m_pIpoDlg ) {
+		delete m_pIpoDlg ;
+		m_pIpoDlg = NULL ;
+	}
+}
 //主界面
 void CDacrsUIDlg::OnBnClickedButtonMainUI()
 {
@@ -245,35 +327,42 @@ void CDacrsUIDlg::OnBnClickedButtonMainUI()
 //发送
 void CDacrsUIDlg::OnBnClickedButtonSend()
 {
+	ShowDialog(CSendDlg::IDD) ;
 	ShowStateTip(IDC_BUTTON_SEND);
 }
 //接收
 void CDacrsUIDlg::OnBnClickedButtonRece()
 {
+	ShowDialog(CReceiveDlg::IDD) ;
 	ShowStateTip(IDC_BUTTON_RECE);
 }
 //交易详情
 void CDacrsUIDlg::OnBnClickedButtonTrad()
 {
+	ShowDialog(CTradDlg::IDD) ;
 	ShowStateTip(IDC_BUTTON_TRAD_INFO);
 }
 //P2P掷色子
 void CDacrsUIDlg::OnBnClickedButtonP2P()
 {
+	ShowDialog(CP2PDlg::IDD) ;
 	ShowStateTip(IDC_BUTTON_P2P);
 }
 //抵押交易
 void CDacrsUIDlg::OnBnClickedButtonMortgage()
 {
+	ShowDialog(CMortgageTardDlg::IDD) ;
 	ShowStateTip(IDC_BUTTON_MORTGAGE);
 }
 //IPO领币
 void CDacrsUIDlg::OnBnClickedButtonDeals()
 {
+	ShowDialog(CIpoDlg::IDD) ;
 	ShowStateTip(IDC_BUTTON_IPO);
 }
 void CDacrsUIDlg::OnBnClickedButtonClose()
 {
+	DestroyDlg();
 	PostMessage( WM_QUIT ) ; 
 	PostMessage( WM_CLOSE ); 	
 	TRACE("DestroyWindow()");

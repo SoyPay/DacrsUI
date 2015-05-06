@@ -6,6 +6,12 @@
 #include "IndTitleBar.h"
 #include "ProgStatusBar.h"
 #include "MainDlg.h"
+#include "SendDlg.h"
+#include "ReceiveDlg.h"
+#include "TradDlg.h"
+#include "P2PDlg.h"
+#include "MortgageTardDlg.h"
+#include "IpoDlg.h"
 
 // CDacrsUIDlg 对话框
 class CDacrsUIDlg : public CDialogEx
@@ -35,12 +41,18 @@ public:
 	CIndTitleBar		*m_pTitleBar;//*m_pIndToolbar;
 	CProgStatusBar      *m_pStatusBar;//状态栏
 	CMainDlg            *m_pMainDlg  ;//主界面
-	
+	CSendDlg            *m_pSendDlg  ;//发送dlg
+	CReceiveDlg         *m_pReceiveDlg;//接收
+	CTradDlg            *m_pTradDlg  ; //交易
+	CP2PDlg             *m_pP2PDlg    ;//P2P
+	CMortgageTardDlg    *m_pMortgageTardDlg;// 抵押
+	CIpoDlg             *m_pIpoDlg;    //IPO
 public:
-	std::map< UINT , CDialog * >  m_dlgMap ; 
+	std::map< UINT , CDialogBar * >  m_dlgMap ; 
 	void       ShowDialog(UINT dlgid)  ;
-	CDialog	   *p_CurSelDlg   ;   //当前选择对话框指针
+	CDialogBar *p_CurSelDlg   ;   //当前选择对话框指针
 	void       ShowStateTip(UINT nButtonID);
+	void       DestroyDlg();
 public:
 	afx_msg void OnBnClickedButtonMainUI();
 	afx_msg void OnBnClickedButtonSend();
