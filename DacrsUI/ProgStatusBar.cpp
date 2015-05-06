@@ -16,6 +16,7 @@ IMPLEMENT_DYNAMIC(CProgStatusBar, CDialogBar)
 	m_pBmp = NULL ;
 	m_bProgressType = false;
 	m_ProgressWnd = NULL ;
+	m_gniuessBlockTime = 1430006505;
 }
 
 CProgStatusBar::~CProgStatusBar()
@@ -141,8 +142,10 @@ BOOL CProgStatusBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UIN
 			m_ProgressWnd->Create(_T("") , WS_CHILD | SS_OWNERDRAW | WS_VISIBLE | SS_NOTIFY , \
 				CRect(20,20,36,36) , this, 111 ) ;
 		}
-
 		theApp.SubscribeMsg( theApp.GetMtHthrdId() , GetSafeHwnd() , MSG_USER_UP_PROGRESS ) ;
+
+		CPostMsg postmsg(MSG_USER_UP_PROGRESS,0);
+		theApp.m_MsgQueue.pushFront(postmsg);
 	}
 	return bRes ;
 }
@@ -153,35 +156,43 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 	memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
 	GetLocalTime( &curTime ) ;
 	static int RecivetxTimeLast =0;
-	int tempTime= UiFun::SystemTimeToTimet(curTime);
+	int nCurTime= UiFun::SystemTimeToTimet(curTime);
 
 	CPostMsg postmsg;
 	if (!theApp.m_UimsgQueue.pop(postmsg))
 	{
-		//m_progress.SetRange32( 0 , 1 );    //设置进度条范围 只设置一次
-		//m_progress.SetPos( 1);
-		//m_bProgressType = TRUE ;
 		return 1;
 	}
+
+	if (!m_bProgressType)
+	{
+		CString strCommand,strShowData;
+		Json::Reader reader; 
+		Json::Value root;
+		strCommand.Format(_T("%s"),_T("getinfo"));
+		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
+		if (reader.parse(strShowData.GetString(), root)) 
+		{
+			int tipblocktime = root["tipblocktime"].asInt();
+			m_progress.SetRange32( 0 , (nCurTime - m_gniuessBlockTime) ); 
+			int  setpos = (tipblocktime -m_gniuessBlockTime);
+			m_progress.SetPos(setpos);
+			m_bProgressType = TRUE;
+		}
+		return 1;
+	}
+	
+
 	uistruct::BLOCKCHANGED_t pBlockchanged;  //= (uistruct::BLOCKCHANGED_t *)wParam ;
 	string strTemp = postmsg.GetData();
 	pBlockchanged.JsonToStruct(strTemp.c_str());
 
-	//	if ( NULL != pBlockchanged ) {
-	if ( !m_bProgressType ) {
-		m_ProgressMax = pBlockchanged.time<=0?1 :pBlockchanged.time;
-		m_progress.SetRange32( 0 , m_ProgressMax );    //设置进度条范围 只设置一次
-		m_bProgressType = TRUE ;
+	if ((nCurTime - pBlockchanged.time)<200)
+	{
+		m_progress.SetPos( m_ProgressMax);
 	}else{
-		if ((tempTime - pBlockchanged.time)<200)
-		{
-			m_progress.SetPos( m_ProgressMax);
-		}else{
-			m_progress.SetPos( m_ProgressMax - pBlockchanged.time );//设置进度条的值 
-		}
-
+		m_progress.SetPos( m_ProgressMax - pBlockchanged.time );//设置进度条的值 
 	}
-	//	UpdateData(false);//实时更新主界面
-	//	}
+
 	return 1;
 }

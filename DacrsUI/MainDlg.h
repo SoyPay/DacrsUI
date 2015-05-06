@@ -22,6 +22,10 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	CStaticTrans     m_strTrading  ;   
+	CStaticTrans     m_strTrading2  ;   
+	CStaticTrans     m_strTrading3  ;   
+	CStaticTrans     m_strTrading4  ;   
+	CStaticTrans     m_strTrading5  ;   
 
 	CRoundButton     m_rBtnAllTxdetail;
 public:
