@@ -24,6 +24,7 @@ CMainDlg::~CMainDlg()
 void CMainDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_TX_JY1 , m_strTrading);
 }
 
 
@@ -47,6 +48,11 @@ BOOL CMainDlg::OnInitDialog()
 	CDialogEx::OnInitDialog();
 	SetCtrlText();
 	// TODO:  在此添加额外的初始化
+
+	UpdateData(0);
+	m_strTrading.SetFont(90, _T("宋体"));				//设置显示字体和大小
+	m_strTrading.SetTextColor(RGB(255,0,0));			//字体颜色
+	m_strTrading.SetWindowText(_T("-3.5smc")) ;
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE
