@@ -42,5 +42,5 @@ public:
 	BOOL   UpdataP2pBetRecord();
 	BOOL   UpdataDarkRecord();
 public:
-		CRITICAL_SECTION        cs_UpDataResult ;  //数据库获取结果
+//		CRITICAL_SECTION        cs_UpDataResult ;  //数据库获取结果
 };
