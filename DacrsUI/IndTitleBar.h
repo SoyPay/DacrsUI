@@ -27,6 +27,10 @@ public:
 	CRoundButton     m_rBtnP2p;
 	CRoundButton     m_rBtnMortgage ;
 	CRoundButton     m_rBtnIpo;
+	CRoundButton     m_rBtnAddApp;
+
+	CRoundButton     m_rBtnClose;
+	CRoundButton     m_rBtnMin;
 public:
 	CToolTipCtrl     m_tooltip;			// 提示信息
 	HBITMAP		     m_pBmp; 
