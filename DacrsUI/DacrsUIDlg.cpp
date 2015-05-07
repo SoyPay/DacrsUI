@@ -372,6 +372,9 @@ void CDacrsUIDlg::OnBnClickedButtonDeals()
 }
 void CDacrsUIDlg::OnBnClickedButtonClose()
 {
+	CloseThread();
+	StopSever();
+
 	DestroyDlg();
 	PostMessage( WM_QUIT ) ; 
 	PostMessage( WM_CLOSE ); 	
@@ -412,13 +415,68 @@ void CDacrsUIDlg::InitialRpcCmd()
 
 void  CDacrsUIDlg::LoadListDataInfo()
 {
-	//加载连表数据
+	//加载连表数据,没有的表创建
 	theApp.cs_SqlData.Lock();
 	theApp.m_SqliteDeal.UpdataAllTable();
 	theApp.m_SqliteDeal.UpdataAllTableData(theApp.m_SqliteDeal.isinBlock());
 	theApp.cs_SqlData.Unlock();
-	//theApp.m_SqliteDeal.GetListaddrData(&theApp.m_listAddr);
-	//theApp.m_SqliteDeal.GetRevtransactionDatta(&theApp.m_RevtRansactionList);
-	//theApp.m_SqliteDeal.GetRecorBetData(&theApp.m_Transaction);
-	//theApp.m_SqliteDeal.GetRecorDarkData(&theApp.m_DarkTransaction);
+}
+void CDacrsUIDlg::CloseThread()
+{
+	DWORD exc;
+	theApp.m_msgAutoDelete= true;
+	theApp.m_blockAutoDelete = true;
+
+	closesocket(theApp.m_blockSock);
+
+	while( ::GetExitCodeThread( theApp.m_msgThread , &exc ) ) {
+
+		if( STILL_ACTIVE == exc ) {
+			;
+		}else {
+			TRACE( "EXC = %d \n" , exc ) ;
+			break;
+		}
+		Sleep(1000);
+	}
+
+	while( ::GetExitCodeThread( theApp.m_hblockThread , &exc ) ) {
+
+		if( STILL_ACTIVE == exc ) {
+			;
+		}else {
+			TRACE( "EXC = %d \n" , exc ) ;
+			break;
+		}
+		Sleep(1000);
+	}
+}
+
+void  CDacrsUIDlg::StopSever()
+{
+	CString strCommand;
+	strCommand.Format(_T("%s"),_T("stop"));
+	CStringA strSendData;
+	CString strret = _T("Dacrsd server stopping");
+
+	SYSTEMTIME curTime ;
+	memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
+	GetLocalTime( &curTime ) ;
+	int RecivetxTimestart =0;
+	RecivetxTimestart= UiFun::SystemTimeToTimet(curTime);
+	while(TRUE){
+		CSoyPayHelp::getInstance()->SendRpc(strCommand,strSendData);
+		if (strSendData.Find(strret) >=0)
+		{
+			return;
+		}
+		GetLocalTime( &curTime ) ;
+		int RecivetxTimeLast =0;
+		RecivetxTimeLast= UiFun::SystemTimeToTimet(curTime);
+		if ((RecivetxTimeLast - RecivetxTimestart) > 10)
+		{
+			return;
+		}
+	}
+
 }

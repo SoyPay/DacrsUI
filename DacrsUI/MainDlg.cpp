@@ -5,7 +5,7 @@
 #include "DacrsUI.h"
 #include "MainDlg.h"
 #include "afxdialogex.h"
-
+#include <afxinet.h>
 
 // CMainDlg 对话框
 
@@ -14,6 +14,7 @@ IMPLEMENT_DYNAMIC(CMainDlg, CDialogBar)
 CMainDlg::CMainDlg()
 {
 	m_pBmp = NULL ;
+	m_url.clear();
 }
 
 CMainDlg::~CMainDlg()
@@ -22,6 +23,14 @@ CMainDlg::~CMainDlg()
 		DeleteObject(m_pBmp) ;
 		m_pBmp = NULL ;
 	}
+	if (CMFCVisualManager::GetInstance() != NULL)
+	{
+		delete CMFCVisualManager::GetInstance();
+	}
+	v_linkCtrl.InternalRelease();
+	v_linkCtrl.ExternalRelease();
+	v_linkCtrl.OnFinalRelease();
+	v_linkCtrl.DestroyWindow();
 }
 
 void CMainDlg::DoDataExchange(CDataExchange* pDX)
@@ -45,6 +54,8 @@ void CMainDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_STATIC_COUNT , m_strTranNum);
 	DDX_Control(pDX, IDC_STATIC_DW1 , m_strUnit1);
 	DDX_Control(pDX, IDC_STATIC_DW2 , m_strUnit2);
+
+	DDX_Control(pDX, IDC_MFCLINK1, v_linkCtrl);
 }
 
 
@@ -99,14 +110,19 @@ void CMainDlg::SetCtrlText()
 	}
 	strCommand.Format(_T("0"));
 	theApp.cs_SqlData.Lock();
-	int nItem =  theApp.m_SqliteDeal.FindINTDB(_T("revtransaction") , strCommand ,_T("confirmHeight")) ;
+	string nmoney =  theApp.m_SqliteDeal.GetColSum(_T("revtransaction") , strCommand ,_T("confirmHeight")) ;
 	theApp.cs_SqlData.Unlock();
 
-	strCommand.Format(_T("%d"),nItem);
-	GetDlgItem(IDC_STATIC_NOTCOF)->SetWindowText(strCommand) ;
+	if (!strcmp(nmoney.c_str(),"(null)"))
+	{
+		GetDlgItem(IDC_STATIC_NOTCOF)->SetWindowText(_T("0.0")) ;
+	}else{
+		GetDlgItem(IDC_STATIC_NOTCOF)->SetWindowText(nmoney.c_str()) ;
+	}
+	
 
 	theApp.cs_SqlData.Lock();
-	nItem =  theApp.m_SqliteDeal.GetTableCount(_T("revtransaction")) ;
+	int nItem =  theApp.m_SqliteDeal.GetTableCount(_T("revtransaction")) ;
 	theApp.cs_SqlData.Unlock();
 
 	strCommand.Format(_T("%d"),nItem);
@@ -185,6 +201,10 @@ BOOL CMainDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_rBtnAllTxdetail.LoadBitmaps(IDB_BITMAP_ALLTRADE1,IDB_BITMAP_ALLTRADE1,IDB_BITMAP_ALLTRADE1,IDB_BITMAP_ALLTRADE1);
 		UpdateData(0);
 		SetCtrlText();
+		GetUrlServer();
+		v_linkCtrl.SetWindowText(_T("456"));
+		//v_linkCtrl.SetURL(_T("www.hao123.com"));
+		//v_linkCtrl.SetURLPrefix(_T("http://"));
 		theApp.SubscribeMsg( theApp.GetMtHthrdId() , GetSafeHwnd() , MSG_USER_MAIN_UI ) ;
 	}
 	return bRes ;
@@ -228,4 +248,57 @@ BOOL CMainDlg::OnEraseBkgnd(CDC* pDC)
 		CWnd::OnEraseBkgnd(pDC); 
 
 	return 1;
+}
+bool CMainDlg::GetUrlServer()
+{
+		m_url.clear();
+	CString url(_T("http://api.dspay.org/dacrs/dacrsUpdate.json"));    
+	CInternetSession session;
+	std::string strHtml;
+
+	try
+	{
+		CHttpFile* pfile = (CHttpFile*)session.OpenURL(url,1,INTERNET_FLAG_TRANSFER_ASCII||INTERNET_FLAG_RELOAD,NULL,0);
+
+		DWORD dwStatusCode;    
+		pfile->QueryInfoStatusCode(dwStatusCode);    
+		if(dwStatusCode == HTTP_STATUS_OK)    
+		{    
+			char strBuff[1025] = {0};
+			while ((pfile->Read((void*)strBuff, 1024)) > 0) 
+			{ 
+				strHtml += strBuff; 
+			} 
+		}
+		else
+		{
+			return false;
+		}
+
+		pfile->Close();    
+		delete pfile;    
+		session.Close();
+	}
+	catch (CException* e)
+	{
+		e;//消除警告
+		return false;
+	}
+
+
+	if (strHtml.empty())
+	{
+		return false;
+	}
+
+	Json::Reader reader;  
+	Json::Value root; 
+
+	if (reader.parse(strHtml, root)) 
+	{
+		//strVersion = root["version"].asString();
+		//ShellExecuteW(NULL, L"open", _T("http://bbs.dspay.org/portal.php"), NULL, NULL, SW_SHOWNORMAL);
+		return true;
+	}
+	return false;
 }

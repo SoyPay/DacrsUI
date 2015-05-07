@@ -187,12 +187,13 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 	string strTemp = postmsg.GetData();
 	pBlockchanged.JsonToStruct(strTemp.c_str());
 
-	if ((nCurTime - pBlockchanged.time)<200)
-	{
-		m_progress.SetPos( m_ProgressMax);
-	}else{
-		m_progress.SetPos( m_ProgressMax - pBlockchanged.time );//设置进度条的值 
-	}
+	//if ((nCurTime - pBlockchanged.time)<200)
+	//{
+	//	m_progress.SetPos( m_ProgressMax);
+	//}else{
+		int  setpos = (nCurTime-pBlockchanged.time) -m_gniuessBlockTime;
+		m_progress.SetPos(setpos);//设置进度条的值 
+	//}
 
 	return 1;
 }
