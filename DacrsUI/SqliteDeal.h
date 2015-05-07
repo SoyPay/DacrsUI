@@ -26,6 +26,7 @@ public:
 	BOOL   DeleteData(const CString strTabName, const CString strSourceData , const CString strW);
 	BOOL   CreateTabe(const CString strTabName,const CString strFiled);
 	BOOL   IsExistTabe(const CString strTabName);
+	string GetColSum(const CString strTabName , const CString strP, const CString strSource);
 public:
 	BOOL   OpenSqlite(CString strPath) ;    //打开数据库 
 public:
