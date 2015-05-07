@@ -321,6 +321,15 @@
     <None Include="res\address_book.bmp">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="res\main_log_1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\main_log_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\button_bar.bmp">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="资源文件">
