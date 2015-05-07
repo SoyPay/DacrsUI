@@ -155,6 +155,7 @@
     <ClInclude Include="MyMutex.h" />
     <ClInclude Include="MyQueue.h" />
     <ClInclude Include="NewAddressDlg.h" />
+    <ClInclude Include="NoUiMsgBuffer.h" />
     <ClInclude Include="P2PDlg.h" />
     <ClInclude Include="PostMsg.h" />
     <ClInclude Include="ProgStatusBar.h" />
@@ -194,6 +195,7 @@
     <ClCompile Include="MyMutex.cpp" />
     <ClCompile Include="MyQueue.cpp" />
     <ClCompile Include="NewAddressDlg.cpp" />
+    <ClCompile Include="NoUiMsgBuffer.cpp" />
     <ClCompile Include="P2PDlg.cpp" />
     <ClCompile Include="PostMsg.cpp" />
     <ClCompile Include="ProgStatusBar.cpp" />
