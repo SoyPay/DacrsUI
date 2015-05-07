@@ -103,6 +103,9 @@
     <ClCompile Include="BtnST.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="StartProgress.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BmpBtn.h">
@@ -243,6 +246,9 @@
     <ClInclude Include="BtnST.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="StartProgress.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -328,6 +334,96 @@
       <Filter>资源文件</Filter>
     </None>
     <None Include="res\button_bar.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\add_app_1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\add_app_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\diya_logo_1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\diya_logo_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\ipo_app_1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\ipo_app_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\rev_logo_1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\rev_logo_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\send_logo_1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\send_logo_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\tradedetail_logo_1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\tradedetail_logo_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\your_sister_1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\your_sister_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\close.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\close2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\close3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\min1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\min2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\min3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\button_bar_3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\sig_0.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\sig_1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\sig_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\sig_3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\bitmap4.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\progress1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\progress2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\progress3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\progress4.bmp">
       <Filter>资源文件</Filter>
     </None>
   </ItemGroup>
