@@ -427,6 +427,57 @@ void CDacrsUIApp::UpdatarevtransactionData(string hash){
 		}
 	}
 }
+
+void CDacrsUIApp::UpdatarevAppRecord(string txdetail){
+	uistruct::REVTRANSACTION_t transcion;
+	if (transcion.JsonToStruct(txdetail))
+	{
+		CString strCommand,strShowData;
+		strCommand.Format(_T("%s %s"),_T("getaccountinfo") ,theApp.m_betScritptid );
+		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
+
+		if (strShowData  =_T("")){		
+			return;
+		}
+		Json::Reader reader;  
+		Json::Value root; 
+		if (!reader.parse(strShowData.GetString(), root)) {		
+			return;
+		}
+		CString DesAddr = root["Address"].asCString();
+		if (!strcmp(transcion.desaddr.c_str(),DesAddr))
+		{
+			string nValue = transcion.Contract;
+			OPEN_DATA Openbet;
+			memset(&Openbet , 0 , sizeof(OPEN_DATA));
+			std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue);
+			if(vTemp.size()>0)
+			memcpy(&Openbet, &vTemp[0], sizeof(OPEN_DATA));
+			if (Openbet.type != TX_OPENBET)
+			{
+				return;
+			}
+			vector<unsigned char>vHash;
+			vHash.assign(Openbet.txhash,Openbet.txhash+sizeof(Openbet.txhash));
+			reverse(vHash.begin(),vHash.end());
+			string hexHash = CSoyPayHelp::getInstance()->HexStr(vHash);
+			theApp.cs_SqlData.Lock();
+			int nItem =  theApp.m_SqliteDeal.FindDB(_T("p2p_bet_record") , hexHash.c_str() ,_T("tx_hash")) ;
+			theApp.cs_SqlData.Unlock();
+			if (nItem != 0)
+			{
+				CString strSourceData,strWhere;
+				strSourceData.Format(_T("recvtime = %d ,guessnum ='%s',") ,transcion.confirmedtime,(int)Openbet.dhash[32] ) ;
+				strWhere.Format(_T("tx_hash = '%s'") , hexHash.c_str() ) ;
+				theApp.cs_SqlData.Lock();
+				if ( !m_SqliteDeal.Updatabase(_T("p2p_bet_record") , strSourceData , strWhere ) ){
+					TRACE(_T("p2p_bet_record数据更新失败!") );
+				}
+				theApp.cs_SqlData.Unlock();
+			}
+		}
+	}
+}
 void CDacrsUIApp::InsertarevtransactionData(string hash){
 
 	CString strCommand,strShowData;
@@ -516,6 +567,13 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 						}
 					}
 					break;
+				case WM_APP_TRANSATION:
+					{
+						CString txDetail = Postmsg.GetData();
+						if ( _T("") != txDetail ) {
+							((CDacrsUIApp*)pParam)->UpdatarevAppRecord(txDetail.GetString());
+						}
+					}
 				case WM_P2P_BET_RECORD:
 					{
 						//更新数据库赌约数据库列表
@@ -657,6 +715,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 #define  ININTAL_TYPE          1
 #define  BLOCK_CHANGE_TYPE     2
 #define  REV_TRANSATION_TYPE     3
+#define  APP_TRANSATION_TYPE     4
 
 int GetMsgType(CString const strData,Json::Value &root)
 {
@@ -675,6 +734,10 @@ int GetMsgType(CString const strData,Json::Value &root)
 		if ( !strcmp(strType ,_T("blockchanged") ) )
 		{
 			return BLOCK_CHANGE_TYPE;
+		}
+		if ( !strcmp(strType ,_T("rev_app_transaction") ) )
+		{
+			return APP_TRANSATION_TYPE;
 		}
 	}
 	return  -1;
@@ -762,20 +825,27 @@ UINT __stdcall CDacrsUIApp::blockProc(LPVOID pParam)
 						 case REV_TRANSATION_TYPE:
 							 {
 								 const Json::Value& txArray = msgroot["transation"]; 
-								 //插入到数据库
+								 ////插入到数据库
+								 //CString strHash ;
+								 //strHash.Format(_T("%s") , txArray["hash"].asCString() );
+								 //theApp.cs_SqlData.Lock();
+								 //int nItem =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.FindDB(_T("revtransaction") ,strHash ,_T("hash") ) ;
+								 //theApp.cs_SqlData.Unlock();
 								 CString strHash ;
-								 strHash.Format(_T("%s") , txArray["hash"].asCString() );
-								 theApp.cs_SqlData.Lock();
-								 int nItem =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.FindDB(_T("revtransaction") ,strHash ,_T("hash") ) ;
-								 theApp.cs_SqlData.Unlock();
 								 strHash.Format(_T("'%s'") , txArray["hash"].asCString() );
-								 if ( 0 == nItem ) {
+							//	 if ( 0 == nItem ) {
 									 CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_REVTRANSACTION);
 									 postmsg.SetData(strHash);
 									 pUiDemeDlg->m_MsgQueue.push(postmsg);
 
-								 }
+								// }
 								 break;
+							 }
+						 case APP_TRANSATION_TYPE:
+							 {
+								 CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_APP_TRANSATION);
+								 postmsg.SetData(msgroot.toStyledString().c_str());
+								 pUiDemeDlg->m_MsgQueue.push(postmsg);
 							 }
 						 case BLOCK_CHANGE_TYPE:
 							 {
@@ -799,7 +869,7 @@ UINT __stdcall CDacrsUIApp::blockProc(LPVOID pParam)
 								 pUiDemeDlg->m_MsgQueue.pushFront(postmsg);
 								 /// 更新tipblock hash
 								 CPostMsg postblockmsg(MSG_USER_GET_UPDATABASE,WM_UP_BlLOCKTIP);
-								 CString msg = root["hash"].asCString();
+								 CString msg = msgroot["hash"].asCString();
 								 postblockmsg.SetData(msg);
 								 pUiDemeDlg->m_MsgQueue.push(postblockmsg);  //.push(postblockmsg);
 

@@ -72,4 +72,6 @@ private:
 	void       CheckPathValid(const CStringA& strDir);
 	void       InitialRpcCmd();
 	void       LoadListDataInfo();         //从数据库中加载列表数据
+	void       CloseThread();
+	void       StopSever();
 };
