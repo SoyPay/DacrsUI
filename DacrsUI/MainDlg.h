@@ -2,7 +2,7 @@
 #include "RoundButton.h"
 #include "StaticTrans.h"
 #include "CommonStruct.h"
-
+#include <map>
 // CMainDlg ¶Ô»°¿ò
 
 class CMainDlg : public CDialogBar
@@ -51,4 +51,8 @@ public:
 	virtual BOOL Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID);
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+private:
+	bool GetUrlServer();
+	map<CString,CString> m_url;
+	CMFCLinkCtrl v_linkCtrl;
 };

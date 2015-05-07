@@ -825,12 +825,11 @@ string CAnonymTxHelp::PackAnonymContract(const string& strSender,int nSendMoney,
 }
 
 //********************************P2P对赌************************************
-string CP2PBetHelp::PacketP2PSendContract(int64_t nMoney,int nHeight, unsigned char noperateType ,const string& strRandomHash)
+string CP2PBetHelp::PacketP2PSendContract(int64_t nMoney,int nHeight ,const string& strRandomHash)
 {
 	//strRandomHash: 32 个随机数 + 中奖数
 	memset(&m_sendContract,0,sizeof(SEND_DATA));
 	m_sendContract.type = TX_SENDBET;
-	m_sendContract.noperateType = noperateType ;
 	m_sendContract.hight = nHeight;
 	m_sendContract.money = nMoney;
 	memcpy(m_sendContract.dhash,strRandomHash.c_str(),HASH_SIZE);
@@ -838,23 +837,21 @@ string CP2PBetHelp::PacketP2PSendContract(int64_t nMoney,int nHeight, unsigned c
 	return CSoyPayHelp::getInstance()->GetHexData((const char*)&m_sendContract,sizeof(SEND_DATA));
 }
 
-string CP2PBetHelp::PacketP2PAcceptContract(int64_t nMoney,unsigned char noperateType , const string& strSendHash,char nData )
+string CP2PBetHelp::PacketP2PAcceptContract(int64_t nMoney, const string& strSendHash,char nData )
 {
 	memset(&m_acceptContract,0,sizeof(ACCEPT_DATA));
 	m_acceptContract.type = TX_ACCEPTBET;
 	m_acceptContract.money = nMoney;
-	m_acceptContract.noperateType = noperateType ;
 	memcpy(m_acceptContract.txhash,strSendHash.c_str(),HASH_SIZE);
 	m_acceptContract.data = nData ;  // nData只能是0或者是1  0：是小  1:是大
 
 	return CSoyPayHelp::getInstance()->GetHexData((const char*)&m_acceptContract,sizeof(ACCEPT_DATA));
 }
 
-string CP2PBetHelp::PacketP2PExposeContract(const string& SendHash,const string& strRandomHash ,unsigned char noperateType)
+string CP2PBetHelp::PacketP2PExposeContract(const string& SendHash,const string& strRandomHash)
 {
 	memset(&m_openContract,0,sizeof(OPEN_DATA));
 	m_openContract.type = TX_OPENBET;
-	m_openContract.noperateType = noperateType ;
 	memcpy(m_openContract.txhash,SendHash.c_str(),HASH_SIZE);
 	memcpy(m_openContract.dhash,strRandomHash.c_str(),sizeof(m_openContract.dhash));
 
@@ -864,10 +861,18 @@ string CP2PBetHelp::GetAppAccountMoneyContract(const string& straccid){
 	APPACC accdata;
 	memset(&accdata,0,sizeof(APPACC));
 	accdata.systype = 0xff;
-	accdata.type = 0x01;
+	accdata.type = 0x01;  /// 0xff 表示提现 或者充值 0x01 提现 0x02 充值
 	accdata.typeaddr = 0x01;
-	vector<unsigned char> v = CSoyPayHelp::getInstance()->ParseHex(straccid);
-	memcpy(accdata.accountid,&v[0],sizeof(accdata.accountid));
+	//vector<unsigned char> v = CSoyPayHelp::getInstance()->ParseHex(straccid);
+	//memcpy(accdata.accountid,&v[0],sizeof(accdata.accountid));
+	return CSoyPayHelp::getInstance()->GetHexData((const char*)&accdata,sizeof(APPACC));
+}
+string CP2PBetHelp::GetReChangContract(){
+
+	APPACC accdata;
+	memset(&accdata,0,sizeof(APPACC));
+	accdata.systype = 0xff;
+	accdata.type = 0x02;  /// 0xff 表示提现 或者充值 0x01 提现 0x02 充值
 	return CSoyPayHelp::getInstance()->GetHexData((const char*)&accdata,sizeof(APPACC));
 }
 bool CheckRegIDValid(const CString& strRegID)

@@ -57,6 +57,7 @@ void CReceiveDlg::ShowListInfo()
 
 	if ( 0 == m_pListaddrInfo.size() ) return  ;
 
+	m_listCtrl.DeleteAllItems();
 	//加载到ComBox控件
 	int nSubIdx = 0 , i = 0 ;
 	CString strShowData = _T("");
@@ -106,7 +107,7 @@ BOOL CReceiveDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT n
 			CString		name ;
 			UINT		size ;
 		} listcol[7]  = { {"标签" , 100 }     ,
-		{"地址" , 140}  , 
+		{"地址" , 275}  , 
 		{"激活状态" , 150}  , 
 		{"余额" , 140}  ,
 		{"支持冷挖矿" ,100} 
