@@ -41,6 +41,7 @@ static const ULONGLONG COIN = 100000000;
 #define WM_UP_BETPOOL           WM_USER+19
 #define WM_UP_BlLOCKTIP         WM_USER+22
 #define WM_UP_ADDRESS            WM_USER+23
+#define WM_APP_TRANSATION       WM_USER+24
 
 #define WINDOW_TAG				_T("Dacrs-UIDemo")
 
@@ -208,7 +209,6 @@ struct ANONYM_CONTRACT:public BASE_ANONYM_CONTRACT
 //P2P赌博
 typedef struct {
 	unsigned char type;
-	unsigned char noperateType;
 	ULONGLONG     money;
 	unsigned short hight;
 	unsigned char dhash[32];
@@ -216,7 +216,6 @@ typedef struct {
 
 typedef struct {
 	unsigned char type;
-	unsigned char noperateType;
 	ULONGLONG money;
 	unsigned char data;
 	unsigned char txhash[32];		//发起对赌的哈希，也是对赌数据的关键字
@@ -224,16 +223,14 @@ typedef struct {
 
 typedef struct {
 	unsigned char type;
-	unsigned char noperateType;
 	unsigned char txhash[32];		//发起对赌的哈希，也是对赌数据的关键字
 	unsigned char dhash[33];        //32 个随机数 + 中奖数
 } OPEN_DATA;
 
 typedef struct {
-	unsigned char systype;
+	unsigned char systype;               //0xff
 	unsigned char type;            // 0x01 提现
 	unsigned char typeaddr;            // 0x01 regid 0x02 base58
-	unsigned char accountid[6];        //32 个随机数 + 中奖数
 } APPACC;
 
 typedef struct {
@@ -386,10 +383,11 @@ private:
 class CP2PBetHelp
 {
 public:
-	string PacketP2PSendContract(int64_t nMoney,int nHeight, unsigned char noperateType ,const string& strRandomHash);
-	string PacketP2PAcceptContract(int64_t nMoney,unsigned char noperateType , const string& strSendHash,char nData );
-	string PacketP2PExposeContract(const string& SendHash,const string& strRandomHash,unsigned char noperateType);
+	string PacketP2PSendContract(int64_t nMoney,int nHeight,const string& strRandomHash);
+	string PacketP2PAcceptContract(int64_t nMoney, const string& strSendHash,char nData );
+	string PacketP2PExposeContract(const string& SendHash,const string& strRandomHash);
 	string GetAppAccountMoneyContract(const string& straccid);
+	string GetReChangContract();
 private:
 	SEND_DATA		m_sendContract;
 	ACCEPT_DATA		m_acceptContract;
