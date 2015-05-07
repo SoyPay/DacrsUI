@@ -87,7 +87,7 @@ int CIndTitleBar::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 
 	// TODO:  在此添加您专用的创建代码
-	SetBkBmpNid( IDB_BITMAP_WNDTITLEBK ) ;
+	SetBkBmpNid( IDB_BITMAP_BAR ) ;
 	ModifyStyle(WS_BORDER,   0); 
 	ModifyStyleEx(WS_EX_WINDOWEDGE,   0); 
 
@@ -101,13 +101,13 @@ void CIndTitleBar::OnSize(UINT nType, int cx, int cy)
 	// TODO: 在此处添加消息处理程序代码
 	if( NULL != GetSafeHwnd() ) {
 		const int div = 100 ;
-		CRect rc , m_BtnRc ;
+		CRect rc  ;
 		GetClientRect( rc ) ;
 		CButton *p_Button = (CButton*)GetDlgItem(IDC_BUTTON_MAIN_UI);
 		if( NULL != p_Button ) {	
 			CRect m_BtnRc ;
 			p_Button->GetClientRect(&m_BtnRc);
-			p_Button->SetWindowPos(NULL ,15*rc.Width()/100, rc.Height()/4 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
+			p_Button->SetWindowPos(NULL ,15*rc.Width()/100, 0 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
 		}
 		p_Button = (CButton*)GetDlgItem(IDC_BUTTON_SEND);
 		if( NULL != p_Button ) {	
@@ -206,7 +206,7 @@ BOOL CIndTitleBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT 
 
 	BOOL bRes = CDialogBar::Create(pParentWnd, nIDTemplate, nStyle, nID);
 	if ( bRes ) {
-		m_rBtnMainUi.LoadBitmaps(IDB_BITMAP_MAINUI,IDB_BITMAP_MAINUI_2,IDB_BITMAP_MAINUI_1,IDB_BITMAP_MAINUI_1);
+		m_rBtnMainUi.LoadBitmaps(IDB_BITMAP_MAINUI_1,IDB_BITMAP_MAINUI_2,IDB_BITMAP_MAINUI_2,IDB_BITMAP_MAINUI_1);
 		m_rBtnSend.LoadBitmaps(IDB_BITMAP_SEND,IDB_BITMAP_SEND,IDB_BITMAP_SEND,IDB_BITMAP_SEND);
 		m_rBtnRece.LoadBitmaps(IDB_BITMAP_RECEIVE,IDB_BITMAP_RECEIVE,IDB_BITMAP_RECEIVE,IDB_BITMAP_RECEIVE);
 		m_rBtnTrad.LoadBitmaps(IDB_BITMAP_DEALS,IDB_BITMAP_DEALS,IDB_BITMAP_DEALS,IDB_BITMAP_DEALS);
