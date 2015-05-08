@@ -117,6 +117,8 @@ public:
 	CStringA				m_sendendHeadstr;
 	CStringA                m_uirpcport;
 	CString                 m_severip;
+	CStringA                m_rpcUser;
+	CStringA                m_rpcPassWord;
 	void UpdataUIData();
 public:
 	CMyQueue m_MsgQueue;
@@ -129,6 +131,7 @@ public:
 public:
 	bool isStartMainDlg;
 	CNoUiMsgBuffer m_noUiMsgBuffer;
+	bool m_bServerState;         //服务程序状态 false:关闭 true:运行
 };
 
 

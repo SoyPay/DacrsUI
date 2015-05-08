@@ -372,8 +372,8 @@ void CDacrsUIDlg::OnBnClickedButtonDeals()
 }
 void CDacrsUIDlg::OnBnClickedButtonClose()
 {
-	CloseThread();
 	StopSever();
+	CloseThread();
 
 	DestroyDlg();
 	PostMessage( WM_QUIT ) ; 
@@ -464,19 +464,28 @@ void  CDacrsUIDlg::StopSever()
 	GetLocalTime( &curTime ) ;
 	int RecivetxTimestart =0;
 	RecivetxTimestart= UiFun::SystemTimeToTimet(curTime);
+	bool nRecStopCmd = false;
 	while(TRUE){
-		CSoyPayHelp::getInstance()->SendRpc(strCommand,strSendData);
+		if(!nRecStopCmd) 
+		{
+			CSoyPayHelp::getInstance()->SendRpc(strCommand,strSendData);
+		}
 		if (strSendData.Find(strret) >=0)
 		{
-			return;
+			nRecStopCmd = true;
 		}
 		GetLocalTime( &curTime ) ;
 		int RecivetxTimeLast =0;
 		RecivetxTimeLast= UiFun::SystemTimeToTimet(curTime);
+		if(!theApp.m_bServerState)
+		{
+			return;
+		}
 		if ((RecivetxTimeLast - RecivetxTimestart) > 10)
 		{
 			return;
 		}
+		Sleep(5);
 	}
 
 }
