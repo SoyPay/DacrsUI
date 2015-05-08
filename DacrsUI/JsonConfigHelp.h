@@ -70,6 +70,14 @@ public:
 	INT64	GetAppAmountnFee;
 };
 
+class CNetParamCfg
+{
+public:
+	CString	server_ip;
+	CString	rpc_port;
+	CString server_ui_port;
+};
+
 class CJsonConfigHelp
 {
 	DEFINE_SINGLETON(CJsonConfigHelp)
@@ -82,6 +90,7 @@ public:
 	void GetSesureTradeCfgData(CSesureTradeCfg& sesureCfg);
 	void GetP2PBetCfgData(CP2PBetCfg& p2pCfg);
 	void GetScriptCfgData(CScriptCfg& scriptCfg);
+	void GetNetParmCfgData(CNetParamCfg& netparm);
 	//void AddItemString(const CString& strFilePath,CAutoComplete &m_comboxinput);
 private:
 	void ReadMainCfgData(const Json::Value& root);
@@ -90,6 +99,7 @@ private:
 	void ReadP2PCfgData(const Json::Value& root);
 	void ReadAnonymCfgData(const Json::Value& root);
 	void ReadScriptCfgData(const Json::Value& root);
+	void ReadNetParmCfgData(const Json::Value& root);
 	//void AddString(const Json::Value& root,CAutoComplete &m_comboxinput);
 
 
@@ -101,5 +111,6 @@ private:
 	CP2PBetCfg		m_P2PBetCfg;
 	CSesureTradeCfg	m_SesureTradeCfg;
 	CScriptCfg      m_Scriptid;
+	CNetParamCfg    m_NetParam;
 };
 

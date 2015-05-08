@@ -96,7 +96,15 @@ BOOL CDacrsUIApp::InitInstance()
 	//打开sqlite3数据库
 	m_SqliteDeal.OpenSqlite(str_InsPath) ;
 
+	CString temprpc = m_rpcport;
+	CString tempuiport = m_uirpcport;
 	ProductHttpHead(str_InsPath ,m_strServerCfgFileName,m_rpcport,m_sendPreHeadstr,m_sendendHeadstr,m_uirpcport);
+
+	if (strcmp(m_severip,_T("127.0.0.1")))
+	{
+		m_rpcport = temprpc;
+		m_uirpcport = tempuiport;
+	}
 
 	/// 关闭系统中dacrs-d.exe进程
 	//CloseProcess("dacrs-d.exe");
@@ -107,7 +115,8 @@ BOOL CDacrsUIApp::InitInstance()
 	//连接block
 	//连接到服务器
 	CSynchronousSocket te;
-	SOCKET nSocket = te.OnblockConnnect(_T("127.0.0.1"),atoi(m_uirpcport) ) ;
+	//SOCKET nSocket = te.OnblockConnnect(_T("127.0.0.1"),atoi(m_uirpcport) ) ;
+	SOCKET nSocket = te.OnblockConnnect(m_severip,atoi(m_uirpcport) ) ;
 	if ( INVALID_SOCKET != nSocket ){
 		theApp.m_blockSock = nSocket ;
 		theApp.StartblockThrd();  //开启Block线程
@@ -810,6 +819,7 @@ UINT __stdcall CDacrsUIApp::ProcessNoUiMsg(LPVOID pParam)
 			while(pUiDemeDlg->m_noUiMsgBuffer.HaveNoUiMsg()) {
 				CString strMsg;
 				pUiDemeDlg->m_noUiMsgBuffer.GetNoUiMsg(strMsg);
+			//	TRACE("recv msg:%s\n", strMsg.GetString());
 				Json::Reader reader;  
 				Json::Value jsonValue; 
 				if (!JsonCheck(strMsg))
@@ -822,6 +832,7 @@ UINT __stdcall CDacrsUIApp::ProcessNoUiMsg(LPVOID pParam)
 				ProcessMsgJson(jsonValue, pUiDemeDlg);
 			}
 			Sleep(100); 
+			
 		}
 	}
 	return 1;
@@ -842,7 +853,7 @@ UINT __stdcall CDacrsUIApp::blockProc(LPVOID pParam)
 			}
 			if(bReConnect) {
 				CSynchronousSocket te;
-				SOCKET nSocket = te.OnblockConnnect(_T("127.0.0.1"),atoi(pUiDemeDlg->m_uirpcport));
+				SOCKET nSocket = te.OnblockConnnect(pUiDemeDlg->m_severip,atoi(pUiDemeDlg->m_uirpcport));
 				if( INVALID_SOCKET != nSocket) {
 					pUiDemeDlg->m_blockSock = nSocket;
 					bReConnect = false;
@@ -854,6 +865,11 @@ UINT __stdcall CDacrsUIApp::blockProc(LPVOID pParam)
 					int nRecLen = recv( pUiDemeDlg->m_blockSock , cRecvbuffer , nMaxbufferLen , 0);
 
 					if ( nRecLen > 0 ) {
+						TRACE("recv len %d:",nRecLen);
+						for(int i=0; i< nRecLen; ++i) {
+							TRACE("%02X",cRecvbuffer[i]);
+						}
+						TRACE("\n");
 						if(!pUiDemeDlg->m_noUiMsgBuffer.AddBytesToBuffer(cRecvbuffer, nRecLen)) {
 							if (INVALID_SOCKET != pUiDemeDlg->m_blockSock)
 							{
@@ -1044,6 +1060,12 @@ void  CDacrsUIApp::ParseUIConfigFile(const CStringA& strExeDir){
 		m_darkScritptid= scriptCfg.strSrcriptDarkid;
 		CJsonConfigHelp::getInstance()->GetDarkCfgData(m_DarkCfg);
 		CJsonConfigHelp::getInstance()->GetP2PBetCfgData(m_P2PBetCfg);
+		CNetParamCfg netParm;
+		CJsonConfigHelp::getInstance()->GetNetParmCfgData(netParm);
+		m_severip = netParm.server_ip;
+		m_uirpcport = netParm.server_ui_port;
+		m_rpcport = netParm.rpc_port;
+
 
 	}
 }
