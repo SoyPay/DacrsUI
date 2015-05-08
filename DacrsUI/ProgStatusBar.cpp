@@ -187,22 +187,20 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 			int  setpos = (tipblocktime -m_gniuessBlockTime);
 			m_progress.SetPos(setpos);
 			m_bProgressType = TRUE;
+			m_nSigIndex =root["connections"].asInt();
+			Invalidate(); 
 		}
 		return 1;
 	}
 	
-
-	uistruct::BLOCKCHANGED_t pBlockchanged;  //= (uistruct::BLOCKCHANGED_t *)wParam ;
+	uistruct::BLOCKCHANGED_t pBlockchanged; 
 	string strTemp = postmsg.GetData();
 	pBlockchanged.JsonToStruct(strTemp.c_str());
 
-	//if ((nCurTime - pBlockchanged.time)<200)
-	//{
-	//	m_progress.SetPos( m_ProgressMax);
-	//}else{
-		int  setpos = (nCurTime-pBlockchanged.time) -m_gniuessBlockTime;
-		m_progress.SetPos(setpos);//设置进度条的值 
-	//}
+	m_nSigIndex = pBlockchanged.connections;
+	Invalidate(); 
+	int  setpos = pBlockchanged.time -m_gniuessBlockTime;
+	m_progress.SetPos(setpos);//设置进度条的值 
 
 	return 1;
 }
@@ -218,7 +216,7 @@ void CProgStatusBar::OnPaint()
 	CRect rc;  
 	GetClientRect(&rc);  
 
-	HBITMAP hOldbmp = (HBITMAP)memDC.SelectObject(m_Sigbmp[1]); 
+	HBITMAP hOldbmp = (HBITMAP)memDC.SelectObject(m_Sigbmp[m_nSigIndex]); 
 	dc.BitBlt(900-60, 0, rc.Width(), rc.Height(), &memDC, 0, 0, SRCCOPY);  
 	memDC.SelectObject(hOldbmp);  
 	memDC.DeleteDC();  
