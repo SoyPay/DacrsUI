@@ -109,6 +109,9 @@
     <ClCompile Include="StartProgress.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="SplashThread.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BmpBtn.h">
@@ -250,9 +253,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="NoUiMsgBuffer.h">
-    <Filter>头文件</Filter>
+      <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="StartProgress.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SplashThread.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -430,6 +436,45 @@
       <Filter>资源文件</Filter>
     </None>
     <None Include="res\progress4.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\button_send_1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\button_send_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\button_send_3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\activate_addr_1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\activate_addr_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\activate_addr_3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\newaddr-1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\newaddr-2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\newaddr-3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\copy_addr_1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\copy_addr_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\copy_addr_3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\wallet_uipro.bmp">
       <Filter>资源文件</Filter>
     </None>
   </ItemGroup>

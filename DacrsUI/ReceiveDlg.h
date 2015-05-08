@@ -1,6 +1,7 @@
 #pragma once
 #include "SignAccountsDlg.h"
 #include "NewAddressDlg.h"
+#include "RoundButton.h"
 // CReceiveDlg ¶Ô»°¿ò
 
 class CReceiveDlg : public CDialogBar
@@ -28,6 +29,9 @@ private:
 	CNewAddressDlg   *m_newaddrDlg;
 	CListCtrl m_listCtrl;
 	uistruct::LISTADDRLIST m_pListaddrInfo;
+	CRoundButton     m_rBtnAcitve;
+	CRoundButton     m_rBtnNewaddr;
+	CRoundButton     m_rBtnCopyaddr;
 public:
 	afx_msg void OnBnClickedButtonSignAccount();
 	afx_msg void OnBnClickedButtonNewaddress();
