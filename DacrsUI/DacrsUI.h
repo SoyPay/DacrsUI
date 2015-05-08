@@ -16,6 +16,7 @@
 #include "JsonConfigHelp.h"
 #include "MyQueue.h"
 #include "GIFControl.h"
+#include "NoUiMsgBuffer.h"
 
 using namespace std;
 // CDacrsUIApp:
@@ -50,14 +51,17 @@ public:
 	UINT            ublockThreadId;
 	HANDLE          m_msgThread;
 	UINT            umsgThreadId;
+	HANDLE          m_hProcessNoUiMsgThread;
+	UINT            m_uProNoUiMsgThreadId;
 	bool            m_blockAutoDelete;
 	bool            m_msgAutoDelete;
 	void            StartblockThrd();  
-	static UINT __stdcall blockProc(LPVOID pParam) ;
-	static UINT __stdcall ProcessMsg(LPVOID pParam) ;
+	static UINT __stdcall blockProc(LPVOID pParam);
+	static UINT __stdcall ProcessMsg(LPVOID pParam);
+	static UINT __stdcall ProcessNoUiMsg(LPVOID pParam);
 public:
 	CMyMutex		cs_MsgDisptch ;    //消息订阅临界
-	CMyMutex        cs_SqlData ;    //数据列表临界
+	CMyMutex        cs_SqlData ;       //数据列表临界
 public:
 	HANDLE	        GetMtHthrd() const { return hMtThrd	       ; }  
 	unsigned int	GetMtHthrdId() const { return nMtThrdID	   ; }  
@@ -112,6 +116,7 @@ public:
 	CStringA				m_sendPreHeadstr;
 	CStringA				m_sendendHeadstr;
 	CStringA                m_uirpcport;
+	CString                 m_severip;
 	void UpdataUIData();
 public:
 	CMyQueue m_MsgQueue;
@@ -123,6 +128,7 @@ public:
 	void UpdatarevAppRecord(string txdetail);
 public:
 	bool isStartMainDlg;
+	CNoUiMsgBuffer m_noUiMsgBuffer;
 };
 
 
