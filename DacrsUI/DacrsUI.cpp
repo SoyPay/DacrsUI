@@ -36,6 +36,7 @@ CDacrsUIApp::CDacrsUIApp()
 	m_blockSock  = INVALID_SOCKET ;
 	m_strServerCfgFileName = "dacrs.conf";
 	isStartMainDlg = false;
+	progessPos = 0;
 }
 
 
@@ -137,7 +138,9 @@ BOOL CDacrsUIApp::InitInstance()
 		}
 		return FALSE ;
 	}
-
+	
+	//CStartProgress  progdlg ;
+	//progdlg.DoModal();
 	while(1)
 	{
 		if (isStartMainDlg)
@@ -146,10 +149,6 @@ BOOL CDacrsUIApp::InitInstance()
 		}
 		Sleep(100);
 	}
-	////
-//	CStartProgress  progdlg ;
-//	progdlg.DoModal();
-
 
 	CDacrsUIDlg dlg;
 	m_pMainWnd = &dlg;
@@ -787,8 +786,21 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 			postmsg.SetStrType(msgValue["type"].asCString());
 			CString msg = msgValue["msg"].asCString();
 			TRACE("MEST:%s\r\n",msg);
+			if (!strcmp(msg,"Verifying blocks..."))
+			{
+				pApp->progessPos = 1;
+			}
+			if (!strcmp(msg,"Verifying Finished"))
+			{
+				pApp->progessPos = 2;
+			}
+			if (!strcmp(msg,"Loading addresses..."))
+			{
+				pApp->progessPos = 3;
+			}
 			if (!strcmp(msg,"initialize end"))
 			{
+				pApp->progessPos = 4;
 				theApp.isStartMainDlg = true;
 			}
 			postmsg.SetData(msg);
@@ -824,6 +836,7 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 			m_Blockchanged.time = msgValue["time"].asInt();
 			m_Blockchanged.high = msgValue["high"].asInt64() ;
 			m_Blockchanged.hash = msgValue["hash"].asString();
+			m_Blockchanged.connections = msgValue["connections"].asInt();
 
 			static int ReciveBlockTimeLast =0;
 			int tempTime= m_Blockchanged.time;

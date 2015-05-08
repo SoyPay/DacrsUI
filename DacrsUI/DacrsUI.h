@@ -129,6 +129,7 @@ public:
 public:
 	bool isStartMainDlg;
 	CNoUiMsgBuffer m_noUiMsgBuffer;
+	int progessPos;
 };
 
 

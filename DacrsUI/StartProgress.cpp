@@ -29,6 +29,7 @@ CStartProgress::~CStartProgress()
 void CStartProgress::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_PROGRESS_INIT, m_progress);
 }
 
 
@@ -61,6 +62,10 @@ BOOL CStartProgress::OnInitDialog()
 	m_ProgressBmp[2].LoadBitmap(IDB_BITMAP_PROG3);  
 	m_ProgressBmp[3].LoadBitmap(IDB_BITMAP_PROG4);  
 
+	m_progress.SendMessage(PBM_SETBKCOLOR, 0, RGB(66, 65, 63));//背景色
+	m_progress.SendMessage(PBM_SETBARCOLOR, 0, RGB(254, 153, 0));//前景色
+
+	m_progress.SetRange(0,4);
 	LoadGifing(TRUE);
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE
@@ -106,4 +111,7 @@ void CStartProgress::SwitchBmp(int nIndex)
 	ASSERT(nIndex<4) ;
 	m_nBmpIndex = nIndex ;
 	Invalidate(); 
+}
+void CStartProgress::SetProgessRange(int pos){
+	m_progress.SetPos(pos);
 }
