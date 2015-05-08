@@ -14,6 +14,7 @@
 #endif
 
 #include "GdiPlusInit.h"
+#include "StartProgress.h"
 // CDacrsUIApp
 
 BEGIN_MESSAGE_MAP(CDacrsUIApp, CWinApp)
@@ -136,6 +137,10 @@ BOOL CDacrsUIApp::InitInstance()
 		}
 	}
 	////
+//	CStartProgress  progdlg ;
+//	progdlg.DoModal();
+
+
 	CDacrsUIDlg dlg;
 	m_pMainWnd = &dlg;
 	INT_PTR nResponse = dlg.DoModal();
