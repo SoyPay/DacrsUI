@@ -33,6 +33,10 @@ void CIndTitleBar::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BUTTON_P2P	, m_rBtnP2p );
 	DDX_Control(pDX, IDC_BUTTON_MORTGAGE	, m_rBtnMortgage );
 	DDX_Control(pDX, IDC_BUTTON_IPO	, m_rBtnIpo );
+	DDX_Control(pDX, IDC_BUTTON_ADDAPP	, m_rBtnAddApp );
+
+	DDX_Control(pDX, IDC_BUTTON_CLOSE	, m_rBtnClose );
+	DDX_Control(pDX, IDC_BUTTON_MIN	, m_rBtnMin );
 }
 
 
@@ -66,17 +70,17 @@ BOOL CIndTitleBar::OnEraseBkgnd(CDC* pDC)
 	GetClientRect(&rect); 
 
 	if(m_pBmp   !=   NULL) { 
-		BITMAP   bm; 
-		CDC   dcMem; 
-		::GetObject(m_pBmp,sizeof(BITMAP),   (LPVOID)&bm); 
-		dcMem.CreateCompatibleDC(NULL); 
-		HBITMAP     pOldBitmap   =(HBITMAP   )   dcMem.SelectObject(m_pBmp); 
-		pDC-> StretchBlt(rect.left,rect.top-1,rect.Width(),rect.Height(),   &dcMem,   0,   0,bm.bmWidth-1,bm.bmHeight-1,   SRCCOPY); 
+	BITMAP   bm; 
+	CDC   dcMem; 
+	::GetObject(m_pBmp,sizeof(BITMAP),   (LPVOID)&bm); 
+	dcMem.CreateCompatibleDC(NULL); 
+	HBITMAP     pOldBitmap   =(HBITMAP   )   dcMem.SelectObject(m_pBmp); 
+	pDC-> StretchBlt(rect.left,rect.top-1,rect.Width(),rect.Height(),   &dcMem,   0,   0,bm.bmWidth-1,bm.bmHeight-1,   SRCCOPY); 
 
-		dcMem.SelectObject(pOldBitmap);
-		dcMem.DeleteDC();
+	dcMem.SelectObject(pOldBitmap);
+	dcMem.DeleteDC();
 	} else  
-		CWnd::OnEraseBkgnd(pDC); 
+	CWnd::OnEraseBkgnd(pDC); 
 
 	return 1;
 }
@@ -87,7 +91,7 @@ int CIndTitleBar::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 
 	// TODO:  在此添加您专用的创建代码
-	SetBkBmpNid( IDB_BITMAP_WNDTITLEBK ) ;
+	SetBkBmpNid( IDB_BITMAP_BAR ) ;
 	ModifyStyle(WS_BORDER,   0); 
 	ModifyStyleEx(WS_EX_WINDOWEDGE,   0); 
 
@@ -101,49 +105,56 @@ void CIndTitleBar::OnSize(UINT nType, int cx, int cy)
 	// TODO: 在此处添加消息处理程序代码
 	if( NULL != GetSafeHwnd() ) {
 		const int div = 100 ;
-		CRect rc , m_BtnRc ;
+		CRect rc  ;
 		GetClientRect( rc ) ;
 		CButton *p_Button = (CButton*)GetDlgItem(IDC_BUTTON_MAIN_UI);
 		if( NULL != p_Button ) {	
 			CRect m_BtnRc ;
 			p_Button->GetClientRect(&m_BtnRc);
-			p_Button->SetWindowPos(NULL ,15*rc.Width()/100, rc.Height()/4 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
+			p_Button->SetWindowPos(NULL ,175, 0 , 0 , 0 , SWP_NOSIZE);
 		}
 		p_Button = (CButton*)GetDlgItem(IDC_BUTTON_SEND);
 		if( NULL != p_Button ) {	
 			CRect m_BtnRc ;
 			p_Button->GetClientRect(&m_BtnRc);
-			p_Button->SetWindowPos(NULL ,15*rc.Width()/100 + m_BtnRc.Width() + 10, rc.Height()/4 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
+			p_Button->SetWindowPos(NULL ,175 + 80 , 0 , 0 , 0 , SWP_NOSIZE);
 		}
+		//
 		p_Button = (CButton*)GetDlgItem(IDC_BUTTON_RECE);
 		if( NULL != p_Button ) {	
 			CRect m_BtnRc ;
 			p_Button->GetClientRect(&m_BtnRc);
-			p_Button->SetWindowPos(NULL ,15*rc.Width()/100 + 2*m_BtnRc.Width() + 10, rc.Height()/4 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
+			p_Button->SetWindowPos(NULL ,175 + 2*80, 0 , 0 , 0 , SWP_NOSIZE);
 		}
 		p_Button = (CButton*)GetDlgItem(IDC_BUTTON_TRAD_INFO);
 		if( NULL != p_Button ) {	
 			CRect m_BtnRc ;
 			p_Button->GetClientRect(&m_BtnRc);
-			p_Button->SetWindowPos(NULL ,15*rc.Width()/100 + 3*m_BtnRc.Width() - 45, rc.Height()/4 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
+			p_Button->SetWindowPos(NULL ,175 + 3*80, 0 , 0 , 0 , SWP_NOSIZE);
 		}
 		p_Button = (CButton*)GetDlgItem(IDC_BUTTON_P2P);
 		if( NULL != p_Button ) {	
 			CRect m_BtnRc ;
 			p_Button->GetClientRect(&m_BtnRc);
-			p_Button->SetWindowPos(NULL ,15*rc.Width()/100 + 4*m_BtnRc.Width() - 120 , rc.Height()/4 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
+			p_Button->SetWindowPos(NULL ,175 + 4*80, 0 , 0 , 0 , SWP_NOSIZE);
 		}
 		p_Button = (CButton*)GetDlgItem(IDC_BUTTON_MORTGAGE);
 		if( NULL != p_Button ) {	
 			CRect m_BtnRc ;
 			p_Button->GetClientRect(&m_BtnRc);
-			p_Button->SetWindowPos(NULL ,15*rc.Width()/100 + 5*m_BtnRc.Width() - 120, rc.Height()/4 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
+			p_Button->SetWindowPos(NULL ,175 + 5*80, 0 , 0 , 0 , SWP_NOSIZE);
 		}
 		p_Button = (CButton*)GetDlgItem(IDC_BUTTON_IPO);
 		if( NULL != p_Button ) {	
 			CRect m_BtnRc ;
 			p_Button->GetClientRect(&m_BtnRc);
-			p_Button->SetWindowPos(NULL ,15*rc.Width()/100 + 6*m_BtnRc.Width() - 120, rc.Height()/4 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
+			p_Button->SetWindowPos(NULL ,175 + 6*80, 0 , 0 , 0 , SWP_NOSIZE);
+		}
+		p_Button = (CButton*)GetDlgItem(IDC_BUTTON_ADDAPP);
+		if( NULL != p_Button ) {	
+			CRect m_BtnRc ;
+			p_Button->GetClientRect(&m_BtnRc);
+			p_Button->SetWindowPos(NULL ,175 + 7*80, 0 , 0 , 0 , SWP_NOSIZE);
 		}
 		CRect rect ; 
 		this->GetWindowRect(rect);
@@ -152,13 +163,19 @@ void CIndTitleBar::OnSize(UINT nType, int cx, int cy)
 		if( NULL != p_Close ) {	
 			CRect m_BtnRc ;
 			p_Close->GetWindowRect(&m_BtnRc);
-			p_Close->SetWindowPos(NULL ,rect.Width() - m_BtnRc.Width() - 5 /*rect.right-1*m_BtnRc.Width()-10*/ , 9 , 0 , 0 , SWP_NOSIZE);
+			p_Close->SetWindowPos(NULL ,rect.Width() - m_BtnRc.Width() - 5 /*rect.right-1*m_BtnRc.Width()-10*/ , 0 , 0 , 0 , SWP_NOSIZE);
 		}
 		CButton * p_Min = (CButton*)GetDlgItem(IDC_BUTTON_MIN);
 		if( NULL != p_Min ) {	
 			CRect m_BtnRc ;
 			p_Min->GetWindowRect(&m_BtnRc);
-			p_Min->SetWindowPos(NULL ,rect.Width() - 2*m_BtnRc.Width() - 8 /*rect.right-1*m_BtnRc.Width()-10*/ , 9 , 0 , 0 , SWP_NOSIZE);
+			p_Min->SetWindowPos(NULL ,rect.Width() - 2*m_BtnRc.Width() - 8 /*rect.right-1*m_BtnRc.Width()-10*/ , 0 , 0 , 0 , SWP_NOSIZE);
+		}
+		CStatic * pImage = (CStatic*)GetDlgItem(IDC_STATIC_LOGO);
+		if( NULL != pImage ) {	
+			CRect m_BtnRc ;
+			pImage->GetWindowRect(&m_BtnRc);
+			pImage->SetWindowPos(NULL ,0 , 0 , 0 , 0 , SWP_NOSIZE);
 		}
 	}
 }
@@ -175,28 +192,31 @@ void CIndTitleBar::MobileTip(UINT nButtonID)
 			switch(nButtonID)
 			{
 			case IDC_BUTTON_MAIN_UI:
-				rect.left  = 15*900/100 + 8 ;
+				rect.left  = 175 ;
 				break;
 			case IDC_BUTTON_SEND:
-				rect.left = 24*900/100 + 8 ;
+				rect.left = 175 + 80 ;
 				break;
 			case IDC_BUTTON_RECE:
-				rect.left = 33*900/100 - 3 ;
+				rect.left = 175 + 2*80 ;
 				break;
 			case IDC_BUTTON_TRAD_INFO:
-				rect.left = 42*900/100 ;
+				rect.left = 175 + 3*80 ;
 				break;
 			case IDC_BUTTON_P2P:
-				rect.left = 51*900/100 + 30 ;
+				rect.left = 175 + 4*80 ;
 				break;
 			case IDC_BUTTON_MORTGAGE:
-				rect.left = 60*900/100 + 70 ;
+				rect.left = 175 + 5*80 ;
 				break;
 			case IDC_BUTTON_IPO:
-				rect.left = 69*900/100 + 100 ;
+				rect.left = 175 + 6*80 ;
+				break;
+			case IDC_BUTTON_ADDAPP:
+				rect.left = 175 + 7*80 ;
 				break;
 			}
-			pst->SetWindowPos( NULL , rect.left , rect.top, rc.Width(), rc.Height() ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL , rect.left , rect.top, 80, 5 ,SWP_SHOWWINDOW ) ; 
 		}
 	}
 }
@@ -206,13 +226,17 @@ BOOL CIndTitleBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT 
 
 	BOOL bRes = CDialogBar::Create(pParentWnd, nIDTemplate, nStyle, nID);
 	if ( bRes ) {
-		m_rBtnMainUi.LoadBitmaps(IDB_BITMAP_MAINUI,IDB_BITMAP_MAINUI_2,IDB_BITMAP_MAINUI_1,IDB_BITMAP_MAINUI_1);
-		m_rBtnSend.LoadBitmaps(IDB_BITMAP_SEND,IDB_BITMAP_SEND,IDB_BITMAP_SEND,IDB_BITMAP_SEND);
-		m_rBtnRece.LoadBitmaps(IDB_BITMAP_RECEIVE,IDB_BITMAP_RECEIVE,IDB_BITMAP_RECEIVE,IDB_BITMAP_RECEIVE);
-		m_rBtnTrad.LoadBitmaps(IDB_BITMAP_DEALS,IDB_BITMAP_DEALS,IDB_BITMAP_DEALS,IDB_BITMAP_DEALS);
-		m_rBtnP2p.LoadBitmaps(IDB_BITMAP_P2P,IDB_BITMAP_P2P,IDB_BITMAP_P2P,IDB_BITMAP_P2P);
-		m_rBtnMortgage.LoadBitmaps(IDB_BITMAP_MORTGAGE,IDB_BITMAP_MORTGAGE,IDB_BITMAP_MORTGAGE,IDB_BITMAP_MORTGAGE);
-		m_rBtnIpo.LoadBitmaps(IDB_BITMAP_IPO,IDB_BITMAP_IPO,IDB_BITMAP_IPO,IDB_BITMAP_IPO);
+		m_rBtnMainUi.LoadBitmaps(IDB_BITMAP_MAINUI_1,IDB_BITMAP_MAINUI_2,IDB_BITMAP_MAINUI_2,IDB_BITMAP_MAINUI_1);
+		m_rBtnSend.LoadBitmaps(IDB_BITMAP_SEND1,IDB_BITMAP_SEND2,IDB_BITMAP_SEND2,IDB_BITMAP_SEND1);
+		m_rBtnRece.LoadBitmaps(IDB_BITMAP_REVAPP1,IDB_BITMAP_REVAPP2,IDB_BITMAP_REVAPP2,IDB_BITMAP_REVAPP1);
+		m_rBtnTrad.LoadBitmaps(IDB_BITMAP_TRAD1,IDB_BITMAP_TRAD2,IDB_BITMAP_TRAD2,IDB_BITMAP_TRAD1);
+		m_rBtnP2p.LoadBitmaps(IDB_BITMAP_YOUR1,IDB_BITMAP_YOUR2,IDB_BITMAP_YOUR2,IDB_BITMAP_YOUR1);
+		m_rBtnMortgage.LoadBitmaps(IDB_BITMAP_DYYALOGO1,IDB_BITMAP_DIYALOGO2,IDB_BITMAP_DIYALOGO2,IDB_BITMAP_DYYALOGO1);
+		m_rBtnIpo.LoadBitmaps(IDB_BITMAP_IPOAPP1 , IDB_BITMAP_IPOAPP2 ,IDB_BITMAP_IPOAPP2,IDB_BITMAP_IPOAPP1);
+		m_rBtnAddApp.LoadBitmaps(IDB_BITMAP_ADDAPP1 , IDB_BITMAP_ADDAPP2 ,IDB_BITMAP_ADDAPP2,IDB_BITMAP_ADDAPP1);
+
+		m_rBtnClose.LoadBitmaps(IDB_BITMAP_CLOSE , IDB_BITMAP_CLOSE2 ,IDB_BITMAP_CLOSE3,IDB_BITMAP_CLOSE);
+		m_rBtnMin.LoadBitmaps(IDB_BITMAP_MIN , IDB_BITMAP_MIN2 ,IDB_BITMAP_MIN3,IDB_BITMAP_MIN);
 
 		UpdateData(0);
 
