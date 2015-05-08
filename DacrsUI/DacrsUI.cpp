@@ -141,13 +141,19 @@ BOOL CDacrsUIApp::InitInstance()
 	
 	//CStartProgress  progdlg ;
 	//progdlg.DoModal();
+	pSplashThread = (CSplashThread*) AfxBeginThread(RUNTIME_CLASS(CSplashThread),THREAD_PRIORITY_NORMAL,0, CREATE_SUSPENDED); 
+	ASSERT(pSplashThread->IsKindOf(RUNTIME_CLASS(CSplashThread)));
+	pSplashThread->ResumeThread(); 
+	Sleep(1); 
 	while(1)
 	{
+		pSplashThread->SetDlgPos(progessPos);
+		//TRACE("index:%d\r\n",progessPos);
 		if (isStartMainDlg)
 		{
 			break;
 		}
-		Sleep(100);
+		Sleep(1000);
 	}
 
 	CDacrsUIDlg dlg;
@@ -1098,6 +1104,11 @@ int CDacrsUIApp::SendPostThread(DWORD msgtype)
 		{
 			if(pDlg->dlgType == CMainDlg::IDD)
 				DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_MAIN_UI , 0,0);
+		}
+		break;
+	case WM_UPWALLET:
+		{
+			DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_MAIN_UI ,WM_UPWALLET,0);
 		}
 		break;
 	//case WM_P2P_BET_RECORD:

@@ -19,7 +19,7 @@ using namespace std;
 
 #define MSG_USER_ACCEPTRECOD_UI			    WM_USER+103	    //更新到AcceptBetRecod界面
 #define MSG_USER_DARK_UI			        WM_USER+104	    //更新到Dark界面
-#define MSG_USER_MAIN_UI			    WM_USER+105	    //更新到Mian界面
+#define MSG_USER_MAIN_UI			        WM_USER+105	    //更新到Mian界面
 
 #define MSG_USER_SENDRECOD_UI			    WM_USER+106	    //更新到SendRecord界面
 #define MSG_USER_SIGNACCEPT_UI			    WM_USER+107	    //更新到SignAccountsDlg界面 1131
