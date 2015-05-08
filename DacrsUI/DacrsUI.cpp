@@ -36,6 +36,9 @@ CDacrsUIApp::CDacrsUIApp()
 	m_blockSock  = INVALID_SOCKET ;
 	m_strServerCfgFileName = "dacrs.conf";
 	isStartMainDlg = false;
+	m_bServerState = false;
+	m_rpcUser = _T("");
+	m_rpcPassWord = _T("");
 }
 
 
@@ -107,9 +110,10 @@ BOOL CDacrsUIApp::InitInstance()
 	}
 
 	/// 关闭系统中dacrs-d.exe进程
-	CloseProcess("dacrs-d.exe");
-	//启动服务程序
-	StartSeverProcess(str_InsPath);
+	//CloseProcess("dacrs-d.exe");
+	////启动服务程序
+	//StartSeverProcess(str_InsPath);
+	m_bServerState = true;
 	Sleep(1000);
 
 	//连接block
@@ -729,8 +733,9 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 }
 #define  ININTAL_TYPE          1
 #define  BLOCK_CHANGE_TYPE     2
-#define  REV_TRANSATION_TYPE     3
-#define  APP_TRANSATION_TYPE     4
+#define  REV_TRANSATION_TYPE   3
+#define  APP_TRANSATION_TYPE   4
+#define  SERVER_NOTIYF_TYPE    5
 
 int GetMsgType(CString const strData,Json::Value &root)
 {
@@ -753,6 +758,10 @@ int GetMsgType(CString const strData,Json::Value &root)
 		if ( !strcmp(strType ,_T("rev_app_transaction") ) )
 		{
 			return APP_TRANSATION_TYPE;
+		}
+		if(!strcmp(strType, _T("notify"))) 
+		{
+			return SERVER_NOTIYF_TYPE;
 		}
 	}
 	return  -1;
@@ -863,6 +872,21 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 			///更新block状态
 			postuimsg.SetType(MSG_USER_BLOCKSTATE_UI,m_Blockchanged.high);
 			pApp->m_MsgQueue.push(postuimsg);
+			break;
+		}
+	case SERVER_NOTIYF_TYPE:
+		{
+			CPostMsg postmsg(MSG_USER_SHOW_INIT,0);
+			postmsg.SetStrType(msgValue["type"].asCString());
+			CString msg = msgValue["msg"].asCString();
+			TRACE("MEST:%s\r\n",msg);
+			if (!strcmp(msg,"server closed"))
+			{
+				theApp.m_bServerState = false;
+			}
+			postmsg.SetData(msg);
+			pApp->m_MsgQueue.push(postmsg);
+			TRACE("type: %s   mag: %s\r\n" , postmsg.GetStrType() ,msg);
 			break;
 		}
 	default:
@@ -1130,8 +1154,8 @@ void  CDacrsUIApp::ParseUIConfigFile(const CStringA& strExeDir){
 		m_severip = netParm.server_ip;
 		m_uirpcport = netParm.server_ui_port;
 		m_rpcport = netParm.rpc_port;
-
-
+		m_rpcUser = netParm.rpc_user;
+		m_rpcPassWord = netParm.rpc_password;
 	}
 }
 void CDacrsUIApp::StartSeverProcess(const CStringA& strdir){
