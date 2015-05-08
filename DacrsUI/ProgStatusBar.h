@@ -20,10 +20,11 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 public:
-	CStaticTrans     m_strShowInfo  ;   
 	CStatic		     *m_ProgressWnd ;	//Progress´°¿Ú
 public:
 	HBITMAP		     m_pBmp; 
+	CBitmap          m_Sigbmp[4];  //ÐÅºÅÍ¼Æ¬
+	int              m_nSigIndex;
 	void		     SetBkBmpNid( UINT nBitmapIn ) ;
 	void             LoadGifing( BOOL bState );
 public:
@@ -39,4 +40,5 @@ public:
 	CProgressCtrl m_progress;
 	BOOL        m_notsetprosess;
 	int         m_gniuessBlockTime;
+	afx_msg void OnPaint();
 };

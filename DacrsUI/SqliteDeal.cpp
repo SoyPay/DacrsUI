@@ -1306,15 +1306,16 @@ void  CSqliteDeal::UpdataAllTableData(BOOL flag){
 		isExistTx(_T("p2p_bet_record"),_T("tx_hash"),strValue);
 		nIndex +=nTempCol ;
 	}
-
 	sqlite3_free_table(pResult);
+
+	EmptyTabData(_T("EmptyTabData"));
 }
 void  CSqliteDeal::UpdataAllTable(){
 
 	CString filed =_T("");
 	if (!IsExistTabe(_T("MYWALLET")))
 	{
-		filed = _T("address TEXT,regid TEXT,money float,coldig INT,sign INT,Lebel TEXT");
+		filed = _T("address TEXT,regid TEXT,money double,coldig INT,sign INT,Lebel TEXT");
 		CreateTabe(_T("MYWALLET"),filed);
 	}
 	if (!IsExistTabe(_T("p2p_bet_record")))
@@ -1472,4 +1473,25 @@ int	CSqliteDeal::FindDB(const CString strTabName , const CString strP, const CSt
 	//LeaveCriticalSection (&cs_UpDataResult) ;
 	return TRUE ;
 
+}
+
+string CSqliteDeal::GetColSum(const CString strTabName , const CString strP, const CString strSource){
+	if ( NULL == m_pSqlitedb ) {
+		if ( !OpenSqlite(theApp.str_InsPath) ) return "" ;
+	}
+
+	CString strSql = _T("SELECT sum(money) FROM ") + strTabName + _T(" WHERE ") + strSource + _T(" =") + strP;
+
+	int nResult = sqlite3_get_table(m_pSqlitedb,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	if ( nResult != SQLITE_OK ){
+		sqlite3_close(m_pSqlitedb);  
+		sqlite3_free(m_pzErrMsg);  
+		m_pSqlitedb = NULL ;
+		return "" ;
+	}
+	int nIndex = m_nCol;
+	CString strValue  ;
+	strValue.Format(_T("%s"),m_pResult[nIndex]);
+	sqlite3_free_table(m_pResult);
+	return strValue.GetString() ;
 }

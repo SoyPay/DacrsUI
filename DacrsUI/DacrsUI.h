@@ -125,7 +125,7 @@ public:
 	void UpdataAddressData();
 	void InsertarevtransactionData(string hash);
 	void UpdatarevtransactionData(string hash);
-	void Jiexi(Json::Value &obj);
+	void UpdatarevAppRecord(string txdetail);
 public:
 	bool isStartMainDlg;
 	CNoUiMsgBuffer m_noUiMsgBuffer;
