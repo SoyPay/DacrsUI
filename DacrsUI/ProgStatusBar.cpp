@@ -144,6 +144,9 @@ BOOL CProgStatusBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UIN
 		}
 		theApp.SubscribeMsg( theApp.GetMtHthrdId() , GetSafeHwnd() , MSG_USER_UP_PROGRESS ) ;
 
+		m_progress.SendMessage(PBM_SETBKCOLOR, 0, RGB(66, 65, 63));//±³¾°É«
+		m_progress.SendMessage(PBM_SETBARCOLOR, 0, RGB(254, 153, 0));//Ç°¾°É«
+
 		CPostMsg postmsg(MSG_USER_UP_PROGRESS,0);
 		theApp.m_MsgQueue.pushFront(postmsg);
 	}
