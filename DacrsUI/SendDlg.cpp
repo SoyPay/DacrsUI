@@ -28,6 +28,7 @@ void CSendDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogBar::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_BUTTON_ADDBOOK , m_rBtnAddbook);
+	DDX_Control(pDX, IDC_SENDTRNSFER , m_rBtnSend);
 }
 
 
@@ -183,6 +184,7 @@ BOOL CSendDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 	BOOL bRes =   CDialogBar::Create(pParentWnd, nIDTemplate, nStyle, nID);
 	if (bRes) 
 	{
+		m_rBtnSend.LoadBitmaps(IDB_BITMAP_BOTTON_SEND1,IDB_BITMAP_BOTTON_SEND2,IDB_BITMAP_BOTTON_SEND3,IDB_BITMAP_BOTTON_SEND3);
 		m_rBtnAddbook.LoadBitmaps(IDB_BITMAP_ADDBOOK,IDB_BITMAP_ADDBOOK,IDB_BITMAP_ADDBOOK,IDB_BITMAP_ADDBOOK);
 		UpdateData(0);
 		AddListaddrDataBox();

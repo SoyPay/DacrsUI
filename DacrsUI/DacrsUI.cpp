@@ -39,6 +39,7 @@ CDacrsUIApp::CDacrsUIApp()
 	m_bServerState = false;
 	m_rpcUser = _T("");
 	m_rpcPassWord = _T("");
+	progessPos = 0;
 }
 
 
@@ -110,9 +111,9 @@ BOOL CDacrsUIApp::InitInstance()
 	}
 
 	/// 关闭系统中dacrs-d.exe进程
-	//CloseProcess("dacrs-d.exe");
-	////启动服务程序
-	//StartSeverProcess(str_InsPath);
+	CloseProcess("dacrs-d.exe");
+	//启动服务程序
+	StartSeverProcess(str_InsPath);
 	m_bServerState = true;
 	Sleep(1000);
 
@@ -141,18 +142,23 @@ BOOL CDacrsUIApp::InitInstance()
 		}
 		return FALSE ;
 	}
-
+	
+	//CStartProgress  progdlg ;
+	//progdlg.DoModal();
+	pSplashThread = (CSplashThread*) AfxBeginThread(RUNTIME_CLASS(CSplashThread),THREAD_PRIORITY_NORMAL,0, CREATE_SUSPENDED); 
+	ASSERT(pSplashThread->IsKindOf(RUNTIME_CLASS(CSplashThread)));
+	pSplashThread->ResumeThread(); 
+	Sleep(1); 
 	while(1)
 	{
+		pSplashThread->SetDlgPos(progessPos);
+		//TRACE("index:%d\r\n",progessPos);
 		if (isStartMainDlg)
 		{
 			break;
 		}
+		Sleep(1000);
 	}
-	////
-//	CStartProgress  progdlg ;
-//	progdlg.DoModal();
-
 
 	CDacrsUIDlg dlg;
 	m_pMainWnd = &dlg;
@@ -795,8 +801,21 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 			postmsg.SetStrType(msgValue["type"].asCString());
 			CString msg = msgValue["msg"].asCString();
 			TRACE("MEST:%s\r\n",msg);
+			if (!strcmp(msg,"Verifying blocks..."))
+			{
+				pApp->progessPos = 1;
+			}
+			if (!strcmp(msg,"Verifying Finished"))
+			{
+				pApp->progessPos = 2;
+			}
+			if (!strcmp(msg,"Loading addresses..."))
+			{
+				pApp->progessPos = 3;
+			}
 			if (!strcmp(msg,"initialize end"))
 			{
+				pApp->progessPos = 4;
 				theApp.isStartMainDlg = true;
 			}
 			postmsg.SetData(msg);
@@ -832,6 +851,7 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 			m_Blockchanged.time = msgValue["time"].asInt();
 			m_Blockchanged.high = msgValue["high"].asInt64() ;
 			m_Blockchanged.hash = msgValue["hash"].asString();
+			m_Blockchanged.connections = msgValue["connections"].asInt();
 
 			static int ReciveBlockTimeLast =0;
 			int tempTime= m_Blockchanged.time;
@@ -1108,6 +1128,11 @@ int CDacrsUIApp::SendPostThread(DWORD msgtype)
 		{
 			if(pDlg->dlgType == CMainDlg::IDD)
 				DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_MAIN_UI , 0,0);
+		}
+		break;
+	case WM_UPWALLET:
+		{
+			DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_MAIN_UI ,WM_UPWALLET,0);
 		}
 		break;
 	//case WM_P2P_BET_RECORD:

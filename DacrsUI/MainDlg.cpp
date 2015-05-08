@@ -52,8 +52,6 @@ void CMainDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_STATIC_AMOUNT , m_strOver);
 	DDX_Control(pDX, IDC_STATIC_NOTCOF , m_strOking);
 	DDX_Control(pDX, IDC_STATIC_COUNT , m_strTranNum);
-	DDX_Control(pDX, IDC_STATIC_DW1 , m_strUnit1);
-	DDX_Control(pDX, IDC_STATIC_DW2 , m_strUnit2);
 
 	DDX_Control(pDX, IDC_MFCLINK1, v_linkCtrl);
 }
@@ -212,7 +210,13 @@ BOOL CMainDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 LRESULT CMainDlg::OnShowListCtorl( WPARAM wParam, LPARAM lParam ) 
 {
 	//更新数据
-	SetCtrlText();
+	if (wParam == WM_UPWALLET)
+	{
+		GetDlgItem(IDC_STATIC_WALLET)->ShowWindow(SW_HIDE);
+	}else{
+		SetCtrlText();
+	}
+	
 	return 0 ;
 }
 

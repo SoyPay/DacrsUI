@@ -16,6 +16,7 @@ CStartProgress::CStartProgress(CWnd* pParent /*=NULL*/)
 {
 	m_nBmpIndex = 0 ;
 	m_ProgressWnd = NULL ; 
+	mprocessindex = false;
 }
 
 CStartProgress::~CStartProgress()
@@ -29,6 +30,7 @@ CStartProgress::~CStartProgress()
 void CStartProgress::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_PROGRESS_INIT, m_progress);
 }
 
 
@@ -53,7 +55,7 @@ BOOL CStartProgress::OnInitDialog()
 	if ( NULL == m_ProgressWnd ) {
 		m_ProgressWnd = new CGIFControl ;
 		m_ProgressWnd->Create(_T("") , WS_CHILD | SS_OWNERDRAW | WS_VISIBLE | SS_NOTIFY , CRect(0,0,48,34) , this, 121 ) ;
-		m_ProgressWnd->SetWindowPos(NULL , x/2 - 175 + 270 , y/2 - 50 + 50 , 0 ,0 , SWP_NOSIZE) ;
+		//m_ProgressWnd->SetWindowPos(NULL , x/2 - 175 + 250 , y/2+20 , 0 ,0 , SWP_NOSIZE) ;
 	}
 
 	m_ProgressBmp[0].LoadBitmap(IDB_BITMAP_PROG1);  
@@ -61,6 +63,11 @@ BOOL CStartProgress::OnInitDialog()
 	m_ProgressBmp[2].LoadBitmap(IDB_BITMAP_PROG3);  
 	m_ProgressBmp[3].LoadBitmap(IDB_BITMAP_PROG4);  
 
+	m_progress.SendMessage(PBM_SETBKCOLOR, 0, RGB(66, 65, 63));//背景色
+	m_progress.SendMessage(PBM_SETBARCOLOR, 0, RGB(254, 153, 0));//前景色
+
+	m_progress.SetRange(0,4);
+	mprocessindex = true;
 	LoadGifing(TRUE);
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE
@@ -87,11 +94,13 @@ void CStartProgress::LoadGifing( BOOL bState )
 	if( NULL != m_ProgressWnd ) {
 		if( m_ProgressWnd->GetSafeHwnd() ) {
 			if( TRUE == bState ) {
-				if( TRUE == ((CGIFControl*)m_ProgressWnd)->Load(_T("C:\\Users\\Administrator\\Desktop\\UI\\最后\\gif\\init.gif\0")) ) {
+				CString gifpath;
+				gifpath.Format(_T("%s\\gif\\init.gif\0"),theApp.str_InsPath);
+				if( TRUE == ((CGIFControl*)m_ProgressWnd)->Load(gifpath.GetBuffer())) {
 					CRect rc ;
 					GetClientRect( rc ) ;
 					Invalidate() ;
-					m_ProgressWnd->SetWindowPos( NULL , rc.Width()- 18 , (rc.Height()/2)-8 , 0 , 0 , \
+					m_ProgressWnd->SetWindowPos( NULL , (rc.Width()*3)/4+10 , (rc.Height()*9)/32 , 0 , 0 , \
 						SWP_SHOWWINDOW|SWP_NOSIZE ) ;
 					((CGIFControl*)m_ProgressWnd)->Play();
 				}
@@ -106,4 +115,11 @@ void CStartProgress::SwitchBmp(int nIndex)
 	ASSERT(nIndex<4) ;
 	m_nBmpIndex = nIndex ;
 	Invalidate(); 
+}
+void CStartProgress::SetProgessRange(int pos){
+	if (mprocessindex)
+	{
+		m_progress.SetPos(pos);
+	}
+	
 }
