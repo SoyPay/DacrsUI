@@ -175,6 +175,8 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 		Json::Value root;
 		strCommand.Format(_T("%s"),_T("getinfo"));
 		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
+		if(strShowData == _T(""))
+			return 0;
 		if (reader.parse(strShowData.GetString(), root)) 
 		{
 			int tipblocktime = root["tipblocktime"].asInt();
