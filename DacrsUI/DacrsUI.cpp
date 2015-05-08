@@ -96,7 +96,15 @@ BOOL CDacrsUIApp::InitInstance()
 	//打开sqlite3数据库
 	m_SqliteDeal.OpenSqlite(str_InsPath) ;
 
+	CString temprpc = m_rpcport;
+	CString tempuiport = m_uirpcport;
 	ProductHttpHead(str_InsPath ,m_strServerCfgFileName,m_rpcport,m_sendPreHeadstr,m_sendendHeadstr,m_uirpcport);
+
+	if (strcmp(m_severip,_T("127.0.0.1")))
+	{
+		m_rpcport = temprpc;
+		m_uirpcport = tempuiport;
+	}
 
 	/// 关闭系统中dacrs-d.exe进程
 	CloseProcess("dacrs-d.exe");
@@ -107,7 +115,8 @@ BOOL CDacrsUIApp::InitInstance()
 	//连接block
 	//连接到服务器
 	CSynchronousSocket te;
-	SOCKET nSocket = te.OnblockConnnect(_T("127.0.0.1"),atoi(m_uirpcport) ) ;
+	//SOCKET nSocket = te.OnblockConnnect(_T("127.0.0.1"),atoi(m_uirpcport) ) ;
+	SOCKET nSocket = te.OnblockConnnect(m_severip,atoi(m_uirpcport) ) ;
 	if ( INVALID_SOCKET != nSocket ){
 		theApp.m_blockSock = nSocket ;
 		theApp.StartblockThrd();  //开启Block线程
@@ -251,8 +260,9 @@ UINT __stdcall CDacrsUIApp::MtProc(LPVOID pParam)
 
 void CDacrsUIApp::StartblockThrd()
 {
-	m_hblockThread = (HANDLE)_beginthreadex(NULL,	0,	blockProc,this,0, &ublockThreadId);	
-	m_msgThread = (HANDLE)_beginthreadex(NULL,	0,	ProcessMsg,this,0, &umsgThreadId);
+	m_hblockThread = (HANDLE)_beginthreadex(NULL,	0,	blockProc, this, 0, &ublockThreadId);	
+	m_msgThread = (HANDLE)_beginthreadex(NULL,	0,	ProcessMsg, this, 0, &umsgThreadId);
+	m_hProcessNoUiMsgThread = (HANDLE)_beginthreadex(NULL,	0,	ProcessNoUiMsg, this, 0, &m_uProNoUiMsgThreadId);
 	return ;
 }
 
@@ -764,10 +774,140 @@ bool JsonCheck(CString strjson){
 }
 
 
+bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp) 
+{
+	string objstr = msgValue.toStyledString();
+	int type = GetMsgType(objstr.c_str(),msgValue);
+
+	switch(type)
+	{
+	case ININTAL_TYPE:
+		{
+			CPostMsg postmsg(MSG_USER_SHOW_INIT,0);
+			postmsg.SetStrType(msgValue["type"].asCString());
+			CString msg = msgValue["msg"].asCString();
+			TRACE("MEST:%s\r\n",msg);
+			if (!strcmp(msg,"initialize end"))
+			{
+				theApp.isStartMainDlg = true;
+			}
+			postmsg.SetData(msg);
+			pApp->m_MsgQueue.push(postmsg);
+			TRACE("type: %s   mag: %s\r\n" , postmsg.GetStrType() ,msg);
+			break;
+		}
+	case REV_TRANSATION_TYPE:
+		{
+			const Json::Value& txArray = msgValue["transation"]; 
+			//插入到数据库
+			CString strHash ;
+			strHash.Format(_T("%s") , txArray["hash"].asCString() );
+			theApp.cs_SqlData.Lock();
+			int nItem =  pApp->m_SqliteDeal.FindDB(_T("revtransaction") ,strHash ,_T("hash") ) ;
+			theApp.cs_SqlData.Unlock();
+			strHash.Format(_T("'%s'") , txArray["hash"].asCString() );
+			if ( 0 == nItem ) {
+				CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_REVTRANSACTION);
+				postmsg.SetData(strHash);
+				pApp->m_MsgQueue.push(postmsg);
+
+			}
+			break;
+		}
+	case BLOCK_CHANGE_TYPE:
+		{
+
+			TRACE("change:%s\r\n","blockchanged");
+			uistruct::BLOCKCHANGED_t      m_Blockchanged ;
+			memset(&m_Blockchanged , 0 , sizeof(uistruct::BLOCKCHANGED_t));
+			m_Blockchanged.type = msgValue["type"].asString();
+			m_Blockchanged.time = msgValue["time"].asInt();
+			m_Blockchanged.high = msgValue["high"].asInt64() ;
+			m_Blockchanged.hash = msgValue["hash"].asString();
+
+			static int ReciveBlockTimeLast =0;
+			int tempTime= m_Blockchanged.time;
+
+			string strJson = m_Blockchanged.ToJson();
+			ReciveBlockTimeLast = tempTime;
+			CPostMsg postmsg(MSG_USER_UP_PROGRESS,0);
+			postmsg.SetData(strJson.c_str());
+
+			pApp->m_MsgQueue.pushFront(postmsg);
+			/// 更新tipblock hash
+			CPostMsg postblockmsg(MSG_USER_GET_UPDATABASE,WM_UP_BlLOCKTIP);
+			CString msg = msgValue["hash"].asCString();
+			postblockmsg.SetData(msg);
+			pApp->m_MsgQueue.push(postblockmsg);  //.push(postblockmsg);
+
+			SYSTEMTIME curTime ;
+			memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
+			GetLocalTime( &curTime ) ;
+			static int RecivetxMsgTimeLast =0;
+			int tempTimemsg= UiFun::SystemTimeToTimet(curTime);
+			/// 更新钱包
+			CPostMsg postuimsg(MSG_USER_GET_UPDATABASE,WM_UP_ADDRESS);
+			if ((tempTimemsg - RecivetxMsgTimeLast)>10 || RecivetxMsgTimeLast == 0)
+			{	
+				pApp->m_MsgQueue.push(postuimsg);
+				postuimsg.SetType(MSG_USER_GET_UPDATABASE,WM_UP_BETPOOL);
+				pApp->m_MsgQueue.push(postuimsg);
+
+				postuimsg.SetType(MSG_USER_GET_UPDATABASE,WM_P2P_BET_RECORD);
+				pApp->m_MsgQueue.push(postuimsg);
+
+				postuimsg.SetType(MSG_USER_GET_UPDATABASE,WM_DARK_RECORD);
+				pApp->m_MsgQueue.push(postuimsg);
+				RecivetxMsgTimeLast = tempTimemsg;
+			}
+
+			///更新block状态
+			postuimsg.SetType(MSG_USER_BLOCKSTATE_UI,m_Blockchanged.high);
+			pApp->m_MsgQueue.push(postuimsg);
+			break;
+		}
+	default:
+		break;
+	}
+	return true;
+}
+
+UINT __stdcall CDacrsUIApp::ProcessNoUiMsg(LPVOID pParam)
+{
+	CDacrsUIApp * pUiDemeDlg  = (CDacrsUIApp*)pParam;
+	if ( NULL != pUiDemeDlg ) {
+		while (true)
+		{
+			if (theApp.m_blockAutoDelete)
+			{
+				return 1;
+			}
+			while(pUiDemeDlg->m_noUiMsgBuffer.HaveNoUiMsg()) {
+				CString strMsg;
+				pUiDemeDlg->m_noUiMsgBuffer.GetNoUiMsg(strMsg);
+			//	TRACE("recv msg:%s\n", strMsg.GetString());
+				Json::Reader reader;  
+				Json::Value jsonValue; 
+				if (!JsonCheck(strMsg))
+				{
+					TRACE("JsonCheck noui msg error,msg content:%s\n", strMsg.GetString());
+					continue;
+				}
+				if (!reader.parse(strMsg.GetString(), jsonValue)) 
+					continue;
+				ProcessMsgJson(jsonValue, pUiDemeDlg);
+			}
+			Sleep(100); 
+			
+		}
+	}
+	return 1;
+}
+
 UINT __stdcall CDacrsUIApp::blockProc(LPVOID pParam)
 {
-	int m_bufferSize;
-	char   m_Recvbuffer[10*1024];
+	bool bReConnect(false);
+	int nMaxbufferLen(10*1024-1);
 	CDacrsUIApp * pUiDemeDlg  = (CDacrsUIApp*)pParam ;
 	CString RevData ;
 	if ( NULL != pUiDemeDlg ) {
@@ -777,139 +917,54 @@ UINT __stdcall CDacrsUIApp::blockProc(LPVOID pParam)
 			{
 				return 1;
 			}
-			if ( INVALID_SOCKET != pUiDemeDlg->m_blockSock ) {
-				memset(m_Recvbuffer,0,sizeof(m_Recvbuffer));
-				m_bufferSize = sizeof(m_Recvbuffer) - 1;
-				int nRes = recv( pUiDemeDlg->m_blockSock , m_Recvbuffer , m_bufferSize , 0);
+			if(bReConnect) {
+				CSynchronousSocket te;
+				SOCKET nSocket = te.OnblockConnnect(pUiDemeDlg->m_severip,atoi(pUiDemeDlg->m_uirpcport));
+				if( INVALID_SOCKET != nSocket) {
+					pUiDemeDlg->m_blockSock = nSocket;
+					bReConnect = false;
+				}
+			}
+			else {
+				if ( INVALID_SOCKET != pUiDemeDlg->m_blockSock ) {
+					char  cRecvbuffer[10*1024];
+					int nRecLen = recv( pUiDemeDlg->m_blockSock , cRecvbuffer , nMaxbufferLen , 0);
 
-				if ( nRes > 0 ) {
-					CString strData ;
-					strData.Format(_T("%s") , m_Recvbuffer ) ;
-					RevData += strData;
-					Json::Reader reader;  
-					Json::Value root; 
-					if (!JsonCheck(RevData))
-					{
-						continue;
+					if ( nRecLen > 0 ) {
+						/*TRACE("recv len %d:",nRecLen);
+						for(int i=0; i< nRecLen; ++i) {
+							TRACE("%02X",cRecvbuffer[i]);
+						}
+						TRACE("\n");*/
+						if(!pUiDemeDlg->m_noUiMsgBuffer.AddBytesToBuffer(cRecvbuffer, nRecLen)) {
+							if (INVALID_SOCKET != pUiDemeDlg->m_blockSock)
+							{
+								closesocket(pUiDemeDlg->m_blockSock);
+								pUiDemeDlg->m_blockSock = INVALID_SOCKET;
+							}
+							bReConnect = true;
+						}
 					}
-
-					CString parseStr;
-					RevData.Replace("}","},");
-					RevData.TrimRight(',');
-					parseStr.Format("[%s]",RevData);
-					if (!reader.parse(parseStr.GetString(), root)) 
-						continue;
-
-					TRACE("Msg:%s\r\n",RevData);
-					 RevData = _T("");
-					int size = root.size();
-					string objstr;
-					for ( int index =0; index < size; ++index )
+					else if(nRecLen == 0) 
 					{
-						Json::Value  msgroot = root[index];
-						 objstr = msgroot.toStyledString();
-						 int type = GetMsgType(objstr.c_str(),msgroot);
-
-						 switch(type)
+						TRACE0("noui socket has been closed");
+						if (INVALID_SOCKET != pUiDemeDlg->m_blockSock)
+						{
+							closesocket(pUiDemeDlg->m_blockSock);
+							pUiDemeDlg->m_blockSock = INVALID_SOCKET;
+						}
+						bReConnect = true;
+					}
+					else if(nRecLen < 0) 
+					{
+						 TRACE1("recv failed: %d\n", WSAGetLastError());
+						 if (INVALID_SOCKET != pUiDemeDlg->m_blockSock)
 						 {
-						 case ININTAL_TYPE:
-							 {
-
-								 CPostMsg postmsg(MSG_USER_SHOW_INIT,0);
-								 postmsg.SetStrType(msgroot["type"].asCString());
-								 CString msg = msgroot["msg"].asCString();
-								 TRACE("MEST:%s\r\n",msg);
-								 if (!strcmp(msg,"initialize end"))
-								 {
-									 theApp.isStartMainDlg = true;
-								 }
-								 postmsg.SetData(msg);
-								 pUiDemeDlg->m_MsgQueue.push(postmsg);
-								 TRACE("type: %s   mag: %s\r\n" , postmsg.GetStrType() ,msg);
-								 break;
-							 }
-						 case REV_TRANSATION_TYPE:
-							 {
-								 const Json::Value& txArray = msgroot["transation"]; 
-								 ////插入到数据库
-								 //CString strHash ;
-								 //strHash.Format(_T("%s") , txArray["hash"].asCString() );
-								 //theApp.cs_SqlData.Lock();
-								 //int nItem =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.FindDB(_T("revtransaction") ,strHash ,_T("hash") ) ;
-								 //theApp.cs_SqlData.Unlock();
-								 CString strHash ;
-								 strHash.Format(_T("'%s'") , txArray["hash"].asCString() );
-							//	 if ( 0 == nItem ) {
-									 CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_REVTRANSACTION);
-									 postmsg.SetData(strHash);
-									 pUiDemeDlg->m_MsgQueue.push(postmsg);
-
-								// }
-								 break;
-							 }
-						 case APP_TRANSATION_TYPE:
-							 {
-								 CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_APP_TRANSATION);
-								 postmsg.SetData(msgroot.toStyledString().c_str());
-								 pUiDemeDlg->m_MsgQueue.push(postmsg);
-							 }
-						 case BLOCK_CHANGE_TYPE:
-							 {
-
-								 TRACE("change:%s\r\n","blockchanged");
-								 uistruct::BLOCKCHANGED_t      m_Blockchanged ;
-								 memset(&m_Blockchanged , 0 , sizeof(uistruct::BLOCKCHANGED_t));
-								 m_Blockchanged.type = msgroot["type"].asString();
-								 m_Blockchanged.time = msgroot["time"].asInt();
-								 m_Blockchanged.high = msgroot["high"].asInt64() ;
-								 m_Blockchanged.hash = msgroot["hash"].asString();
-
-								 static int ReciveBlockTimeLast =0;
-								 int tempTime= m_Blockchanged.time;
-
-								 string strJson = m_Blockchanged.ToJson();
-								 ReciveBlockTimeLast = tempTime;
-								 CPostMsg postmsg(MSG_USER_UP_PROGRESS,0);
-								 postmsg.SetData(strJson.c_str());
-
-								 pUiDemeDlg->m_MsgQueue.pushFront(postmsg);
-								 /// 更新tipblock hash
-								 CPostMsg postblockmsg(MSG_USER_GET_UPDATABASE,WM_UP_BlLOCKTIP);
-								 CString msg = msgroot["hash"].asCString();
-								 postblockmsg.SetData(msg);
-								 pUiDemeDlg->m_MsgQueue.push(postblockmsg);  //.push(postblockmsg);
-
-								 SYSTEMTIME curTime ;
-								 memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
-								 GetLocalTime( &curTime ) ;
-								 static int RecivetxMsgTimeLast =0;
-								 int tempTimemsg= UiFun::SystemTimeToTimet(curTime);
-								 /// 更新钱包
-								 CPostMsg postuimsg(MSG_USER_GET_UPDATABASE,WM_UP_ADDRESS);
-								 if ((tempTimemsg - RecivetxMsgTimeLast)>10 || RecivetxMsgTimeLast == 0)
-								 {	
-									 pUiDemeDlg->m_MsgQueue.push(postuimsg);
-									 postuimsg.SetType(MSG_USER_GET_UPDATABASE,WM_UP_BETPOOL);
-									 pUiDemeDlg->m_MsgQueue.push(postuimsg);
-
-									 postuimsg.SetType(MSG_USER_GET_UPDATABASE,WM_P2P_BET_RECORD);
-									 pUiDemeDlg->m_MsgQueue.push(postuimsg);
-
-									 postuimsg.SetType(MSG_USER_GET_UPDATABASE,WM_DARK_RECORD);
-									 pUiDemeDlg->m_MsgQueue.push(postuimsg);
-									 RecivetxMsgTimeLast = tempTimemsg;
-								 }
-
-								 ///更新block状态
-								 postuimsg.SetType(MSG_USER_BLOCKSTATE_UI,m_Blockchanged.high);
-								 pUiDemeDlg->m_MsgQueue.push(postuimsg);
-								 break;
-							 }
-						 default:
-							 break;
+							 closesocket(pUiDemeDlg->m_blockSock);
+							 pUiDemeDlg->m_blockSock = INVALID_SOCKET;
 						 }
+						 bReConnect = true;
 					}
-
 				}
 			}
 		}
@@ -1071,6 +1126,12 @@ void  CDacrsUIApp::ParseUIConfigFile(const CStringA& strExeDir){
 		m_darkScritptid= scriptCfg.strSrcriptDarkid;
 		CJsonConfigHelp::getInstance()->GetDarkCfgData(m_DarkCfg);
 		CJsonConfigHelp::getInstance()->GetP2PBetCfgData(m_P2PBetCfg);
+		CNetParamCfg netParm;
+		CJsonConfigHelp::getInstance()->GetNetParmCfgData(netParm);
+		m_severip = netParm.server_ip;
+		m_uirpcport = netParm.server_ui_port;
+		m_rpcport = netParm.rpc_port;
+
 
 	}
 }

@@ -5,7 +5,7 @@ class CRpcCmd
 {
 public:
 	CRpcCmd(void);
-	CRpcCmd(const string ip,int port,int timerout)
+	CRpcCmd(const CStringA	 ip,int port,int timerout)
 	{
 	mIp = ip;
 	mPort = port;
@@ -20,7 +20,9 @@ public:
 	{
 		mPort = port;
 	}
-
+	void SetSeverIp(const CStringA & ip){
+		mIp = ip;
+	}
 	 CStringA RpcJosnStr;
     void BuildSendString(const CString	 &cmd,CStringA &sendStr);
 	
@@ -28,7 +30,7 @@ public:
 private:
 	CStringA				m_sendPreHeadstr;
 	CStringA				m_sendendHeadstr;
-	string mIp;
+	CStringA                mIp;
 	int mPort;
 	int mTimerout;
 	void RPCCommandToJson(const CString& strRPCCommand,CStringA& strSendData);

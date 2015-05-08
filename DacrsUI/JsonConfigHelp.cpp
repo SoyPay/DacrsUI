@@ -23,6 +23,7 @@ void CJsonConfigHelp::ReadJsonConfig(const CString& strFilePath)
 		ReadScriptCfgData(root);
 		ReadDarkCoinCfgData(root);
 		ReadP2PCfgData(root);
+		ReadNetParmCfgData(root);
 	}
 	ifs.close();
 }
@@ -201,3 +202,14 @@ void CJsonConfigHelp::GetScriptCfgData(CScriptCfg& scriptCfg){
 //	}
 //	ifs.close();
 //}
+
+void CJsonConfigHelp::ReadNetParmCfgData(const Json::Value& root){
+	Json::Value netparam = root["netparam"];
+	ASSERT(!netparam.isNull());
+	m_NetParam.server_ip = netparam["server_ip"].asCString();
+	m_NetParam.rpc_port= netparam["rpc_port"].asCString();
+	m_NetParam.server_ui_port =netparam["server_ui_port"].asCString();
+}
+void CJsonConfigHelp::GetNetParmCfgData(CNetParamCfg& netparm){
+	netparm =m_NetParam;
+}

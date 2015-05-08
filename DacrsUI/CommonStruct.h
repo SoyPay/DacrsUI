@@ -293,10 +293,11 @@ private:
 
 public:
    //CRPCDlg * pdlg,
-	void InitialRpcCmd(const CStringA	 &sendPreHeadstr,const CStringA &sendendHeadstr,const CStringA &rpcport)
+	void InitialRpcCmd(const CStringA &severip,const CStringA	 &sendPreHeadstr,const CStringA &sendendHeadstr,const CStringA &rpcport)
 	{
 		mRpcCmd.SetHeadString(sendPreHeadstr,sendendHeadstr);
 		mRpcCmd.SetPort(atoi(rpcport));
+		mRpcCmd.SetSeverIp(severip);
 		//m_pRPCDlg = pdlg;
 	}
 
