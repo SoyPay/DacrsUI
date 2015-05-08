@@ -17,6 +17,7 @@ IMPLEMENT_DYNAMIC(CProgStatusBar, CDialogBar)
 	m_bProgressType = false;
 	m_ProgressWnd = NULL ;
 	m_gniuessBlockTime = 1430006505;
+	m_nSigIndex = 0 ;
 }
 
 CProgStatusBar::~CProgStatusBar()
@@ -34,7 +35,6 @@ CProgStatusBar::~CProgStatusBar()
 void CProgStatusBar::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogBar::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_STATIC_SHOW , m_strShowInfo);
 	DDX_Control(pDX, IDC_PROGRESS, m_progress);
 }
 
@@ -44,6 +44,7 @@ BEGIN_MESSAGE_MAP(CProgStatusBar, CDialogBar)
 	ON_WM_CREATE()
 	ON_WM_SIZE()
 	ON_MESSAGE(MSG_USER_UP_PROGRESS , &CProgStatusBar::OnShowProgressCtrl  )
+	ON_WM_PAINT()
 END_MESSAGE_MAP()
 
 
@@ -110,7 +111,7 @@ int CProgStatusBar::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 
 	// TODO:  在此添加您专用的创建代码
-	SetBkBmpNid( IDB_BITMAP_WNDTITLEBK ) ;
+	SetBkBmpNid( IDB_BITMAP_BAR3 ) ;
 	ModifyStyle(WS_BORDER,   0); 
 	ModifyStyleEx(WS_EX_WINDOWEDGE,   0); 
 
@@ -133,15 +134,18 @@ BOOL CProgStatusBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UIN
 	BOOL bRes = CDialogBar::Create(pParentWnd, nIDTemplate, nStyle, nID);
 	if ( bRes ) {
 		UpdateData(0);
-		m_strShowInfo.SetFont(90, _T("宋体"));				//设置显示字体和大小
-		m_strShowInfo.SetTextColor(RGB(192,192,192));			//字体颜色
-		m_strShowInfo.SetWindowText(_T("网络同步中...")) ;
 
 		if ( NULL == m_ProgressWnd ) {
 			m_ProgressWnd = new CGIFControl ;
 			m_ProgressWnd->Create(_T("") , WS_CHILD | SS_OWNERDRAW | WS_VISIBLE | SS_NOTIFY , \
 				CRect(20,20,36,36) , this, 111 ) ;
 		}
+		
+		m_Sigbmp[0].LoadBitmap(IDB_BITMAP_SIG0);  
+		m_Sigbmp[1].LoadBitmap(IDB_BITMAP_SIG1);  
+		m_Sigbmp[2].LoadBitmap(IDB_BITMAP_SIG2);  
+		m_Sigbmp[3].LoadBitmap(IDB_BITMAP_SIG3);  
+
 		theApp.SubscribeMsg( theApp.GetMtHthrdId() , GetSafeHwnd() , MSG_USER_UP_PROGRESS ) ;
 
 		m_progress.SendMessage(PBM_SETBKCOLOR, 0, RGB(66, 65, 63));//背景色
@@ -199,4 +203,21 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 	//}
 
 	return 1;
+}
+
+//Invalidate(); 
+void CProgStatusBar::OnPaint()
+{
+	CPaintDC dc(this); // device context for painting
+	// TODO: 在此处添加消息处理程序代码
+	// 不为绘图消息调用 CDialogBar::OnPaint()
+	CDC memDC;  
+	memDC.CreateCompatibleDC(&dc);  
+	CRect rc;  
+	GetClientRect(&rc);  
+
+	HBITMAP hOldbmp = (HBITMAP)memDC.SelectObject(m_Sigbmp[1]); 
+	dc.BitBlt(900-60, 0, rc.Width(), rc.Height(), &memDC, 0, 0, SRCCOPY);  
+	memDC.SelectObject(hOldbmp);  
+	memDC.DeleteDC();  
 }
