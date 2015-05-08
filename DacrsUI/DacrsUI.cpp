@@ -135,6 +135,7 @@ BOOL CDacrsUIApp::InitInstance()
 		{
 			break;
 		}
+		Sleep(100);
 	}
 	////
 //	CStartProgress  progdlg ;
