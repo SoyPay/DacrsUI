@@ -148,6 +148,9 @@ BOOL CProgStatusBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UIN
 
 		theApp.SubscribeMsg( theApp.GetMtHthrdId() , GetSafeHwnd() , MSG_USER_UP_PROGRESS ) ;
 
+		m_progress.SendMessage(PBM_SETBKCOLOR, 0, RGB(66, 65, 63));//背景色
+		m_progress.SendMessage(PBM_SETBARCOLOR, 0, RGB(254, 153, 0));//前景色
+
 		CPostMsg postmsg(MSG_USER_UP_PROGRESS,0);
 		theApp.m_MsgQueue.pushFront(postmsg);
 	}
@@ -184,23 +187,33 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 			int  setpos = (tipblocktime -m_gniuessBlockTime);
 			m_progress.SetPos(setpos);
 			m_bProgressType = TRUE;
+			m_nSigIndex =root["connections"].asInt();
+
+			if ((nCurTime-tipblocktime)< 2000)
+			{
+				//// 发送钱包同步完毕
+				CPostMsg postblockmsg(MSG_USER_MAIN_UI,WM_UPWALLET);
+				theApp.m_MsgQueue.push(postblockmsg); 
+			}
+			Invalidate(); 
 		}
 		return 1;
 	}
 	
-
-	uistruct::BLOCKCHANGED_t pBlockchanged;  //= (uistruct::BLOCKCHANGED_t *)wParam ;
+	uistruct::BLOCKCHANGED_t pBlockchanged; 
 	string strTemp = postmsg.GetData();
 	pBlockchanged.JsonToStruct(strTemp.c_str());
 
-	//if ((nCurTime - pBlockchanged.time)<200)
-	//{
-	//	m_progress.SetPos( m_ProgressMax);
-	//}else{
-		int  setpos = (nCurTime-pBlockchanged.time) -m_gniuessBlockTime;
-		m_progress.SetPos(setpos);//设置进度条的值 
-	//}
-
+	m_nSigIndex = pBlockchanged.connections;
+	Invalidate(); 
+	int  setpos = pBlockchanged.time -m_gniuessBlockTime;
+	m_progress.SetPos(setpos);//设置进度条的值 
+	if ((nCurTime-pBlockchanged.time ) < 200)
+	{
+		//// 发送钱包同步完毕
+		CPostMsg postblockmsg(MSG_USER_MAIN_UI,WM_UPWALLET);
+		theApp.m_MsgQueue.push(postblockmsg); 
+	}
 	return 1;
 }
 
@@ -215,7 +228,7 @@ void CProgStatusBar::OnPaint()
 	CRect rc;  
 	GetClientRect(&rc);  
 
-	HBITMAP hOldbmp = (HBITMAP)memDC.SelectObject(m_Sigbmp[1]); 
+	HBITMAP hOldbmp = (HBITMAP)memDC.SelectObject(m_Sigbmp[m_nSigIndex]); 
 	dc.BitBlt(900-60, 0, rc.Width(), rc.Height(), &memDC, 0, 0, SRCCOPY);  
 	memDC.SelectObject(hOldbmp);  
 	memDC.DeleteDC();  

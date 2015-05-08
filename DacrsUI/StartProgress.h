@@ -28,5 +28,8 @@ public:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnPaint();
 public:
-	void    SwitchBmp(int nIndex);         
+	void    SwitchBmp(int nIndex);   
+	void    SetProgessRange(int pos);
+	CProgressCtrl m_progress;
+	bool mprocessindex;
 };

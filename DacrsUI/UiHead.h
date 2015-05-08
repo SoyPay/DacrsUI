@@ -19,7 +19,7 @@ using namespace std;
 
 #define MSG_USER_ACCEPTRECOD_UI			    WM_USER+103	    //更新到AcceptBetRecod界面
 #define MSG_USER_DARK_UI			        WM_USER+104	    //更新到Dark界面
-#define MSG_USER_MAIN_UI			    WM_USER+105	    //更新到Mian界面
+#define MSG_USER_MAIN_UI			        WM_USER+105	    //更新到Mian界面
 
 #define MSG_USER_SENDRECOD_UI			    WM_USER+106	    //更新到SendRecord界面
 #define MSG_USER_SIGNACCEPT_UI			    WM_USER+107	    //更新到SignAccountsDlg界面 1131
@@ -268,12 +268,14 @@ namespace uistruct {
 		int    time ;
 		INT64  high  ;
 		string   hash;
+		int connections;
 		string ToJson(){
 			Json::Value root;
 			root["type"] = type;
 			root["time"] = time;
 			root["high"] = high;
 			root["hash"] = hash;
+			root["connections"] = connections;
 			return root.toStyledString();
 		}
 	bool JsonToStruct(string json){
@@ -286,6 +288,7 @@ namespace uistruct {
 		this->time = root["time"].asInt();
 		this->high = root["high"].asInt64();
 		this->hash = root["hash"].asString();
+		this->connections = root["connections"].asInt();
 		return true;
 	}
 	}BLOCKCHANGED_t;
