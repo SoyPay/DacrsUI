@@ -1,4 +1,3 @@
-MSG_NOTIFY
 
 // DacrsUI.cpp : 定义应用程序的类行为。
 //
@@ -15,6 +14,7 @@ MSG_NOTIFY
 #endif
 
 #include "GdiPlusInit.h"
+#include "StartProgress.h"
 // CDacrsUIApp
 
 BEGIN_MESSAGE_MAP(CDacrsUIApp, CWinApp)
@@ -107,10 +107,10 @@ BOOL CDacrsUIApp::InitInstance()
 	}
 
 	/// 关闭系统中dacrs-d.exe进程
-	//CloseProcess("dacrs-d.exe");
-	////启动服务程序
-	//StartSeverProcess(str_InsPath);
-	//Sleep(1000);
+	CloseProcess("dacrs-d.exe");
+	//启动服务程序
+	StartSeverProcess(str_InsPath);
+	Sleep(1000);
 
 	//连接block
 	//连接到服务器
@@ -146,6 +146,10 @@ BOOL CDacrsUIApp::InitInstance()
 		}
 	}
 	////
+//	CStartProgress  progdlg ;
+//	progdlg.DoModal();
+
+
 	CDacrsUIDlg dlg;
 	m_pMainWnd = &dlg;
 	INT_PTR nResponse = dlg.DoModal();
@@ -438,6 +442,57 @@ void CDacrsUIApp::UpdatarevtransactionData(string hash){
 		}
 	}
 }
+
+void CDacrsUIApp::UpdatarevAppRecord(string txdetail){
+	uistruct::REVTRANSACTION_t transcion;
+	if (transcion.JsonToStruct(txdetail))
+	{
+		CString strCommand,strShowData;
+		strCommand.Format(_T("%s %s"),_T("getaccountinfo") ,theApp.m_betScritptid );
+		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
+
+		if (strShowData  =_T("")){		
+			return;
+		}
+		Json::Reader reader;  
+		Json::Value root; 
+		if (!reader.parse(strShowData.GetString(), root)) {		
+			return;
+		}
+		CString DesAddr = root["Address"].asCString();
+		if (!strcmp(transcion.desaddr.c_str(),DesAddr))
+		{
+			string nValue = transcion.Contract;
+			OPEN_DATA Openbet;
+			memset(&Openbet , 0 , sizeof(OPEN_DATA));
+			std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue);
+			if(vTemp.size()>0)
+			memcpy(&Openbet, &vTemp[0], sizeof(OPEN_DATA));
+			if (Openbet.type != TX_OPENBET)
+			{
+				return;
+			}
+			vector<unsigned char>vHash;
+			vHash.assign(Openbet.txhash,Openbet.txhash+sizeof(Openbet.txhash));
+			reverse(vHash.begin(),vHash.end());
+			string hexHash = CSoyPayHelp::getInstance()->HexStr(vHash);
+			theApp.cs_SqlData.Lock();
+			int nItem =  theApp.m_SqliteDeal.FindDB(_T("p2p_bet_record") , hexHash.c_str() ,_T("tx_hash")) ;
+			theApp.cs_SqlData.Unlock();
+			if (nItem != 0)
+			{
+				CString strSourceData,strWhere;
+				strSourceData.Format(_T("recvtime = %d ,guessnum ='%s',") ,transcion.confirmedtime,(int)Openbet.dhash[32] ) ;
+				strWhere.Format(_T("tx_hash = '%s'") , hexHash.c_str() ) ;
+				theApp.cs_SqlData.Lock();
+				if ( !m_SqliteDeal.Updatabase(_T("p2p_bet_record") , strSourceData , strWhere ) ){
+					TRACE(_T("p2p_bet_record数据更新失败!") );
+				}
+				theApp.cs_SqlData.Unlock();
+			}
+		}
+	}
+}
 void CDacrsUIApp::InsertarevtransactionData(string hash){
 
 	CString strCommand,strShowData;
@@ -527,6 +582,13 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 						}
 					}
 					break;
+				case WM_APP_TRANSATION:
+					{
+						CString txDetail = Postmsg.GetData();
+						if ( _T("") != txDetail ) {
+							((CDacrsUIApp*)pParam)->UpdatarevAppRecord(txDetail.GetString());
+						}
+					}
 				case WM_P2P_BET_RECORD:
 					{
 						//更新数据库赌约数据库列表
@@ -662,14 +724,13 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 		{
 			((CDacrsUIApp*)pParam)->DispatchMsg( ((CDacrsUIApp*)pParam)->GetMtHthrdId() , Postmsg.GetUItype(), Postmsg.GetDatatype() , 0) ;
 		}
-
-		Sleep(100); 
 	}
 	return 1 ;
 }
 #define  ININTAL_TYPE          1
 #define  BLOCK_CHANGE_TYPE     2
 #define  REV_TRANSATION_TYPE     3
+#define  APP_TRANSATION_TYPE     4
 
 int GetMsgType(CString const strData,Json::Value &root)
 {
@@ -688,6 +749,10 @@ int GetMsgType(CString const strData,Json::Value &root)
 		if ( !strcmp(strType ,_T("blockchanged") ) )
 		{
 			return BLOCK_CHANGE_TYPE;
+		}
+		if ( !strcmp(strType ,_T("rev_app_transaction") ) )
+		{
+			return APP_TRANSATION_TYPE;
 		}
 	}
 	return  -1;
