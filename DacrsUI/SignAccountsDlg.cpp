@@ -41,15 +41,30 @@ void CSignAccountsDlg::OnBnClickedButtonSend()
 	CString address;
 	GetDlgItem(IDC_EDIT_ADDRESS)->GetWindowText(address);
 	if ( _T("") != address ) {
-		CString strCommand , strFee ;
+		CString strCommand , strShowData,strFee ;
+
+		strCommand.Format(_T("%s %s %lld"),_T("getaccountinfo") ,address);
+		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
+		if (strShowData == _T(""))
+		{
+			::MessageBox( this->GetSafeHwnd() ,_T("服务器没有反应") , _T("提示") , MB_ICONINFORMATION ) ;
+		}
+		Json::Reader reader;  
+		Json::Value root; 
+		if (!reader.parse(strShowData.GetString(), root)) 
+			return  ;
+
+
 		GetDlgItem(IDC_EDIT_FEE)->GetWindowText(strFee);
 		strCommand.Format(_T("%s %s %lld"),_T("registaccounttx") ,address  , (INT64)REAL_MONEY(atof(strFee)) );
-		CStringA strShowData ;
 
 		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 
-		Json::Reader reader;  
-		Json::Value root; 
+		if (strShowData == _T(""))
+		{
+			::MessageBox( this->GetSafeHwnd() ,_T("服务器没有反应") , _T("提示") , MB_ICONINFORMATION ) ;
+		}
+
 		if (!reader.parse(strShowData.GetString(), root)) 
 			return  ;
 
@@ -70,17 +85,13 @@ void CSignAccountsDlg::OnBnClickedButtonSend()
 				postmsg.SetData(strHash);
 				theApp.m_MsgQueue.push(postmsg);
 
-				//EnterCriticalSection( &theApp.cs_BlockListch ) ;
-				//theApp.m_RevtransactionHash.Format(_T("%s") , strHash);
-				//::PostThreadMessage( theApp.GetMtHthrdId() , MSG_USER_GET_UPDATABASE , WM_REVTRANSACTION , (LPARAM)theApp.m_RevtransactionHash.GetBuffer() ) ;
-				//LeaveCriticalSection (&theApp.cs_BlockListch ) ;
 			}
 		}
 
 		if ( pos >=0 ) {
-			strData.Format( _T("恭喜成功注册了账户\n%s") , root["hash"].asCString() ) ;
+			strData.Format( _T("恭喜成功激活账户\n%s") , root["hash"].asCString() ) ;
 		}else{
-			strData.Format( _T("注册账户失败!") ) ;
+			strData.Format( _T("激活账户失败!") ) ;
 		}
 		::MessageBox( this->GetSafeHwnd() ,strData , _T("提示") , MB_ICONINFORMATION ) ;
 	}

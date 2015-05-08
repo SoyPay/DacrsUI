@@ -268,12 +268,14 @@ namespace uistruct {
 		int    time ;
 		INT64  high  ;
 		string   hash;
+		int connections;
 		string ToJson(){
 			Json::Value root;
 			root["type"] = type;
 			root["time"] = time;
 			root["high"] = high;
 			root["hash"] = hash;
+			root["connections"] = connections;
 			return root.toStyledString();
 		}
 	bool JsonToStruct(string json){
@@ -286,6 +288,7 @@ namespace uistruct {
 		this->time = root["time"].asInt();
 		this->high = root["high"].asInt64();
 		this->hash = root["hash"].asString();
+		this->connections = root["connections"].asInt();
 		return true;
 	}
 	}BLOCKCHANGED_t;
