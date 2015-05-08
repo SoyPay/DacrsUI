@@ -31,4 +31,5 @@ public:
 	void    SwitchBmp(int nIndex);   
 	void    SetProgessRange(int pos);
 	CProgressCtrl m_progress;
+	bool mprocessindex;
 };

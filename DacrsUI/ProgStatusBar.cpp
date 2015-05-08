@@ -188,6 +188,13 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 			m_progress.SetPos(setpos);
 			m_bProgressType = TRUE;
 			m_nSigIndex =root["connections"].asInt();
+
+			if ((nCurTime-tipblocktime)< 2000)
+			{
+				//// 发送钱包同步完毕
+				CPostMsg postblockmsg(MSG_USER_MAIN_UI,WM_UPWALLET);
+				theApp.m_MsgQueue.push(postblockmsg); 
+			}
 			Invalidate(); 
 		}
 		return 1;
@@ -201,7 +208,12 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 	Invalidate(); 
 	int  setpos = pBlockchanged.time -m_gniuessBlockTime;
 	m_progress.SetPos(setpos);//设置进度条的值 
-
+	if ((nCurTime-pBlockchanged.time ) < 200)
+	{
+		//// 发送钱包同步完毕
+		CPostMsg postblockmsg(MSG_USER_MAIN_UI,WM_UPWALLET);
+		theApp.m_MsgQueue.push(postblockmsg); 
+	}
 	return 1;
 }
 

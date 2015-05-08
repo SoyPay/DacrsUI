@@ -17,7 +17,8 @@
 #include "MyQueue.h"
 #include "GIFControl.h"
 #include "NoUiMsgBuffer.h"
-
+#include "SplashThread.h"
+#include "StartProgress.h"
 using namespace std;
 // CDacrsUIApp:
 // 有关此类的实现，请参阅 DacrsUI.cpp
@@ -130,6 +131,8 @@ public:
 	bool isStartMainDlg;
 	CNoUiMsgBuffer m_noUiMsgBuffer;
 	int progessPos;
+
+	CSplashThread* pSplashThread;
 };
 
 

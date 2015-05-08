@@ -39,8 +39,6 @@ public:
 	CStaticTrans     m_strOver      ;
 	CStaticTrans     m_strOking     ;
 	CStaticTrans     m_strTranNum   ;
-	CStaticTrans     m_strUnit1     ;
-	CStaticTrans     m_strUnit2     ;
 
 	CRoundButton     m_rBtnAllTxdetail;
 public:
