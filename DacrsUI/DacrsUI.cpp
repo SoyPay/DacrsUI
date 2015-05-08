@@ -930,11 +930,11 @@ UINT __stdcall CDacrsUIApp::blockProc(LPVOID pParam)
 					int nRecLen = recv( pUiDemeDlg->m_blockSock , cRecvbuffer , nMaxbufferLen , 0);
 
 					if ( nRecLen > 0 ) {
-						TRACE("recv len %d:",nRecLen);
+						/*TRACE("recv len %d:",nRecLen);
 						for(int i=0; i< nRecLen; ++i) {
 							TRACE("%02X",cRecvbuffer[i]);
 						}
-						TRACE("\n");
+						TRACE("\n");*/
 						if(!pUiDemeDlg->m_noUiMsgBuffer.AddBytesToBuffer(cRecvbuffer, nRecLen)) {
 							if (INVALID_SOCKET != pUiDemeDlg->m_blockSock)
 							{
