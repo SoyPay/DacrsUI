@@ -26,7 +26,7 @@ SOCKET CSynchronousSocket::OnConnnect(const char *pIpAddr, WORD nPort)
 	memset(&servAddr, 0, sizeof(struct sockaddr_in));
 	servAddr.sin_family = AF_INET;
 	servAddr.sin_port = htons(nPort);
-	servAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+	servAddr.sin_addr.s_addr = inet_addr(pIpAddr);    //inet_addr("127.0.0.1");
 	if (servAddr.sin_addr.s_addr != INADDR_NONE){
 		if ((hSocket = socket(AF_INET, SOCK_STREAM, 0)) != INVALID_SOCKET){
 			if (connect(hSocket, (struct sockaddr *)&servAddr, sizeof(struct sockaddr_in)) == 0){
@@ -49,7 +49,7 @@ SOCKET CSynchronousSocket::OnblockConnnect(const char *pIpAddr, WORD nPort)
 	memset(&servAddr, 0, sizeof(struct sockaddr_in));
 	servAddr.sin_family = AF_INET;
 	servAddr.sin_port = htons(nPort);
-	servAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+	servAddr.sin_addr.s_addr = inet_addr(pIpAddr);//inet_addr("127.0.0.1");
 	if (servAddr.sin_addr.s_addr != INADDR_NONE){
 		if ((hSocket = socket(AF_INET, SOCK_STREAM, 0)) != INVALID_SOCKET){
 			if (connect(hSocket, (struct sockaddr *)&servAddr, sizeof(struct sockaddr_in)) == 0){

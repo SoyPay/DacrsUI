@@ -410,7 +410,7 @@ void CDacrsUIDlg::CheckPathValid(const CStringA& strDir)
 void CDacrsUIDlg::InitialRpcCmd()
 {
 	//ProductHttpHead(theApp.str_InsPath ,m_strServerCfgFileName,m_rpcport,m_sendPreHeadstr,m_sendendHeadstr);
-	CSoyPayHelp::getInstance()->InitialRpcCmd(theApp.m_sendPreHeadstr,theApp.m_sendendHeadstr,theApp.m_rpcport);
+	CSoyPayHelp::getInstance()->InitialRpcCmd(theApp.m_severip,theApp.m_sendPreHeadstr,theApp.m_sendendHeadstr,theApp.m_rpcport);
 }
 
 void  CDacrsUIDlg::LoadListDataInfo()
