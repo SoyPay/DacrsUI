@@ -35,6 +35,9 @@ void CReceiveDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogBar::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LIST_SHOW, m_listCtrl);
+	DDX_Control(pDX, IDC_BUTTON1, m_rBtnAcitve);
+	DDX_Control(pDX, IDC_BUTTON_NEWADDRESS, m_rBtnNewaddr);
+	DDX_Control(pDX, IDC_COPYADDRESS, m_rBtnCopyaddr);
 }
 
 
@@ -102,6 +105,9 @@ BOOL CReceiveDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT n
 	BOOL bRes =   CDialogBar::Create(pParentWnd, nIDTemplate, nStyle, nID);
 	if (bRes)
 	{
+		m_rBtnAcitve.LoadBitmaps(IDB_BITMAP_ACTIVE1,IDB_BITMAP_ACTIVE2,IDB_BITMAP_ACTIVE3,IDB_BITMAP_ACTIVE3);
+		m_rBtnNewaddr.LoadBitmaps(IDB_BITMAP_NEWADDR1,IDB_BITMAP_NEWADDR2,IDB_BITMAP_NEWADDR3,IDB_BITMAP_NEWADDR3);
+		m_rBtnCopyaddr.LoadBitmaps(IDB_BITMAP_COPYADDR1,IDB_BITMAP_COPYADDR2,IDB_BITMAP_COPYADDR3,IDB_BITMAP_COPYADDR3);
 		UpdateData(0);
 		struct LISTCol {
 			CString		name ;
