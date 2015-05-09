@@ -43,7 +43,7 @@ BEGIN_MESSAGE_MAP(CProgStatusBar, CDialogBar)
 	ON_WM_ERASEBKGND()
 	ON_WM_CREATE()
 	ON_WM_SIZE()
-	ON_MESSAGE(MSG_USER_UP_PROGRESS , &CProgStatusBar::OnShowProgressCtrl  )
+	ON_MESSAGE(MSG_USER_STARTPROCESS_UI , &CProgStatusBar::OnShowProgressCtrl  )
 	ON_WM_PAINT()
 END_MESSAGE_MAP()
 
@@ -205,7 +205,6 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 	pBlockchanged.JsonToStruct(strTemp.c_str());
 
 	m_nSigIndex = pBlockchanged.connections;
-	Invalidate(); 
 	int  setpos = pBlockchanged.time -m_gniuessBlockTime;
 	m_progress.SetPos(setpos);//设置进度条的值 
 	if ((nCurTime-pBlockchanged.time ) < 200)
@@ -214,6 +213,7 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 		CPostMsg postblockmsg(MSG_USER_MAIN_UI,WM_UPWALLET);
 		theApp.m_MsgQueue.push(postblockmsg); 
 	}
+	Invalidate(); 
 	return 1;
 }
 
