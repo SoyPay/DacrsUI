@@ -112,50 +112,50 @@ void CIndTitleBar::OnSize(UINT nType, int cx, int cy)
 		if( NULL != p_Button ) {	
 			CRect m_BtnRc ;
 			p_Button->GetClientRect(&m_BtnRc);
-			p_Button->SetWindowPos(NULL ,175, 10 , 0 , 0 , SWP_NOSIZE);
+			p_Button->SetWindowPos(NULL ,175, 15 , 0 , 0 , SWP_NOSIZE);
 		}
 		p_Button = (CButton*)GetDlgItem(IDC_BUTTON_SEND);
 		if( NULL != p_Button ) {	
 			CRect m_BtnRc ;
 			p_Button->GetClientRect(&m_BtnRc);
-			p_Button->SetWindowPos(NULL ,175 + 80 , 10 , 0 , 0 , SWP_NOSIZE);
+			p_Button->SetWindowPos(NULL ,175 + 80 , 15 , 0 , 0 , SWP_NOSIZE);
 		}
 		//
 		p_Button = (CButton*)GetDlgItem(IDC_BUTTON_RECE);
 		if( NULL != p_Button ) {	
 			CRect m_BtnRc ;
 			p_Button->GetClientRect(&m_BtnRc);
-			p_Button->SetWindowPos(NULL ,175 + 2*80, 10 , 0 , 0 , SWP_NOSIZE);
+			p_Button->SetWindowPos(NULL ,175 + 2*80, 15 , 0 , 0 , SWP_NOSIZE);
 		}
 		p_Button = (CButton*)GetDlgItem(IDC_BUTTON_TRAD_INFO);
 		if( NULL != p_Button ) {	
 			CRect m_BtnRc ;
 			p_Button->GetClientRect(&m_BtnRc);
-			p_Button->SetWindowPos(NULL ,175 + 3*80, 10 , 0 , 0 , SWP_NOSIZE);
+			p_Button->SetWindowPos(NULL ,175 + 3*80, 15 , 0 , 0 , SWP_NOSIZE);
 		}
 		p_Button = (CButton*)GetDlgItem(IDC_BUTTON_P2P);
 		if( NULL != p_Button ) {	
 			CRect m_BtnRc ;
 			p_Button->GetClientRect(&m_BtnRc);
-			p_Button->SetWindowPos(NULL ,175 + 4*80, 10 , 0 , 0 , SWP_NOSIZE);
+			p_Button->SetWindowPos(NULL ,175 + 4*80, 15 , 0 , 0 , SWP_NOSIZE);
 		}
 		p_Button = (CButton*)GetDlgItem(IDC_BUTTON_MORTGAGE);
 		if( NULL != p_Button ) {	
 			CRect m_BtnRc ;
 			p_Button->GetClientRect(&m_BtnRc);
-			p_Button->SetWindowPos(NULL ,175 + 5*80, 10, 0 , 0 , SWP_NOSIZE);
+			p_Button->SetWindowPos(NULL ,175 + 5*80, 15, 0 , 0 , SWP_NOSIZE);
 		}
 		p_Button = (CButton*)GetDlgItem(IDC_BUTTON_IPO);
 		if( NULL != p_Button ) {	
 			CRect m_BtnRc ;
 			p_Button->GetClientRect(&m_BtnRc);
-			p_Button->SetWindowPos(NULL ,175 + 6*80, 10 , 0 , 0 , SWP_NOSIZE);
+			p_Button->SetWindowPos(NULL ,175 + 6*80, 15 , 0 , 0 , SWP_NOSIZE);
 		}
 		p_Button = (CButton*)GetDlgItem(IDC_BUTTON_ADDAPP);
 		if( NULL != p_Button ) {	
 			CRect m_BtnRc ;
 			p_Button->GetClientRect(&m_BtnRc);
-			p_Button->SetWindowPos(NULL ,175 + 7*80, 10 , 0 , 0 , SWP_NOSIZE);
+			p_Button->SetWindowPos(NULL ,175 + 7*80, 15 , 0 , 0 , SWP_NOSIZE);
 		}
 		CRect rect ; 
 		this->GetWindowRect(rect);
@@ -176,7 +176,7 @@ void CIndTitleBar::OnSize(UINT nType, int cx, int cy)
 		if( NULL != pImage ) {	
 			CRect m_BtnRc ;
 			pImage->GetWindowRect(&m_BtnRc);
-			pImage->SetWindowPos(NULL ,0 , 0 , 0 , 0 , SWP_NOSIZE);
+			pImage->SetWindowPos(NULL ,0 , -2 , 0 , 0 , SWP_NOSIZE);
 		}
 	}
 }
