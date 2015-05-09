@@ -1,7 +1,7 @@
 #pragma once
 #include <memory.h>
 #include "MyMutex.h"
-
+const int nBufferMaxLength = 20*1024;
 class CNoUiMsgBuffer 
 {
 public:
@@ -13,7 +13,7 @@ public:
 	void GetNoUiMsg(CString &strMsg);
 	bool HaveNoUiMsg(); 
 public:
-	char  m_Recvbuffer[10*1024];
+	char  m_Recvbuffer[nBufferMaxLength];
 private:
 	CMyMutex        cs_NoUiNotifyMsg;  //noui通知消息临界
 	std::deque<CString> m_dqNoUiMsg;

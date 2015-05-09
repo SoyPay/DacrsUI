@@ -36,6 +36,10 @@ CDacrsUIApp::CDacrsUIApp()
 	m_blockSock  = INVALID_SOCKET ;
 	m_strServerCfgFileName = "dacrs.conf";
 	isStartMainDlg = false;
+	m_bServerState = false;
+	m_rpcUser = _T("");
+	m_rpcPassWord = _T("");
+	progessPos = 0;
 }
 
 
@@ -110,6 +114,7 @@ BOOL CDacrsUIApp::InitInstance()
 	CloseProcess("dacrs-d.exe");
 	//启动服务程序
 	StartSeverProcess(str_InsPath);
+	m_bServerState = true;
 	Sleep(1000);
 
 	//连接block
@@ -144,8 +149,18 @@ BOOL CDacrsUIApp::InitInstance()
 	ASSERT(pSplashThread->IsKindOf(RUNTIME_CLASS(CSplashThread)));
 	pSplashThread->ResumeThread(); 
 	Sleep(1); 
+	int nCount(0);
 	while(1)
 	{
+	
+		HANDLE processHandle = OpenProcess(PROCESS_ALL_ACCESS,FALSE,sever_pi.dwProcessId);  
+		if(NULL == processHandle)
+		{
+			int errorCode = GetLastError();
+			AfxMessageBox(_T("open sever error:"+errorCode));
+			exit(1);
+		}
+//		TRACE("detect count:%d\n", ++nCount);
 		//pSplashThread->SetDlgPos(progessPos);
 		//TRACE("index:%d\r\n",progessPos);
 		if (isStartMainDlg)
@@ -739,8 +754,9 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 }
 #define  ININTAL_TYPE          1
 #define  BLOCK_CHANGE_TYPE     2
-#define  REV_TRANSATION_TYPE     3
-#define  APP_TRANSATION_TYPE     4
+#define  REV_TRANSATION_TYPE   3
+#define  APP_TRANSATION_TYPE   4
+#define  SERVER_NOTIYF_TYPE    5
 
 int GetMsgType(CString const strData,Json::Value &root)
 {
@@ -763,6 +779,10 @@ int GetMsgType(CString const strData,Json::Value &root)
 		if ( !strcmp(strType ,_T("rev_app_transaction") ) )
 		{
 			return APP_TRANSATION_TYPE;
+		}
+		if(!strcmp(strType, _T("notify"))) 
+		{
+			return SERVER_NOTIYF_TYPE;
 		}
 	}
 	return  -1;
@@ -893,6 +913,21 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 			pApp->m_MsgQueue.push(postuimsg);
 			break;
 		}
+	case SERVER_NOTIYF_TYPE:
+		{
+			CPostMsg postmsg(MSG_USER_SHOW_INIT,0);
+			postmsg.SetStrType(msgValue["type"].asCString());
+			CString msg = msgValue["msg"].asCString();
+			TRACE("MEST:%s\r\n",msg);
+			if (!strcmp(msg,"server closed"))
+			{
+				theApp.m_bServerState = false;
+			}
+			postmsg.SetData(msg);
+			pApp->m_MsgQueue.push(postmsg);
+			TRACE("type: %s   mag: %s\r\n" , postmsg.GetStrType() ,msg);
+			break;
+		}
 	default:
 		break;
 	}
@@ -974,7 +1009,7 @@ UINT __stdcall CDacrsUIApp::blockProc(LPVOID pParam)
 					}
 					else if(nRecLen == 0) 
 					{
-						TRACE0("noui socket has been closed\r\n");
+						TRACE0("noui socket has been closed\n");
 						if (INVALID_SOCKET != pUiDemeDlg->m_blockSock)
 						{
 							closesocket(pUiDemeDlg->m_blockSock);
@@ -1163,8 +1198,8 @@ void  CDacrsUIApp::ParseUIConfigFile(const CStringA& strExeDir){
 		m_severip = netParm.server_ip;
 		m_uirpcport = netParm.server_ui_port;
 		m_rpcport = netParm.rpc_port;
-
-
+		m_rpcUser = netParm.rpc_user;
+		m_rpcPassWord = netParm.rpc_password;
 	}
 }
 void CDacrsUIApp::StartSeverProcess(const CStringA& strdir){
