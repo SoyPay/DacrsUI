@@ -35,8 +35,8 @@ public:
 	CToolTipCtrl     m_tooltip;			// 提示信息
 	HBITMAP		     m_pBmp; 
 	void		     SetBkBmpNid( UINT nBitmapIn ) ;
-	UINT             nButtonID                     ;
-	void             MobileTip(UINT nButtonID);
+	UINT             m_nButtonID                   ; //当前点击的button
+	void             MobileTip(UINT nButtonID , BOOL bFlag );
 public:
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 public:

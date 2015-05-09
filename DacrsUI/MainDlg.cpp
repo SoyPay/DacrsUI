@@ -61,6 +61,7 @@ BEGIN_MESSAGE_MAP(CMainDlg, CDialogBar)
 	ON_BN_CLICKED(IDC_ALLTXDETAIL, &CMainDlg::OnBnClickedAlltxdetail)
 	ON_MESSAGE(MSG_USER_MAIN_UI , &CMainDlg::OnShowListCtorl )
 	ON_WM_CREATE()
+	ON_WM_PAINT()
 	ON_WM_ERASEBKGND()
 END_MESSAGE_MAP()
 
@@ -89,26 +90,37 @@ void CMainDlg::OnBnClickedAlltxdetail()
 void CMainDlg::SetCtrlText()
 {
 	CString strCommand,strShowData;
-	strCommand.Format(_T("%s"),_T("getbalance"));
-	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
+	//strCommand.Format(_T("%s"),_T("getbalance"));
+	//CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 
-	Json::Reader reader;  
-	Json::Value root; 
-	if (strShowData.Find("balance")>=0)
-	{
-		if (reader.parse(strShowData.GetString(), root)) 
-		{
-			double money = root["balance"].asDouble();
-			strCommand.Format(_T("%.8f"),money);
-			GetDlgItem(IDC_STATIC_AMOUNT)->SetWindowText(strCommand) ;
-		}
-	}else{
-		strCommand.Format(_T("0.0"));
-		GetDlgItem(IDC_STATIC_AMOUNT)->SetWindowText(strCommand) ;
-	}
+	//Json::Reader reader;  
+	//Json::Value root; 
+	//if (strShowData.Find("balance")>=0)
+	//{
+	//	if (reader.parse(strShowData.GetString(), root)) 
+	//	{
+	//		double money = root["balance"].asDouble();
+	//		strCommand.Format(_T("%.8f"),money);
+	//		GetDlgItem(IDC_STATIC_AMOUNT)->SetWindowText(strCommand) ;
+	//	}
+	//}else{
+	//	strCommand.Format(_T("0.0"));
+	//	GetDlgItem(IDC_STATIC_AMOUNT)->SetWindowText(strCommand) ;
+	//}
 	strCommand.Format(_T("0"));
 	theApp.cs_SqlData.Lock();
-	string nmoney =  theApp.m_SqliteDeal.GetColSum(_T("revtransaction") , strCommand ,_T("confirmHeight")) ;
+	string nmoney =  theApp.m_SqliteDeal.GetColSum(_T("MYWALLET") ,_T("money") ) ;
+	theApp.cs_SqlData.Unlock();
+	if (!strcmp(nmoney.c_str(),"(null)"))
+	{
+		GetDlgItem(IDC_STATIC_AMOUNT)->SetWindowText(_T("0.0")) ;
+	}else{
+		GetDlgItem(IDC_STATIC_AMOUNT)->SetWindowText(nmoney.c_str()) ;
+	}
+
+	strCommand.Format(_T("0"));
+	theApp.cs_SqlData.Lock();
+	 nmoney =  theApp.m_SqliteDeal.GetColSum(_T("revtransaction") , strCommand ,_T("confirmHeight")) ;
 	theApp.cs_SqlData.Unlock();
 
 	if (!strcmp(nmoney.c_str(),"(null)"))
@@ -128,7 +140,7 @@ void CMainDlg::SetCtrlText()
 
 	CString Where,strSource;
 	//Where.Format(_T("'COMMON_TX' order by confirmedtime"));
-	Where.Format(_T("'CONTRACT_TX' order by confirmedtime"));
+	Where.Format(_T("'COMMON_TX' order by confirmedtime"));
 	strSource.Format(_T("txtype"));
 	uistruct::TRANSRECORDLIST pTransaction;
 	theApp.cs_SqlData.Lock();
@@ -230,29 +242,6 @@ int CMainDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	return 0;
 }
-
-
-BOOL CMainDlg::OnEraseBkgnd(CDC* pDC)
-{
-	// TODO: 在此添加消息处理程序代码和/或调用默认值
-	CRect   rect; 
-	GetClientRect(&rect); 
-
-	if(m_pBmp   !=   NULL) { 
-		BITMAP   bm; 
-		CDC   dcMem; 
-		::GetObject(m_pBmp,sizeof(BITMAP),   (LPVOID)&bm); 
-		dcMem.CreateCompatibleDC(NULL); 
-		HBITMAP     pOldBitmap   =(HBITMAP   )   dcMem.SelectObject(m_pBmp); 
-		pDC-> StretchBlt(rect.left,rect.top-1,rect.Width(),rect.Height(),   &dcMem,   0,   0,bm.bmWidth-1,bm.bmHeight-1,   SRCCOPY); 
-
-		dcMem.SelectObject(pOldBitmap);
-		dcMem.DeleteDC();
-	} else  
-		CWnd::OnEraseBkgnd(pDC); 
-
-	return 1;
-}
 bool CMainDlg::GetUrlServer()
 {
 		m_url.clear();
@@ -305,4 +294,34 @@ bool CMainDlg::GetUrlServer()
 		return true;
 	}
 	return false;
+}
+
+void CMainDlg::OnPaint()
+{
+	CPaintDC dc(this); // device context for painting
+	// TODO: 在此处添加消息处理程序代码
+	// 不为绘图消息调用 CDialogBar::OnPaint()
+}
+
+
+BOOL CMainDlg::OnEraseBkgnd(CDC* pDC)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+		CRect   rect; 
+		GetClientRect(&rect); 
+	
+		if(m_pBmp   !=   NULL) { 
+		BITMAP   bm; 
+		CDC   dcMem; 
+		::GetObject(m_pBmp,sizeof(BITMAP),   (LPVOID)&bm); 
+		dcMem.CreateCompatibleDC(NULL); 
+		HBITMAP     pOldBitmap   =(HBITMAP   )   dcMem.SelectObject(m_pBmp); 
+		pDC-> StretchBlt(rect.left,rect.top-1,rect.Width(),rect.Height(),   &dcMem,   0,   0,bm.bmWidth-1,bm.bmHeight-1,   SRCCOPY); 
+	
+		dcMem.SelectObject(pOldBitmap);
+		dcMem.DeleteDC();
+		} else  
+		CWnd::OnEraseBkgnd(pDC); 
+	
+		return TRUE;
 }
