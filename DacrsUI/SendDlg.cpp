@@ -127,7 +127,7 @@ void CSendDlg::OnCbnSelchangeCombo1()
 	if ( NULL != pListAddr ) {
 		double money = CSoyPayHelp::getInstance()->GetAccountBalance(pListAddr->address);
 		CString strshow;
-		strshow.Format(_T("Óà¶î:%.8f"),money);
+		strshow.Format(_T("%.8f"),money);
 		((CStatic*)GetDlgItem(IDC_STATIC_XM))->SetWindowText(strshow);
 	}
 }
@@ -155,7 +155,7 @@ BOOL CSendDlg::AddListaddrDataBox(){
 	if ( NULL != pListAddr ) {
 		double money = CSoyPayHelp::getInstance()->GetAccountBalance(pListAddr->address);
 		CString strshow;
-		strshow.Format(_T("Óà¶î:%.8f"),money);
+		strshow.Format(_T("%.8f"),money);
 		((CStatic*)GetDlgItem(IDC_STATIC_XM))->SetWindowText(strshow);
 	}
 	return TRUE ;
