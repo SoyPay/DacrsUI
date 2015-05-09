@@ -4,25 +4,29 @@
 
 CNoUiMsgBuffer::CNoUiMsgBuffer(){
 	ClearBuffer();
-	m_nLength = 0;
+	
 }
 
 void CNoUiMsgBuffer::ClearBuffer()
 {
 	memset(m_Recvbuffer, 0, 10*1024);
+	m_nLength = 0;
 };
 
 bool CNoUiMsgBuffer::AddBytesToBuffer(char *pCh, int nLen)
 {
-	if(m_nLength+nLen > 10*1024-1)
+
+	if(m_nLength+nLen > nBufferMaxLength-1) {
+		TRACE("Buffer Overflowed Len:%d\n",m_nLength + nLen);
 		return false;
+	}
 	memcpy(m_Recvbuffer+m_nLength, pCh, nLen);
 	m_nLength += nLen;
 	int nPos(0);
-	//TRACE("Buffer Data:");
-	//for(int i=0;i<m_nLength;++i)
-	//	TRACE("%02X", m_Recvbuffer[i]);
-	//TRACE("\n");
+	/*TRACE("Buffer Data %d:", m_nLength);
+	for(int i=0;i<m_nLength;++i)
+		TRACE("%02X", (unsigned char)m_Recvbuffer[i]);
+	TRACE("\n");*/
 	while(nPos < m_nLength) {
 		int nStart = nPos;
 		if(m_Recvbuffer[nStart] != '<') {
@@ -62,7 +66,8 @@ bool CNoUiMsgBuffer::AddBytesToBuffer(char *pCh, int nLen)
 			TRACE("½áÊø×Ö·û²»¶Ô\n");
 			return false;
 		}
-		nPos += nStart + 1;
+		nPos = nStart + 1;
+		//TRACE("nPos:%d\n", nPos);
 		cs_NoUiNotifyMsg.Lock();
 		CString strMsg;
 		strMsg.Format(_T("%s"), cMsgData);
@@ -71,14 +76,12 @@ bool CNoUiMsgBuffer::AddBytesToBuffer(char *pCh, int nLen)
 		m_dqNoUiMsg.push_back(strMsg);
 		cs_NoUiNotifyMsg.Unlock();
 	}
-	if(nPos == m_nLength) {
+	if(nPos >= m_nLength) {
 		ClearBuffer();
-		m_nLength = 0;
 	}else {
 		memmove(m_Recvbuffer, m_Recvbuffer+nPos, m_nLength-nPos);
 		m_nLength = m_nLength-nPos;
 	}
-	nPos = 0;
 	return true;
 }
 
