@@ -458,6 +458,7 @@ void CDacrsUIDlg::CloseThread()
 		}
 		Sleep(1000);
 	}
+	//delete theApp.pSplashThread;
 }
 
 void  CDacrsUIDlg::StopSever()
