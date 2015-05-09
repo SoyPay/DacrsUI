@@ -266,14 +266,14 @@ namespace uistruct {
 
 	typedef struct BLOCKCHANGED  {
 		string  type ;
-		int    time ;
+		int    tips ;
 		INT64  high  ;
 		string   hash;
 		int connections;
 		string ToJson(){
 			Json::Value root;
 			root["type"] = type;
-			root["time"] = time;
+			root["tips"] = tips;
 			root["high"] = high;
 			root["hash"] = hash;
 			root["connections"] = connections;
@@ -286,7 +286,7 @@ namespace uistruct {
 			return false ;
 
 		this->type = root["type"].asString();
-		this->time = root["time"].asInt();
+		this->tips = root["tips"].asInt();
 		this->high = root["high"].asInt64();
 		this->hash = root["hash"].asString();
 		this->connections = root["connections"].asInt();
