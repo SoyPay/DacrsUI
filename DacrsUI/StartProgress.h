@@ -28,6 +28,8 @@ public:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnPaint();
 public:
+	afx_msg LRESULT OnShowProgressCtrl(  WPARAM wParam, LPARAM lParam ) ;
+public:
 	void    SwitchBmp(int nIndex);   
 	void    SetProgessRange(int pos);
 	CProgressCtrl m_progress;

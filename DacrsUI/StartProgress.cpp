@@ -36,6 +36,7 @@ void CStartProgress::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CStartProgress, CDialogEx)
 	ON_WM_PAINT()
+	ON_MESSAGE(MSG_USER_STARTPROCESS_UI , &CStartProgress::OnShowProgressCtrl  )
 END_MESSAGE_MAP()
 
 
@@ -69,6 +70,8 @@ BOOL CStartProgress::OnInitDialog()
 	m_progress.SetRange(0,4);
 	mprocessindex = true;
 	LoadGifing(TRUE);
+
+	theApp.SubscribeMsg( theApp.GetMtHthrdId() , GetSafeHwnd() , MSG_USER_STARTPROCESS_UI ) ;
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE
 }
@@ -122,4 +125,13 @@ void CStartProgress::SetProgessRange(int pos){
 		m_progress.SetPos(pos);
 	}
 	
+}
+LRESULT CStartProgress::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam ) 
+{
+	if (mprocessindex)
+	{
+		int index =(int)wParam;
+		m_progress.SetPos(index);
+	}
+	return 1;
 }

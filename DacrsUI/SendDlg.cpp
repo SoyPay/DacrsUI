@@ -92,7 +92,7 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 			//插入到数据库
 			CString strHash,strHash1 ;
 			strHash.Format(_T("'%s'") , root["hash"].asCString() );
-			strHash1.Format(_T("'%s'") , root["hash"].asCString() );
+			strHash1.Format(_T("%s") , root["hash"].asCString() );
 			theApp.cs_SqlData.Lock();
 			int nItem =  theApp.m_SqliteDeal.FindDB(_T("revtransaction") , strHash1 ,_T("hash") ) ;
 			theApp.cs_SqlData.Unlock();
