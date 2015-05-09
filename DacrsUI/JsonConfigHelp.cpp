@@ -209,6 +209,8 @@ void CJsonConfigHelp::ReadNetParmCfgData(const Json::Value& root){
 	m_NetParam.server_ip = netparam["server_ip"].asCString();
 	m_NetParam.rpc_port= netparam["rpc_port"].asCString();
 	m_NetParam.server_ui_port =netparam["server_ui_port"].asCString();
+	m_NetParam.rpc_user =  netparam["rpc_user"].asCString();
+	m_NetParam.rpc_password = netparam["rpc_password"].asCString();
 }
 void CJsonConfigHelp::GetNetParmCfgData(CNetParamCfg& netparm){
 	netparm =m_NetParam;
