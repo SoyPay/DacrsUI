@@ -477,6 +477,60 @@
     <None Include="res\wallet_uipro.bmp">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="res\main_log_3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\send_logo_3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\send_logo_4.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\rev_logo_3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\rev_logo_4.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\tradedetail_logo_3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\tradedetail_logo_4.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\your_sister_3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\your_sister_4.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\diya_logo_3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\diya_logo_4.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\ipo_1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\ipo_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\ipo_3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\add_app_3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\add_app_4.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\ipo_4.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\main_log_4.bmp">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="资源文件">
