@@ -107,11 +107,11 @@ BOOL CDacrsUIApp::InitInstance()
 		m_uirpcport = tempuiport;
 	}
 
-	/// 关闭系统中dacrs-d.exe进程
-	CloseProcess("dacrs-d.exe");
-	//启动服务程序
-	StartSeverProcess(str_InsPath);
-	Sleep(1000);
+	///// 关闭系统中dacrs-d.exe进程
+	//CloseProcess("dacrs-d.exe");
+	////启动服务程序
+	//StartSeverProcess(str_InsPath);
+	//Sleep(1000);
 
 	//连接block
 	//连接到服务器
@@ -144,17 +144,17 @@ BOOL CDacrsUIApp::InitInstance()
 	pSplashThread = (CSplashThread*) AfxBeginThread(RUNTIME_CLASS(CSplashThread),THREAD_PRIORITY_NORMAL,0, CREATE_SUSPENDED); 
 	ASSERT(pSplashThread->IsKindOf(RUNTIME_CLASS(CSplashThread)));
 	pSplashThread->ResumeThread(); 
-	Sleep(1); 
-	while(1)
-	{
-		pSplashThread->SetDlgPos(progessPos);
-		//TRACE("index:%d\r\n",progessPos);
-		if (isStartMainDlg)
-		{
-			break;
-		}
-		Sleep(1000);
-	}
+	//Sleep(1); 
+	//while(1)
+	//{
+	//	pSplashThread->SetDlgPos(progessPos);
+	//	//TRACE("index:%d\r\n",progessPos);
+	//	if (isStartMainDlg)
+	//	{
+	//		break;
+	//	}
+	//	Sleep(1000);
+	//}
 
 	CDacrsUIDlg dlg;
 	m_pMainWnd = &dlg;

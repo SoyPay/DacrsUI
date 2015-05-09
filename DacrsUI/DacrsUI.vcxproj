@@ -109,6 +109,8 @@
     <None Include="res\address_book.bmp" />
     <None Include="res\add_app_1.bmp" />
     <None Include="res\add_app_2.bmp" />
+    <None Include="res\add_app_3.bmp" />
+    <None Include="res\add_app_4.bmp" />
     <None Include="res\alltrade1.bmp" />
     <None Include="res\bitmap1.bmp" />
     <None Include="res\bitmap4.bmp" />
@@ -129,7 +131,13 @@
     <None Include="res\Deals.bmp" />
     <None Include="res\diya_logo_1.bmp" />
     <None Include="res\diya_logo_2.bmp" />
+    <None Include="res\diya_logo_3.bmp" />
+    <None Include="res\diya_logo_4.bmp" />
     <None Include="res\IPO.bmp" />
+    <None Include="res\ipo_1.bmp" />
+    <None Include="res\ipo_2.bmp" />
+    <None Include="res\ipo_3.bmp" />
+    <None Include="res\ipo_4.bmp" />
     <None Include="res\ipo_app_1.bmp" />
     <None Include="res\ipo_app_2.bmp" />
     <None Include="res\Logo.bmp" />
@@ -138,6 +146,8 @@
     <None Include="res\MainUI_2.bmp" />
     <None Include="res\main_log_1.bmp" />
     <None Include="res\main_log_2.bmp" />
+    <None Include="res\main_log_3.bmp" />
+    <None Include="res\main_log_4.bmp" />
     <None Include="res\main_ui_background.bmp" />
     <None Include="res\min1.bmp" />
     <None Include="res\min2.bmp" />
@@ -154,9 +164,13 @@
     <None Include="res\Receive.bmp" />
     <None Include="res\rev_logo_1.bmp" />
     <None Include="res\rev_logo_2.bmp" />
+    <None Include="res\rev_logo_3.bmp" />
+    <None Include="res\rev_logo_4.bmp" />
     <None Include="res\Send.bmp" />
     <None Include="res\send_logo_1.bmp" />
     <None Include="res\send_logo_2.bmp" />
+    <None Include="res\send_logo_3.bmp" />
+    <None Include="res\send_logo_4.bmp" />
     <None Include="res\send_ui_blackgruond.bmp" />
     <None Include="res\sig_0.bmp" />
     <None Include="res\sig_1.bmp" />
@@ -165,12 +179,16 @@
     <None Include="res\Tip.bmp" />
     <None Include="res\tradedetail_logo_1.bmp" />
     <None Include="res\tradedetail_logo_2.bmp" />
+    <None Include="res\tradedetail_logo_3.bmp" />
+    <None Include="res\tradedetail_logo_4.bmp" />
     <None Include="res\wallet_uipro.bmp" />
     <None Include="res\wndtitlebk.bmp" />
     <None Include="res\xh_2.bmp" />
     <None Include="res\xh_3.bmp" />
     <None Include="res\your_sister_1.bmp" />
     <None Include="res\your_sister_2.bmp" />
+    <None Include="res\your_sister_3.bmp" />
+    <None Include="res\your_sister_4.bmp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BmpBtn.h" />
