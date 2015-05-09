@@ -167,7 +167,6 @@ void CMainDlg::SetCtrlText()
 				strShowaddr.Format(_T("%s "),const_it->desaddr);
 				i++;
 			}
-			GetDlgItem(item)->SetWindowText(strShowaddr) ;
 			if (const_it->state == 1)
 			{
 				if(i == 1)
@@ -194,7 +193,9 @@ void CMainDlg::SetCtrlText()
 					m_strTrading5.SetTextColor(RGB(166,162,247));
 
 			}
-
+			if(item <=IDC_TX5)
+			GetDlgItem(item)->SetWindowText(strShowaddr) ;
+			if(item1 <=IDC_TX_JY7)
 			GetDlgItem(item1)->SetWindowText(strSource) ;
 			item++;
 			item1++;
@@ -239,7 +240,6 @@ int CMainDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	// TODO:  在此添加您专用的创建代码
 	SetBkBmpNid( IDB_BITMAP_MAINUI_BJ ) ;
-	//UpdateData(0);
 	m_strOver.SetFont(90, _T("Arial"));				//设置显示字体和大小
 	m_strOking.SetFont(90, _T("Arial"));	   
 	m_strTranNum.SetFont(90, _T("Arial"));	

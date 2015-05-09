@@ -865,15 +865,15 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 
 			TRACE("change:%s\r\n","blockchanged");
 			uistruct::BLOCKCHANGED_t      m_Blockchanged ;
-			memset(&m_Blockchanged , 0 , sizeof(uistruct::BLOCKCHANGED_t));
+			//memset(&m_Blockchanged , 0 , sizeof(uistruct::BLOCKCHANGED_t));
 			m_Blockchanged.type = msgValue["type"].asString();
-			m_Blockchanged.time = msgValue["time"].asInt();
+			m_Blockchanged.tips = msgValue["tips"].asInt();
 			m_Blockchanged.high = msgValue["high"].asInt64() ;
 			m_Blockchanged.hash = msgValue["hash"].asString();
 			m_Blockchanged.connections = msgValue["connections"].asInt();
 
 			static int ReciveBlockTimeLast =0;
-			int tempTime= m_Blockchanged.time;
+			int tempTime= m_Blockchanged.tips;
 
 			string strJson = m_Blockchanged.ToJson();
 			ReciveBlockTimeLast = tempTime;
