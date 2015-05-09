@@ -36,7 +36,6 @@ CDacrsUIApp::CDacrsUIApp()
 	m_blockSock  = INVALID_SOCKET ;
 	m_strServerCfgFileName = "dacrs.conf";
 	isStartMainDlg = false;
-	progessPos = 0;
 }
 
 
@@ -108,10 +107,10 @@ BOOL CDacrsUIApp::InitInstance()
 	}
 
 	///// 关闭系统中dacrs-d.exe进程
-	//CloseProcess("dacrs-d.exe");
-	////启动服务程序
-	//StartSeverProcess(str_InsPath);
-	//Sleep(1000);
+	CloseProcess("dacrs-d.exe");
+	//启动服务程序
+	StartSeverProcess(str_InsPath);
+	Sleep(1000);
 
 	//连接block
 	//连接到服务器
@@ -123,7 +122,7 @@ BOOL CDacrsUIApp::InitInstance()
 		theApp.StartblockThrd();  //开启Block线程
 	}
 	//gif
-	m_ProgressGifFile =   str_InsPath + _T("\\progress.gif\0") ;
+	m_ProgressGifFile =   str_InsPath + _T("\\gif\\progress.gif\0") ;
 	GdiplusStartupInput gdiplusStartupInput;
 	ULONG_PTR gdiplusToken;
 	Status state = GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL) ;
@@ -144,17 +143,17 @@ BOOL CDacrsUIApp::InitInstance()
 	pSplashThread = (CSplashThread*) AfxBeginThread(RUNTIME_CLASS(CSplashThread),THREAD_PRIORITY_NORMAL,0, CREATE_SUSPENDED); 
 	ASSERT(pSplashThread->IsKindOf(RUNTIME_CLASS(CSplashThread)));
 	pSplashThread->ResumeThread(); 
-	//Sleep(1); 
-	//while(1)
-	//{
-	//	pSplashThread->SetDlgPos(progessPos);
-	//	//TRACE("index:%d\r\n",progessPos);
-	//	if (isStartMainDlg)
-	//	{
-	//		break;
-	//	}
-	//	Sleep(1000);
-	//}
+	Sleep(1); 
+	while(1)
+	{
+		//pSplashThread->SetDlgPos(progessPos);
+		//TRACE("index:%d\r\n",progessPos);
+		if (isStartMainDlg)
+		{
+			break;
+		}
+		Sleep(1000);
+	}
 
 	CDacrsUIDlg dlg;
 	m_pMainWnd = &dlg;
@@ -552,10 +551,15 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 		if(!pUiDemeDlg->m_MsgQueue.pop(Postmsg))
 			continue;
 		CDacrsUIDlg *pDlg = (CDacrsUIDlg*)(((CDacrsUIApp*)pParam)->m_pMainWnd) ;
-		if (pDlg == NULL)
+		if (pDlg == NULL && Postmsg.GetUItype() != MSG_USER_STARTPROCESS_UI)
 			continue;
 		switch (Postmsg.GetUItype() )
 		{
+		case MSG_USER_STARTPROCESS_UI:
+			{
+				theApp.DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_STARTPROCESS_UI ,Postmsg.GetDatatype(),0);
+			}
+			break;
 		case MSG_USER_GET_UPDATABASE:
 			{
 				//EnterCriticalSection( &theApp.cs_UpDatabasech ) ;
@@ -794,19 +798,23 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 			TRACE("MEST:%s\r\n",msg);
 			if (!strcmp(msg,"Verifying blocks..."))
 			{
-				pApp->progessPos = 1;
+				CPostMsg postmsg(MSG_USER_STARTPROCESS_UI,1);
+				pApp->m_MsgQueue.push(postmsg);
 			}
 			if (!strcmp(msg,"Verifying Finished"))
 			{
-				pApp->progessPos = 2;
+				CPostMsg postmsg(MSG_USER_STARTPROCESS_UI,2);
+				pApp->m_MsgQueue.push(postmsg);
 			}
 			if (!strcmp(msg,"Loading addresses..."))
 			{
-				pApp->progessPos = 3;
+				CPostMsg postmsg(MSG_USER_STARTPROCESS_UI,3);
+				pApp->m_MsgQueue.push(postmsg);
 			}
 			if (!strcmp(msg,"initialize end"))
 			{
-				pApp->progessPos = 4;
+				CPostMsg postmsg(MSG_USER_STARTPROCESS_UI,4);
+				pApp->m_MsgQueue.push(postmsg);
 				theApp.isStartMainDlg = true;
 			}
 			postmsg.SetData(msg);
@@ -966,7 +974,7 @@ UINT __stdcall CDacrsUIApp::blockProc(LPVOID pParam)
 					}
 					else if(nRecLen == 0) 
 					{
-						TRACE0("noui socket has been closed");
+						TRACE0("noui socket has been closed\r\n");
 						if (INVALID_SOCKET != pUiDemeDlg->m_blockSock)
 						{
 							closesocket(pUiDemeDlg->m_blockSock);
