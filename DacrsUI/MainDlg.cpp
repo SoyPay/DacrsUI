@@ -239,7 +239,10 @@ int CMainDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	// TODO:  在此添加您专用的创建代码
 	SetBkBmpNid( IDB_BITMAP_MAINUI_BJ ) ;
-
+	//UpdateData(0);
+	m_strOver.SetFont(90, _T("Arial"));				//设置显示字体和大小
+	m_strOking.SetFont(90, _T("Arial"));	   
+	m_strTranNum.SetFont(90, _T("Arial"));	
 	return 0;
 }
 bool CMainDlg::GetUrlServer()

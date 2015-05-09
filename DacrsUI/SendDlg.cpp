@@ -29,6 +29,7 @@ void CSendDlg::DoDataExchange(CDataExchange* pDX)
 	CDialogBar::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_BUTTON_ADDBOOK , m_rBtnAddbook);
 	DDX_Control(pDX, IDC_SENDTRNSFER , m_rBtnSend);
+	DDX_Control(pDX, IDC_STATIC_XM , m_strTx1);
 }
 
 
@@ -187,6 +188,7 @@ BOOL CSendDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_rBtnSend.LoadBitmaps(IDB_BITMAP_BOTTON_SEND1,IDB_BITMAP_BOTTON_SEND2,IDB_BITMAP_BOTTON_SEND3,IDB_BITMAP_BOTTON_SEND3);
 		m_rBtnAddbook.LoadBitmaps(IDB_BITMAP_ADDBOOK,IDB_BITMAP_ADDBOOK,IDB_BITMAP_ADDBOOK,IDB_BITMAP_ADDBOOK);
 		UpdateData(0);
+		m_strTx1.SetFont(90, _T("Arial"));				//设置显示字体和大小
 		AddListaddrDataBox();
 		theApp.SubscribeMsg( theApp.GetMtHthrdId() , GetSafeHwnd() , MSG_USER_SEND_UI ) ;
 		((CComboBox*)GetDlgItem(IDC_COMBO2))->SetCurSel(0);
