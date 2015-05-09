@@ -40,6 +40,7 @@ using namespace std;
 #define MSG_USER_SIGUSER_UI			        WM_USER+121	    //更新到注册应用  1138
 #define MSG_USER_SEND_UI			        WM_USER+122    //更新到转账  1138
 #define MSG_USER_RECIVE_UI			        WM_USER+122    //更新到接受页面
+#define MSG_USER_STARTPROCESS_UI			WM_USER+123    //更新到接受页面
 
 #define MSG_USER_QUITTHREAD			        WM_USER+200	    //退出线程
 

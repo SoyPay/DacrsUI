@@ -82,7 +82,8 @@ BEGIN_MESSAGE_MAP(CDacrsUIDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_TRAD_INFO, &CDacrsUIDlg::OnBnClickedButtonTrad)
 	ON_BN_CLICKED(IDC_BUTTON_P2P, &CDacrsUIDlg::OnBnClickedButtonP2P)
 	ON_BN_CLICKED(IDC_BUTTON_MORTGAGE, &CDacrsUIDlg::OnBnClickedButtonMortgage)
-	ON_BN_CLICKED(IDC_BUTTON_IPO, &CDacrsUIDlg::OnBnClickedButtonDeals)
+	ON_BN_CLICKED(IDC_BUTTON_IPO, &CDacrsUIDlg::OnBnClickedButtonDeals)  
+	ON_BN_CLICKED(IDC_BUTTON_ADDAPP, &CDacrsUIDlg::OnBnClickedButtonAddApp)
 	ON_BN_CLICKED(IDC_BUTTON_CLOSE, &CDacrsUIDlg::OnBnClickedButtonClose)
 	ON_BN_CLICKED(IDC_BUTTON_MIN, &CDacrsUIDlg::OnBnClickedButtonMin)
 END_MESSAGE_MAP()
@@ -289,7 +290,7 @@ void CDacrsUIDlg::ShowDialog(UINT dlgid)
 void CDacrsUIDlg::ShowStateTip(UINT nButtonID)
 {
 	if ( NULL == m_pTitleBar  ) return ;
-	m_pTitleBar->MobileTip(nButtonID);
+	m_pTitleBar->MobileTip(nButtonID , FALSE );
 }
 void CDacrsUIDlg::DestroyDlg()
 {
@@ -371,6 +372,11 @@ void CDacrsUIDlg::OnBnClickedButtonDeals()
 {
 	ShowDialog(CIpoDlg::IDD) ;
 	ShowStateTip(IDC_BUTTON_IPO);
+}
+//ÃÌº””¶”√
+void CDacrsUIDlg::OnBnClickedButtonAddApp()
+{
+	ShowStateTip(IDC_BUTTON_ADDAPP);
 }
 void CDacrsUIDlg::OnBnClickedButtonClose()
 {

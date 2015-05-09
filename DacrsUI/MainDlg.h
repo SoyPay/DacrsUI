@@ -48,9 +48,11 @@ public:
 	void SetCtrlText();
 	virtual BOOL Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID);
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
-	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 private:
 	bool GetUrlServer();
 	map<CString,CString> m_url;
 	CMFCLinkCtrl v_linkCtrl;
+public:
+	afx_msg void OnPaint();
+	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 };

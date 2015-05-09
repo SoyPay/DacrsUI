@@ -62,6 +62,7 @@ public:
 	afx_msg void OnBnClickedButtonP2P();
 	afx_msg void OnBnClickedButtonMortgage();
 	afx_msg void OnBnClickedButtonDeals();
+	afx_msg void OnBnClickedButtonAddApp();
 
 	afx_msg void OnBnClickedButtonClose();
 	afx_msg void OnBnClickedButtonMin();

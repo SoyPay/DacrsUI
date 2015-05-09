@@ -13,6 +13,7 @@ IMPLEMENT_DYNAMIC(CIndTitleBar, CDialogBar)
 	CIndTitleBar::CIndTitleBar()
 {
 	m_pBmp = NULL ;
+	m_nButtonID = IDC_BUTTON_MAIN_UI ;
 }
 
 CIndTitleBar::~CIndTitleBar()
@@ -111,50 +112,50 @@ void CIndTitleBar::OnSize(UINT nType, int cx, int cy)
 		if( NULL != p_Button ) {	
 			CRect m_BtnRc ;
 			p_Button->GetClientRect(&m_BtnRc);
-			p_Button->SetWindowPos(NULL ,175, 0 , 0 , 0 , SWP_NOSIZE);
+			p_Button->SetWindowPos(NULL ,175, 10 , 0 , 0 , SWP_NOSIZE);
 		}
 		p_Button = (CButton*)GetDlgItem(IDC_BUTTON_SEND);
 		if( NULL != p_Button ) {	
 			CRect m_BtnRc ;
 			p_Button->GetClientRect(&m_BtnRc);
-			p_Button->SetWindowPos(NULL ,175 + 80 , 0 , 0 , 0 , SWP_NOSIZE);
+			p_Button->SetWindowPos(NULL ,175 + 80 , 10 , 0 , 0 , SWP_NOSIZE);
 		}
 		//
 		p_Button = (CButton*)GetDlgItem(IDC_BUTTON_RECE);
 		if( NULL != p_Button ) {	
 			CRect m_BtnRc ;
 			p_Button->GetClientRect(&m_BtnRc);
-			p_Button->SetWindowPos(NULL ,175 + 2*80, 0 , 0 , 0 , SWP_NOSIZE);
+			p_Button->SetWindowPos(NULL ,175 + 2*80, 10 , 0 , 0 , SWP_NOSIZE);
 		}
 		p_Button = (CButton*)GetDlgItem(IDC_BUTTON_TRAD_INFO);
 		if( NULL != p_Button ) {	
 			CRect m_BtnRc ;
 			p_Button->GetClientRect(&m_BtnRc);
-			p_Button->SetWindowPos(NULL ,175 + 3*80, 0 , 0 , 0 , SWP_NOSIZE);
+			p_Button->SetWindowPos(NULL ,175 + 3*80, 10 , 0 , 0 , SWP_NOSIZE);
 		}
 		p_Button = (CButton*)GetDlgItem(IDC_BUTTON_P2P);
 		if( NULL != p_Button ) {	
 			CRect m_BtnRc ;
 			p_Button->GetClientRect(&m_BtnRc);
-			p_Button->SetWindowPos(NULL ,175 + 4*80, 0 , 0 , 0 , SWP_NOSIZE);
+			p_Button->SetWindowPos(NULL ,175 + 4*80, 10 , 0 , 0 , SWP_NOSIZE);
 		}
 		p_Button = (CButton*)GetDlgItem(IDC_BUTTON_MORTGAGE);
 		if( NULL != p_Button ) {	
 			CRect m_BtnRc ;
 			p_Button->GetClientRect(&m_BtnRc);
-			p_Button->SetWindowPos(NULL ,175 + 5*80, 0 , 0 , 0 , SWP_NOSIZE);
+			p_Button->SetWindowPos(NULL ,175 + 5*80, 10, 0 , 0 , SWP_NOSIZE);
 		}
 		p_Button = (CButton*)GetDlgItem(IDC_BUTTON_IPO);
 		if( NULL != p_Button ) {	
 			CRect m_BtnRc ;
 			p_Button->GetClientRect(&m_BtnRc);
-			p_Button->SetWindowPos(NULL ,175 + 6*80, 0 , 0 , 0 , SWP_NOSIZE);
+			p_Button->SetWindowPos(NULL ,175 + 6*80, 10 , 0 , 0 , SWP_NOSIZE);
 		}
 		p_Button = (CButton*)GetDlgItem(IDC_BUTTON_ADDAPP);
 		if( NULL != p_Button ) {	
 			CRect m_BtnRc ;
 			p_Button->GetClientRect(&m_BtnRc);
-			p_Button->SetWindowPos(NULL ,175 + 7*80, 0 , 0 , 0 , SWP_NOSIZE);
+			p_Button->SetWindowPos(NULL ,175 + 7*80, 10 , 0 , 0 , SWP_NOSIZE);
 		}
 		CRect rect ; 
 		this->GetWindowRect(rect);
@@ -179,46 +180,70 @@ void CIndTitleBar::OnSize(UINT nType, int cx, int cy)
 		}
 	}
 }
-void CIndTitleBar::MobileTip(UINT nButtonID)
+void CIndTitleBar::MobileTip(UINT nButtonID , BOOL bFlag )
 {
-	CButton *pBtton = (CButton*)GetDlgItem(nButtonID);
-	if ( NULL != pBtton ) {
-		CWnd *pst = GetDlgItem( IDC_STATIC_IMAGE_TIP ) ;
-		if ( NULL != pst ) {
-			CRect rect , rc;
-			pBtton->GetClientRect(&rect);
-			rect.top  = 60  ;
-			pst->GetClientRect(&rc);
-			switch(nButtonID)
-			{
-			case IDC_BUTTON_MAIN_UI:
-				rect.left  = 175 ;
-				break;
-			case IDC_BUTTON_SEND:
-				rect.left = 175 + 80 ;
-				break;
-			case IDC_BUTTON_RECE:
-				rect.left = 175 + 2*80 ;
-				break;
-			case IDC_BUTTON_TRAD_INFO:
-				rect.left = 175 + 3*80 ;
-				break;
-			case IDC_BUTTON_P2P:
-				rect.left = 175 + 4*80 ;
-				break;
-			case IDC_BUTTON_MORTGAGE:
-				rect.left = 175 + 5*80 ;
-				break;
-			case IDC_BUTTON_IPO:
-				rect.left = 175 + 6*80 ;
-				break;
-			case IDC_BUTTON_ADDAPP:
-				rect.left = 175 + 7*80 ;
-				break;
-			}
-			pst->SetWindowPos( NULL , rect.left , rect.top, 80, 5 ,SWP_SHOWWINDOW ) ; 
-		}
+	if ( bFlag ) {   //第一次
+		m_rBtnMainUi.LoadBitmaps(IDB_BITMAP_MAINUI_4,IDB_BITMAP_MAINUI_4,IDB_BITMAP_MAINUI_4,IDB_BITMAP_MAINUI_4);
 	}
+	if ( m_nButtonID == nButtonID  && !bFlag ) {
+		return ;
+	}
+	switch(m_nButtonID)
+	{
+	case IDC_BUTTON_MAIN_UI:
+		m_rBtnMainUi.LoadBitmaps(IDB_BITMAP_MAINUI_1,IDB_BITMAP_MAINUI_2,IDB_BITMAP_MAINUI_3,IDB_BITMAP_MAINUI_1);
+		break;
+	case IDC_BUTTON_SEND:
+		m_rBtnSend.LoadBitmaps(IDB_BITMAP_SEND_1,IDB_BITMAP_SEND_2,IDB_BITMAP_SEND_3,IDB_BITMAP_SEND_1);
+		break;
+	case IDC_BUTTON_RECE:
+		m_rBtnRece.LoadBitmaps(IDB_BITMAP_REV_1,IDB_BITMAP_REV_2,IDB_BITMAP_REV_3,IDB_BITMAP_REV_1);
+		break;
+	case IDC_BUTTON_TRAD_INFO:
+		m_rBtnTrad.LoadBitmaps(IDB_BITMAP_TRAD_1,IDB_BITMAP_TRAD_2,IDB_BITMAP_TRAD_3,IDB_BITMAP_TRAD_1);
+		break;
+	case IDC_BUTTON_P2P:
+		m_rBtnP2p.LoadBitmaps(IDB_BITMAP_YOUR_1,IDB_BITMAP_YOUR_2,IDB_BITMAP_YOUR_3,IDB_BITMAP_YOUR_1);
+		break;
+	case IDC_BUTTON_MORTGAGE:
+		m_rBtnMortgage.LoadBitmaps(IDB_BITMAP_DIYA_1,IDB_BITMAP_DIYA_2,IDB_BITMAP_DIYA_3,IDB_BITMAP_DIYA_1);
+		break;
+	case IDC_BUTTON_IPO:
+		m_rBtnIpo.LoadBitmaps(IDB_BITMAP_IPO_1,IDB_BITMAP_IPO_2,IDB_BITMAP_IPO_3,IDB_BITMAP_IPO_1);
+		break;
+	case IDC_BUTTON_ADDAPP:
+		m_rBtnAddApp.LoadBitmaps(IDB_BITMAP_ADDAPP_1 , IDB_BITMAP_ADDAPP_2 ,IDB_BITMAP_ADDAPP_3,IDB_BITMAP_ADDAPP_1);
+		break;
+	}
+	switch(nButtonID)
+	{
+	case IDC_BUTTON_MAIN_UI:
+		m_rBtnMainUi.LoadBitmaps(IDB_BITMAP_MAINUI_4,IDB_BITMAP_MAINUI_4,IDB_BITMAP_MAINUI_4,IDB_BITMAP_MAINUI_4);
+		break;
+	case IDC_BUTTON_SEND:
+		m_rBtnSend.LoadBitmaps(IDB_BITMAP_SEND_4,IDB_BITMAP_SEND_4,IDB_BITMAP_SEND_4,IDB_BITMAP_SEND_4);
+		break;
+	case IDC_BUTTON_RECE:
+		m_rBtnRece.LoadBitmaps(IDB_BITMAP_REV_4,IDB_BITMAP_REV_4,IDB_BITMAP_REV_4,IDB_BITMAP_REV_4);
+		break;
+	case IDC_BUTTON_TRAD_INFO:
+		m_rBtnTrad.LoadBitmaps(IDB_BITMAP_TRAD_4,IDB_BITMAP_TRAD_4,IDB_BITMAP_TRAD_4,IDB_BITMAP_TRAD_4);
+		break;
+	case IDC_BUTTON_P2P:
+		m_rBtnP2p.LoadBitmaps(IDB_BITMAP_YOUR_4,IDB_BITMAP_YOUR_4,IDB_BITMAP_YOUR_4,IDB_BITMAP_YOUR_4);
+		break;
+	case IDC_BUTTON_MORTGAGE:
+		m_rBtnMortgage.LoadBitmaps(IDB_BITMAP_DIYA_4,IDB_BITMAP_DIYA_4,IDB_BITMAP_DIYA_4,IDB_BITMAP_DIYA_4);
+		break;
+	case IDC_BUTTON_IPO:
+		m_rBtnIpo.LoadBitmaps(IDB_BITMAP_IPO_4,IDB_BITMAP_IPO_4,IDB_BITMAP_IPO_4,IDB_BITMAP_IPO_4);
+		break;
+	case IDC_BUTTON_ADDAPP:
+		m_rBtnAddApp.LoadBitmaps(IDB_BITMAP_ADDAPP_4,IDB_BITMAP_ADDAPP_4,IDB_BITMAP_ADDAPP_4,IDB_BITMAP_ADDAPP_4);
+		break;
+	}
+	m_nButtonID = nButtonID ;
+	Invalidate();
 }
 BOOL CIndTitleBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 {
@@ -226,19 +251,21 @@ BOOL CIndTitleBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT 
 
 	BOOL bRes = CDialogBar::Create(pParentWnd, nIDTemplate, nStyle, nID);
 	if ( bRes ) {
-		m_rBtnMainUi.LoadBitmaps(IDB_BITMAP_MAINUI_1,IDB_BITMAP_MAINUI_2,IDB_BITMAP_MAINUI_2,IDB_BITMAP_MAINUI_1);
-		m_rBtnSend.LoadBitmaps(IDB_BITMAP_SEND1,IDB_BITMAP_SEND2,IDB_BITMAP_SEND2,IDB_BITMAP_SEND1);
-		m_rBtnRece.LoadBitmaps(IDB_BITMAP_REVAPP1,IDB_BITMAP_REVAPP2,IDB_BITMAP_REVAPP2,IDB_BITMAP_REVAPP1);
-		m_rBtnTrad.LoadBitmaps(IDB_BITMAP_TRAD1,IDB_BITMAP_TRAD2,IDB_BITMAP_TRAD2,IDB_BITMAP_TRAD1);
-		m_rBtnP2p.LoadBitmaps(IDB_BITMAP_YOUR1,IDB_BITMAP_YOUR2,IDB_BITMAP_YOUR2,IDB_BITMAP_YOUR1);
-		m_rBtnMortgage.LoadBitmaps(IDB_BITMAP_DYYALOGO1,IDB_BITMAP_DIYALOGO2,IDB_BITMAP_DIYALOGO2,IDB_BITMAP_DYYALOGO1);
-		m_rBtnIpo.LoadBitmaps(IDB_BITMAP_IPOAPP1 , IDB_BITMAP_IPOAPP2 ,IDB_BITMAP_IPOAPP2,IDB_BITMAP_IPOAPP1);
-		m_rBtnAddApp.LoadBitmaps(IDB_BITMAP_ADDAPP1 , IDB_BITMAP_ADDAPP2 ,IDB_BITMAP_ADDAPP2,IDB_BITMAP_ADDAPP1);
+		m_rBtnMainUi.LoadBitmaps(IDB_BITMAP_MAINUI_1,IDB_BITMAP_MAINUI_2,IDB_BITMAP_MAINUI_3,IDB_BITMAP_MAINUI_1);
+		m_rBtnSend.LoadBitmaps(IDB_BITMAP_SEND_1,IDB_BITMAP_SEND_2,IDB_BITMAP_SEND_3,IDB_BITMAP_SEND_1);
+		m_rBtnRece.LoadBitmaps(IDB_BITMAP_REV_1,IDB_BITMAP_REV_2,IDB_BITMAP_REV_3,IDB_BITMAP_REV_1);
+		m_rBtnTrad.LoadBitmaps(IDB_BITMAP_TRAD_1,IDB_BITMAP_TRAD_2,IDB_BITMAP_TRAD_3,IDB_BITMAP_TRAD_1);
+		m_rBtnP2p.LoadBitmaps(IDB_BITMAP_YOUR_1,IDB_BITMAP_YOUR_2,IDB_BITMAP_YOUR_3,IDB_BITMAP_YOUR_1);
+		m_rBtnMortgage.LoadBitmaps(IDB_BITMAP_DIYA_1,IDB_BITMAP_DIYA_2,IDB_BITMAP_DIYA_3,IDB_BITMAP_DIYA_1);
+		m_rBtnIpo.LoadBitmaps(IDB_BITMAP_IPO_1,IDB_BITMAP_IPO_2,IDB_BITMAP_IPO_3,IDB_BITMAP_IPO_1);
+		m_rBtnAddApp.LoadBitmaps(IDB_BITMAP_ADDAPP_1 , IDB_BITMAP_ADDAPP_2 ,IDB_BITMAP_ADDAPP_3,IDB_BITMAP_ADDAPP_1);
 
 		m_rBtnClose.LoadBitmaps(IDB_BITMAP_CLOSE , IDB_BITMAP_CLOSE2 ,IDB_BITMAP_CLOSE3,IDB_BITMAP_CLOSE);
 		m_rBtnMin.LoadBitmaps(IDB_BITMAP_MIN , IDB_BITMAP_MIN2 ,IDB_BITMAP_MIN3,IDB_BITMAP_MIN);
 
 		UpdateData(0);
+
+		GetDlgItem( IDC_STATIC_IMAGE_TIP )->ShowWindow(SW_HIDE);
 
 		m_tooltip.Create(this); 
 		m_tooltip.AddTool((CButton   *)GetDlgItem(IDC_BUTTON_MAIN_UI), _T("主界面")); 
@@ -249,7 +276,7 @@ BOOL CIndTitleBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT 
 		m_tooltip.AddTool((CButton   *)GetDlgItem(IDC_BUTTON_MORTGAGE), _T("抵押交易")); 
 		m_tooltip.AddTool((CButton   *)GetDlgItem(IDC_BUTTON_IPO), _T("IPO领币")); 
 
-		MobileTip(IDC_BUTTON_MAIN_UI);
+		MobileTip(IDC_BUTTON_MAIN_UI , TRUE );
 	}
 	return bRes ;
 }
