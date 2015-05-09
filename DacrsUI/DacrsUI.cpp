@@ -149,8 +149,18 @@ BOOL CDacrsUIApp::InitInstance()
 	ASSERT(pSplashThread->IsKindOf(RUNTIME_CLASS(CSplashThread)));
 	pSplashThread->ResumeThread(); 
 	Sleep(1); 
+	int nCount(0);
 	while(1)
 	{
+	
+		HANDLE processHandle = OpenProcess(PROCESS_ALL_ACCESS,FALSE,sever_pi.dwProcessId);  
+		if(NULL == processHandle)
+		{
+			int errorCode = GetLastError();
+			AfxMessageBox(_T("open sever error:"+errorCode));
+			exit(1);
+		}
+//		TRACE("detect count:%d\n", ++nCount);
 		pSplashThread->SetDlgPos(progessPos);
 		//TRACE("index:%d\r\n",progessPos);
 		if (isStartMainDlg)
@@ -990,7 +1000,7 @@ UINT __stdcall CDacrsUIApp::blockProc(LPVOID pParam)
 					}
 					else if(nRecLen == 0) 
 					{
-						TRACE0("noui socket has been closed");
+						TRACE0("noui socket has been closed\n");
 						if (INVALID_SOCKET != pUiDemeDlg->m_blockSock)
 						{
 							closesocket(pUiDemeDlg->m_blockSock);
