@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "DacrsUI.h"
 #include "ReceiveDlg.h"
+#include "NewAddressDlg.h"
 #include "afxdialogex.h"
 
 
@@ -14,20 +15,18 @@ IMPLEMENT_DYNAMIC(CReceiveDlg, CDialogBar)
 CReceiveDlg::CReceiveDlg()
 {
 	m_accountDlg = NULL;
-	m_newaddrDlg = NULL;
+	m_pBmp = NULL ;
 }
 
 CReceiveDlg::~CReceiveDlg()
 {
-	if (m_accountDlg != NULL)
-	{
+	if (m_accountDlg != NULL) {
 		delete m_accountDlg;
 		m_accountDlg = NULL;
 	}
-	if (m_newaddrDlg != NULL )
-	{
-		delete m_newaddrDlg;
-		m_newaddrDlg = NULL;
+	if( NULL != m_pBmp ) {
+		DeleteObject(m_pBmp) ;
+		m_pBmp = NULL ;
 	}
 }
 
@@ -47,6 +46,8 @@ BEGIN_MESSAGE_MAP(CReceiveDlg, CDialogBar)
 	ON_BN_CLICKED(IDC_BUTTON1, &CReceiveDlg::OnBnClickedButtonSignAccount)
 	ON_BN_CLICKED(IDC_BUTTON_NEWADDRESS, &CReceiveDlg::OnBnClickedButtonNewaddress)
 	ON_WM_SIZE()
+	ON_WM_CREATE()
+	ON_WM_ERASEBKGND()
 END_MESSAGE_MAP()
 
 
@@ -106,17 +107,14 @@ BOOL CReceiveDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT n
 	BOOL bRes =   CDialogBar::Create(pParentWnd, nIDTemplate, nStyle, nID);
 	if (bRes)
 	{
-		m_rBtnAcitve.LoadBitmaps(IDB_BITMAP_ACTIVE1,IDB_BITMAP_ACTIVE2,IDB_BITMAP_ACTIVE3,IDB_BITMAP_ACTIVE3);
-		m_rBtnNewaddr.LoadBitmaps(IDB_BITMAP_NEWADDR1,IDB_BITMAP_NEWADDR2,IDB_BITMAP_NEWADDR3,IDB_BITMAP_NEWADDR3);
-		m_rBtnCopyaddr.LoadBitmaps(IDB_BITMAP_COPYADDR1,IDB_BITMAP_COPYADDR2,IDB_BITMAP_COPYADDR3,IDB_BITMAP_COPYADDR3);
 		UpdateData(0);
 		struct LISTCol {
 			CString		name ;
 			UINT		size ;
-		} listcol[5]  = { {"标签" , 100 }     ,
+		} listcol[5]  = { {"标签" , 136 }     ,
 		{"地址" , 275}  , 
 		{"激活状态" , 150}  , 
-		{"余额" , 140}  ,
+		{"余额" , 172}  ,
 		{"支持冷挖矿" ,100} 
 		};
 		m_listCtrl.SetBkColor(RGB(240,240,240));       
@@ -124,12 +122,42 @@ BOOL CReceiveDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT n
 		m_listCtrl.SetHeaderHeight(1.5);         
 		m_listCtrl.SetHeaderFontHW(16,0);
 		m_listCtrl.SetHeaderBKColor(32,30,32,8); 
+		m_listCtrl.SetHeaderTextColor(RGB(255,255,255)); //设置头部字体颜色
 		m_listCtrl.SetTextColor(RGB(0,0,0));  
 		for( int i = 0 ; i < 5 ; i++  ) {
 			m_listCtrl.InsertColumn(i,listcol[i].name,LVCFMT_CENTER,listcol[i].size);
 		}
 		m_listCtrl.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_HEADERDRAGDROP );// |LVS_SINGLESEL  );
 		
+		m_rBtnAcitve.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
+		m_rBtnAcitve.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+		m_rBtnAcitve.SetWindowText("激活地址") ;
+		m_rBtnAcitve.SetFontEx(24 , _T("微软雅黑"));
+		m_rBtnAcitve.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
+		m_rBtnAcitve.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+		m_rBtnAcitve.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
+		m_rBtnAcitve.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
+		m_rBtnAcitve.SizeToContent();
+
+		m_rBtnNewaddr.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
+		m_rBtnNewaddr.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+		m_rBtnNewaddr.SetWindowText("新建地址") ;
+		m_rBtnNewaddr.SetFontEx(24 , _T("微软雅黑"));
+		m_rBtnNewaddr.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
+		m_rBtnNewaddr.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+		m_rBtnNewaddr.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
+		m_rBtnNewaddr.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
+		m_rBtnNewaddr.SizeToContent();
+
+		m_rBtnCopyaddr.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
+		m_rBtnCopyaddr.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+		m_rBtnCopyaddr.SetWindowText("复制地址") ;
+		m_rBtnCopyaddr.SetFontEx(24 , _T("微软雅黑"));
+		m_rBtnCopyaddr.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
+		m_rBtnCopyaddr.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+		m_rBtnCopyaddr.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
+		m_rBtnCopyaddr.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
+		m_rBtnCopyaddr.SizeToContent();
 
 		ShowListInfo();
 
@@ -137,13 +165,6 @@ BOOL CReceiveDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT n
 			m_accountDlg = new CSignAccountsDlg ;
 			m_accountDlg->Create(CSignAccountsDlg::IDD, this) ;
 			m_accountDlg->ShowWindow(SW_HIDE) ;
-		}
-
-		if (NULL == m_newaddrDlg)
-		{
-			m_newaddrDlg = new CNewAddressDlg ;
-			m_newaddrDlg->Create(CNewAddressDlg::IDD, this) ;
-			m_newaddrDlg->ShowWindow(SW_HIDE) ;
 		}
 
 		theApp.SubscribeMsg( theApp.GetMtHthrdId() , GetSafeHwnd() , MSG_USER_RECIVE_UI ) ;
@@ -210,10 +231,11 @@ void CReceiveDlg::OnBnClickedButtonSignAccount()
 void CReceiveDlg::OnBnClickedButtonNewaddress()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	CRect rcWindow;
-	GetWindowRect(&rcWindow);
-	m_newaddrDlg->MoveWindow(rcWindow.right/2+50,rcWindow.top+200,400,rcWindow.Height()/2);
-	m_newaddrDlg->ShowWindow(SW_SHOW);
+	/*if ( NULL != m_pNewAddressDlg ) {
+		m_pNewAddressDlg->ShowWindow(SW_SHOW) ;
+	}*/
+	CNewAddressDlg dlg;
+	dlg.DoModal();
 }
 
 
@@ -231,6 +253,19 @@ BOOL CReceiveDlg::PreTranslateMessage(MSG* pMsg)
 	return CDialogBar::PreTranslateMessage(pMsg);
 }
 
+void CReceiveDlg::SetBkBmpNid( UINT nBitmapIn ) 
+{
+	if( NULL != m_pBmp ) {
+		::DeleteObject( m_pBmp ) ;
+		m_pBmp = NULL ;
+	}
+	m_pBmp	= NULL ;
+	HINSTANCE	hInstResource = NULL;	
+	hInstResource = AfxFindResourceHandle(MAKEINTRESOURCE(nBitmapIn), RT_BITMAP);
+	if( NULL != hInstResource ) {
+		m_pBmp = (HBITMAP)::LoadImage(hInstResource, MAKEINTRESOURCE(nBitmapIn), IMAGE_BITMAP, 0, 0, 0);
+	}
+}
 
 void CReceiveDlg::OnSize(UINT nType, int cx, int cy)
 {
@@ -243,25 +278,61 @@ void CReceiveDlg::OnSize(UINT nType, int cx, int cy)
 		GetClientRect( rc ) ;
 		CButton *pList = (CButton*)GetDlgItem(IDC_LIST_SHOW);
 		if( NULL != pList ) {	
-		   pList->SetWindowPos(NULL ,0, 0 , 900 , 600 - 72 - 32 - 41 , SWP_SHOWWINDOW);
+		   pList->SetWindowPos(NULL ,32, 21 , 837 , 408 , SWP_SHOWWINDOW);
 		}
 		CButton *pButton = (CButton*)GetDlgItem(IDC_BUTTON_JHDZ);
 		if( NULL != pButton ) {	
 		   CRect m_BtnRc ;
 		   pButton->GetClientRect(&m_BtnRc);
-		   pButton->SetWindowPos(NULL ,900 - 3*(103 + 5) , 600 - 72 - 32 - 39 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
+		   pButton->SetWindowPos(NULL ,900 - 3*(103 + 5) - 23 , 600 - 72 - 32 - 46 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
 		}
 		pButton = (CButton*)GetDlgItem(IDC_BUTTON_NEWADDRESS);
 		if( NULL != pButton ) {	
 			CRect m_BtnRc ;
 			pButton->GetClientRect(&m_BtnRc);
-			pButton->SetWindowPos(NULL ,900 - 2*(103 + 5) , 600 - 72 - 32 - 39 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
+			pButton->SetWindowPos(NULL ,900 - 2*(103 + 5) - 23 , 600 - 72 - 32 - 46 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
 		}
 		pButton = (CButton*)GetDlgItem(IDC_COPYADDRESS);
 		if( NULL != pButton ) {	
 			CRect m_BtnRc ;
 			pButton->GetClientRect(&m_BtnRc);
-			pButton->SetWindowPos(NULL ,900 - 1*(103 + 5) , 600 - 72 - 32 - 39 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
+			pButton->SetWindowPos(NULL ,900 - 1*(103 + 5)- 23 , 600 - 72 - 32 - 46 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
 		}
 	}
+}
+
+
+int CReceiveDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
+{
+	if (CDialogBar::OnCreate(lpCreateStruct) == -1)
+		return -1;
+
+	// TODO:  在此添加您专用的创建代码
+	SetBkBmpNid(IDB_BITMAP_RECEIVE);
+
+	return 0;
+}
+
+
+BOOL CReceiveDlg::OnEraseBkgnd(CDC* pDC)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+
+	CRect   rect; 
+	GetClientRect(&rect); 
+
+	if(m_pBmp   !=   NULL) { 
+		BITMAP   bm; 
+		CDC   dcMem; 
+		::GetObject(m_pBmp,sizeof(BITMAP),   (LPVOID)&bm); 
+		dcMem.CreateCompatibleDC(NULL); 
+		HBITMAP     pOldBitmap   =(HBITMAP   )   dcMem.SelectObject(m_pBmp); 
+		pDC-> StretchBlt(rect.left,rect.top-1,rect.Width(),rect.Height(),   &dcMem,   0,   0,bm.bmWidth-1,bm.bmHeight-1,   SRCCOPY); 
+
+		dcMem.SelectObject(pOldBitmap);
+		dcMem.DeleteDC();
+	} else  
+		CWnd::OnEraseBkgnd(pDC); 
+
+	return TRUE;
 }
