@@ -65,6 +65,11 @@ BOOL CDacrsUIApp::InitInstance()
 
 	CWinApp::InitInstance();
 
+	if (!RunOnlyOneApp())
+	{
+		return FALSE;
+	}
+
 
 	AfxEnableControlContainer();
 
@@ -1460,4 +1465,37 @@ void CDacrsUIApp::GetMainDlgStruc()
 	string msg =maindlg.ToJson();
 	Postmsg.SetData(msg.c_str());	
 	m_UiManDlgQueue.pushFront(Postmsg);
+}
+
+BOOL CDacrsUIApp::RunOnlyOneApp()
+{
+	HANDLE hMutex = CreateMutex(NULL, FALSE, _T("DacrsUI"));
+	// ¼ì²é´íÎó´úÂë
+	if (GetLastError() == ERROR_ALREADY_EXISTS) 
+	{
+		CloseHandle(hMutex);
+
+		HWND hWndPrevious = ::GetWindow( ::GetDesktopWindow(), GW_CHILD );
+		while(::IsWindow(hWndPrevious))
+		{
+			if (::GetProp(hWndPrevious, WINDOW_TAG))
+			{
+				if (::IsIconic(hWndPrevious))
+				{
+					::ShowWindow(hWndPrevious, SW_RESTORE);
+					::SetForegroundWindow(hWndPrevious);
+				}
+				else
+				{
+					::SetForegroundWindow(::GetLastActivePopup(hWndPrevious));
+				}
+				return FALSE;
+			}
+			hWndPrevious = ::GetWindow( hWndPrevious, GW_HWNDNEXT );
+		}
+
+		return FALSE;
+	}
+
+	return TRUE;
 }

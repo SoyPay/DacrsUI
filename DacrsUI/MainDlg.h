@@ -53,6 +53,9 @@ private:
 	bool GetUrlServer();
 	map<CString,CString> m_url;
 	CMFCLinkCtrl v_linkCtrl;
+	CMFCLinkCtrl v_linkCtrl1;
+	CMFCLinkCtrl v_linkCtrl2;
+	CMFCLinkCtrl v_linkCtrl3;
 public:
 	afx_msg void OnPaint();
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
