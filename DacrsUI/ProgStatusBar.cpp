@@ -230,6 +230,10 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 		m_strHeight.SetWindowText(strTips) ;
 		m_progress.ShowWindow(SW_HIDE);
 		m_strHeight.ShowWindow(SW_SHOW);
+		if ( NULL != m_ProgressWnd ) {
+			m_ProgressWnd->ShowWindow(SW_HIDE) ;
+		}
+		m_walletui = !m_walletui ;
 		Invalidate();
 	}
 	InvalidateRect(m_bmpsig);
