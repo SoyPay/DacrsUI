@@ -686,9 +686,9 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 			break;
 		case MSG_USER_UP_PROGRESS:
 			{
-				string strTemp = Postmsg.GetData();
-				uistruct::BLOCKCHANGED_t      m_Blockchanged;
-				m_Blockchanged.JsonToStruct(strTemp.c_str());
+				//string strTemp = Postmsg.GetData();
+				//uistruct::BLOCKCHANGED_t      m_Blockchanged;
+				//m_Blockchanged.JsonToStruct(strTemp.c_str());
 				pUiDemeDlg->m_UimsgQueue.push(Postmsg);
 				theApp.DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_UP_PROGRESS , 0,0);					
 			}
@@ -1165,8 +1165,19 @@ int CDacrsUIApp::SendPostThread(DWORD msgtype)
 		break;
 	case WM_REVTRANSACTION:
 		{
-			if(pDlg->dlgType == CMainDlg::IDD)
-				DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_MAIN_UI , 0,0);
+			SYSTEMTIME curTime ;
+			memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
+			GetLocalTime( &curTime ) ;
+			static int UpdatManUiTimeLast =0;
+			int tempTimemsg= UiFun::SystemTimeToTimet(curTime);
+
+			if ((tempTimemsg - UpdatManUiTimeLast)>100 || UpdatManUiTimeLast == 0)
+			{	
+				if(pDlg->dlgType == CMainDlg::IDD)
+					DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_MAIN_UI , 0,0);
+				UpdatManUiTimeLast = tempTimemsg;
+			}
+
 		}
 		break;
 	case WM_UPWALLET:
