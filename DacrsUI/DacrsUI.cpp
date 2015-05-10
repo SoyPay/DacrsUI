@@ -41,6 +41,7 @@ CDacrsUIApp::CDacrsUIApp()
 	m_rpcUser = _T("");
 	m_rpcPassWord = _T("");
 	progessPos = 0;
+	m_strAddress = _T("");
 }
 
 
