@@ -117,6 +117,9 @@
     <None Include="res\button_bar.bmp" />
     <None Include="res\button_bar_3.bmp" />
     <None Include="res\button_black_ground.bmp" />
+    <None Include="res\button_image.bmp" />
+    <None Include="res\button_image_1.bmp" />
+    <None Include="res\button_image_2.bmp" />
     <None Include="res\button_send_1.bmp" />
     <None Include="res\button_send_2.bmp" />
     <None Include="res\button_send_3.bmp" />
@@ -133,6 +136,7 @@
     <None Include="res\diya_logo_2.bmp" />
     <None Include="res\diya_logo_3.bmp" />
     <None Include="res\diya_logo_4.bmp" />
+    <None Include="res\dlg_bj.bmp" />
     <None Include="res\IPO.bmp" />
     <None Include="res\ipo_1.bmp" />
     <None Include="res\ipo_2.bmp" />
@@ -198,6 +202,7 @@
     <ClInclude Include="DacrsUI.h" />
     <ClInclude Include="DacrsUIDlg.h" />
     <ClInclude Include="GIFControl.h" />
+    <ClInclude Include="HeaderCtrlCl.h" />
     <ClInclude Include="IndTitleBar.h" />
     <ClInclude Include="IpoDlg.h" />
     <ClInclude Include="JsonConfigHelp.h" />
@@ -214,6 +219,7 @@
     <ClInclude Include="json\version.h" />
     <ClInclude Include="json\writer.h" />
     <ClInclude Include="Language.h" />
+    <ClInclude Include="ListCtrlCl.h" />
     <ClInclude Include="MainDlg.h" />
     <ClInclude Include="MortgageTardDlg.h" />
     <ClInclude Include="MyMutex.h" />
@@ -249,6 +255,7 @@
     <ClCompile Include="DacrsUI.cpp" />
     <ClCompile Include="DacrsUIDlg.cpp" />
     <ClCompile Include="GIFControl.cpp" />
+    <ClCompile Include="HeaderCtrlCl.cpp" />
     <ClCompile Include="IndTitleBar.cpp" />
     <ClCompile Include="IpoDlg.cpp" />
     <ClCompile Include="JsonConfigHelp.cpp" />
@@ -256,6 +263,7 @@
     <ClCompile Include="json\json_value.cpp" />
     <ClCompile Include="json\json_writer.cpp" />
     <ClCompile Include="Language.cpp" />
+    <ClCompile Include="ListCtrlCl.cpp" />
     <ClCompile Include="MainDlg.cpp" />
     <ClCompile Include="MortgageTardDlg.cpp" />
     <ClCompile Include="MyMutex.cpp" />

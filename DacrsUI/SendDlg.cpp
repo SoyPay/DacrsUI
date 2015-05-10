@@ -92,7 +92,7 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 			//插入到数据库
 			CString strHash,strHash1 ;
 			strHash.Format(_T("'%s'") , root["hash"].asCString() );
-			strHash1.Format(_T("'%s'") , root["hash"].asCString() );
+			strHash1.Format(_T("%s") , root["hash"].asCString() );
 			theApp.cs_SqlData.Lock();
 			int nItem =  theApp.m_SqliteDeal.FindDB(_T("revtransaction") , strHash1 ,_T("hash") ) ;
 			theApp.cs_SqlData.Unlock();
@@ -184,10 +184,21 @@ BOOL CSendDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 	BOOL bRes =   CDialogBar::Create(pParentWnd, nIDTemplate, nStyle, nID);
 	if (bRes) 
 	{
-		m_rBtnSend.LoadBitmaps(IDB_BITMAP_BOTTON_SEND1,IDB_BITMAP_BOTTON_SEND2,IDB_BITMAP_BOTTON_SEND3,IDB_BITMAP_BOTTON_SEND3);
+		//m_rBtnSend.LoadBitmaps(IDB_BITMAP_BOTTON_SEND1,IDB_BITMAP_BOTTON_SEND2,IDB_BITMAP_BOTTON_SEND3,IDB_BITMAP_BOTTON_SEND3);
 		m_rBtnAddbook.LoadBitmaps(IDB_BITMAP_ADDBOOK,IDB_BITMAP_ADDBOOK,IDB_BITMAP_ADDBOOK,IDB_BITMAP_ADDBOOK);
 		UpdateData(0);
 		AddListaddrDataBox();
+
+		m_rBtnSend.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
+		m_rBtnSend.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+		m_rBtnSend.SetWindowText("发送") ;
+		m_rBtnSend.SetFontEx(32 , _T("微软雅黑"));
+		m_rBtnSend.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(255, 255, 255));
+		m_rBtnSend.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+		m_rBtnSend.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(255, 255, 255));
+		m_rBtnSend.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
+		m_rBtnSend.SizeToContent();
+
 		theApp.SubscribeMsg( theApp.GetMtHthrdId() , GetSafeHwnd() , MSG_USER_SEND_UI ) ;
 		((CComboBox*)GetDlgItem(IDC_COMBO2))->SetCurSel(0);
 		
