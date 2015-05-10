@@ -57,4 +57,5 @@ public:
 	afx_msg void OnPaint();
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	void OnnitCtrlText();
+	void onnitLinkText();
 };
