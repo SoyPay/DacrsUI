@@ -76,6 +76,8 @@ public:
 	CString	server_ip;
 	CString	rpc_port;
 	CString server_ui_port;
+	CString rpc_user;
+	CString rpc_password;
 };
 
 class CJsonConfigHelp

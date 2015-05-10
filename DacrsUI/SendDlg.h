@@ -32,6 +32,7 @@ public:
 private:
 	uistruct::LISTADDRLIST m_pListaddrInfo;
 	CShadeButtonST         m_rBtnSend;
+	CStaticTrans     m_strTx1  ;  
 public:
 	BOOL AddListaddrDataBox();
 	virtual BOOL Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID);
