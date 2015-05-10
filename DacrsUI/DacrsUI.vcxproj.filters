@@ -118,6 +118,9 @@
     <ClCompile Include="NewAddressDlg.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="AddApp.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BmpBtn.h">
@@ -271,6 +274,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="NewAddressDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="AddApp.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -559,6 +565,21 @@
       <Filter>资源文件</Filter>
     </None>
     <None Include="res\dlg_balck_ground.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\Trad_dlg.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\addapp_dlg.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\ipo_dlg.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\mort_dlg.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\p2p_dlg.bmp">
       <Filter>资源文件</Filter>
     </None>
   </ItemGroup>
