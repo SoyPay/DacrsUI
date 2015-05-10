@@ -678,6 +678,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 				//string strTemp = Postmsg.GetData();
 				//uistruct::BLOCKCHANGED_t      m_Blockchanged;
 				//m_Blockchanged.JsonToStruct(strTemp.c_str());
+				TRACE("change:%s\r\n","MSG_USER_UP_PROGRESS");
 				pUiDemeDlg->m_UimsgQueue.push(Postmsg);
 				theApp.DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_UP_PROGRESS , 0,0);					
 			}

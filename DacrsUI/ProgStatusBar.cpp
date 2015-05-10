@@ -160,6 +160,7 @@ BOOL CProgStatusBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UIN
 
 LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam ) 
 {
+	TRACE("OnShowProgressCtrl:%s\r\n","OnShowProgressCtrl");
 	CPostMsg postmsg;
 	if (!theApp.m_UimsgQueue.pop(postmsg))
 	{
