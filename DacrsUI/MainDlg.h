@@ -46,6 +46,7 @@ public:
 	afx_msg LRESULT OnShowListCtorl(  WPARAM wParam, LPARAM lParam ) ;
 public:
 	void SetCtrlText();
+	void ClearCtrlText();
 	virtual BOOL Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID);
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 private:
