@@ -62,6 +62,7 @@ CDacrsUIDlg::CDacrsUIDlg(CWnd* pParent /*=NULL*/)
 	m_pP2PDlg  = NULL  ;
 	m_pMortgageTardDlg  = NULL  ;
 	m_pIpoDlg  = NULL  ;
+	m_pAddApp  = NULL  ;
 	dlgType = 0;
 }
 
@@ -253,6 +254,11 @@ int CDacrsUIDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		m_pIpoDlg->Create(this, CIpoDlg::IDD, CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_HIDE_INPLACE,9) ;
 		m_pIpoDlg->ShowWindow(SW_HIDE) ;
 	}
+	if( NULL == m_pAddApp ){
+		m_pAddApp = new CAddApp ;
+		m_pAddApp->Create(this, CAddApp::IDD, CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_HIDE_INPLACE,10) ;
+		m_pAddApp->ShowWindow(SW_HIDE) ;
+	}
 
 	//加入到m_dlgMap
 	m_dlgMap.insert( std::map<UINT , CDialogBar *>::value_type( CMainDlg::IDD , m_pMainDlg)) ; 
@@ -262,6 +268,7 @@ int CDacrsUIDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_dlgMap.insert( std::map<UINT , CDialogBar *>::value_type( CP2PDlg::IDD , m_pP2PDlg)) ;
 	m_dlgMap.insert( std::map<UINT , CDialogBar *>::value_type( CMortgageTardDlg::IDD , m_pMortgageTardDlg)) ;
 	m_dlgMap.insert( std::map<UINT , CDialogBar *>::value_type( CIpoDlg::IDD , m_pIpoDlg)) ;
+	m_dlgMap.insert( std::map<UINT , CDialogBar *>::value_type( CAddApp::IDD , m_pAddApp)) ;
 
 	//显示主界面
 	ShowDialog(CMainDlg::IDD) ;
@@ -332,6 +339,10 @@ void CDacrsUIDlg::DestroyDlg()
 		delete m_pIpoDlg ;
 		m_pIpoDlg = NULL ;
 	}
+	if ( NULL != m_pAddApp ) {
+		delete m_pAddApp ;
+		m_pAddApp = NULL ;
+	}
 }
 //主界面
 void CDacrsUIDlg::OnBnClickedButtonMainUI()
@@ -378,6 +389,7 @@ void CDacrsUIDlg::OnBnClickedButtonDeals()
 //添加应用
 void CDacrsUIDlg::OnBnClickedButtonAddApp()
 {
+	ShowDialog(CAddApp::IDD) ;
 	ShowStateTip(IDC_BUTTON_ADDAPP);
 }
 void CDacrsUIDlg::OnBnClickedButtonClose()
