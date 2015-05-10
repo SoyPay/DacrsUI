@@ -285,7 +285,9 @@ void CDacrsUIDlg::ShowDialog(UINT dlgid)
 	}
 	p_CurSelDlg = m_dlgMap[dlgid] ;  //当前选择对话框指针
 	dlgType = dlgid;
-	theApp.UpdataUIData();
+
+	CPostMsg postkmsg(MSG_USER_UPDATA_UI,0);
+	theApp.m_MsgQueue.push(postkmsg); 
 }
 void CDacrsUIDlg::ShowStateTip(UINT nButtonID)
 {
@@ -380,14 +382,34 @@ void CDacrsUIDlg::OnBnClickedButtonAddApp()
 }
 void CDacrsUIDlg::OnBnClickedButtonClose()
 {
+	//SYSTEMTIME curTime ,local;
+	//memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
+	//GetLocalTime( &curTime ) ;
+	//int RecivetxTimeLast =0,cutrtieme;
+	//RecivetxTimeLast= UiFun::SystemTimeToTimet(curTime);
 	StopSever();
-	CloseThread();
 
+	//GetLocalTime( &local ) ;
+	//cutrtieme= UiFun::SystemTimeToTimet(curTime);
+	//TRACE("StopSever:= %d",(cutrtieme- RecivetxTimeLast));
+
+	//GetLocalTime( &curTime ) ;
+	//RecivetxTimeLast= UiFun::SystemTimeToTimet(curTime);
+	CloseThread();
+	//GetLocalTime( &local ) ;
+	//cutrtieme= UiFun::SystemTimeToTimet(curTime);
+	//TRACE("CloseThread:= %d",(cutrtieme- RecivetxTimeLast));
+
+	//GetLocalTime( &curTime ) ;
+	//RecivetxTimeLast= UiFun::SystemTimeToTimet(curTime);
 	DestroyDlg();
 	PostMessage( WM_QUIT ) ; 
 	PostMessage( WM_CLOSE ); 	
 	TRACE("DestroyWindow()");
 	DestroyWindow();
+	//GetLocalTime( &local ) ;
+	//cutrtieme= UiFun::SystemTimeToTimet(curTime);
+	//TRACE("DestroyWindow:= %d",(cutrtieme- RecivetxTimeLast));
 	Sleep(200) ;
 }
 void CDacrsUIDlg::OnBnClickedButtonMin()
@@ -445,7 +467,7 @@ void CDacrsUIDlg::CloseThread()
 			TRACE( "EXC = %d \n" , exc ) ;
 			break;
 		}
-		Sleep(1000);
+		Sleep(100);
 	}
 
 	while( ::GetExitCodeThread( theApp.m_hblockThread , &exc ) ) {
@@ -456,7 +478,7 @@ void CDacrsUIDlg::CloseThread()
 			TRACE( "EXC = %d \n" , exc ) ;
 			break;
 		}
-		Sleep(1000);
+		Sleep(100);
 	}
 	//delete theApp.pSplashThread;
 }

@@ -38,7 +38,7 @@ public:
 	BOOL        m_bProgressType;
 	int         m_ProgressMax  ;
 	CProgressCtrl m_progress;
-	BOOL        m_notsetprosess;
-	int         m_gniuessBlockTime;
 	afx_msg void OnPaint();
+	CRect  m_bmpsig;
+	bool   m_walletui;
 };

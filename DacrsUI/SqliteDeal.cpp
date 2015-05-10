@@ -702,9 +702,10 @@ BOOL  CSqliteDeal::UpdataP2pBetRecord()
 		memset(&DBbet , 0 , sizeof(uistruct::DBBET_DATA));
 		std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue.GetString());
 		uistruct::P2P_BET_RECORD_t  betrecord;
-		theApp.cs_SqlData.Lock();
-		int nItem =  theApp.m_SqliteDeal.FindDB(_T("p2p_bet_record") , txhash ,_T("tx_hash"),&betrecord ) ;
-		theApp.cs_SqlData.Unlock();
+		//theApp.cs_SqlData.Lock();
+		//int nItem =  theApp.m_SqliteDeal.FindDB(_T("p2p_bet_record") , txhash ,_T("tx_hash"),&betrecord ) ;
+		//theApp.cs_SqlData.Unlock();
+		int nItem =FindDB(_T("p2p_bet_record") , txhash ,_T("tx_hash"),&betrecord ) ;
 		if (vTemp.size() == 0)  /// 此条数据在应用数据库中被删除了,如果被接赌了,说明已经揭赌了
 		{
 			if (nItem != 0 && (betrecord.state == 1 || betrecord.state == 4 || betrecord.state == 5))
@@ -994,9 +995,11 @@ BOOL CSqliteDeal::UpdataDarkRecord(){
 		memset(&DBbet , 0 , sizeof(uistruct::DARK_DATA_DB));
 		std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue.GetString());
 		uistruct::DARK_RECORD  betrecord;
-		theApp.cs_SqlData.Lock();
-		int nItem =  theApp.m_SqliteDeal.FindDB(_T("dark_record") , txhash ,_T("tx_hash"),&betrecord ) ;
-		theApp.cs_SqlData.Unlock();
+		//theApp.cs_SqlData.Lock();
+		//int nItem =  theApp.m_SqliteDeal.FindDB(_T("dark_record") , txhash ,_T("tx_hash"),&betrecord ) ;
+		//theApp.cs_SqlData.Unlock();
+
+		int nItem =  FindDB(_T("dark_record") , txhash ,_T("tx_hash"),&betrecord ) ;
 		if (vTemp.size() == 0)  /// 此条数据在应用数据库中被删除了,确认收货了
 		{
 			if (nItem != 0 && (betrecord.state == 1 || betrecord.state == 5))

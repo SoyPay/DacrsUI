@@ -122,11 +122,13 @@ public:
 public:
 	CMyQueue m_MsgQueue;
 	CMyQueue m_UimsgQueue;
+	CMyQueue m_UiManDlgQueue;
 	void UpdataBetPoolData();
 	void UpdataAddressData();
 	void InsertarevtransactionData(string hash);
 	void UpdatarevtransactionData(string hash);
 	void UpdatarevAppRecord(string txdetail);
+	void GetMainDlgStruc();
 public:
 	bool isStartMainDlg;
 	CNoUiMsgBuffer m_noUiMsgBuffer;
