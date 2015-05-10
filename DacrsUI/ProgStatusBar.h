@@ -22,6 +22,7 @@ protected:
 public:
 	CStatic		     *m_ProgressWnd ;	//Progress窗口
 	CStaticTrans     m_strNeting    ;   //网络同步 
+	CStaticTrans     m_strHeight    ;   //高度 
 public:
 	HBITMAP		     m_pBmp; 
 	CBitmap          m_Sigbmp[4];  //信号图片
