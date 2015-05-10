@@ -265,8 +265,6 @@ BOOL CIndTitleBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT 
 
 		UpdateData(0);
 
-		GetDlgItem( IDC_STATIC_IMAGE_TIP )->ShowWindow(SW_HIDE);
-
 		m_tooltip.Create(this); 
 		m_tooltip.AddTool((CButton   *)GetDlgItem(IDC_BUTTON_MAIN_UI), _T("主界面")); 
 		m_tooltip.AddTool((CButton   *)GetDlgItem(IDC_BUTTON_SEND), _T("发送")); 

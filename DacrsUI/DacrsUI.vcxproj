@@ -136,6 +136,7 @@
     <None Include="res\diya_logo_2.bmp" />
     <None Include="res\diya_logo_3.bmp" />
     <None Include="res\diya_logo_4.bmp" />
+    <None Include="res\dlg_balck_ground.bmp" />
     <None Include="res\dlg_bj.bmp" />
     <None Include="res\IPO.bmp" />
     <None Include="res\ipo_1.bmp" />
@@ -144,6 +145,7 @@
     <None Include="res\ipo_4.bmp" />
     <None Include="res\ipo_app_1.bmp" />
     <None Include="res\ipo_app_2.bmp" />
+    <None Include="res\kuang.bmp" />
     <None Include="res\Logo.bmp" />
     <None Include="res\MainUI.bmp" />
     <None Include="res\MainUI_1.bmp" />

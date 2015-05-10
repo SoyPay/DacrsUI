@@ -1,5 +1,9 @@
 #pragma once
-#include "CommonStruct.h"
+#include "RoundButton.h"
+#include "StaticTrans.h"
+#include "BmpBtn.h"
+#include "ShadeButtonST.h"
+
 // CNewAddressDlg 对话框
 
 class CNewAddressDlg : public CDialogEx
@@ -18,10 +22,19 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 public:
-	afx_msg void OnBnClickedButton1();
-	virtual BOOL OnInitDialog();
-public:
+	CFont            m_fontGrid;//字体变量
 	HBITMAP		     m_pBmp; 
 	void		     SetBkBmpNid( UINT nBitmapIn ) ;
+public:
+	CShadeButtonST   m_rBtnClose;
+	CShadeButtonST   m_rBtnNewAdd;
+public:
+	virtual BOOL OnInitDialog();
 	afx_msg void OnPaint();
+	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
+	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+	afx_msg void OnSize(UINT nType, int cx, int cy);
+	afx_msg void OnBnClickedButtonClose();
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+	afx_msg LRESULT OnNcHitTest(CPoint point);
 };
