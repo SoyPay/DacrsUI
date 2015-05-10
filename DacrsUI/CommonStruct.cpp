@@ -1,5 +1,6 @@
 ﻿#include "stdafx.h"
 #include "CommonStruct.h"
+#include "DacrsUI.h"
 
 IMPLEMENT_SINGLETON(CSoyPayHelp)
 
@@ -103,7 +104,7 @@ void ProductHttpHead(const CStringA& configdir,const string& strCfgFileName,CStr
 	}
 	if (struiport == "")
 	{
-		struiport = "123456";
+		struiport = "12345";
 	}
 	static const int LEN_NAME = 8;
 	if (!userflag)
@@ -129,10 +130,17 @@ void ProductHttpHead(const CStringA& configdir,const string& strCfgFileName,CStr
 		mFile.Close();
 	}
 
+	if(strcmp(theApp.m_severip, "127.0.0.1")) {
+		rpcuser = theApp.m_rpcUser.GetString();
+		rpcpassword = theApp.m_rpcPassWord.GetString();
+	}else{
+		theApp.m_rpcUser = _T(rpcuser.c_str());
+		theApp.m_rpcPassWord = _T(rpcpassword.c_str());
+	}
+
 	CStringA UserPass = "";
 	if (rpcuser!= "" && rpcpassword!="")
 	{
-
 		UserPass = rpcuser.c_str();
 		UserPass.TrimLeft();
 		UserPass.TrimRight();

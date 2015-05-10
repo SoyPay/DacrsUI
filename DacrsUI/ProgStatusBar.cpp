@@ -43,7 +43,7 @@ BEGIN_MESSAGE_MAP(CProgStatusBar, CDialogBar)
 	ON_WM_ERASEBKGND()
 	ON_WM_CREATE()
 	ON_WM_SIZE()
-	ON_MESSAGE(MSG_USER_STARTPROCESS_UI , &CProgStatusBar::OnShowProgressCtrl  )
+	ON_MESSAGE(MSG_USER_UP_PROGRESS , &CProgStatusBar::OnShowProgressCtrl  )
 	ON_WM_PAINT()
 END_MESSAGE_MAP()
 
@@ -151,13 +151,13 @@ BOOL CProgStatusBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UIN
 		m_progress.SendMessage(PBM_SETBKCOLOR, 0, RGB(66, 65, 63));//背景色
 		m_progress.SendMessage(PBM_SETBARCOLOR, 0, RGB(254, 153, 0));//前景色
 
-		CPostMsg postmsg(MSG_USER_UP_PROGRESS,0);
-		theApp.m_MsgQueue.pushFront(postmsg);
+		//CPostMsg postmsg(MSG_USER_UP_PROGRESS,0);
+		//theApp.m_MsgQueue.pushFront(postmsg);
 	}
 	return bRes ;
 }
 
-LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam ) 
+/*LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam ) 
 {
 	SYSTEMTIME curTime ;
 	memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
@@ -215,8 +215,56 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 	}
 	Invalidate(); 
 	return 1;
-}
+}*/
+LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam ) 
+{
+	SYSTEMTIME curTime ;
+	memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
+	GetLocalTime( &curTime ) ;
+	static int RecivetxTimeLast =0;
+	int nCurTime= UiFun::SystemTimeToTimet(curTime);
 
+	CPostMsg postmsg;
+	if (!theApp.m_UimsgQueue.pop(postmsg))
+	{
+		return 1;
+	}
+
+	uistruct::BLOCKCHANGED_t pBlockchanged; 
+	string strTemp = postmsg.GetData();
+	pBlockchanged.JsonToStruct(strTemp.c_str());
+
+	if (!m_bProgressType)
+	{
+		
+			m_progress.SetRange32( 0 , 100); 
+			int  setpos = (pBlockchanged.high*1.0/pBlockchanged.tips)*100;
+			m_progress.SetPos(setpos);
+			m_bProgressType = TRUE;
+			m_nSigIndex =pBlockchanged.connections;
+
+			if ((pBlockchanged.tips-pBlockchanged.high)<10)
+			{
+				//// 发送钱包同步完毕
+				CPostMsg postblockmsg(MSG_USER_MAIN_UI,WM_UPWALLET);
+				theApp.m_MsgQueue.push(postblockmsg); 
+			}
+			Invalidate(); 
+		return 1;
+	}
+
+	m_nSigIndex = pBlockchanged.connections;
+	int  setpos = (pBlockchanged.high*1.0/pBlockchanged.tips)*100;
+	m_progress.SetPos(setpos);//设置进度条的值 
+	if ((pBlockchanged.tips-pBlockchanged.high)<10)
+	{
+		//// 发送钱包同步完毕
+		CPostMsg postblockmsg(MSG_USER_MAIN_UI,WM_UPWALLET);
+		theApp.m_MsgQueue.push(postblockmsg); 
+	}
+	Invalidate(); 
+	return 1;
+}
 //Invalidate(); 
 void CProgStatusBar::OnPaint()
 {

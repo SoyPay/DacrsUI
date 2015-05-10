@@ -16,6 +16,11 @@ CSplashThread::CSplashThread()
 
 CSplashThread::~CSplashThread()
 {
+	if (m_pSplashDlg != NULL)
+	{
+		delete m_pSplashDlg;
+		m_pSplashDlg = NULL;
+	}
 }
 
 BOOL CSplashThread::InitInstance()
@@ -33,6 +38,7 @@ int CSplashThread::ExitInstance()
 	// TODO: 在此执行任意逐线程清理
 	m_pSplashDlg->DestroyWindow();
 	delete m_pSplashDlg;
+	m_pSplashDlg = NULL;
 	return CWinThread::ExitInstance();
 }
 
