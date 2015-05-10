@@ -78,6 +78,9 @@ CButtonST::CButtonST()
 	m_bDrawTransparent = FALSE;
 	m_pbmpOldBk = NULL;
 
+	//font
+	m_Font = NULL ;
+
 	// No URL defined
 	SetURL(NULL);
 
@@ -114,6 +117,12 @@ CButtonST::~CButtonST()
 	} // if
 
 	FreeResources();
+	if(m_Font)
+	{
+		m_Font->DeleteObject();
+		delete m_Font;
+		m_Font = NULL ;
+	} 
 
 	// Destroy the cursor (if any)
 	if (m_hCursor) ::DestroyCursor(m_hCursor);
@@ -216,7 +225,34 @@ UINT CButtonST::OnGetDlgCode()
 
 	return nCode;
 } // End of OnGetDlgCode
+//font
+void CButtonST::SetFontEx(int nHeight, LPCTSTR fontName, BOOL bRedraw)
+{
+	if(m_Font)
+		m_Font->DeleteObject();
 
+	if(m_Font == NULL)
+		m_Font = new CFont();
+
+	if(m_Font)
+	{
+		if ( ! m_Font->CreateFont(nHeight, 0, 0, 0, FW_BOLD, FALSE, FALSE, 0, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, 
+			FIXED_PITCH | FF_MODERN, fontName) ) {
+				delete m_Font; 
+				m_Font = NULL;
+		 }
+		 if ( NULL != m_Font ) {
+			SetFont(m_Font);
+		 } 
+		/*if(!m_Font->CreatePointFont(nHeight, fontName))
+		{
+			delete m_Font; 
+			m_Font = NULL;
+		}*/
+	}
+	if(bRedraw && GetSafeHwnd())
+		Invalidate();
+}
 BOOL CButtonST::PreTranslateMessage(MSG* pMsg) 
 {
 	InitToolTip();

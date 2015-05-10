@@ -35,7 +35,7 @@ void CReceiveDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogBar::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LIST_SHOW, m_listCtrl);
-	DDX_Control(pDX, IDC_BUTTON1, m_rBtnAcitve);
+	DDX_Control(pDX, IDC_BUTTON_JHDZ, m_rBtnAcitve);
 	DDX_Control(pDX, IDC_BUTTON_NEWADDRESS, m_rBtnNewaddr);
 	DDX_Control(pDX, IDC_COPYADDRESS, m_rBtnCopyaddr);
 }
@@ -46,6 +46,7 @@ BEGIN_MESSAGE_MAP(CReceiveDlg, CDialogBar)
 	ON_MESSAGE(MSG_USER_RECIVE_UI , &CReceiveDlg::OnShowListCtrl )
 	ON_BN_CLICKED(IDC_BUTTON1, &CReceiveDlg::OnBnClickedButtonSignAccount)
 	ON_BN_CLICKED(IDC_BUTTON_NEWADDRESS, &CReceiveDlg::OnBnClickedButtonNewaddress)
+	ON_WM_SIZE()
 END_MESSAGE_MAP()
 
 
@@ -112,16 +113,23 @@ BOOL CReceiveDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT n
 		struct LISTCol {
 			CString		name ;
 			UINT		size ;
-		} listcol[7]  = { {"标签" , 100 }     ,
+		} listcol[5]  = { {"标签" , 100 }     ,
 		{"地址" , 275}  , 
 		{"激活状态" , 150}  , 
 		{"余额" , 140}  ,
 		{"支持冷挖矿" ,100} 
 		};
+		m_listCtrl.SetBkColor(RGB(240,240,240));       
+		m_listCtrl.SetRowHeigt(23);               
+		m_listCtrl.SetHeaderHeight(1.5);         
+		m_listCtrl.SetHeaderFontHW(16,0);
+		m_listCtrl.SetHeaderBKColor(32,30,32,8); 
+		m_listCtrl.SetTextColor(RGB(0,0,0));  
 		for( int i = 0 ; i < 5 ; i++  ) {
 			m_listCtrl.InsertColumn(i,listcol[i].name,LVCFMT_CENTER,listcol[i].size);
 		}
 		m_listCtrl.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_HEADERDRAGDROP );// |LVS_SINGLESEL  );
+		
 
 		ShowListInfo();
 
@@ -221,4 +229,39 @@ BOOL CReceiveDlg::PreTranslateMessage(MSG* pMsg)
 		}
 	}
 	return CDialogBar::PreTranslateMessage(pMsg);
+}
+
+
+void CReceiveDlg::OnSize(UINT nType, int cx, int cy)
+{
+	CDialogBar::OnSize(nType, cx, cy);
+
+	// TODO: 在此处添加消息处理程序代码
+	if( NULL != GetSafeHwnd() ) {
+		const int div = 100 ;
+		CRect rc  ;
+		GetClientRect( rc ) ;
+		CButton *pList = (CButton*)GetDlgItem(IDC_LIST_SHOW);
+		if( NULL != pList ) {	
+		   pList->SetWindowPos(NULL ,0, 0 , 900 , 600 - 72 - 32 - 41 , SWP_SHOWWINDOW);
+		}
+		CButton *pButton = (CButton*)GetDlgItem(IDC_BUTTON_JHDZ);
+		if( NULL != pButton ) {	
+		   CRect m_BtnRc ;
+		   pButton->GetClientRect(&m_BtnRc);
+		   pButton->SetWindowPos(NULL ,900 - 3*(103 + 5) , 600 - 72 - 32 - 39 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
+		}
+		pButton = (CButton*)GetDlgItem(IDC_BUTTON_NEWADDRESS);
+		if( NULL != pButton ) {	
+			CRect m_BtnRc ;
+			pButton->GetClientRect(&m_BtnRc);
+			pButton->SetWindowPos(NULL ,900 - 2*(103 + 5) , 600 - 72 - 32 - 39 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
+		}
+		pButton = (CButton*)GetDlgItem(IDC_COPYADDRESS);
+		if( NULL != pButton ) {	
+			CRect m_BtnRc ;
+			pButton->GetClientRect(&m_BtnRc);
+			pButton->SetWindowPos(NULL ,900 - 1*(103 + 5) , 600 - 72 - 32 - 39 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
+		}
+	}
 }

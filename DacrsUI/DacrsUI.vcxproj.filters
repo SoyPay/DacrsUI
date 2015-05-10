@@ -112,6 +112,12 @@
     <ClCompile Include="SplashThread.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="HeaderCtrlCl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ListCtrlCl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BmpBtn.h">
@@ -259,6 +265,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="SplashThread.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="HeaderCtrlCl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ListCtrlCl.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -529,6 +541,18 @@
       <Filter>资源文件</Filter>
     </None>
     <None Include="res\main_log_4.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\button_image_1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\button_image_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\button_image.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\dlg_bj.bmp">
       <Filter>资源文件</Filter>
     </None>
   </ItemGroup>
