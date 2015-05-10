@@ -138,11 +138,11 @@ BOOL CProgStatusBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UIN
 	if ( bRes ) {
 		UpdateData(0);
 
-		m_strNeting.SetFont(85, _T("宋体"));				//设置显示字体和大小
+		m_strNeting.SetFont(90, _T("宋体"));				//设置显示字体和大小
 		m_strNeting.SetTextColor(RGB(255,255,255));			    //字体颜色
 		m_strNeting.SetWindowText(_T("网络同步中...")) ;
 
-		m_strHeight.SetFont(85, _T("宋体"));				//设置显示字体和大小
+		m_strHeight.SetFont(90, _T("宋体"));				//设置显示字体和大小
 		m_strHeight.SetTextColor(RGB(255,255,255));			    //字体颜色
 		m_strHeight.SetWindowText(_T("高度:")) ;
 		m_strHeight.ShowWindow(SW_HIDE) ;
@@ -226,8 +226,9 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 	if ( m_walletui ) {
 		m_strNeting.SetWindowText(_T("网络已同步")) ;
 		CString strTips;
-		strTips.Format(_T("高度:%d") ,pBlockchanged.tips ) ;
+		strTips.Format(_T("当前高度:%d") ,pBlockchanged.tips ) ;
 		m_strHeight.SetWindowText(strTips) ;
+		m_progress.ShowWindow(SW_HIDE);
 		m_strHeight.ShowWindow(SW_SHOW);
 	}
 	InvalidateRect(m_bmpsig);
