@@ -91,9 +91,6 @@
     <ClCompile Include="json\json_writer.cpp">
       <Filter>源文件\json</Filter>
     </ClCompile>
-    <ClCompile Include="NewAddressDlg.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="CeXDib.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -116,6 +113,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="ListCtrlCl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="NewAddressDlg.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -246,9 +246,6 @@
     <ClInclude Include="json\assertions.h">
       <Filter>头文件\json</Filter>
     </ClInclude>
-    <ClInclude Include="NewAddressDlg.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="CeXDib.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -271,6 +268,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="ListCtrlCl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="NewAddressDlg.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -553,6 +553,12 @@
       <Filter>资源文件</Filter>
     </None>
     <None Include="res\dlg_bj.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\kuang.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\dlg_balck_ground.bmp">
       <Filter>资源文件</Filter>
     </None>
   </ItemGroup>

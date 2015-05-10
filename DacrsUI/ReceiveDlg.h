@@ -1,8 +1,8 @@
 #pragma once
 #include "SignAccountsDlg.h"
-#include "NewAddressDlg.h"
 #include "RoundButton.h"
 #include "ListCtrlCl.h"
+#include "ShadeButtonST.h"
 // CReceiveDlg ¶Ô»°¿ò
 
 class CReceiveDlg : public CDialogBar
@@ -27,15 +27,19 @@ public:
 	afx_msg LRESULT OnShowListCtrl(  WPARAM wParam, LPARAM lParam ) ;
 private:
 	CSignAccountsDlg *m_accountDlg;
-	CNewAddressDlg   *m_newaddrDlg;
 	CListCtrlCl m_listCtrl;
 	uistruct::LISTADDRLIST m_pListaddrInfo;
-	CRoundButton     m_rBtnAcitve;
-	CRoundButton     m_rBtnNewaddr;
-	CRoundButton     m_rBtnCopyaddr;
+	CShadeButtonST     m_rBtnAcitve;
+	CShadeButtonST     m_rBtnNewaddr;
+	CShadeButtonST     m_rBtnCopyaddr;
 public:
 	afx_msg void OnBnClickedButtonSignAccount();
 	afx_msg void OnBnClickedButtonNewaddress();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
+public:
+	HBITMAP		     m_pBmp; 
+	void		     SetBkBmpNid( UINT nBitmapIn ) ;
+	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 };

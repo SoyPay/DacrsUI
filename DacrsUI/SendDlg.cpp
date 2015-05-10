@@ -39,6 +39,7 @@ BEGIN_MESSAGE_MAP(CSendDlg, CDialogBar)
 	ON_MESSAGE(MSG_USER_SEND_UI , &CSendDlg::OnShowListaddrData  )
 	ON_WM_CREATE()
 	ON_WM_ERASEBKGND()
+	ON_BN_CLICKED(IDC_BUTTON_ADDBOOK, &CSendDlg::OnBnClickedButtonAddbook)
 END_MESSAGE_MAP()
 
 
@@ -194,10 +195,10 @@ BOOL CSendDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_rBtnSend.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
 		m_rBtnSend.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
 		m_rBtnSend.SetWindowText("发送") ;
-		m_rBtnSend.SetFontEx(32 , _T("微软雅黑"));
-		m_rBtnSend.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(255, 255, 255));
+		m_rBtnSend.SetFontEx(24 , _T("微软雅黑"));
+		m_rBtnSend.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		m_rBtnSend.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
-		m_rBtnSend.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(255, 255, 255));
+		m_rBtnSend.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
 		m_rBtnSend.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
 		m_rBtnSend.SizeToContent();
 
@@ -241,4 +242,9 @@ BOOL CSendDlg::OnEraseBkgnd(CDC* pDC)
 		CWnd::OnEraseBkgnd(pDC); 
 
 	return 1;
+}
+
+void CSendDlg::OnBnClickedButtonAddbook()
+{
+	// TODO: 在此添加控件通知处理程序代码
 }
