@@ -144,6 +144,8 @@ void CRpcCmd::RPCCommandToJson(const CString& strRPCCommand,CStringA& strSendDat
 
 		if (IsAllDigtal(rpcCommand) && rpcCommand.GetLength() != 12)
 		{
+			INT64 param;
+			sscanf(rpcCommand,"%lld",&param);
 			root["params"].append(atoi(rpcCommand));
 		}
 		else

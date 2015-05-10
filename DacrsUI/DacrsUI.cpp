@@ -923,7 +923,7 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 			CPostMsg postmsg(MSG_USER_UP_PROGRESS,0);
 			postmsg.SetData(strJson.c_str());
 
-			pApp->m_MsgQueue.pushFront(postmsg);
+			pApp->m_MsgQueue.push(postmsg);
 			/// ¸üÐÂtipblock hash
 			CPostMsg postblockmsg(MSG_USER_GET_UPDATABASE,WM_UP_BlLOCKTIP);
 			CString msg = msgValue["hash"].asCString();
