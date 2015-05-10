@@ -230,6 +230,7 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 		m_strHeight.SetWindowText(strTips) ;
 		m_progress.ShowWindow(SW_HIDE);
 		m_strHeight.ShowWindow(SW_SHOW);
+		Invalidate();
 	}
 	InvalidateRect(m_bmpsig);
 	return 1;
