@@ -131,6 +131,7 @@ void CSendDlg::OnCbnSelchangeCombo1()
 		CString strshow;
 		strshow.Format(_T("%.8f"),money);
 		((CStatic*)GetDlgItem(IDC_STATIC_XM))->SetWindowText(strshow);
+		Invalidate();
 	}
 }
 BOOL CSendDlg::AddListaddrDataBox(){
@@ -159,6 +160,7 @@ BOOL CSendDlg::AddListaddrDataBox(){
 		CString strshow;
 		strshow.Format(_T("%.8f"),money);
 		((CStatic*)GetDlgItem(IDC_STATIC_XM))->SetWindowText(strshow);
+		Invalidate();
 	}
 	return TRUE ;
 }
