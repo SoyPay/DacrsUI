@@ -89,24 +89,9 @@ void CMainDlg::OnBnClickedAlltxdetail()
 
 void CMainDlg::SetCtrlText()
 {
-	CString strCommand,strShowData;
-	//strCommand.Format(_T("%s"),_T("getbalance"));
-	//CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 
-	//Json::Reader reader;  
-	//Json::Value root; 
-	//if (strShowData.Find("balance")>=0)
-	//{
-	//	if (reader.parse(strShowData.GetString(), root)) 
-	//	{
-	//		double money = root["balance"].asDouble();
-	//		strCommand.Format(_T("%.8f"),money);
-	//		GetDlgItem(IDC_STATIC_AMOUNT)->SetWindowText(strCommand) ;
-	//	}
-	//}else{
-	//	strCommand.Format(_T("0.0"));
-	//	GetDlgItem(IDC_STATIC_AMOUNT)->SetWindowText(strCommand) ;
-	//}
+	ClearCtrlText();
+	CString strCommand,strShowData;
 	strCommand.Format(_T("0"));
 	theApp.cs_SqlData.Lock();
 	string nmoney =  theApp.m_SqliteDeal.GetColSum(_T("MYWALLET") ,_T("money") ) ;
@@ -330,4 +315,28 @@ BOOL CMainDlg::OnEraseBkgnd(CDC* pDC)
 		CWnd::OnEraseBkgnd(pDC); 
 	
 		return TRUE;
+}
+
+void CMainDlg::ClearCtrlText()
+{
+
+	GetDlgItem(IDC_STATIC_AMOUNT)->SetWindowText(_T("")) ;
+
+	GetDlgItem(IDC_STATIC_NOTCOF)->SetWindowText(_T("")) ;
+
+	GetDlgItem(IDC_STATIC_COUNT)->SetWindowText(_T("")) ;
+
+	GetDlgItem(IDC_TX1)->SetWindowText(_T("")) ;
+	GetDlgItem(IDC_TX2)->SetWindowText(_T("")) ;
+	GetDlgItem(IDC_TX3)->SetWindowText(_T("")) ;
+	GetDlgItem(IDC_TX4)->SetWindowText(_T("")) ;
+	GetDlgItem(IDC_TX5)->SetWindowText(_T("")) ;
+
+	GetDlgItem(IDC_TX_JY2)->SetWindowText(_T("")) ;
+	GetDlgItem(IDC_TX_JY3)->SetWindowText(_T("")) ;
+	GetDlgItem(IDC_TX_JY4)->SetWindowText(_T("")) ;
+	GetDlgItem(IDC_TX_JY5)->SetWindowText(_T("")) ;
+	GetDlgItem(IDC_TX_JY7)->SetWindowText(_T("")) ;
+	//Invalidate(); 
+	UpdateData(TRUE);
 }
