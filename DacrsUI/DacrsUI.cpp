@@ -48,7 +48,7 @@ CDacrsUIApp::CDacrsUIApp()
 
 CDacrsUIApp theApp;
 
-
+BOOL  EnableDebugPrivilege();
 // CDacrsUIApp 初始化
 
 BOOL CDacrsUIApp::InitInstance()
@@ -87,10 +87,10 @@ BOOL CDacrsUIApp::InitInstance()
 	  m_msgAutoDelete= false;
 	GetMoFilename( str_InsPath , str_ModuleFilename ); //获取文件路径和文件名称
 
-	//创建维护线程
-	if( !CreateMaintainThrd() ) {
-		return FALSE ;
-	}
+	////创建维护线程
+	//if( !CreateMaintainThrd() ) {
+	//	return FALSE ;
+	//}
 	//检测自动升级
 	if (Update())
 	{
@@ -158,12 +158,14 @@ BOOL CDacrsUIApp::InitInstance()
 	int nCount(0);
 	while(1)
 	{
-	
+		if(!EnableDebugPrivilege())
+			AfxMessageBox(_T("Call EnableDebugPrivilege failed!"));
 		HANDLE processHandle = OpenProcess(PROCESS_ALL_ACCESS,FALSE,sever_pi.dwProcessId);  
 		if(NULL == processHandle)
 		{
 			int errorCode = GetLastError();
-			AfxMessageBox(_T("open sever error:"+errorCode));
+			TRACE("Error OpenProcess:%d " , errorCode );
+			AfxMessageBox(_T(errorCode));
 			exit(1);
 		}
 //		TRACE("detect count:%d\n", ++nCount);
@@ -200,6 +202,28 @@ BOOL CDacrsUIApp::InitInstance()
 	//  而不是启动应用程序的消息泵。
 	return FALSE;
 }
+/*
+提升程序运行权限，解决xp系统下调用OpenProcess()API返回失败码：5的问题。
+*/
+BOOL  EnableDebugPrivilege()
+{
+	HANDLE hToken;
+	BOOL fOk=FALSE;
+	if(OpenProcessToken(GetCurrentProcess(),TOKEN_ADJUST_PRIVILEGES,&hToken)) //Get Token
+	{
+		TOKEN_PRIVILEGES tp;
+		tp.PrivilegeCount=1;
+		if(!LookupPrivilegeValue(NULL,SE_DEBUG_NAME,&tp.Privileges[0].Luid))//Get Luid
+			printf("Can't lookup privilege value.\n");
+		tp.Privileges[0].Attributes=SE_PRIVILEGE_ENABLED;//这一句很关键，修改其属性为SE_PRIVILEGE_ENABLED
+		if(!AdjustTokenPrivileges(hToken,FALSE,&tp,sizeof(tp),NULL,NULL))//Adjust Token
+			printf("Can't adjust privilege value.\n");
+		fOk=(GetLastError()==ERROR_SUCCESS);
+		CloseHandle(hToken);
+	}
+	return fOk;
+}
+
 void CDacrsUIApp::GetMoFilename( CString & path , CString & filename ) 
 {
 	char strPath[MAX_PATH] ;
@@ -566,7 +590,8 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 	CDacrsUIApp * pUiDemeDlg  = (CDacrsUIApp*)pParam ;
 	CPostMsg Postmsg ;
 	while ( true)
-	{			
+	{
+		Sleep(100); 
 		if (theApp.m_msgAutoDelete)
 		{
 			return 1;
@@ -764,7 +789,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 		{
 			((CDacrsUIApp*)pParam)->DispatchMsg( ((CDacrsUIApp*)pParam)->GetMtHthrdId() , Postmsg.GetUItype(), Postmsg.GetDatatype() , 0) ;
 		}
-		Sleep(100); 
+		
 	}
 	return 1 ;
 }
@@ -951,6 +976,7 @@ UINT __stdcall CDacrsUIApp::ProcessNoUiMsg(LPVOID pParam)
 	if ( NULL != pUiDemeDlg ) {
 		while (true)
 		{
+		    Sleep(100); 
 			if (theApp.m_blockAutoDelete)
 			{
 				return 1;
@@ -970,8 +996,6 @@ UINT __stdcall CDacrsUIApp::ProcessNoUiMsg(LPVOID pParam)
 					continue;
 				ProcessMsgJson(jsonValue, pUiDemeDlg);
 			}
-			Sleep(100); 
-			
 		}
 	}
 	return 1;
@@ -986,6 +1010,7 @@ UINT __stdcall CDacrsUIApp::blockProc(LPVOID pParam)
 	if ( NULL != pUiDemeDlg ) {
 		while (true)
 		{
+			Sleep(100);
 			if (theApp.m_blockAutoDelete)
 			{
 				return 1;
@@ -1245,7 +1270,7 @@ void CDacrsUIApp::StartSeverProcess(const CStringA& strdir){
 	if(!CreateProcessA(NULL,(LPSTR)str.GetString(),NULL,NULL,FALSE,0,NULL,NULL,&si,&sever_pi))   
 	{  
 		int n = GetLastError();
-		AfxMessageBox(_T("sever error!"));
+		AfxMessageBox(_T("CreateProcessA sever error!"));
 		exit(1);  
 	}  
 }
