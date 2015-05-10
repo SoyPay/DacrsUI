@@ -285,7 +285,9 @@ void CDacrsUIDlg::ShowDialog(UINT dlgid)
 	}
 	p_CurSelDlg = m_dlgMap[dlgid] ;  //当前选择对话框指针
 	dlgType = dlgid;
-	theApp.UpdataUIData();
+
+	CPostMsg postkmsg(MSG_USER_UPDATA_UI,0);
+	theApp.m_MsgQueue.push(postkmsg); 
 }
 void CDacrsUIDlg::ShowStateTip(UINT nButtonID)
 {
