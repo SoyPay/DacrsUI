@@ -258,17 +258,6 @@ UINT __stdcall CDacrsUIApp::MtProc(LPVOID pParam)
 		{
 			switch ( msg.message )
 			{
-			case MSG_USER_SHOW_INIT_DLG:
-				{
-					CStartProgress SplashDlg;  //初始化对话框指针
-					SplashDlg.DoModal();
-				}
-				break;
-			case MSG_USER_SHOW_CLOSE_DLG:
-				{
-
-				}
-				break;
 			case MSG_USER_QUITTHREAD:
 				{
 					std::vector< sThrd >::iterator it ;
@@ -686,9 +675,10 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 			break;
 		case MSG_USER_UP_PROGRESS:
 			{
-				string strTemp = Postmsg.GetData();
-				uistruct::BLOCKCHANGED_t      m_Blockchanged;
-				m_Blockchanged.JsonToStruct(strTemp.c_str());
+				//string strTemp = Postmsg.GetData();
+				//uistruct::BLOCKCHANGED_t      m_Blockchanged;
+				//m_Blockchanged.JsonToStruct(strTemp.c_str());
+				TRACE("change:%s\r\n","MSG_USER_UP_PROGRESS");
 				pUiDemeDlg->m_UimsgQueue.push(Postmsg);
 				theApp.DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_UP_PROGRESS , 0,0);					
 			}
@@ -742,6 +732,11 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 
 			}
 			break;
+		case MSG_USER_UPDATA_UI:
+			{
+				theApp.UpdataUIData();
+			}
+			break;
 		case MSG_USER_QUITTHREAD:
 			{
 				std::vector< sThrd >::iterator it ;
@@ -769,6 +764,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 		{
 			((CDacrsUIApp*)pParam)->DispatchMsg( ((CDacrsUIApp*)pParam)->GetMtHthrdId() , Postmsg.GetUItype(), Postmsg.GetDatatype() , 0) ;
 		}
+		Sleep(100); 
 	}
 	return 1 ;
 }
@@ -885,18 +881,13 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 
 			TRACE("change:%s\r\n","blockchanged");
 			uistruct::BLOCKCHANGED_t      m_Blockchanged ;
-			//memset(&m_Blockchanged , 0 , sizeof(uistruct::BLOCKCHANGED_t));
 			m_Blockchanged.type = msgValue["type"].asString();
 			m_Blockchanged.tips = msgValue["tips"].asInt();
 			m_Blockchanged.high = msgValue["high"].asInt64() ;
 			m_Blockchanged.hash = msgValue["hash"].asString();
 			m_Blockchanged.connections = msgValue["connections"].asInt();
 
-			static int ReciveBlockTimeLast =0;
-			int tempTime= m_Blockchanged.tips;
-
 			string strJson = m_Blockchanged.ToJson();
-			ReciveBlockTimeLast = tempTime;
 			CPostMsg postmsg(MSG_USER_UP_PROGRESS,0);
 			postmsg.SetData(strJson.c_str());
 
@@ -917,20 +908,20 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 			if ((tempTimemsg - RecivetxMsgTimeLast)>10 || RecivetxMsgTimeLast == 0)
 			{	
 				pApp->m_MsgQueue.push(postuimsg);
-				postuimsg.SetType(MSG_USER_GET_UPDATABASE,WM_UP_BETPOOL);
-				pApp->m_MsgQueue.push(postuimsg);
+				//postuimsg.SetType(MSG_USER_GET_UPDATABASE,WM_UP_BETPOOL);
+				//pApp->m_MsgQueue.push(postuimsg);
 
-				postuimsg.SetType(MSG_USER_GET_UPDATABASE,WM_P2P_BET_RECORD);
-				pApp->m_MsgQueue.push(postuimsg);
+				//postuimsg.SetType(MSG_USER_GET_UPDATABASE,WM_P2P_BET_RECORD);
+				//pApp->m_MsgQueue.push(postuimsg);
 
-				postuimsg.SetType(MSG_USER_GET_UPDATABASE,WM_DARK_RECORD);
-				pApp->m_MsgQueue.push(postuimsg);
+				//postuimsg.SetType(MSG_USER_GET_UPDATABASE,WM_DARK_RECORD);
+				//pApp->m_MsgQueue.push(postuimsg);
 				RecivetxMsgTimeLast = tempTimemsg;
 			}
 
 			///更新block状态
-			postuimsg.SetType(MSG_USER_BLOCKSTATE_UI,m_Blockchanged.high);
-			pApp->m_MsgQueue.push(postuimsg);
+			//postuimsg.SetType(MSG_USER_BLOCKSTATE_UI,m_Blockchanged.high);
+			//pApp->m_MsgQueue.push(postuimsg);
 			break;
 		}
 	case SERVER_NOTIYF_TYPE:
@@ -1165,8 +1156,22 @@ int CDacrsUIApp::SendPostThread(DWORD msgtype)
 		break;
 	case WM_REVTRANSACTION:
 		{
-			if(pDlg->dlgType == CMainDlg::IDD)
-				DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_MAIN_UI , 0,0);
+			SYSTEMTIME curTime ;
+			memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
+			GetLocalTime( &curTime ) ;
+			static int UpdatManUiTimeLast =0;
+			int tempTimemsg= UiFun::SystemTimeToTimet(curTime);
+
+			if ((tempTimemsg - UpdatManUiTimeLast)>10|| UpdatManUiTimeLast == 0)
+			{	
+				if(pDlg->dlgType == CMainDlg::IDD)
+				{
+					GetMainDlgStruc();
+					DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_MAIN_UI , 0,0);
+				}
+				UpdatManUiTimeLast = tempTimemsg;
+			}
+
 		}
 		break;
 	case WM_UPWALLET:
@@ -1372,6 +1377,7 @@ void CDacrsUIApp::UpdataUIData(){
 		//	DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_ACCEPTRECOD_UI,0,0);
 		//	break;
 		case CMainDlg::IDD:
+			GetMainDlgStruc();
 			DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_MAIN_UI , 0,0);
 			break;
 		//case DIALOG_SIGN_ACCOUNTS:
@@ -1387,3 +1393,71 @@ void CDacrsUIApp::UpdataUIData(){
 	}
 }
 
+void CDacrsUIApp::GetMainDlgStruc()
+{
+	uistruct::MINDLG_T maindlg;
+	CString strCommand,strShowData;
+	strCommand.Format(_T("0"));
+	theApp.cs_SqlData.Lock();
+	string nmoney =  theApp.m_SqliteDeal.GetColSum(_T("MYWALLET") ,_T("money") ) ;
+	theApp.cs_SqlData.Unlock();
+	if (!strcmp(nmoney.c_str(),"(null)"))
+	{
+		maindlg.money = "0.0";
+	}else{
+		maindlg.money = nmoney;
+	}
+
+	strCommand.Format(_T("0"));
+	theApp.cs_SqlData.Lock();
+	nmoney =  theApp.m_SqliteDeal.GetColSum(_T("revtransaction") , strCommand ,_T("confirmHeight")) ;
+	theApp.cs_SqlData.Unlock();
+
+	if (!strcmp(nmoney.c_str(),"(null)"))
+	{
+		maindlg.unconfirmmoney = _T("0.0");
+	}else{
+		maindlg.unconfirmmoney = nmoney;
+	}
+
+
+	theApp.cs_SqlData.Lock();
+	int nItem =  theApp.m_SqliteDeal.GetTableCount(_T("revtransaction")) ;
+	theApp.cs_SqlData.Unlock();
+
+	strCommand.Format(_T("%d"),nItem);
+	maindlg.itemcount = strCommand.GetString();
+
+	CString Where,strSource;
+	Where.Format(_T("'COMMON_TX' order by confirmedtime limit 5"));
+	strSource.Format(_T("txtype"));
+	uistruct::TRANSRECORDLIST pTransaction;
+	theApp.cs_SqlData.Lock();
+	theApp.m_SqliteDeal.FindDB(_T("revtransaction"),Where,strSource,&pTransaction);
+	theApp.cs_SqlData.Unlock();
+
+	int i = 1;
+	if (pTransaction.size() != 0  ) {
+		std::vector<uistruct::REVTRANSACTION_t>::const_iterator const_it;
+		for (const_it = pTransaction.begin() ; const_it != pTransaction.end()&&i<6 ; const_it++ ) {
+			uistruct::REVTRANSACTION_t temp = *const_it;
+			if(i == 1)
+			maindlg.addr1 = temp.ToJson();
+			if(i == 2)
+				maindlg.addr2 = temp.ToJson();
+			if(i == 3)
+				maindlg.addr3 = temp.ToJson();
+			if(i ==4)
+				maindlg.addr4 = temp.ToJson();
+			if(i == 5)
+				maindlg.addr5 = temp.ToJson();
+
+			i++;
+		}
+	}
+
+	CPostMsg Postmsg(MSG_USER_MAIN_UI,0);
+	string msg =maindlg.ToJson();
+	Postmsg.SetData(msg.c_str());	
+	m_UiManDlgQueue.pushFront(Postmsg);
+}

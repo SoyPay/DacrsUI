@@ -87,26 +87,11 @@ void CMainDlg::OnBnClickedAlltxdetail()
 	// TODO: 在此添加控件通知处理程序代码
 }
 
-void CMainDlg::SetCtrlText()
+void CMainDlg::OnnitCtrlText()
 {
-	CString strCommand,strShowData;
-	//strCommand.Format(_T("%s"),_T("getbalance"));
-	//CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 
-	//Json::Reader reader;  
-	//Json::Value root; 
-	//if (strShowData.Find("balance")>=0)
-	//{
-	//	if (reader.parse(strShowData.GetString(), root)) 
-	//	{
-	//		double money = root["balance"].asDouble();
-	//		strCommand.Format(_T("%.8f"),money);
-	//		GetDlgItem(IDC_STATIC_AMOUNT)->SetWindowText(strCommand) ;
-	//	}
-	//}else{
-	//	strCommand.Format(_T("0.0"));
-	//	GetDlgItem(IDC_STATIC_AMOUNT)->SetWindowText(strCommand) ;
-	//}
+	ClearCtrlText();
+	CString strCommand,strShowData;
 	strCommand.Format(_T("0"));
 	theApp.cs_SqlData.Lock();
 	string nmoney =  theApp.m_SqliteDeal.GetColSum(_T("MYWALLET") ,_T("money") ) ;
@@ -140,7 +125,7 @@ void CMainDlg::SetCtrlText()
 
 	CString Where,strSource;
 	//Where.Format(_T("'COMMON_TX' order by confirmedtime"));
-	Where.Format(_T("'COMMON_TX' order by confirmedtime"));
+	Where.Format(_T("'COMMON_TX' order by confirmedtime limit 5"));
 	strSource.Format(_T("txtype"));
 	uistruct::TRANSRECORDLIST pTransaction;
 	theApp.cs_SqlData.Lock();
@@ -202,7 +187,128 @@ void CMainDlg::SetCtrlText()
 		}
 	}
 }
+void CMainDlg::SetCtrlText()
+{
 
+	//ClearCtrlText();
+	CPostMsg postmsg;
+	if (!theApp.m_UiManDlgQueue.pop(postmsg))
+	{
+		return ;
+	}
+
+	uistruct::MINDLG_T maindlg; 
+	string strTemp = postmsg.GetData();
+	maindlg.JsonToStruct(strTemp.c_str());
+
+
+	CString strCommand,strShowData;
+
+	GetDlgItem(IDC_STATIC_AMOUNT)->SetWindowText(maindlg.money.c_str()) ;
+
+	GetDlgItem(IDC_STATIC_NOTCOF)->SetWindowText(maindlg.unconfirmmoney.c_str()) ;
+
+	GetDlgItem(IDC_STATIC_COUNT)->SetWindowText(maindlg.itemcount.c_str()) ;
+
+	string addr1 = maindlg.addr1;
+	uistruct::REVTRANSACTION_t temp;
+	if (addr1 != "")
+	{
+		temp.JsonToStruct(addr1);
+		if (temp.state == 1)
+		{
+			strCommand.Format(_T("-%.8f"),temp.money*COIN);
+			strShowData.Format(_T("%s "),temp.addr.c_str());
+			m_strTrading.SetTextColor(RGB(255,0,0));
+		}else if (temp.state == 2)
+		{
+			strCommand.Format(_T("+%.8f"),temp.money*COIN);
+			strShowData.Format(_T("%s "),temp.desaddr);
+			m_strTrading.SetTextColor(RGB(166,162,247));
+		}
+
+		GetDlgItem(IDC_TX1)->SetWindowText(strShowData) ;
+		GetDlgItem(IDC_TX_JY2)->SetWindowText(strCommand) ;
+	}
+	
+	addr1 = maindlg.addr2;
+	if (addr1 != "")
+	{
+		temp.JsonToStruct(addr1);
+		if (temp.state == 1)
+		{
+			strCommand.Format(_T("-%.8f"),temp.money*COIN);
+			strShowData.Format(_T("%s "),temp.addr.c_str());
+			m_strTrading2.SetTextColor(RGB(255,0,0));
+		}else if (temp.state == 2)
+		{
+			strCommand.Format(_T("+%.8f"),temp.money*COIN);
+			strShowData.Format(_T("%s "),temp.desaddr);
+			m_strTrading2.SetTextColor(RGB(166,162,247));
+		}
+
+		GetDlgItem(IDC_TX2)->SetWindowText(strShowData) ;
+		GetDlgItem(IDC_TX_JY3)->SetWindowText(strCommand) ;
+	}
+
+	addr1 = maindlg.addr3;
+	if (addr1 != "")
+	{
+		temp.JsonToStruct(addr1);
+		if (temp.state == 1)
+		{
+			strCommand.Format(_T("-%.8f"),temp.money*COIN);
+			strShowData.Format(_T("%s "),temp.addr.c_str());
+			m_strTrading3.SetTextColor(RGB(255,0,0));
+		}else if (temp.state == 2)
+		{
+			strCommand.Format(_T("+%.8f"),temp.money*COIN);
+			strShowData.Format(_T("%s "),temp.desaddr);
+			m_strTrading3.SetTextColor(RGB(166,162,247));
+		}
+
+		GetDlgItem(IDC_TX3)->SetWindowText(strShowData) ;
+		GetDlgItem(IDC_TX_JY4)->SetWindowText(strCommand) ;
+	}
+	addr1 = maindlg.addr4;
+	if (addr1 != "")
+	{
+		temp.JsonToStruct(addr1);
+		if (temp.state == 1)
+		{
+			strCommand.Format(_T("-%.8f"),temp.money*COIN);
+			strShowData.Format(_T("%s "),temp.addr.c_str());
+			m_strTrading4.SetTextColor(RGB(255,0,0));
+		}else if (temp.state == 2)
+		{
+			strCommand.Format(_T("+%.8f"),temp.money*COIN);
+			strShowData.Format(_T("%s "),temp.desaddr);
+			m_strTrading4.SetTextColor(RGB(166,162,247));
+		}
+
+		GetDlgItem(IDC_TX4)->SetWindowText(strShowData) ;
+		GetDlgItem(IDC_TX_JY5)->SetWindowText(strCommand) ;
+	}
+	addr1 = maindlg.addr1;
+	if (addr1 != "")
+	{
+		temp.JsonToStruct(addr1);
+		if (temp.state == 1)
+		{
+			strCommand.Format(_T("-%.8f"),temp.money*COIN);
+			strShowData.Format(_T("%s "),temp.addr.c_str());
+			m_strTrading5.SetTextColor(RGB(255,0,0));
+		}else if (temp.state == 2)
+		{
+			strCommand.Format(_T("+%.8f"),temp.money*COIN);
+			strShowData.Format(_T("%s "),temp.desaddr);
+			m_strTrading5.SetTextColor(RGB(166,162,247));
+		}
+
+		GetDlgItem(IDC_TX5)->SetWindowText(strShowData) ;
+		GetDlgItem(IDC_TX_JY7)->SetWindowText(strCommand) ;
+	}
+}
 BOOL CMainDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 {
 	// TODO: 在此添加专用代码和/或调用基类
@@ -211,7 +317,8 @@ BOOL CMainDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 	if ( bRes ) {
 		m_rBtnAllTxdetail.LoadBitmaps(IDB_BITMAP_ALLTRADE1,IDB_BITMAP_ALLTRADE1,IDB_BITMAP_ALLTRADE1,IDB_BITMAP_ALLTRADE1);
 		UpdateData(0);
-		SetCtrlText();
+		ClearCtrlText();
+		OnnitCtrlText();
 		GetUrlServer();
 		v_linkCtrl.SetWindowText(_T("456"));
 		//m_strTx1.SetFont(120, _T("微软雅黑"));				//设置显示字体和大小
@@ -250,7 +357,7 @@ int CMainDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 }
 bool CMainDlg::GetUrlServer()
 {
-		m_url.clear();
+	m_url.clear();
 	CString url(_T("http://api.dspay.org/dacrs/dacrsUpdate.json"));    
 	CInternetSession session;
 	std::string strHtml;
@@ -330,4 +437,28 @@ BOOL CMainDlg::OnEraseBkgnd(CDC* pDC)
 		CWnd::OnEraseBkgnd(pDC); 
 	
 		return TRUE;
+}
+
+void CMainDlg::ClearCtrlText()
+{
+
+	GetDlgItem(IDC_STATIC_AMOUNT)->SetWindowText(_T("")) ;
+
+	GetDlgItem(IDC_STATIC_NOTCOF)->SetWindowText(_T("")) ;
+
+	GetDlgItem(IDC_STATIC_COUNT)->SetWindowText(_T("")) ;
+
+	GetDlgItem(IDC_TX1)->SetWindowText(_T("")) ;
+	GetDlgItem(IDC_TX2)->SetWindowText(_T("")) ;
+	GetDlgItem(IDC_TX3)->SetWindowText(_T("")) ;
+	GetDlgItem(IDC_TX4)->SetWindowText(_T("")) ;
+	GetDlgItem(IDC_TX5)->SetWindowText(_T("")) ;
+
+	GetDlgItem(IDC_TX_JY2)->SetWindowText(_T("")) ;
+	GetDlgItem(IDC_TX_JY3)->SetWindowText(_T("")) ;
+	GetDlgItem(IDC_TX_JY4)->SetWindowText(_T("")) ;
+	GetDlgItem(IDC_TX_JY5)->SetWindowText(_T("")) ;
+	GetDlgItem(IDC_TX_JY7)->SetWindowText(_T("")) ;
+	//Invalidate(); 
+	UpdateData(TRUE);
 }
