@@ -37,6 +37,7 @@ void CProgStatusBar::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogBar::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_PROGRESS, m_progress);
+	DDX_Control(pDX, IDC_STATIC_NET_TB, m_strNeting);
 }
 
 
@@ -136,6 +137,10 @@ BOOL CProgStatusBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UIN
 	if ( bRes ) {
 		UpdateData(0);
 
+		m_strNeting.SetFont(85, _T("宋体"));				//设置显示字体和大小
+		m_strNeting.SetTextColor(RGB(255,255,255));			    //字体颜色
+		m_strNeting.SetWindowText(_T("网络同步中...")) ;
+
 		if ( NULL == m_ProgressWnd ) {
 			m_ProgressWnd = new CGIFControl ;
 			m_ProgressWnd->Create(_T("") , WS_CHILD | SS_OWNERDRAW | WS_VISIBLE | SS_NOTIFY , \
@@ -212,7 +217,9 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 		LoadGifing(false);
 		m_walletui = true;
 	}
-	//Invalidate(); 
+	if ( m_walletui ) {
+		m_strNeting.SetWindowText(_T("网络已同步")) ;
+	}
 	InvalidateRect(m_bmpsig);
 	return 1;
 }
