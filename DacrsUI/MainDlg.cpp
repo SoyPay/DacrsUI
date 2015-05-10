@@ -5,6 +5,7 @@
 #include "DacrsUI.h"
 #include "MainDlg.h"
 #include "afxdialogex.h"
+#include "DacrsUIDlg.h"
 #include <afxinet.h>
 
 // CMainDlg 对话框
@@ -85,6 +86,11 @@ void CMainDlg::SetBkBmpNid( UINT nBitmapIn )
 void CMainDlg::OnBnClickedAlltxdetail()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	CDacrsUIDlg* pDlg = (CDacrsUIDlg*)GetParent();
+	if ( NULL != pDlg ) {
+		pDlg->ShowDialog(CTradDlg::IDD) ;
+		pDlg->ShowStateTip(IDC_BUTTON_TRAD_INFO);
+	}
 }
 
 void CMainDlg::OnnitCtrlText()

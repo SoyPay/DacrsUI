@@ -96,6 +96,7 @@ int CSynchronousSocket::GetRpcRes(const string ip,int port,string cmd,string & r
 				{
 					if(timerout < 0)
 					{
+						closesocket(te.m_Socket);
 						return -1;
 					}
 					timerout -= 100;
