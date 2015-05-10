@@ -160,12 +160,6 @@ BOOL CProgStatusBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UIN
 
 LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam ) 
 {
-	SYSTEMTIME curTime ;
-	memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
-	GetLocalTime( &curTime ) ;
-	static int RecivetxTimeLast =0;
-	int nCurTime= UiFun::SystemTimeToTimet(curTime);
-
 	CPostMsg postmsg;
 	if (!theApp.m_UimsgQueue.pop(postmsg))
 	{

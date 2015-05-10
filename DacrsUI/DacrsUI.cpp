@@ -1169,7 +1169,10 @@ int CDacrsUIApp::SendPostThread(DWORD msgtype)
 			if ((tempTimemsg - UpdatManUiTimeLast)>10|| UpdatManUiTimeLast == 0)
 			{	
 				if(pDlg->dlgType == CMainDlg::IDD)
+				{
+					GetMainDlgStruc();
 					DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_MAIN_UI , 0,0);
+				}
 				UpdatManUiTimeLast = tempTimemsg;
 			}
 
@@ -1378,6 +1381,7 @@ void CDacrsUIApp::UpdataUIData(){
 		//	DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_ACCEPTRECOD_UI,0,0);
 		//	break;
 		case CMainDlg::IDD:
+			GetMainDlgStruc();
 			DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_MAIN_UI , 0,0);
 			break;
 		//case DIALOG_SIGN_ACCOUNTS:
@@ -1393,3 +1397,71 @@ void CDacrsUIApp::UpdataUIData(){
 	}
 }
 
+void CDacrsUIApp::GetMainDlgStruc()
+{
+	uistruct::MINDLG_T maindlg;
+	CString strCommand,strShowData;
+	strCommand.Format(_T("0"));
+	theApp.cs_SqlData.Lock();
+	string nmoney =  theApp.m_SqliteDeal.GetColSum(_T("MYWALLET") ,_T("money") ) ;
+	theApp.cs_SqlData.Unlock();
+	if (!strcmp(nmoney.c_str(),"(null)"))
+	{
+		maindlg.money = "0.0";
+	}else{
+		maindlg.money = nmoney;
+	}
+
+	strCommand.Format(_T("0"));
+	theApp.cs_SqlData.Lock();
+	nmoney =  theApp.m_SqliteDeal.GetColSum(_T("revtransaction") , strCommand ,_T("confirmHeight")) ;
+	theApp.cs_SqlData.Unlock();
+
+	if (!strcmp(nmoney.c_str(),"(null)"))
+	{
+		maindlg.unconfirmmoney = _T("0.0");
+	}else{
+		maindlg.unconfirmmoney = nmoney;
+	}
+
+
+	theApp.cs_SqlData.Lock();
+	int nItem =  theApp.m_SqliteDeal.GetTableCount(_T("revtransaction")) ;
+	theApp.cs_SqlData.Unlock();
+
+	strCommand.Format(_T("%d"),nItem);
+	maindlg.itemcount = strCommand.GetString();
+
+	CString Where,strSource;
+	Where.Format(_T("'COMMON_TX' order by confirmedtime limit 5"));
+	strSource.Format(_T("txtype"));
+	uistruct::TRANSRECORDLIST pTransaction;
+	theApp.cs_SqlData.Lock();
+	theApp.m_SqliteDeal.FindDB(_T("revtransaction"),Where,strSource,&pTransaction);
+	theApp.cs_SqlData.Unlock();
+
+	int i = 1;
+	if (pTransaction.size() != 0  ) {
+		std::vector<uistruct::REVTRANSACTION_t>::const_iterator const_it;
+		for (const_it = pTransaction.begin() ; const_it != pTransaction.end()&&i<6 ; const_it++ ) {
+			uistruct::REVTRANSACTION_t temp = *const_it;
+			if(i == 1)
+			maindlg.addr1 = temp.ToJson();
+			if(i == 2)
+				maindlg.addr2 = temp.ToJson();
+			if(i == 3)
+				maindlg.addr3 = temp.ToJson();
+			if(i ==4)
+				maindlg.addr4 = temp.ToJson();
+			if(i == 5)
+				maindlg.addr5 = temp.ToJson();
+
+			i++;
+		}
+	}
+
+	CPostMsg Postmsg(MSG_USER_MAIN_UI,0);
+	string msg =maindlg.ToJson();
+	Postmsg.SetData(msg.c_str());	
+	m_UiManDlgQueue.pushFront(Postmsg);
+}
