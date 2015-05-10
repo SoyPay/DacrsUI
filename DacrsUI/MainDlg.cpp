@@ -546,3 +546,4 @@ void CMainDlg::onnitLinkText()
 	}
 		
 }
+
