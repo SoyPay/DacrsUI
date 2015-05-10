@@ -1171,7 +1171,7 @@ int CDacrsUIApp::SendPostThread(DWORD msgtype)
 			static int UpdatManUiTimeLast =0;
 			int tempTimemsg= UiFun::SystemTimeToTimet(curTime);
 
-			if ((tempTimemsg - UpdatManUiTimeLast)>100 || UpdatManUiTimeLast == 0)
+			if ((tempTimemsg - UpdatManUiTimeLast)>10|| UpdatManUiTimeLast == 0)
 			{	
 				if(pDlg->dlgType == CMainDlg::IDD)
 					DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_MAIN_UI , 0,0);
