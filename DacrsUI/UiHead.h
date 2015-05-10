@@ -41,8 +41,7 @@ using namespace std;
 #define MSG_USER_SEND_UI			        WM_USER+122    //更新到转账  1138
 #define MSG_USER_RECIVE_UI			        WM_USER+122    //更新到接受页面
 #define MSG_USER_STARTPROCESS_UI			WM_USER+123    //更新到接受页面
-#define MSG_USER_SHOW_INIT_DLG			    WM_USER+124    //显示初始化对话框
-#define MSG_USER_SHOW_CLOSE_DLG			    WM_USER+125    //关闭初始化对话框
+#define MSG_USER_UPDATA_UI			        WM_USER+124   //更新到接受页面
 
 #define MSG_USER_QUITTHREAD			        WM_USER+200	    //退出线程
 

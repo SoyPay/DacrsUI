@@ -17,6 +17,8 @@ IMPLEMENT_DYNAMIC(CProgStatusBar, CDialogBar)
 	m_bProgressType = false;
 	m_ProgressWnd = NULL ;
 	m_nSigIndex = 0 ;
+	m_walletui = false;
+	memset(m_bmpsig , 0 , sizeof(CRect)) ;
 }
 
 CProgStatusBar::~CProgStatusBar()
@@ -186,13 +188,16 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 			m_bProgressType = TRUE;
 			m_nSigIndex =pBlockchanged.connections>3?3:pBlockchanged.connections;
 
-			if ((pBlockchanged.tips-pBlockchanged.high)<10)
+			if ((pBlockchanged.tips-pBlockchanged.high)<10 && !m_walletui)
 			{
 				//// 发送钱包同步完毕
 				CPostMsg postblockmsg(MSG_USER_MAIN_UI,WM_UPWALLET);
-				theApp.m_MsgQueue.push(postblockmsg); 
+				theApp.m_MsgQueue.pushFront(postblockmsg); 
+				LoadGifing(false);
+				m_walletui = true;
 			}
-			Invalidate(); 
+			//Invalidate(); 
+			InvalidateRect(m_bmpsig);
 		return 1;
 	}
 
@@ -202,13 +207,16 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 	//设置进度条的值
 	m_progress.SetPos(setpos);
 	
-	if ((pBlockchanged.tips-pBlockchanged.high)<10)
+	if ((pBlockchanged.tips-pBlockchanged.high)<10&& !m_walletui)
 	{
 		//// 发送钱包同步完毕
 		CPostMsg postblockmsg(MSG_USER_MAIN_UI,WM_UPWALLET);
-		theApp.m_MsgQueue.push(postblockmsg); 
+		theApp.m_MsgQueue.pushFront(postblockmsg); 
+		LoadGifing(false);
+		m_walletui = true;
 	}
-	Invalidate(); 
+	//Invalidate(); 
+	InvalidateRect(m_bmpsig);
 	return 1;
 }
 //Invalidate(); 
@@ -224,6 +232,8 @@ void CProgStatusBar::OnPaint()
 
 	HBITMAP hOldbmp = (HBITMAP)memDC.SelectObject(m_Sigbmp[m_nSigIndex]); 
 	dc.BitBlt(900-60, 0, rc.Width(), rc.Height(), &memDC, 0, 0, SRCCOPY);  
+	CRect rc1(900-60, 0, rc.Width(), rc.Height());
+	m_bmpsig = rc1;
 	memDC.SelectObject(hOldbmp);  
 	memDC.DeleteDC();  
 }

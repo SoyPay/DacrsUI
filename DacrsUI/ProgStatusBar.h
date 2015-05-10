@@ -39,4 +39,6 @@ public:
 	int         m_ProgressMax  ;
 	CProgressCtrl m_progress;
 	afx_msg void OnPaint();
+	CRect  m_bmpsig;
+	bool   m_walletui;
 };

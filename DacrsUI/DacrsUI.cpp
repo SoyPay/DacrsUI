@@ -258,17 +258,6 @@ UINT __stdcall CDacrsUIApp::MtProc(LPVOID pParam)
 		{
 			switch ( msg.message )
 			{
-			case MSG_USER_SHOW_INIT_DLG:
-				{
-					CStartProgress SplashDlg;  //初始化对话框指针
-					SplashDlg.DoModal();
-				}
-				break;
-			case MSG_USER_SHOW_CLOSE_DLG:
-				{
-
-				}
-				break;
 			case MSG_USER_QUITTHREAD:
 				{
 					std::vector< sThrd >::iterator it ;
@@ -742,6 +731,11 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 
 			}
 			break;
+		case MSG_USER_UPDATA_UI:
+			{
+				theApp.UpdataUIData();
+			}
+			break;
 		case MSG_USER_QUITTHREAD:
 			{
 				std::vector< sThrd >::iterator it ;
@@ -769,6 +763,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 		{
 			((CDacrsUIApp*)pParam)->DispatchMsg( ((CDacrsUIApp*)pParam)->GetMtHthrdId() , Postmsg.GetUItype(), Postmsg.GetDatatype() , 0) ;
 		}
+		Sleep(100); 
 	}
 	return 1 ;
 }
