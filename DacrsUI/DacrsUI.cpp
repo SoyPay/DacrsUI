@@ -881,18 +881,13 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 
 			TRACE("change:%s\r\n","blockchanged");
 			uistruct::BLOCKCHANGED_t      m_Blockchanged ;
-			//memset(&m_Blockchanged , 0 , sizeof(uistruct::BLOCKCHANGED_t));
 			m_Blockchanged.type = msgValue["type"].asString();
 			m_Blockchanged.tips = msgValue["tips"].asInt();
 			m_Blockchanged.high = msgValue["high"].asInt64() ;
 			m_Blockchanged.hash = msgValue["hash"].asString();
 			m_Blockchanged.connections = msgValue["connections"].asInt();
 
-			static int ReciveBlockTimeLast =0;
-			int tempTime= m_Blockchanged.tips;
-
 			string strJson = m_Blockchanged.ToJson();
-			ReciveBlockTimeLast = tempTime;
 			CPostMsg postmsg(MSG_USER_UP_PROGRESS,0);
 			postmsg.SetData(strJson.c_str());
 
@@ -913,20 +908,20 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 			if ((tempTimemsg - RecivetxMsgTimeLast)>10 || RecivetxMsgTimeLast == 0)
 			{	
 				pApp->m_MsgQueue.push(postuimsg);
-				postuimsg.SetType(MSG_USER_GET_UPDATABASE,WM_UP_BETPOOL);
-				pApp->m_MsgQueue.push(postuimsg);
+				//postuimsg.SetType(MSG_USER_GET_UPDATABASE,WM_UP_BETPOOL);
+				//pApp->m_MsgQueue.push(postuimsg);
 
-				postuimsg.SetType(MSG_USER_GET_UPDATABASE,WM_P2P_BET_RECORD);
-				pApp->m_MsgQueue.push(postuimsg);
+				//postuimsg.SetType(MSG_USER_GET_UPDATABASE,WM_P2P_BET_RECORD);
+				//pApp->m_MsgQueue.push(postuimsg);
 
-				postuimsg.SetType(MSG_USER_GET_UPDATABASE,WM_DARK_RECORD);
-				pApp->m_MsgQueue.push(postuimsg);
+				//postuimsg.SetType(MSG_USER_GET_UPDATABASE,WM_DARK_RECORD);
+				//pApp->m_MsgQueue.push(postuimsg);
 				RecivetxMsgTimeLast = tempTimemsg;
 			}
 
 			///¸üÐÂblock×´Ì¬
-			postuimsg.SetType(MSG_USER_BLOCKSTATE_UI,m_Blockchanged.high);
-			pApp->m_MsgQueue.push(postuimsg);
+			//postuimsg.SetType(MSG_USER_BLOCKSTATE_UI,m_Blockchanged.high);
+			//pApp->m_MsgQueue.push(postuimsg);
 			break;
 		}
 	case SERVER_NOTIYF_TYPE:
