@@ -22,11 +22,22 @@ CMortgageTardDlg::~CMortgageTardDlg()
 		DeleteObject(m_pBmp) ;
 		m_pBmp = NULL ;
 	}
+	v_linkCtrl1.InternalRelease();
+	v_linkCtrl1.ExternalRelease();
+	v_linkCtrl1.OnFinalRelease();
+	v_linkCtrl1.DestroyWindow();
+
+	v_linkCtrl2.InternalRelease();
+	v_linkCtrl2.ExternalRelease();
+	v_linkCtrl2.OnFinalRelease();
+	v_linkCtrl2.DestroyWindow();
 }
 
 void CMortgageTardDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogBar::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_PROGRESS, v_linkCtrl1);
+	DDX_Control(pDX, IDC_MFCLINK2, v_linkCtrl2);
 }
 
 
@@ -82,4 +93,23 @@ BOOL CMortgageTardDlg::OnEraseBkgnd(CDC* pDC)
 		CWnd::OnEraseBkgnd(pDC); 
 
 	return TRUE;
+}
+
+
+BOOL CMortgageTardDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
+{
+	// TODO: 在此添加专用代码和/或调用基类
+	BOOL bRes = CDialogBar::Create(pParentWnd, nIDTemplate, nStyle, nID);
+	if ( bRes ) {
+		 UpdateData(0);
+		 v_linkCtrl1.SetWindowText(_T(""));
+		 v_linkCtrl2.SetWindowText(_T(""));
+
+		 v_linkCtrl1.SetWindowText(_T("关注官网"));
+		 v_linkCtrl2.SetWindowText(_T("QQ群"));
+
+		 v_linkCtrl1.SetURL(_T("http://www.dacrs.com/"));
+		 v_linkCtrl2.SetURL(_T("http://jq.qq.com/?_wv=1027&k=T5mlmd"));
+	}
+	return bRes ;
 }
