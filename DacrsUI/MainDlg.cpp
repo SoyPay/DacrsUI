@@ -32,6 +32,21 @@ CMainDlg::~CMainDlg()
 	v_linkCtrl.ExternalRelease();
 	v_linkCtrl.OnFinalRelease();
 	v_linkCtrl.DestroyWindow();
+
+	v_linkCtrl1.InternalRelease();
+	v_linkCtrl1.ExternalRelease();
+	v_linkCtrl1.OnFinalRelease();
+	v_linkCtrl1.DestroyWindow();
+
+	v_linkCtrl2.InternalRelease();
+	v_linkCtrl2.ExternalRelease();
+	v_linkCtrl2.OnFinalRelease();
+	v_linkCtrl2.DestroyWindow();
+
+	v_linkCtrl3.InternalRelease();
+	v_linkCtrl3.ExternalRelease();
+	v_linkCtrl3.OnFinalRelease();
+	v_linkCtrl3.DestroyWindow();
 }
 
 void CMainDlg::DoDataExchange(CDataExchange* pDX)
@@ -55,6 +70,9 @@ void CMainDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_STATIC_COUNT , m_strTranNum);
 
 	DDX_Control(pDX, IDC_MFCLINK1, v_linkCtrl);
+	DDX_Control(pDX, IDC_MFCLINK3, v_linkCtrl1);
+	DDX_Control(pDX, IDC_MFCLINK4, v_linkCtrl2);
+	DDX_Control(pDX, IDC_MFCLINK5, v_linkCtrl3);
 }
 
 
@@ -327,7 +345,7 @@ BOOL CMainDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		ClearCtrlText();
 		OnnitCtrlText();
 		GetUrlServer();
-		v_linkCtrl.SetWindowText(_T("456"));
+		onnitLinkText();
 		//m_strTx1.SetFont(120, _T("微软雅黑"));				//设置显示字体和大小
 		//m_strTx1.SetTextColor(RGB(192,192,192));			    //字体颜色
 		//m_strTx1.SetWindowText(_T("方斌")) ;
@@ -495,6 +513,36 @@ void CMainDlg::ClearCtrlText()
 
 void CMainDlg::onnitLinkText()
 {
-   
-
+   v_linkCtrl.SetWindowText(_T(""));
+   v_linkCtrl1.SetWindowText(_T(""));
+   v_linkCtrl2.SetWindowText(_T(""));
+   v_linkCtrl3.SetWindowText(_T(""));
+   int i = 1;
+	map<CString,CString>::iterator it;
+	for(it=m_url.begin();it!=m_url.end();++it)
+	{
+		if (i == 1)
+		{
+			v_linkCtrl.SetWindowText(it->first);
+			v_linkCtrl.SetURL(it->second);
+		}
+		if (i == 2)
+		{
+			v_linkCtrl1.SetWindowText(it->first);
+			v_linkCtrl1.SetURL(it->second);
+		}
+		if (i == 3)
+		{
+			v_linkCtrl2.SetWindowText(it->first);
+			v_linkCtrl2.SetURL(it->second);
+		}
+		if (i == 4)
+		{
+			v_linkCtrl3.SetWindowText(it->first);
+			v_linkCtrl3.SetURL(it->second);
+			break;
+		}
+		i++;
+	}
+		
 }
