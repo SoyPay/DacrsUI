@@ -98,9 +98,9 @@ void CMainDlg::OnnitCtrlText()
 	theApp.cs_SqlData.Unlock();
 	if (!strcmp(nmoney.c_str(),"(null)"))
 	{
-		GetDlgItem(IDC_STATIC_AMOUNT)->SetWindowText(_T("0.0")) ;
+		m_strOver.SetWindowText(_T("0.0")) ;
 	}else{
-		GetDlgItem(IDC_STATIC_AMOUNT)->SetWindowText(nmoney.c_str()) ;
+		m_strOver.SetWindowText(nmoney.c_str()) ;
 	}
 
 	strCommand.Format(_T("0"));
@@ -121,7 +121,7 @@ void CMainDlg::OnnitCtrlText()
 	theApp.cs_SqlData.Unlock();
 
 	strCommand.Format(_T("%d"),nItem);
-	GetDlgItem(IDC_STATIC_COUNT)->SetWindowText(strCommand) ;
+	m_strTranNum.SetWindowText(strCommand) ;
 
 	CString Where,strSource;
 	//Where.Format(_T("'COMMON_TX' order by confirmedtime"));
@@ -190,7 +190,7 @@ void CMainDlg::OnnitCtrlText()
 void CMainDlg::SetCtrlText()
 {
 
-	//ClearCtrlText();
+	ClearCtrlText();
 	CPostMsg postmsg;
 	if (!theApp.m_UiManDlgQueue.pop(postmsg))
 	{
@@ -208,7 +208,7 @@ void CMainDlg::SetCtrlText()
 
 	GetDlgItem(IDC_STATIC_NOTCOF)->SetWindowText(maindlg.unconfirmmoney.c_str()) ;
 
-	GetDlgItem(IDC_STATIC_COUNT)->SetWindowText(maindlg.itemcount.c_str()) ;
+	m_strTranNum.SetWindowText(maindlg.itemcount.c_str()) ;
 
 	string addr1 = maindlg.addr1;
 	uistruct::REVTRANSACTION_t temp;
@@ -338,6 +338,7 @@ LRESULT CMainDlg::OnShowListCtorl( WPARAM wParam, LPARAM lParam )
 		GetDlgItem(IDC_STATIC_WALLET)->ShowWindow(SW_HIDE);
 	}else{
 		SetCtrlText();
+		UpdateData(FALSE);
 	}
 	
 	return 0 ;
@@ -421,12 +422,12 @@ bool CMainDlg::GetUrlServer()
 
 	if (reader.parse(strHtml, root)) 
 	{
-		int index = root.size();
-		for (int i = 0;i <index;i++)
-		{
-			Json::Value  msgroot = root[index];
-			//m_url[]
-		}
+		//int index = root.size();
+		//for (int i = 0;i <index;i++)
+		//{
+		//	Json::Value  msgroot = root[index];
+		//	//m_url[]
+		//}
 		//strVersion = root["version"].asString();
 		//ShellExecuteW(NULL, L"open", _T("http://bbs.dspay.org/portal.php"), NULL, NULL, SW_SHOWNORMAL);
 		return true;
@@ -471,7 +472,7 @@ void CMainDlg::ClearCtrlText()
 
 	GetDlgItem(IDC_STATIC_NOTCOF)->SetWindowText(_T("")) ;
 
-	GetDlgItem(IDC_STATIC_COUNT)->SetWindowText(_T("")) ;
+	m_strTranNum.SetWindowText(_T("")) ;
 
 	GetDlgItem(IDC_TX1)->SetWindowText(_T("")) ;
 	GetDlgItem(IDC_TX2)->SetWindowText(_T("")) ;
@@ -485,5 +486,5 @@ void CMainDlg::ClearCtrlText()
 	GetDlgItem(IDC_TX_JY5)->SetWindowText(_T("")) ;
 	GetDlgItem(IDC_TX_JY7)->SetWindowText(_T("")) ;
 	//Invalidate(); 
-	UpdateData(TRUE);
+	UpdateData(FALSE);
 }
