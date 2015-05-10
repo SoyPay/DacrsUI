@@ -12,6 +12,7 @@
 #include "P2PDlg.h"
 #include "MortgageTardDlg.h"
 #include "IpoDlg.h"
+#include "AddApp.h"
 
 // CDacrsUIDlg 对话框
 class CDacrsUIDlg : public CDialogEx
@@ -47,6 +48,7 @@ public:
 	CP2PDlg             *m_pP2PDlg    ;//P2P
 	CMortgageTardDlg    *m_pMortgageTardDlg;// 抵押
 	CIpoDlg             *m_pIpoDlg;    //IPO
+	CAddApp             *m_pAddApp;    //添加应用
 public:
 	std::map< UINT , CDialogBar * >  m_dlgMap ; 
 	void       ShowDialog(UINT dlgid)  ;
