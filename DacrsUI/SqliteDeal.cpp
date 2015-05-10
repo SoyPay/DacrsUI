@@ -1219,7 +1219,12 @@ BOOL CSqliteDeal::isinBlock(){
 			case 0:
 				{
 					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
-					strCommand.Format(_T("%s %s"),_T("getblock") ,strValue );
+
+					if(strValue == _T("")){
+						strCommand.Format(_T("%s %d"),_T("getblock") ,-1 );
+					}else{
+						strCommand.Format(_T("%s %s"),_T("getblock") ,strValue );
+					}					
 					CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 					if (strShowData == _T("")){
 						flag = false;
@@ -1308,7 +1313,8 @@ void  CSqliteDeal::UpdataAllTableData(BOOL flag){
 	}
 	sqlite3_free_table(pResult);
 
-	EmptyTabData(_T("EmptyTabData"));
+	EmptyTabData(_T("MYWALLET"));
+	theApp.UpdataAddressData();
 }
 void  CSqliteDeal::UpdataAllTable(){
 
@@ -1494,4 +1500,26 @@ string CSqliteDeal::GetColSum(const CString strTabName , const CString strP, con
 	strValue.Format(_T("%s"),m_pResult[nIndex]);
 	sqlite3_free_table(m_pResult);
 	return strValue.GetString() ;
+}
+string  CSqliteDeal::GetColSum(const CString strTabName,const CString filed)
+{
+	if ( NULL == m_pSqlitedb ) {
+		if ( !OpenSqlite(theApp.str_InsPath) ) return "" ;
+	}
+
+	CString strSql = _T("SELECT sum(")+filed+_T(") FROM ") + strTabName;
+
+	int nResult = sqlite3_get_table(m_pSqlitedb,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	if ( nResult != SQLITE_OK ){
+		sqlite3_close(m_pSqlitedb);  
+		sqlite3_free(m_pzErrMsg);  
+		m_pSqlitedb = NULL ;
+		return "" ;
+	}
+	int nIndex = m_nCol;
+	CString strValue  ;
+	strValue.Format(_T("%s"),m_pResult[nIndex]);
+	sqlite3_free_table(m_pResult);
+	return strValue.GetString() ;
+
 }

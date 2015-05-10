@@ -2,6 +2,7 @@
 #include "SignAccountsDlg.h"
 #include "NewAddressDlg.h"
 #include "RoundButton.h"
+#include "ListCtrlCl.h"
 // CReceiveDlg ¶Ô»°¿ò
 
 class CReceiveDlg : public CDialogBar
@@ -27,7 +28,7 @@ public:
 private:
 	CSignAccountsDlg *m_accountDlg;
 	CNewAddressDlg   *m_newaddrDlg;
-	CListCtrl m_listCtrl;
+	CListCtrlCl m_listCtrl;
 	uistruct::LISTADDRLIST m_pListaddrInfo;
 	CRoundButton     m_rBtnAcitve;
 	CRoundButton     m_rBtnNewaddr;
@@ -36,4 +37,5 @@ public:
 	afx_msg void OnBnClickedButtonSignAccount();
 	afx_msg void OnBnClickedButtonNewaddress();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	afx_msg void OnSize(UINT nType, int cx, int cy);
 };

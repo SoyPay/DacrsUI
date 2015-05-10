@@ -380,8 +380,8 @@ void CDacrsUIDlg::OnBnClickedButtonAddApp()
 }
 void CDacrsUIDlg::OnBnClickedButtonClose()
 {
-	//CloseThread();
-	//StopSever();
+	CloseThread();
+	StopSever();
 
 	DestroyDlg();
 	PostMessage( WM_QUIT ) ; 

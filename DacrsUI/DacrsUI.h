@@ -93,8 +93,6 @@ public:
 	void		 SubscribeMsg( DWORD nThreadId , HWND hWnd , UINT msg , void * relMsgMem = NULL )	;	
 	void		 UnSubscribeMsg( DWORD , HWND , UINT )	;	
 	void		 DispatchMsg( unsigned int threadID , UINT msg , WPARAM wParam , LPARAM lParam ) ;
-
-	
 public:
 	CString      m_betScritptid;
 	CString      m_darkScritptid;

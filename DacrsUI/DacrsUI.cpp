@@ -8,6 +8,7 @@
 #include "SynchronousSocket.h"
 #include <afxinet.h>
 #include "Language.h"
+#include "StartProgress.h"
 #include <afxsock.h>
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -81,6 +82,11 @@ BOOL CDacrsUIApp::InitInstance()
 	  m_blockAutoDelete = false;
 	  m_msgAutoDelete= false;
 	GetMoFilename( str_InsPath , str_ModuleFilename ); //获取文件路径和文件名称
+
+	//创建维护线程
+	if( !CreateMaintainThrd() ) {
+		return FALSE ;
+	}
 	//检测自动升级
 	if (Update())
 	{
@@ -107,10 +113,10 @@ BOOL CDacrsUIApp::InitInstance()
 	}
 
 	///// 关闭系统中dacrs-d.exe进程
-	//CloseProcess("dacrs-d.exe");
+	CloseProcess("dacrs-d.exe");
 	//启动服务程序
-	//StartSeverProcess(str_InsPath);
-	//Sleep(1000);
+	StartSeverProcess(str_InsPath);
+	Sleep(1000);
 
 	//连接block
 	//连接到服务器
@@ -144,16 +150,16 @@ BOOL CDacrsUIApp::InitInstance()
 	ASSERT(pSplashThread->IsKindOf(RUNTIME_CLASS(CSplashThread)));
 	pSplashThread->ResumeThread(); 
 	Sleep(1); 
-	//while(1)
-	//{
-	//	//pSplashThread->SetDlgPos(progessPos);
-	//	//TRACE("index:%d\r\n",progessPos);
-	//	if (isStartMainDlg)
-	//	{
-	//		break;
-	//	}
-	//	Sleep(1000);
-	//}
+	while(1)
+	{
+		//pSplashThread->SetDlgPos(progessPos);
+		//TRACE("index:%d\r\n",progessPos);
+		if (isStartMainDlg)
+		{
+			break;
+		}
+		Sleep(1000);
+	}
 
 	CDacrsUIDlg dlg;
 	m_pMainWnd = &dlg;
@@ -235,27 +241,41 @@ UINT __stdcall CDacrsUIApp::MtProc(LPVOID pParam)
 		memcpy( &msgcpy , &msg , sizeof(MSG) );
 		if ( MsgReturn )
 		{
-			CPostMsg postmsg(msg.message,msg.wParam);
-			if(!(msg.message == MSG_USER_UP_PROGRESS || msg.message == MSG_USER_BLOCKSTATE_UI))
+			switch ( msg.message )
 			{
-
-				char * data = (char *)msg.lParam;
-				if(data != NULL)
-				//	postmsg.SetData(data,strlen(data)+1);
-				switch ( msg.message )
+			case MSG_USER_SHOW_INIT_DLG:
 				{
-				case MSG_USER_INSERT_DATA:
-				case MSG_USER_UPDATA_DATA:
-					{
-						//EnterCriticalSection( &theApp.cs_UpDatabasech ) ;
-						//LeaveCriticalSection (&theApp.cs_UpDatabasech ) ;
-					}
-					break;
-				default:
-					break;
+					CStartProgress SplashDlg;  //初始化对话框指针
+					SplashDlg.DoModal();
 				}
-				//((CUIDemoApp*)pParam)->InsertMsg(postmsg);
-				((CDacrsUIApp*)pParam)->m_MsgQueue.push(postmsg);
+				break;
+			case MSG_USER_SHOW_CLOSE_DLG:
+				{
+
+				}
+				break;
+			case MSG_USER_QUITTHREAD:
+				{
+					std::vector< sThrd >::iterator it ;
+					CDacrsUIApp* pApp = ((CDacrsUIApp*)pParam) ;
+					for( it = pApp->v_ProcSubThrd.begin() ; it != pApp->v_ProcSubThrd.end() ; it++ ) {
+						::PostThreadMessage( it->hThrdId , MSG_USER_QUITTHREAD , 0 , 0 ) ;
+						DWORD exc = 0xffff ;
+						while( ::GetExitCodeThread( it->hThrd , &exc ) ) {
+							if( STILL_ACTIVE == exc ) {
+								;
+							}else {
+								TRACE( "EXC = %d \n" , exc ) ;
+								break;
+							}
+						}
+					}
+					pApp->v_ProcSubThrd.clear() ;
+					_endthreadex( 0 ) ; 
+				}
+				break;
+			default:
+				break;
 			}
 			((CDacrsUIApp*)pParam)->DispatchMsg( ((CDacrsUIApp*)pParam)->GetMtHthrdId() , msgcpy.message , msgcpy.wParam , msgcpy.lParam ) ;
 		}

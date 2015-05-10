@@ -115,8 +115,9 @@ public:
 	protected:
 	virtual void PreSubclassWindow();
 	//}}AFX_VIRTUAL
-
+	
 public:
+	virtual void SetFontEx(int nHeight, LPCTSTR fontName, BOOL bRedraw = true);
 	DWORD SetDefaultColors(BOOL bRepaint = TRUE);
 	DWORD SetColor(BYTE byColorIndex, COLORREF crColor, BOOL bRepaint = TRUE);
 	DWORD GetColor(BYTE byColorIndex, COLORREF* crpColor);
@@ -190,7 +191,6 @@ protected:
 	afx_msg LRESULT OnMenuChar(UINT nChar, UINT nFlags, CMenu* pMenu);
 	afx_msg void OnMeasureItem(int nIDCtl, LPMEASUREITEMSTRUCT lpMeasureItemStruct);
 #endif
-
 	afx_msg HBRUSH CtlColor(CDC* pDC, UINT nCtlColor);
 	HICON CreateGrayscaleIcon(HICON hIcon);
 	HICON CreateDarkerIcon(HICON hIcon);
@@ -244,6 +244,8 @@ private:
 	CDC			m_dcBk;
 	CBitmap		m_bmpBk;
 	CBitmap*	m_pbmpOldBk;
+
+	CFont		*m_Font;            
 
 	BOOL		m_bAlwaysTrack;		// Always hilight button?
 	int			m_nCheck;			// Current value for checkbox

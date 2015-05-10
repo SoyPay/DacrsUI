@@ -20,4 +20,8 @@ protected:
 public:
 	afx_msg void OnBnClickedButton1();
 	virtual BOOL OnInitDialog();
+public:
+	HBITMAP		     m_pBmp; 
+	void		     SetBkBmpNid( UINT nBitmapIn ) ;
+	afx_msg void OnPaint();
 };
