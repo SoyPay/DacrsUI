@@ -5,6 +5,7 @@
 #include "DacrsUI.h"
 #include "MainDlg.h"
 #include "afxdialogex.h"
+#include "DacrsUIDlg.h"
 #include <afxinet.h>
 
 // CMainDlg 对话框
@@ -31,6 +32,21 @@ CMainDlg::~CMainDlg()
 	v_linkCtrl.ExternalRelease();
 	v_linkCtrl.OnFinalRelease();
 	v_linkCtrl.DestroyWindow();
+
+	v_linkCtrl1.InternalRelease();
+	v_linkCtrl1.ExternalRelease();
+	v_linkCtrl1.OnFinalRelease();
+	v_linkCtrl1.DestroyWindow();
+
+	v_linkCtrl2.InternalRelease();
+	v_linkCtrl2.ExternalRelease();
+	v_linkCtrl2.OnFinalRelease();
+	v_linkCtrl2.DestroyWindow();
+
+	v_linkCtrl3.InternalRelease();
+	v_linkCtrl3.ExternalRelease();
+	v_linkCtrl3.OnFinalRelease();
+	v_linkCtrl3.DestroyWindow();
 }
 
 void CMainDlg::DoDataExchange(CDataExchange* pDX)
@@ -54,6 +70,9 @@ void CMainDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_STATIC_COUNT , m_strTranNum);
 
 	DDX_Control(pDX, IDC_MFCLINK1, v_linkCtrl);
+	DDX_Control(pDX, IDC_MFCLINK3, v_linkCtrl1);
+	DDX_Control(pDX, IDC_MFCLINK4, v_linkCtrl2);
+	DDX_Control(pDX, IDC_MFCLINK5, v_linkCtrl3);
 }
 
 
@@ -85,6 +104,11 @@ void CMainDlg::SetBkBmpNid( UINT nBitmapIn )
 void CMainDlg::OnBnClickedAlltxdetail()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	CDacrsUIDlg* pDlg = (CDacrsUIDlg*)GetParent();
+	if ( NULL != pDlg ) {
+		pDlg->ShowDialog(CTradDlg::IDD) ;
+		pDlg->ShowStateTip(IDC_BUTTON_TRAD_INFO);
+	}
 }
 
 void CMainDlg::OnnitCtrlText()
@@ -308,6 +332,7 @@ void CMainDlg::SetCtrlText()
 		GetDlgItem(IDC_TX5)->SetWindowText(strShowData) ;
 		GetDlgItem(IDC_TX_JY7)->SetWindowText(strCommand) ;
 	}
+	Invalidate();
 }
 BOOL CMainDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 {
@@ -320,9 +345,9 @@ BOOL CMainDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		ClearCtrlText();
 		OnnitCtrlText();
 		GetUrlServer();
-		v_linkCtrl.SetWindowText(_T("456"));
+		onnitLinkText();
 		//m_strTx1.SetFont(120, _T("微软雅黑"));				//设置显示字体和大小
-		//m_strTx1.SetTextColor(RGB(192,192,192));			//字体颜色
+		//m_strTx1.SetTextColor(RGB(192,192,192));			    //字体颜色
 		//m_strTx1.SetWindowText(_T("方斌")) ;
 		//v_linkCtrl.SetURL(_T("www.hao123.com"));
 		//v_linkCtrl.SetURLPrefix(_T("http://"));
@@ -338,7 +363,6 @@ LRESULT CMainDlg::OnShowListCtorl( WPARAM wParam, LPARAM lParam )
 		GetDlgItem(IDC_STATIC_WALLET)->ShowWindow(SW_HIDE);
 	}else{
 		SetCtrlText();
-		UpdateData(FALSE);
 	}
 	
 	return 0 ;
@@ -359,7 +383,7 @@ int CMainDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 bool CMainDlg::GetUrlServer()
 {
 	m_url.clear();
-	CString url(_T("http://api.dspay.org/dacrs/dacrsUpdate.json"));    
+	CString url(_T("http://www.dacrs.com/dacrs/forumupdata.json"));    
 	CInternetSession session;
 	std::string strHtml;
 
@@ -392,12 +416,11 @@ bool CMainDlg::GetUrlServer()
 		return false;
 	}
 
-
 	if (strHtml.empty())
 	{
 		CStdioFile myFile;
 		CString strLine; 
-		if(myFile.Open(theApp.str_InsPath+_T("dacrsUpdate.json"), CFile::modeRead))
+		if(myFile.Open(theApp.str_InsPath+_T("\\dacrsUpdate.json"), CFile::modeRead))
 		{
 			while(myFile.ReadString(strLine))
 			{
@@ -411,7 +434,7 @@ bool CMainDlg::GetUrlServer()
 	}else{
 			//创建
 			CStdioFile  File;
-			File.Open(theApp.str_InsPath+_T("dacrsUpdate.json"),CFile::modeWrite | CFile::modeCreate);  
+			File.Open(theApp.str_InsPath+_T("\\dacrsUpdate.json"),CFile::modeWrite | CFile::modeCreate);  
 			File.WriteString(strHtml.c_str());
 			File.Close();
 	}
@@ -422,12 +445,14 @@ bool CMainDlg::GetUrlServer()
 
 	if (reader.parse(strHtml, root)) 
 	{
-		//int index = root.size();
-		//for (int i = 0;i <index;i++)
-		//{
-		//	Json::Value  msgroot = root[index];
-		//	//m_url[]
-		//}
+		int index = root.size();
+		for (int i = 0;i <index;i++)
+		{
+			Json::Value  msgroot = root[i];
+			CString key = msgroot["msn"].asCString();
+			CString valuetemp = msgroot["url"].asCString();
+			m_url[key] = valuetemp;
+		}
 		//strVersion = root["version"].asString();
 		//ShellExecuteW(NULL, L"open", _T("http://bbs.dspay.org/portal.php"), NULL, NULL, SW_SHOWNORMAL);
 		return true;
@@ -464,7 +489,6 @@ BOOL CMainDlg::OnEraseBkgnd(CDC* pDC)
 	
 		return TRUE;
 }
-
 void CMainDlg::ClearCtrlText()
 {
 
@@ -485,6 +509,41 @@ void CMainDlg::ClearCtrlText()
 	GetDlgItem(IDC_TX_JY4)->SetWindowText(_T("")) ;
 	GetDlgItem(IDC_TX_JY5)->SetWindowText(_T("")) ;
 	GetDlgItem(IDC_TX_JY7)->SetWindowText(_T("")) ;
-	//Invalidate(); 
-	UpdateData(FALSE);
 }
+
+void CMainDlg::onnitLinkText()
+{
+   v_linkCtrl.SetWindowText(_T(""));
+   v_linkCtrl1.SetWindowText(_T(""));
+   v_linkCtrl2.SetWindowText(_T(""));
+   v_linkCtrl3.SetWindowText(_T(""));
+   int i = 1;
+	map<CString,CString>::iterator it;
+	for(it=m_url.begin();it!=m_url.end();++it)
+	{
+		if (i == 1)
+		{
+			v_linkCtrl.SetWindowText(it->first);
+			v_linkCtrl.SetURL(it->second);
+		}
+		if (i == 2)
+		{
+			v_linkCtrl1.SetWindowText(it->first);
+			v_linkCtrl1.SetURL(it->second);
+		}
+		if (i == 3)
+		{
+			v_linkCtrl2.SetWindowText(it->first);
+			v_linkCtrl2.SetURL(it->second);
+		}
+		if (i == 4)
+		{
+			v_linkCtrl3.SetWindowText(it->first);
+			v_linkCtrl3.SetURL(it->second);
+			break;
+		}
+		i++;
+	}
+		
+}
+
