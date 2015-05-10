@@ -605,8 +605,10 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 		if(!pUiDemeDlg->m_MsgQueue.pop(Postmsg))
 			continue;
 		CDacrsUIDlg *pDlg = (CDacrsUIDlg*)(((CDacrsUIApp*)pParam)->m_pMainWnd) ;
-		if (pDlg == NULL && Postmsg.GetUItype() != MSG_USER_STARTPROCESS_UI)
+		if (pDlg == NULL && Postmsg.GetUItype() != MSG_USER_STARTPROCESS_UI){
+			pUiDemeDlg->m_MsgQueue.push(Postmsg);
 			continue;
+		}
 		switch (Postmsg.GetUItype() )
 		{
 		case MSG_USER_STARTPROCESS_UI:
