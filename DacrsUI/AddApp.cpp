@@ -1,22 +1,22 @@
-// IpoDlg.cpp : 实现文件
+// AddApp.cpp : 实现文件
 //
 
 #include "stdafx.h"
 #include "DacrsUI.h"
-#include "IpoDlg.h"
+#include "AddApp.h"
 #include "afxdialogex.h"
 
 
-// CIpoDlg 对话框
+// CAddApp 对话框
 
-IMPLEMENT_DYNAMIC(CIpoDlg, CDialogEx)
+IMPLEMENT_DYNAMIC(CAddApp, CDialogBar)
 
-CIpoDlg::CIpoDlg()
+CAddApp::CAddApp()
 {
 	m_pBmp = NULL ;
 }
 
-CIpoDlg::~CIpoDlg()
+CAddApp::~CAddApp()
 {
 	if( NULL != m_pBmp ) {
 		DeleteObject(m_pBmp) ;
@@ -24,20 +24,21 @@ CIpoDlg::~CIpoDlg()
 	}
 }
 
-void CIpoDlg::DoDataExchange(CDataExchange* pDX)
+void CAddApp::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogBar::DoDataExchange(pDX);
 }
 
 
-BEGIN_MESSAGE_MAP(CIpoDlg, CDialogBar)
+BEGIN_MESSAGE_MAP(CAddApp, CDialogBar)
 	ON_WM_CREATE()
 	ON_WM_ERASEBKGND()
 END_MESSAGE_MAP()
 
 
-// CIpoDlg 消息处理程序
-void CIpoDlg::SetBkBmpNid( UINT nBitmapIn ) 
+// CAddApp 消息处理程序
+
+void CAddApp::SetBkBmpNid( UINT nBitmapIn ) 
 {
 	if( NULL != m_pBmp ) {
 		::DeleteObject( m_pBmp ) ;
@@ -50,19 +51,19 @@ void CIpoDlg::SetBkBmpNid( UINT nBitmapIn )
 		m_pBmp = (HBITMAP)::LoadImage(hInstResource, MAKEINTRESOURCE(nBitmapIn), IMAGE_BITMAP, 0, 0, 0);
 	}
 }
-
-int CIpoDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
+int CAddApp::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CDialogBar::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
 	// TODO:  在此添加您专用的创建代码
-	SetBkBmpNid(IDB_BITMAP_IPO_BJ);
+	SetBkBmpNid(IDB_BITMAP_ADDAPP_BJ);
+
 	return 0;
 }
 
 
-BOOL CIpoDlg::OnEraseBkgnd(CDC* pDC)
+BOOL CAddApp::OnEraseBkgnd(CDC* pDC)
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
 	CRect   rect; 

@@ -129,6 +129,7 @@ public:
 	void UpdatarevtransactionData(string hash);
 	void UpdatarevAppRecord(string txdetail);
 	void GetMainDlgStruc();
+	BOOL RunOnlyOneApp();
 public:
 	bool isStartMainDlg;
 	CNoUiMsgBuffer m_noUiMsgBuffer;

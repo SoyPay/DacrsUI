@@ -20,7 +20,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
-    <UseOfMfc>Static</UseOfMfc>
+    <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -52,7 +52,6 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -61,8 +60,8 @@
       <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>
       </AdditionalDependencies>
-      <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
-      <EnableUAC>false</EnableUAC>
+      <MinimumRequiredVersion>
+      </MinimumRequiredVersion>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -109,6 +108,7 @@
     <None Include="res\activate_addr_1.bmp" />
     <None Include="res\activate_addr_2.bmp" />
     <None Include="res\activate_addr_3.bmp" />
+    <None Include="res\addapp_dlg.bmp" />
     <None Include="res\address_book.bmp" />
     <None Include="res\add_app_1.bmp" />
     <None Include="res\add_app_2.bmp" />
@@ -148,6 +148,7 @@
     <None Include="res\ipo_4.bmp" />
     <None Include="res\ipo_app_1.bmp" />
     <None Include="res\ipo_app_2.bmp" />
+    <None Include="res\ipo_dlg.bmp" />
     <None Include="res\kuang.bmp" />
     <None Include="res\Logo.bmp" />
     <None Include="res\MainUI.bmp" />
@@ -162,10 +163,12 @@
     <None Include="res\min2.bmp" />
     <None Include="res\min3.bmp" />
     <None Include="res\Mortgage.bmp" />
+    <None Include="res\mort_dlg.bmp" />
     <None Include="res\newaddr-1.bmp" />
     <None Include="res\newaddr-2.bmp" />
     <None Include="res\newaddr-3.bmp" />
     <None Include="res\P2P.bmp" />
+    <None Include="res\p2p_dlg.bmp" />
     <None Include="res\progress1.bmp" />
     <None Include="res\progress2.bmp" />
     <None Include="res\progress3.bmp" />
@@ -190,6 +193,7 @@
     <None Include="res\tradedetail_logo_2.bmp" />
     <None Include="res\tradedetail_logo_3.bmp" />
     <None Include="res\tradedetail_logo_4.bmp" />
+    <None Include="res\Trad_dlg.bmp" />
     <None Include="res\wallet_uipro.bmp" />
     <None Include="res\wndtitlebk.bmp" />
     <None Include="res\xh_2.bmp" />
@@ -200,6 +204,7 @@
     <None Include="res\your_sister_4.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AddApp.h" />
     <ClInclude Include="BmpBtn.h" />
     <ClInclude Include="BtnST.h" />
     <ClInclude Include="CeXDib.h" />
@@ -253,6 +258,7 @@
     <ClInclude Include="UiHead.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AddApp.cpp" />
     <ClCompile Include="BmpBtn.cpp" />
     <ClCompile Include="BtnST.cpp" />
     <ClCompile Include="CeXDib.cpp" />

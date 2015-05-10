@@ -1,18 +1,18 @@
 #pragma once
 
 
-// CMortgageTardDlg 对话框
+// CAddApp 对话框
 
-class CMortgageTardDlg : public CDialogBar
+class CAddApp : public CDialogBar
 {
-	DECLARE_DYNAMIC(CMortgageTardDlg)
+	DECLARE_DYNAMIC(CAddApp)
 
 public:
-	CMortgageTardDlg();   // 标准构造函数
-	virtual ~CMortgageTardDlg();
+	CAddApp();   // 标准构造函数
+	virtual ~CAddApp();
 
 // 对话框数据
-	enum { IDD = IDD_DIALOG_MORTGAGE };
+	enum { IDD = IDD_DIALOG_ADDAPP };
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
