@@ -38,6 +38,7 @@ void CProgStatusBar::DoDataExchange(CDataExchange* pDX)
 	CDialogBar::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_PROGRESS, m_progress);
 	DDX_Control(pDX, IDC_STATIC_NET_TB, m_strNeting);
+	DDX_Control(pDX, IDC_STATIC_HEIGHT, m_strHeight);
 }
 
 
@@ -141,6 +142,11 @@ BOOL CProgStatusBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UIN
 		m_strNeting.SetTextColor(RGB(255,255,255));			    //字体颜色
 		m_strNeting.SetWindowText(_T("网络同步中...")) ;
 
+		m_strHeight.SetFont(85, _T("宋体"));				//设置显示字体和大小
+		m_strHeight.SetTextColor(RGB(255,255,255));			    //字体颜色
+		m_strHeight.SetWindowText(_T("高度:")) ;
+		m_strHeight.ShowWindow(SW_HIDE) ;
+
 		if ( NULL == m_ProgressWnd ) {
 			m_ProgressWnd = new CGIFControl ;
 			m_ProgressWnd->Create(_T("") , WS_CHILD | SS_OWNERDRAW | WS_VISIBLE | SS_NOTIFY , \
@@ -219,6 +225,10 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 	}
 	if ( m_walletui ) {
 		m_strNeting.SetWindowText(_T("网络已同步")) ;
+		CString strTips;
+		strTips.Format(_T("高度:%d") ,pBlockchanged.tips ) ;
+		m_strHeight.SetWindowText(strTips) ;
+		m_strHeight.ShowWindow(SW_SHOW);
 	}
 	InvalidateRect(m_bmpsig);
 	return 1;
