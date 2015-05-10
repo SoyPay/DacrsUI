@@ -43,7 +43,7 @@ void CReceiveDlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CReceiveDlg, CDialogBar)
 	ON_BN_CLICKED(IDC_COPYADDRESS, &CReceiveDlg::OnBnClickedCopyaddress)
 	ON_MESSAGE(MSG_USER_RECIVE_UI , &CReceiveDlg::OnShowListCtrl )
-	ON_BN_CLICKED(IDC_BUTTON1, &CReceiveDlg::OnBnClickedButtonSignAccount)
+	ON_BN_CLICKED(IDC_BUTTON_JHDZ, &CReceiveDlg::OnBnClickedButtonSignAccount)
 	ON_BN_CLICKED(IDC_BUTTON_NEWADDRESS, &CReceiveDlg::OnBnClickedButtonNewaddress)
 	ON_WM_SIZE()
 	ON_WM_CREATE()
@@ -216,6 +216,12 @@ void CReceiveDlg::OnBnClickedButtonSignAccount()
 	if ( pos ) {
 		int nRow = m_listCtrl.GetNextSelectedItem(pos) ;
 		uistruct::LISTADDR_t * pDbbetData = (uistruct::LISTADDR_t*)m_listCtrl.GetItemData(nRow) ;
+		if (pDbbetData->fMoney <=0)
+		{
+			StrShow.Format(_T("账户余额为零,不能激活!\n"));
+			::MessageBox( this->GetSafeHwnd() ,StrShow , _T("提示") , MB_ICONINFORMATION ) ;
+			return;
+		}
 		m_accountDlg->SetShowAddr(pDbbetData->address);
 		CRect rcWindow;
 		GetWindowRect(&rcWindow);
@@ -336,3 +342,4 @@ BOOL CReceiveDlg::OnEraseBkgnd(CDC* pDC)
 
 	return TRUE;
 }
+
