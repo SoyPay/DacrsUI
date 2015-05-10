@@ -185,6 +185,7 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 
 			if ((pBlockchanged.tips-pBlockchanged.high)<10 && !m_walletui)
 			{
+				TRACE("ok:%s\r\n","OnShowProgressCtrl");
 				//// 发送钱包同步完毕
 				CPostMsg postblockmsg(MSG_USER_MAIN_UI,WM_UPWALLET);
 				theApp.m_MsgQueue.pushFront(postblockmsg); 
@@ -204,6 +205,7 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 	
 	if ((pBlockchanged.tips-pBlockchanged.high)<10&& !m_walletui)
 	{
+		TRACE("ok:%s\r\n","OnShowProgressCtrl");
 		//// 发送钱包同步完毕
 		CPostMsg postblockmsg(MSG_USER_MAIN_UI,WM_UPWALLET);
 		theApp.m_MsgQueue.pushFront(postblockmsg); 
