@@ -341,6 +341,55 @@ namespace uistruct {
 		}
 	}LISTP2POOL_T;
 	typedef std::vector<LISTP2POOL_T> P2PLIST ;
+
+	typedef struct MINDLG{   
+		string   money ;   //address
+		string   unconfirmmoney ;   //RegID
+		string   itemcount;
+		string   addr1;
+		string   addr2;
+		string   addr3;
+		string   addr4;
+		string   addr5;
+		MINDLG(){
+			money = "" ;   //address
+			unconfirmmoney = "";   //RegID
+			itemcount = "";
+			addr1 = "";
+			addr2 = "";
+			addr3 = "";
+			addr4 = "";
+			addr5 = "";
+		}
+		string ToJson(){
+			Json::Value root;
+			root["money"] = money;
+			root["unconfirmmoney"] = unconfirmmoney;
+			root["itemcount"] = itemcount;
+			root["addr1"] = addr1;
+			root["addr2"] = addr2;
+			root["addr3"] = addr3;
+			root["addr4"] = addr4;
+			root["addr5"] = addr5;
+			return root.toStyledString();
+		}
+		bool JsonToStruct(string json){
+			Json::Reader reader;  
+			Json::Value root; 
+			if (!reader.parse(json, root)) 
+				return false ;
+
+			this->money = root["money"].asString();
+			this->unconfirmmoney = root["unconfirmmoney"].asString();
+			this->itemcount = root["itemcount"].asString();
+			this->addr1 = root["addr1"].asString();
+			this->addr2 = root["addr2"].asString();
+			this->addr3 = root["addr3"].asString();
+			this->addr4 = root["addr4"].asString();
+			this->addr5 = root["addr4"].asString();
+			return true;
+		}
+	}MINDLG_T;
 }
 #pragma pack(pop)
 //UiFun
