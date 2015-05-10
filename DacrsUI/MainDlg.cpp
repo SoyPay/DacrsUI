@@ -308,6 +308,7 @@ void CMainDlg::SetCtrlText()
 		GetDlgItem(IDC_TX5)->SetWindowText(strShowData) ;
 		GetDlgItem(IDC_TX_JY7)->SetWindowText(strCommand) ;
 	}
+	Invalidate();
 }
 BOOL CMainDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 {
@@ -322,7 +323,7 @@ BOOL CMainDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		GetUrlServer();
 		v_linkCtrl.SetWindowText(_T("456"));
 		//m_strTx1.SetFont(120, _T("微软雅黑"));				//设置显示字体和大小
-		//m_strTx1.SetTextColor(RGB(192,192,192));			//字体颜色
+		//m_strTx1.SetTextColor(RGB(192,192,192));			    //字体颜色
 		//m_strTx1.SetWindowText(_T("方斌")) ;
 		//v_linkCtrl.SetURL(_T("www.hao123.com"));
 		//v_linkCtrl.SetURLPrefix(_T("http://"));
@@ -338,7 +339,6 @@ LRESULT CMainDlg::OnShowListCtorl( WPARAM wParam, LPARAM lParam )
 		GetDlgItem(IDC_STATIC_WALLET)->ShowWindow(SW_HIDE);
 	}else{
 		SetCtrlText();
-		UpdateData(FALSE);
 	}
 	
 	return 0 ;
@@ -359,7 +359,7 @@ int CMainDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 bool CMainDlg::GetUrlServer()
 {
 	m_url.clear();
-	CString url(_T("http://api.dspay.org/dacrs/dacrsUpdate.json"));    
+	CString url(_T("http://www.dacrs.com/dacrs/forumupdata.json"));    
 	CInternetSession session;
 	std::string strHtml;
 
@@ -392,12 +392,11 @@ bool CMainDlg::GetUrlServer()
 		return false;
 	}
 
-
 	if (strHtml.empty())
 	{
 		CStdioFile myFile;
 		CString strLine; 
-		if(myFile.Open(theApp.str_InsPath+_T("dacrsUpdate.json"), CFile::modeRead))
+		if(myFile.Open(theApp.str_InsPath+_T("\\dacrsUpdate.json"), CFile::modeRead))
 		{
 			while(myFile.ReadString(strLine))
 			{
@@ -411,7 +410,7 @@ bool CMainDlg::GetUrlServer()
 	}else{
 			//创建
 			CStdioFile  File;
-			File.Open(theApp.str_InsPath+_T("dacrsUpdate.json"),CFile::modeWrite | CFile::modeCreate);  
+			File.Open(theApp.str_InsPath+_T("\\dacrsUpdate.json"),CFile::modeWrite | CFile::modeCreate);  
 			File.WriteString(strHtml.c_str());
 			File.Close();
 	}
@@ -422,12 +421,14 @@ bool CMainDlg::GetUrlServer()
 
 	if (reader.parse(strHtml, root)) 
 	{
-		//int index = root.size();
-		//for (int i = 0;i <index;i++)
-		//{
-		//	Json::Value  msgroot = root[index];
-		//	//m_url[]
-		//}
+		int index = root.size();
+		for (int i = 0;i <index;i++)
+		{
+			Json::Value  msgroot = root[i];
+			CString key = msgroot["msn"].asCString();
+			CString valuetemp = msgroot["url"].asCString();
+			m_url[key] = valuetemp;
+		}
 		//strVersion = root["version"].asString();
 		//ShellExecuteW(NULL, L"open", _T("http://bbs.dspay.org/portal.php"), NULL, NULL, SW_SHOWNORMAL);
 		return true;
@@ -464,7 +465,6 @@ BOOL CMainDlg::OnEraseBkgnd(CDC* pDC)
 	
 		return TRUE;
 }
-
 void CMainDlg::ClearCtrlText()
 {
 
@@ -485,6 +485,10 @@ void CMainDlg::ClearCtrlText()
 	GetDlgItem(IDC_TX_JY4)->SetWindowText(_T("")) ;
 	GetDlgItem(IDC_TX_JY5)->SetWindowText(_T("")) ;
 	GetDlgItem(IDC_TX_JY7)->SetWindowText(_T("")) ;
-	//Invalidate(); 
-	UpdateData(FALSE);
+}
+
+void CMainDlg::onnitLinkText()
+{
+   
+
 }
