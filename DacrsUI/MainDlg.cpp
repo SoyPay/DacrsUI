@@ -394,14 +394,39 @@ bool CMainDlg::GetUrlServer()
 
 	if (strHtml.empty())
 	{
-		return false;
+		CStdioFile myFile;
+		CString strLine; 
+		if(myFile.Open(theApp.str_InsPath+_T("dacrsUpdate.json"), CFile::modeRead))
+		{
+			while(myFile.ReadString(strLine))
+			{
+				strHtml +=strLine.GetString();
+			}
+			//∂¡»°
+			myFile.Close();
+		}else{
+			return false;
+		}
+	}else{
+			//¥¥Ω®
+			CStdioFile  File;
+			File.Open(theApp.str_InsPath+_T("dacrsUpdate.json"),CFile::modeWrite | CFile::modeCreate);  
+			File.WriteString(strHtml.c_str());
+			File.Close();
 	}
+
 
 	Json::Reader reader;  
 	Json::Value root; 
 
 	if (reader.parse(strHtml, root)) 
 	{
+		int index = root.size();
+		for (int i = 0;i <index;i++)
+		{
+			Json::Value  msgroot = root[index];
+			//m_url[]
+		}
 		//strVersion = root["version"].asString();
 		//ShellExecuteW(NULL, L"open", _T("http://bbs.dspay.org/portal.php"), NULL, NULL, SW_SHOWNORMAL);
 		return true;
