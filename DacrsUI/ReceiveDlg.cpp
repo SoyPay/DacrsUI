@@ -199,7 +199,26 @@ void CReceiveDlg::OnBnClickedCopyaddress()
 
 LRESULT  CReceiveDlg::OnShowListCtrl(  WPARAM wParam, LPARAM lParam )
 {
-	ShowListInfo();
+	int type = (int)wParam;
+	switch(type)
+	{
+	case WM_UP_ADDRESS:
+		{
+			ModifyListCtrlItem();
+			break;
+		}
+		break;
+	case WM_UP_NEWADDRESS:
+		{
+			InsertListCtrlItem();
+			break;
+		}
+		break;
+	default:
+		break;
+
+	}
+	//ShowListInfo();
 	return 1;
 }
 
@@ -339,3 +358,105 @@ BOOL CReceiveDlg::OnEraseBkgnd(CDC* pDC)
 	return TRUE;
 }
 
+void   CReceiveDlg::ModifyListCtrlItem()
+{
+
+	CPostMsg postmsg;
+	if (!theApp.m_UiReciveDlgQueue.pop(postmsg))
+	{
+		return ;
+	}
+
+	uistruct::LISTADDR_t addr; 
+	string strTemp = postmsg.GetData();
+	addr.JsonToStruct(strTemp.c_str());
+
+	int count = m_listCtrl.GetItemCount();
+
+	for(int i = 0; i < count; i++)
+	{
+		CString str = m_listCtrl.GetItemText(i, 0); // 这个函数名具体忘了，就是取得每个item第0列的值
+		uistruct::LISTADDR_t *pListAddr = (uistruct::LISTADDR_t*)m_listCtrl.GetItemData(i);
+		if (pListAddr != NULL && !strcmp(pListAddr->address,addr.address))
+		{
+			memcpy(addr.Lebel,pListAddr->Lebel,sizeof(addr.Lebel));
+			m_pListaddrInfo.push_back(addr);
+
+			int nSubIdx = 0;
+			CString  strShowData;
+			strShowData.Format(_T("%s") ,pListAddr->Lebel) ;
+			m_listCtrl.SetItemData(i , (DWORD_PTR)&(*m_pListaddrInfo.rbegin())) ;
+
+			uistruct::LISTADDR_t *pListAddr1 = (uistruct::LISTADDR_t*)m_listCtrl.GetItemData(i);
+
+			strShowData.Format(_T("%s") ,addr.address) ;
+			m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
+
+			if (addr.bSign == 1)
+			{
+				strShowData.Format(_T("已激活")) ;
+			}else{
+				strShowData.Format(_T("未激活")) ;
+			}
+
+			m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
+			strShowData.Format(_T("%.8f") , addr.fMoney ) ;
+			m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
+
+			if (addr.nColdDig== 1)
+			{
+				strShowData.Format(_T("支持")) ;
+			}else{
+				strShowData.Format(_T("不支持")) ;
+			}
+			m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
+			break;
+		}
+	}
+}
+void   CReceiveDlg::InsertListCtrlItem()
+{
+	CPostMsg postmsg;
+	if (!theApp.m_UiReciveDlgQueue.pop(postmsg))
+	{
+		return ;
+	}
+
+	uistruct::LISTADDR_t addr; 
+	string strTemp = postmsg.GetData();
+	addr.JsonToStruct(strTemp.c_str());
+
+	int count = m_listCtrl.GetItemCount();
+
+	int nSubIdx = 0,i =count;
+
+	CString  strShowData;
+	strShowData.Format(_T("%s") ,addr.Lebel) ;
+
+	m_pListaddrInfo.push_back(addr);
+	int item = m_listCtrl.InsertItem( i , strShowData ) ;
+	m_listCtrl.SetItemData(item , (DWORD_PTR)&(*m_pListaddrInfo.rbegin())) ;
+
+
+	strShowData.Format(_T("%s") ,addr.address) ;
+	m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
+
+	if (addr.bSign == 1)
+	{
+		strShowData.Format(_T("已激活")) ;
+	}else{
+		strShowData.Format(_T("未激活")) ;
+	}
+
+	m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
+	strShowData.Format(_T("%.8f") , addr.fMoney ) ;
+	m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
+
+	if (addr.nColdDig== 1)
+	{
+		strShowData.Format(_T("支持")) ;
+	}else{
+		strShowData.Format(_T("不支持")) ;
+	}
+	m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
+}

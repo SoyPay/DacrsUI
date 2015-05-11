@@ -40,4 +40,6 @@ public:
 	void		     SetBkBmpNid( UINT nBitmapIn ) ;
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+	void    ModifyListCtrlItem();
+	void    InsertListCtrlItem();
 };

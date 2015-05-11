@@ -105,7 +105,7 @@ HBRUSH CNewAddressDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 	{
 		pDC->SetBkMode(TRANSPARENT);
 		pDC->SelectObject(&m_fontGrid);
-		hbr = (HBRUSH)CreateSolidBrush(RGB(249,249,249));
+		hbr = (HBRUSH)CreateSolidBrush(RGB(240,240,240));
 	}
 	return hbr;
 }
@@ -191,15 +191,24 @@ void CNewAddressDlg::OnBnClickedButtonScdz()
 	CString Leble;
 	GetDlgItem(IDC_EDIT_Leble)->GetWindowText(Leble);
 
+	uistruct::LISTADDR_t newaddr; 
+	memcpy(newaddr.address,addr,sizeof(newaddr.address));
+	newaddr.nColdDig = nCold;
+	memcpy(newaddr.Lebel,Leble,sizeof(newaddr.Lebel));
+
 	CString strSourceData;
-	strSourceData.Format(_T("'%s' , '%s' , '%.8f' , '%d' ,'%d','%s'") , addr ,"",0.0 ,nCold ,0,Leble) ;
+	double money = 0.0;
+	strSourceData.Format(_T("'%s' , '%s' , '%.8f' , '%d' ,'%d','%s'") , addr ,"",money ,nCold ,0,Leble) ;
 	uistruct::DATABASEINFO_t   pDatabase;
-	pDatabase.strSource = strSourceData.GetString();
+	pDatabase.strSource = strSourceData;
+	pDatabase.strcutjson = newaddr.ToJson();
 	pDatabase.strTabName =  _T("MYWALLET");
 	CPostMsg postmsg(MSG_USER_INSERT_DATA,0);
 	string  strTemp = pDatabase.ToJson();
 	postmsg.SetData(strTemp.c_str());
 	theApp.m_MsgQueue.push(postmsg);
+
+	
 
 	strCommand.Format(_T("恭喜生成新地址%s"),addr);
 	::MessageBox( this->GetSafeHwnd() ,_T("恭喜生成新地址") , _T("提示") , MB_ICONINFORMATION ) ;
