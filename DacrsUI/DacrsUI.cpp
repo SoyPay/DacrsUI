@@ -164,8 +164,10 @@ BOOL CDacrsUIApp::InitInstance()
 	int nCount(0);
 	while(1)
 	{
-		if(!EnableDebugPrivilege())
-			AfxMessageBox(_T("Call EnableDebugPrivilege failed!"));
+		if(!CSoyPayHelp::getInstance()->IsWin8()) {
+			if(!EnableDebugPrivilege())
+				AfxMessageBox(_T("Call EnableDebugPrivilege failed!"));
+		}
 		HANDLE processHandle = OpenProcess(PROCESS_ALL_ACCESS,FALSE,sever_pi.dwProcessId);  
 		if(NULL == processHandle)
 		{
