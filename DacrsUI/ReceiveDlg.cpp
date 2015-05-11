@@ -5,6 +5,7 @@
 #include "DacrsUI.h"
 #include "ReceiveDlg.h"
 #include "NewAddressDlg.h"
+#include "SignAccountsDlg.h"
 #include "afxdialogex.h"
 
 
@@ -14,16 +15,11 @@ IMPLEMENT_DYNAMIC(CReceiveDlg, CDialogBar)
 
 CReceiveDlg::CReceiveDlg()
 {
-	m_accountDlg = NULL;
 	m_pBmp = NULL ;
 }
 
 CReceiveDlg::~CReceiveDlg()
 {
-	if (m_accountDlg != NULL) {
-		delete m_accountDlg;
-		m_accountDlg = NULL;
-	}
 	if( NULL != m_pBmp ) {
 		DeleteObject(m_pBmp) ;
 		m_pBmp = NULL ;
@@ -161,11 +157,11 @@ BOOL CReceiveDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT n
 
 		ShowListInfo();
 
-		if( NULL == m_accountDlg ){
-			m_accountDlg = new CSignAccountsDlg ;
-			m_accountDlg->Create(CSignAccountsDlg::IDD, this) ;
-			m_accountDlg->ShowWindow(SW_HIDE) ;
-		}
+		/*if( NULL == m_accountDlg ){
+		m_accountDlg = new CSignAccountsDlg ;
+		m_accountDlg->Create(CSignAccountsDlg::IDD, this) ;
+		m_accountDlg->ShowWindow(SW_HIDE) ;
+		}*/
 
 		theApp.SubscribeMsg( theApp.GetMtHthrdId() , GetSafeHwnd() , MSG_USER_RECIVE_UI ) ;
 	}
@@ -207,7 +203,15 @@ LRESULT  CReceiveDlg::OnShowListCtrl(  WPARAM wParam, LPARAM lParam )
 	return 1;
 }
 
-
+void CReceiveDlg::OnBnClickedButtonNewaddress()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	/*if ( NULL != m_pNewAddressDlg ) {
+		m_pNewAddressDlg->ShowWindow(SW_SHOW) ;
+	}*/
+	CNewAddressDlg dlg;
+	dlg.DoModal();
+}
 void CReceiveDlg::OnBnClickedButtonSignAccount()
 {
 	// TODO: 在此添加控件通知处理程序代码
@@ -222,28 +226,20 @@ void CReceiveDlg::OnBnClickedButtonSignAccount()
 			::MessageBox( this->GetSafeHwnd() ,StrShow , _T("提示") , MB_ICONINFORMATION ) ;
 			return;
 		}
-		m_accountDlg->SetShowAddr(pDbbetData->address);
+		theApp.m_strAddress.Format(_T("%s") ,pDbbetData->address ) ;
+		CSignAccountsDlg dlg;
+		dlg.DoModal();
+
+		/*m_accountDlg->SetShowAddr(pDbbetData->address);
 		CRect rcWindow;
 		GetWindowRect(&rcWindow);
 		m_accountDlg->MoveWindow(rcWindow.right/2+50,rcWindow.top+200,400,rcWindow.Height()/2);
-		m_accountDlg->ShowWindow(SW_SHOW);
+		m_accountDlg->ShowWindow(SW_SHOW);*/
 	}else{
 		StrShow.Format(_T("请选择地址!\n"));
 		::MessageBox( this->GetSafeHwnd() ,StrShow , _T("提示") , MB_ICONINFORMATION ) ;
 	}
 }
-
-
-void CReceiveDlg::OnBnClickedButtonNewaddress()
-{
-	// TODO: 在此添加控件通知处理程序代码
-	/*if ( NULL != m_pNewAddressDlg ) {
-		m_pNewAddressDlg->ShowWindow(SW_SHOW) ;
-	}*/
-	CNewAddressDlg dlg;
-	dlg.DoModal();
-}
-
 
 BOOL CReceiveDlg::PreTranslateMessage(MSG* pMsg)
 {
