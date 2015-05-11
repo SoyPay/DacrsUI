@@ -64,8 +64,8 @@ BOOL CNewAddressDlg::OnInitDialog()
 
 	m_rBtnNewAdd.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
 	m_rBtnNewAdd.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-	m_rBtnNewAdd.SetWindowText("生成新地址") ;
-	m_rBtnNewAdd.SetFontEx(18 , _T("微软雅黑"));
+	m_rBtnNewAdd.SetWindowText("生成地址") ;
+	m_rBtnNewAdd.SetFontEx(24 , _T("微软雅黑"));
 	m_rBtnNewAdd.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 	m_rBtnNewAdd.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 	m_rBtnNewAdd.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
