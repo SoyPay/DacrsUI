@@ -40,8 +40,9 @@ static const ULONGLONG COIN = 100000000;
 #define WM_DARK_RECORD          WM_USER+18
 #define WM_UP_BETPOOL           WM_USER+19
 #define WM_UP_BlLOCKTIP         WM_USER+22
-#define WM_UP_ADDRESS            WM_USER+23
+#define WM_UP_ADDRESS           WM_USER+23
 #define WM_APP_TRANSATION       WM_USER+24
+#define WM_UP_NEWADDRESS        WM_USER+25
 
 #define WINDOW_TAG				_T("Dacrs-UIDemo")
 
