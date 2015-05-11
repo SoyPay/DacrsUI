@@ -102,6 +102,41 @@ namespace uistruct {
 		int     nColdDig    ;   //是否支持冷挖矿 1:代表支持  ， 0:代表不支持
 		int     bSign       ;   //是否注册       1:已注册    ,  0:没注册
 		char    Lebel[34]       ;
+		LISTADDR(){
+			memset(address,0,sizeof(address));
+			memset(RegID,0,sizeof(RegID));
+			memset(Lebel,0,sizeof(Lebel));
+			fMoney = 0.0;
+			nColdDig =0;
+			bSign = 0;
+		}
+		string ToJson(){
+			Json::Value root;
+			root["address"] = address;
+			root["RegID"] = RegID;
+			root["fMoney"] = fMoney;
+			root["nColdDig"] = nColdDig;
+			root["bSign"] = bSign;
+			root["Lebel"] = Lebel;
+			return root.toStyledString();
+		}
+		bool JsonToStruct(string json){
+			Json::Reader reader;  
+			Json::Value root; 
+			if (!reader.parse(json, root)) 
+				return false ;
+			CString temp = root["address"].asCString();
+			memcpy(address,temp,sizeof(address));
+			temp = root["RegID"].asCString();
+			memcpy(RegID,temp,sizeof(RegID));
+			this->fMoney = root["fMoney"].asDouble();
+			this->nColdDig = root["nColdDig"].asInt();
+			this->bSign = root["bSign"].asInt();
+			temp = root["Lebel"].asCString();
+			memcpy(Lebel,temp,sizeof(Lebel));
+	
+			return true;
+		}
 	}LISTADDR_t;
 	typedef std::vector<LISTADDR_t> LISTADDRLIST ;
 	//初始化服务器结构体
@@ -298,12 +333,14 @@ namespace uistruct {
 	typedef struct DATABASEINFO  {
 		string strSource ;
 		string strWhere  ;
-		string  strTabName          ;
+		string  strTabName  ;
+		string  strcutjson ;
 		string ToJson(){
 			Json::Value root;
 			root["strSource"] = strSource;
 			root["strWhere"] = strWhere;
 			root["strTabName"] = strTabName;
+			root["strcutjson"] = strcutjson;
 			return root.toStyledString();
 		}
 		bool JsonToStruct(string json){
@@ -316,6 +353,7 @@ namespace uistruct {
 
 			this->strWhere = root["strWhere"].asString();
 			this->strTabName = root["strTabName"].asString();
+			this->strcutjson = root["strcutjson"].asString();
 			return true;
 		}
 	}DATABASEINFO_t;

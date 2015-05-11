@@ -30,6 +30,7 @@ void CSendDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BUTTON_ADDBOOK , m_rBtnAddbook);
 	DDX_Control(pDX, IDC_SENDTRNSFER , m_rBtnSend);
 	DDX_Control(pDX, IDC_STATIC_XM , m_strTx1);
+	DDX_Control(pDX, IDC_COMBO_ADDR_OUT , m_addrbook);
 }
 
 
@@ -130,11 +131,11 @@ void CSendDlg::OnCbnSelchangeCombo1()
 	{
 		return;
 	}
-	uistruct::LISTADDR_t *pListAddr = (uistruct::LISTADDR_t*)(((CComboBox*)GetDlgItem(IDC_COMBO_ADDR_OUT))->GetItemData(((CComboBox*)GetDlgItem(IDC_COMBO_ADDR_OUT))->GetCurSel())) ;
+	uistruct::LISTADDR_t *pListAddr = (uistruct::LISTADDR_t*)m_addrbook.GetItemData(m_addrbook.GetCurSel());//(uistruct::LISTADDR_t*)(((CComboBox*)GetDlgItem(IDC_COMBO_ADDR_OUT))->GetItemData(((CComboBox*)GetDlgItem(IDC_COMBO_ADDR_OUT))->GetCurSel())) ;
 	if ( NULL != pListAddr ) {
-		double money = CSoyPayHelp::getInstance()->GetAccountBalance(pListAddr->address);
+		//double money = CSoyPayHelp::getInstance()->GetAccountBalance(pListAddr->address);
 		CString strshow;
-		strshow.Format(_T("%.8f"),money);
+		strshow.Format(_T("%.8f"),pListAddr->fMoney);
 		((CStatic*)GetDlgItem(IDC_STATIC_XM))->SetWindowText(strshow);
 		Invalidate();
 	}
@@ -173,13 +174,24 @@ BOOL CSendDlg::AddListaddrDataBox(){
 LRESULT CSendDlg::OnShowListaddrData( WPARAM wParam, LPARAM lParam ) 
 {
 	//更新数据
-	switch (wParam)
+	int type = (int)wParam;
+	switch(type)
 	{
 	case WM_UP_ADDRESS:
 		{
-			AddListaddrDataBox();
+			ModifyComboxItem();
+			break;
 		}
 		break;
+	case WM_UP_NEWADDRESS:
+		{
+			InsertComboxIitem();
+			break;
+		}
+		break;
+	default:
+		break;
+
 	}
 	return 0 ;
 }
@@ -254,4 +266,46 @@ BOOL CSendDlg::OnEraseBkgnd(CDC* pDC)
 void CSendDlg::OnBnClickedButtonAddbook()
 {
 	// TODO: 在此添加控件通知处理程序代码
+}
+void CSendDlg::ModifyComboxItem(){
+	CPostMsg postmsg;
+	if (!theApp.m_UiSendDlgQueue.pop(postmsg))
+	{
+		return ;
+	}
+
+	uistruct::LISTADDR_t addr; 
+	string strTemp = postmsg.GetData();
+	addr.JsonToStruct(strTemp.c_str());
+
+	int count = m_addrbook.GetCount();
+
+	for(int i = 0; i < count; i++)
+	{
+		uistruct::LISTADDR_t *pListAddr = (uistruct::LISTADDR_t*)m_addrbook.GetItemData(i);
+		if (pListAddr != NULL && !strcmp(pListAddr->address,addr.address))
+		{
+			memcpy(addr.Lebel,pListAddr->Lebel,sizeof(addr.Lebel));
+			m_pListaddrInfo.push_back(addr);
+			m_addrbook.SetItemData(i, (DWORD_PTR)&(*m_pListaddrInfo.rbegin()));
+			break;
+		}
+	}
+}
+void CSendDlg::InsertComboxIitem()
+{
+	CPostMsg postmsg;
+	if (!theApp.m_UiSendDlgQueue.pop(postmsg))
+	{
+		return ;
+	}
+
+	uistruct::LISTADDR_t addr; 
+	string strTemp = postmsg.GetData();
+	addr.JsonToStruct(strTemp.c_str());
+	m_pListaddrInfo.push_back(addr);
+
+	int nItem = m_addrbook.GetCount();
+	m_addrbook.InsertString(nItem , addr.address );
+	m_addrbook.SetItemData(nItem, (DWORD_PTR)&(*m_pListaddrInfo.rbegin()));
 }
