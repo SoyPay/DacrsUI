@@ -71,16 +71,38 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 	uistruct::LISTADDR_t *pListAddr = (uistruct::LISTADDR_t*)(((CComboBox*)GetDlgItem(IDC_COMBO_ADDR_OUT))->GetItemData(((CComboBox*)GetDlgItem(IDC_COMBO_ADDR_OUT))->GetCurSel())) ;
 	if ( NULL != pListAddr ) {
 		CString strCommand , strMaddress , strMoney;
-		GetDlgItem(IDC_EDIT_DESADDRESS)->GetWindowTextA(strMaddress);
-		if (strMaddress == _T(""))
+		if(!pListAddr->bSign) 
 		{
-			::MessageBox( this->GetSafeHwnd() ,_T("接受地址不不能未空") , _T("提示") , MB_ICONINFORMATION ) ;
+			::MessageBox( this->GetSafeHwnd() ,_T("发送地址未激活") , _T("提示") , MB_ICONINFORMATION ) ;
 			return;
 		}
 
+		GetDlgItem(IDC_EDIT_DESADDRESS)->GetWindowTextA(strMaddress);
+		if (strMaddress == _T(""))
+		{
+			::MessageBox( this->GetSafeHwnd() ,_T("接受地址不能未空") , _T("提示") , MB_ICONINFORMATION ) ;
+			return;
+		}
+		if(!strcmp(strMaddress.GetString(), pListAddr->address))
+		{
+			::MessageBox( this->GetSafeHwnd() ,_T("发送地址和目的地址不能相同") , _T("提示") , MB_ICONINFORMATION ) ;
+			return;
+		}
+		
 		GetDlgItem(IDC_EDIT_MONEY)->GetWindowTextA(strMoney);
+		double dSendMoney = atof(strMoney);
+		if(dSendMoney > pListAddr->fMoney || ( pListAddr->fMoney>-0.0000001 && pListAddr->fMoney< 0.000001 )) 
+		{
+			::MessageBox( this->GetSafeHwnd() ,_T("账户余额不足") , _T("提示") , MB_ICONINFORMATION ) ;
+			return;
+		}
 
-		strCommand.Format(_T("%s %s %s %lld"),_T("sendtoaddress") ,pListAddr->address ,strMaddress ,REAL_MONEY(atof(strMoney)) );
+		if(_T("") == strMoney.GetString() || (dSendMoney >-0.0000001 && dSendMoney< 0.000001))
+		{
+			::MessageBox( this->GetSafeHwnd() ,_T("发送金额不能为0") , _T("提示") , MB_ICONINFORMATION ) ;
+			return;
+		}
+		strCommand.Format(_T("%s %s %s %lld"),_T("sendtoaddress") ,pListAddr->address ,strMaddress ,REAL_MONEY(dSendMoney));
 		CStringA strShowData ;
 
 		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
