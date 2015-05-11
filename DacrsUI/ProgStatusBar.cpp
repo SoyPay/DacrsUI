@@ -15,6 +15,7 @@ IMPLEMENT_DYNAMIC(CProgStatusBar, CDialogBar)
 {
 	m_pBmp = NULL ;
 	m_bProgressType = false;
+	m_prosshiden = false;
 	m_ProgressWnd = NULL ;
 	m_nSigIndex = 0 ;
 	m_walletui = false;
@@ -230,7 +231,7 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 		LoadGifing(false);
 		m_walletui = true;
 	}
-	if ( m_walletui ) {
+	if ( m_walletui && !m_prosshiden) {
 		m_strNeting.SetWindowText(_T("ÍøÂçÒÑÍ¬²½")) ;
 		m_strNeting.ShowWindow(SW_HIDE);
 		m_strNeting.ShowWindow(SW_SHOW);
@@ -243,7 +244,7 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 		if ( NULL != m_ProgressWnd ) {
 			m_ProgressWnd->ShowWindow(SW_HIDE) ;
 		}
-		m_walletui = !m_walletui ;
+		m_prosshiden = !m_prosshiden ;
 	}
 	InvalidateRect(m_bmpsig);
 	return 1;

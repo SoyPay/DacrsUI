@@ -351,7 +351,10 @@ BOOL CMainDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		OnnitCtrlText();
 		GetUrlServer();
 		onnitLinkText();
-		//m_strTx1.SetFont(120, _T("微软雅黑"));				//设置显示字体和大小
+		m_strOver.SetFont(120, _T("黑体"));
+		m_strOking.SetFont(120, _T("黑体"));
+		m_strTranNum.SetFont(120, _T("黑体"));
+		//m_strOver.SetFont(120, _T("微软雅黑"));				//设置显示字体和大小
 		//m_strTx1.SetTextColor(RGB(192,192,192));			    //字体颜色
 		//m_strTx1.SetWindowText(_T("方斌")) ;
 		//v_linkCtrl.SetURL(_T("www.hao123.com"));
