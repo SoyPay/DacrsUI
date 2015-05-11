@@ -187,7 +187,8 @@ BOOL CSendDlg::AddListaddrDataBox(){
 		double money = CSoyPayHelp::getInstance()->GetAccountBalance(pListAddr->address);
 		CString strshow;
 		strshow.Format(_T("%.8f"),money);
-		((CStatic*)GetDlgItem(IDC_STATIC_XM))->SetWindowText(strshow);
+		m_strTx1.SetWindowText(strshow);
+		//((CStatic*)GetDlgItem(IDC_STATIC_XM))->SetWindowText(strshow);
 		Invalidate();
 	}
 	return TRUE ;
@@ -230,7 +231,7 @@ BOOL CSendDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		//m_rBtnSend.LoadBitmaps(IDB_BITMAP_BOTTON_SEND1,IDB_BITMAP_BOTTON_SEND2,IDB_BITMAP_BOTTON_SEND3,IDB_BITMAP_BOTTON_SEND3);
 		m_rBtnAddbook.LoadBitmaps(IDB_BITMAP_ADDBOOK,IDB_BITMAP_ADDBOOK,IDB_BITMAP_ADDBOOK,IDB_BITMAP_ADDBOOK);
 		UpdateData(0);
-		m_strTx1.SetFont(90, _T("Arial"));				//设置显示字体和大小
+		m_strTx1.SetFont(120, _T("黑体"));				//设置显示字体和大小
 		AddListaddrDataBox();
 
 		m_rBtnSend.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
