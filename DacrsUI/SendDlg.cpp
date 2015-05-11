@@ -64,13 +64,18 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 	// TODO: 在此添加控件通知处理程序代码
 	if (m_pListaddrInfo.size() == 0)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("地址不存在") , _T("提示") , MB_ICONINFORMATION ) ;
+		::MessageBox( this->GetSafeHwnd() ,_T("发送地址不存在") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
 	uistruct::LISTADDR_t *pListAddr = (uistruct::LISTADDR_t*)(((CComboBox*)GetDlgItem(IDC_COMBO_ADDR_OUT))->GetItemData(((CComboBox*)GetDlgItem(IDC_COMBO_ADDR_OUT))->GetCurSel())) ;
 	if ( NULL != pListAddr ) {
 		CString strCommand , strMaddress , strMoney;
-		GetDlgItem(IDC_EDIT_DESADDRESS)->GetWindowTextA(strMoney);
+		GetDlgItem(IDC_EDIT_DESADDRESS)->GetWindowTextA(strMaddress);
+		if (strMaddress == _T(""))
+		{
+			::MessageBox( this->GetSafeHwnd() ,_T("接受地址不不能未空") , _T("提示") , MB_ICONINFORMATION ) ;
+			return;
+		}
 
 		GetDlgItem(IDC_EDIT_MONEY)->GetWindowTextA(strMoney);
 
