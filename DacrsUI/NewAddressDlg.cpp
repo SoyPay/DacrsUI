@@ -41,6 +41,7 @@ BEGIN_MESSAGE_MAP(CNewAddressDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_CLOSE, &CNewAddressDlg::OnBnClickedButtonClose)
 	ON_WM_LBUTTONDOWN()
 	ON_WM_NCHITTEST()
+	ON_BN_CLICKED(IDC_BUTTON_SCDZ, &CNewAddressDlg::OnBnClickedButtonScdz)
 END_MESSAGE_MAP()
 
 
@@ -161,4 +162,45 @@ LRESULT CNewAddressDlg::OnNcHitTest(CPoint point)
 	 return nResult  == HTCLIENT ? HTCAPTION : nResult;//鼠标的坐标在客户区么？在的话就把它当成标题栏
 
 	 return CDialogEx::OnNcHitTest(point);
+}
+
+
+void CNewAddressDlg::OnBnClickedButtonScdz()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CString strCommand;
+	int nCold = 0;
+	if( ((CButton*)GetDlgItem(IDC_RADIO_YES))->GetCheck() ) {
+		strCommand.Format(_T("%s"),_T("getnewaddress true"));
+		nCold = 1;
+	}else if ( ((CButton*)GetDlgItem(IDC_RADIO_NO))->GetCheck()){
+		strCommand.Format(_T("%s"),_T("getnewaddress"));
+	}
+	CStringA strShowData ;
+	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
+
+	int pos = strShowData.Find("addr");
+	if ( pos < 0 ) return ;
+
+	Json::Reader reader;  
+	Json::Value root; 
+	if (!reader.parse(strShowData.GetString(), root)) 
+		return  ;
+	CString addr = root["addr"].asCString();
+
+	CString Leble;
+	GetDlgItem(IDC_EDIT_Leble)->GetWindowText(Leble);
+
+	CString strSourceData;
+	strSourceData.Format(_T("'%s' , '%s' , '%.8f' , '%d' ,'%d','%s'") , addr ,"",0.0 ,nCold ,0,Leble) ;
+	uistruct::DATABASEINFO_t   pDatabase;
+	pDatabase.strSource = strSourceData.GetString();
+	pDatabase.strTabName =  _T("MYWALLET");
+	CPostMsg postmsg(MSG_USER_INSERT_DATA,0);
+	string  strTemp = pDatabase.ToJson();
+	postmsg.SetData(strTemp.c_str());
+	theApp.m_MsgQueue.push(postmsg);
+
+	strCommand.Format(_T("恭喜生成新地址%s"),addr);
+	::MessageBox( this->GetSafeHwnd() ,_T("恭喜生成新地址") , _T("提示") , MB_ICONINFORMATION ) ;
 }
