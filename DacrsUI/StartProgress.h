@@ -1,5 +1,5 @@
 #pragma once
-
+#include "XProgressCtrl.h"
 
 // CStartProgress ¶Ô»°¿ò
 
@@ -32,6 +32,7 @@ public:
 public:
 	void    SwitchBmp(int nIndex);   
 	void    SetProgessRange(int pos);
-	CProgressCtrl m_progress;
+//	CProgressCtrl m_progress;
+	CXProgressCtrl m_progress;
 	bool mprocessindex;
 };
