@@ -73,7 +73,7 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 		GetDlgItem(IDC_EDIT_DESADDRESS)->GetWindowTextA(strMaddress);
 		if (strMaddress == _T(""))
 		{
-			::MessageBox( this->GetSafeHwnd() ,_T("接受地址不不能未空") , _T("提示") , MB_ICONINFORMATION ) ;
+			::MessageBox( this->GetSafeHwnd() ,_T("接受地址不能未空") , _T("提示") , MB_ICONINFORMATION ) ;
 			return;
 		}
 
