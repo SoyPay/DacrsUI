@@ -121,6 +121,9 @@
     <ClCompile Include="AddApp.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="XProgressCtrl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BmpBtn.h">
@@ -277,6 +280,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="AddApp.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="XProgressCtrl.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

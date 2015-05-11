@@ -209,6 +209,7 @@
     <ClInclude Include="BtnST.h" />
     <ClInclude Include="CeXDib.h" />
     <ClInclude Include="CommonStruct.h" />
+    <ClInclude Include="XProgressCtrl.h" />
     <ClInclude Include="DacrsUI.h" />
     <ClInclude Include="DacrsUIDlg.h" />
     <ClInclude Include="GIFControl.h" />
@@ -301,6 +302,7 @@
     <ClCompile Include="SynchronousSocket.cpp" />
     <ClCompile Include="TradDlg.cpp" />
     <ClCompile Include="UiHead.cpp" />
+    <ClCompile Include="XProgressCtrl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DacrsUI.rc" />
