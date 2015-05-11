@@ -377,11 +377,12 @@ void   CReceiveDlg::ModifyListCtrlItem()
 	{
 		CString str = m_listCtrl.GetItemText(i, 0); // 这个函数名具体忘了，就是取得每个item第0列的值
 		uistruct::LISTADDR_t *pListAddr = (uistruct::LISTADDR_t*)m_listCtrl.GetItemData(i);
-		if (pListAddr != NULL && !strcmp(pListAddr->address,addr.address))
+		if (pListAddr != NULL && !memcmp(pListAddr->address,addr.address,sizeof(pListAddr->address)) &&\
+			(pListAddr->fMoney != addr.fMoney || pListAddr->bSign != addr.bSign))
 		{
-			memcpy(addr.Lebel,pListAddr->Lebel,sizeof(addr.Lebel));
-			m_pListaddrInfo.push_back(addr);
-
+			pListAddr->fMoney = addr.fMoney;
+			pListAddr->bSign = addr.bSign;
+		
 			int nSubIdx = 0;
 			CString  strShowData;
 			strShowData.Format(_T("%s") ,pListAddr->Lebel) ;
@@ -389,7 +390,7 @@ void   CReceiveDlg::ModifyListCtrlItem()
 
 			uistruct::LISTADDR_t *pListAddr1 = (uistruct::LISTADDR_t*)m_listCtrl.GetItemData(i);
 
-			strShowData.Format(_T("%s") ,addr.address) ;
+			strShowData.Format(_T("%s") ,pListAddr->address) ;
 			m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
 
 			if (addr.bSign == 1)
@@ -400,7 +401,7 @@ void   CReceiveDlg::ModifyListCtrlItem()
 			}
 
 			m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
-			strShowData.Format(_T("%.8f") , addr.fMoney ) ;
+			strShowData.Format(_T("%.8f") , pListAddr->fMoney ) ;
 			m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
 
 			if (addr.nColdDig== 1)
