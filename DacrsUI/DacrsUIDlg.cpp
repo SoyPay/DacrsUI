@@ -524,7 +524,7 @@ void  CDacrsUIDlg::StopSever()
 		{
 			return;
 		}
-		if ((RecivetxTimeLast - RecivetxTimestart) > 10)
+		if ((RecivetxTimeLast - RecivetxTimestart) > 5)
 		{
 			return;
 		}

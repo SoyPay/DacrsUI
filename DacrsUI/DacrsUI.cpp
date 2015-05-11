@@ -491,8 +491,8 @@ void CDacrsUIApp::UpdatarevtransactionData(string hash){
 		if (transcion.JsonToStruct(root.toStyledString()))
 		{
 			CString strSourceData,strWhere;
-			strSourceData.Format(_T("confirmHeight = %d , confirmedtime = '%d' ,blockhash ='%s',") ,transcion.confirmedHeight,transcion.confirmedtime,transcion.blockhash.c_str() ) ;
-			strWhere.Format(_T("tx_hash = '%s'") , hash ) ;
+			strSourceData.Format(_T("confirmHeight = %d , confirmedtime = '%d' ,blockhash ='%s'") ,transcion.confirmedHeight,transcion.confirmedtime,transcion.blockhash.c_str() ) ;
+			strWhere.Format(_T("hash = '%s'") , hash.c_str() ) ;
 			theApp.cs_SqlData.Lock();
 			if ( !m_SqliteDeal.Updatabase(_T("revtransaction") , strSourceData , strWhere ) ){
 				TRACE(_T("revtransaction数据更新失败!") );
@@ -896,19 +896,25 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 			const Json::Value& txArray = msgValue["transation"]; 
 			//插入到数据库
 			CString strHash ;
-			strHash.Format(_T("%s") , txArray["hash"].asCString() );
-			theApp.cs_SqlData.Lock();
-			int nItem =  pApp->m_SqliteDeal.FindDB(_T("revtransaction") ,strHash ,_T("hash") ) ;
-			theApp.cs_SqlData.Unlock();
+	//		strHash.Format(_T("%s") , txArray["hash"].asCString() );
+		//	theApp.cs_SqlData.Lock();
+	//		int nItem =  pApp->m_SqliteDeal.FindDB(_T("revtransaction") ,strHash ,_T("hash") ) ;
+		//	theApp.cs_SqlData.Unlock();
 			strHash.Format(_T("'%s'") , txArray["hash"].asCString() );
-			if ( 0 == nItem ) {
+		//	if ( 0 == nItem ) {
 				CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_REVTRANSACTION);
 				postmsg.SetData(strHash);
 				pApp->m_MsgQueue.push(postmsg);
 
 			}
 			break;
-		}
+		case APP_TRANSATION_TYPE:
+		 {
+			 CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_APP_TRANSATION);
+			 postmsg.SetData(msgValue.toStyledString().c_str());
+			 pApp->m_MsgQueue.push(postmsg);
+		 }
+		  break;
 	case BLOCK_CHANGE_TYPE:
 		{
 

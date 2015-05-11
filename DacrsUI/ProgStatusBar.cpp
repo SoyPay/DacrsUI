@@ -18,7 +18,9 @@ IMPLEMENT_DYNAMIC(CProgStatusBar, CDialogBar)
 	m_ProgressWnd = NULL ;
 	m_nSigIndex = 0 ;
 	m_walletui = false;
-	memset(m_bmpsig , 0 , sizeof(CRect)) ;
+	memset(m_bmpsig , 0 , sizeof(CRect));
+	m_progress.ShowPercent(FALSE);
+	m_progress.ShowDefineText(TRUE);
 }
 
 CProgStatusBar::~CProgStatusBar()
@@ -190,7 +192,9 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 			setpos = setpos>100?100:setpos;
 			//设置进度条的值
 			m_progress.SetPos(setpos);
-
+			CString strText;
+			strText.AppendFormat("剩余 ~%d 块没有同步到本地", pBlockchanged.tips-pBlockchanged.high);
+			m_progress.SetDefinedStr(strText);
 			m_bProgressType = TRUE;
 			m_nSigIndex =pBlockchanged.connections>3?3:pBlockchanged.connections;
 
@@ -203,8 +207,8 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 				LoadGifing(false);
 				m_walletui = true;
 			}
-			//Invalidate(); 
-			InvalidateRect(m_bmpsig);
+			Invalidate(); 
+			//InvalidateRect(m_bmpsig);
 		return 1;
 	}
 
@@ -213,7 +217,10 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 	setpos = setpos>100?100:setpos;
 	//设置进度条的值
 	m_progress.SetPos(setpos);
-	
+	CString strText;
+	strText.AppendFormat("剩余 ~%d 块没有同步到本地", pBlockchanged.tips-pBlockchanged.high);
+	m_progress.SetDefinedStr(strText);
+
 	if ((pBlockchanged.tips-pBlockchanged.high)<10&& !m_walletui)
 	{
 		TRACE("ok:%s\r\n","OnShowProgressCtrl");
@@ -225,16 +232,18 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 	}
 	if ( m_walletui ) {
 		m_strNeting.SetWindowText(_T("网络已同步")) ;
+		m_strNeting.ShowWindow(SW_HIDE);
+		m_strNeting.ShowWindow(SW_SHOW);
 		CString strTips;
 		strTips.Format(_T("当前高度:%d") ,pBlockchanged.tips ) ;
 		m_strHeight.SetWindowText(strTips) ;
 		m_progress.ShowWindow(SW_HIDE);
+		m_strHeight.ShowWindow(SW_HIDE);
 		m_strHeight.ShowWindow(SW_SHOW);
 		if ( NULL != m_ProgressWnd ) {
 			m_ProgressWnd->ShowWindow(SW_HIDE) ;
 		}
 		m_walletui = !m_walletui ;
-		Invalidate();
 	}
 	InvalidateRect(m_bmpsig);
 	return 1;

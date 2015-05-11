@@ -133,7 +133,9 @@ void CRpcCmd::RPCCommandToJson(const CString& strRPCCommand,CStringA& strSendDat
 			rpcCommand = rpcCommand.TrimLeft();
 			if (param.GetLength()<10&&IsAllDigtal(param))
 			{
-				root["params"].append(atoi(param));
+				INT64 param;
+				sscanf(rpcCommand,"%lld",&param);
+				root["params"].append(param);
 			}
 			else
 			{
@@ -146,7 +148,7 @@ void CRpcCmd::RPCCommandToJson(const CString& strRPCCommand,CStringA& strSendDat
 		{
 			INT64 param;
 			sscanf(rpcCommand,"%lld",&param);
-			root["params"].append(atoi(rpcCommand));
+			root["params"].append(param);
 		}
 		else
 		{

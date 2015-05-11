@@ -1,6 +1,7 @@
 #pragma once
 #include "RoundButton.h"
 #include "StaticTrans.h"
+#include "XProgressCtrl.h"
 
 // CProgStatusBar ¶Ô»°¿ò
 
@@ -39,7 +40,8 @@ public:
 public:
 	BOOL        m_bProgressType;
 	int         m_ProgressMax  ;
-	CProgressCtrl m_progress;
+//	CProgressCtrl m_progress;
+	CXProgressCtrl m_progress;
 	afx_msg void OnPaint();
 	CRect  m_bmpsig;
 	bool   m_walletui;
