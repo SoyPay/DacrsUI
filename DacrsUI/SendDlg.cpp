@@ -305,11 +305,12 @@ void CSendDlg::ModifyComboxItem(){
 	for(int i = 0; i < count; i++)
 	{
 		uistruct::LISTADDR_t *pListAddr = (uistruct::LISTADDR_t*)m_addrbook.GetItemData(i);
-		if (pListAddr != NULL && !strcmp(pListAddr->address,addr.address))
+		if (pListAddr != NULL && !memcmp(pListAddr->address,addr.address,sizeof(pListAddr->address)) &&\
+			(pListAddr->fMoney != addr.fMoney || pListAddr->bSign != addr.bSign))
 		{
-			memcpy(addr.Lebel,pListAddr->Lebel,sizeof(addr.Lebel));
-			m_pListaddrInfo.push_back(addr);
-			m_addrbook.SetItemData(i, (DWORD_PTR)&(*m_pListaddrInfo.rbegin()));
+			pListAddr->bSign =addr.bSign;
+			pListAddr->fMoney = addr.fMoney;
+			//m_addrbook.SetItemData(i, (DWORD_PTR)&(*m_pListaddrInfo.rbegin()));
 			break;
 		}
 	}
