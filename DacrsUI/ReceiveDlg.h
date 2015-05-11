@@ -1,5 +1,4 @@
 #pragma once
-#include "SignAccountsDlg.h"
 #include "RoundButton.h"
 #include "ListCtrlCl.h"
 #include "ShadeButtonST.h"
@@ -26,7 +25,6 @@ public:
 	afx_msg void OnBnClickedCopyaddress();
 	afx_msg LRESULT OnShowListCtrl(  WPARAM wParam, LPARAM lParam ) ;
 private:
-	CSignAccountsDlg *m_accountDlg;
 	CListCtrlCl m_listCtrl;
 	uistruct::LISTADDRLIST m_pListaddrInfo;
 	CShadeButtonST     m_rBtnAcitve;
