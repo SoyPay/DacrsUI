@@ -238,14 +238,20 @@ void CReceiveDlg::OnBnClickedButtonSignAccount()
 	POSITION pos = m_listCtrl.GetFirstSelectedItemPosition() ;
 	if ( pos ) {
 		int nRow = m_listCtrl.GetNextSelectedItem(pos) ;
-		uistruct::LISTADDR_t * pDbbetData = (uistruct::LISTADDR_t*)m_listCtrl.GetItemData(nRow) ;
-		if (pDbbetData->fMoney <=0)
+		uistruct::LISTADDR_t * pAddrItem = (uistruct::LISTADDR_t*)m_listCtrl.GetItemData(nRow) ;
+		if (pAddrItem->fMoney <=0)
 		{
 			StrShow.Format(_T("账户余额为零,不能激活!\n"));
 			::MessageBox( this->GetSafeHwnd() ,StrShow , _T("提示") , MB_ICONINFORMATION ) ;
 			return;
 		}
-		theApp.m_strAddress.Format(_T("%s") ,pDbbetData->address ) ;
+		if(pAddrItem->bSign) 
+		{
+			StrShow.Format(_T("账户已激活!\n"));
+			::MessageBox( this->GetSafeHwnd() ,StrShow , _T("提示") , MB_ICONINFORMATION ) ;
+			return;
+		}
+		theApp.m_strAddress.Format(_T("%s") ,pAddrItem->address ) ;
 		CSignAccountsDlg dlg;
 		dlg.DoModal();
 

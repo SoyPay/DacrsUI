@@ -143,7 +143,8 @@ BOOL CProgStatusBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UIN
 
 		m_strNeting.SetFont(90, _T("宋体"));				//设置显示字体和大小
 		m_strNeting.SetTextColor(RGB(255,255,255));			    //字体颜色
-		m_strNeting.SetWindowText(_T("网络同步中...")) ;
+//		m_strNeting.SetWindowText(_T("网络同步中..."));
+		m_strNeting.SetWindowText(_T("获取网络连接")) ;
 
 		m_strHeight.SetFont(90, _T("宋体"));				//设置显示字体和大小
 		m_strHeight.SetTextColor(RGB(255,255,255));			    //字体颜色
@@ -184,10 +185,12 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 	uistruct::BLOCKCHANGED_t pBlockchanged; 
 	string strTemp = postmsg.GetData();
 	pBlockchanged.JsonToStruct(strTemp.c_str());
-
 	if (!m_bProgressType)
 	{
-		
+			m_strNeting.SetWindowText(_T("网络同步中..."));
+			m_strNeting.ShowWindow(SW_HIDE);
+			m_strNeting.ShowWindow(SW_SHOW);
+
 			m_progress.SetRange32( 0 , 100); 
 			int  setpos = (pBlockchanged.high*1.0/pBlockchanged.tips)*100;
 			setpos = setpos>100?100:setpos;
@@ -210,7 +213,7 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 			}
 			Invalidate(); 
 			//InvalidateRect(m_bmpsig);
-		return 1;
+//		return 1;
 	}
 
 	m_nSigIndex = pBlockchanged.connections>3?3:pBlockchanged.connections;
