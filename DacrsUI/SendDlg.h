@@ -32,11 +32,14 @@ public:
 private:
 	uistruct::LISTADDRLIST m_pListaddrInfo;
 	CShadeButtonST         m_rBtnSend;
-	CStaticTrans     m_strTx1  ;  
+	CStaticTrans           m_strTx1  ; 
+	CComboBox			   m_addrbook;
 public:
 	BOOL AddListaddrDataBox();
 	virtual BOOL Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID);
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	afx_msg void OnBnClickedButtonAddbook();
+	void ModifyComboxItem();
+	void InsertComboxIitem();
 };
