@@ -408,14 +408,7 @@ void CDacrsUIApp::UpdataAddressData(){
 	Json::Value root; 
 	if (!reader.parse(strShowData.GetString(), root)) 
 		return  ;
-	//更新数据库
-	/*theApp.cs_SqlData.Lock();
-	if (!m_SqliteDeal.EmptyTabData(_T("MYWALLET")))
-	{
-		theApp.cs_SqlData.Unlock();
-		return;
-	}
-	theApp.cs_SqlData.Unlock();*/
+
 	uistruct::LISTADDR_t listaddr;
 	for(int i = 0; i < root.size(); ++i){
 		memset(&listaddr , 0 , sizeof(uistruct::LISTADDR_t));
@@ -455,6 +448,9 @@ void CDacrsUIApp::UpdataAddressData(){
 			theApp.cs_SqlData.Lock();
 			m_SqliteDeal.InsertData(_T("MYWALLET") ,strSourceData ) ;
 			theApp.cs_SqlData.Unlock();
+			
+			string Temp = listaddr.ToJson();
+			SendRecvieUiMes((int)WM_UP_NEWADDRESS,Temp.c_str());
 		}else{
 			CString strSourceData,strWhere;
 			strSourceData.Format(_T("regid = '%s', money = %.8f ,coldig =%d,sign =%d") ,listaddr.RegID ,listaddr.fMoney ,listaddr.nColdDig ,listaddr.bSign ) ;
@@ -464,6 +460,9 @@ void CDacrsUIApp::UpdataAddressData(){
 				TRACE(_T("MYWALLET数据更新失败!") );
 			}
 			theApp.cs_SqlData.Unlock();
+
+			string Temp = listaddr.ToJson();
+			SendRecvieUiMes((int)WM_UP_ADDRESS,Temp.c_str());
 		}
 	}
 }
@@ -741,6 +740,10 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 					Postmsg.SetType(MSG_USER_INSERT_DATA,WM_DARK_RECORD);
 				}else if (!strcmp(pDatabase.strTabName.c_str() , _T("MYWALLET")))
 				{
+					uistruct::LISTADDR_t addr; 
+					addr.JsonToStruct(pDatabase.strcutjson.c_str());
+					string Temp = addr.ToJson();
+					((CDacrsUIApp*)pParam)->SendRecvieUiMes((int)WM_UP_NEWADDRESS,Temp.c_str());
 					Postmsg.SetType(MSG_USER_INSERT_DATA,WM_UP_ADDRESS);
 				}
 
@@ -1182,8 +1185,8 @@ int CDacrsUIApp::SendPostThread(DWORD msgtype)
 		{
 			if(pDlg->dlgType == CSendDlg::IDD)
 				DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_SEND_UI , WM_UP_ADDRESS,0);
-			if(pDlg->dlgType == CReceiveDlg::IDD)
-				DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_RECIVE_UI , 0,0);
+			/*if(pDlg->dlgType == CReceiveDlg::IDD)
+				DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_RECIVE_UI , 0,0);*/
 
 		}
 		break;
@@ -1416,12 +1419,12 @@ void CDacrsUIApp::UpdataUIData(){
 		//case DIALOG_SIGN_ACCOUNTS:
 		//	DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_MYWALLET_UI , WM_UP_ADDRESS,0);
 		//	break;
-		case CReceiveDlg::IDD:
-			DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_RECIVE_UI , 0,0);
-			break;
-		case CSendDlg::IDD:
-			DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_SEND_UI , WM_UP_ADDRESS,0);
-			break;
+		//case CReceiveDlg::IDD:
+		//	DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_RECIVE_UI , 0,0);
+		//	break;
+		//case CSendDlg::IDD:
+		//	DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_SEND_UI , WM_UP_ADDRESS,0);
+		//	break;
 		}
 	}
 }
@@ -1489,10 +1492,11 @@ void CDacrsUIApp::GetMainDlgStruc()
 		}
 	}
 
+	m_UiManDlgQueue.clear();
 	CPostMsg Postmsg(MSG_USER_MAIN_UI,0);
 	string msg =maindlg.ToJson();
 	Postmsg.SetData(msg.c_str());	
-	m_UiManDlgQueue.pushFront(Postmsg);
+	m_UiManDlgQueue.push(Postmsg);
 }
 
 BOOL CDacrsUIApp::RunOnlyOneApp()
@@ -1526,4 +1530,15 @@ BOOL CDacrsUIApp::RunOnlyOneApp()
 	}
 
 	return TRUE;
+}
+void CDacrsUIApp::SendRecvieUiMes(int message,CString jsonaddr){
+
+	m_UiReciveDlgQueue.clear();
+	CPostMsg Postmsg(MSG_USER_MAIN_UI,message);
+	Postmsg.SetData(jsonaddr);	
+	m_UiReciveDlgQueue.push(Postmsg);
+	DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_RECIVE_UI ,message,0);
+
+	m_UiSendDlgQueue.push(Postmsg);
+	DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_SEND_UI ,message,0);
 }

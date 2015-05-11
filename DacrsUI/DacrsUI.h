@@ -124,6 +124,8 @@ public:
 	CMyQueue m_MsgQueue;
 	CMyQueue m_UimsgQueue;
 	CMyQueue m_UiManDlgQueue;
+	CMyQueue m_UiReciveDlgQueue;
+	CMyQueue m_UiSendDlgQueue;
 	void UpdataBetPoolData();
 	void UpdataAddressData();
 	void InsertarevtransactionData(string hash);
@@ -131,6 +133,7 @@ public:
 	void UpdatarevAppRecord(string txdetail);
 	void GetMainDlgStruc();
 	BOOL RunOnlyOneApp();
+	void SendRecvieUiMes(int message,CString jsonaddr);
 public:
 	bool isStartMainDlg;
 	CNoUiMsgBuffer m_noUiMsgBuffer;
