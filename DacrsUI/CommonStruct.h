@@ -340,6 +340,10 @@ public:
 	vector<unsigned char> ParseHex(const string& str);
 
 	void LoadPng( CImage &img);
+
+	CString DisPlayMoney(CString &strMoney);
+
+	bool IsWin8();
 };
 
 //*******************************担保交易************************************************

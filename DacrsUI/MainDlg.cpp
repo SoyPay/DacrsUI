@@ -124,7 +124,9 @@ void CMainDlg::OnnitCtrlText()
 	{
 		m_strOver.SetWindowText(_T("0.0")) ;
 	}else{
-		m_strOver.SetWindowText(nmoney.c_str()) ;
+		CString strMoney = _T(nmoney.c_str());
+		strMoney = CSoyPayHelp::getInstance()->DisPlayMoney(strMoney);
+		m_strOver.SetWindowText(strMoney.GetString()) ;
 	}
 
 	strCommand.Format(_T("0"));
@@ -228,9 +230,12 @@ void CMainDlg::SetCtrlText()
 
 	CString strCommand,strShowData;
 
-	GetDlgItem(IDC_STATIC_AMOUNT)->SetWindowText(maindlg.money.c_str()) ;
-
-	GetDlgItem(IDC_STATIC_NOTCOF)->SetWindowText(maindlg.unconfirmmoney.c_str()) ;
+	CString strMoney = _T(maindlg.money.c_str());
+	strMoney = CSoyPayHelp::getInstance()->DisPlayMoney(strMoney);
+	GetDlgItem(IDC_STATIC_AMOUNT)->SetWindowText(strMoney);
+	strMoney = _T(maindlg.unconfirmmoney.c_str());
+	strMoney = CSoyPayHelp::getInstance()->DisPlayMoney(strMoney);
+	GetDlgItem(IDC_STATIC_NOTCOF)->SetWindowText(strMoney);
 
 	m_strTranNum.SetWindowText(maindlg.itemcount.c_str()) ;
 

@@ -481,6 +481,51 @@ std::string CSoyPayHelp::HexStr(const T itbegin, const T itend, bool fSpaces) {
 	return rv;
 }
 
+CString CSoyPayHelp::DisPlayMoney(CString &strMoney)
+{
+	int iStart = strMoney.Find(".");
+	if(strMoney.GetLength() > iStart + 4);
+		return strMoney.Left(iStart+4);
+	return strMoney;
+}
+
+bool CSoyPayHelp::IsWin8()
+{
+	char szOSName[200] = {0};
+	DWORD  dwMajorVersion;
+	DWORD   dwMinorVersion;
+	DWORD  dwBuildNumber;
+	DWORD  dwPlatformId;
+	OSVERSIONINFO osvi;//定义OSVERSIONINFO数据结构对象
+	memset(&osvi, 0, sizeof(OSVERSIONINFO));//开空间 
+	osvi.dwOSVersionInfoSize = sizeof (OSVERSIONINFO);//定义大小 
+	GetVersionEx (&osvi);//获得版本信息 
+	dwMajorVersion=osvi.dwMajorVersion;//主版本号
+	dwMinorVersion=osvi.dwMinorVersion;//副版本
+	dwBuildNumber=osvi.dwBuildNumber;//创建号
+	dwPlatformId=osvi.dwPlatformId;//ID号
+	char swVersion[10]={0};    
+	sprintf(swVersion,"%d.%d",dwMajorVersion,dwMinorVersion);
+	// dwVesion=atoi(swVersion);  
+
+	if (!strcmp(swVersion,"4.0"))   strcpy( szOSName,"win95");    //win95    
+	if (!strcmp(swVersion,"4.1")) strcpy( szOSName,"win98");     //win98 
+	if (!strcmp(swVersion,"4.9")) strcpy( szOSName,"win_me");     // win_me 
+	if (!strcmp(swVersion,"3.51")) strcpy( szOSName,"win_Nt_3_5");  //win_Nt_3_5    
+	if (!strcmp(swVersion,"5.0"))  strcpy( szOSName,"win2000");    //win2000   
+	if (!strcmp(swVersion,"5.1"))   strcpy( szOSName,"win_xp");    //win_xp 
+	if (!strcmp(swVersion,"5.2"))  strcpy( szOSName,"win2003");    // win2003 
+	if (!strcmp(swVersion,"6.6"))   strcpy(szOSName,"vista");    //vista
+	if (!strcmp(swVersion,"6.1"))   strcpy( szOSName,"win7");     // win7 
+	if((6 == osvi.dwMajorVersion && 2==osvi.dwMinorVersion) || (6<osvi.dwMajorVersion && 0 ==osvi.dwMinorVersion))
+	{
+		strcpy( szOSName,"win8");      // win8 
+		return TRUE;
+	}
+	TRACE("Operate System Version:%s\n", szOSName);
+	return FALSE;
+}
+
 template<typename T>
 inline std::string CSoyPayHelp::HexStr(const T& vch, bool fSpaces) {
 	return HexStr(vch.begin(), vch.end(), fSpaces);
