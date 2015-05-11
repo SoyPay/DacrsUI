@@ -105,7 +105,7 @@ HBRUSH CNewAddressDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 	{
 		pDC->SetBkMode(TRANSPARENT);
 		pDC->SelectObject(&m_fontGrid);
-		hbr = (HBRUSH)CreateSolidBrush(RGB(249,249,249));
+		hbr = (HBRUSH)CreateSolidBrush(RGB(240,240,240));
 	}
 	return hbr;
 }
