@@ -45,4 +45,5 @@ public:
 	afx_msg void OnPaint();
 	CRect  m_bmpsig;
 	bool   m_walletui;
+	bool   m_prosshiden;
 };
