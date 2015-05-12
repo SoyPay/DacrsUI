@@ -145,7 +145,7 @@ BOOL CSignAccountsDlg::OnInitDialog()
 	m_rBtnClose.SetBitmaps( IDB_BITMAP_CLOSE , RGB(255, 255, 0) , IDB_BITMAP_CLOSE2 , RGB(255, 255, 255) );
 	m_rBtnClose.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
 	m_rBtnClose.SetWindowText("") ;
-	m_rBtnClose.SetFontEx(24 , _T("Î¢ÈíÑÅºÚ"));
+	m_rBtnClose.SetFontEx(20 , _T("Î¢ÈíÑÅºÚ"));
 	m_rBtnClose.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 	m_rBtnClose.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 	m_rBtnClose.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
@@ -155,8 +155,8 @@ BOOL CSignAccountsDlg::OnInitDialog()
 
 	m_rBtnSend.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
 	m_rBtnSend.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-	m_rBtnSend.SetWindowText("·¢ËÍ") ;
-	m_rBtnSend.SetFontEx(24 , _T("Î¢ÈíÑÅºÚ"));
+	m_rBtnSend.SetWindowText("·¢   ËÍ") ;
+	m_rBtnSend.SetFontEx(20 , _T("Î¢ÈíÑÅºÚ"));
 	m_rBtnSend.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 	m_rBtnSend.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 	m_rBtnSend.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
