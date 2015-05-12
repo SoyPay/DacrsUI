@@ -719,7 +719,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 				//m_Blockchanged.JsonToStruct(strTemp.c_str());
 				TRACE("change:%s\r\n","MSG_USER_UP_PROGRESS");
 				pUiDemeDlg->m_UimsgQueue.push(Postmsg);
-				theApp.DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_UP_PROGRESS , 0,0);					
+				//theApp.DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_UP_PROGRESS , 0,0);					
 			}
 			break;
 		case MSG_USER_BLOCKSTATE_UI:
@@ -1196,8 +1196,8 @@ int CDacrsUIApp::SendPostThread(DWORD msgtype)
 	{
 	case WM_UP_ADDRESS:
 		{
-			if(pDlg->dlgType == CSendDlg::IDD)
-				DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_SEND_UI , WM_UP_ADDRESS,0);
+			/*if(pDlg->dlgType == CSendDlg::IDD)
+				DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_SEND_UI , WM_UP_ADDRESS,0);*/
 			/*if(pDlg->dlgType == CReceiveDlg::IDD)
 				DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_RECIVE_UI , 0,0);*/
 
@@ -1544,9 +1544,10 @@ BOOL CDacrsUIApp::RunOnlyOneApp()
 
 	return TRUE;
 }
+//// 通知发送界面或者接受界面地址的内容改变了获取要插入新地址
 void CDacrsUIApp::SendRecvieUiMes(int message,CString jsonaddr){
 
-	m_UiReciveDlgQueue.clear();
+	//m_UiReciveDlgQueue.clear();
 	CPostMsg Postmsg(MSG_USER_MAIN_UI,message);
 	Postmsg.SetData(jsonaddr);	
 	m_UiReciveDlgQueue.push(Postmsg);
