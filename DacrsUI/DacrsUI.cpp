@@ -412,6 +412,8 @@ void CDacrsUIApp::UpdataAddressData(){
 	if (!reader.parse(strShowData.GetString(), root)) 
 		return  ;
 
+	//TRACE("UpdataAddressData:%s\r\n",strShowData);
+	TRACE("line:%d\r\n",root.size());
 	uistruct::LISTADDR_t listaddr;
 	for(int i = 0; i < root.size(); ++i){
 		memset(&listaddr , 0 , sizeof(uistruct::LISTADDR_t));
@@ -445,6 +447,7 @@ void CDacrsUIApp::UpdataAddressData(){
 		int item = m_SqliteDeal.FindDB(_T("MYWALLET") ,strSourceData, feild) ;
 		theApp.cs_SqlData.Unlock();
 
+		//TRACE("line:%d,addr:%s\r\n",i,listaddr.address);
 		if (item == 0 )
 		{
 			strSourceData.Format(_T("'%s' , '%s' , '%.8f' , '%d' ,'%d','%s'") , listaddr.address ,listaddr.RegID ,listaddr.fMoney ,listaddr.nColdDig ,listaddr.bSign,listaddr.Lebel ) ;
