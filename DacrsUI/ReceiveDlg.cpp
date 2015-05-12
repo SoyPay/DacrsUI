@@ -53,14 +53,14 @@ void CReceiveDlg::ShowListInfo()
 {
 
 	theApp.cs_SqlData.Lock();
-	theApp.m_SqliteDeal.GetListaddrData(&m_MapAddrInfo);
+	theApp.m_SqliteDeal.GetListaddrData(&m_pListaddrInfo);
 	theApp.cs_SqlData.Unlock();
 
-	if ( 0 == m_MapAddrInfo.size() ) return  ;
+	if ( 0 == m_pListaddrInfo.size() ) return  ;
 
 	m_listCtrl.DeleteAllItems();
 
-	if ( 17 <= m_MapAddrInfo.size() )  {
+	if ( 17 <= m_pListaddrInfo.size() )  {
 		m_listCtrl.SetColumnWidth(5 , 86 ); 
 	}else{
 		m_listCtrl.SetColumnWidth(5 , 100 ); 
@@ -69,7 +69,7 @@ void CReceiveDlg::ShowListInfo()
 	int nSubIdx = 0 , i = 0 ;
 	CString strShowData = _T("");
 	std::map<CString,uistruct::LISTADDR_t>::const_iterator const_it;
-	for ( const_it = m_MapAddrInfo.begin() ; const_it != m_MapAddrInfo.end() ; const_it++ ) {
+	for ( const_it = m_pListaddrInfo.begin() ; const_it != m_pListaddrInfo.end() ; const_it++ ) {
 		nSubIdx = 0;
 		CString strOrder("");
 		strOrder.Format(_T("%d"), i+1);
@@ -251,9 +251,15 @@ void CReceiveDlg::OnBnClickedButtonSignAccount()
 	POSITION pos = m_listCtrl.GetFirstSelectedItemPosition() ;
 	if ( pos ) {
 		int nRow = m_listCtrl.GetNextSelectedItem(pos) ;
-		CString str = m_listCtrl.GetItemText(nRow, 2);
-		ASSERT(m_MapAddrInfo.count(str));
-		uistruct::LISTADDR_t te =  m_MapAddrInfo[str];
+		CString str = m_listCtrl.GetItemText(nRow, 1);
+		if(!m_MapAddrInfo.count(str))
+			{
+					TRACE("ERROR");
+				StrShow.Format(_T("地址不存在\n"));
+				::MessageBox( this->GetSafeHwnd() ,StrShow , _T("提示") , MB_ICONINFORMATION ) ;
+				return;
+		   }
+		uistruct::LISTADDR_t te =  m_pListaddrInfo[str];
 		//uistruct::LISTADDR_t * pAddrItem = (uistruct::LISTADDR_t*)m_listCtrl.GetItemData(nRow) ;
 		if (te.fMoney <=0)
 		{
@@ -396,9 +402,13 @@ void   CReceiveDlg::ModifyListCtrlItem()
 	CString addressd;
 	addressd.Format(_T("%s"),addr.address);
 
-	ASSERT(m_MapAddrInfo.count(addressd) > 0);
+	if(m_MapAddrInfo.count(addressd) <= 0)
+	{
+			TRACE("ERROR");
+		return;
+	}
 	
-	m_MapAddrInfo[addressd]=addr;
+	m_pListaddrInfo[addressd]=addr;
 	
 	int count = m_listCtrl.GetItemCount();
 	if ( 17 <= count )  {
@@ -476,8 +486,12 @@ void   CReceiveDlg::InsertListCtrlItem()
 	CString addressd;
 	addressd.Format(_T("%s"),addr.address);
 
-	ASSERT(m_MapAddrInfo.count(addressd) == 0);
-	m_MapAddrInfo[addressd]=addr;
+	if(m_MapAddrInfo.count(addressd) == 0);
+		{
+			TRACE("ERROR");
+			return ;
+	}
+	m_pListaddrInfo[addressd]=addr;
 
 	strShowData.Format(_T("%s"),addr.address);    //地址
 	m_listCtrl.SetItemText( i , ++nSubIdx, strShowData ); 
