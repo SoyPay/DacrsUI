@@ -953,7 +953,12 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 		  break;
 	case BLOCK_CHANGE_TYPE:
 		{
-
+			SYSTEMTIME curTime ;
+			memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
+			GetLocalTime( &curTime ) ;
+			static int RecivetxMsgTimeLast =0;
+			int tempTimemsg= UiFun::SystemTimeToTimet(curTime);
+		
 			TRACE("change:%s\r\n","blockchanged");
 			uistruct::BLOCKCHANGED_t      m_Blockchanged ;
 			m_Blockchanged.type = msgValue["type"].asString();
@@ -967,36 +972,23 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 			postmsg.SetData(strJson.c_str());
 
 			pApp->m_MsgQueue.push(postmsg);
-			/// 更新tipblock hash
-			CPostMsg postblockmsg(MSG_USER_GET_UPDATABASE,WM_UP_BlLOCKTIP);
-			CString msg = msgValue["hash"].asCString();
-			postblockmsg.SetData(msg);
-			pApp->m_MsgQueue.push(postblockmsg);  //.push(postblockmsg);
-
-			SYSTEMTIME curTime ;
-			memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
-			GetLocalTime( &curTime ) ;
-			static int RecivetxMsgTimeLast =0;
-			int tempTimemsg= UiFun::SystemTimeToTimet(curTime);
-			/// 更新钱包
-			CPostMsg postuimsg(MSG_USER_GET_UPDATABASE,WM_UP_ADDRESS);
+			
+			
 			if ((tempTimemsg - RecivetxMsgTimeLast)>10 || RecivetxMsgTimeLast == 0)
 			{	
+				/// 更新tipblock hash
+				CPostMsg postblockmsg(MSG_USER_GET_UPDATABASE,WM_UP_BlLOCKTIP);
+				CString msg = msgValue["hash"].asCString();
+				postblockmsg.SetData(msg);
+				pApp->m_MsgQueue.push(postblockmsg);  
+
+			
+				/// 更新钱包
+				CPostMsg postuimsg(MSG_USER_GET_UPDATABASE,WM_UP_ADDRESS);
+			
 				pApp->m_MsgQueue.push(postuimsg);
-				//postuimsg.SetType(MSG_USER_GET_UPDATABASE,WM_UP_BETPOOL);
-				//pApp->m_MsgQueue.push(postuimsg);
-
-				//postuimsg.SetType(MSG_USER_GET_UPDATABASE,WM_P2P_BET_RECORD);
-				//pApp->m_MsgQueue.push(postuimsg);
-
-				//postuimsg.SetType(MSG_USER_GET_UPDATABASE,WM_DARK_RECORD);
-				//pApp->m_MsgQueue.push(postuimsg);
 				RecivetxMsgTimeLast = tempTimemsg;
 			}
-
-			///更新block状态
-			//postuimsg.SetType(MSG_USER_BLOCKSTATE_UI,m_Blockchanged.high);
-			//pApp->m_MsgQueue.push(postuimsg);
 			break;
 		}
 	case SERVER_NOTIYF_TYPE:
