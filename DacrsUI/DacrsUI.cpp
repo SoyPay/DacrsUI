@@ -452,7 +452,11 @@ void CDacrsUIApp::UpdataAddressData(){
 		{
 			strSourceData.Format(_T("'%s' , '%s' , '%.8f' , '%d' ,'%d','%s'") , listaddr.address ,listaddr.RegID ,listaddr.fMoney ,listaddr.nColdDig ,listaddr.bSign,listaddr.Lebel ) ;
 			theApp.cs_SqlData.Lock();
-			m_SqliteDeal.InsertData(_T("MYWALLET") ,strSourceData ) ;
+			if (!m_SqliteDeal.InsertData(_T("MYWALLET") ,strSourceData ) )
+			{
+				TRACE(_T("MYWALLETÊý¾Ý²åÈëÊ§°Ü!") );
+				TRACE("insert:%d\r\n",i);
+			}
 			theApp.cs_SqlData.Unlock();
 			
 			string Temp = listaddr.ToJson();
@@ -1170,9 +1174,11 @@ void CDacrsUIApp::DispatchMsg( unsigned int threadID , UINT msg , WPARAM wParam 
 		if( threadID == it->nThreadId && msg == it->msg ) {
 			if( NULL != it->relMsgMem ) {
 				flag = TRUE ;
-				::PostMessage( it->hSubWnd , msg , wParam , (LPARAM)it->relMsgMem ) ;
+				//::PostMessage( it->hSubWnd , msg , wParam , (LPARAM)it->relMsgMem ) ;
+				::SendMessage( it->hSubWnd , msg , wParam , (LPARAM)it->relMsgMem ) ;
 			} else {
-				::PostMessage( it->hSubWnd , msg , wParam , lParam ) ;
+				//::PostMessage( it->hSubWnd , msg , wParam , lParam ) ;
+				::SendMessage( it->hSubWnd , msg , wParam , lParam ) ;
 			}
 		}
 	}
