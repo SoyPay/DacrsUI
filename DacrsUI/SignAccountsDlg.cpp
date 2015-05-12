@@ -112,7 +112,7 @@ void CSignAccountsDlg::OnBnClickedButtonSend()
 		}
 
 		if ( pos >=0 ) {
-			strData.Format( _T("恭喜成功激活账户\n%s") , root["hash"].asCString() ) ;
+			strData.Format( _T("激活交易发送成功，请等待1-2分钟确认激活交易\n%s") , root["hash"].asCString() ) ;
 		}else{
 			strData.Format( _T("激活账户失败!") ) ;
 		}
@@ -168,6 +168,7 @@ BOOL CSignAccountsDlg::OnInitDialog()
 	SetBkBmpNid( IDB_BITMAP_DLG_BALCK ) ;
 	m_fontGrid.CreatePointFont(100,_T("新宋体"));
 
+	GetDlgItem(IDC_EDIT_FEE)->SetWindowTextA("0.0001");
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE
 }
