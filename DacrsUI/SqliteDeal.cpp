@@ -1491,7 +1491,7 @@ int	 CSqliteDeal::FindDB(const CString strTabName , const CString strP, const CS
 		if ( !OpenSqlite(theApp.str_InsPath) ) return -1 ;
 	}
 
-	CString strSql = _T("SELECT * FROM ") + strTabName + _T(" WHERE ") + strSource + _T(" =") + strP;
+	CString strSql = _T("SELECT * FROM ") + strTabName + _T(" WHERE ") + strSource + _T(" ='") + strP+ _T("'") ;
 
 	int nResult = sqlite3_get_table(m_pSqlitedb,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
 	if ( nResult != SQLITE_OK ){
