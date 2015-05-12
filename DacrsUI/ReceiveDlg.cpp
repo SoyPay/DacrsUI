@@ -59,6 +59,12 @@ void CReceiveDlg::ShowListInfo()
 	if ( 0 == m_pListaddrInfo.size() ) return  ;
 
 	m_listCtrl.DeleteAllItems();
+
+	if ( 17 <= m_pListaddrInfo.size() )  {
+		m_listCtrl.SetColumnWidth(5 , 86 ); 
+	}else{
+		m_listCtrl.SetColumnWidth(5 , 100 ); 
+	}
 	//加载到ComBox控件
 	int nSubIdx = 0 , i = 0 ;
 	CString strShowData = _T("");
@@ -118,7 +124,7 @@ BOOL CReceiveDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT n
 							{"地址" ,      275}, 
 							{"激活状态" ,  100}, 
 							{"余额" ,      172},
-							{"支持冷挖矿" ,86} 
+							{"支持冷挖矿" ,100} 
 						};
 		m_listCtrl.SetBkColor(RGB(240,240,240));       
 		m_listCtrl.SetRowHeigt(23);               
@@ -395,7 +401,11 @@ void   CReceiveDlg::ModifyListCtrlItem()
 	m_pListaddrInfo[addressd]=addr;
 	
 	int count = m_listCtrl.GetItemCount();
-
+	if ( 17 <= count )  {
+		m_listCtrl.SetColumnWidth(5 , 86 ); 
+	}else{
+		m_listCtrl.SetColumnWidth(5 , 100 ); 
+	}
 	for(int i = 0; i < count; i++)
 	{
 		CString str = m_listCtrl.GetItemText(i, 1); // 这个函数名具体忘了，就是取得每个item第0列的值
@@ -453,25 +463,24 @@ void   CReceiveDlg::InsertListCtrlItem()
 
 	int count = m_listCtrl.GetItemCount();
 
-	int nSubIdx = 1,i =count;
+	int nSubIdx = 0,i =count;
 
 	CString strOrder(_T(""));
-	strOrder.Format(_T("%d"), count);
+	strOrder.Format(_T("%d"), ++count);
+	
+	m_listCtrl.InsertItem( i , strOrder);  //序号
 	CString  strShowData;
-	m_listCtrl.InsertItem( i , strShowData) ;
 	strShowData.Format(_T("%s") ,addr.Lebel) ;
-
-
+	m_listCtrl.SetItemText( i , ++nSubIdx, strShowData ) ; //标签
+	
 	CString addressd;
 	addressd.Format(_T("%s"),addr.address);
 
 	ASSERT(m_pListaddrInfo.count(addressd) == 0);
+	m_pListaddrInfo[addressd]=addr;
 
-    m_pListaddrInfo[addressd]=addr;
-	m_listCtrl.SetItemText( i , ++nSubIdx, strShowData ) ;
-
-	strShowData.Format(_T("%s") ,addr.address) ;
-	m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
+	strShowData.Format(_T("%s"),addr.address);    //地址
+	m_listCtrl.SetItemText( i , ++nSubIdx, strShowData ); 
 
 	if (addr.bSign == 1)
 	{
