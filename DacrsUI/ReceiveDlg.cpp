@@ -190,7 +190,7 @@ void CReceiveDlg::OnBnClickedCopyaddress()
 	if ( pos ) {
 			int nRow = m_listCtrl.GetNextSelectedItem(pos) ;
 			//uistruct::LISTADDR_t * pDbbetData = (uistruct::LISTADDR_t*)m_listCtrl.GetItemData(nRow) ;
-			CString source =m_listCtrl.GetItemText(nRow, 1);;
+			CString source =m_listCtrl.GetItemText(nRow, 2);
 			//文本内容保存在source变量中
 			if(OpenClipboard())
 			{
@@ -251,7 +251,7 @@ void CReceiveDlg::OnBnClickedButtonSignAccount()
 	POSITION pos = m_listCtrl.GetFirstSelectedItemPosition() ;
 	if ( pos ) {
 		int nRow = m_listCtrl.GetNextSelectedItem(pos) ;
-		CString str = m_listCtrl.GetItemText(nRow, 1);
+		CString str = m_listCtrl.GetItemText(nRow, 2);
 		if(!m_MapAddrInfo.count(str))
 			{
 					TRACE("ERROR");
