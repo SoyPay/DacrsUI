@@ -203,6 +203,7 @@ int CDacrsUIDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	InitialRpcCmd();
 	LoadListDataInfo();//加载数据库信息
 
+	TRACE("wwwwwLoadListDataInfo\r\n");
 	//TOP
 	if( NULL == m_pTitleBar ){
 		m_pTitleBar = new CIndTitleBar ;
@@ -210,6 +211,7 @@ int CDacrsUIDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		m_pTitleBar->SetWindowPos(NULL , 0 , 0  , rect.Width() ,72 , SWP_SHOWWINDOW) ;
 		m_pTitleBar->ShowWindow(SW_SHOW) ;
 	}
+	TRACE("wwwwwCIndTitleBar\r\n");
 	//BOTTOM
 	if( NULL == m_pStatusBar ){
 		m_pStatusBar = new CProgStatusBar ;
@@ -218,22 +220,26 @@ int CDacrsUIDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		m_pStatusBar->ShowWindow(SW_SHOW) ;
 		m_pStatusBar->LoadGifing(TRUE);
 	}
+	TRACE("wwwwwCProgStatusBar\r\n");
 	if( NULL == m_pMainDlg ){
 		m_pMainDlg = new CMainDlg ;
 		m_pMainDlg->Create(this, CMainDlg::IDD, CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_HIDE_INPLACE,3) ;
 		m_pMainDlg->ShowWindow(SW_HIDE) ;
 	}
+	TRACE("wwwwwCMainDlg\r\n");
 	if( NULL == m_pSendDlg ){
 		m_pSendDlg = new CSendDlg ;
 		m_pSendDlg->Create(this, CSendDlg::IDD, CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_HIDE_INPLACE,4) ;
 		m_pSendDlg->ShowWindow(SW_HIDE) ;
 	}
+	TRACE("wwwwwCSendDlg\r\n");
 	//
 	if( NULL == m_pReceiveDlg ){
 		m_pReceiveDlg = new CReceiveDlg ;
 		m_pReceiveDlg->Create(this, CReceiveDlg::IDD, CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_HIDE_INPLACE,5) ;
 		m_pReceiveDlg->ShowWindow(SW_HIDE) ;
 	}
+	TRACE("wwwwwCReceiveDlg\r\n");
 	if( NULL == m_pTradDlg ){
 		m_pTradDlg = new CTradDlg ;
 		m_pTradDlg->Create(this, CTradDlg::IDD, CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_HIDE_INPLACE,6) ;
