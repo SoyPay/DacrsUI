@@ -135,7 +135,12 @@ BOOL CDacrsUIApp::InitInstance()
 	//SOCKET nSocket = te.OnblockConnnect(_T("127.0.0.1"),atoi(m_uirpcport) ) ;
 	SOCKET nSocket = te.OnblockConnnect(m_severip,atoi(m_uirpcport) ) ;
 	if ( INVALID_SOCKET != nSocket ){
+		TRACE("nSocket OK\n");
 		theApp.m_blockSock = nSocket ;
+	}
+	else
+	{
+		TRACE("nSocket Error\n");
 	}
 	theApp.StartblockThrd();  //¿ªÆôBlockÏß³Ì
 	//gif
@@ -627,6 +632,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 			TRACE("push message:MSG_USER_STARTPROCESS_UI\n");
 			continue;
 		}
+		//TRACE("meassage wwwwwwwwwwwwwww\n");
 		switch (Postmsg.GetUItype() )
 		{
 		case MSG_USER_STARTPROCESS_UI:
@@ -1051,11 +1057,17 @@ UINT __stdcall CDacrsUIApp::blockProc(LPVOID pParam)
 				return 1;
 			}
 			if(bReConnect) {
+
 				CSynchronousSocket te;
 				SOCKET nSocket = te.OnblockConnnect(pUiDemeDlg->m_severip,atoi(pUiDemeDlg->m_uirpcport));
 				if( INVALID_SOCKET != nSocket) {
 					pUiDemeDlg->m_blockSock = nSocket;
 					bReConnect = false;
+					TRACE("retry nSocket OK\n");
+				}
+				else
+				{
+				TRACE("retry nSocket Error\n");
 				}
 			}
 			else {
@@ -1098,6 +1110,10 @@ UINT __stdcall CDacrsUIApp::blockProc(LPVOID pParam)
 						 }
 						 bReConnect = true;
 					}
+				}
+				else
+				{
+						bReConnect = true;
 				}
 			}
 		}
