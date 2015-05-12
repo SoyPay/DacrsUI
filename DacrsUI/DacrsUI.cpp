@@ -599,17 +599,21 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 	CPostMsg Postmsg ;
 	while ( true)
 	{
-		Sleep(100); 
+		
 		if (theApp.m_msgAutoDelete)
 		{
 			return 1;
 		}
 
-		if(!pUiDemeDlg->m_MsgQueue.pop(Postmsg))
+		if(!pUiDemeDlg->m_MsgQueue.pop(Postmsg)){
+			Sleep(100); 
 			continue;
+		}
 		CDacrsUIDlg *pDlg = (CDacrsUIDlg*)(((CDacrsUIApp*)pParam)->m_pMainWnd) ;
 		if (pDlg == NULL && Postmsg.GetUItype() != MSG_USER_STARTPROCESS_UI){
 			pUiDemeDlg->m_MsgQueue.push(Postmsg);
+			Sleep(100); 
+			TRACE("push message:MSG_USER_STARTPROCESS_UI");
 			continue;
 		}
 		switch (Postmsg.GetUItype() )
