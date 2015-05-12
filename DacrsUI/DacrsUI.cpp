@@ -627,6 +627,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 			TRACE("push message:MSG_USER_STARTPROCESS_UI\n");
 			continue;
 		}
+		//TRACE("meassage wwwwwwwwwwwwwww\n");
 		switch (Postmsg.GetUItype() )
 		{
 		case MSG_USER_STARTPROCESS_UI:
