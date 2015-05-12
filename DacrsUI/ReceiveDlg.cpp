@@ -252,7 +252,13 @@ void CReceiveDlg::OnBnClickedButtonSignAccount()
 	if ( pos ) {
 		int nRow = m_listCtrl.GetNextSelectedItem(pos) ;
 		CString str = m_listCtrl.GetItemText(nRow, 1);
-		ASSERT(m_pListaddrInfo.count(str));
+		if(!m_pListaddrInfo.count(str))
+			{
+					TRACE("ERROR");
+				StrShow.Format(_T("地址不存在\n"));
+				::MessageBox( this->GetSafeHwnd() ,StrShow , _T("提示") , MB_ICONINFORMATION ) ;
+				return;
+		   }
 		uistruct::LISTADDR_t te =  m_pListaddrInfo[str];
 		//uistruct::LISTADDR_t * pAddrItem = (uistruct::LISTADDR_t*)m_listCtrl.GetItemData(nRow) ;
 		if (te.fMoney <=0)
@@ -396,7 +402,11 @@ void   CReceiveDlg::ModifyListCtrlItem()
 	CString addressd;
 	addressd.Format(_T("%s"),addr.address);
 
-	ASSERT(m_pListaddrInfo.count(addressd) > 0);
+	if(m_pListaddrInfo.count(addressd) <= 0)
+	{
+			TRACE("ERROR");
+		return;
+	}
 	
 	m_pListaddrInfo[addressd]=addr;
 	
@@ -476,7 +486,11 @@ void   CReceiveDlg::InsertListCtrlItem()
 	CString addressd;
 	addressd.Format(_T("%s"),addr.address);
 
-	ASSERT(m_pListaddrInfo.count(addressd) == 0);
+	if(m_pListaddrInfo.count(addressd) != 0)
+		{
+			TRACE("ERROR");
+			return ;
+	}
 	m_pListaddrInfo[addressd]=addr;
 
 	strShowData.Format(_T("%s"),addr.address);    //地址
