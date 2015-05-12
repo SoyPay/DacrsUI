@@ -471,6 +471,14 @@ void   CReceiveDlg::InsertListCtrlItem()
 	string strTemp = postmsg.GetData();
 	addr.JsonToStruct(strTemp.c_str());
 
+	CString addressd;
+	addressd.Format(_T("%s"),addr.address);
+
+	if(m_MapAddrInfo.count(addressd) > 0){
+		TRACE("map InsertListCtrlItem ERROR");
+		return ;
+	}
+
 	int count = m_listCtrl.GetItemCount();
 
 	int nSubIdx = 0,i =count;
@@ -483,13 +491,6 @@ void   CReceiveDlg::InsertListCtrlItem()
 	strShowData.Format(_T("%s") ,addr.Lebel) ;
 	m_listCtrl.SetItemText( i , ++nSubIdx, strShowData ) ; //±Í«©
 	
-	CString addressd;
-	addressd.Format(_T("%s"),addr.address);
-
-	if(m_MapAddrInfo.count(addressd) > 0){
-		TRACE("map InsertListCtrlItem ERROR");
-		return ;
-	}
 	m_MapAddrInfo[addressd]=addr;
 
 	strShowData.Format(_T("%s"),addr.address);    //µÿ÷∑
