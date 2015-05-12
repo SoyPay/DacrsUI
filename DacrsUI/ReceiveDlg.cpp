@@ -463,25 +463,24 @@ void   CReceiveDlg::InsertListCtrlItem()
 
 	int count = m_listCtrl.GetItemCount();
 
-	int nSubIdx = 1,i =count;
+	int nSubIdx = 0,i =count;
 
 	CString strOrder(_T(""));
-	strOrder.Format(_T("%d"), count);
+	strOrder.Format(_T("%d"), ++count);
+	
+	m_listCtrl.InsertItem( i , strOrder);  //–Ú∫≈
 	CString  strShowData;
-	m_listCtrl.InsertItem( i , strShowData) ;
 	strShowData.Format(_T("%s") ,addr.Lebel) ;
-
-
+	m_listCtrl.SetItemText( i , ++nSubIdx, strShowData ) ; //±Í«©
+	
 	CString addressd;
 	addressd.Format(_T("%s"),addr.address);
 
 	ASSERT(m_pListaddrInfo.count(addressd) == 0);
+	m_pListaddrInfo[addressd]=addr;
 
-    m_pListaddrInfo[addressd]=addr;
-	m_listCtrl.SetItemText( i , ++nSubIdx, strShowData ) ;
-
-	strShowData.Format(_T("%s") ,addr.address) ;
-	m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
+	strShowData.Format(_T("%s"),addr.address);    //µÿ÷∑
+	m_listCtrl.SetItemText( i , ++nSubIdx, strShowData ); 
 
 	if (addr.bSign == 1)
 	{
