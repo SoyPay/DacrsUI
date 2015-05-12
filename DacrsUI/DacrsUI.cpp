@@ -937,18 +937,27 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 		}
 	case REV_TRANSATION_TYPE:
 		{
+
+			SYSTEMTIME curTime ;
+			memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
+			GetLocalTime( &curTime ) ;
+			static int RecivetxtxTimeLast =0;
+			int tempTimemsg= UiFun::SystemTimeToTimet(curTime);
+			/// 更新钱包
+			CPostMsg postuimsg(MSG_USER_GET_UPDATABASE,WM_UP_ADDRESS);
+			if ((tempTimemsg - RecivetxtxTimeLast)>10 || RecivetxtxTimeLast == 0)
+			{	
+				pApp->m_MsgQueue.push(postuimsg);
+				RecivetxtxTimeLast = tempTimemsg;
+			}
+
 			const Json::Value& txArray = msgValue["transation"]; 
 			//插入到数据库
 			CString strHash ;
-	//		strHash.Format(_T("%s") , txArray["hash"].asCString() );
-		//	theApp.cs_SqlData.Lock();
-	//		int nItem =  pApp->m_SqliteDeal.FindDB(_T("revtransaction") ,strHash ,_T("hash") ) ;
-		//	theApp.cs_SqlData.Unlock();
 			strHash.Format(_T("'%s'") , txArray["hash"].asCString() );
-		//	if ( 0 == nItem ) {
-				CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_REVTRANSACTION);
-				postmsg.SetData(strHash);
-				pApp->m_MsgQueue.push(postmsg);
+			CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_REVTRANSACTION);
+			postmsg.SetData(strHash);
+			pApp->m_MsgQueue.push(postmsg);
 
 			}
 			break;
@@ -961,7 +970,12 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 		  break;
 	case BLOCK_CHANGE_TYPE:
 		{
-
+			SYSTEMTIME curTime ;
+			memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
+			GetLocalTime( &curTime ) ;
+			static int RecivetxMsgTimeLast =0;
+			int tempTimemsg= UiFun::SystemTimeToTimet(curTime);
+		
 			TRACE("change:%s\r\n","blockchanged");
 			uistruct::BLOCKCHANGED_t      m_Blockchanged ;
 			m_Blockchanged.type = msgValue["type"].asString();
@@ -975,36 +989,23 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 			postmsg.SetData(strJson.c_str());
 
 			pApp->m_MsgQueue.push(postmsg);
-			/// 更新tipblock hash
-			CPostMsg postblockmsg(MSG_USER_GET_UPDATABASE,WM_UP_BlLOCKTIP);
-			CString msg = msgValue["hash"].asCString();
-			postblockmsg.SetData(msg);
-			pApp->m_MsgQueue.push(postblockmsg);  //.push(postblockmsg);
-
-			SYSTEMTIME curTime ;
-			memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
-			GetLocalTime( &curTime ) ;
-			static int RecivetxMsgTimeLast =0;
-			int tempTimemsg= UiFun::SystemTimeToTimet(curTime);
-			/// 更新钱包
-			CPostMsg postuimsg(MSG_USER_GET_UPDATABASE,WM_UP_ADDRESS);
+			
+			
 			if ((tempTimemsg - RecivetxMsgTimeLast)>10 || RecivetxMsgTimeLast == 0)
 			{	
+				/// 更新tipblock hash
+				CPostMsg postblockmsg(MSG_USER_GET_UPDATABASE,WM_UP_BlLOCKTIP);
+				CString msg = msgValue["hash"].asCString();
+				postblockmsg.SetData(msg);
+				pApp->m_MsgQueue.push(postblockmsg);  
+
+			
+				/// 更新钱包
+				CPostMsg postuimsg(MSG_USER_GET_UPDATABASE,WM_UP_ADDRESS);
+			
 				pApp->m_MsgQueue.push(postuimsg);
-				//postuimsg.SetType(MSG_USER_GET_UPDATABASE,WM_UP_BETPOOL);
-				//pApp->m_MsgQueue.push(postuimsg);
-
-				//postuimsg.SetType(MSG_USER_GET_UPDATABASE,WM_P2P_BET_RECORD);
-				//pApp->m_MsgQueue.push(postuimsg);
-
-				//postuimsg.SetType(MSG_USER_GET_UPDATABASE,WM_DARK_RECORD);
-				//pApp->m_MsgQueue.push(postuimsg);
 				RecivetxMsgTimeLast = tempTimemsg;
 			}
-
-			///更新block状态
-			//postuimsg.SetType(MSG_USER_BLOCKSTATE_UI,m_Blockchanged.high);
-			//pApp->m_MsgQueue.push(postuimsg);
 			break;
 		}
 	case SERVER_NOTIYF_TYPE:
@@ -1524,7 +1525,7 @@ void CDacrsUIApp::GetMainDlgStruc()
 	maindlg.itemcount = strCommand.GetString();
 
 	CString Where,strSource;
-	Where.Format(_T("'COMMON_TX' order by confirmedtime limit 5"));
+	Where.Format(_T("'COMMON_TX' order by confirmedtime desc limit 5"));
 	strSource.Format(_T("txtype"));
 	uistruct::TRANSRECORDLIST pTransaction;
 	theApp.cs_SqlData.Lock();
@@ -1534,7 +1535,7 @@ void CDacrsUIApp::GetMainDlgStruc()
 	int i = 1;
 	if (pTransaction.size() != 0  ) {
 		std::vector<uistruct::REVTRANSACTION_t>::const_iterator const_it;
-		for (const_it = pTransaction.begin() ; const_it != pTransaction.end()&&i<6 ; const_it++ ) {
+		for (const_it = pTransaction.begin(); const_it != pTransaction.end()&&i<6 ; const_it++ ) {
 			uistruct::REVTRANSACTION_t temp = *const_it;
 			if(i == 1)
 			maindlg.addr1 = temp.ToJson();
