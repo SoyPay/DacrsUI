@@ -330,7 +330,7 @@ BOOL CSqliteDeal::Updatabase(const CString strTabName , const CString strSourceD
 	}
 	return TRUE ;
 }
-BOOL CSqliteDeal::GetListaddrData(uistruct::LISTADDRLIST *pListInfo)
+BOOL CSqliteDeal::GetListaddrData(map<CString,uistruct::LISTADDR_t> *pListInfo)
 {
 	if (NULL == pListInfo ) return FALSE ;
 	if ( NULL == m_pSqlitedb ) {
@@ -393,7 +393,10 @@ BOOL CSqliteDeal::GetListaddrData(uistruct::LISTADDRLIST *pListInfo)
 			}
 			++nIndex ;
 		}
-		pListInfo->push_back(listdata) ;
+		//pListInfo->push_back(listdata) ;
+		CString key;
+		key.Format(_T("%s"),listdata.address);
+		(*pListInfo)[key] = listdata;
 	}
 	sqlite3_free_table(m_pResult);
 //	LeaveCriticalSection (&cs_UpDataResult) ;
