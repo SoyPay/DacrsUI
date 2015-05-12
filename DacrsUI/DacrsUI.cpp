@@ -1516,7 +1516,7 @@ void CDacrsUIApp::GetMainDlgStruc()
 	maindlg.itemcount = strCommand.GetString();
 
 	CString Where,strSource;
-	Where.Format(_T("'COMMON_TX' order by confirmedtime limit 5"));
+	Where.Format(_T("'COMMON_TX' order by confirmedtime desc limit 5"));
 	strSource.Format(_T("txtype"));
 	uistruct::TRANSRECORDLIST pTransaction;
 	theApp.cs_SqlData.Lock();
@@ -1525,8 +1525,8 @@ void CDacrsUIApp::GetMainDlgStruc()
 
 	int i = 1;
 	if (pTransaction.size() != 0  ) {
-		std::vector<uistruct::REVTRANSACTION_t>::const_reverse_iterator const_it;
-		for (const_it = pTransaction.rbegin(); const_it != pTransaction.rend()&&i<6 ; const_it++ ) {
+		std::vector<uistruct::REVTRANSACTION_t>::const_iterator const_it;
+		for (const_it = pTransaction.begin(); const_it != pTransaction.end()&&i<6 ; const_it++ ) {
 			uistruct::REVTRANSACTION_t temp = *const_it;
 			if(i == 1)
 			maindlg.addr1 = temp.ToJson();
