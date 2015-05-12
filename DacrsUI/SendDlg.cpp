@@ -253,6 +253,7 @@ BOOL CSendDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_rBtnAddbook.LoadBitmaps(IDB_BITMAP_ADDBOOK,IDB_BITMAP_ADDBOOK,IDB_BITMAP_ADDBOOK,IDB_BITMAP_ADDBOOK);
 		UpdateData(0);
 		m_strTx1.SetFont(120, _T("黑体"));				//设置显示字体和大小
+		m_strTx1.SetWindowText(_T(""));
 		AddListaddrDataBox();
 
 		m_rBtnSend.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
