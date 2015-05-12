@@ -418,7 +418,7 @@ void   CReceiveDlg::ModifyListCtrlItem()
 	}
 	for(int i = 0; i < count; i++)
 	{
-		CString str = m_listCtrl.GetItemText(i, 1); // 这个函数名具体忘了，就是取得每个item第0列的值
+		CString str = m_listCtrl.GetItemText(i, 2); // 这个函数名具体忘了，就是取得每个item第0列的值
 		if(str == addressd)
 		////uistruct::LISTADDR_t *pListAddr = (uistruct::LISTADDR_t*)m_listCtrl.GetItemData(i);
 		//if (!memcmp(pListAddr->address,addr.address,sizeof(pListAddr->address)) &&\
