@@ -59,6 +59,12 @@ void CReceiveDlg::ShowListInfo()
 	if ( 0 == m_pListaddrInfo.size() ) return  ;
 
 	m_listCtrl.DeleteAllItems();
+
+	if ( 17 <= m_pListaddrInfo.size() )  {
+		m_listCtrl.SetColumnWidth(5 , 86 ); 
+	}else{
+		m_listCtrl.SetColumnWidth(5 , 100 ); 
+	}
 	//加载到ComBox控件
 	int nSubIdx = 0 , i = 0 ;
 	CString strShowData = _T("");
@@ -118,7 +124,7 @@ BOOL CReceiveDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT n
 							{"地址" ,      275}, 
 							{"激活状态" ,  100}, 
 							{"余额" ,      172},
-							{"支持冷挖矿" ,86} 
+							{"支持冷挖矿" ,100} 
 						};
 		m_listCtrl.SetBkColor(RGB(240,240,240));       
 		m_listCtrl.SetRowHeigt(23);               
@@ -395,7 +401,11 @@ void   CReceiveDlg::ModifyListCtrlItem()
 	m_pListaddrInfo[addressd]=addr;
 	
 	int count = m_listCtrl.GetItemCount();
-
+	if ( 17 <= count )  {
+		m_listCtrl.SetColumnWidth(5 , 86 ); 
+	}else{
+		m_listCtrl.SetColumnWidth(5 , 100 ); 
+	}
 	for(int i = 0; i < count; i++)
 	{
 		CString str = m_listCtrl.GetItemText(i, 1); // 这个函数名具体忘了，就是取得每个item第0列的值
