@@ -116,7 +116,9 @@ void CSignAccountsDlg::OnBnClickedButtonSend()
 		}else{
 			strData.Format( _T("激活账户失败!") ) ;
 		}
-		::MessageBox( this->GetSafeHwnd() ,strData , _T("提示") , MB_ICONINFORMATION ) ;
+		if ( IDYES == ::MessageBox( this->GetSafeHwnd() ,strData , _T("提示") , MB_YESNO|MB_ICONINFORMATION ) ){
+			EndDialog(IDOK);
+		}
 	}
 
 }

@@ -211,6 +211,8 @@
     <ClInclude Include="BtnST.h" />
     <ClInclude Include="CeXDib.h" />
     <ClInclude Include="CommonStruct.h" />
+    <ClInclude Include="Out.h" />
+    <ClInclude Include="OutGifDlg.h" />
     <ClInclude Include="XProgressCtrl.h" />
     <ClInclude Include="DacrsUI.h" />
     <ClInclude Include="DacrsUIDlg.h" />
@@ -284,6 +286,8 @@
     <ClCompile Include="MyQueue.cpp" />
     <ClCompile Include="NewAddressDlg.cpp" />
     <ClCompile Include="NoUiMsgBuffer.cpp" />
+    <ClCompile Include="Out.cpp" />
+    <ClCompile Include="OutGifDlg.cpp" />
     <ClCompile Include="P2PDlg.cpp" />
     <ClCompile Include="PostMsg.cpp" />
     <ClCompile Include="ProgStatusBar.cpp" />
