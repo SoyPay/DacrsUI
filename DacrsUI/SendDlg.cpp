@@ -68,10 +68,19 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 		::MessageBox( this->GetSafeHwnd() ,_T("发送地址不存在") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
-	uistruct::LISTADDR_t *pListAddr = (uistruct::LISTADDR_t*)(((CComboBox*)GetDlgItem(IDC_COMBO_ADDR_OUT))->GetItemData(((CComboBox*)GetDlgItem(IDC_COMBO_ADDR_OUT))->GetCurSel())) ;
-	if ( NULL != pListAddr ) {
+	CString text;
+	m_addrbook.GetWindowText(text) ;
+	uistruct::LISTADDR_t data;
+	if(text!=_T(""))
+	{
+		ASSERT(m_pListaddrInfo.count(text)>0);
+		//uistruct::LISTADDR_t te = m_pListaddrInfo[text];
+		data = m_pListaddrInfo[text];
+	
+	}
+
 		CString strCommand , strMaddress , strMoney;
-		if(!pListAddr->bSign) 
+		if(!data.bSign) 
 		{
 			::MessageBox( this->GetSafeHwnd() ,_T("发送地址未激活") , _T("提示") , MB_ICONINFORMATION ) ;
 			return;
@@ -83,7 +92,7 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 			::MessageBox( this->GetSafeHwnd() ,_T("接受地址不能未空") , _T("提示") , MB_ICONINFORMATION ) ;
 			return;
 		}
-		if(!strcmp(strMaddress.GetString(), pListAddr->address))
+		if(!strcmp(strMaddress.GetString(), data.address))
 		{
 			::MessageBox( this->GetSafeHwnd() ,_T("发送地址和目的地址不能相同") , _T("提示") , MB_ICONINFORMATION ) ;
 			return;
@@ -91,7 +100,7 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 		
 		GetDlgItem(IDC_EDIT_MONEY)->GetWindowTextA(strMoney);
 		double dSendMoney = atof(strMoney);
-		if(dSendMoney > pListAddr->fMoney || ( pListAddr->fMoney>-0.0000001 && pListAddr->fMoney< 0.000001 )) 
+		if(dSendMoney > data.fMoney || ( data.fMoney>-0.0000001 && data.fMoney< 0.000001 )) 
 		{
 			::MessageBox( this->GetSafeHwnd() ,_T("账户余额不足") , _T("提示") , MB_ICONINFORMATION ) ;
 			return;
@@ -102,7 +111,7 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 			::MessageBox( this->GetSafeHwnd() ,_T("发送金额不能为0") , _T("提示") , MB_ICONINFORMATION ) ;
 			return;
 		}
-		strCommand.Format(_T("%s %s %s %lld"),_T("sendtoaddress") ,pListAddr->address ,strMaddress ,REAL_MONEY(dSendMoney));
+		strCommand.Format(_T("%s %s %s %lld"),_T("sendtoaddress") ,data.address ,strMaddress ,REAL_MONEY(dSendMoney));
 		CStringA strShowData ;
 
 		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
@@ -142,7 +151,7 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 			strData.Format( _T("转账失败!") ) ;
 		}
 		::MessageBox( this->GetSafeHwnd() ,strData , _T("提示") , MB_ICONINFORMATION ) ;
-	}
+
 }
 
 
@@ -153,14 +162,18 @@ void CSendDlg::OnCbnSelchangeCombo1()
 	{
 		return;
 	}
-	uistruct::LISTADDR_t *pListAddr = (uistruct::LISTADDR_t*)m_addrbook.GetItemData(m_addrbook.GetCurSel());//(uistruct::LISTADDR_t*)(((CComboBox*)GetDlgItem(IDC_COMBO_ADDR_OUT))->GetItemData(((CComboBox*)GetDlgItem(IDC_COMBO_ADDR_OUT))->GetCurSel())) ;
-	if ( NULL != pListAddr ) {
-		//double money = CSoyPayHelp::getInstance()->GetAccountBalance(pListAddr->address);
-		CString strshow;
-		strshow.Format(_T("%.8f"),pListAddr->fMoney);
-		((CStatic*)GetDlgItem(IDC_STATIC_XM))->SetWindowText(strshow);
-		Invalidate();
+	CString text;
+	m_addrbook.GetWindowText(text) ;
+	if(text!=_T(""))
+	{
+	ASSERT(m_pListaddrInfo.count(text)>0);
+	//uistruct::LISTADDR_t te = m_pListaddrInfo[text];
+	CString strshow;
+	strshow.Format(_T("%.8f"),m_pListaddrInfo[text].fMoney);
+	((CStatic*)GetDlgItem(IDC_STATIC_XM))->SetWindowText(strshow);
+	Invalidate();
 	}
+
 }
 BOOL CSendDlg::AddListaddrDataBox(){
 
@@ -174,19 +187,27 @@ BOOL CSendDlg::AddListaddrDataBox(){
 	((CComboBox*)GetDlgItem(IDC_COMBO_ADDR_OUT))->ResetContent();
 	//加载到ComBox控件
 	int nItem = 0;
-	std::vector<uistruct::LISTADDR_t>::const_iterator const_it;
+	std::map<CString,uistruct::LISTADDR_t>::const_iterator const_it;
 	for ( const_it = m_pListaddrInfo.begin() ; const_it != m_pListaddrInfo.end() ; const_it++ ) {
-		((CComboBox*)GetDlgItem(IDC_COMBO_ADDR_OUT))->InsertString(nItem , const_it->address );
-		((CComboBox*)GetDlgItem(IDC_COMBO_ADDR_OUT))->SetItemData(nItem, (DWORD_PTR)&(*const_it));
+
+		((CComboBox*)GetDlgItem(IDC_COMBO_ADDR_OUT))->InsertString(nItem , const_it->first );
+		//((CComboBox*)GetDlgItem(IDC_COMBO_ADDR_OUT))->SetItemData(nItem, (DWORD_PTR)&(*const_it));
 		nItem++;
 	}
 	((CComboBox*)GetDlgItem(IDC_COMBO_ADDR_OUT))->SetCurSel(0);
 
+	CString address;
+	m_addrbook.GetWindowText(address);
+	std::map<CString,uistruct::LISTADDR_t>::const_iterator item = m_pListaddrInfo.find(address);
+	//uistruct::LISTADDR_t pListAddr = m_pListaddrInfo.find(address);
+
 	uistruct::LISTADDR_t *pListAddr = (uistruct::LISTADDR_t*)(((CComboBox*)GetDlgItem(IDC_COMBO_ADDR_OUT))->GetItemData(((CComboBox*)GetDlgItem(IDC_COMBO_ADDR_OUT))->GetCurSel())) ;
-	if ( NULL != pListAddr ) {
-		double money = CSoyPayHelp::getInstance()->GetAccountBalance(pListAddr->address);
+
+	if ( m_pListaddrInfo.end()!= item ) {
+		uistruct::LISTADDR_t addrstruc = item->second;
+	//	double money = CSoyPayHelp::getInstance()->GetAccountBalance(pListAddr->address);
 		CString strshow;
-		strshow.Format(_T("%.8f"),money);
+		strshow.Format(_T("%.8f"),addrstruc.fMoney);
 		m_strTx1.SetWindowText(strshow);
 		//((CStatic*)GetDlgItem(IDC_STATIC_XM))->SetWindowText(strshow);
 		Invalidate();
@@ -301,20 +322,14 @@ void CSendDlg::ModifyComboxItem(){
 	string strTemp = postmsg.GetData();
 	addr.JsonToStruct(strTemp.c_str());
 
-	int count = m_addrbook.GetCount();
+	CString addressd;
+	addressd.Format(_T("%s"),addr.address);
 
-	for(int i = 0; i < count; i++)
-	{
-		uistruct::LISTADDR_t *pListAddr = (uistruct::LISTADDR_t*)m_addrbook.GetItemData(i);
-		if (pListAddr != NULL && !memcmp(pListAddr->address,addr.address,sizeof(pListAddr->address)) &&\
-			(pListAddr->fMoney != addr.fMoney || pListAddr->bSign != addr.bSign))
-		{
-			pListAddr->bSign =addr.bSign;
-			pListAddr->fMoney = addr.fMoney;
-			//m_addrbook.SetItemData(i, (DWORD_PTR)&(*m_pListaddrInfo.rbegin()));
-			break;
-		}
-	}
+	ASSERT(m_pListaddrInfo.count(addressd) > 0);
+	
+	m_pListaddrInfo[addressd]=addr;
+	
+		
 }
 void CSendDlg::InsertComboxIitem()
 {
@@ -327,9 +342,11 @@ void CSendDlg::InsertComboxIitem()
 	uistruct::LISTADDR_t addr; 
 	string strTemp = postmsg.GetData();
 	addr.JsonToStruct(strTemp.c_str());
-	m_pListaddrInfo.push_back(addr);
+	
+	CString addressd;
+	addressd.Format(_T("%s"),addr.address);
 
-	int nItem = m_addrbook.GetCount();
-	m_addrbook.InsertString(nItem , addr.address );
-	m_addrbook.SetItemData(nItem, (DWORD_PTR)&(*m_pListaddrInfo.rbegin()));
+	ASSERT(m_pListaddrInfo.count(addressd) == 0);
+	m_pListaddrInfo[addressd]=addr;
+
 }

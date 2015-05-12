@@ -62,18 +62,19 @@ void CReceiveDlg::ShowListInfo()
 	//加载到ComBox控件
 	int nSubIdx = 0 , i = 0 ;
 	CString strShowData = _T("");
-	std::vector<uistruct::LISTADDR_t>::const_iterator const_it;
+	std::map<CString,uistruct::LISTADDR_t>::const_iterator const_it;
 	for ( const_it = m_pListaddrInfo.begin() ; const_it != m_pListaddrInfo.end() ; const_it++ ) {
 		nSubIdx = 0;
-		strShowData.Format(_T("%s") ,const_it->Lebel) ;
+		uistruct::LISTADDR_t address = const_it->second;
+		strShowData.Format(_T("%s") ,address.Lebel) ;
 		int item = m_listCtrl.InsertItem( i , strShowData ) ;
-		m_listCtrl.SetItemData(item , (DWORD_PTR)&(*const_it)) ;
+		//m_listCtrl.SetItemData(item , (DWORD_PTR)&(*const_it)) ;
 
 
-		strShowData.Format(_T("%s") ,const_it->address) ;
+		strShowData.Format(_T("%s") ,address.address) ;
 		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
 
-		if (const_it->bSign == 1)
+		if (address.bSign == 1)
 		{
 			strShowData.Format(_T("已激活")) ;
 		}else{
@@ -81,10 +82,10 @@ void CReceiveDlg::ShowListInfo()
 		}
 
 		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
-		strShowData.Format(_T("%.8f") , const_it->fMoney ) ;
+		strShowData.Format(_T("%.8f") , address.fMoney ) ;
 		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
 
-		if (const_it->nColdDig== 1)
+		if (address.nColdDig== 1)
 		{
 			strShowData.Format(_T("支持")) ;
 		}else{
@@ -176,8 +177,8 @@ void CReceiveDlg::OnBnClickedCopyaddress()
 	POSITION pos = m_listCtrl.GetFirstSelectedItemPosition() ;
 	if ( pos ) {
 			int nRow = m_listCtrl.GetNextSelectedItem(pos) ;
-			uistruct::LISTADDR_t * pDbbetData = (uistruct::LISTADDR_t*)m_listCtrl.GetItemData(nRow) ;
-			CString source =pDbbetData->address;
+			//uistruct::LISTADDR_t * pDbbetData = (uistruct::LISTADDR_t*)m_listCtrl.GetItemData(nRow) ;
+			CString source =m_listCtrl.GetItemText(nRow, 1);;
 			//文本内容保存在source变量中
 			if(OpenClipboard())
 			{
@@ -238,20 +239,23 @@ void CReceiveDlg::OnBnClickedButtonSignAccount()
 	POSITION pos = m_listCtrl.GetFirstSelectedItemPosition() ;
 	if ( pos ) {
 		int nRow = m_listCtrl.GetNextSelectedItem(pos) ;
-		uistruct::LISTADDR_t * pAddrItem = (uistruct::LISTADDR_t*)m_listCtrl.GetItemData(nRow) ;
-		if (pAddrItem->fMoney <=0)
+		CString str = m_listCtrl.GetItemText(nRow, 1);
+		ASSERT(m_pListaddrInfo.count(str));
+		uistruct::LISTADDR_t te =  m_pListaddrInfo[str];
+		//uistruct::LISTADDR_t * pAddrItem = (uistruct::LISTADDR_t*)m_listCtrl.GetItemData(nRow) ;
+		if (te.fMoney <=0)
 		{
 			StrShow.Format(_T("账户余额为零,不能激活!\n"));
 			::MessageBox( this->GetSafeHwnd() ,StrShow , _T("提示") , MB_ICONINFORMATION ) ;
 			return;
 		}
-		if(pAddrItem->bSign) 
+		if(te.bSign) 
 		{
 			StrShow.Format(_T("账户已激活!\n"));
 			::MessageBox( this->GetSafeHwnd() ,StrShow , _T("提示") , MB_ICONINFORMATION ) ;
 			return;
 		}
-		theApp.m_strAddress.Format(_T("%s") ,pAddrItem->address ) ;
+		theApp.m_strAddress.Format(_T("%s") ,te.address ) ;
 		CSignAccountsDlg dlg;
 		dlg.DoModal();
 
@@ -377,26 +381,34 @@ void   CReceiveDlg::ModifyListCtrlItem()
 	string strTemp = postmsg.GetData();
 	addr.JsonToStruct(strTemp.c_str());
 
+	CString addressd;
+	addressd.Format(_T("%s"),addr.address);
+
+	ASSERT(m_pListaddrInfo.count(addressd) > 0);
+	
+	m_pListaddrInfo[addressd]=addr;
+	
 	int count = m_listCtrl.GetItemCount();
 
 	for(int i = 0; i < count; i++)
 	{
-		CString str = m_listCtrl.GetItemText(i, 0); // 这个函数名具体忘了，就是取得每个item第0列的值
-		uistruct::LISTADDR_t *pListAddr = (uistruct::LISTADDR_t*)m_listCtrl.GetItemData(i);
-		if (pListAddr != NULL && !memcmp(pListAddr->address,addr.address,sizeof(pListAddr->address)) &&\
-			(pListAddr->fMoney != addr.fMoney || pListAddr->bSign != addr.bSign))
+		CString str = m_listCtrl.GetItemText(i, 1); // 这个函数名具体忘了，就是取得每个item第0列的值
+		if(str == addressd)
+		////uistruct::LISTADDR_t *pListAddr = (uistruct::LISTADDR_t*)m_listCtrl.GetItemData(i);
+		//if (!memcmp(pListAddr->address,addr.address,sizeof(pListAddr->address)) &&\
+		//	(pListAddr->fMoney != addr.fMoney || pListAddr->bSign != addr.bSign))
 		{
-			pListAddr->fMoney = addr.fMoney;
-			pListAddr->bSign = addr.bSign;
+			/*pListAddr->fMoney = addr.fMoney;
+			pListAddr->bSign = addr.bSign;*/
 		
 			int nSubIdx = 0;
 			CString  strShowData;
-			strShowData.Format(_T("%s") ,pListAddr->Lebel) ;
-			m_listCtrl.SetItemData(i , (DWORD_PTR)&(*m_pListaddrInfo.rbegin())) ;
+			strShowData.Format(_T("%s") ,addr.Lebel) ;
+			//m_listCtrl.SetItemData(i , (DWORD_PTR)&(*m_pListaddrInfo.rbegin())) ;
 
-			uistruct::LISTADDR_t *pListAddr1 = (uistruct::LISTADDR_t*)m_listCtrl.GetItemData(i);
+		//	uistruct::LISTADDR_t *pListAddr1 = (uistruct::LISTADDR_t*)m_listCtrl.GetItemData(i);
 
-			strShowData.Format(_T("%s") ,pListAddr->address) ;
+			strShowData.Format(_T("%s") ,addr.address) ;
 			m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
 
 			if (addr.bSign == 1)
@@ -407,7 +419,7 @@ void   CReceiveDlg::ModifyListCtrlItem()
 			}
 
 			m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
-			strShowData.Format(_T("%.8f") , pListAddr->fMoney ) ;
+			strShowData.Format(_T("%.8f") ,addr.fMoney ) ;
 			m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
 
 			if (addr.nColdDig== 1)
@@ -440,10 +452,15 @@ void   CReceiveDlg::InsertListCtrlItem()
 	CString  strShowData;
 	strShowData.Format(_T("%s") ,addr.Lebel) ;
 
-	m_pListaddrInfo.push_back(addr);
-	int item = m_listCtrl.InsertItem( i , strShowData ) ;
-	m_listCtrl.SetItemData(item , (DWORD_PTR)&(*m_pListaddrInfo.rbegin())) ;
 
+	CString addressd;
+	addressd.Format(_T("%s"),addr.address);
+
+	ASSERT(m_pListaddrInfo.count(addressd) == 0);
+
+    m_pListaddrInfo[addressd]=addr;
+
+	int item = m_listCtrl.InsertItem( i , strShowData ) ;
 
 	strShowData.Format(_T("%s") ,addr.address) ;
 	m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
