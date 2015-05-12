@@ -1320,7 +1320,7 @@ void  CSqliteDeal::UpdataAllTableData(BOOL flag){
 	sqlite3_free_table(pResult);
 
 	EmptyTabData(_T("MYWALLET"));
-	theApp.UpdataAddressData();
+	//theApp.UpdataAddressData();
 }
 void  CSqliteDeal::UpdataAllTable(){
 
