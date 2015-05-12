@@ -489,7 +489,7 @@ CString CSoyPayHelp::DisPlayMoney(CString &strMoney)
 	return strMoney;
 }
 
-bool CSoyPayHelp::IsWin8()
+bool CSoyPayHelp::IsOSVersionBelowXp()
 {
 	char szOSName[200] = {0};
 	DWORD  dwMajorVersion;
@@ -508,21 +508,49 @@ bool CSoyPayHelp::IsWin8()
 	sprintf(swVersion,"%d.%d",dwMajorVersion,dwMinorVersion);
 	// dwVesion=atoi(swVersion);  
 
-	if (!strcmp(swVersion,"4.0"))   strcpy( szOSName,"win95");    //win95    
-	if (!strcmp(swVersion,"4.1")) strcpy( szOSName,"win98");     //win98 
-	if (!strcmp(swVersion,"4.9")) strcpy( szOSName,"win_me");     // win_me 
-	if (!strcmp(swVersion,"3.51")) strcpy( szOSName,"win_Nt_3_5");  //win_Nt_3_5    
-	if (!strcmp(swVersion,"5.0"))  strcpy( szOSName,"win2000");    //win2000   
-	if (!strcmp(swVersion,"5.1"))   strcpy( szOSName,"win_xp");    //win_xp 
-	if (!strcmp(swVersion,"5.2"))  strcpy( szOSName,"win2003");    // win2003 
-	if (!strcmp(swVersion,"6.6"))   strcpy(szOSName,"vista");    //vista
-	if (!strcmp(swVersion,"6.1"))   strcpy( szOSName,"win7");     // win7 
+	if (!strcmp(swVersion,"4.0")){   
+		strcpy( szOSName,"win95");    //win95    
+		return TRUE;
+	}
+	if (!strcmp(swVersion,"4.1")){
+		strcpy( szOSName,"win98");     //win98 
+		return TRUE;
+	}
+	if (!strcmp(swVersion,"4.9")){
+		strcpy( szOSName,"win_me");     // win_me 
+		return TRUE;
+	}
+	if (!strcmp(swVersion,"3.51")){
+		strcpy( szOSName,"win_Nt_3_5");  //win_Nt_3_5    
+		return TRUE;
+	}
+	if (!strcmp(swVersion,"5.0")){
+		strcpy( szOSName,"win2000");    //win2000   
+		return TRUE;
+	}
+	if (!strcmp(swVersion,"5.1")){
+		strcpy( szOSName,"win_xp");    //win_xp 
+		return TRUE;
+	}
+	if (!strcmp(swVersion,"5.2")){
+		strcpy( szOSName,"win2003");    // win2003 
+		return FALSE;
+	}
+	if (!strcmp(swVersion,"6.6")){
+		strcpy(szOSName,"vista");    //vista
+		return FALSE;
+	}
+	if (!strcmp(swVersion,"6.1")){
+		strcpy( szOSName,"win7");     // win7 
+		return FALSE;
+	}
 	if((6 == osvi.dwMajorVersion && 2==osvi.dwMinorVersion) || (6<osvi.dwMajorVersion && 0 ==osvi.dwMinorVersion))
 	{
 		strcpy( szOSName,"win8");      // win8 
-		return TRUE;
+		return FALSE;
 	}
 	TRACE("Operate System Version:%s\n", szOSName);
+
 	return FALSE;
 }
 

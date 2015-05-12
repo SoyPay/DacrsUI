@@ -136,8 +136,8 @@ BOOL CDacrsUIApp::InitInstance()
 	SOCKET nSocket = te.OnblockConnnect(m_severip,atoi(m_uirpcport) ) ;
 	if ( INVALID_SOCKET != nSocket ){
 		theApp.m_blockSock = nSocket ;
-		theApp.StartblockThrd();  //开启Block线程
 	}
+	theApp.StartblockThrd();  //开启Block线程
 	//gif
 	m_ProgressGifFile =   str_InsPath + _T("\\gif\\progress.gif\0") ;
 	GdiplusStartupInput gdiplusStartupInput;
@@ -164,9 +164,10 @@ BOOL CDacrsUIApp::InitInstance()
 	int nCount(0);
 	while(1)
 	{
-		if(!CSoyPayHelp::getInstance()->IsWin8()) {
+		if(CSoyPayHelp::getInstance()->IsOSVersionBelowXp()) {
 			if(!EnableDebugPrivilege())
-				AfxMessageBox(_T("Call EnableDebugPrivilege failed!"));
+				TRACE(_T("Call EnableDebugPrivilege failed!"));
+//				AfxMessageBox(_T("Call EnableDebugPrivilege failed!"));
 		}
 		HANDLE processHandle = OpenProcess(PROCESS_ALL_ACCESS,FALSE,sever_pi.dwProcessId);  
 		if(NULL == processHandle)
