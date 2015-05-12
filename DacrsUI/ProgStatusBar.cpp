@@ -175,7 +175,7 @@ BOOL CProgStatusBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UIN
 
 LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam ) 
 {
-//	TRACE("OnShowProgressCtrl:%s\r\n","OnShowProgressCtrl");
+	TRACE("OnShowProgressCtrl:%s\r\n","OnShowProgressCtrl");
 	CPostMsg postmsg;
 	if (!theApp.m_UimsgQueue.pop(postmsg))
 	{
@@ -242,16 +242,21 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 		m_strNeting.SetWindowText(_T("网络已同步")) ;
 		m_strNeting.ShowWindow(SW_HIDE);
 		m_strNeting.ShowWindow(SW_SHOW);
-		CString strTips;
-		strTips.Format(_T("当前高度:%d") ,pBlockchanged.tips ) ;
-		m_strHeight.SetWindowText(strTips) ;
+
 		m_progress.ShowWindow(SW_HIDE);
-		m_strHeight.ShowWindow(SW_HIDE);
-		m_strHeight.ShowWindow(SW_SHOW);
 		if ( NULL != m_ProgressWnd ) {
 			m_ProgressWnd->ShowWindow(SW_HIDE) ;
 		}
 		m_prosshiden = !m_prosshiden ;
+	}
+
+	if (m_walletui && m_prosshiden)
+	{
+		CString strTips;
+		strTips.Format(_T("当前高度:%d") ,pBlockchanged.tips ) ;
+		m_strHeight.SetWindowText(strTips) ;
+		m_strHeight.ShowWindow(SW_HIDE);
+		m_strHeight.ShowWindow(SW_SHOW);
 	}
 	InvalidateRect(m_bmpsig);
 	return 1;
