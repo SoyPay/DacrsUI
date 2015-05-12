@@ -31,7 +31,7 @@ public:
 public:
 	BOOL   OpenSqlite(CString strPath) ;    //打开数据库 
 public:
-	BOOL   GetListaddrData(uistruct::LISTADDRLIST* pListInfo); 
+	BOOL   GetListaddrData(map<CString,uistruct::LISTADDR_t>* pListInfo); 
 	BOOL   GetRevtransactionDatta(uistruct::TRANSRECORDLIST* pListInfo); 
 	BOOL   GetRecorBetData(uistruct::P2PBETRECORDLIST* pListInfo); 
 	BOOL  GetRecorDarkData(uistruct::DARKRECORDLIST* pListInfo);
