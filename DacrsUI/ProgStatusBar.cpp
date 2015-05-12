@@ -185,6 +185,10 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 	uistruct::BLOCKCHANGED_t pBlockchanged; 
 	string strTemp = postmsg.GetData();
 	pBlockchanged.JsonToStruct(strTemp.c_str());
+	if (pBlockchanged.tips <= 0)
+	{
+		return 1;
+	}
 	if (!m_bProgressType)
 	{
 			m_strNeting.SetWindowText(_T("ÍøÂçÍ¬²½ÖÐ..."));
