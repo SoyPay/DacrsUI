@@ -1178,11 +1178,11 @@ void CDacrsUIApp::DispatchMsg( unsigned int threadID , UINT msg , WPARAM wParam 
 		if( threadID == it->nThreadId && msg == it->msg ) {
 			if( NULL != it->relMsgMem ) {
 				flag = TRUE ;
-				//::PostMessage( it->hSubWnd , msg , wParam , (LPARAM)it->relMsgMem ) ;
-				::SendMessage( it->hSubWnd , msg , wParam , (LPARAM)it->relMsgMem ) ;
+				::PostMessage( it->hSubWnd , msg , wParam , (LPARAM)it->relMsgMem ) ;
+				//::SendMessage( it->hSubWnd , msg , wParam , (LPARAM)it->relMsgMem ) ;
 			} else {
-				//::PostMessage( it->hSubWnd , msg , wParam , lParam ) ;
-				::SendMessage( it->hSubWnd , msg , wParam , lParam ) ;
+				::PostMessage( it->hSubWnd , msg , wParam , lParam ) ;
+				//::SendMessage( it->hSubWnd , msg , wParam , lParam ) ;
 			}
 		}
 	}
