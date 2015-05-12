@@ -75,6 +75,8 @@ BOOL CNewAddressDlg::OnInitDialog()
 	SetBkBmpNid( IDB_BITMAP_DLG_BALCK ) ;
 	m_fontGrid.CreatePointFont(100,_T("新宋体"));
 
+	CButton* radio=(CButton*)GetDlgItem(IDC_RADIO_YES);
+	radio->SetCheck(TRUE);
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE
 }
