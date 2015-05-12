@@ -413,7 +413,7 @@ void CDacrsUIApp::UpdataAddressData(){
 		return  ;
 
 	//TRACE("UpdataAddressData:%s\r\n",strShowData);
-	TRACE("line:%d\r\n",root.size());
+	//TRACE("line:%d\r\n",root.size());
 	uistruct::LISTADDR_t listaddr;
 	for(int i = 0; i < root.size(); ++i){
 		memset(&listaddr , 0 , sizeof(uistruct::LISTADDR_t));
@@ -443,8 +443,9 @@ void CDacrsUIApp::UpdataAddressData(){
 		feild.Format(_T("address"));
 		strSourceData.Format(_T("%s"),listaddr.address);
 
+		uistruct::LISTADDR_t addrsql;
 		theApp.cs_SqlData.Lock();
-		int item = m_SqliteDeal.FindDB(_T("MYWALLET") ,strSourceData, feild) ;
+		int item = m_SqliteDeal.FindDB(_T("MYWALLET") ,strSourceData, feild,&addrsql) ;
 		theApp.cs_SqlData.Unlock();
 
 		//TRACE("line:%d,addr:%s\r\n",i,listaddr.address);
@@ -462,17 +463,20 @@ void CDacrsUIApp::UpdataAddressData(){
 			string Temp = listaddr.ToJson();
 			SendRecvieUiMes((int)WM_UP_NEWADDRESS,Temp.c_str());
 		}else{
-			CString strSourceData,strWhere;
-			strSourceData.Format(_T("regid = '%s', money = %.8f ,coldig =%d,sign =%d") ,listaddr.RegID ,listaddr.fMoney ,listaddr.nColdDig ,listaddr.bSign ) ;
-			strWhere.Format(_T("address = '%s'") , listaddr.address  ) ;
-			theApp.cs_SqlData.Lock();
-			if ( !m_SqliteDeal.Updatabase(_T("MYWALLET") , strSourceData , strWhere ) ){
-				TRACE(_T("MYWALLET数据更新失败!") );
-			}
-			theApp.cs_SqlData.Unlock();
+			if (listaddr.fMoney != addrsql.fMoney || listaddr.bSign != addrsql.bSign)
+			{
+				CString strSourceData,strWhere;
+				strSourceData.Format(_T("regid = '%s', money = %.8f ,coldig =%d,sign =%d") ,listaddr.RegID ,listaddr.fMoney ,listaddr.nColdDig ,listaddr.bSign ) ;
+				strWhere.Format(_T("address = '%s'") , listaddr.address  ) ;
+				theApp.cs_SqlData.Lock();
+				if ( !m_SqliteDeal.Updatabase(_T("MYWALLET") , strSourceData , strWhere ) ){
+					TRACE(_T("MYWALLET数据更新失败!") );
+				}
+				theApp.cs_SqlData.Unlock();
 
-			string Temp = listaddr.ToJson();
-			SendRecvieUiMes((int)WM_UP_ADDRESS,Temp.c_str());
+				string Temp = listaddr.ToJson();
+				SendRecvieUiMes((int)WM_UP_ADDRESS,Temp.c_str());
+			}
 		}
 	}
 }
