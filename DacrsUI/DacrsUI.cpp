@@ -135,7 +135,12 @@ BOOL CDacrsUIApp::InitInstance()
 	//SOCKET nSocket = te.OnblockConnnect(_T("127.0.0.1"),atoi(m_uirpcport) ) ;
 	SOCKET nSocket = te.OnblockConnnect(m_severip,atoi(m_uirpcport) ) ;
 	if ( INVALID_SOCKET != nSocket ){
+		TRACE("nSocket OK\n");
 		theApp.m_blockSock = nSocket ;
+	}
+	else
+	{
+		TRACE("nSocket Error\n");
 	}
 	theApp.StartblockThrd();  //¿ªÆôBlockÏß³Ì
 	//gif
@@ -1052,11 +1057,17 @@ UINT __stdcall CDacrsUIApp::blockProc(LPVOID pParam)
 				return 1;
 			}
 			if(bReConnect) {
+
 				CSynchronousSocket te;
 				SOCKET nSocket = te.OnblockConnnect(pUiDemeDlg->m_severip,atoi(pUiDemeDlg->m_uirpcport));
 				if( INVALID_SOCKET != nSocket) {
 					pUiDemeDlg->m_blockSock = nSocket;
 					bReConnect = false;
+					TRACE("retry nSocket OK\n");
+				}
+				else
+				{
+				TRACE("retry nSocket Error\n");
 				}
 			}
 			else {
@@ -1099,6 +1110,10 @@ UINT __stdcall CDacrsUIApp::blockProc(LPVOID pParam)
 						 }
 						 bReConnect = true;
 					}
+				}
+				else
+				{
+						bReConnect = true;
 				}
 			}
 		}
@@ -1179,11 +1194,11 @@ void CDacrsUIApp::DispatchMsg( unsigned int threadID , UINT msg , WPARAM wParam 
 		if( threadID == it->nThreadId && msg == it->msg ) {
 			if( NULL != it->relMsgMem ) {
 				flag = TRUE ;
-				//::PostMessage( it->hSubWnd , msg , wParam , (LPARAM)it->relMsgMem ) ;
-				::SendMessage( it->hSubWnd , msg , wParam , (LPARAM)it->relMsgMem ) ;
+				::PostMessage( it->hSubWnd , msg , wParam , (LPARAM)it->relMsgMem ) ;
+				//::SendMessage( it->hSubWnd , msg , wParam , (LPARAM)it->relMsgMem ) ;
 			} else {
-				//::PostMessage( it->hSubWnd , msg , wParam , lParam ) ;
-				::SendMessage( it->hSubWnd , msg , wParam , lParam ) ;
+				::PostMessage( it->hSubWnd , msg , wParam , lParam ) ;
+				//::SendMessage( it->hSubWnd , msg , wParam , lParam ) ;
 			}
 		}
 	}
