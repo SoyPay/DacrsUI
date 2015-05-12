@@ -40,24 +40,15 @@
   </descriptions>
   <files>
     <file ver="v1.0.0.1" path="qupdater.exe"/>
-    <file ver="v1.0.0.1" path="dacrs-d.exe"/>
+    <file ver="v1.0.0.2" path="dacrs-d.exe"/>
     <file ver="v1.0.0.1" path="dacrs.conf"/>
     <file ver="v1.0.0.1" path="qupdater.ini"/>
-    <file ver="v1.0.0.1" path="SkinH.dll"/>
-    <file ver="v1.0.0.1" path="skinh.she"/>
     <file ver="v1.0.0.1" path="sqlite3.dll"/>
 	<file ver="v1.0.0.1" path="db\sqlite3.exe"/>
-    <file ver="v1.0.0.1" path="DacrsClient.exe"/>
+    <file ver="v1.0.0.2" path="DacrsUI.exe"/>
     <file ver="v1.0.0.1" path="dacrsclient.conf"/>
-    <file ver="v1.0.0.1" path="png\gambl_01.png"/>
-    <file ver="v1.0.0.1" path="png\gambl_02.png"/>
-    <file ver="v1.0.0.1" path="png\gambl_03.png"/>
-    <file ver="v1.0.0.1" path="png\wallet_01.png"/>
-    <file ver="v1.0.0.1" path="png\wallet_02.png"/>
-    <file ver="v1.0.0.1" path="png\wallet_03.png"/>
-    <file ver="v1.0.0.1" path="png\wallet_04.png"/>
-    <file ver="v1.0.0.1" path="png\wallet_05.png"/>
-    <file ver="v1.0.0.1" path="png\wallet_06.png"/>
-	<file ver="v1.0.0.1" path="DacrsClient.exe" shortcut="{commonprograms}\QUpdater\QUpdater DacrsClient.ilk"/>  
+    <file ver="v1.0.0.1" path="gif\init.gif"/>
+    <file ver="v1.0.0.1" path="gif\progress.gif"/>
+	<file ver="v1.0.0.1" path="DacrsUi.exe" shortcut="{commonprograms}\QUpdater\QUpdater DacrsUI.ilk"/>  
   </files>
 </update>
