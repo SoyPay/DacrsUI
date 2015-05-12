@@ -349,4 +349,6 @@ void CSendDlg::InsertComboxIitem()
 	ASSERT(m_mapAddrInfo.count(addressd) == 0);
 	m_mapAddrInfo[addressd]=addr;
 
+	int item = m_addrbook.GetCount();
+	m_addrbook.InsertString(item,addressd);
 }
