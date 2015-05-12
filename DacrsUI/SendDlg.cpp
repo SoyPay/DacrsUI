@@ -167,7 +167,10 @@ void CSendDlg::OnCbnSelchangeCombo1()
 		return;
 	}
 	CString text;
-	m_addrbook.GetWindowText(text) ;
+	int sel = m_addrbook.GetCurSel();
+	m_addrbook.GetLBText(sel,text);
+	
+	//m_addrbook.GetWindowText(text) ;
 	if(text!=_T(""))
 	{
 	   if(m_mapAddrInfo.count(text)<=0)
