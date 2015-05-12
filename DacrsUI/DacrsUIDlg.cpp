@@ -538,7 +538,7 @@ void CDacrsUIDlg::CloseApp()
 	EndWaitCursor();
 	PostMessage( WM_QUIT ) ; 
 	PostMessage( WM_CLOSE ); 	
-	DestroyWindow();
+	//DestroyWindow();
 	Sleep(200);
 }
 void CDacrsUIDlg::OnBnClickedButtonClose()
