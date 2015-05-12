@@ -44,6 +44,7 @@ using namespace std;
 #define MSG_USER_UPDATA_UI			        WM_USER+124   //更新到接受页面
 
 #define MSG_USER_QUITTHREAD			        WM_USER+200	    //退出线程
+#define MSG_USER_OUT                        WM_USER+201     //退出软件
 
 
 #define MSG_USER_END			        WM_USER+800	    //退出线程

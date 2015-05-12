@@ -13,6 +13,7 @@
 #include "MortgageTardDlg.h"
 #include "IpoDlg.h"
 #include "AddApp.h"
+#include "OutGifDlg.h"
 
 // CDacrsUIDlg 对话框
 class CDacrsUIDlg : public CDialogEx
@@ -49,6 +50,8 @@ public:
 	CMortgageTardDlg    *m_pMortgageTardDlg;// 抵押
 	CIpoDlg             *m_pIpoDlg;    //IPO
 	CAddApp             *m_pAddApp;    //添加应用
+	//
+	COutGifDlg          *m_pOutGifDlg;
 public:
 	std::map< UINT , CDialogBar * >  m_dlgMap ; 
 	void       ShowDialog(UINT dlgid)  ;
@@ -77,4 +80,7 @@ private:
 	void       LoadListDataInfo();         //从数据库中加载列表数据
 	void       CloseThread();
 	void       StopSever();
+public:
+	void       CloseApp();
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
 };

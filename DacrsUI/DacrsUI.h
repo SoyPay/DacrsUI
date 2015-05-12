@@ -38,9 +38,11 @@ public:
 	CString		  str_InsPath	        ;   
 	CString		  str_ModuleFilename	;    
 	CString		  m_ProgressGifFile	;		//进度GIF文件
+	CString		  m_ProgressOutGifFile	;	//进度GIF文件
 	void          GetMoFilename( CString & path , CString & filename ) ;// 获取文件名和路径
 	int           language()    ;     //读取设置语言
 	CString       m_strAddress  ;
+	BOOL          m_bOutApp     ;     //退出软件
 public:
 	CSqliteDeal   m_SqliteDeal  ;     //Sqlite3数据库操作
 
