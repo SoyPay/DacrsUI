@@ -1486,7 +1486,69 @@ int	CSqliteDeal::FindDB(const CString strTabName , const CString strP, const CSt
 	return TRUE ;
 
 }
+int	 CSqliteDeal::FindDB(const CString strTabName , const CString strP, const CString strSource,uistruct::LISTADDR_t *listaddr ){
+	if ( NULL == m_pSqlitedb ) {
+		if ( !OpenSqlite(theApp.str_InsPath) ) return -1 ;
+	}
 
+	CString strSql = _T("SELECT * FROM ") + strTabName + _T(" WHERE ") + strSource + _T(" =") + strP;
+
+	int nResult = sqlite3_get_table(m_pSqlitedb,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	if ( nResult != SQLITE_OK ){
+		sqlite3_close(m_pSqlitedb);  
+		sqlite3_free(m_pzErrMsg);  
+		m_pSqlitedb = NULL ;
+		return 0 ;
+	}
+
+	int nIndex = m_nCol;
+	CString strValue ;
+	for(int i = 0; i < m_nRow ; i++) {
+		for(int j = 0; j < m_nCol; j++ ){
+			switch (j)
+			{
+			case 0:
+				{
+					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					memcpy(listaddr->address , strValue , sizeof(listaddr->address));
+				}
+				break;
+			case 1:
+				{
+					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					memcpy(listaddr->RegID , strValue , sizeof(listaddr->RegID));
+				}
+				break;
+			case 2:
+				{
+					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					listaddr->fMoney = atof(strValue);
+				}
+				break;
+			case 3:
+				{
+					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					listaddr->nColdDig = atoi(strValue) ;
+				}
+				break;
+			case 4:
+				{
+					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					listaddr->bSign = atoi(strValue) ;
+				}
+			case 5:
+				{
+					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					memcpy(listaddr->Lebel , strValue , sizeof(listaddr->Lebel));
+				}
+				break;
+			}
+			++nIndex ;
+		}
+	}
+	sqlite3_free_table(m_pResult);
+	return m_nRow;
+}
 string CSqliteDeal::GetColSum(const CString strTabName , const CString strP, const CString strSource){
 	if ( NULL == m_pSqlitedb ) {
 		if ( !OpenSqlite(theApp.str_InsPath) ) return "" ;
