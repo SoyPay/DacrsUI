@@ -404,7 +404,7 @@ void   CReceiveDlg::ModifyListCtrlItem()
 
 	if(m_MapAddrInfo.count(addressd) <= 0)
 	{
-			TRACE("ERROR");
+		TRACE("map ModifyListCtrlItem ERROR");
 		return;
 	}
 	
@@ -486,10 +486,9 @@ void   CReceiveDlg::InsertListCtrlItem()
 	CString addressd;
 	addressd.Format(_T("%s"),addr.address);
 
-	if(m_MapAddrInfo.count(addressd) == 0);
-		{
-			TRACE("ERROR");
-			return ;
+	if(m_MapAddrInfo.count(addressd) > 0){
+		TRACE("map InsertListCtrlItem ERROR");
+		return ;
 	}
 	m_MapAddrInfo[addressd]=addr;
 

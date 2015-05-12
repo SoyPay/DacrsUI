@@ -73,7 +73,11 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 	uistruct::LISTADDR_t data;
 	if(text!=_T(""))
 	{
-		ASSERT(m_mapAddrInfo.count(text)>0);
+		if(m_mapAddrInfo.count(text)<=0)
+		{
+			//::MessageBox( this->GetSafeHwnd() ,_T("发送地址不存在") , _T("提示") , MB_ICONINFORMATION ) ;
+			return;
+		}
 		//uistruct::LISTADDR_t te = m_pListaddrInfo[text];
 		data = m_mapAddrInfo[text];
 	
@@ -166,7 +170,11 @@ void CSendDlg::OnCbnSelchangeCombo1()
 	m_addrbook.GetWindowText(text) ;
 	if(text!=_T(""))
 	{
-	ASSERT(m_mapAddrInfo.count(text)>0);
+	   if(m_mapAddrInfo.count(text)<=0)
+	   {
+		   TRACE("map OnCbnSelchangeCombo1 error");
+		   return;
+	   }
 	//uistruct::LISTADDR_t te = m_pListaddrInfo[text];
 	CString strshow;
 	strshow.Format(_T("%.8f"),m_mapAddrInfo[text].fMoney);
@@ -326,8 +334,11 @@ void CSendDlg::ModifyComboxItem(){
 	CString addressd;
 	addressd.Format(_T("%s"),addr.address);
 
-	ASSERT(m_mapAddrInfo.count(addressd) > 0);
-	
+	if(m_mapAddrInfo.count(addressd)<=0)
+	{
+		TRACE("map ModifyComboxItem error");
+		return;
+	}
 	m_mapAddrInfo[addressd]=addr;
 	
 		
@@ -347,7 +358,11 @@ void CSendDlg::InsertComboxIitem()
 	CString addressd;
 	addressd.Format(_T("%s"),addr.address);
 
-	ASSERT(m_mapAddrInfo.count(addressd) == 0);
+	if(m_mapAddrInfo.count(addressd)>0)
+	{
+		TRACE("map InsertComboxIitem error");
+		return;
+	}
 	m_mapAddrInfo[addressd]=addr;
 
 	int item = m_addrbook.GetCount();
