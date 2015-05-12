@@ -124,6 +124,12 @@
     <ClCompile Include="XProgressCtrl.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Out.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="OutGifDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BmpBtn.h">
@@ -283,6 +289,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="XProgressCtrl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Out.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="OutGifDlg.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

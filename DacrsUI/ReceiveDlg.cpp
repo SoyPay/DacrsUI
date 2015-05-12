@@ -60,11 +60,6 @@ void CReceiveDlg::ShowListInfo()
 
 	m_listCtrl.DeleteAllItems();
 
-	if ( 17 <= m_MapAddrInfo.size() )  {
-		m_listCtrl.SetColumnWidth(5 , 86 ); 
-	}else{
-		m_listCtrl.SetColumnWidth(5 , 100 ); 
-	}
 	//¼ÓÔØµ½ComBox¿Ø¼þ
 	int nSubIdx = 0 , i = 0 ;
 	CString strShowData = _T("");
@@ -105,6 +100,11 @@ void CReceiveDlg::ShowListInfo()
 
 		i++;
 	}
+	if ( 17 <= m_MapAddrInfo.size() )  {
+		m_listCtrl.SetColumnWidth(5 , 86 ); 
+	}else{
+		m_listCtrl.SetColumnWidth(5 , 104 ); 
+	}
 }
 
 BOOL CReceiveDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
@@ -124,7 +124,7 @@ BOOL CReceiveDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT n
 							{"µØÖ·" ,      275}, 
 							{"¼¤»î×´Ì¬" ,  100}, 
 							{"Óà¶î" ,      172},
-							{"Ö§³ÖÀäÍÚ¿ó" ,100} 
+							{"Ö§³ÖÀäÍÚ¿ó" ,104} 
 						};
 		m_listCtrl.SetBkColor(RGB(240,240,240));       
 		m_listCtrl.SetRowHeigt(23);               
@@ -414,7 +414,7 @@ void   CReceiveDlg::ModifyListCtrlItem()
 	if ( 17 <= count )  {
 		m_listCtrl.SetColumnWidth(5 , 86 ); 
 	}else{
-		m_listCtrl.SetColumnWidth(5 , 100 ); 
+		m_listCtrl.SetColumnWidth(5 , 104 ); 
 	}
 	for(int i = 0; i < count; i++)
 	{

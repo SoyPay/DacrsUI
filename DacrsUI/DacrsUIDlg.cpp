@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "DacrsUI.h"
 #include "DacrsUIDlg.h"
+#include "Out.h"
 #include "afxdialogex.h"
 
 #ifdef _DEBUG
@@ -64,6 +65,7 @@ CDacrsUIDlg::CDacrsUIDlg(CWnd* pParent /*=NULL*/)
 	m_pIpoDlg  = NULL  ;
 	m_pAddApp  = NULL  ;
 	dlgType = 0;
+	m_pOutGifDlg =  NULL ;
 }
 
 void CDacrsUIDlg::DoDataExchange(CDataExchange* pDX)
@@ -87,6 +89,7 @@ BEGIN_MESSAGE_MAP(CDacrsUIDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_ADDAPP, &CDacrsUIDlg::OnBnClickedButtonAddApp)
 	ON_BN_CLICKED(IDC_BUTTON_CLOSE, &CDacrsUIDlg::OnBnClickedButtonClose)
 	ON_BN_CLICKED(IDC_BUTTON_MIN, &CDacrsUIDlg::OnBnClickedButtonMin)
+	ON_WM_TIMER()
 END_MESSAGE_MAP()
 
 
@@ -266,6 +269,13 @@ int CDacrsUIDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		m_pAddApp->ShowWindow(SW_HIDE) ;
 	}
 
+	if( NULL == m_pOutGifDlg ){
+		m_pOutGifDlg = new COutGifDlg ;
+		m_pOutGifDlg->Create(COutGifDlg::IDD , this) ;
+		m_pOutGifDlg->ShowWindow(SW_HIDE) ;
+		m_pOutGifDlg->SetWindowPos(NULL , 800 , 480 , 0 , 0 ,SWP_NOSIZE );
+	}
+
 	//加入到m_dlgMap
 	m_dlgMap.insert( std::map<UINT , CDialogBar *>::value_type( CMainDlg::IDD , m_pMainDlg)) ; 
 	m_dlgMap.insert( std::map<UINT , CDialogBar *>::value_type( CSendDlg::IDD , m_pSendDlg)) ; 
@@ -398,38 +408,7 @@ void CDacrsUIDlg::OnBnClickedButtonAddApp()
 	ShowDialog(CAddApp::IDD) ;
 	ShowStateTip(IDC_BUTTON_ADDAPP);
 }
-void CDacrsUIDlg::OnBnClickedButtonClose()
-{
-	//SYSTEMTIME curTime ,local;
-	//memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
-	//GetLocalTime( &curTime ) ;
-	//int RecivetxTimeLast =0,cutrtieme;
-	//RecivetxTimeLast= UiFun::SystemTimeToTimet(curTime);
-	StopSever();
 
-	//GetLocalTime( &local ) ;
-	//cutrtieme= UiFun::SystemTimeToTimet(curTime);
-	//TRACE("StopSever:= %d",(cutrtieme- RecivetxTimeLast));
-
-	//GetLocalTime( &curTime ) ;
-	//RecivetxTimeLast= UiFun::SystemTimeToTimet(curTime);
-	CloseThread();
-	//GetLocalTime( &local ) ;
-	//cutrtieme= UiFun::SystemTimeToTimet(curTime);
-	//TRACE("CloseThread:= %d",(cutrtieme- RecivetxTimeLast));
-
-	//GetLocalTime( &curTime ) ;
-	//RecivetxTimeLast= UiFun::SystemTimeToTimet(curTime);
-	DestroyDlg();
-	PostMessage( WM_QUIT ) ; 
-	PostMessage( WM_CLOSE ); 	
-	TRACE("DestroyWindow()");
-	DestroyWindow();
-	//GetLocalTime( &local ) ;
-	//cutrtieme= UiFun::SystemTimeToTimet(curTime);
-	//TRACE("DestroyWindow:= %d",(cutrtieme- RecivetxTimeLast));
-	Sleep(200) ;
-}
 void CDacrsUIDlg::OnBnClickedButtonMin()
 {
 	ShowWindow(SW_SHOWMINIMIZED);
@@ -549,4 +528,67 @@ void  CDacrsUIDlg::StopSever()
 		Sleep(5);
 	}
 
+}
+void CDacrsUIDlg::CloseApp()
+{
+	/*if ( NULL != m_pOutGifDlg ) {
+	delete m_pOutGifDlg ;
+	m_pOutGifDlg = NULL ;
+	}*/
+	EndWaitCursor();
+	PostMessage( WM_QUIT ) ; 
+	PostMessage( WM_CLOSE ); 	
+	DestroyWindow();
+	Sleep(200);
+}
+void CDacrsUIDlg::OnBnClickedButtonClose()
+{
+	//SYSTEMTIME curTime ,local;
+	//memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
+	//GetLocalTime( &curTime ) ;
+	//int RecivetxTimeLast =0,cutrtieme;
+	//RecivetxTimeLast= UiFun::SystemTimeToTimet(curTime);
+	COut outdlg;
+	if ( IDOK == outdlg.DoModal()){
+		BeginWaitCursor();
+		/*if ( NULL != m_pOutGifDlg ) {
+		m_pOutGifDlg->LoadGifing(TRUE);
+		m_pOutGifDlg->ShowWindow(SW_SHOW) ;
+		}*/
+		::PostThreadMessage( theApp.GetMtHthrdId() , MSG_USER_OUT , 0 , 0 ) ;
+		SetTimer( 0x10 , 100 , NULL ) ; 
+		Sleep(200);
+	}else{
+		;
+	}
+	//GetLocalTime( &local ) ;
+	//cutrtieme= UiFun::SystemTimeToTimet(curTime);
+	//TRACE("StopSever:= %d",(cutrtieme- RecivetxTimeLast));
+
+	//GetLocalTime( &curTime ) ;
+	//RecivetxTimeLast= UiFun::SystemTimeToTimet(curTime);
+	
+	//GetLocalTime( &local ) ;
+	//cutrtieme= UiFun::SystemTimeToTimet(curTime);
+	//TRACE("CloseThread:= %d",(cutrtieme- RecivetxTimeLast));
+
+	//GetLocalTime( &curTime ) ;
+	//RecivetxTimeLast= UiFun::SystemTimeToTimet(curTime);
+	
+	//GetLocalTime( &local ) ;
+	//cutrtieme= UiFun::SystemTimeToTimet(curTime);
+	//TRACE("DestroyWindow:= %d",(cutrtieme- RecivetxTimeLast));
+}
+void CDacrsUIDlg::OnTimer(UINT_PTR nIDEvent)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	if( 0x10 == nIDEvent ) {
+		KillTimer(0x10);
+		StopSever();
+		CloseThread();
+
+		DestroyDlg();
+		theApp.m_bOutApp = TRUE ;
+	}
+	CDialogEx::OnTimer(nIDEvent);
 }

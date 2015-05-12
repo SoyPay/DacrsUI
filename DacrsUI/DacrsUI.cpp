@@ -9,6 +9,7 @@
 #include <afxinet.h>
 #include "Language.h"
 #include "StartProgress.h"
+
 #include <afxsock.h>
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -42,6 +43,7 @@ CDacrsUIApp::CDacrsUIApp()
 	m_rpcPassWord = _T("");
 	progessPos = 0;
 	m_strAddress = _T("");
+	m_bOutApp = FALSE ;
 }
 
 
@@ -94,9 +96,9 @@ BOOL CDacrsUIApp::InitInstance()
 	GetMoFilename( str_InsPath , str_ModuleFilename ); //获取文件路径和文件名称
 
 	////创建维护线程
-	//if( !CreateMaintainThrd() ) {
-	//	return FALSE ;
-	//}
+	if( !CreateMaintainThrd() ) {
+		return FALSE ;
+	}
 	//检测自动升级
 	if (Update())
 	{
@@ -145,6 +147,7 @@ BOOL CDacrsUIApp::InitInstance()
 	theApp.StartblockThrd();  //开启Block线程
 	//gif
 	m_ProgressGifFile =   str_InsPath + _T("\\gif\\progress.gif\0") ;
+	m_ProgressOutGifFile =   str_InsPath + _T("\\gif\\exit.gif\0") ;
 	GdiplusStartupInput gdiplusStartupInput;
 	ULONG_PTR gdiplusToken;
 	Status state = GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL) ;
@@ -296,6 +299,20 @@ UINT __stdcall CDacrsUIApp::MtProc(LPVOID pParam)
 		{
 			switch ( msg.message )
 			{
+			case MSG_USER_OUT:
+				{
+					while(1)
+					{
+						if(((CDacrsUIApp*)pParam)->m_bOutApp){
+							CDacrsUIDlg* pMainWnd = (CDacrsUIDlg*)AfxGetApp()->m_pMainWnd ;
+							if ( NULL != pMainWnd ) {
+								pMainWnd->CloseApp(); //关闭对话框
+							}
+							break;
+						}
+					}
+				}
+				break;
 			case MSG_USER_QUITTHREAD:
 				{
 					std::vector< sThrd >::iterator it ;
