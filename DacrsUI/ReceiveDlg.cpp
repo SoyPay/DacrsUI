@@ -141,7 +141,7 @@ BOOL CReceiveDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT n
 		m_rBtnAcitve.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
 		m_rBtnAcitve.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
 		m_rBtnAcitve.SetWindowText("º§ªÓµÿ÷∑") ;
-		m_rBtnAcitve.SetFontEx(24 , _T("Œ¢»Ì—≈∫⁄"));
+		m_rBtnAcitve.SetFontEx(20 , _T("Œ¢»Ì—≈∫⁄"));
 		m_rBtnAcitve.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		m_rBtnAcitve.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 		m_rBtnAcitve.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
@@ -151,7 +151,7 @@ BOOL CReceiveDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT n
 		m_rBtnNewaddr.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
 		m_rBtnNewaddr.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
 		m_rBtnNewaddr.SetWindowText("–¬Ω®µÿ÷∑") ;
-		m_rBtnNewaddr.SetFontEx(24 , _T("Œ¢»Ì—≈∫⁄"));
+		m_rBtnNewaddr.SetFontEx(20 , _T("Œ¢»Ì—≈∫⁄"));
 		m_rBtnNewaddr.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		m_rBtnNewaddr.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 		m_rBtnNewaddr.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
@@ -161,7 +161,7 @@ BOOL CReceiveDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT n
 		m_rBtnCopyaddr.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
 		m_rBtnCopyaddr.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
 		m_rBtnCopyaddr.SetWindowText("∏¥÷∆µÿ÷∑") ;
-		m_rBtnCopyaddr.SetFontEx(24 , _T("Œ¢»Ì—≈∫⁄"));
+		m_rBtnCopyaddr.SetFontEx(20 , _T("Œ¢»Ì—≈∫⁄"));
 		m_rBtnCopyaddr.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		m_rBtnCopyaddr.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 		m_rBtnCopyaddr.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
