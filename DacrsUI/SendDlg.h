@@ -30,7 +30,8 @@ public:
 public:
 	CRoundButton     m_rBtnAddbook;
 private:
-	uistruct::LISTADDRLIST m_pListaddrInfo;
+	//uistruct::LISTADDRLIST m_pListaddrInfo;
+	map<CString,uistruct::LISTADDR_t> m_pListaddrInfo;
 	CShadeButtonST         m_rBtnSend;
 	CStaticTrans           m_strTx1  ; 
 	CComboBox			   m_addrbook;
