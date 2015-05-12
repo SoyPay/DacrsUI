@@ -343,7 +343,7 @@ public:
 
 	CString DisPlayMoney(CString &strMoney);
 
-	bool IsWin8();
+	bool IsOSVersionBelowXp();
 };
 
 //*******************************担保交易************************************************
