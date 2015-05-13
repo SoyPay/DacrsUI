@@ -1581,8 +1581,10 @@ BOOL CDacrsUIApp::RunOnlyOneApp()
 	if (GetLastError() == ERROR_ALREADY_EXISTS) 
 	{
 		CloseHandle(hMutex);
+		AfxMessageBox(_T("程序已经在运行了") ,MB_OK);
+		exit(1);  
 
-		HWND hWndPrevious = ::GetWindow( ::GetDesktopWindow(), GW_CHILD );
+		/*HWND hWndPrevious = ::GetWindow( ::GetDesktopWindow(), GW_CHILD );
 		while(::IsWindow(hWndPrevious))
 		{
 			if (::GetProp(hWndPrevious, WINDOW_TAG))
@@ -1599,7 +1601,7 @@ BOOL CDacrsUIApp::RunOnlyOneApp()
 				return FALSE;
 			}
 			hWndPrevious = ::GetWindow( hWndPrevious, GW_HWNDNEXT );
-		}
+		}*/
 
 		return FALSE;
 	}
