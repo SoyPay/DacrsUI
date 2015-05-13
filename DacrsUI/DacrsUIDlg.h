@@ -75,7 +75,6 @@ public:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg LRESULT OnBeginMoveWnd(WPARAM wParam, LPARAM lParam);
 private:
-	void       CheckPathValid(const CStringA& strDir);
 	void       InitialRpcCmd();
 	void       LoadListDataInfo();         //从数据库中加载列表数据
 	void       CloseThread();
