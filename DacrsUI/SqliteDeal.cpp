@@ -31,7 +31,7 @@ BOOL CSqliteDeal::OpenSqlite(CString strPath, BOOL bOperateFlag)
    strDbPath.Format(_T("%s\\db\\data.db") , strPath );
    if(bOperateFlag) {
 	   EnterCriticalSection( &cs_UpDataResult) ;
-	   int ret = sqlite3_open_v2( UiFun::MbcsToUtf8(strDbPath), &m_pSqliteWrite, SQLITE_OPEN_READWRITE | SQLITE_OPEN_NOMUTEX, NULL);
+	   int ret = sqlite3_open_v2( UiFun::MbcsToUtf8(strDbPath), &m_pSqliteWrite, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_NOMUTEX, NULL);
 	   if ( 0 != ret) {   //打开指定的数据库文件,如果不存在将创建一个同名的数据库文件
 		   sqlite3_close(m_pSqliteWrite);
 		   m_pSqliteWrite = NULL ;
