@@ -123,9 +123,9 @@ void CMainDlg::OnnitCtrlText()
 	ClearCtrlText();
 	CString strCommand,strShowData;
 	strCommand.Format(_T("0"));
-	theApp.cs_SqlData.Lock();
+//	theApp.cs_SqlData.Lock();
 	string nmoney =  theApp.m_SqliteDeal.GetColSum(_T("MYWALLET") ,_T("money") ) ;
-	theApp.cs_SqlData.Unlock();
+//	theApp.cs_SqlData.Unlock();
 	if (!strcmp(nmoney.c_str(),"(null)"))
 	{
 		m_strOver.SetWindowText(_T("0.0")) ;
@@ -136,9 +136,9 @@ void CMainDlg::OnnitCtrlText()
 	}
 
 	strCommand.Format(_T("0"));
-	theApp.cs_SqlData.Lock();
+//	theApp.cs_SqlData.Lock();
 	 nmoney =  theApp.m_SqliteDeal.GetColSum(_T("revtransaction") , strCommand ,_T("confirmHeight")) ;
-	theApp.cs_SqlData.Unlock();
+//	theApp.cs_SqlData.Unlock();
 
 	if (!strcmp(nmoney.c_str(),"(null)"))
 	{
@@ -148,9 +148,9 @@ void CMainDlg::OnnitCtrlText()
 	}
 	
 
-	theApp.cs_SqlData.Lock();
+//	theApp.cs_SqlData.Lock();
 	int nItem =  theApp.m_SqliteDeal.GetTableCount(_T("revtransaction")) ;
-	theApp.cs_SqlData.Unlock();
+//	theApp.cs_SqlData.Unlock();
 
 	strCommand.Format(_T("%d"),nItem);
 	m_strTranNum.SetWindowText(strCommand) ;
@@ -160,9 +160,9 @@ void CMainDlg::OnnitCtrlText()
 	Where.Format(_T("'COMMON_TX' order by confirmedtime desc limit 5"));
 	strSource.Format(_T("txtype"));
 	uistruct::TRANSRECORDLIST pTransaction;
-	theApp.cs_SqlData.Lock();
+//	theApp.cs_SqlData.Lock();
 	theApp.m_SqliteDeal.FindDB(_T("revtransaction"),Where,strSource,&pTransaction);
-	theApp.cs_SqlData.Unlock();
+//	theApp.cs_SqlData.Unlock();
 
 	int i = 1;
 	strCommand.Format(_T("IDC_TX%d"),nItem);

@@ -98,9 +98,9 @@ void CSignAccountsDlg::OnBnClickedButtonSend()
 			//插入到数据库
 			CString strHash , strHash1;
 			strHash1.Format(_T("%s") , root["hash"].asCString() );
-			theApp.cs_SqlData.Lock();
+//			theApp.cs_SqlData.Lock();
 			int nItem =  theApp.m_SqliteDeal.FindDB(_T("revtransaction") , strHash1 ,_T("hash") ) ;
-			theApp.cs_SqlData.Unlock();
+//			theApp.cs_SqlData.Unlock();
 			strHash.Format(_T("'%s'") , root["hash"].asCString() );
 			if ( 0 == nItem ) {
 
