@@ -39,6 +39,7 @@ public:
 	BOOL   GetRecorBetData(uistruct::P2PBETRECORDLIST* pListInfo); 
 	BOOL  GetRecorDarkData(uistruct::DARKRECORDLIST* pListInfo);
 	BOOL  GetRecorP2Pool(uistruct::P2PLIST* pListInfo);
+	BOOL   GetaddrBookData(map<CString,uistruct::ADDRBOOK_t>* pListInfo); 
 	BOOL  isExistTx(CString tablename,CString filed ,CString txhash);
 	BOOL  isinBlock();
 	void  UpdataAllTableData(BOOL flag);
