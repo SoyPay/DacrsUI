@@ -136,6 +136,7 @@ public:
 	void GetMainDlgStruc();
 	BOOL RunOnlyOneApp();
 	void SendRecvieUiMes(int message,CString jsonaddr);
+	void CheckPathValid(const CStringA& strDir);
 public:
 	bool isStartMainDlg;
 	CNoUiMsgBuffer m_noUiMsgBuffer;

@@ -95,6 +95,7 @@ BOOL CDacrsUIApp::InitInstance()
 	  m_msgAutoDelete= false;
 	GetMoFilename( str_InsPath , str_ModuleFilename ); //获取文件路径和文件名称
 
+	CheckPathValid( str_InsPath );
 	////创建维护线程
 	if( !CreateMaintainThrd() ) {
 		return FALSE ;
@@ -1602,4 +1603,24 @@ void CDacrsUIApp::SendRecvieUiMes(int message,CString jsonaddr){
 
 	m_UiSendDlgQueue.push(Postmsg);
 	DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_SEND_UI ,message,0);
+}
+
+void CDacrsUIApp::CheckPathValid(const CStringA& strDir)
+{
+	BOOL bExist = FALSE;
+	for(int i = 0;i <= strDir.GetLength();i++)
+	{
+		BYTE bchar = (BYTE)strDir.GetAt(i);
+		if(bchar == ' ')
+		{
+			bExist = TRUE;
+			break;
+		}
+	}
+
+	if (bExist)
+	{
+		::MessageBox( NULL , _T("程序不可以放在含有空格的目录下\r\n") , "Error" , MB_ICONERROR) ;
+		exit(0);
+	}
 }

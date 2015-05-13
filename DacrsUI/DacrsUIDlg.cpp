@@ -200,7 +200,7 @@ int CDacrsUIDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	GetClientRect( rect ) ;
 
 	//检测EXE文件所在路径是否包含中文或者空格
-	CheckPathValid( theApp.str_InsPath );
+	//CheckPathValid( theApp.str_InsPath );
 
 	//初始化RPC Cmd
 	InitialRpcCmd();
@@ -412,26 +412,6 @@ void CDacrsUIDlg::OnBnClickedButtonAddApp()
 void CDacrsUIDlg::OnBnClickedButtonMin()
 {
 	ShowWindow(SW_SHOWMINIMIZED);
-}
-
-void CDacrsUIDlg::CheckPathValid(const CStringA& strDir)
-{
-	BOOL bExist = FALSE;
-	for(int i = 0;i <= strDir.GetLength();i++)
-	{
-		BYTE bchar = (BYTE)strDir.GetAt(i);
-		if(bchar == ' ')
-		{
-			bExist = TRUE;
-			break;
-		}
-	}
-
-	if (bExist)
-	{
-		MessageBox(_T("程序不可以放在含有空格的目录下\r\n"));
-		exit(0);
-	}
 }
 
 void CDacrsUIDlg::InitialRpcCmd()
