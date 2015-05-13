@@ -5,35 +5,49 @@
 
 CSqliteDeal::CSqliteDeal(void)
 {
-	m_pSqlitedb = NULL ;
-	m_pzErrMsg  = NULL ;
-	m_pResult   = NULL ;
+	m_pSqliteRead = NULL;
+	m_pSqliteWrite = NULL;
+	m_pzErrMsg  = NULL;
+	m_pResult   = NULL;
 	m_nRow = -1 ;
 	m_nCol = -1 ;
 	//初始化临界
-//	InitializeCriticalSection(&(cs_UpDataResult) ) ;
+	InitializeCriticalSection(&(cs_UpDataResult) ) ;
 }
 
 CSqliteDeal::~CSqliteDeal(void)
 {
-	if ( NULL != m_pSqlitedb ) {
-       sqlite3_close(m_pSqlitedb);
-	   m_pSqlitedb = NULL ;
+	if ( NULL != m_pSqliteWrite ) {
+       sqlite3_close(m_pSqliteWrite);
+	   m_pSqliteWrite = NULL ;
 	}
 }
 
-BOOL CSqliteDeal::OpenSqlite(CString strPath)
+BOOL CSqliteDeal::OpenSqlite(CString strPath, BOOL bOperateFlag)
 {
-   if ( NULL != m_pSqlitedb ) TRUE;
+   if ( NULL != m_pSqliteWrite ) TRUE;
    ///////////////////////////////////////
    CString strDbPath ;
-   strDbPath.Format(_T("%s\\db\\data.db") , strPath ) ;
-   if ( 0 != sqlite3_open( UiFun::MbcsToUtf8(strDbPath), &m_pSqlitedb ) ) {   //打开指定的数据库文件,如果不存在将创建一个同名的数据库文件
-	   sqlite3_close(m_pSqlitedb);
-	   m_pSqlitedb = NULL ;
-	   return FALSE ;
+   strDbPath.Format(_T("%s\\db\\data.db") , strPath );
+   if(bOperateFlag) {
+	   EnterCriticalSection( &cs_UpDataResult) ;
+	   int ret = sqlite3_open_v2( UiFun::MbcsToUtf8(strDbPath), &m_pSqliteWrite, SQLITE_OPEN_READWRITE | SQLITE_OPEN_NOMUTEX, NULL);
+	   if ( 0 != ret) {   //打开指定的数据库文件,如果不存在将创建一个同名的数据库文件
+		   sqlite3_close(m_pSqliteWrite);
+		   m_pSqliteWrite = NULL ;
+		   return FALSE ;
+	   }
+	   LeaveCriticalSection (&cs_UpDataResult);
+   }   
+   else{
+	   int ret = sqlite3_open_v2( UiFun::MbcsToUtf8(strDbPath), &m_pSqliteRead, SQLITE_OPEN_READONLY  | SQLITE_OPEN_NOMUTEX, NULL);
+	   if ( 0 != ret) {   //打开指定的数据库文件,如果不存在将创建一个同名的数据库文件
+		   sqlite3_close(m_pSqliteWrite);
+		   m_pSqliteRead = NULL ;
+		   return FALSE ;
+	   }
    }
-    return TRUE ;
+   return TRUE ;
 }
 /***************************************
 strTabName: 表名
@@ -43,18 +57,18 @@ strSource:要比较的字段值
 ***************************************/
 int CSqliteDeal::FindDB(const CString strTabName ,const CString strP, const CString strSource )
 {
-	if ( NULL == m_pSqlitedb ) {
+	if ( NULL == m_pSqliteRead ) {
 		if ( !OpenSqlite(theApp.str_InsPath) ) return -1 ;
 	}
 	
 	CString strSql = _T("SELECT * FROM ") + strTabName + _T(" WHERE ") + strSource + _T(" ='") + strP + _T("'");
 
 //	EnterCriticalSection( &cs_UpDataResult) ;
-	int nResult = sqlite3_get_table(m_pSqlitedb,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
 	if ( nResult != SQLITE_OK ){
-		 sqlite3_close(m_pSqlitedb);  
+		 sqlite3_close(m_pSqliteRead);  
 		 sqlite3_free(m_pzErrMsg);  
-		 m_pSqlitedb = NULL ;
+		 m_pSqliteRead = NULL ;
 		 return -1 ;
 	}
 	sqlite3_free_table(m_pResult);
@@ -62,18 +76,18 @@ int CSqliteDeal::FindDB(const CString strTabName ,const CString strP, const CStr
 	return m_nRow ;
 }
 int  CSqliteDeal::FindINTDB(const CString strTabName , const CString strP, const CString strSource ){
-	if ( NULL == m_pSqlitedb ) {
+	if ( NULL == m_pSqliteRead ) {
 		if ( !OpenSqlite(theApp.str_InsPath) ) return -1 ;
 	}
 
 	CString strSql = _T("SELECT * FROM ") + strTabName + _T(" WHERE ") + strSource + _T(" = ") + strP;
 
 //	EnterCriticalSection( &cs_UpDataResult) ;
-	int nResult = sqlite3_get_table(m_pSqlitedb,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
 	if ( nResult != SQLITE_OK ){
-		sqlite3_close(m_pSqlitedb);  
+		sqlite3_close(m_pSqliteRead);  
 		sqlite3_free(m_pzErrMsg);  
-		m_pSqlitedb = NULL ;
+		m_pSqliteRead = NULL ;
 		return -1 ;
 	}
 	sqlite3_free_table(m_pResult);
@@ -81,18 +95,18 @@ int  CSqliteDeal::FindINTDB(const CString strTabName , const CString strP, const
 	return m_nRow ;
 }
 int CSqliteDeal::GetTableCount(const CString strTabName){
-	if ( NULL == m_pSqlitedb ) {
+	if ( NULL == m_pSqliteRead ) {
 		if ( !OpenSqlite(theApp.str_InsPath) ) return -1 ;
 	}
 
 	CString strSql = _T("SELECT * FROM ") + strTabName;
 
 //	EnterCriticalSection( &cs_UpDataResult) ;
-	int nResult = sqlite3_get_table(m_pSqlitedb,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
 	if ( nResult != SQLITE_OK ){
-		sqlite3_close(m_pSqlitedb);  
+		sqlite3_close(m_pSqliteRead);  
 		sqlite3_free(m_pzErrMsg);  
-		m_pSqlitedb = NULL ;
+		m_pSqliteRead = NULL ;
 		return -1 ;
 	}
 	sqlite3_free_table(m_pResult);
@@ -100,18 +114,18 @@ int CSqliteDeal::GetTableCount(const CString strTabName){
 	return m_nRow ;
 }
 BOOL CSqliteDeal::DeleteData(const CString strTabName,const CString strSourceData , const CString strW){
-	if ( NULL == m_pSqlitedb ) {
-		if ( !OpenSqlite(theApp.str_InsPath) ) return -1 ;
+	if ( NULL == m_pSqliteWrite ) {
+		if ( !OpenSqlite(theApp.str_InsPath, TRUE) ) return -1 ;
 	}
 
 	CString strSql = _T("delete from ") + strTabName + _T(" WHERE ") + strSourceData + _T(" ='") + strW + _T("'");
 
 //	EnterCriticalSection( &cs_UpDataResult) ;
-	int nResult = sqlite3_get_table(m_pSqlitedb,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	int nResult = sqlite3_get_table(m_pSqliteWrite,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
 	if ( nResult != SQLITE_OK ){
-		sqlite3_close(m_pSqlitedb);  
+		sqlite3_close(m_pSqliteWrite);  
 		sqlite3_free(m_pzErrMsg);  
-		m_pSqlitedb = NULL ;
+		m_pSqliteWrite = NULL ;
 		return -1 ;
 	}
 	sqlite3_free_table(m_pResult);
@@ -120,18 +134,18 @@ BOOL CSqliteDeal::DeleteData(const CString strTabName,const CString strSourceDat
 }
 BOOL  CSqliteDeal::CreateTabe(const CString strTabName,const CString strFiled){
 
-	if ( NULL == m_pSqlitedb ) {
-		if ( !OpenSqlite(theApp.str_InsPath) ) return -1 ;
+	if ( NULL == m_pSqliteWrite ) {
+		if ( !OpenSqlite(theApp.str_InsPath, TRUE) ) return -1 ;
 	}
 
 	CString strSql = _T("create table  ") + strTabName + _T("(") + strFiled + _T(");");
 
 //	EnterCriticalSection( &cs_UpDataResult) ;
-	int nResult = sqlite3_exec( m_pSqlitedb , strSql.GetBuffer() , NULL , NULL , &m_pzErrMsg );
+	int nResult = sqlite3_exec( m_pSqliteWrite , strSql.GetBuffer() , NULL , NULL , &m_pzErrMsg );
 	if ( nResult != SQLITE_OK ){
-		sqlite3_close(m_pSqlitedb);  
+		sqlite3_close(m_pSqliteWrite);  
 		sqlite3_free(m_pzErrMsg);  
-		m_pSqlitedb = NULL ;
+		m_pSqliteWrite = NULL ;
 		return FALSE ;
 	}
 //	LeaveCriticalSection (&cs_UpDataResult) ;
@@ -139,7 +153,7 @@ BOOL  CSqliteDeal::CreateTabe(const CString strTabName,const CString strFiled){
 }
 
 BOOL  CSqliteDeal::IsExistTabe(const CString strTabName){
-	if ( NULL == m_pSqlitedb ) {
+	if ( NULL == m_pSqliteRead ) {
 		if ( !OpenSqlite(theApp.str_InsPath) ) return -1 ;
 	}
 	CString strSql = _T("select count(type) from sqlite_master where type='table' and name =");
@@ -147,11 +161,11 @@ BOOL  CSqliteDeal::IsExistTabe(const CString strTabName){
 
 //	EnterCriticalSection( &cs_UpDataResult) ;
 	bool tableIsExisted = FALSE;
-	int nResult = sqlite3_get_table(m_pSqlitedb,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
 	if ( nResult != SQLITE_OK ){
-		sqlite3_close(m_pSqlitedb);  
+		sqlite3_close(m_pSqliteRead);  
 		sqlite3_free(m_pzErrMsg);  
-		m_pSqlitedb = NULL ;
+		m_pSqliteRead = NULL ;
 		return FALSE ;
 	}
 	int nIndex = m_nCol;
@@ -163,18 +177,18 @@ BOOL  CSqliteDeal::IsExistTabe(const CString strTabName){
 	return tableIsExisted ;
 }
 int   CSqliteDeal::FindDB(const CString strTabName , const CString strP, const CString strSource,uistruct::P2P_BET_RECORD_t * p2pbetrecord ){
-	if ( NULL == m_pSqlitedb ) {
+	if ( NULL == m_pSqliteRead ) {
 		if ( !OpenSqlite(theApp.str_InsPath) ) return -1 ;
 	}
 
 	CString strSql = _T("SELECT * FROM ") + strTabName + _T(" WHERE ") + strSource + _T(" ='") + strP + _T("'");
 
 //	EnterCriticalSection( &cs_UpDataResult) ;
-	int nResult = sqlite3_get_table(m_pSqlitedb,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
 	if ( nResult != SQLITE_OK ){
-		sqlite3_close(m_pSqlitedb);  
+		sqlite3_close(m_pSqliteRead);  
 		sqlite3_free(m_pzErrMsg);  
-		m_pSqlitedb = NULL ;
+		m_pSqliteRead = NULL ;
 		return -1 ;
 	}
 	int nIndex = m_nCol;
@@ -283,49 +297,49 @@ strSourceData: 要插入的数据
 ***************************************/
 BOOL CSqliteDeal::InsertData(const CString strTabName ,const CString strSourceData )
 {
-	if ( NULL == m_pSqlitedb ) {
-		if ( !OpenSqlite(theApp.str_InsPath) ) return FALSE ;
+	if ( NULL == m_pSqliteWrite ) {
+		if ( !OpenSqlite(theApp.str_InsPath, TRUE) ) return FALSE ;
 	}
 
 	CString strSql = _T("INSERT INTO ") + strTabName + _T(" VALUES( ") + strSourceData + _T(" )") ;
 
-	int nResult = sqlite3_exec( m_pSqlitedb , strSql.GetBuffer() , NULL , NULL , &m_pzErrMsg );
+	int nResult = sqlite3_exec( m_pSqliteWrite , strSql.GetBuffer() , NULL , NULL , &m_pzErrMsg );
 	if ( nResult != SQLITE_OK ){
-		sqlite3_close(m_pSqlitedb);  
+		sqlite3_close(m_pSqliteWrite);  
 		sqlite3_free(m_pzErrMsg);  
-		m_pSqlitedb = NULL ;
+		m_pSqliteWrite = NULL ;
 		return FALSE ;
 	}
 	return TRUE ;
 }
 BOOL CSqliteDeal::EmptyTabData(const CString strTabName )
 {
-	if ( NULL == m_pSqlitedb ) {
-		if ( !OpenSqlite(theApp.str_InsPath) ) return FALSE ;
+	if ( NULL == m_pSqliteWrite ) {
+		if ( !OpenSqlite(theApp.str_InsPath, TRUE)) return FALSE ;
 	}
 
 	CString strSql = _T("DELETE FROM ") + strTabName ;
-	int nResult = sqlite3_exec( m_pSqlitedb , strSql.GetBuffer() , NULL , NULL , &m_pzErrMsg );
+	int nResult = sqlite3_exec( m_pSqliteWrite , strSql.GetBuffer() , NULL , NULL , &m_pzErrMsg );
 	if ( nResult != SQLITE_OK ){
-		sqlite3_close(m_pSqlitedb);  
+		sqlite3_close(m_pSqliteWrite);  
 		sqlite3_free(m_pzErrMsg);  
-		m_pSqlitedb = NULL ;
+		m_pSqliteWrite = NULL ;
 		return FALSE ;
 	}
 	return TRUE ;
 }
 BOOL CSqliteDeal::Updatabase(const CString strTabName , const CString strSourceData , const CString strW )
 {
-	if ( NULL == m_pSqlitedb ) {
-		if ( !OpenSqlite(theApp.str_InsPath) ) return FALSE ;
+	if ( NULL == m_pSqliteWrite ) {
+		if ( !OpenSqlite(theApp.str_InsPath, TRUE)) return FALSE ;
 	}
 
 	CString strSql = _T("UPDATE ") + strTabName + _T(" SET ") + strSourceData + _T(" WHERE ") + strW ;
-	int nResult = sqlite3_exec( m_pSqlitedb , strSql.GetBuffer() , NULL , NULL , &m_pzErrMsg );
+	int nResult = sqlite3_exec( m_pSqliteWrite , strSql.GetBuffer() , NULL , NULL , &m_pzErrMsg );
 	if ( nResult != SQLITE_OK ){
-		sqlite3_close(m_pSqlitedb);  
+		sqlite3_close(m_pSqliteWrite);  
 		sqlite3_free(m_pzErrMsg);  
-		m_pSqlitedb = NULL ;
+		m_pSqliteWrite = NULL ;
 		return FALSE ;
 	}
 	return TRUE ;
@@ -333,18 +347,18 @@ BOOL CSqliteDeal::Updatabase(const CString strTabName , const CString strSourceD
 BOOL CSqliteDeal::GetListaddrData(map<CString,uistruct::LISTADDR_t> *pListInfo)
 {
 	if (NULL == pListInfo ) return FALSE ;
-	if ( NULL == m_pSqlitedb ) {
+	if ( NULL == m_pSqliteRead ) {
 		if ( !OpenSqlite(theApp.str_InsPath) ) return FALSE ;
 	}
 	pListInfo->clear() ;
 
 	CString strSql = _T("SELECT * FROM MYWALLET");
 //	EnterCriticalSection( &cs_UpDataResult) ;
-	int nResult = sqlite3_get_table(m_pSqlitedb,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
 	if ( nResult != SQLITE_OK ){
-		sqlite3_close(m_pSqlitedb);  
+		sqlite3_close(m_pSqliteRead);  
 		sqlite3_free(m_pzErrMsg);  
-		m_pSqlitedb = NULL ;
+		m_pSqliteRead = NULL ;
 		return FALSE ;
 	}
 	int nIndex = m_nCol;
@@ -405,18 +419,18 @@ BOOL CSqliteDeal::GetListaddrData(map<CString,uistruct::LISTADDR_t> *pListInfo)
 BOOL CSqliteDeal::GetRevtransactionDatta(uistruct::TRANSRECORDLIST* pListInfo)
 {
 	if (NULL == pListInfo ) return FALSE ;
-	if ( NULL == m_pSqlitedb ) {
-		if ( !OpenSqlite(theApp.str_InsPath) ) return FALSE ;
+	if ( NULL == m_pSqliteWrite ) {
+		if ( !OpenSqlite(theApp.str_InsPath, TRUE)) return FALSE ;
 	}
 	pListInfo->clear() ;
 
 	CString strSql = _T("SELECT * FROM revtransaction");
 //	EnterCriticalSection( &cs_UpDataResult) ;
-	int nResult = sqlite3_get_table(m_pSqlitedb,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	int nResult = sqlite3_get_table(m_pSqliteWrite,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
 	if ( nResult != SQLITE_OK ){
-		sqlite3_close(m_pSqlitedb);  
+		sqlite3_close(m_pSqliteWrite);  
 		sqlite3_free(m_pzErrMsg);  
-		m_pSqlitedb = NULL ;
+		m_pSqliteWrite = NULL ;
 		return FALSE ;
 	}
 
@@ -532,18 +546,18 @@ BOOL CSqliteDeal::GetRevtransactionDatta(uistruct::TRANSRECORDLIST* pListInfo)
 BOOL  CSqliteDeal::GetRecorBetData(uistruct::P2PBETRECORDLIST* pListInfo)
 {
 	if (NULL == pListInfo ) return FALSE ;
-	if ( NULL == m_pSqlitedb ) {
+	if ( NULL == m_pSqliteRead ) {
 		if ( !OpenSqlite(theApp.str_InsPath) ) return FALSE ;
 	}
 	pListInfo->clear() ;
 	
 	CString strSql = _T("SELECT * FROM p2p_bet_record");
 //	EnterCriticalSection( &cs_UpDataResult) ;
-	int nResult = sqlite3_get_table(m_pSqlitedb,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
 	if ( nResult != SQLITE_OK ){
-		sqlite3_close(m_pSqlitedb);  
+		sqlite3_close(m_pSqliteRead);  
 		sqlite3_free(m_pzErrMsg);  
-		m_pSqlitedb = NULL ;
+		m_pSqliteRead = NULL ;
 		return FALSE ;
 	}
 
@@ -658,7 +672,7 @@ BOOL  CSqliteDeal::UpdataP2pBetRecord()
 	uistruct::P2PBETRECORDLIST pTransaction;
 	GetRecorBetData(&pTransaction);
 	if (0 == pTransaction.size() ) return FALSE ;
-	if ( NULL == m_pSqlitedb ) {
+	if ( NULL == m_pSqliteWrite ) {
 		if ( !OpenSqlite(theApp.str_InsPath) ) return FALSE ;
 	}
 
@@ -801,18 +815,18 @@ BOOL  CSqliteDeal::UpdataP2pBetRecord()
 BOOL   CSqliteDeal::GetRecorP2Pool(uistruct::P2PLIST* pListInfo)
 {
 	if (NULL == pListInfo ) return FALSE ;
-	if ( NULL == m_pSqlitedb ) {
+	if ( NULL == m_pSqliteRead ) {
 		if ( !OpenSqlite(theApp.str_InsPath) ) return FALSE ;
 	}
 	pListInfo->clear() ;
 
 	CString strSql = _T("SELECT * FROM p2ppool");
 //	EnterCriticalSection( &cs_UpDataResult) ;
-	int nResult = sqlite3_get_table(m_pSqlitedb,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
 	if ( nResult != SQLITE_OK ){
-		sqlite3_close(m_pSqlitedb);  
+		sqlite3_close(m_pSqliteRead);  
 		sqlite3_free(m_pzErrMsg);  
-		m_pSqlitedb = NULL ;
+		m_pSqliteRead = NULL ;
 		return FALSE ;
 	}
 
@@ -849,18 +863,18 @@ BOOL   CSqliteDeal::GetRecorP2Pool(uistruct::P2PLIST* pListInfo)
 BOOL  CSqliteDeal::GetRecorDarkData(uistruct::DARKRECORDLIST* pListInfo)
 {
 	if (NULL == pListInfo ) return FALSE ;
-	if ( NULL == m_pSqlitedb ) {
+	if ( NULL == m_pSqliteRead ) {
 		if ( !OpenSqlite(theApp.str_InsPath) ) return FALSE ;
 	}
 	pListInfo->clear() ;
 
 	CString strSql = _T("SELECT * FROM dark_record");
 //	EnterCriticalSection( &cs_UpDataResult) ;
-	int nResult = sqlite3_get_table(m_pSqlitedb,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
 	if ( nResult != SQLITE_OK ){
-		sqlite3_close(m_pSqlitedb);  
+		sqlite3_close(m_pSqliteRead);  
 		sqlite3_free(m_pzErrMsg);  
-		m_pSqlitedb = NULL ;
+		m_pSqliteRead = NULL ;
 		return FALSE ;
 	}
 
@@ -951,9 +965,6 @@ BOOL CSqliteDeal::UpdataDarkRecord(){
 	uistruct::DARKRECORDLIST pTransaction;
 	GetRecorDarkData(&pTransaction);
 	if (0 == pTransaction.size() ) return FALSE ;
-	if ( NULL == m_pSqlitedb ) {
-		if ( !OpenSqlite(theApp.m_darkScritptid) ) return FALSE ;
-	}
 
 	vector<string> vSignHash;
 	std::vector<uistruct::DARK_RECORD>::const_iterator const_it;
@@ -1082,18 +1093,18 @@ BOOL CSqliteDeal::UpdataDarkRecord(){
 	return true;
 }
 int   CSqliteDeal::FindDB(const CString strTabName , const CString strP, const CString strSource,uistruct::DARK_RECORD *darkrecord ){
-	if ( NULL == m_pSqlitedb ) {
+	if ( NULL == m_pSqliteWrite ) {
 		if ( !OpenSqlite(theApp.str_InsPath) ) return -1 ;
 	}
 
 	CString strSql = _T("SELECT * FROM ") + strTabName + _T(" WHERE ") + strSource + _T(" ='") + strP + _T("'");
 
 //	EnterCriticalSection( &cs_UpDataResult) ;
-	int nResult = sqlite3_get_table(m_pSqlitedb,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	int nResult = sqlite3_get_table(m_pSqliteWrite,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
 	if ( nResult != SQLITE_OK ){
-		sqlite3_close(m_pSqlitedb);  
+		sqlite3_close(m_pSqliteWrite);  
 		sqlite3_free(m_pzErrMsg);  
-		m_pSqlitedb = NULL ;
+		m_pSqliteWrite = NULL ;
 		return -1 ;
 	}
 	int nIndex = m_nCol;
@@ -1196,17 +1207,17 @@ BOOL   CSqliteDeal::isExistTx(CString tablename,CString filed ,CString txhash){
 }
 BOOL CSqliteDeal::isinBlock(){
 
-	if ( NULL == m_pSqlitedb ) {
+	if ( NULL == m_pSqliteRead ) {
 		if ( !OpenSqlite(theApp.str_InsPath) ) return FALSE ;
 	}
 
 	CString strSql = _T("SELECT * FROM tip_block");
 //	EnterCriticalSection( &cs_UpDataResult) ;
-	int nResult = sqlite3_get_table(m_pSqlitedb,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
 	if ( nResult != SQLITE_OK ){
-		sqlite3_close(m_pSqlitedb);  
+		sqlite3_close(m_pSqliteRead);  
 		sqlite3_free(m_pzErrMsg);  
-		m_pSqlitedb = NULL ;
+		m_pSqliteRead = NULL ;
 		return FALSE ;
 	}
 	if (m_nCol == 0)
@@ -1255,17 +1266,17 @@ void  CSqliteDeal::UpdataAllTableData(BOOL flag){
 		return ;
 	}
 	//// 更新交易数据库表
-	if ( NULL == m_pSqlitedb ) {
+	if ( NULL == m_pSqliteRead ) {
 		if ( !OpenSqlite(theApp.str_InsPath) ) return  ;
 	}
 
 	char    **  pResult; 
 	CString strSql = _T("SELECT * FROM revtransaction");
-	int nResult = sqlite3_get_table(m_pSqlitedb,strSql.GetBuffer(),&pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
 	if ( nResult != SQLITE_OK ){
-		sqlite3_close(m_pSqlitedb);  
+		sqlite3_close(m_pSqliteRead);  
 		sqlite3_free(m_pzErrMsg);  
-		m_pSqlitedb = NULL ;
+		m_pSqliteRead = NULL ;
 		return  ;
 	}
 	//读数据库
@@ -1282,11 +1293,11 @@ void  CSqliteDeal::UpdataAllTableData(BOOL flag){
 
 
 	strSql = _T("SELECT * FROM dark_record");
-	 nResult = sqlite3_get_table(m_pSqlitedb,strSql.GetBuffer(),&pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	 nResult = sqlite3_get_table(m_pSqliteWrite,strSql.GetBuffer(),&pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
 	if ( nResult != SQLITE_OK ){
-		sqlite3_close(m_pSqlitedb);  
+		sqlite3_close(m_pSqliteWrite);  
 		sqlite3_free(m_pzErrMsg);  
-		m_pSqlitedb = NULL ;
+		m_pSqliteWrite = NULL ;
 		return  ;
 	}
 	//读数据库
@@ -1301,11 +1312,11 @@ void  CSqliteDeal::UpdataAllTableData(BOOL flag){
 	sqlite3_free_table(pResult);
 
 	strSql = _T("SELECT * FROM p2p_bet_record");
-	 nResult = sqlite3_get_table(m_pSqlitedb,strSql.GetBuffer(),&pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	 nResult = sqlite3_get_table(m_pSqliteWrite,strSql.GetBuffer(),&pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
 	if ( nResult != SQLITE_OK ){
-		sqlite3_close(m_pSqlitedb);  
+		sqlite3_close(m_pSqliteWrite);  
 		sqlite3_free(m_pzErrMsg);  
-		m_pSqlitedb = NULL ;
+		m_pSqliteWrite = NULL ;
 		return  ;
 	}
 	//读数据库
@@ -1360,7 +1371,7 @@ void  CSqliteDeal::UpdataAllTable(){
 }
 
 int	CSqliteDeal::FindDB(const CString strTabName , const CString strP, const CString strSource,uistruct::TRANSRECORDLIST* pListInfo){
-	if ( NULL == m_pSqlitedb ) {
+	if ( NULL == m_pSqliteRead ) {
 		if ( !OpenSqlite(theApp.str_InsPath) ) return -1 ;
 	}
 
@@ -1368,11 +1379,11 @@ int	CSqliteDeal::FindDB(const CString strTabName , const CString strP, const CSt
 
 	pListInfo->clear() ;
 //	EnterCriticalSection( &cs_UpDataResult) ;
-	int nResult = sqlite3_get_table(m_pSqlitedb,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
 	if ( nResult != SQLITE_OK ){
-		sqlite3_close(m_pSqlitedb);  
+		sqlite3_close(m_pSqliteRead);  
 		sqlite3_free(m_pzErrMsg);  
-		m_pSqlitedb = NULL ;
+		m_pSqliteRead = NULL ;
 		return FALSE ;
 	}
 
@@ -1487,17 +1498,17 @@ int	CSqliteDeal::FindDB(const CString strTabName , const CString strP, const CSt
 
 }
 int	 CSqliteDeal::FindDB(const CString strTabName , const CString strP, const CString strSource,uistruct::LISTADDR_t *listaddr ){
-	if ( NULL == m_pSqlitedb ) {
+	if ( NULL == m_pSqliteRead ) {
 		if ( !OpenSqlite(theApp.str_InsPath) ) return -1 ;
 	}
 
 	CString strSql = _T("SELECT * FROM ") + strTabName + _T(" WHERE ") + strSource + _T(" ='") + strP+ _T("'") ;
 
-	int nResult = sqlite3_get_table(m_pSqlitedb,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
 	if ( nResult != SQLITE_OK ){
-		sqlite3_close(m_pSqlitedb);  
+		sqlite3_close(m_pSqliteRead);  
 		sqlite3_free(m_pzErrMsg);  
-		m_pSqlitedb = NULL ;
+		m_pSqliteRead = NULL ;
 		return 0 ;
 	}
 
@@ -1550,17 +1561,17 @@ int	 CSqliteDeal::FindDB(const CString strTabName , const CString strP, const CS
 	return m_nRow;
 }
 string CSqliteDeal::GetColSum(const CString strTabName , const CString strP, const CString strSource){
-	if ( NULL == m_pSqlitedb ) {
+	if ( NULL == m_pSqliteRead ) {
 		if ( !OpenSqlite(theApp.str_InsPath) ) return "" ;
 	}
 
 	CString strSql = _T("SELECT sum(money) FROM ") + strTabName + _T(" WHERE ") + strSource + _T(" =") + strP;
 
-	int nResult = sqlite3_get_table(m_pSqlitedb,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
 	if ( nResult != SQLITE_OK ){
-		sqlite3_close(m_pSqlitedb);  
+		sqlite3_close(m_pSqliteRead);  
 		sqlite3_free(m_pzErrMsg);  
-		m_pSqlitedb = NULL ;
+		m_pSqliteRead = NULL ;
 		return "" ;
 	}
 	int nIndex = m_nCol;
@@ -1571,17 +1582,17 @@ string CSqliteDeal::GetColSum(const CString strTabName , const CString strP, con
 }
 string  CSqliteDeal::GetColSum(const CString strTabName,const CString filed)
 {
-	if ( NULL == m_pSqlitedb ) {
+	if ( NULL == m_pSqliteRead ) {
 		if ( !OpenSqlite(theApp.str_InsPath) ) return "" ;
 	}
 
 	CString strSql = _T("SELECT sum(")+filed+_T(") FROM ") + strTabName;
 
-	int nResult = sqlite3_get_table(m_pSqlitedb,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
 	if ( nResult != SQLITE_OK ){
-		sqlite3_close(m_pSqlitedb);  
+		sqlite3_close(m_pSqliteRead);  
 		sqlite3_free(m_pzErrMsg);  
-		m_pSqlitedb = NULL ;
+		m_pSqliteRead = NULL ;
 		return "" ;
 	}
 	int nIndex = m_nCol;

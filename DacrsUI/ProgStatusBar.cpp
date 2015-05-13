@@ -42,6 +42,7 @@ void CProgStatusBar::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_PROGRESS, m_progress);
 	DDX_Control(pDX, IDC_STATIC_NET_TB, m_strNeting);
 	DDX_Control(pDX, IDC_STATIC_HEIGHT, m_strHeight);
+	DDX_Control(pDX, IDC_STATIC_VERSION, m_strVersion);
 }
 
 
@@ -150,6 +151,11 @@ BOOL CProgStatusBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UIN
 		m_strHeight.SetTextColor(RGB(255,255,255));			    //字体颜色
 		m_strHeight.SetWindowText(_T("高度:")) ;
 		m_strHeight.ShowWindow(SW_HIDE) ;
+
+		m_strVersion.SetFont(90, _T("宋体"));				//设置显示字体和大小
+		m_strVersion.SetTextColor(RGB(255,255,255));	    //字体颜色
+		m_strVersion.SetWindowText(_T("版本:V1.0.0.4")) ;
+
 
 		if ( NULL == m_ProgressWnd ) {
 			m_ProgressWnd = new CGIFControl ;
