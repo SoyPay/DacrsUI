@@ -73,6 +73,9 @@ void CMainDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_MFCLINK3, v_linkCtrl1);
 	DDX_Control(pDX, IDC_MFCLINK4, v_linkCtrl2);
 	DDX_Control(pDX, IDC_MFCLINK5, v_linkCtrl3);
+
+	DDX_Control(pDX, IDC_BUTTON_IMPORTWALLET, m_rBtnImportWallet);
+	DDX_Control(pDX, IDC_BUTTON_DUMPWALLET, m_rBtnDumpWallet);
 }
 
 
@@ -82,6 +85,9 @@ BEGIN_MESSAGE_MAP(CMainDlg, CDialogBar)
 	ON_WM_CREATE()
 	ON_WM_PAINT()
 	ON_WM_ERASEBKGND()
+	ON_BN_CLICKED(IDC_BUTTON_IMPORTWALLET, &CMainDlg::OnBnClickedButtonImportwallet)
+	ON_BN_CLICKED(IDC_BUTTON_DUMPWALLET, &CMainDlg::OnBnClickedButtonDumpwallet)
+	ON_WM_SIZE()
 END_MESSAGE_MAP()
 
 
@@ -151,7 +157,7 @@ void CMainDlg::OnnitCtrlText()
 
 	CString Where,strSource;
 	//Where.Format(_T("'COMMON_TX' order by confirmedtime"));
-	Where.Format(_T("'COMMON_TX' order by confirmedtime limit 5"));
+	Where.Format(_T("'COMMON_TX' order by confirmedtime desc limit 5"));
 	strSource.Format(_T("txtype"));
 	uistruct::TRANSRECORDLIST pTransaction;
 //	theApp.cs_SqlData.Lock();
@@ -346,6 +352,8 @@ BOOL CMainDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 	BOOL bRes =  CDialogBar::Create(pParentWnd, nIDTemplate, nStyle, nID);
 	if ( bRes ) {
 		m_rBtnAllTxdetail.LoadBitmaps(IDB_BITMAP_ALLTRADE1,IDB_BITMAP_ALLTRADE1,IDB_BITMAP_ALLTRADE1,IDB_BITMAP_ALLTRADE1);
+		m_rBtnImportWallet.LoadBitmaps(IDB_BITMAP_IMPORTWALLET,IDB_BITMAP_IMPORTWALLET,IDB_BITMAP_IMPORTWALLET,IDB_BITMAP_IMPORTWALLET);
+		m_rBtnDumpWallet.LoadBitmaps(IDB_BITMAP_DUMPWALLET,IDB_BITMAP_DUMPWALLET,IDB_BITMAP_DUMPWALLET,IDB_BITMAP_DUMPWALLET);
 		UpdateData(0);
 		ClearCtrlText();
 		OnnitCtrlText();
@@ -555,3 +563,71 @@ void CMainDlg::onnitLinkText()
 		
 }
 
+
+
+void CMainDlg::OnBnClickedButtonImportwallet()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	// TODO: 在此添加命令处理程序代码
+	CFileDialog dlg(TRUE,NULL,NULL,OFN_HIDEREADONLY|OFN_FILEMUSTEXIST ,_T("所有文件(*.*)|*.*||"));
+	if (IDOK == dlg.DoModal())
+	{
+		CString strPath = dlg.GetPathName();
+		CString strCommand;
+		strCommand.Format(_T("%s %s"),_T("importwallet"),strPath);
+		CStringA strSendData;
+
+		CSoyPayHelp::getInstance()->SendRpc(strCommand,strSendData);	
+		if (strSendData.Find(_T("imorpt key size")) >=0)
+		{
+			MessageBox(_T("导入钱包成功请重新启动钱包"));
+			PostMessage(WM_CLOSE);
+		}else
+		{
+			MessageBox(_T("导入钱包失败"));
+		}
+	}
+}
+
+
+void CMainDlg::OnBnClickedButtonDumpwallet()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CFileDialog dlg(FALSE,NULL,NULL,OFN_HIDEREADONLY|OFN_FILEMUSTEXIST ,_T("所有文件(*.*)|*.*||"));
+	if (IDOK == dlg.DoModal())
+	{
+		CString strPath = dlg.GetPathName();
+		CString strCommand;
+		strCommand.Format(_T("%s %s"),_T("dumpwallet"),strPath);
+		CStringA strSendData;
+		CSoyPayHelp::getInstance()->SendRpc(strCommand,strSendData);
+	}
+}
+
+
+void CMainDlg::OnSize(UINT nType, int cx, int cy)
+{
+	CDialogBar::OnSize(nType, cx, cy);
+
+	// TODO: 在此处添加消息处理程序代码
+	if( NULL != GetSafeHwnd() ) {
+		const int div = 100 ;
+
+		CRect rc ;
+		GetClientRect( rc ) ;
+
+
+		CWnd *pst = GetDlgItem( IDC_BUTTON_IMPORTWALLET ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL , rc.Width()- 2*rect.Width()-10 , rc.Height()-rect.Height()-10 , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
+		pst = GetDlgItem( IDC_BUTTON_DUMPWALLET ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,rc.Width()- rect.Width() ,rc.Height()-rect.Height()-10  , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
+	}
+}
