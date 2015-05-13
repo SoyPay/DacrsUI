@@ -45,7 +45,7 @@
     <file ver="v1.0.0.1" path="qupdater.ini"/>
     <file ver="v1.0.0.1" path="sqlite3.dll"/>
 	<file ver="v1.0.0.1" path="db\sqlite3.exe"/>
-    <file ver="v1.0.0.2" path="DacrsUI.exe"/>
+    <file ver="v1.0.0.4" path="DacrsUI.exe"/>
     <file ver="v1.0.0.1" path="dacrsclient.conf"/>
     <file ver="v1.0.0.1" path="gif\init.gif"/>
     <file ver="v1.0.0.1" path="gif\progress.gif"/>
