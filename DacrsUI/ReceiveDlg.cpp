@@ -52,9 +52,9 @@ END_MESSAGE_MAP()
 void CReceiveDlg::ShowListInfo()
 {
 
-	theApp.cs_SqlData.Lock();
+//	theApp.cs_SqlData.Lock();
 	theApp.m_SqliteDeal.GetListaddrData(&m_MapAddrInfo);
-	theApp.cs_SqlData.Unlock();
+//	theApp.cs_SqlData.Unlock();
 
 	if ( 0 == m_MapAddrInfo.size() ) return  ;
 
@@ -129,7 +129,7 @@ BOOL CReceiveDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT n
 		m_listCtrl.SetBkColor(RGB(240,240,240));       
 		m_listCtrl.SetRowHeigt(23);               
 		m_listCtrl.SetHeaderHeight(1.5);         
-		m_listCtrl.SetHeaderFontHW(16,0);
+		m_listCtrl.SetHeaderFontHW(15,0);
 		m_listCtrl.SetHeaderBKColor(32,30,32,8); 
 		m_listCtrl.SetHeaderTextColor(RGB(255,255,255)); //设置头部字体颜色
 		m_listCtrl.SetTextColor(RGB(0,0,0));  
