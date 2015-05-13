@@ -209,7 +209,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AddApp.h" />
-    <ClInclude Include="AddrBook.h" />
     <ClInclude Include="BmpBtn.h" />
     <ClInclude Include="BtnST.h" />
     <ClInclude Include="CeXDib.h" />
@@ -268,7 +267,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AddApp.cpp" />
-    <ClCompile Include="AddrBook.cpp" />
     <ClCompile Include="BmpBtn.cpp" />
     <ClCompile Include="BtnST.cpp" />
     <ClCompile Include="CeXDib.cpp" />
