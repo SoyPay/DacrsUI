@@ -600,6 +600,12 @@
     <None Include="res\p2p_dlg.bmp">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="res\import_wallet.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\bak_wallet.bmp">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="资源文件">

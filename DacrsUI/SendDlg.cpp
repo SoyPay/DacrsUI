@@ -69,7 +69,9 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 		return;
 	}
 	CString text;
-	m_addrbook.GetWindowText(text) ;
+	int sel = m_addrbook.GetCurSel();
+	m_addrbook.GetLBText(sel,text);
+
 	uistruct::LISTADDR_t data;
 	if(text!=_T(""))
 	{
@@ -208,19 +210,15 @@ BOOL CSendDlg::AddListaddrDataBox(){
 	((CComboBox*)GetDlgItem(IDC_COMBO_ADDR_OUT))->SetCurSel(0);
 
 	CString address;
-	m_addrbook.GetWindowText(address);
+	int sel = m_addrbook.GetCurSel();
+	m_addrbook.GetLBText(sel,address);
 	std::map<CString,uistruct::LISTADDR_t>::const_iterator item = m_mapAddrInfo.find(address);
-	//uistruct::LISTADDR_t pListAddr = m_pListaddrInfo.find(address);
 
-	uistruct::LISTADDR_t *pListAddr = (uistruct::LISTADDR_t*)(((CComboBox*)GetDlgItem(IDC_COMBO_ADDR_OUT))->GetItemData(((CComboBox*)GetDlgItem(IDC_COMBO_ADDR_OUT))->GetCurSel())) ;
-
-	if ( m_mapAddrInfo.end()!= item ) {
-		uistruct::LISTADDR_t addrstruc = item->second;
-	//	double money = CSoyPayHelp::getInstance()->GetAccountBalance(pListAddr->address);
+	if (m_mapAddrInfo.count(address)>0 ) {
+		uistruct::LISTADDR_t addrstruc = m_mapAddrInfo[address];
 		CString strshow;
 		strshow.Format(_T("%.8f"),addrstruc.fMoney);
 		m_strTx1.SetWindowText(strshow);
-		//((CStatic*)GetDlgItem(IDC_STATIC_XM))->SetWindowText(strshow);
 		Invalidate();
 	}
 	return TRUE ;
