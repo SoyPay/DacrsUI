@@ -578,8 +578,14 @@ void CMainDlg::OnBnClickedButtonImportwallet()
 		CStringA strSendData;
 
 		CSoyPayHelp::getInstance()->SendRpc(strCommand,strSendData);	
-		MessageBox(_T("导入钱包成功请重新启动钱包"));
-		PostMessage(WM_CLOSE);
+		if (strSendData.Find(_T("imorpt key size")) >=0)
+		{
+			MessageBox(_T("导入钱包成功请重新启动钱包"));
+			PostMessage(WM_CLOSE);
+		}else
+		{
+			MessageBox(_T("导入钱包失败"));
+		}
 	}
 }
 
