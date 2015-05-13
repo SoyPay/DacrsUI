@@ -171,6 +171,11 @@ BOOL CDacrsUIApp::InitInstance()
 	pSplashThread->ResumeThread(); 
 	Sleep(1); 
 	int nCount(0);
+
+	SYSTEMTIME WaitTimeLast ;
+	memset( &WaitTimeLast , 0 , sizeof(SYSTEMTIME) ) ;
+	GetLocalTime( &WaitTimeLast ) ;
+
 	while(1)
 	{
 		if(CSoyPayHelp::getInstance()->IsOSVersionBelowXp()) {
@@ -194,6 +199,15 @@ BOOL CDacrsUIApp::InitInstance()
 			break;
 		}
 		Sleep(1000);
+
+		SYSTEMTIME CurTimeLast ;
+		memset( &CurTimeLast , 0 , sizeof(SYSTEMTIME) ) ;
+		GetLocalTime( &CurTimeLast ) ;
+		if ((CurTimeLast.wMinute - WaitTimeLast.wMinute) > 2)
+		{
+			::MessageBox( NULL , _T("º”‘ÿ«Æ∞¸ ß∞‹\r\n") , "Error" , MB_ICONERROR) ;
+			exit(0);
+		}
 	}
 
 	CDacrsUIDlg dlg;
