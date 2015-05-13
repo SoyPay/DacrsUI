@@ -130,9 +130,6 @@
     <ClCompile Include="OutGifDlg.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="AddrBook.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="ChangeDPI.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -301,9 +298,6 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="OutGifDlg.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="AddrBook.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="ChangeDPI.h">
