@@ -1602,3 +1602,49 @@ string  CSqliteDeal::GetColSum(const CString strTabName,const CString filed)
 	return strValue.GetString() ;
 
 }
+
+BOOL  CSqliteDeal::GetaddrBookData(map<CString,uistruct::ADDRBOOK_t>* pListInfo)
+{
+	if (NULL == pListInfo ) return FALSE ;
+	if ( NULL == m_pSqliteRead ) {
+		if ( !OpenSqlite(theApp.str_InsPath) ) return FALSE ;
+	}
+	pListInfo->clear() ;
+
+	CString strSql = _T("SELECT * FROM addrbook");
+	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	if ( nResult != SQLITE_OK ){
+		sqlite3_close(m_pSqliteRead);  
+		sqlite3_free(m_pzErrMsg);  
+		m_pSqliteRead = NULL ;
+		return FALSE ;
+	}
+	int nIndex = m_nCol;
+	CString strValue ;
+	uistruct::ADDRBOOK_t listdata;
+	for(int i = 0; i < m_nRow ; i++) {
+		for(int j = 0; j < m_nCol; j++ ){
+			switch (j)
+			{
+			case 0:
+				{
+					strValue.Format(_T("%s") , m_pResult[nIndex] );
+					listdata.lebel = strValue;
+				}
+				break;
+			case 1:
+				{
+					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					listdata.lebel = strValue;
+				}
+				break;
+			}
+			++nIndex ;
+		}
+		CString key;
+		key.Format(_T("%s"),listdata.address);
+		(*pListInfo)[key] = listdata;
+	}
+	sqlite3_free_table(m_pResult);
+	return TRUE ;
+}
