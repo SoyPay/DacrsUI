@@ -429,6 +429,30 @@ namespace uistruct {
 			return true;
 		}
 	}MINDLG_T;
+
+	typedef struct ADDRBOOK{   
+		CString    lebel;   //address
+		CString    address  ;   //RegID
+		ADDRBOOK(){
+			lebel = _T("");
+			address = _T("");
+		}
+		string ToJson(){
+			Json::Value root;
+			root["address"] = address.GetString();
+			root["lebel"] = lebel.GetString();
+			return root.toStyledString();
+		}
+		bool JsonToStruct(string json){
+			Json::Reader reader;  
+			Json::Value root; 
+			if (!reader.parse(json, root)) 
+				return false ;
+			this->lebel = root["lebel"].asCString();
+			this->address = root["address"].asCString();
+			return true;
+		}
+	}ADDRBOOK_t;
 }
 #pragma pack(pop)
 //UiFun
