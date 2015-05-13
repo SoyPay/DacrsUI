@@ -138,9 +138,9 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 			CString strHash,strHash1 ;
 			strHash.Format(_T("'%s'") , root["hash"].asCString() );
 			strHash1.Format(_T("%s") , root["hash"].asCString() );
-			theApp.cs_SqlData.Lock();
+//			theApp.cs_SqlData.Lock();
 			int nItem =  theApp.m_SqliteDeal.FindDB(_T("revtransaction") , strHash1 ,_T("hash") ) ;
-			theApp.cs_SqlData.Unlock();
+//			theApp.cs_SqlData.Unlock();
 
 			if ( 0 == nItem ) {
 
@@ -190,9 +190,9 @@ void CSendDlg::OnCbnSelchangeCombo1()
 }
 BOOL CSendDlg::AddListaddrDataBox(){
 
-	theApp.cs_SqlData.Lock();
+//	theApp.cs_SqlData.Lock();
 	theApp.m_SqliteDeal.GetListaddrData(&m_mapAddrInfo);
-	theApp.cs_SqlData.Unlock();
+//	theApp.cs_SqlData.Unlock();
 
 	if ( 0 == m_mapAddrInfo.size() ) return FALSE ;
 

@@ -402,9 +402,9 @@ void CDacrsUIApp::UpdataBetPoolData()
 			uistruct::P2P_BET_RECORD_t  betrecord;
 			CString findhash;
 			findhash.Format(_T("%s"),strTemp.c_str());
-			theApp.cs_SqlData.Lock();
+//			theApp.cs_SqlData.Lock();
 			int nItem =  theApp.m_SqliteDeal.FindDB(_T("p2p_bet_record") , findhash ,_T("tx_hash"),&betrecord ) ;
-			theApp.cs_SqlData.Unlock();
+//			theApp.cs_SqlData.Unlock();
 			if (nItem != 0 && betrecord.state == 4) ////此赌约正在接赌，只是在block中没有确认
 			{
 				continue;
@@ -429,9 +429,9 @@ void CDacrsUIApp::UpdataBetPoolData()
 			{
 				CString strSourceData;
 				strSourceData.Format(_T("'%s' , '%s'") ,txhash,nValue) ;
-				theApp.cs_SqlData.Lock();
+//				theApp.cs_SqlData.Lock();
 				m_SqliteDeal.InsertData(_T("p2ppool") ,strSourceData ) ;
-				theApp.cs_SqlData.Unlock();
+//				theApp.cs_SqlData.Unlock();
 
 			}
 		}
@@ -481,21 +481,21 @@ void CDacrsUIApp::UpdataAddressData(){
 		strSourceData.Format(_T("%s"),listaddr.address);
 
 		uistruct::LISTADDR_t addrsql;
-		theApp.cs_SqlData.Lock();
+//		theApp.cs_SqlData.Lock();
 		int item = m_SqliteDeal.FindDB(_T("MYWALLET") ,strSourceData, feild,&addrsql) ;
-		theApp.cs_SqlData.Unlock();
+//		theApp.cs_SqlData.Unlock();
 
 		//TRACE("line:%d,addr:%s\r\n",i,listaddr.address);
 		if (item == 0 )
 		{
 			strSourceData.Format(_T("'%s' , '%s' , '%.8f' , '%d' ,'%d','%s'") , listaddr.address ,listaddr.RegID ,listaddr.fMoney ,listaddr.nColdDig ,listaddr.bSign,listaddr.Lebel ) ;
-			theApp.cs_SqlData.Lock();
+//			theApp.cs_SqlData.Lock();
 			if (!m_SqliteDeal.InsertData(_T("MYWALLET") ,strSourceData ) )
 			{
 				TRACE(_T("MYWALLET数据插入失败!") );
 				TRACE("insert:%d\r\n",i);
 			}
-			theApp.cs_SqlData.Unlock();
+//			theApp.cs_SqlData.Unlock();
 			
 			string Temp = listaddr.ToJson();
 			SendRecvieUiMes((int)WM_UP_NEWADDRESS,Temp.c_str());
@@ -505,11 +505,11 @@ void CDacrsUIApp::UpdataAddressData(){
 				CString strSourceData,strWhere;
 				strSourceData.Format(_T("regid = '%s', money = %.8f ,coldig =%d,sign =%d") ,listaddr.RegID ,listaddr.fMoney ,listaddr.nColdDig ,listaddr.bSign ) ;
 				strWhere.Format(_T("address = '%s'") , listaddr.address  ) ;
-				theApp.cs_SqlData.Lock();
+//				theApp.cs_SqlData.Lock();
 				if ( !m_SqliteDeal.Updatabase(_T("MYWALLET") , strSourceData , strWhere ) ){
 					TRACE(_T("MYWALLET数据更新失败!") );
 				}
-				theApp.cs_SqlData.Unlock();
+//				theApp.cs_SqlData.Unlock();
 
 				string Temp = listaddr.ToJson();
 				SendRecvieUiMes((int)WM_UP_ADDRESS,Temp.c_str());
@@ -543,11 +543,11 @@ void CDacrsUIApp::UpdatarevtransactionData(string hash){
 			CString strSourceData,strWhere;
 			strSourceData.Format(_T("confirmHeight = %d , confirmedtime = '%d' ,blockhash ='%s'") ,transcion.confirmedHeight,transcion.confirmedtime,transcion.blockhash.c_str() ) ;
 			strWhere.Format(_T("hash = '%s'") , hash.c_str() ) ;
-			theApp.cs_SqlData.Lock();
+//			theApp.cs_SqlData.Lock();
 			if ( !m_SqliteDeal.Updatabase(_T("revtransaction") , strSourceData , strWhere ) ){
 				TRACE(_T("revtransaction数据更新失败!") );
 			}
-			theApp.cs_SqlData.Unlock();
+//			theApp.cs_SqlData.Unlock();
 		}
 	}
 }
@@ -585,19 +585,19 @@ void CDacrsUIApp::UpdatarevAppRecord(string txdetail){
 			vHash.assign(Openbet.txhash,Openbet.txhash+sizeof(Openbet.txhash));
 			reverse(vHash.begin(),vHash.end());
 			string hexHash = CSoyPayHelp::getInstance()->HexStr(vHash);
-			theApp.cs_SqlData.Lock();
+//			theApp.cs_SqlData.Lock();
 			int nItem =  theApp.m_SqliteDeal.FindDB(_T("p2p_bet_record") , hexHash.c_str() ,_T("tx_hash")) ;
-			theApp.cs_SqlData.Unlock();
+//			theApp.cs_SqlData.Unlock();
 			if (nItem != 0)
 			{
 				CString strSourceData,strWhere;
 				strSourceData.Format(_T("recvtime = %d ,guessnum ='%s',") ,transcion.confirmedtime,(int)Openbet.dhash[32] ) ;
 				strWhere.Format(_T("tx_hash = '%s'") , hexHash.c_str() ) ;
-				theApp.cs_SqlData.Lock();
+//				theApp.cs_SqlData.Lock();
 				if ( !m_SqliteDeal.Updatabase(_T("p2p_bet_record") , strSourceData , strWhere ) ){
 					TRACE(_T("p2p_bet_record数据更新失败!") );
 				}
-				theApp.cs_SqlData.Unlock();
+//				theApp.cs_SqlData.Unlock();
 			}
 		}
 	}
@@ -622,10 +622,10 @@ void CDacrsUIApp::InsertarevtransactionData(string hash){
 	uistruct::REVTRANSACTION_t transcion;
 	if (transcion.JsonToStruct(root.toStyledString()))
 	{
-		theApp.cs_SqlData.Lock();
+//		theApp.cs_SqlData.Lock();
 		int nItem =  theApp.m_SqliteDeal.FindDB(_T("MYWALLET") , transcion.addr.c_str() ,_T("address")) ;
 		int nItem1 =  theApp.m_SqliteDeal.FindDB(_T("MYWALLET") , transcion.desaddr.c_str() ,_T("address")) ;
-		theApp.cs_SqlData.Unlock();
+//		theApp.cs_SqlData.Unlock();
 		if (nItem != 0)
 		{
 			transcion.state = 1;        //// 扣钱
@@ -637,9 +637,9 @@ void CDacrsUIApp::InsertarevtransactionData(string hash){
 		strSourceData.Format(_T("'%s' , '%s' ,'%d' ,'%s' ,'%s' ,'%s' , '%.8f' ,'%d' ,'%s' , '%.8f' ,'%s' ,'%d','%d','%s',%d") , transcion.txhash ,\
 			transcion.txtype.c_str() ,transcion.ver ,transcion.addr.c_str() ,transcion.pubkey.c_str(),transcion.miner_pubkey.c_str(),transcion.fees,transcion.height,\
 			transcion.desaddr.c_str(), transcion.money,transcion.Contract.c_str(),transcion.confirmedHeight,transcion.confirmedtime,transcion.blockhash.c_str(),transcion.state) ;
-		theApp.cs_SqlData.Lock();
+//		theApp.cs_SqlData.Lock();
 		m_SqliteDeal.InsertData(_T("revtransaction") ,strSourceData ) ;
-		theApp.cs_SqlData.Unlock();
+//		theApp.cs_SqlData.Unlock();
 	}
 }
 UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
@@ -692,9 +692,9 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 							strHash.Format("%s",pHash);
 							strHash.TrimLeft("'");
 							strHash.TrimRight("'");
-							theApp.cs_SqlData.Lock();
+//							theApp.cs_SqlData.Lock();
 							int nItem =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.FindDB(_T("revtransaction") ,strHash,_T("hash") ) ;
-							theApp.cs_SqlData.Unlock();
+//							theApp.cs_SqlData.Unlock();
 							if (nItem == 0)
 							{
 								((CDacrsUIApp*)pParam)->InsertarevtransactionData(strHash.GetString() ) ;
@@ -714,25 +714,25 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 				case WM_P2P_BET_RECORD:
 					{
 						//更新数据库赌约数据库列表
-						theApp.cs_SqlData.Lock();
+//						theApp.cs_SqlData.Lock();
 						((CDacrsUIApp*)pParam)->m_SqliteDeal.UpdataP2pBetRecord(); 
-						theApp.cs_SqlData.Unlock();
+//						theApp.cs_SqlData.Unlock();
 					}
 					break;
 				case WM_DARK_RECORD:
 					{
 						//更新数据库抵押数据库列表
-						theApp.cs_SqlData.Lock();
+//						theApp.cs_SqlData.Lock();
 						((CDacrsUIApp*)pParam)->m_SqliteDeal.UpdataDarkRecord(); 
-						theApp.cs_SqlData.Unlock();
+//						theApp.cs_SqlData.Unlock();
 					}
 					break;
 				case WM_UP_BETPOOL:
 					{
 						/// 赌约池数据库列表
-						theApp.cs_SqlData.Lock();
+//						theApp.cs_SqlData.Lock();
 						bool flag =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.EmptyTabData(_T("p2ppool") );
-						theApp.cs_SqlData.Unlock();
+//						theApp.cs_SqlData.Unlock();
 						if (flag ) 
 						{
 							((CDacrsUIApp*)pParam)->UpdataBetPoolData();
@@ -742,7 +742,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 				case WM_UP_BlLOCKTIP:
 					{
 						//更新最新blocktip数据库
-						theApp.cs_SqlData.Lock();
+//						theApp.cs_SqlData.Lock();
 						if ( ((CDacrsUIApp*)pParam)->m_SqliteDeal.EmptyTabData(_T("tip_block") ) ) {
 
 							CString pHash = Postmsg.GetData();
@@ -752,7 +752,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 								((CDacrsUIApp*)pParam)->m_SqliteDeal.InsertData(_T("tip_block") ,strinsert ) ;
 							}
 						}
-						theApp.cs_SqlData.Unlock();
+//						theApp.cs_SqlData.Unlock();
 					}
 					break;
 				default:
@@ -786,9 +786,9 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 				uistruct::DATABASEINFO_t   pDatabase; // = (uistruct::DATABASEINFO_t *)Postmsg.GetStrPoint();
 				string strTemp = Postmsg.GetData();
 				pDatabase.JsonToStruct(strTemp.c_str());
-				theApp.cs_SqlData.Lock();
+//				theApp.cs_SqlData.Lock();
 				((CDacrsUIApp*)pParam)->m_SqliteDeal.InsertData(pDatabase.strTabName.c_str() ,pDatabase.strSource.c_str() ) ;
-				theApp.cs_SqlData.Unlock();
+//				theApp.cs_SqlData.Unlock();
 				if ( !strcmp(pDatabase.strTabName.c_str() , _T("p2p_bet_record")) ){
 					Postmsg.SetType(MSG_USER_INSERT_DATA,WM_P2P_BET_RECORD);
 				}else if (!strcmp(pDatabase.strTabName.c_str() , _T("dark_record")) )
@@ -810,11 +810,11 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 				uistruct::DATABASEINFO_t pDatabase;// = (uistruct::DATABASEINFO_t *)Postmsg.GetStrPoint();
 				string strTemp = Postmsg.GetData();
 				pDatabase.JsonToStruct(strTemp.c_str());
-				theApp.cs_SqlData.Lock();
+//				theApp.cs_SqlData.Lock();
 				if ( !((CDacrsUIApp*)pParam)->m_SqliteDeal.Updatabase(pDatabase.strTabName.c_str() , pDatabase.strSource.c_str() , pDatabase.strWhere.c_str() ) ){
 					TRACE(_T("p2p_bet_record数据更新失败!") );
 				}
-				theApp.cs_SqlData.Unlock();
+//				theApp.cs_SqlData.Unlock();
 				if ( !strcmp(pDatabase.strTabName.c_str() , _T("p2p_bet_record")) ){
 					Postmsg.SetType(MSG_USER_UPDATA_DATA,WM_P2P_BET_RECORD);
 				}else if (!strcmp(pDatabase.strTabName.c_str() , _T("dark_record")) )
@@ -1509,9 +1509,9 @@ void CDacrsUIApp::GetMainDlgStruc()
 	uistruct::MINDLG_T maindlg;
 	CString strCommand,strShowData;
 	strCommand.Format(_T("0"));
-	theApp.cs_SqlData.Lock();
+//	theApp.cs_SqlData.Lock();
 	string nmoney =  theApp.m_SqliteDeal.GetColSum(_T("MYWALLET") ,_T("money") ) ;
-	theApp.cs_SqlData.Unlock();
+//	theApp.cs_SqlData.Unlock();
 	if (!strcmp(nmoney.c_str(),"(null)"))
 	{
 		maindlg.money = "0.0";
@@ -1520,9 +1520,9 @@ void CDacrsUIApp::GetMainDlgStruc()
 	}
 
 	strCommand.Format(_T("0"));
-	theApp.cs_SqlData.Lock();
+//	theApp.cs_SqlData.Lock();
 	nmoney =  theApp.m_SqliteDeal.GetColSum(_T("revtransaction") , strCommand ,_T("confirmHeight")) ;
-	theApp.cs_SqlData.Unlock();
+//	theApp.cs_SqlData.Unlock();
 
 	if (!strcmp(nmoney.c_str(),"(null)"))
 	{
@@ -1532,9 +1532,9 @@ void CDacrsUIApp::GetMainDlgStruc()
 	}
 
 
-	theApp.cs_SqlData.Lock();
+//	theApp.cs_SqlData.Lock();
 	int nItem =  theApp.m_SqliteDeal.GetTableCount(_T("revtransaction")) ;
-	theApp.cs_SqlData.Unlock();
+//	theApp.cs_SqlData.Unlock();
 
 	strCommand.Format(_T("%d"),nItem);
 	maindlg.itemcount = strCommand.GetString();
@@ -1543,9 +1543,9 @@ void CDacrsUIApp::GetMainDlgStruc()
 	Where.Format(_T("'COMMON_TX' order by confirmedtime desc limit 5"));
 	strSource.Format(_T("txtype"));
 	uistruct::TRANSRECORDLIST pTransaction;
-	theApp.cs_SqlData.Lock();
+//	theApp.cs_SqlData.Lock();
 	theApp.m_SqliteDeal.FindDB(_T("revtransaction"),Where,strSource,&pTransaction);
-	theApp.cs_SqlData.Unlock();
+//	theApp.cs_SqlData.Unlock();
 
 	int i = 1;
 	if (pTransaction.size() != 0  ) {

@@ -8,11 +8,13 @@ public:
 public:
 	~CSqliteDeal(void);
 private:
-	sqlite3 *   m_pSqlitedb;  //
+	sqlite3 *   m_pSqliteWrite; //写连接
+	sqlite3 *   m_pSqliteRead;  //读连接
 	char    *   m_pzErrMsg ;  //错误信息
 	char    **  m_pResult;    //结果
 	int         m_nRow;       //行数
 	int         m_nCol;       //列数
+
 public:
 	int    FindDB(const CString strTabName , const CString strP, const CString strSource );
 	int    FindINTDB(const CString strTabName , const CString strP, const CString strSource );
@@ -30,7 +32,7 @@ public:
 	string GetColSum(const CString strTabName , const CString strP, const CString strSource);
 	string GetColSum(const CString strTabName,const CString filed);
 public:
-	BOOL   OpenSqlite(CString strPath) ;    //打开数据库 
+	BOOL   OpenSqlite(CString strPath, BOOL bOperFlag=FALSE) ;    //打开数据库  FALSE:read TRUE:write 
 public:
 	BOOL   GetListaddrData(map<CString,uistruct::LISTADDR_t>* pListInfo); 
 	BOOL   GetRevtransactionDatta(uistruct::TRANSRECORDLIST* pListInfo); 
@@ -45,5 +47,5 @@ public:
 	BOOL   UpdataP2pBetRecord();
 	BOOL   UpdataDarkRecord();
 public:
-//		CRITICAL_SECTION        cs_UpDataResult ;  //数据库获取结果
+		CRITICAL_SECTION        cs_UpDataResult;  //数据库获取结果
 };
