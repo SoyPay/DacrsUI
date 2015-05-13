@@ -213,7 +213,8 @@ void CNewAddressDlg::OnBnClickedButtonScdz()
 	
 
 	strCommand.Format(_T("恭喜生成新地址%s"),addr);
-	if (IDYES == ::MessageBox( this->GetSafeHwnd() ,_T("恭喜生成新地址") , _T("提示") , MB_YESNO|MB_ICONINFORMATION ) ){
-		EndDialog(IDOK);
-	}
+	::MessageBox( this->GetSafeHwnd() ,strCommand , _T("提示") , MB_ICONINFORMATION ) ;
+	//if (IDYES == ::MessageBox( this->GetSafeHwnd() ,_T("恭喜生成新地址") , _T("提示") , MB_YESNO|MB_ICONINFORMATION ) ){
+	//	EndDialog(IDOK);
+	//}
 }
