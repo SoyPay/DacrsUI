@@ -113,7 +113,7 @@ BOOL CDacrsUIApp::InitInstance()
 
 	OnInitList() ;
 	//打开sqlite3数据库
-	m_SqliteDeal.OpenSqlite(str_InsPath) ;
+	m_SqliteDeal.OpenSqlite(str_InsPath, TRUE) ;
 
 	CString temprpc = m_rpcport;
 	CString tempuiport = m_uirpcport;
