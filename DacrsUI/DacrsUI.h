@@ -133,6 +133,8 @@ public:
 	void InsertarevtransactionData(string hash);
 	void UpdatarevtransactionData(string hash);
 	void UpdatarevAppRecord(string txdetail);
+	void InsertAddbook(uistruct::ADDRBOOK_t );
+	void UpdataAddbook(uistruct::ADDRBOOK_t );
 	void GetMainDlgStruc();
 	BOOL RunOnlyOneApp();
 	void SendRecvieUiMes(int message,CString jsonaddr);

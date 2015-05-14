@@ -6,7 +6,7 @@
 #include "AddrBook.h"
 #include "afxdialogex.h"
 
-
+#include "NewSendAddr.h"
 // CAddrBook 对话框
 
 IMPLEMENT_DYNAMIC(CAddrBook, CDialogEx)
@@ -31,6 +31,7 @@ void CAddrBook::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CAddrBook, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_ADDADDRBOOK, &CAddrBook::OnBnClickedButtonAddaddrbook)
 	ON_BN_CLICKED(IDOK, &CAddrBook::OnBnClickedOk)
+	ON_BN_CLICKED(IDC_BUTTON_DELEITEM, &CAddrBook::OnBnClickedButtonDeleitem)
 END_MESSAGE_MAP()
 
 
@@ -40,6 +41,29 @@ END_MESSAGE_MAP()
 void CAddrBook::OnBnClickedButtonAddaddrbook()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	CNewSendAddr addsendaddr;
+	CString strShowData;
+	INT_PTR nResponse = addsendaddr.DoModal();;
+	if (nResponse == IDOK)
+	{
+		uistruct::ADDRBOOK_t addr;
+		addsendaddr.GetAddrbook(addr);
+		int count = m_listCtrl.GetItemCount();
+		int nSubIdx = 0;
+
+		strShowData.Format(_T("%s") ,addr.lebel) ;
+		m_listCtrl.InsertItem( count ,strShowData) ;
+
+		strShowData.Format(_T("%s") ,addr.address) ;
+		m_listCtrl.SetItemText(count , ++nSubIdx , strShowData ) ;
+
+		//// 插入数据库
+		CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_UP_ADDRBOOK);
+		string temp =addr.ToJson();
+		postmsg.SetData(temp.c_str());
+		theApp.m_MsgQueue.push(postmsg);
+	}
+
 }
 
 BOOL CAddrBook::OnInitDialog()
@@ -51,9 +75,8 @@ BOOL CAddrBook::OnInitDialog()
 		CString		name ;
 		UINT		size ;
 	} listcol[3]  = {
-		{"序号" ,      50},
-		{"标签" ,      130},
-		{"地址" ,      275}
+		{"标签" ,      300},
+		{"地址" ,      370}
 	};
 	m_listCtrl.SetBkColor(RGB(240,240,240));       
 	m_listCtrl.SetRowHeigt(23);               
@@ -62,11 +85,11 @@ BOOL CAddrBook::OnInitDialog()
 	m_listCtrl.SetHeaderBKColor(32,30,32,8); 
 	m_listCtrl.SetHeaderTextColor(RGB(255,255,255)); //设置头部字体颜色
 	m_listCtrl.SetTextColor(RGB(0,0,0));  
-	for( int i = 0 ; i < 3 ; i++  ) {
+	for( int i = 0 ; i < 2 ; i++  ) {
 		m_listCtrl.InsertColumn(i,listcol[i].name,LVCFMT_CENTER,listcol[i].size);
 	}
 	m_listCtrl.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_HEADERDRAGDROP );
-
+	LoadAddrBook();
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE
 }
@@ -83,15 +106,9 @@ bool CAddrBook::LoadAddrBook()
 	std::map<CString,uistruct::ADDRBOOK_t>::const_iterator const_it;
 	for ( const_it = m_mapAddrInfo.begin() ; const_it != m_mapAddrInfo.end() ; const_it++ ) {
 		nSubIdx = 0;
-		CString strOrder("");
-		strOrder.Format(_T("%d"), i+1);
-		m_listCtrl.InsertItem(i,strOrder);
-
 		uistruct::ADDRBOOK_t address = const_it->second;
 		strShowData.Format(_T("%s") ,address.lebel) ;
-		m_listCtrl.SetItemText( i , ++nSubIdx, strShowData) ;
-		//m_listCtrl.SetItemData(item , (DWORD_PTR)&(*const_it)) ;
-
+		m_listCtrl.InsertItem(i,strShowData);
 
 		strShowData.Format(_T("%s") ,address.address) ;
 		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
@@ -123,4 +140,33 @@ void CAddrBook::OnBnClickedOk()
 			return;
 		}
 	CDialogEx::OnOK();
+}
+
+
+void CAddrBook::OnBnClickedButtonDeleitem()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CString StrShow;
+	POSITION pos = m_listCtrl.GetFirstSelectedItemPosition() ;
+	if ( pos ) {
+		int nRow = m_listCtrl.GetNextSelectedItem(pos) ;
+
+		//// 删除此条数据库
+		CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_UP_DELETERBOOK);
+		uistruct::ADDRBOOK_t addr;
+		CString Leble = m_listCtrl.GetItemText(nRow, 0); 
+		CString address = m_listCtrl.GetItemText(nRow, 1); 
+		addr.address = address;
+		addr.lebel = Leble;
+		string temp =addr.ToJson();
+		postmsg.SetData(temp.c_str());
+		theApp.m_MsgQueue.push(postmsg);
+
+		//// 从控件中删除
+		m_listCtrl.DeleteItem(nRow);
+	}else{
+		StrShow.Format(_T("请选择地址!\n"));
+		::MessageBox( this->GetSafeHwnd() ,StrShow , _T("提示") , MB_ICONINFORMATION ) ;
+		return;
+	}
 }
