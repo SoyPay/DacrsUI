@@ -276,6 +276,7 @@
     <ClCompile Include="ChangeDPI.cpp" />
     <ClCompile Include="CommonStruct.cpp" />
     <ClCompile Include="DacrsUI.cpp" />
+    <ClCompile Include="DacrsUIDB.cpp" />
     <ClCompile Include="DacrsUIDlg.cpp" />
     <ClCompile Include="GIFControl.cpp" />
     <ClCompile Include="HeaderCtrlCl.cpp" />
