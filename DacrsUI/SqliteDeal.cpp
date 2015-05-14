@@ -1368,6 +1368,11 @@ void  CSqliteDeal::UpdataAllTable(){
 		filed = _T("hash text,data text");
 		CreateTabe(_T("p2ppool"),filed);
 	}
+	if (!IsExistTabe(_T("addrbook")))
+	{
+		filed = _T("Lebel TEXT,address TEXT");
+		CreateTabe(_T("addrbook"),filed);
+	}
 }
 
 int	CSqliteDeal::FindDB(const CString strTabName , const CString strP, const CString strSource,uistruct::TRANSRECORDLIST* pListInfo){
@@ -1635,7 +1640,7 @@ BOOL  CSqliteDeal::GetaddrBookData(map<CString,uistruct::ADDRBOOK_t>* pListInfo)
 			case 1:
 				{
 					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
-					listdata.lebel = strValue;
+					listdata.address = strValue;
 				}
 				break;
 			}

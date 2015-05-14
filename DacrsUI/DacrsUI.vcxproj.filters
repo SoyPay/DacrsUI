@@ -139,6 +139,9 @@
     <ClCompile Include="NewSendAddr.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="DacrsUIDB.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BmpBtn.h">
