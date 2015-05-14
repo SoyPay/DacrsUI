@@ -203,11 +203,15 @@ void CReceiveDlg::OnBnClickedCopyaddress()
 				GlobalUnlock(clipbuffer);
 				SetClipboardData(CF_TEXT,clipbuffer);
 				CloseClipboard();
-		}else{
-			StrShow.Format(_T("请选择地址!\n"));
-			::MessageBox( this->GetSafeHwnd() ,StrShow , _T("提示") , MB_ICONINFORMATION ) ;
-		}
+				StrShow.Format(_T("地址已复制到剪贴板\n"));
+				::MessageBox( this->GetSafeHwnd() ,StrShow , _T("提示") , MB_ICONINFORMATION ) ;
+		     }
 	}
+	else{
+		StrShow.Format(_T("请选择地址!\n"));
+		::MessageBox( this->GetSafeHwnd() ,StrShow , _T("提示") , MB_ICONINFORMATION ) ;
+	}
+	
 }
 
 LRESULT  CReceiveDlg::OnShowListCtrl(  WPARAM wParam, LPARAM lParam )

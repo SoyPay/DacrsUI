@@ -5,7 +5,7 @@
 #include "DacrsUI.h"
 #include "SendDlg.h"
 #include "afxdialogex.h"
-
+#include "Out.h"
 
 // CSendDlg 对话框
 
@@ -63,6 +63,8 @@ void CSendDlg::SetBkBmpNid( UINT nBitmapIn )
 void CSendDlg::OnBnClickedSendtrnsfer()
 {
 	// TODO: 在此添加控件通知处理程序代码
+
+
 	if (m_mapAddrInfo.size() == 0)
 	{
 		::MessageBox( this->GetSafeHwnd() ,_T("发送地址不存在") , _T("提示") , MB_ICONINFORMATION ) ;
@@ -117,9 +119,16 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 			::MessageBox( this->GetSafeHwnd() ,_T("发送金额不能为0") , _T("提示") , MB_ICONINFORMATION ) ;
 			return;
 		}
+
 		strCommand.Format(_T("%s %s %s %lld"),_T("sendtoaddress") ,data.address ,strMaddress ,REAL_MONEY(dSendMoney));
 		CStringA strShowData ;
 
+		CString strDisplay;
+		strDisplay.Format(_T("确定发送%.4lfsmc到%s"), dSendMoney, strMaddress);
+		COut outdlg(NULL, strDisplay,100);
+		if ( IDOK != outdlg.DoModal()){
+			return;
+		}
 		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 
 		Json::Reader reader;  
