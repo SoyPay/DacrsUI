@@ -209,11 +209,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AddApp.h" />
+    <ClInclude Include="AddrBook.h" />
     <ClInclude Include="BmpBtn.h" />
     <ClInclude Include="BtnST.h" />
     <ClInclude Include="CeXDib.h" />
     <ClInclude Include="ChangeDPI.h" />
     <ClInclude Include="CommonStruct.h" />
+    <ClInclude Include="NewSendAddr.h" />
     <ClInclude Include="Out.h" />
     <ClInclude Include="OutGifDlg.h" />
     <ClInclude Include="XProgressCtrl.h" />
@@ -267,6 +269,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AddApp.cpp" />
+    <ClCompile Include="AddrBook.cpp" />
     <ClCompile Include="BmpBtn.cpp" />
     <ClCompile Include="BtnST.cpp" />
     <ClCompile Include="CeXDib.cpp" />
@@ -289,6 +292,7 @@
     <ClCompile Include="MyMutex.cpp" />
     <ClCompile Include="MyQueue.cpp" />
     <ClCompile Include="NewAddressDlg.cpp" />
+    <ClCompile Include="NewSendAddr.cpp" />
     <ClCompile Include="NoUiMsgBuffer.cpp" />
     <ClCompile Include="Out.cpp" />
     <ClCompile Include="OutGifDlg.cpp" />

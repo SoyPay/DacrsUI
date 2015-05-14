@@ -133,6 +133,12 @@
     <ClCompile Include="ChangeDPI.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="AddrBook.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="NewSendAddr.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BmpBtn.h">
@@ -301,6 +307,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="ChangeDPI.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="AddrBook.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="NewSendAddr.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
