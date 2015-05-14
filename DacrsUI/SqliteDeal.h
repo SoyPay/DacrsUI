@@ -17,7 +17,7 @@ private:
 
 public:
 	int    FindDB(const CString strTabName , const CString strP, const CString strSource );
-	int    FindINTDB(const CString strTabName , const CString strP, const CString strSource );
+	int    FindInDB(const CString strTabName , const CString strP, const CString strSource );
 	int    GetTableCount(const CString strTabName);
 	int    FindDB(const CString strTabName , const CString strP, const CString strSource,uistruct::P2P_BET_RECORD_t * pResult );
 	int	   FindDB(const CString strTabName , const CString strP, const CString strSource,uistruct::DARK_RECORD *darkrecord );

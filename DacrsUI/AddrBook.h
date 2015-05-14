@@ -1,5 +1,5 @@
 #pragma once
-
+#include "ListCtrlCl.h"
 
 // CAddrBook 对话框
 
@@ -18,4 +18,17 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
 
 	DECLARE_MESSAGE_MAP()
+public:
+	afx_msg void OnBnClickedButtonAddaddrbook();
+public:
+	CListCtrlCl m_listCtrl;
+	virtual BOOL OnInitDialog();
+private:
+	bool LoadAddrBook();
+private:
+	map<CString,uistruct::ADDRBOOK_t> m_mapAddrInfo;
+	uistruct::ADDRBOOK_t m_selectAddr;
+public:
+	void GetAddrbook(uistruct::ADDRBOOK_t &addr);
+	afx_msg void OnBnClickedOk();
 };

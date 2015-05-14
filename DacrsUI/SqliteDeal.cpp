@@ -75,7 +75,7 @@ int CSqliteDeal::FindDB(const CString strTabName ,const CString strP, const CStr
 //	LeaveCriticalSection (&cs_UpDataResult) ;
 	return m_nRow ;
 }
-int  CSqliteDeal::FindINTDB(const CString strTabName , const CString strP, const CString strSource ){
+int  CSqliteDeal::FindInDB(const CString strTabName , const CString strP, const CString strSource ){
 	if ( NULL == m_pSqliteRead ) {
 		if ( !OpenSqlite(theApp.str_InsPath) ) return -1 ;
 	}
