@@ -32,4 +32,5 @@ public:
 	void GetAddrbook(uistruct::ADDRBOOK_t &addr);
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnBnClickedButtonDeleitem();
+	afx_msg void OnNMDblclkList1(NMHDR *pNMHDR, LRESULT *pResult);
 };
