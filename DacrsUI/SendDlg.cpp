@@ -6,7 +6,7 @@
 #include "SendDlg.h"
 #include "afxdialogex.h"
 #include "Out.h"
-
+#include "AddrBook.h"
 // CSendDlg 对话框
 
 IMPLEMENT_DYNAMIC(CSendDlg, CDialogBar)
@@ -75,6 +75,7 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 	m_addrbook.GetLBText(sel,text);
 
 	uistruct::LISTADDR_t data;
+	CString strCommand , strMaddress , strMoney;
 	if(text!=_T(""))
 	{
 		if(m_mapAddrInfo.count(text)<=0)
@@ -87,7 +88,6 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 	
 	}
 
-		CString strCommand , strMaddress , strMoney;
 		if(!data.bSign) 
 		{
 			::MessageBox( this->GetSafeHwnd() ,_T("发送地址未激活") , _T("提示") , MB_ICONINFORMATION ) ;
@@ -166,6 +166,17 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 			strData.Format( _T("转账失败!") ) ;
 		}
 		::MessageBox( this->GetSafeHwnd() ,strData , _T("提示") , MB_ICONINFORMATION ) ;
+
+		//// 插入数据库,将收款人添加到地址簿
+		CString lebel;
+		GetDlgItem(IDC_EDIT2)->GetWindowTextA(lebel);
+		CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_UP_ADDRBOOK);
+		uistruct::ADDRBOOK_t addr;
+		addr.address = strMaddress;
+		addr.lebel = lebel;
+		string temp =addr.ToJson();
+		postmsg.SetData(temp.c_str());
+		theApp.m_MsgQueue.push(postmsg);
 
 }
 
@@ -329,6 +340,16 @@ BOOL CSendDlg::OnEraseBkgnd(CDC* pDC)
 void CSendDlg::OnBnClickedButtonAddbook()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	CAddrBook addrbook;
+	CString strShowData;
+	INT_PTR nResponse = addrbook.DoModal();;
+	if (nResponse == IDOK)
+	{
+		uistruct::ADDRBOOK_t addr;
+		addrbook.GetAddrbook(addr);
+		GetDlgItem(IDC_EDIT_DESADDRESS)->SetWindowTextA(addr.address);
+		GetDlgItem(IDC_EDIT2)->SetWindowTextA(addr.lebel);
+	}
 }
 void CSendDlg::ModifyComboxItem(){
 	CPostMsg postmsg;
