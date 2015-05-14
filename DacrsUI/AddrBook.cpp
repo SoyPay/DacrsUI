@@ -77,7 +77,7 @@ BOOL CAddrBook::OnInitDialog()
 		UINT		size ;
 	} listcol[3]  = {
 		{"±Í«©" ,      300},
-		{"µÿ÷∑" ,      370}
+		{"µÿ÷∑" ,      417}
 	};
 	m_listCtrl.SetBkColor(RGB(240,240,240));       
 	m_listCtrl.SetRowHeigt(23);               
