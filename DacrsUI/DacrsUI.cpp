@@ -44,6 +44,7 @@ CDacrsUIApp::CDacrsUIApp()
 	progessPos = 0;
 	m_strAddress = _T("");
 	m_bOutApp = FALSE ;
+	m_bReIndexServer = FALSE;
 }
 
 
@@ -125,8 +126,6 @@ BOOL CDacrsUIApp::InitInstance()
 		m_uirpcport = tempuiport;
 	}
 
-	///// 关闭系统中dacrs-d.exe进程
-	CloseProcess("dacrs-d.exe");
 	//启动服务程序
 	StartSeverProcess(str_InsPath);
 	m_bServerState = true;
@@ -176,16 +175,20 @@ BOOL CDacrsUIApp::InitInstance()
 	memset( &WaitTimeLast , 0 , sizeof(SYSTEMTIME) ) ;
 	GetLocalTime( &WaitTimeLast ) ;
 
+	if(CSoyPayHelp::getInstance()->IsOSVersionBelowXp()) {
+		if(!EnableDebugPrivilege())
+			TRACE(_T("Call EnableDebugPrivilege failed!"));
+		//				AfxMessageBox(_T("Call EnableDebugPrivilege failed!"));
+	}
+
 	while(1)
 	{
-		if(CSoyPayHelp::getInstance()->IsOSVersionBelowXp()) {
-			if(!EnableDebugPrivilege())
-				TRACE(_T("Call EnableDebugPrivilege failed!"));
-//				AfxMessageBox(_T("Call EnableDebugPrivilege failed!"));
-		}
+		
 		HANDLE processHandle = OpenProcess(PROCESS_ALL_ACCESS,FALSE,sever_pi.dwProcessId);  
 		if(NULL == processHandle)
 		{
+			/*if(m_bReIndexServer)
+				StartSeverProcess(str_InsPath);*/
 			int errorCode = GetLastError();
 			TRACE("Error OpenProcess:%d " , errorCode );
 			AfxMessageBox(_T(errorCode));
@@ -198,16 +201,16 @@ BOOL CDacrsUIApp::InitInstance()
 		{
 			break;
 		}
-		Sleep(1000);
+		Sleep(100);
 
-		SYSTEMTIME CurTimeLast ;
-		memset( &CurTimeLast , 0 , sizeof(SYSTEMTIME) ) ;
-		GetLocalTime( &CurTimeLast ) ;
-		if ((CurTimeLast.wMinute - WaitTimeLast.wMinute) > 2)
-		{
-			::MessageBox( NULL , _T("加载钱包失败\r\n") , "Error" , MB_ICONERROR) ;
-			exit(0);
-		}
+		//SYSTEMTIME CurTimeLast ;
+		//memset( &CurTimeLast , 0 , sizeof(SYSTEMTIME) ) ;
+		//GetLocalTime( &CurTimeLast ) ;
+		//if ((CurTimeLast.wMinute - WaitTimeLast.wMinute) > 2)
+		//{
+		//	::MessageBox( NULL , _T("加载钱包失败\r\n") , "Error" , MB_ICONERROR) ;
+		//	exit(0);
+		//}
 	}
 
 	CDacrsUIDlg dlg;
@@ -920,8 +923,8 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 	{
 	case ININTAL_TYPE:
 		{
-			CPostMsg postmsg(MSG_USER_SHOW_INIT,0);
-			postmsg.SetStrType(msgValue["type"].asCString());
+//			CPostMsg postmsg(MSG_USER_SHOW_INIT,0);
+//			postmsg.SetStrType(msgValue["type"].asCString());
 			CString msg = msgValue["msg"].asCString();
 			TRACE("MEST:%s\r\n",msg);
 			if (!strcmp(msg,"Verifying blocks..."))
@@ -929,25 +932,29 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 				CPostMsg postmsg(MSG_USER_STARTPROCESS_UI,1);
 				pApp->m_MsgQueue.push(postmsg);
 			}
-			if (!strcmp(msg,"Verifying Finished"))
+			else if (!strcmp(msg,"Verifying Finished"))
 			{
 				CPostMsg postmsg(MSG_USER_STARTPROCESS_UI,2);
 				pApp->m_MsgQueue.push(postmsg);
 			}
-			if (!strcmp(msg,"Loading addresses..."))
+			else if(!strcmp(msg, "Verifying blocks Corrupted block database detected"))
+			{
+				pApp->m_bReIndexServer = true;
+			}
+			else if (!strcmp(msg,"Loading addresses..."))
 			{
 				CPostMsg postmsg(MSG_USER_STARTPROCESS_UI,3);
 				pApp->m_MsgQueue.push(postmsg);
 			}
-			if (!strcmp(msg,"initialize end"))
+			else if (!strcmp(msg,"initialize end"))
 			{
 				CPostMsg postmsg(MSG_USER_STARTPROCESS_UI,4);
 				pApp->m_MsgQueue.push(postmsg);
 				theApp.isStartMainDlg = true;
 			}
-			postmsg.SetData(msg);
-			pApp->m_MsgQueue.push(postmsg);
-			TRACE("type: %s   mag: %s\r\n" , postmsg.GetStrType() ,msg);
+//			postmsg.SetData(msg);
+//			pApp->m_MsgQueue.push(postmsg);
+//			TRACE("type: %s   mag: %s\r\n" , postmsg.GetStrType() ,msg);
 			break;
 		}
 	case REV_TRANSATION_TYPE:
@@ -1339,6 +1346,9 @@ void  CDacrsUIApp::ParseUIConfigFile(const CStringA& strExeDir){
 	}
 }
 void CDacrsUIApp::StartSeverProcess(const CStringA& strdir){
+	///// 启动前先关闭系统中dacrs-d.exe进程
+	CloseProcess("dacrs-d.exe");
+	
 	STARTUPINFOA si; 
 	memset(&si, 0, sizeof(STARTUPINFO));  
 	si.cb = sizeof(STARTUPINFO);  
@@ -1347,7 +1357,8 @@ void CDacrsUIApp::StartSeverProcess(const CStringA& strdir){
 
 	CString str = _T("dacrs-d.exe -datadir=");
 	str.AppendFormat("%s",strdir);
-
+	if(m_bReIndexServer)
+		str.Append(_T(" -reindex=1"));
 	//if (!m_bStartServer)
 	//{
 	//	return ;
