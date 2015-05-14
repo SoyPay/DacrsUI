@@ -11,10 +11,11 @@
 
 IMPLEMENT_DYNAMIC(COut, CDialogEx)
 
-COut::COut(CWnd* pParent /*=NULL*/)
+COut::COut(CWnd* pParent /*=NULL*/, CString strDisplay, int nFontSize)
 	: CDialogEx(COut::IDD, pParent)
 {
-
+	m_strDisplay = strDisplay;
+	m_nFontSize = nFontSize;
 }
 
 COut::~COut()
@@ -50,10 +51,16 @@ BOOL COut::OnInitDialog()
 
 	// TODO:  在此添加额外的初始化
 	UpdateData(FALSE);
-	m_Text.SetFont(120, _T("宋体"));	
-	m_Text.SetTextColor(RGB(0,0,0));			    //字体颜色
-	m_Text.SetWindowText("确认要退出软件吗?") ;
-	m_Text.SetWindowPos(NULL ,143 , 55 , 0 , 0 , SWP_NOSIZE);
+	m_Text.SetFont(m_nFontSize, _T("宋体"));	
+	m_Text.SetTextColor(RGB(0,0,0));			    //字体颜色	
+	if(_T("") == m_strDisplay) 
+	{
+		m_Text.SetWindowText("确认要退出软件吗?") ;
+	}else
+	{
+		m_Text.SetWindowText(m_strDisplay.GetString());
+	}
+	//m_Text.SetWindowPos(NULL ,143 , 55 , 0 , 0 , SWP_NOSIZE);
 
 	m_rBtnOK.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
 	m_rBtnOK.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
