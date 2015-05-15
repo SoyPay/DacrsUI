@@ -405,6 +405,14 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 						((CDacrsUIApp*)pParam)->UpdataAddressData();
 					}
 					break;
+				case WM_SYS_REVTRANSACTION:
+					{
+						CString txData = Postmsg.GetData();
+						if ( _T("") != txData ) {
+							((CDacrsUIApp*)pParam)->SysncevtransactionData(txData.GetString()) ;
+						}
+					}
+					break;
 				case WM_REVTRANSACTION:
 					{
 						//更新历史交易记录数据库
@@ -617,6 +625,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 #define  REV_TRANSATION_TYPE   3
 #define  APP_TRANSATION_TYPE   4
 #define  SERVER_NOTIYF_TYPE    5
+#define  SERVER_SYNC_TX        6
 
 int GetMsgType(CString const strData,Json::Value &root)
 {
@@ -643,6 +652,10 @@ int GetMsgType(CString const strData,Json::Value &root)
 		if(!strcmp(strType, _T("notify"))) 
 		{
 			return SERVER_NOTIYF_TYPE;
+		}
+		if(!strcmp(strType, _T("SyncTx"))) 
+		{
+			return SERVER_SYNC_TX;
 		}
 	}
 	return  -1;
@@ -674,6 +687,7 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 		{
 			CPostMsg postmsg(MSG_USER_SHOW_INIT,0);
 			postmsg.SetStrType(msgValue["type"].asCString());
+
 			CString msg = msgValue["msg"].asCString();
 			TRACE("MEST:%s\r\n",msg);
 			if (!strcmp(msg,"Verifying blocks..."))
@@ -697,11 +711,37 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 				pApp->m_MsgQueue.push(postmsg);
 				theApp.isStartMainDlg = true;
 			}
+			if (!strcmp(msg,"initialize end"))
+			{
+				CPostMsg postmsg(MSG_USER_STARTPROCESS_UI,4);
+				pApp->m_MsgQueue.push(postmsg);
+				theApp.isStartMainDlg = true;
+			}
 			postmsg.SetData(msg);
 			pApp->m_MsgQueue.push(postmsg);
 			TRACE("type: %s   mag: %s\r\n" , postmsg.GetStrType() ,msg);
 			break;
 		}
+	case SERVER_SYNC_TX:
+		{
+			if (msgValue["msg"].isArray())
+			{
+				Json::Value obj =msgValue["msg"]; 
+				int index = obj.size();
+				for (int i = 0;i<index;i++)
+				{
+					Json::Value txobj = obj[i];
+					//插入到数据库
+					CString txData ;
+					txData.Format(_T("%s") , txobj.toStyledString().c_str() );
+					CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_SYS_REVTRANSACTION);
+					postmsg.SetData(txData);
+					pApp->m_MsgQueue.push(postmsg);
+				}
+			}
+			
+		}
+		break;
 	case REV_TRANSATION_TYPE:
 		{
 
