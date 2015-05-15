@@ -254,14 +254,20 @@ namespace uistruct {
 			this->height  =root["height"].asInt()   ;
 
 			if(json.find("money") >=0)
-			this->money = (root["money"].asInt64()*1.0)/100000000 ;
+			{
+				this->money = (root["money"].asDouble()*1.0)/100000000 ;
+			}
+			
 
 			if(json.find("pubkey") >=0)
 			this->pubkey = root["pubkey"].asString();
 			if(json.find("miner_pubkey") >=0)
 			this->miner_pubkey = root["miner_pubkey"].asString();
 			if(json.find("fees") >=0)
-			this->fees = (root["fees"].asInt64()*1.0)/100000000 ;     ;
+			{
+				this->fees = (root["fees"].asDouble()*1.0)/100000000 ;
+			}
+			
 			if(json.find("desaddr") >=0)
 			this->desaddr =root["desaddr"].asString()  ;
 			if(json.find("Contract") >=0)
