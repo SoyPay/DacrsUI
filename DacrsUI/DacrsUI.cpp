@@ -116,6 +116,9 @@ BOOL CDacrsUIApp::InitInstance()
 	//打开sqlite3数据库
 	m_SqliteDeal.OpenSqlite(str_InsPath, TRUE) ;
 
+	/// 清空交易记录
+	ClearRevstranson();
+
 	CString temprpc = m_rpcport;
 	CString tempuiport = m_uirpcport;
 	ProductHttpHead(str_InsPath ,m_strServerCfgFileName,m_rpcport,m_sendPreHeadstr,m_sendendHeadstr,m_uirpcport);
@@ -127,7 +130,7 @@ BOOL CDacrsUIApp::InitInstance()
 	}
 
 	//启动服务程序
-	StartSeverProcess(str_InsPath);
+//	StartSeverProcess(str_InsPath);
 	m_bServerState = true;
 	Sleep(1000);
 
@@ -185,21 +188,21 @@ BOOL CDacrsUIApp::InitInstance()
 	while(1)
 	{
 		
-		HANDLE processHandle = OpenProcess(PROCESS_ALL_ACCESS,FALSE,sever_pi.dwProcessId);  
-		if(NULL == processHandle)
-		{
-			if(m_bReIndexServer) {
-				StartSeverProcess(str_InsPath);
-				m_bReIndexServer = FALSE;
-				continue;
-			}
-			int errorCode = GetLastError();
-			TRACE("Error OpenProcess:%d " , errorCode );
-			::MessageBox( NULL , _T("加载钱包失败\r\n") , "Error" , MB_ICONERROR) ;
-			//AfxMessageBox(_T(errorCode));
-			exit(1);
-		}
-		CloseHandle(processHandle);
+		//HANDLE processHandle = OpenProcess(PROCESS_ALL_ACCESS,FALSE,sever_pi.dwProcessId);  
+		//if(NULL == processHandle)
+		//{
+		//	if(m_bReIndexServer) {
+		//		StartSeverProcess(str_InsPath);
+		//		m_bReIndexServer = FALSE;
+		//		continue;
+		//	}
+		//	int errorCode = GetLastError();
+		//	TRACE("Error OpenProcess:%d " , errorCode );
+		//	::MessageBox( NULL , _T("加载钱包失败\r\n") , "Error" , MB_ICONERROR) ;
+		//	//AfxMessageBox(_T(errorCode));
+		//	exit(1);
+		//}
+		//CloseHandle(processHandle);
 		//TRACE("detect count:%d\n", ++nCount);
 		//pSplashThread->SetDlgPos(progessPos);
 		//TRACE("index:%d\r\n",progessPos);
@@ -389,10 +392,10 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 			continue;
 		}
 		CDacrsUIDlg *pDlg = (CDacrsUIDlg*)(((CDacrsUIApp*)pParam)->m_pMainWnd) ;
-		if (pDlg == NULL && Postmsg.GetUItype() != MSG_USER_STARTPROCESS_UI){
+		if (pDlg == NULL && Postmsg.GetUItype() != MSG_USER_STARTPROCESS_UI&&Postmsg.GetDatatype() !=WM_SYS_REVTRANSACTION){
 			pUiDemeDlg->m_MsgQueue.push(Postmsg);
 			Sleep(100); 
-			TRACE("push message:MSG_USER_STARTPROCESS_UI\n");
+			//TRACE("push message:MSG_USER_STARTPROCESS_UI\n");
 			continue;
 		}
 		//TRACE("meassage wwwwwwwwwwwwwww\n");
@@ -401,6 +404,11 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 		case MSG_USER_STARTPROCESS_UI:
 			{
 				theApp.DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_STARTPROCESS_UI ,Postmsg.GetDatatype(),0);
+				if (Postmsg.GetDatatype() == 4)
+				{
+					theApp.isStartMainDlg = true;
+				}
+				
 			}
 			break;
 		case MSG_USER_GET_UPDATABASE:
@@ -716,8 +724,7 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 			else if (!strcmp(msg,"initialize end"))
 			{
 				CPostMsg postmsg(MSG_USER_STARTPROCESS_UI,4);
-				pApp->m_MsgQueue.push(postmsg);
-				theApp.isStartMainDlg = true;
+				pApp->m_MsgQueue.push(postmsg);				
 			}
 //			postmsg.SetData(msg);
 //			pApp->m_MsgQueue.push(postmsg);
@@ -726,21 +733,14 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 		}
 	case SERVER_SYNC_TX:
 		{
-			if (msgValue["msg"].isArray())
-			{
-				Json::Value obj =msgValue["msg"]; 
-				int index = obj.size();
-				for (int i = 0;i<index;i++)
-				{
-					Json::Value txobj = obj[i];
-					//插入到数据库
-					CString txData ;
-					txData.Format(_T("%s") , txobj.toStyledString().c_str() );
-					CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_SYS_REVTRANSACTION);
-					postmsg.SetData(txData);
-					pApp->m_MsgQueue.push(postmsg);
-				}
-			}
+
+			Json::Value obj =msgValue["msg"]; 
+			//插入到数据库
+			CString txData ;
+			txData.Format(_T("%s") , obj.toStyledString().c_str() );
+			CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_SYS_REVTRANSACTION);
+			postmsg.SetData(txData);
+			pApp->m_MsgQueue.push(postmsg);
 			
 		}
 		break;
