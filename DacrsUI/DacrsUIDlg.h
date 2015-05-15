@@ -77,6 +77,7 @@ public:
 private:
 	void       InitialRpcCmd();
 	void       LoadListDataInfo();         //从数据库中加载列表数据
+	void       SyncAddrInfo();
 	void       CloseThread();
 	void       StopSever();
 public:

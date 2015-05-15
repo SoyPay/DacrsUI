@@ -289,3 +289,29 @@ void  CDacrsUIApp::UpdataAddbook(uistruct::ADDRBOOK_t addr)
 		TRACE(_T("addrbook数据更新失败!") );
 	}
 }
+void CDacrsUIApp:: SysncevtransactionData(string obj)
+{
+	uistruct::REVTRANSACTION_t transcion;
+	if (transcion.JsonToStruct(obj))
+	{
+		int txitem = theApp.m_SqliteDeal.FindDB(_T("revtransaction") , transcion.txhash ,_T("hash")) ;
+		if (txitem != 0)
+		{
+			return;
+		}
+		int nItem =  theApp.m_SqliteDeal.FindDB(_T("MYWALLET") , transcion.addr.c_str() ,_T("address")) ;
+		int nItem1 =  theApp.m_SqliteDeal.FindDB(_T("MYWALLET") , transcion.desaddr.c_str() ,_T("address")) ;
+		if (nItem != 0)
+		{
+			transcion.state = 1;        //// 扣钱
+		}else if (nItem1 != 0)
+		{
+			transcion.state = 2;        ////价钱
+		}
+		CString strSourceData;
+		strSourceData.Format(_T("'%s' , '%s' ,'%d' ,'%s' ,'%s' ,'%s' , '%.8f' ,'%d' ,'%s' , '%.8f' ,'%s' ,'%d','%d','%s',%d") , transcion.txhash ,\
+			transcion.txtype.c_str() ,transcion.ver ,transcion.addr.c_str() ,transcion.pubkey.c_str(),transcion.miner_pubkey.c_str(),transcion.fees,transcion.height,\
+			transcion.desaddr.c_str(), transcion.money,transcion.Contract.c_str(),transcion.confirmedHeight,transcion.confirmedtime,transcion.blockhash.c_str(),transcion.state) ;
+		m_SqliteDeal.InsertData(_T("revtransaction") ,strSourceData ) ;
+	}
+}

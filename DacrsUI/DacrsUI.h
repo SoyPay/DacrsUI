@@ -132,6 +132,7 @@ public:
 	void UpdataAddressData();
 	void InsertarevtransactionData(string hash);
 	void UpdatarevtransactionData(string hash);
+	void SysncevtransactionData(string obj);
 	void UpdatarevAppRecord(string txdetail);
 	void InsertAddbook(uistruct::ADDRBOOK_t );
 	void UpdataAddbook(uistruct::ADDRBOOK_t );
