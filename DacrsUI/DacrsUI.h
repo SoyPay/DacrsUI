@@ -137,6 +137,7 @@ public:
 	void UpdatarevAppRecord(string txdetail);
 	void InsertAddbook(uistruct::ADDRBOOK_t );
 	void UpdataAddbook(uistruct::ADDRBOOK_t );
+	void ClearRevstranson();
 	void GetMainDlgStruc();
 	BOOL RunOnlyOneApp();
 	void SendRecvieUiMes(int message,CString jsonaddr);

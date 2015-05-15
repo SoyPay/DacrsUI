@@ -1,7 +1,7 @@
 #pragma once
 #include <memory.h>
 #include "MyMutex.h"
-const int nBufferMaxLength = 20*1024;
+const int nBufferMaxLength = 1024*1024;
 class CNoUiMsgBuffer 
 {
 public:

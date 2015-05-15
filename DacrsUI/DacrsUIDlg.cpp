@@ -469,7 +469,6 @@ void  CDacrsUIDlg::LoadListDataInfo()
 	theApp.m_SqliteDeal.UpdataAllTable();
 	theApp.m_SqliteDeal.UpdataAllTableData(theApp.m_SqliteDeal.isinBlock());
 	SyncAddrInfo();
-	theApp.m_SqliteDeal.EmptyTabData(_T("revtransaction"));
 	theApp.cs_SqlData.Unlock();
 }
 void CDacrsUIDlg::CloseThread()

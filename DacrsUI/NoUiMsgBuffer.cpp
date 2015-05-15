@@ -79,6 +79,7 @@ bool CNoUiMsgBuffer::AddBytesToBuffer(char *pCh, int nLen)
 	if(nPos >= m_nLength) {
 		ClearBuffer();
 	}else {
+		TRACE("Move data:m_nLength=%d nPos=%d\n",m_nLength, nPos);
 		memmove(m_Recvbuffer, m_Recvbuffer+nPos, m_nLength-nPos);
 		m_nLength = m_nLength-nPos;
 	}
