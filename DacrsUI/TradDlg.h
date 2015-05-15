@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ListCtrlCl.h"
 
 // CTradDlg ¶Ô»°¿ò
 
@@ -25,6 +26,12 @@ public:
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	virtual BOOL Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID);
 public:
-	CMFCLinkCtrl v_linkCtrl1;
-	CMFCLinkCtrl v_linkCtrl2;
+	//CMFCLinkCtrl v_linkCtrl1;
+	//CMFCLinkCtrl v_linkCtrl2;
+	afx_msg void OnBnClickedButtonTxdetail();
+	void OninitializeList();
+private:
+	CListCtrlCl     m_listCtrl;
+public:
+	afx_msg void OnNMDblclkListListtx(NMHDR *pNMHDR, LRESULT *pResult);
 };
