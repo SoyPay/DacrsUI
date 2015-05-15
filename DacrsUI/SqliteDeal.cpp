@@ -1246,15 +1246,18 @@ BOOL CSqliteDeal::isinBlock(){
 					CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 					if (strShowData == _T("")){
 						flag = false;
+						break;
 					}
 					if(strShowData.Find("hash") < 0){		
 						flag = false;
+						break;
 					}
 					Json::Reader reader;  
 					Json::Value root; 
 					if (!reader.parse(strShowData.GetString(), root)) 
 					{		
 						flag = false;
+						break;
 					}
 
 					int height = root["height"].asInt();
@@ -1262,18 +1265,22 @@ BOOL CSqliteDeal::isinBlock(){
 					CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 					if (strShowData == _T("")){
 						flag = false;
+						break;
 					}
 					if(strShowData.Find("hash") < 0){		
 						flag = false;
+						break;
 					}
 					if (!reader.parse(strShowData.GetString(), root)) 
 					{		
 						flag = false;
+						break;
 					}
 					CString newblock = root["hash"].asCString();
 					if (!strcmp(strValue,newblock))
 					{
 						flag = false;
+						break;
 					}
 				}
 				break;
@@ -1298,28 +1305,28 @@ void  CSqliteDeal::UpdataAllTableData(BOOL flag){
 
 	char    **  pResult; 
 	CString strSql = _T("SELECT * FROM revtransaction");
-	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
-	if ( nResult != SQLITE_OK ){
-		sqlite3_close(m_pSqliteRead);  
-		sqlite3_free(m_pzErrMsg);  
-		m_pSqliteRead = NULL ;
-		return  ;
-	}
+	//int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	//if ( nResult != SQLITE_OK ){
+	//	sqlite3_close(m_pSqliteRead);  
+	//	sqlite3_free(m_pzErrMsg);  
+	//	m_pSqliteRead = NULL ;
+	//	return  ;
+	//}
 	//¶ÁÊý¾Ý¿â
 	int nIndex = m_nCol;
 	int nTempRow = m_nRow;
 	int nTempCol = m_nCol;
 	CString strCommand , strValue ,strShowData ;
-	for(int i = 0; i < nTempRow ; i++) {
-			strValue.Format(_T("%s") , pResult[nIndex] ) ;
-			isExistTx(_T("revtransaction"),_T("hash"),strValue);
-			nIndex +=  nTempCol;
-	}
-	sqlite3_free_table(pResult);
+	//for(int i = 0; i < nTempRow ; i++) {
+	//		strValue.Format(_T("%s") , pResult[nIndex] ) ;
+	//		isExistTx(_T("revtransaction"),_T("hash"),strValue);
+	//		nIndex +=  nTempCol;
+	//}
+	//sqlite3_free_table(pResult);
 
 
 	strSql = _T("SELECT * FROM dark_record");
-	 nResult = sqlite3_get_table(m_pSqliteWrite,strSql.GetBuffer(),&pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	 int nResult = sqlite3_get_table(m_pSqliteWrite,strSql.GetBuffer(),&pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
 	if ( nResult != SQLITE_OK ){
 		sqlite3_close(m_pSqliteWrite);  
 		sqlite3_free(m_pzErrMsg);  
@@ -1356,7 +1363,7 @@ void  CSqliteDeal::UpdataAllTableData(BOOL flag){
 	}
 	sqlite3_free_table(pResult);
 
-	EmptyTabData(_T("MYWALLET"));
+	//EmptyTabData(_T("MYWALLET"));
 	//theApp.UpdataAddressData();
 }
 void  CSqliteDeal::UpdataAllTable(){

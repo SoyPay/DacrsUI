@@ -314,3 +314,15 @@ void CDacrsUIApp:: SysncevtransactionData(string obj)
 		m_SqliteDeal.InsertData(_T("revtransaction") ,strSourceData ) ;
 	}
 }
+void CDacrsUIApp::ClearRevstranson()
+{
+	if (m_SqliteDeal.IsExistTabe(_T("revtransaction")))
+	{
+		m_SqliteDeal.EmptyTabData(_T("revtransaction"));
+	}else{
+		CString  filed;
+		filed = _T(" hash text, txtype text,ver INT, addr text, pubkey text,miner_pubkey text,fees double,height INT, desaddr text,money double, Contract text,confirmHeight INT,confirmedtime INT,blockhash text,state INT");
+		m_SqliteDeal.CreateTabe(_T("revtransaction"),filed);
+	}
+	
+}

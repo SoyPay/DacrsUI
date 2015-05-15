@@ -315,7 +315,7 @@ CStringA ParseJsonToList(const CStringA& strValue)
 			strData = obj.toStyledString().c_str();
 		}		
 	}
-	int pos = strData.Find(",");
+	/*int pos = strData.Find(",");
 	CStringA strTemp;
 
 	while(pos >=0)
@@ -325,8 +325,8 @@ CStringA ParseJsonToList(const CStringA& strValue)
 		pos = strData.Find(",");
 		strTemp.AppendFormat("%s\r\n",addstr);
 	}
-	strTemp.AppendFormat("%s\r\n",strData);
-	return strTemp;
+	strTemp.AppendFormat("%s\r\n",strData);*/
+	return strData;
 }
 
 CStringA ParseRecvData(const char*pRecvData)
