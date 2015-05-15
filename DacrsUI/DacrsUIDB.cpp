@@ -98,7 +98,6 @@ void CDacrsUIApp::UpdataAddressData(){
 	if (!reader.parse(strShowData.GetString(), root)) 
 		return  ;
 
-
 	uistruct::LISTADDR_t listaddr;
 	for(int i = 0; i < root.size(); ++i){
 		memset(&listaddr , 0 , sizeof(uistruct::LISTADDR_t));
