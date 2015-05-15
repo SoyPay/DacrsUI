@@ -131,7 +131,8 @@ void CRpcCmd::RPCCommandToJson(const CString& strRPCCommand,CStringA& strSendDat
 			param.TrimRight();
 			rpcCommand = rpcCommand.Mid(pos+1);
 			rpcCommand = rpcCommand.TrimLeft();
-			if (param.GetLength()<10&&IsAllDigtal(param))
+			//if (param.GetLength()<10&&IsAllDigtal(param))
+			if (IsAllDigtal(param))
 			{
 				INT64 param;
 				sscanf(rpcCommand,"%lld",&param);
@@ -144,7 +145,7 @@ void CRpcCmd::RPCCommandToJson(const CString& strRPCCommand,CStringA& strSendDat
 			pos = rpcCommand.Find(" ");
 		}
 
-		if (IsAllDigtal(rpcCommand) && rpcCommand.GetLength() != 12)
+		if (IsAllDigtal(rpcCommand)) //&& rpcCommand.GetLength() != 12)
 		{
 			INT64 param;
 			sscanf(rpcCommand,"%lld",&param);

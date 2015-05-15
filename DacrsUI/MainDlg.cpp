@@ -405,7 +405,7 @@ bool CMainDlg::GetUrlServer()
 
 	try
 	{
-		CHttpFile* pfile = (CHttpFile*)session.OpenURL(url,1,INTERNET_FLAG_TRANSFER_ASCII||INTERNET_FLAG_RELOAD,NULL,0);
+		CHttpFile* pfile = (CHttpFile*)session.OpenURL(url,1,INTERNET_FLAG_TRANSFER_ASCII|INTERNET_FLAG_RELOAD,NULL,0);
 
 		DWORD dwStatusCode;    
 		pfile->QueryInfoStatusCode(dwStatusCode);    
