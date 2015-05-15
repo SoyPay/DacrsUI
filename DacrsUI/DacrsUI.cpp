@@ -45,6 +45,8 @@ CDacrsUIApp::CDacrsUIApp()
 	m_strAddress = _T("");
 	m_bOutApp = FALSE ;
 	m_bReIndexServer = FALSE;
+	blocktipheight = 0;
+	IsSysnBlock = FALSE;
 }
 
 
