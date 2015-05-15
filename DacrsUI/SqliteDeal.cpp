@@ -344,6 +344,7 @@ BOOL CSqliteDeal::Updatabase(const CString strTabName , const CString strSourceD
 	}
 	return TRUE ;
 }
+
 BOOL CSqliteDeal::GetListaddrData(map<CString,uistruct::LISTADDR_t> *pListInfo)
 {
 	if (NULL == pListInfo ) return FALSE ;
