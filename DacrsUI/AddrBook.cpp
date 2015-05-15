@@ -32,6 +32,7 @@ BEGIN_MESSAGE_MAP(CAddrBook, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_ADDADDRBOOK, &CAddrBook::OnBnClickedButtonAddaddrbook)
 	ON_BN_CLICKED(IDOK, &CAddrBook::OnBnClickedOk)
 	ON_BN_CLICKED(IDC_BUTTON_DELEITEM, &CAddrBook::OnBnClickedButtonDeleitem)
+	ON_NOTIFY(NM_DBLCLK, IDC_LIST1, &CAddrBook::OnNMDblclkList1)
 END_MESSAGE_MAP()
 
 
@@ -76,7 +77,7 @@ BOOL CAddrBook::OnInitDialog()
 		UINT		size ;
 	} listcol[3]  = {
 		{"标签" ,      300},
-		{"地址" ,      370}
+		{"地址" ,      417}
 	};
 	m_listCtrl.SetBkColor(RGB(240,240,240));       
 	m_listCtrl.SetRowHeigt(23);               
@@ -146,27 +147,47 @@ void CAddrBook::OnBnClickedOk()
 void CAddrBook::OnBnClickedButtonDeleitem()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	CString StrShow;
-	POSITION pos = m_listCtrl.GetFirstSelectedItemPosition() ;
-	if ( pos ) {
-		int nRow = m_listCtrl.GetNextSelectedItem(pos) ;
+	if ( IDYES == ::MessageBox( this->GetSafeHwnd() ,_T("是否要删除此收款地址") , _T("提示") , MB_YESNO|MB_ICONINFORMATION ) ){
+		//EndDialog(IDOK);
+		CString StrShow;
+		POSITION pos = m_listCtrl.GetFirstSelectedItemPosition() ;
+		if ( pos ) {
+			int nRow = m_listCtrl.GetNextSelectedItem(pos) ;
 
-		//// 删除此条数据库
-		CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_UP_DELETERBOOK);
-		uistruct::ADDRBOOK_t addr;
-		CString Leble = m_listCtrl.GetItemText(nRow, 0); 
-		CString address = m_listCtrl.GetItemText(nRow, 1); 
-		addr.address = address;
-		addr.lebel = Leble;
-		string temp =addr.ToJson();
-		postmsg.SetData(temp.c_str());
-		theApp.m_MsgQueue.push(postmsg);
+			//// 删除此条数据库
+			CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_UP_DELETERBOOK);
+			uistruct::ADDRBOOK_t addr;
+			CString Leble = m_listCtrl.GetItemText(nRow, 0); 
+			CString address = m_listCtrl.GetItemText(nRow, 1); 
+			addr.address = address;
+			addr.lebel = Leble;
+			string temp =addr.ToJson();
+			postmsg.SetData(temp.c_str());
+			theApp.m_MsgQueue.push(postmsg);
 
-		//// 从控件中删除
-		m_listCtrl.DeleteItem(nRow);
-	}else{
-		StrShow.Format(_T("请选择地址!\n"));
-		::MessageBox( this->GetSafeHwnd() ,StrShow , _T("提示") , MB_ICONINFORMATION ) ;
-		return;
+			//// 从控件中删除
+			m_listCtrl.DeleteItem(nRow);
+		}else{
+			StrShow.Format(_T("请选择地址!\n"));
+			::MessageBox( this->GetSafeHwnd() ,StrShow , _T("提示") , MB_ICONINFORMATION ) ;
+			return;
+		}
 	}
+}
+
+
+void CAddrBook::OnNMDblclkList1(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
+	// TODO: 在此添加控件通知处理程序代码
+	if(-1 != pNMItemActivate->iItem) 
+	{  
+		int nRow = pNMItemActivate->iItem;
+		CString Lebel =m_listCtrl.GetItemText(nRow, 0);
+		CString addr =m_listCtrl.GetItemText(nRow, 1);
+		m_selectAddr.lebel = Lebel;
+		m_selectAddr.address = addr;
+		CDialogEx::OnOK();
+	}  
+	*pResult = 0;
 }
