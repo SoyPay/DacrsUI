@@ -426,13 +426,50 @@ void CDacrsUIDlg::InitialRpcCmd()
 	//ProductHttpHead(theApp.str_InsPath ,m_strServerCfgFileName,m_rpcport,m_sendPreHeadstr,m_sendendHeadstr);
 	CSoyPayHelp::getInstance()->InitialRpcCmd(theApp.m_severip,theApp.m_sendPreHeadstr,theApp.m_sendendHeadstr,theApp.m_rpcport);
 }
+void    CDacrsUIDlg::SyncAddrInfo()
+{
+	CString strCommand;
+	strCommand.Format(_T("%s"),_T("listaddr"));
+	CStringA strShowData ;
 
+	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
+
+	Json::Reader reader;  
+	Json::Value root; 
+	if (!reader.parse(strShowData.GetString(), root)) 
+		return  ;
+	map<CString,uistruct::LISTADDR_t> pListInfo;
+	theApp.m_SqliteDeal.GetListaddrData(&pListInfo);
+
+	map<CString,int> SListInfo;
+	for(int i = 0; i < root.size(); ++i){
+		//address
+		CString address;
+		address.Format( _T("%s") , root[i]["addr"].asCString() ) ;		
+		SListInfo[address] = i;
+
+	}
+
+	map<CString,uistruct::LISTADDR_t>::const_iterator it;
+	for (it= pListInfo.begin();it != pListInfo.end();it++)
+	{
+		if (SListInfo.count(it->first) <= 0)
+		{
+			CString strSourceData,feild;
+			feild.Format(_T("address"));
+			strSourceData.Format(_T("%s"),it->first);
+			int item = theApp.m_SqliteDeal.DeleteData(_T("MYWALLET"),feild,strSourceData);
+		}
+	}
+}
 void  CDacrsUIDlg::LoadListDataInfo()
 {
 	//加载连表数据,没有的表创建
 	theApp.cs_SqlData.Lock();
 	theApp.m_SqliteDeal.UpdataAllTable();
 	theApp.m_SqliteDeal.UpdataAllTableData(theApp.m_SqliteDeal.isinBlock());
+	SyncAddrInfo();
+	theApp.m_SqliteDeal.EmptyTabData(_T("revtransaction"));
 	theApp.cs_SqlData.Unlock();
 }
 void CDacrsUIDlg::CloseThread()

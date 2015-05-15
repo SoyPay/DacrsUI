@@ -1249,6 +1249,31 @@ BOOL CSqliteDeal::isinBlock(){
 					if(strShowData.Find("hash") < 0){		
 						flag = false;
 					}
+					Json::Reader reader;  
+					Json::Value root; 
+					if (!reader.parse(strShowData.GetString(), root)) 
+					{		
+						flag = false;
+					}
+
+					int height = root["height"].asInt();
+					strCommand.Format(_T("%s %d"),_T("getblockhash") ,height );
+					CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
+					if (strShowData == _T("")){
+						flag = false;
+					}
+					if(strShowData.Find("hash") < 0){		
+						flag = false;
+					}
+					if (!reader.parse(strShowData.GetString(), root)) 
+					{		
+						flag = false;
+					}
+					CString newblock = root["hash"].asCString();
+					if (!strcmp(strValue,newblock))
+					{
+						flag = false;
+					}
 				}
 				break;
 			}
