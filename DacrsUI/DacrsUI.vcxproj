@@ -218,6 +218,7 @@
     <ClInclude Include="NewSendAddr.h" />
     <ClInclude Include="Out.h" />
     <ClInclude Include="OutGifDlg.h" />
+    <ClInclude Include="TxDetailDlg.h" />
     <ClInclude Include="XProgressCtrl.h" />
     <ClInclude Include="DacrsUI.h" />
     <ClInclude Include="DacrsUIDlg.h" />
@@ -316,6 +317,7 @@
     </ClCompile>
     <ClCompile Include="SynchronousSocket.cpp" />
     <ClCompile Include="TradDlg.cpp" />
+    <ClCompile Include="TxDetailDlg.cpp" />
     <ClCompile Include="UiHead.cpp" />
     <ClCompile Include="XProgressCtrl.cpp" />
   </ItemGroup>
