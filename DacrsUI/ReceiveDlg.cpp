@@ -392,7 +392,6 @@ BOOL CReceiveDlg::OnEraseBkgnd(CDC* pDC)
 
 void   CReceiveDlg::ModifyListCtrlItem()
 {
-
 	CPostMsg postmsg;
 	if (!theApp.m_UiReciveDlgQueue.pop(postmsg))
 	{
