@@ -188,21 +188,21 @@ BOOL CDacrsUIApp::InitInstance()
 	while(1)
 	{
 		
-		//HANDLE processHandle = OpenProcess(PROCESS_ALL_ACCESS,FALSE,sever_pi.dwProcessId);  
-		//if(NULL == processHandle)
-		//{
-		//	if(m_bReIndexServer) {
-		//		StartSeverProcess(str_InsPath);
-		//		m_bReIndexServer = FALSE;
-		//		continue;
-		//	}
-		//	int errorCode = GetLastError();
-		//	TRACE("Error OpenProcess:%d " , errorCode );
-		//	::MessageBox( NULL , _T("加载钱包失败\r\n") , "Error" , MB_ICONERROR) ;
-		//	//AfxMessageBox(_T(errorCode));
-		//	exit(1);
-		//}
-		//CloseHandle(processHandle);
+		HANDLE processHandle = OpenProcess(PROCESS_ALL_ACCESS,FALSE,sever_pi.dwProcessId);  
+		if(NULL == processHandle)
+		{
+			if(m_bReIndexServer) {
+				StartSeverProcess(str_InsPath);
+				m_bReIndexServer = FALSE;
+				continue;
+			}
+			int errorCode = GetLastError();
+			TRACE("Error OpenProcess:%d " , errorCode );
+			::MessageBox( NULL , _T("加载钱包失败\r\n") , "Error" , MB_ICONERROR) ;
+			//AfxMessageBox(_T(errorCode));
+			exit(1);
+		}
+		CloseHandle(processHandle);
 		//TRACE("detect count:%d\n", ++nCount);
 		//pSplashThread->SetDlgPos(progessPos);
 		//TRACE("index:%d\r\n",progessPos);
@@ -212,14 +212,14 @@ BOOL CDacrsUIApp::InitInstance()
 		}
 		Sleep(100);
 
-		//SYSTEMTIME CurTimeLast ;
-		//memset( &CurTimeLast , 0 , sizeof(SYSTEMTIME) ) ;
-		//GetLocalTime( &CurTimeLast ) ;
-		//if ((CurTimeLast.wMinute - WaitTimeLast.wMinute) > 2)
-		//{
-		//	::MessageBox( NULL , _T("加载钱包失败\r\n") , "Error" , MB_ICONERROR) ;
-		//	exit(0);
-		//}
+		SYSTEMTIME CurTimeLast ;
+		memset( &CurTimeLast , 0 , sizeof(SYSTEMTIME) ) ;
+		GetLocalTime( &CurTimeLast ) ;
+		if ((CurTimeLast.wMinute - WaitTimeLast.wMinute) > 2)
+		{
+			::MessageBox( NULL , _T("加载钱包失败\r\n") , "Error" , MB_ICONERROR) ;
+			exit(0);
+		}
 	}
 
 	CDacrsUIDlg dlg;
