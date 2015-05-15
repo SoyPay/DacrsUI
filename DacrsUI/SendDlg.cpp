@@ -120,6 +120,11 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 			return;
 		}
 
+		if (!theApp.IsSysnBlock )
+		{
+			::MessageBox( this->GetSafeHwnd() ,_T("还未同步完成,不能发交易") , _T("提示") , MB_ICONINFORMATION ) ;
+			return;
+		}
 		strCommand.Format(_T("%s %s %s %lld"),_T("sendtoaddress") ,data.address ,strMaddress ,REAL_MONEY(dSendMoney));
 		CStringA strShowData ;
 

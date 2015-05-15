@@ -195,6 +195,8 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 	{
 		return 1;
 	}
+	//// blocktip高度
+	theApp.blocktipheight = pBlockchanged.tips ;
 	if (!m_bProgressType)
 	{
 			m_strNeting.SetWindowText(_T("网络同步中..."));
@@ -220,6 +222,7 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 				theApp.m_MsgQueue.pushFront(postblockmsg); 
 				LoadGifing(false);
 				m_walletui = true;
+				theApp.IsSysnBlock = true;
 			}
 			Invalidate(); 
 			//InvalidateRect(m_bmpsig);
@@ -243,6 +246,7 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 		theApp.m_MsgQueue.pushFront(postblockmsg); 
 		LoadGifing(false);
 		m_walletui = true;
+		theApp.IsSysnBlock = true;
 	}
 	if ( m_walletui && !m_prosshiden) {
 		m_strNeting.SetWindowText(_T("网络已同步")) ;

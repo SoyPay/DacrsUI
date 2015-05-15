@@ -581,7 +581,8 @@ void CMainDlg::OnBnClickedButtonImportwallet()
 		if (strSendData.Find(_T("imorpt key size")) >=0)
 		{
 			MessageBox(_T("导入钱包成功请重新启动钱包"));
-			PostMessage(WM_CLOSE);
+			//PostMessage(WM_CLOSE);
+			::PostThreadMessage( theApp.GetMtHthrdId() , MSG_USER_OUT , 0 , 0 ) ;
 		}else
 		{
 			MessageBox(_T("导入钱包失败"));
