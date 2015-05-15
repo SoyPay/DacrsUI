@@ -124,7 +124,7 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 		CStringA strShowData ;
 
 		CString strDisplay;
-		strDisplay.Format(_T("确定发送%.4lfsmc到%s"), dSendMoney, strMaddress);
+		strDisplay.Format(_T("转账%.4lfsmc至%s"), dSendMoney, strMaddress);
 		COut outdlg(NULL, strDisplay,100);
 		if ( IDOK != outdlg.DoModal()){
 			return;

@@ -169,6 +169,7 @@ BOOL CDacrsUIApp::InitInstance()
 	ASSERT(pSplashThread->IsKindOf(RUNTIME_CLASS(CSplashThread)));
 	pSplashThread->ResumeThread(); 
 	Sleep(1); 
+
 	int nCount(0);
 
 	SYSTEMTIME WaitTimeLast ;
@@ -180,21 +181,26 @@ BOOL CDacrsUIApp::InitInstance()
 			TRACE(_T("Call EnableDebugPrivilege failed!"));
 		//				AfxMessageBox(_T("Call EnableDebugPrivilege failed!"));
 	}
-
+	m_bReIndexServer = TRUE;
 	while(1)
 	{
 		
 		HANDLE processHandle = OpenProcess(PROCESS_ALL_ACCESS,FALSE,sever_pi.dwProcessId);  
 		if(NULL == processHandle)
 		{
-			/*if(m_bReIndexServer)
-				StartSeverProcess(str_InsPath);*/
+			if(m_bReIndexServer) {
+				StartSeverProcess(str_InsPath);
+				m_bReIndexServer = FALSE;
+				continue;
+			}
 			int errorCode = GetLastError();
 			TRACE("Error OpenProcess:%d " , errorCode );
-			AfxMessageBox(_T(errorCode));
+			::MessageBox( NULL , _T("¼ÓÔØÇ®°üÊ§°Ü\r\n") , "Error" , MB_ICONERROR) ;
+			//AfxMessageBox(_T(errorCode));
 			exit(1);
 		}
-//		TRACE("detect count:%d\n", ++nCount);
+		CloseHandle(processHandle);
+		//TRACE("detect count:%d\n", ++nCount);
 		//pSplashThread->SetDlgPos(progessPos);
 		//TRACE("index:%d\r\n",progessPos);
 		if (isStartMainDlg)
@@ -689,10 +695,6 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 				CPostMsg postmsg(MSG_USER_STARTPROCESS_UI,2);
 				pApp->m_MsgQueue.push(postmsg);
 			}
-			else if(!strcmp(msg, "Verifying blocks Corrupted block database detected"))
-			{
-				pApp->m_bReIndexServer = true;
-			}
 			else if (!strcmp(msg,"Loading addresses..."))
 			{
 				CPostMsg postmsg(MSG_USER_STARTPROCESS_UI,3);
@@ -1122,6 +1124,8 @@ void CDacrsUIApp::StartSeverProcess(const CStringA& strdir){
 		AfxMessageBox(_T("CreateProcessA sever error!"));
 		exit(1);  
 	}  
+	CloseHandle(sever_pi.hProcess);
+	CloseHandle(sever_pi.hThread);
 }
 void CDacrsUIApp::CloseProcess(const string& exename){
 	HANDLE SnapShot,ProcessHandle;  
