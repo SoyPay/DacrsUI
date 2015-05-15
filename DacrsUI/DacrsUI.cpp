@@ -130,7 +130,7 @@ BOOL CDacrsUIApp::InitInstance()
 	}
 
 	//启动服务程序
-//	StartSeverProcess(str_InsPath);
+	StartSeverProcess(str_InsPath);
 	m_bServerState = true;
 	Sleep(1000);
 
@@ -212,14 +212,14 @@ BOOL CDacrsUIApp::InitInstance()
 		}
 		Sleep(100);
 
-		SYSTEMTIME CurTimeLast ;
+	/*	SYSTEMTIME CurTimeLast ;
 		memset( &CurTimeLast , 0 , sizeof(SYSTEMTIME) ) ;
 		GetLocalTime( &CurTimeLast ) ;
 		if ((CurTimeLast.wMinute - WaitTimeLast.wMinute) > 2)
 		{
 			::MessageBox( NULL , _T("加载钱包失败\r\n") , "Error" , MB_ICONERROR) ;
 			exit(0);
-		}
+		}*/
 	}
 
 	CDacrsUIDlg dlg;
