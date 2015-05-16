@@ -583,6 +583,13 @@ void CMainDlg::ClearCtrlText()
 
 	m_strTranNum.SetWindowText(_T("")) ;
 
+
+	GetDlgItem(IDC_STATIC_DES1)->SetWindowText(_T(""));
+	GetDlgItem(IDC_STATIC_DES2)->SetWindowText(_T("")) ;
+	GetDlgItem(IDC_STATIC_DES3)->SetWindowText(_T("")) ;
+	GetDlgItem(IDC_STATIC_DES4)->SetWindowText(_T("")) ;
+	GetDlgItem(IDC_STATIC_DES5)->SetWindowText(_T("")) ;
+
 	GetDlgItem(IDC_TX1)->SetWindowText(_T("")) ;
 	GetDlgItem(IDC_TX2)->SetWindowText(_T("")) ;
 	GetDlgItem(IDC_TX3)->SetWindowText(_T("")) ;
