@@ -553,16 +553,6 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 				//theApp.DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_UP_PROGRESS , 0,0);					
 			}
 			break;
-		case MSG_USER_BLOCKSTATE_UI:
-			{
-				//if (pDlg->dlgType == DIALOG_BLOCK_STATE)
-				//{
-				//	theApp.DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_BLOCKSTATE_UI , Postmsg.GetDatatype(),0);
-				//	//::PostThreadMessage( theApp.GetMtHthrdId() , MSG_USER_BLOCKSTATE_UI ,Postmsg.GetDatatype(), 0 ) ; 
-				//}
-
-			}
-			break;
 		case MSG_USER_INSERT_DATA:   //// ≤Â»Î ˝æ›
 			{
 				uistruct::DATABASEINFO_t   pDatabase; // = (uistruct::DATABASEINFO_t *)Postmsg.GetStrPoint();

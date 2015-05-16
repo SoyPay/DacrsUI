@@ -1503,7 +1503,7 @@ int	CSqliteDeal::FindDB(const CString strTabName , const CString strP, const CSt
 			case 11:
 				{
 					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
-					root["confirmedHeight"] = atoi(strValue);
+					root["confirmHeight"] = atoi(strValue);
 				}
 				break;
 			case 12:

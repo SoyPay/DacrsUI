@@ -280,6 +280,7 @@ int CDacrsUIDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		m_pOutGifDlg = new COutGifDlg ;
 		m_pOutGifDlg->Create(COutGifDlg::IDD , this) ;
 		m_pOutGifDlg->ShowWindow(SW_HIDE) ;
+		m_pOutGifDlg->LoadGifing(TRUE);
 		m_pOutGifDlg->SetWindowPos(NULL , 800 , 480 , 0 , 0 ,SWP_NOSIZE );
 	}
 
@@ -554,10 +555,6 @@ void  CDacrsUIDlg::StopSever()
 }
 void CDacrsUIDlg::CloseApp()
 {
-	/*if ( NULL != m_pOutGifDlg ) {
-	delete m_pOutGifDlg ;
-	m_pOutGifDlg = NULL ;
-	}*/
 	EndWaitCursor();
 	PostMessage( WM_QUIT ) ; 
 	PostMessage( WM_CLOSE ); 	
@@ -566,41 +563,18 @@ void CDacrsUIDlg::CloseApp()
 }
 void CDacrsUIDlg::OnBnClickedButtonClose()
 {
-	//SYSTEMTIME curTime ,local;
-	//memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
-	//GetLocalTime( &curTime ) ;
-	//int RecivetxTimeLast =0,cutrtieme;
-	//RecivetxTimeLast= UiFun::SystemTimeToTimet(curTime);
 	COut outdlg;
 	if ( IDOK == outdlg.DoModal()){
 		BeginWaitCursor();
-		/*if ( NULL != m_pOutGifDlg ) {
-		m_pOutGifDlg->LoadGifing(TRUE);
-		m_pOutGifDlg->ShowWindow(SW_SHOW) ;
-		}*/
+		if ( NULL != m_pOutGifDlg ) {
+		  m_pOutGifDlg->ShowWindow(SW_SHOW) ;
+		}
 		::PostThreadMessage( theApp.GetMtHthrdId() , MSG_USER_OUT , 0 , 0 ) ;
-		SetTimer( 0x10 , 100 , NULL ) ; 
+		SetTimer( 0x10 , 10000 , NULL ) ; 
 		Sleep(200);
 	}else{
 		;
 	}
-	//GetLocalTime( &local ) ;
-	//cutrtieme= UiFun::SystemTimeToTimet(curTime);
-	//TRACE("StopSever:= %d",(cutrtieme- RecivetxTimeLast));
-
-	//GetLocalTime( &curTime ) ;
-	//RecivetxTimeLast= UiFun::SystemTimeToTimet(curTime);
-	
-	//GetLocalTime( &local ) ;
-	//cutrtieme= UiFun::SystemTimeToTimet(curTime);
-	//TRACE("CloseThread:= %d",(cutrtieme- RecivetxTimeLast));
-
-	//GetLocalTime( &curTime ) ;
-	//RecivetxTimeLast= UiFun::SystemTimeToTimet(curTime);
-	
-	//GetLocalTime( &local ) ;
-	//cutrtieme= UiFun::SystemTimeToTimet(curTime);
-	//TRACE("DestroyWindow:= %d",(cutrtieme- RecivetxTimeLast));
 }
 void CDacrsUIDlg::OnTimer(UINT_PTR nIDEvent)
 {
@@ -611,6 +585,13 @@ void CDacrsUIDlg::OnTimer(UINT_PTR nIDEvent)
 		CloseThread();
 
 		DestroyDlg();
+
+		if ( NULL != m_pOutGifDlg ) {
+			m_pOutGifDlg->ShowWindow(SW_HIDE) ;
+			m_pOutGifDlg->LoadGifing(FALSE);
+			delete m_pOutGifDlg ;
+			m_pOutGifDlg = NULL ;
+		}
 		theApp.m_bOutApp = TRUE ;
 	}
 	CDialogEx::OnTimer(nIDEvent);
