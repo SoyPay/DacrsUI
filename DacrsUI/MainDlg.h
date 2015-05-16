@@ -36,6 +36,12 @@ public:
 	CStaticTrans     m_strTx4  ;  
 	CStaticTrans     m_strTx5  ;  
 
+	CStaticTrans     m_strDesTx1  ;  
+	CStaticTrans     m_strDesTx2  ;  
+	CStaticTrans     m_strDesTx3  ;  
+	CStaticTrans     m_strDesTx4  ;  
+	CStaticTrans     m_strDesTx5  ;  
+
 	CStaticTrans     m_strOver      ;
 	CStaticTrans     m_strOking     ;
 	CStaticTrans     m_strTranNum   ;
