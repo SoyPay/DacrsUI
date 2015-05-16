@@ -112,6 +112,7 @@
     <None Include="res\activate_addr_3.bmp" />
     <None Include="res\addapp_dlg.bmp" />
     <None Include="res\address_book.bmp" />
+    <None Include="res\addr_book_black_ground.bmp" />
     <None Include="res\add_app_1.bmp" />
     <None Include="res\add_app_2.bmp" />
     <None Include="res\add_app_3.bmp" />
@@ -219,6 +220,7 @@
     <ClInclude Include="NewSendAddr.h" />
     <ClInclude Include="Out.h" />
     <ClInclude Include="OutGifDlg.h" />
+    <ClInclude Include="TxDetailDlg.h" />
     <ClInclude Include="XProgressCtrl.h" />
     <ClInclude Include="DacrsUI.h" />
     <ClInclude Include="DacrsUIDlg.h" />
@@ -318,6 +320,7 @@
     </ClCompile>
     <ClCompile Include="SynchronousSocket.cpp" />
     <ClCompile Include="TradDlg.cpp" />
+    <ClCompile Include="TxDetailDlg.cpp" />
     <ClCompile Include="UiHead.cpp" />
     <ClCompile Include="XProgressCtrl.cpp" />
   </ItemGroup>

@@ -271,6 +271,12 @@ void CDacrsUIApp::InsertarevtransactionData(string hash){
 			transcion.txtype.c_str() ,transcion.ver ,transcion.addr.c_str() ,transcion.pubkey.c_str(),transcion.miner_pubkey.c_str(),transcion.fees,transcion.height,\
 			transcion.desaddr.c_str(), transcion.money,transcion.Contract.c_str(),transcion.confirmedHeight,transcion.confirmedtime,transcion.blockhash.c_str(),transcion.state) ;
 		m_SqliteDeal.InsertData(_T("revtransaction") ,strSourceData ) ;
+
+		//// 数据插入了，更新到交易详情界面
+		CPostMsg Postmsg(MSG_USER_TRANSRECORD_UI,WM_INSERT);
+		string temp =root.toStyledString();
+		Postmsg.SetData(temp.c_str());	
+		m_UiTxDetailQueue.push(Postmsg);
 	}
 }
 void  CDacrsUIApp::InsertAddbook(uistruct::ADDRBOOK_t addr)

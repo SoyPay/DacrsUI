@@ -130,6 +130,7 @@ public:
 	CMyQueue m_UiManDlgQueue;
 	CMyQueue m_UiReciveDlgQueue;
 	CMyQueue m_UiSendDlgQueue;
+	CMyQueue m_UiTxDetailQueue;
 	void UpdataBetPoolData();
 	void UpdataAddressData();
 	void InsertarevtransactionData(string hash);
