@@ -80,6 +80,20 @@ public:
 	CString rpc_password;
 };
 
+class CLogParamCfg
+{
+public:
+	vector<CString> vTag;
+	BOOL   bPrintFileLine;
+	BOOL   bPrinttimestamps;	
+	BOOL   bLogFlag;
+public:
+	CLogParamCfg():bPrintFileLine(TRUE), bPrinttimestamps(TRUE), bLogFlag(TRUE){
+		vTag.clear();
+	}
+	~CLogParamCfg(){};
+};
+
 class CJsonConfigHelp
 {
 	DEFINE_SINGLETON(CJsonConfigHelp)
@@ -92,7 +106,8 @@ public:
 	void GetSesureTradeCfgData(CSesureTradeCfg& sesureCfg);
 	void GetP2PBetCfgData(CP2PBetCfg& p2pCfg);
 	void GetScriptCfgData(CScriptCfg& scriptCfg);
-	void GetNetParmCfgData(CNetParamCfg& netparm);
+	void GetNetParamCfgData(CNetParamCfg& netparm);
+	void GetLogParamCfg(CLogParamCfg &logCfg);
 	//void AddItemString(const CString& strFilePath,CAutoComplete &m_comboxinput);
 private:
 	void ReadMainCfgData(const Json::Value& root);
@@ -102,6 +117,7 @@ private:
 	void ReadAnonymCfgData(const Json::Value& root);
 	void ReadScriptCfgData(const Json::Value& root);
 	void ReadNetParmCfgData(const Json::Value& root);
+	void ReadLogParamCfg(const Json::Value &root);
 	//void AddString(const Json::Value& root,CAutoComplete &m_comboxinput);
 
 
@@ -114,5 +130,6 @@ private:
 	CSesureTradeCfg	m_SesureTradeCfg;
 	CScriptCfg      m_Scriptid;
 	CNetParamCfg    m_NetParam;
+	CLogParamCfg     m_LogParamCfg;
 };
 

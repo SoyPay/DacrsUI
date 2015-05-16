@@ -162,7 +162,7 @@ void ProductHttpHead(const CStringA& configdir,const string& strCfgFileName,CStr
 	}
 	else
 	{
-		AfxMessageBox(_T("Invald config error"));
+		AfxMessageBox(_T("Invalid config error"));
 	}
 }
 
