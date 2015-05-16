@@ -1,0 +1,94 @@
+#include "stdafx.h"
+#include "Log.h"
+#include "JsonConfigHelp.h"
+#include <set>
+#include <map>
+using namespace std;
+
+CLogParamCfg logParamCfg;
+static map<CString,DebugLogFile> g_DebugLogs;
+
+
+int LogPrintStr(const char* category, const CString &str) {
+
+	if (!logParamCfg.bLogFlag)
+		return 0;
+
+	int ret = 0; // Returns total number of characters written
+
+	map<CString, DebugLogFile>::iterator it;
+
+	it = g_DebugLogs.find((NULL == category) ? _T("debug") : _T(category));
+	if (it == g_DebugLogs.end()) {
+		return 0;
+		
+	}
+
+	DebugLogFile& log = it->second;
+	log.m_clsMutex->Lock();
+	// Debug print useful for profiling
+	if (logParamCfg.bPrinttimestamps && log.m_newLine) {
+		SYSTEMTIME st;
+		CString strDate,strTime, strTimestamps;
+		GetLocalTime(&st);
+		strDate.Format("%04d-%02d-%02d ",st.wYear,st.wMonth,st.wDay);
+		strTime.Format("%02d:%02d:%02d",st.wHour,st.wMinute,st.wSecond);
+		strTimestamps = strDate + strTime;
+		ret += fprintf(log.m_fileout, "%s ", strTimestamps.GetBuffer());
+	}
+	if (str.GetLength()>0 && str.GetAt(str.GetLength()-1) == '\n') {
+		log.m_newLine = true;
+	} else {
+		log.m_newLine = false;
+	}
+	ret = fwrite((LPSTR)(LPCTSTR)str, 1, str.GetLength(), log.m_fileout);
+	log.m_clsMutex->Unlock();
+	return ret;
+}
+
+CString GetLogHead(int line, const char* file, const char* category) {
+	
+	if(logParamCfg.bPrintFileLine){
+		CString strLogHead(_T(""));
+		strLogHead.Format(_T("[%s:%d]%s: "), file, line, category != NULL ? category : "");
+		return strLogHead;
+	}
+	return CString(_T(""));
+}
+
+static void DebugPrintInit() {
+	set<CString> logfiles(logParamCfg.vTag.begin(), logParamCfg.vTag.end());
+	set<CString>::iterator iterLogFile = logfiles.begin();
+	for (; iterLogFile!=logfiles.end(); ++iterLogFile) {
+		FILE* fileout = NULL;
+		CString pathDebug = GetCurrentWorkDir();
+		CString fileName = *iterLogFile + ".log";
+		pathDebug +=  "\\" + fileName;
+		fileout = fopen(pathDebug.GetBuffer(), "a");
+		if (fileout) {
+			DebugLogFile& log = g_DebugLogs[*iterLogFile];
+			setbuf(fileout, NULL); // unbuffered
+			log.m_fileout = fileout;
+			log.m_clsMutex = new CMutex(FALSE, NULL);
+		}
+	}
+}
+
+CString GetCurrentWorkDir() 
+{
+	const DWORD dwPathLength = 1024;
+	char pFileName[dwPathLength];
+	int nPos = GetCurrentDirectory( dwPathLength, pFileName); 
+
+	CString csFullPath(pFileName);  
+	if( nPos < 0 ) 
+		return CString(""); 
+	else 
+		return csFullPath; 
+}
+
+void InitLogCfg()
+{
+	CJsonConfigHelp::getInstance()->GetLogParamCfg(logParamCfg);
+	DebugPrintInit();
+}
