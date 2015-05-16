@@ -66,7 +66,7 @@ void COutGifDlg::LoadGifing( BOOL bState )
 					CRect rc ;
 					GetClientRect( rc ) ;
 					Invalidate() ;
-					m_ProgressWnd->SetWindowPos( NULL , 0 , 0 , 300 , 100 , SWP_SHOWWINDOW|SWP_NOSIZE ) ;
+					m_ProgressWnd->SetWindowPos( NULL ,  rc.Width()- 18 , (rc.Height()/2)-8 ,  0 , 0 ,SWP_SHOWWINDOW|SWP_NOSIZE ) ;
 					((CGIFControl*)m_ProgressWnd)->Play();
 				}
 			}else{
@@ -106,7 +106,7 @@ BOOL COutGifDlg::OnInitDialog()
 	if ( NULL == m_ProgressWnd ) {
 		m_ProgressWnd = new CGIFControl ;
 		m_ProgressWnd->Create(_T("") , WS_CHILD | SS_OWNERDRAW | WS_VISIBLE | SS_NOTIFY , \
-			CRect(20,20,300,100) , this, 112 ) ;
+			CRect(20,20,36,36) , this, 112 ) ;
 	}
 
 	SetBkBmpNid( IDB_BITMAP_BAR3 ) ;

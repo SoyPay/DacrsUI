@@ -1,6 +1,7 @@
 #pragma once
-
+#include "RoundButton.h"
 #include "ListCtrlCl.h"
+#include "ShadeButtonST.h"
 
 // CTradDlg ¶Ô»°¿ò
 
@@ -32,8 +33,10 @@ public:
 	afx_msg LRESULT OnShowListCtrl(  WPARAM wParam, LPARAM lParam ) ;
 	void OninitializeList();
 private:
-	CListCtrlCl     m_listCtrl;
+	CListCtrlCl        m_listCtrl;
+	CShadeButtonST     m_rBtnTxdetail;
 public:
 	afx_msg void OnNMDblclkListListtx(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnSize(UINT nType, int cx, int cy);
 	void InsertItemData();
 };
