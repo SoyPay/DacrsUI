@@ -566,11 +566,11 @@ void CDacrsUIDlg::OnBnClickedButtonClose()
 	COut outdlg;
 	if ( IDOK == outdlg.DoModal()){
 		BeginWaitCursor();
-		if ( NULL != m_pOutGifDlg ) {
-		  m_pOutGifDlg->ShowWindow(SW_SHOW) ;
-		}
+	/*	if ( NULL != m_pOutGifDlg ) {
+			m_pOutGifDlg->ShowWindow(SW_SHOW) ;
+		}*/
 		::PostThreadMessage( theApp.GetMtHthrdId() , MSG_USER_OUT , 0 , 0 ) ;
-		SetTimer( 0x10 , 10000 , NULL ) ; 
+		SetTimer( 0x10 , 3000 , NULL ) ; 
 		Sleep(200);
 	}else{
 		;
@@ -586,12 +586,12 @@ void CDacrsUIDlg::OnTimer(UINT_PTR nIDEvent)
 
 		DestroyDlg();
 
-		if ( NULL != m_pOutGifDlg ) {
+		//if ( NULL != m_pOutGifDlg ) {
 			m_pOutGifDlg->ShowWindow(SW_HIDE) ;
-			m_pOutGifDlg->LoadGifing(FALSE);
-			delete m_pOutGifDlg ;
-			m_pOutGifDlg = NULL ;
-		}
+		//	m_pOutGifDlg->LoadGifing(FALSE);
+		//	delete m_pOutGifDlg ;
+		//	m_pOutGifDlg = NULL ;
+		//}
 		theApp.m_bOutApp = TRUE ;
 	}
 	CDialogEx::OnTimer(nIDEvent);
