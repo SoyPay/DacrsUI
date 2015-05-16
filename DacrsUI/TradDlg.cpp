@@ -47,6 +47,7 @@ BEGIN_MESSAGE_MAP(CTradDlg, CDialogBar)
 	ON_WM_ERASEBKGND()
 	ON_BN_CLICKED(IDC_BUTTON_TXDETAIL, &CTradDlg::OnBnClickedButtonTxdetail)
 	ON_NOTIFY(NM_DBLCLK, IDC_LIST_LISTTX, &CTradDlg::OnNMDblclkListListtx)
+	ON_MESSAGE(MSG_USER_TRANSRECORD_UI , &CTradDlg::OnShowListCtrl )
 END_MESSAGE_MAP()
 
 
@@ -253,3 +254,64 @@ void CTradDlg::OnNMDblclkListListtx(NMHDR *pNMHDR, LRESULT *pResult)
 	}  
 	*pResult = 0;
 }
+void CTradDlg::InsertItemData()
+{
+	CPostMsg postmsg;
+	if (!theApp.m_UiTxDetailQueue.pop(postmsg))
+	{
+		return ;
+	}
+
+	uistruct::REVTRANSACTION_t txdetail; 
+	string strTemp = postmsg.GetData();
+	txdetail.JsonToStruct(strTemp.c_str());
+
+	CString strShowData;
+	int nSubIdx = 0;
+	strShowData.Format(_T("%s"), txdetail.txhash);
+	m_listCtrl.InsertItem(0,strShowData);
+
+	string txtype = txdetail.txtype;
+	if (!strcmp(txtype.c_str(),"REWARD_TX"))
+	{
+		strShowData.Format(_T("%s") ,_T("挖矿奖励交易")) ;
+	}else if (!strcmp(txtype.c_str(),"REG_ACCT_TX"))
+	{
+		strShowData.Format(_T("%s") ,_T("注册账户交易")) ;
+	}else if (!strcmp(txtype.c_str(),"COMMON_TX"))
+	{
+		strShowData.Format(_T("%s") ,_T("转账交易")) ;
+	}else if (!strcmp(txtype.c_str(),"CONTRACT_TX"))
+	{
+		strShowData.Format(_T("%s") ,_T("合约交易")) ;
+	}else if (!strcmp(txtype.c_str(),"REG_APP_TX"))
+	{
+		strShowData.Format(_T("%s") ,_T("注册应用交易")) ;
+	}
+	m_listCtrl.SetItemText( 0 , ++nSubIdx, strShowData) ;
+
+
+	strShowData.Format(_T("%s") ,txdetail.addr.c_str()) ;
+	m_listCtrl.SetItemText(0 , ++nSubIdx , strShowData ) ;
+
+	strShowData.Format(_T("%s") ,txdetail.desaddr.c_str()) ;
+	m_listCtrl.SetItemText(0 , ++nSubIdx , strShowData ) ;
+
+	strShowData.Format(_T("%.8f") , txdetail.money ) ;
+	m_listCtrl.SetItemText(0 , ++nSubIdx , strShowData ) ;
+}
+ LRESULT CTradDlg::OnShowListCtrl(  WPARAM wParam, LPARAM lParam )
+ {
+	 int type = (int)wParam;
+	 switch(type)
+	 {
+	 case WM_INSERT:
+		 {
+			 InsertItemData();
+		 }
+		 break;
+	default:
+		 break;
+	 }
+	 return 0;
+ }
