@@ -76,6 +76,13 @@ void CMainDlg::DoDataExchange(CDataExchange* pDX)
 
 	DDX_Control(pDX, IDC_BUTTON_IMPORTWALLET, m_rBtnImportWallet);
 	DDX_Control(pDX, IDC_BUTTON_DUMPWALLET, m_rBtnDumpWallet);
+
+	DDX_Control(pDX, IDC_STATIC_DES1 , m_strDesTx1);
+	DDX_Control(pDX, IDC_STATIC_DES2 , m_strDesTx2);
+	DDX_Control(pDX, IDC_STATIC_DES3 , m_strDesTx3);
+	DDX_Control(pDX, IDC_STATIC_DES4 , m_strDesTx4);
+	DDX_Control(pDX, IDC_STATIC_DES5 , m_strDesTx5);
+
 }
 
 
@@ -169,6 +176,8 @@ void CMainDlg::OnnitCtrlText()
 	int item = IDC_TX1;
 	int item1 = IDC_TX_JY2;
 	int pic = IDC_STATIC_TARGET1;
+	int desitem = IDC_STATIC_DES1;
+	CString desStr =_T("");
 	if (pTransaction.size() != 0  ) {
 		int nSubIdx = 0 , i = 0 ;
 		CString strShowaddr ;
@@ -186,8 +195,8 @@ void CMainDlg::OnnitCtrlText()
 			//	i++;
 			//}
 			strSource.Format(_T("%.4f"),const_it->money);
-			strShowaddr.Format(_T("%s     %s"),const_it->addr.c_str(),const_it->desaddr.c_str());
-
+			strShowaddr.Format(_T("%s"),const_it->addr.c_str());
+			desStr.Format(_T("%s"),const_it->desaddr.c_str());
 			//if (const_it->state == 1)
 			//{
 			//	if(i == 1)
@@ -222,9 +231,14 @@ void CMainDlg::OnnitCtrlText()
 			{
 				GetDlgItem(pic)->ShowWindow(SW_SHOW);
 			}
+			if (desitem <=IDC_STATIC_DES5)
+			{
+				GetDlgItem(pic)->SetWindowText(desStr);
+			}
 			pic++;
 			item++;
 			item1++;
+			desitem++;
 		}
 	}
 }
@@ -254,6 +268,7 @@ void CMainDlg::SetCtrlText()
 
 	m_strTranNum.SetWindowText(maindlg.itemcount.c_str()) ;
 
+	CString strDes = _T("");
 	string addr1 = maindlg.addr1;
 	uistruct::REVTRANSACTION_t temp;
 	if (addr1 != "")
@@ -272,8 +287,10 @@ void CMainDlg::SetCtrlText()
 		//}
 
 		strCommand.Format(_T("%.4f"),temp.money*COIN);
-		strShowData.Format(_T("%s     %s"),temp.addr.c_str(),temp.desaddr.c_str());
-
+		strShowData.Format(_T("%s"),temp.addr.c_str());
+		strDes.Format(_T("%s"),temp.desaddr.c_str());
+		
+		GetDlgItem(IDC_STATIC_DES1)->SetWindowText(strDes) ;
 		GetDlgItem(IDC_TX1)->SetWindowText(strShowData) ;
 		GetDlgItem(IDC_TX_JY2)->SetWindowText(strCommand) ;
 		GetDlgItem(IDC_STATIC_TARGET1)->ShowWindow(SW_SHOW);
@@ -295,8 +312,10 @@ void CMainDlg::SetCtrlText()
 		//	m_strTrading2.SetTextColor(RGB(166,162,247));
 		//}
 		strCommand.Format(_T("%.4f"),temp.money*COIN);
-		strShowData.Format(_T("%s     %s"),temp.addr.c_str(),temp.desaddr.c_str());
+		strShowData.Format(_T("%s"),temp.addr.c_str());
+		strDes.Format(_T("%s"),temp.desaddr.c_str());
 
+		GetDlgItem(IDC_STATIC_DES2)->SetWindowText(strDes) ;
 		GetDlgItem(IDC_TX2)->SetWindowText(strShowData) ;
 		GetDlgItem(IDC_TX_JY3)->SetWindowText(strCommand) ;
 		GetDlgItem(IDC_STATIC_TARGET2)->ShowWindow(SW_SHOW);
@@ -319,8 +338,10 @@ void CMainDlg::SetCtrlText()
 		//}
 
 		strCommand.Format(_T("%.4f"),temp.money*COIN);
-		strShowData.Format(_T("%s     %s"),temp.addr.c_str(),temp.desaddr.c_str());
+		strShowData.Format(_T("%s"),temp.addr.c_str());
+		strDes.Format(_T("%s"),temp.desaddr.c_str());
 
+		GetDlgItem(IDC_STATIC_DES3)->SetWindowText(strDes) ;
 		GetDlgItem(IDC_TX3)->SetWindowText(strShowData) ;
 		GetDlgItem(IDC_TX_JY4)->SetWindowText(strCommand) ;
 		GetDlgItem(IDC_STATIC_TARGET3)->ShowWindow(SW_SHOW);
@@ -342,8 +363,10 @@ void CMainDlg::SetCtrlText()
 		//}
 
 		strCommand.Format(_T("%.4f"),temp.money*COIN);
-		strShowData.Format(_T("%s     %s"),temp.addr.c_str(),temp.desaddr.c_str());
+		strShowData.Format(_T("%s"),temp.addr.c_str());
+		strDes.Format(_T("%s"),temp.desaddr.c_str());
 
+		GetDlgItem(IDC_STATIC_DES4)->SetWindowText(strDes) ;
 		GetDlgItem(IDC_TX4)->SetWindowText(strShowData) ;
 		GetDlgItem(IDC_TX_JY5)->SetWindowText(strCommand) ;
 		GetDlgItem(IDC_STATIC_TARGET4)->ShowWindow(SW_SHOW);
@@ -364,7 +387,10 @@ void CMainDlg::SetCtrlText()
 		//	m_strTrading5.SetTextColor(RGB(166,162,247));
 		//}
 		strCommand.Format(_T("%.4f"),temp.money*COIN);
-		strShowData.Format(_T("%s     %s"),temp.addr.c_str(),temp.desaddr.c_str());
+		strShowData.Format(_T("%s"),temp.addr.c_str());
+		strDes.Format(_T("%s"),temp.desaddr.c_str());
+
+		GetDlgItem(IDC_STATIC_DES5)->SetWindowText(strDes) ;
 		GetDlgItem(IDC_TX5)->SetWindowText(strShowData) ;
 		GetDlgItem(IDC_TX_JY7)->SetWindowText(strCommand) ;
 		GetDlgItem(IDC_STATIC_TARGET5)->ShowWindow(SW_SHOW);
@@ -399,6 +425,12 @@ BOOL CMainDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_strTx3.SetFont(88, _T("Calibri"));
 		m_strTx4.SetFont(88, _T("Calibri"));
 		m_strTx5.SetFont(88, _T("Calibri"));
+
+		m_strDesTx1.SetFont(88, _T("Calibri"));
+		m_strDesTx2.SetFont(88, _T("Calibri"));
+		m_strDesTx3.SetFont(88, _T("Calibri"));
+		m_strDesTx4.SetFont(88, _T("Calibri")); 
+		m_strDesTx5.SetFont(88, _T("Calibri")); 
 		//m_strOver.SetFont(120, _T("微软雅黑"));				//设置显示字体和大小
 		//m_strTx1.SetTextColor(RGB(192,192,192));			    //字体颜色
 		//m_strTx1.SetWindowText(_T("方斌")) ;
@@ -732,13 +764,19 @@ void CMainDlg::OnSize(UINT nType, int cx, int cy)
 			pst->GetClientRect( rect ) ;
 			pst->SetWindowPos( NULL ,(rc.Width()/100)*4 ,(rc.Height()/100)*67  , rect.Width()*2, rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
+
+		pst = GetDlgItem( IDC_STATIC_DES1 ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*35+4 ,(rc.Height()/100)*67  , rect.Width()*2, rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
 		pst = GetDlgItem( IDC_STATIC_TARGET1 ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
 			pst->SetWindowPos( NULL ,(rc.Width()/100)*33+4 ,(rc.Height()/100)*67  , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
-
 		pst = GetDlgItem( IDC_TX_JY2 ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
@@ -751,6 +789,13 @@ void CMainDlg::OnSize(UINT nType, int cx, int cy)
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
 			pst->SetWindowPos( NULL ,(rc.Width()/100)*4 ,(rc.Height()/100)*75 , rect.Width()*2, rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
+
+		pst = GetDlgItem( IDC_STATIC_DES2 ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*35+4 ,(rc.Height()/100)*75  , rect.Width()*2, rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
 
 		pst = GetDlgItem( IDC_STATIC_TARGET2) ;
@@ -774,6 +819,13 @@ void CMainDlg::OnSize(UINT nType, int cx, int cy)
 			pst->SetWindowPos( NULL ,(rc.Width()/100)*4 ,(rc.Height()/100)*82 , rect.Width()*2, rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
 
+		pst = GetDlgItem( IDC_STATIC_DES3 ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*35+4 ,(rc.Height()/100)*82  , rect.Width()*2, rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
+
 		pst = GetDlgItem( IDC_STATIC_TARGET3) ;
 		if ( NULL != pst ) {
 			CRect rect ;
@@ -793,6 +845,13 @@ void CMainDlg::OnSize(UINT nType, int cx, int cy)
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
 			pst->SetWindowPos( NULL ,(rc.Width()/100)*4 ,(rc.Height()/100)*89 , rect.Width()*2, rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
+
+		pst = GetDlgItem( IDC_STATIC_DES4 ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*35+4 ,(rc.Height()/100)*89  , rect.Width()*2, rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
 
 		pst = GetDlgItem( IDC_STATIC_TARGET4) ;
@@ -815,6 +874,14 @@ void CMainDlg::OnSize(UINT nType, int cx, int cy)
 			pst->GetClientRect( rect ) ;
 			pst->SetWindowPos( NULL ,(rc.Width()/100)*4 ,(rc.Height()/100)*97 , rect.Width()*2, rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
+
+		pst = GetDlgItem( IDC_STATIC_DES5 ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*35+4 ,(rc.Height()/100)*97  , rect.Width()*2, rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
+
 		
 		pst = GetDlgItem( IDC_STATIC_TARGET5) ;
 		if ( NULL != pst ) {
