@@ -251,6 +251,13 @@ void CReceiveDlg::OnBnClickedButtonNewaddress()
 void CReceiveDlg::OnBnClickedButtonSignAccount()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	
+	if (!theApp.IsSysnBlock )
+	{
+		::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送激活交易") , _T("提示") , MB_ICONINFORMATION ) ;
+		return;
+	}
+
 	CString StrShow;
 	POSITION pos = m_listCtrl.GetFirstSelectedItemPosition() ;
 	if ( pos ) {
