@@ -30,6 +30,7 @@ public:
 	//CMFCLinkCtrl v_linkCtrl1;
 	//CMFCLinkCtrl v_linkCtrl2;
 	afx_msg void OnBnClickedButtonTxdetail();
+	afx_msg LRESULT OnShowListCtrl(  WPARAM wParam, LPARAM lParam ) ;
 	void OninitializeList();
 private:
 	CListCtrlCl        m_listCtrl;
@@ -37,4 +38,5 @@ private:
 public:
 	afx_msg void OnNMDblclkListListtx(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
+	void InsertItemData();
 };
