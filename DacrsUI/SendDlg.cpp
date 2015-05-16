@@ -41,6 +41,7 @@ BEGIN_MESSAGE_MAP(CSendDlg, CDialogBar)
 	ON_WM_CREATE()
 	ON_WM_ERASEBKGND()
 	ON_BN_CLICKED(IDC_BUTTON_ADDBOOK, &CSendDlg::OnBnClickedButtonAddbook)
+	ON_WM_SIZE()
 END_MESSAGE_MAP()
 
 
@@ -449,4 +450,73 @@ BOOL CSendDlg::PreTranslateMessage(MSG* pMsg)
 		}
 	}
 	return CDialogBar::PreTranslateMessage(pMsg);
+}
+
+
+void CSendDlg::OnSize(UINT nType, int cx, int cy)
+{
+	CDialogBar::OnSize(nType, cx, cy);
+	if( NULL != GetSafeHwnd() ) {
+		const int div = 100 ;
+
+		CRect rc ;
+		GetClientRect( rc ) ;
+
+		
+		CWnd *pst = GetDlgItem( IDC_COMBO_ADDR_OUT ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL , (rc.Width()/100)*24 , (rc.Height()/100)*12 , (rc.Width()/100)*37, rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
+
+		pst = GetDlgItem( IDC_STATIC_XM ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL , (rc.Width()/100)*70 ,(rc.Height()/100)*12 , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
+		
+		pst = GetDlgItem( IDC_EDIT_DESADDRESS ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL , (rc.Width()/100)*24 ,(rc.Height()/100)*23, (rc.Width()/100)*37, (rc.Height()/100)*7 ,SWP_SHOWWINDOW ) ; 
+		}
+		
+		pst = GetDlgItem( IDC_BUTTON_ADDBOOK ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL , (rc.Width()/100)*62 ,(rc.Height()/100)*23-2 , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
+
+		pst = GetDlgItem( IDC_EDIT2) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL , (rc.Width()/100)*24 ,(rc.Height()/100)*34, rect.Width(), (rc.Height()/100)*7  ,SWP_SHOWWINDOW ) ; 
+		}
+		pst = GetDlgItem( IDC_EDIT_MONEY) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL , (rc.Width()/100)*24 ,(rc.Height()/100)*46, rect.Width(), (rc.Height()/100)*7  ,SWP_SHOWWINDOW ) ; 
+		}
+		
+		pst = GetDlgItem( IDC_COMBO2) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL , (rc.Width()/100)*36 ,(rc.Height()/100)*47, rect.Width(), (rc.Height()/100)*7  ,SWP_SHOWWINDOW ) ; 
+		}
+
+		pst = GetDlgItem( IDC_SENDTRNSFER) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL , (rc.Width()/100)*90 ,(rc.Height()/100)*65, rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
+	}
+	// TODO: 在此处添加消息处理程序代码
 }
