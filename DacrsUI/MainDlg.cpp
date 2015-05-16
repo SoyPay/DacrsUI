@@ -658,7 +658,8 @@ void CMainDlg::OnBnClickedButtonImportwallet()
 		{
 			MessageBox(_T("导入钱包成功请重新启动钱包"));
 			//PostMessage(WM_CLOSE);
-			::PostThreadMessage( theApp.GetMtHthrdId() , MSG_USER_OUT , 0 , 0 ) ;
+			//::PostThreadMessage( theApp.GetMtHthrdId() , MSG_USER_OUT , 0 , 0 );
+			((CDacrsUIDlg*)(this->GetParent()))->Close();
 		}else
 		{
 			MessageBox(_T("导入钱包失败"));

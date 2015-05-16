@@ -569,12 +569,18 @@ void CDacrsUIDlg::OnBnClickedButtonClose()
 	/*	if ( NULL != m_pOutGifDlg ) {
 			m_pOutGifDlg->ShowWindow(SW_SHOW) ;
 		}*/
-		::PostThreadMessage( theApp.GetMtHthrdId() , MSG_USER_OUT , 0 , 0 ) ;
-		SetTimer( 0x10 , 3000 , NULL ) ; 
+		/*::PostThreadMessage( theApp.GetMtHthrdId() , MSG_USER_OUT , 0 , 0 ) ;
+		SetTimer( 0x10 , 3000 , NULL ) ; */
+		Close();
 		Sleep(200);
 	}else{
 		;
 	}
+}
+
+void CDacrsUIDlg::Close() {
+	::PostThreadMessage( theApp.GetMtHthrdId() , MSG_USER_OUT , 0 , 0 );
+	SetTimer( 0x10 , 3000 , NULL); 
 }
 void CDacrsUIDlg::OnTimer(UINT_PTR nIDEvent)
 {
