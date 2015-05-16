@@ -55,54 +55,54 @@ void CTxDetailDlg::ShowTxDetail(CString jsontx)
 	{
 		strShowData.AppendFormat(_T("%s") ,_T("注册应用交易")) ;
 	}
-	txdetail.Format(_T("交易类型:%s\r\n\r\n"),strShowData);
-	txdetail.AppendFormat(_T("交易hash:%s\r\n\r\n"),tx.txhash);
-	txdetail.AppendFormat(_T("版本号:%d\r\n\r\n"),tx.ver);
-	txdetail.AppendFormat(_T("源地址:%s\r\n\r\n"),tx.addr.c_str());
+	      txdetail.Format(_T("交易类型: %s\r\n\r\n"),strShowData);
+	txdetail.AppendFormat(_T("交易hash: %s\r\n\r\n"),tx.txhash);
+	txdetail.AppendFormat(_T("版本号:   %d\r\n\r\n"),tx.ver);
+	txdetail.AppendFormat(_T("源地址:   %s\r\n\r\n"),tx.addr.c_str());
 	if (tx.pubkey != "")
 	{
-		txdetail.AppendFormat(_T("公钥:%s\r\n\r\n"),tx.pubkey.c_str());
+		txdetail.AppendFormat(_T("公钥:   %s\r\n\r\n"),tx.pubkey.c_str());
 	}
 	if (tx.miner_pubkey != "")
 	{
-		txdetail.AppendFormat(_T("冷挖矿公钥:%s\r\n\r\n"),tx.miner_pubkey.c_str());
+		txdetail.AppendFormat(_T("冷挖矿公钥:   %s\r\n\r\n"),tx.miner_pubkey.c_str());
 	}
 	if (tx.fees != 0)
 	{
-		txdetail.AppendFormat(_T("小费:%.8f\r\n\r\n"),tx.fees*COIN);
+		txdetail.AppendFormat(_T("小费:   %.8f\r\n\r\n"),tx.fees*COIN);
 	}
 	if (tx.height != 0)
 	{
-		txdetail.AppendFormat(_T("交易超时高度:%d\r\n\r\n"),tx.height);
+		txdetail.AppendFormat(_T("交易超时高度:   %d\r\n\r\n"),tx.height);
 	}
 	if (tx.desaddr != "")
 	{
-		txdetail.AppendFormat(_T("目的地址:%d\r\n\r\n"),tx.desaddr.c_str() );
+		txdetail.AppendFormat(_T("目的地址:   %s\r\n\r\n"),tx.desaddr.c_str() );
 	}
 	if (tx.money != 0)
 	{
-		txdetail.AppendFormat(_T("交易金额:%.8f\r\n\r\n"),tx.money*COIN);
+		txdetail.AppendFormat(_T("交易金额:   %.8f\r\n\r\n"),tx.money*COIN);
 	}
 	if (tx.Contract != "")
 	{
-		txdetail.AppendFormat(_T("合约内容:%d\r\n\r\n"),tx.Contract.c_str() );
+		txdetail.AppendFormat(_T("合约内容:   %d\r\n\r\n"),tx.Contract.c_str() );
 	}
 
 	if (tx.confirmedHeight != 0)
 	{
-		txdetail.AppendFormat(_T("确认高度:%d\r\n\r\n"),tx.confirmedHeight );
+		txdetail.AppendFormat(_T("确认高度:   %d\r\n\r\n"),tx.confirmedHeight );
 	}
 	if (tx.confirmedtime != 0)
 	{
 		SYSTEMTIME curTime = UiFun::Time_tToSystemTime(tx.confirmedtime);
-		txdetail.AppendFormat(_T("确认时间:%04d-%02d-%02d %02d:%02d:%02d\r\n\r\n"),curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+		txdetail.AppendFormat(_T("确认时间:   %04d-%02d-%02d %02d:%02d:%02d\r\n\r\n"),curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
 	}
 	if (tx.blockhash != "")
 	{
-		txdetail.AppendFormat(_T("确认blockHash:%s\r\n\r\n"),tx.blockhash.c_str());
+		txdetail.AppendFormat(_T("确认blockHash:   %s\r\n\r\n"),tx.blockhash.c_str());
 	}
 
-	GetDlgItem(IDC_STATIC_TXDETAIL)->SetWindowText(txdetail);
+	GetDlgItem(IDC_EDIT_TXDETAIL)->SetWindowText(txdetail);
 }
 
 BOOL CTxDetailDlg::OnInitDialog()
