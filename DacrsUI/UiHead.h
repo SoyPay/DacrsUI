@@ -22,26 +22,20 @@ using namespace std;
 #define MSG_USER_MAIN_UI			        WM_USER+105	    //更新到Mian界面
 
 #define MSG_USER_SENDRECOD_UI			    WM_USER+106	    //更新到SendRecord界面
-#define MSG_USER_SIGNACCEPT_UI			    WM_USER+107	    //更新到SignAccountsDlg界面 1131
-#define MSG_USER_TRANSRECORD_UI			    WM_USER+108	    //更新到TransRecord界面
-#define MSG_USER_BETPOOL_UI			        WM_USER+109	    //更新到CAcceptBetDlg界面
-#define MSG_USER_GET_SERVER_DATA            WM_USER+110     //从服务器获取数据 1134
-#define MSG_USER_GET_UPDATABASE             WM_USER+111     //从数据库中获取数据
-#define MSG_USER_SHOW_INIT                  WM_USER+112     //显示服务器初始化 
-#define MSG_USER_GET_TIPBLOCK_DATA          WM_USER+113     //更新服务器bloktip hash 
-#define MSG_USER_SENDDARK_UI			    WM_USER+114	    //更新到发送Dark界面
-#define MSG_USER_ACCEPTDARK_UI			    WM_USER+115	    //更新到接受Dark界面
-#define MSG_USER_SENDBET_UI			        WM_USER+116	    //更新到接受p2p界面
-#define MSG_USER_GETAPPM_UI			        WM_USER+116	    //更新到提现界面
-#define MSG_USER_UP_PROGRESS			    WM_USER+117	    //更新进度条  1131
-#define MSG_USER_INSERT_DATA                WM_USER+118	    //插入数据到数据库
-#define MSG_USER_UPDATA_DATA                WM_USER+119	    //更新数据到数据库
-#define MSG_USER_BLOCKSTATE_UI			    WM_USER+120	    //更新到提现界面  1138
-#define MSG_USER_SIGUSER_UI			        WM_USER+121	    //更新到注册应用  1138
-#define MSG_USER_SEND_UI			        WM_USER+122    //更新到转账  1138
-#define MSG_USER_RECIVE_UI			        WM_USER+122    //更新到接受页面
-#define MSG_USER_STARTPROCESS_UI			WM_USER+123    //更新到接受页面
-#define MSG_USER_UPDATA_UI			        WM_USER+124   //更新到接受页面
+#define MSG_USER_TRANSRECORD_UI			    WM_USER+107	    //更新到TransRecord界面
+#define MSG_USER_BETPOOL_UI			        WM_USER+108	    //更新到CAcceptBetDlg界面
+#define MSG_USER_GET_UPDATABASE             WM_USER+109     //从数据库中获取数据
+#define MSG_USER_SHOW_INIT                  WM_USER+110     //显示服务器初始化 
+#define MSG_USER_SENDDARK_UI			    WM_USER+111	    //更新到发送Dark界面
+#define MSG_USER_ACCEPTDARK_UI			    WM_USER+112	    //更新到接受Dark界面
+#define MSG_USER_SENDBET_UI			        WM_USER+113	    //更新到接受p2p界面
+#define MSG_USER_UP_PROGRESS			    WM_USER+114	    //更新进度条  1131
+#define MSG_USER_INSERT_DATA                WM_USER+115	    //插入数据到数据库
+#define MSG_USER_UPDATA_DATA                WM_USER+116	    //更新数据到数据库
+#define MSG_USER_SEND_UI			        WM_USER+117    //更新到转账  1138
+#define MSG_USER_RECIVE_UI			        WM_USER+118    //更新到接受页面
+#define MSG_USER_STARTPROCESS_UI			WM_USER+119    //更新启动的界面
+#define MSG_USER_UPDATA_UI			        WM_USER+120   //更新到接受页面
 
 #define MSG_USER_QUITTHREAD			        WM_USER+200	    //退出线程
 #define MSG_USER_OUT                        WM_USER+201     //退出软件
@@ -219,7 +213,7 @@ namespace uistruct {
 			root["desaddr"] = desaddr;
 			root["money"] = money;
 			root["Contract"] = Contract;
-			root["confirmedHeight"] = confirmedHeight;
+			root["confirmHeight"] = confirmedHeight;
 			root["confirmedtime"] = confirmedtime;
 			root["blockhash"] = blockhash;
 			root["state"] = state;
