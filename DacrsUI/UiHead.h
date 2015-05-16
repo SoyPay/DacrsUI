@@ -453,6 +453,7 @@ namespace uistruct {
 			return true;
 		}
 	}ADDRBOOK_t;
+	typedef std::vector<ADDRBOOK_t> ADDRBOOKLIST ;
 }
 #pragma pack(pop)
 //UiFun

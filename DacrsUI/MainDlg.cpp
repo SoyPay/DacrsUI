@@ -168,52 +168,61 @@ void CMainDlg::OnnitCtrlText()
 	strCommand.Format(_T("IDC_TX%d"),nItem);
 	int item = IDC_TX1;
 	int item1 = IDC_TX_JY2;
+	int pic = IDC_STATIC_TARGET1;
 	if (pTransaction.size() != 0  ) {
 		int nSubIdx = 0 , i = 0 ;
 		CString strShowaddr ;
 		std::vector<uistruct::REVTRANSACTION_t>::const_iterator const_it;
 		for (const_it = pTransaction.begin() ; const_it != pTransaction.end()&&i<6 ; const_it++ ) {
-			if (const_it->state == 1)
-			{
-				strSource.Format(_T("-%.8f"),const_it->money);
-				strShowaddr.Format(_T("%s "),const_it->addr.c_str());
-				i++;
-			}else if (const_it->state == 2)
-			{
-				strSource.Format(_T("+%.8f"),const_it->money);
-				strShowaddr.Format(_T("%s "),const_it->desaddr.c_str());
-				i++;
-			}
-			if (const_it->state == 1)
-			{
-				if(i == 1)
-				m_strTrading.SetTextColor(RGB(255,0,0));			//字体颜色
-				if(i == 2)
-				m_strTrading2.SetTextColor(RGB(255,0,0));
-				if(i == 3)
-					m_strTrading3.SetTextColor(RGB(255,0,0));			//字体颜色
-				if(i == 4)
-					m_strTrading4.SetTextColor(RGB(255,0,0));
-				if(i == 5)
-					m_strTrading5.SetTextColor(RGB(255,0,0));
-			}else if (const_it->state == 2)
-			{
-				if(i == 1)
-					m_strTrading.SetTextColor(RGB(166,162,247));			//字体颜色
-				if(i == 2)
-					m_strTrading2.SetTextColor(RGB(166,162,247));
-				if(i == 3)
-					m_strTrading3.SetTextColor(RGB(166,162,247));			//字体颜色
-				if(i == 4)
-					m_strTrading4.SetTextColor(RGB(166,162,247));
-				if(i == 5)
-					m_strTrading5.SetTextColor(RGB(166,162,247));
+			//if (const_it->state == 1)
+			//{
+			//	strSource.Format(_T("-%.8f"),const_it->money);
+			//	strShowaddr.Format(_T("%s  %s"),const_it->addr.c_str(),const_it->desaddr);
+			//	i++;
+			//}else if (const_it->state == 2)
+			//{
+			//	strSource.Format(_T("+%.8f"),const_it->money);
+			//	strShowaddr.Format(_T("%s "),const_it->desaddr.c_str());
+			//	i++;
+			//}
+			strSource.Format(_T("%.4f"),const_it->money);
+			strShowaddr.Format(_T("%s     %s"),const_it->addr.c_str(),const_it->desaddr.c_str());
 
-			}
+			//if (const_it->state == 1)
+			//{
+			//	if(i == 1)
+			//	m_strTrading.SetTextColor(RGB(255,0,0));			//字体颜色
+			//	if(i == 2)
+			//	m_strTrading2.SetTextColor(RGB(255,0,0));
+			//	if(i == 3)
+			//		m_strTrading3.SetTextColor(RGB(255,0,0));			//字体颜色
+			//	if(i == 4)
+			//		m_strTrading4.SetTextColor(RGB(255,0,0));
+			//	if(i == 5)
+			//		m_strTrading5.SetTextColor(RGB(255,0,0));
+			//}else if (const_it->state == 2)
+			//{
+			//	if(i == 1)
+			//		m_strTrading.SetTextColor(RGB(166,162,247));			//字体颜色
+			//	if(i == 2)
+			//		m_strTrading2.SetTextColor(RGB(166,162,247));
+			//	if(i == 3)
+			//		m_strTrading3.SetTextColor(RGB(166,162,247));			//字体颜色
+			//	if(i == 4)
+			//		m_strTrading4.SetTextColor(RGB(166,162,247));
+			//	if(i == 5)
+			//		m_strTrading5.SetTextColor(RGB(166,162,247));
+
+			//}
 			if(item <=IDC_TX5)
 			GetDlgItem(item)->SetWindowText(strShowaddr) ;
 			if(item1 <=IDC_TX_JY7)
 			GetDlgItem(item1)->SetWindowText(strSource) ;
+			if (pic <=IDC_STATIC_TARGET5)
+			{
+				GetDlgItem(pic)->ShowWindow(SW_SHOW);
+			}
+			pic++;
 			item++;
 			item1++;
 		}
@@ -250,98 +259,115 @@ void CMainDlg::SetCtrlText()
 	if (addr1 != "")
 	{
 		temp.JsonToStruct(addr1);
-		if (temp.state == 1)
-		{
-			strCommand.Format(_T("-%.8f"),temp.money*COIN);
-			strShowData.Format(_T("%s "),temp.addr.c_str());
-			m_strTrading.SetTextColor(RGB(255,0,0));
-		}else if (temp.state == 2)
-		{
-			strCommand.Format(_T("+%.8f"),temp.money*COIN);
-			strShowData.Format(_T("%s "),temp.desaddr.c_str());
-			m_strTrading.SetTextColor(RGB(166,162,247));
-		}
+		//if (temp.state == 1)
+		//{
+		//	strCommand.Format(_T("-%.8f"),temp.money*COIN);
+		//	strShowData.Format(_T("%s "),temp.addr.c_str());
+		//	m_strTrading.SetTextColor(RGB(255,0,0));
+		//}else if (temp.state == 2)
+		//{
+		//	strCommand.Format(_T("+%.8f"),temp.money*COIN);
+		//	strShowData.Format(_T("%s "),temp.desaddr.c_str());
+		//	m_strTrading.SetTextColor(RGB(166,162,247));
+		//}
+
+		strCommand.Format(_T("%.4f"),temp.money*COIN);
+		strShowData.Format(_T("%s     %s"),temp.addr.c_str(),temp.desaddr.c_str());
 
 		GetDlgItem(IDC_TX1)->SetWindowText(strShowData) ;
 		GetDlgItem(IDC_TX_JY2)->SetWindowText(strCommand) ;
+		GetDlgItem(IDC_STATIC_TARGET1)->ShowWindow(SW_SHOW);
 	}
 	
 	addr1 = maindlg.addr2;
 	if (addr1 != "")
 	{
 		temp.JsonToStruct(addr1);
-		if (temp.state == 1)
-		{
-			strCommand.Format(_T("-%.8f"),temp.money*COIN);
-			strShowData.Format(_T("%s "),temp.addr.c_str());
-			m_strTrading2.SetTextColor(RGB(255,0,0));
-		}else if (temp.state == 2)
-		{
-			strCommand.Format(_T("+%.8f"),temp.money*COIN);
-			strShowData.Format(_T("%s "),temp.desaddr.c_str());
-			m_strTrading2.SetTextColor(RGB(166,162,247));
-		}
+		//if (temp.state == 1)
+		//{
+		//	strCommand.Format(_T("-%.8f"),temp.money*COIN);
+		//	strShowData.Format(_T("%s "),temp.addr.c_str());
+		//	m_strTrading2.SetTextColor(RGB(255,0,0));
+		//}else if (temp.state == 2)
+		//{
+		//	strCommand.Format(_T("+%.8f"),temp.money*COIN);
+		//	strShowData.Format(_T("%s "),temp.desaddr.c_str());
+		//	m_strTrading2.SetTextColor(RGB(166,162,247));
+		//}
+		strCommand.Format(_T("%.4f"),temp.money*COIN);
+		strShowData.Format(_T("%s     %s"),temp.addr.c_str(),temp.desaddr.c_str());
 
 		GetDlgItem(IDC_TX2)->SetWindowText(strShowData) ;
 		GetDlgItem(IDC_TX_JY3)->SetWindowText(strCommand) ;
+		GetDlgItem(IDC_STATIC_TARGET2)->ShowWindow(SW_SHOW);
 	}
 
 	addr1 = maindlg.addr3;
 	if (addr1 != "")
 	{
 		temp.JsonToStruct(addr1);
-		if (temp.state == 1)
-		{
-			strCommand.Format(_T("-%.8f"),temp.money*COIN);
-			strShowData.Format(_T("%s "),temp.addr.c_str());
-			m_strTrading3.SetTextColor(RGB(255,0,0));
-		}else if (temp.state == 2)
-		{
-			strCommand.Format(_T("+%.8f"),temp.money*COIN);
-			strShowData.Format(_T("%s "),temp.desaddr.c_str());
-			m_strTrading3.SetTextColor(RGB(166,162,247));
-		}
+		//if (temp.state == 1)
+		//{
+		//	strCommand.Format(_T("-%.8f"),temp.money*COIN);
+		//	strShowData.Format(_T("%s "),temp.addr.c_str());
+		//	m_strTrading3.SetTextColor(RGB(255,0,0));
+		//}else if (temp.state == 2)
+		//{
+		//	strCommand.Format(_T("+%.8f"),temp.money*COIN);
+		//	strShowData.Format(_T("%s "),temp.desaddr.c_str());
+		//	m_strTrading3.SetTextColor(RGB(166,162,247));
+		//}
+
+		strCommand.Format(_T("%.4f"),temp.money*COIN);
+		strShowData.Format(_T("%s     %s"),temp.addr.c_str(),temp.desaddr.c_str());
 
 		GetDlgItem(IDC_TX3)->SetWindowText(strShowData) ;
 		GetDlgItem(IDC_TX_JY4)->SetWindowText(strCommand) ;
+		GetDlgItem(IDC_STATIC_TARGET3)->ShowWindow(SW_SHOW);
 	}
 	addr1 = maindlg.addr4;
 	if (addr1 != "")
 	{
 		temp.JsonToStruct(addr1);
-		if (temp.state == 1)
-		{
-			strCommand.Format(_T("-%.8f"),temp.money*COIN);
-			strShowData.Format(_T("%s "),temp.addr.c_str());
-			m_strTrading4.SetTextColor(RGB(255,0,0));
-		}else if (temp.state == 2)
-		{
-			strCommand.Format(_T("+%.8f"),temp.money*COIN);
-			strShowData.Format(_T("%s "),temp.desaddr.c_str());
-			m_strTrading4.SetTextColor(RGB(166,162,247));
-		}
+		//if (temp.state == 1)
+		//{
+		//	strCommand.Format(_T("-%.8f"),temp.money*COIN);
+		//	strShowData.Format(_T("%s "),temp.addr.c_str());
+		//	m_strTrading4.SetTextColor(RGB(255,0,0));
+		//}else if (temp.state == 2)
+		//{
+		//	strCommand.Format(_T("+%.8f"),temp.money*COIN);
+		//	strShowData.Format(_T("%s "),temp.desaddr.c_str());
+		//	m_strTrading4.SetTextColor(RGB(166,162,247));
+		//}
+
+		strCommand.Format(_T("%.4f"),temp.money*COIN);
+		strShowData.Format(_T("%s     %s"),temp.addr.c_str(),temp.desaddr.c_str());
 
 		GetDlgItem(IDC_TX4)->SetWindowText(strShowData) ;
 		GetDlgItem(IDC_TX_JY5)->SetWindowText(strCommand) ;
+		GetDlgItem(IDC_STATIC_TARGET4)->ShowWindow(SW_SHOW);
 	}
 	addr1 = maindlg.addr5;
 	if (addr1 != "")
 	{
 		temp.JsonToStruct(addr1);
-		if (temp.state == 1)
-		{
-			strCommand.Format(_T("-%.8f"),temp.money*COIN);
-			strShowData.Format(_T("%s "),temp.addr.c_str());
-			m_strTrading5.SetTextColor(RGB(255,0,0));
-		}else if (temp.state == 2)
-		{
-			strCommand.Format(_T("+%.8f"),temp.money*COIN);
-			strShowData.Format(_T("%s "),temp.desaddr.c_str());
-			m_strTrading5.SetTextColor(RGB(166,162,247));
-		}
-
+		//if (temp.state == 1)
+		//{
+		//	strCommand.Format(_T("-%.8f"),temp.money*COIN);
+		//	strShowData.Format(_T("%s "),temp.addr.c_str());
+		//	m_strTrading5.SetTextColor(RGB(255,0,0));
+		//}else if (temp.state == 2)
+		//{
+		//	strCommand.Format(_T("+%.8f"),temp.money*COIN);
+		//	strShowData.Format(_T("%s "),temp.desaddr.c_str());
+		//	m_strTrading5.SetTextColor(RGB(166,162,247));
+		//}
+		strCommand.Format(_T("%.4f"),temp.money*COIN);
+		strShowData.Format(_T("%s     %s"),temp.addr.c_str(),temp.desaddr.c_str());
 		GetDlgItem(IDC_TX5)->SetWindowText(strShowData) ;
 		GetDlgItem(IDC_TX_JY7)->SetWindowText(strCommand) ;
+		GetDlgItem(IDC_STATIC_TARGET5)->ShowWindow(SW_SHOW);
 	}
 	Invalidate();
 }
@@ -355,13 +381,24 @@ BOOL CMainDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_rBtnImportWallet.LoadBitmaps(IDB_BITMAP_IMPORTWALLET,IDB_BITMAP_IMPORTWALLET,IDB_BITMAP_IMPORTWALLET,IDB_BITMAP_IMPORTWALLET);
 		m_rBtnDumpWallet.LoadBitmaps(IDB_BITMAP_DUMPWALLET,IDB_BITMAP_DUMPWALLET,IDB_BITMAP_DUMPWALLET,IDB_BITMAP_DUMPWALLET);
 		UpdateData(0);
-		ClearCtrlText();
 		OnnitCtrlText();
 		GetUrlServer();
 		onnitLinkText();
 		m_strOver.SetFont(120, _T("黑体"));
 		m_strOking.SetFont(120, _T("黑体"));
 		m_strTranNum.SetFont(120, _T("黑体"));
+
+		m_strTrading.SetFont(95, _T("Calibri"));
+		m_strTrading2.SetFont(95, _T("Calibri"));
+		m_strTrading3.SetFont(95, _T("Calibri"));
+		m_strTrading4.SetFont(95, _T("Calibri"));
+		m_strTrading5.SetFont(95, _T("Calibri"));
+
+		m_strTx1.SetFont(88, _T("Calibri"));
+		m_strTx2.SetFont(88, _T("Calibri"));
+		m_strTx3.SetFont(88, _T("Calibri"));
+		m_strTx4.SetFont(88, _T("Calibri"));
+		m_strTx5.SetFont(88, _T("Calibri"));
 		//m_strOver.SetFont(120, _T("微软雅黑"));				//设置显示字体和大小
 		//m_strTx1.SetTextColor(RGB(192,192,192));			    //字体颜色
 		//m_strTx1.SetWindowText(_T("方斌")) ;
@@ -507,7 +544,7 @@ BOOL CMainDlg::OnEraseBkgnd(CDC* pDC)
 }
 void CMainDlg::ClearCtrlText()
 {
-
+	SetShowCtrol();
 	GetDlgItem(IDC_STATIC_AMOUNT)->SetWindowText(_T("")) ;
 
 	GetDlgItem(IDC_STATIC_NOTCOF)->SetWindowText(_T("")) ;
@@ -630,5 +667,181 @@ void CMainDlg::OnSize(UINT nType, int cx, int cy)
 			pst->GetClientRect( rect ) ;
 			pst->SetWindowPos( NULL ,rc.Width()- rect.Width() ,rc.Height()-rect.Height()-10  , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
+
+		
+			//
+		//	
+		pst = GetDlgItem( IDC_STATIC_AMOUNT ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*15 ,(rc.Height()/100)*17+2  , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
+
+		pst = GetDlgItem( IDC_STATIC_NOTCOF ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*15 ,(rc.Height()/100)*25+2  , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
+
+		pst = GetDlgItem( IDC_STATIC_COUNT ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*15 ,(rc.Height()/100)*34  , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
+		 /////////////////////////////////////////////////////////////////////////////////////////
+		pst = GetDlgItem( IDC_MFCLINK1 ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*63 ,(rc.Height()/100)*15  , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
+
+
+		pst = GetDlgItem( IDC_MFCLINK3 ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*63 ,(rc.Height()/100)*23 , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
+
+		pst = GetDlgItem( IDC_MFCLINK4 ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*63 ,(rc.Height()/100)*30, rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
+
+
+		pst = GetDlgItem( IDC_MFCLINK5 ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*63 ,(rc.Height()/100)*38, rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	 
+	////	 
+	////	 
+	////	 
+		pst = GetDlgItem( IDC_TX1 ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*4 ,(rc.Height()/100)*67  , rect.Width()*2, rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
+		pst = GetDlgItem( IDC_STATIC_TARGET1 ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*33+4 ,(rc.Height()/100)*67  , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
+
+		pst = GetDlgItem( IDC_TX_JY2 ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*66 ,(rc.Height()/100)*67  , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
+
+		pst = GetDlgItem( IDC_TX2 ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*4 ,(rc.Height()/100)*75 , rect.Width()*2, rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
+
+		pst = GetDlgItem( IDC_STATIC_TARGET2) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*33+4 ,(rc.Height()/100)*75  , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
+
+		pst = GetDlgItem( IDC_TX_JY3 ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*66 ,(rc.Height()/100)*75  , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
+
+		pst = GetDlgItem( IDC_TX3 ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*4 ,(rc.Height()/100)*82 , rect.Width()*2, rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
+
+		pst = GetDlgItem( IDC_STATIC_TARGET3) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*33+4 ,(rc.Height()/100)*82  , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
+
+		pst = GetDlgItem( IDC_TX_JY4 ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*66 ,(rc.Height()/100)*82  , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
+
+		pst = GetDlgItem( IDC_TX4 ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*4 ,(rc.Height()/100)*89 , rect.Width()*2, rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
+
+		pst = GetDlgItem( IDC_STATIC_TARGET4) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*33+4 ,(rc.Height()/100)*89  , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
+
+		pst = GetDlgItem( IDC_TX_JY5 ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*66 ,(rc.Height()/100)*89 , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
+
+		pst = GetDlgItem( IDC_TX5 ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*4 ,(rc.Height()/100)*97 , rect.Width()*2, rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
+		
+		pst = GetDlgItem( IDC_STATIC_TARGET5) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*33+4 ,(rc.Height()/100)*97 , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
+
+		pst = GetDlgItem( IDC_TX_JY7 ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*66 ,(rc.Height()/100)*97 , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
+		pst = GetDlgItem( IDC_ALLTXDETAIL ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*63 ,rc.Height()*9/10  , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
 	}
+}
+void CMainDlg::SetShowCtrol()
+{
+	GetDlgItem(IDC_STATIC_TARGET1)->ShowWindow(SW_HIDE);
+	GetDlgItem(IDC_STATIC_TARGET2)->ShowWindow(SW_HIDE);
+	GetDlgItem(IDC_STATIC_TARGET3)->ShowWindow(SW_HIDE);
+	GetDlgItem(IDC_STATIC_TARGET4)->ShowWindow(SW_HIDE);
+	GetDlgItem(IDC_STATIC_TARGET5)->ShowWindow(SW_HIDE);
 }
