@@ -61,11 +61,11 @@ void CTxDetailDlg::ShowTxDetail(CString jsontx)
 	txdetail.AppendFormat(_T("源地址:%s\r\n\r\n"),tx.addr.c_str());
 	if (tx.pubkey != "")
 	{
-		txdetail.AppendFormat(_T("公钥:%s\r\n\r\n"),tx.pubkey);
+		txdetail.AppendFormat(_T("公钥:%s\r\n\r\n"),tx.pubkey.c_str());
 	}
 	if (tx.miner_pubkey != "")
 	{
-		txdetail.AppendFormat(_T("冷挖矿公钥:%s\r\n\r\n"),tx.miner_pubkey);
+		txdetail.AppendFormat(_T("冷挖矿公钥:%s\r\n\r\n"),tx.miner_pubkey.c_str());
 	}
 	if (tx.fees != 0)
 	{
@@ -88,10 +88,6 @@ void CTxDetailDlg::ShowTxDetail(CString jsontx)
 		txdetail.AppendFormat(_T("合约内容:%d\r\n\r\n"),tx.Contract.c_str() );
 	}
 
-	if (tx.height != 0)
-	{
-		txdetail.AppendFormat(_T("交易超时高度:%d\r\n\r\n"),tx.height);
-	}
 	if (tx.confirmedHeight != 0)
 	{
 		txdetail.AppendFormat(_T("确认高度:%d\r\n\r\n"),tx.confirmedHeight );
