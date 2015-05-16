@@ -243,32 +243,32 @@ void CAddrBook::OnBnClickedOk()
 void CAddrBook::OnBnClickedButtonDeleitem()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	if ( IDYES == ::MessageBox( this->GetSafeHwnd() ,_T("是否要删除此收款地址") , _T("提示") , MB_YESNO|MB_ICONINFORMATION ) ){
 		//EndDialog(IDOK);
 		CString StrShow;
 		POSITION pos = m_listCtrl.GetFirstSelectedItemPosition() ;
 		if ( pos ) {
-			int nRow = m_listCtrl.GetNextSelectedItem(pos) ;
+			if ( IDYES == ::MessageBox( this->GetSafeHwnd() ,_T("是否要删除此收款地址") , _T("提示") , MB_YESNO|MB_ICONINFORMATION ) ){
+				int nRow = m_listCtrl.GetNextSelectedItem(pos) ;
 
-			//// 删除此条数据库
-			CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_UP_DELETERBOOK);
-			uistruct::ADDRBOOK_t addr;
-			CString Leble = m_listCtrl.GetItemText(nRow, 0); 
-			CString address = m_listCtrl.GetItemText(nRow, 1); 
-			addr.address = address;
-			addr.lebel = Leble;
-			string temp =addr.ToJson();
-			postmsg.SetData(temp.c_str());
-			theApp.m_MsgQueue.push(postmsg);
+				//// 删除此条数据库
+				CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_UP_DELETERBOOK);
+				uistruct::ADDRBOOK_t addr;
+				CString Leble = m_listCtrl.GetItemText(nRow, 0); 
+				CString address = m_listCtrl.GetItemText(nRow, 1); 
+				addr.address = address;
+				addr.lebel = Leble;
+				string temp =addr.ToJson();
+				postmsg.SetData(temp.c_str());
+				theApp.m_MsgQueue.push(postmsg);
 
-			//// 从控件中删除
-			m_listCtrl.DeleteItem(nRow);
+				//// 从控件中删除
+				m_listCtrl.DeleteItem(nRow);
+			}
 		}else{
 			StrShow.Format(_T("请选择地址!\n"));
 			::MessageBox( this->GetSafeHwnd() ,StrShow , _T("提示") , MB_ICONINFORMATION ) ;
 			return;
 		}
-	}
 }
 
 
