@@ -81,6 +81,7 @@ private:
 	void       CloseThread();
 	void       StopSever();
 public:
+	void       Close(); 
 	void       CloseApp();
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 };
