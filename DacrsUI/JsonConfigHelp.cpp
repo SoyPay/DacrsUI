@@ -24,6 +24,7 @@ void CJsonConfigHelp::ReadJsonConfig(const CString& strFilePath)
 		ReadDarkCoinCfgData(root);
 		ReadP2PCfgData(root);
 		ReadNetParmCfgData(root);
+		ReadLogParamCfg(root);
 	}
 	ifs.close();
 }
@@ -212,6 +213,26 @@ void CJsonConfigHelp::ReadNetParmCfgData(const Json::Value& root){
 	m_NetParam.rpc_user =  netparam["rpc_user"].asCString();
 	m_NetParam.rpc_password = netparam["rpc_password"].asCString();
 }
-void CJsonConfigHelp::GetNetParmCfgData(CNetParamCfg& netparm){
+void CJsonConfigHelp::GetNetParamCfgData(CNetParamCfg& netparm){
 	netparm =m_NetParam;
+}
+
+void CJsonConfigHelp::ReadLogParamCfg(const Json::Value &root)
+{
+	Json::Value logParam = root["logcfg"];
+	ASSERT(!logParam.isNull());
+	m_LogParamCfg.bLogFlag = (logParam["log_flag"].asInt()>0);
+	Json::Value  arrayTags = logParam["tags"];
+	for(int i=0; i<arrayTags.size();++i)
+	{
+		m_LogParamCfg.vTag.push_back(arrayTags[i]["debug"].asCString());
+	}
+	m_LogParamCfg.bPrintFileLine = (logParam["print_fileline"].asInt()>0);
+	m_LogParamCfg.bPrinttimestamps = (logParam["print_timestamps"].asInt()>0);
+	
+}
+
+void CJsonConfigHelp::GetLogParamCfg(CLogParamCfg &logCfg)
+{
+	logCfg = m_LogParamCfg;
 }

@@ -114,6 +114,9 @@ BOOL CDacrsUIApp::InitInstance()
 	ParseUIConfigFile(str_InsPath);
 	gsLanguage = language();
 
+	//初始化日志配置参数
+	InitLogCfg();
+
 	OnInitList() ;
 	//打开sqlite3数据库
 	m_SqliteDeal.OpenSqlite(str_InsPath, TRUE) ;
@@ -1126,7 +1129,7 @@ void  CDacrsUIApp::ParseUIConfigFile(const CStringA& strExeDir){
 		CJsonConfigHelp::getInstance()->GetDarkCfgData(m_DarkCfg);
 		CJsonConfigHelp::getInstance()->GetP2PBetCfgData(m_P2PBetCfg);
 		CNetParamCfg netParm;
-		CJsonConfigHelp::getInstance()->GetNetParmCfgData(netParm);
+		CJsonConfigHelp::getInstance()->GetNetParamCfgData(netParm);
 		m_severip = netParm.server_ip;
 		m_uirpcport = netParm.server_ui_port;
 		m_rpcport = netParm.rpc_port;
@@ -1137,6 +1140,7 @@ void  CDacrsUIApp::ParseUIConfigFile(const CStringA& strExeDir){
 void CDacrsUIApp::StartSeverProcess(const CStringA& strdir){
 	///// 启动前先关闭系统中dacrs-d.exe进程
 	CloseProcess("dacrs-d.exe");
+	LogPrint("INFO", "关闭服务端成功\n");
 	
 	STARTUPINFOA si; 
 	memset(&si, 0, sizeof(STARTUPINFO));  
@@ -1157,10 +1161,12 @@ void CDacrsUIApp::StartSeverProcess(const CStringA& strdir){
 	{  
 		int n = GetLastError();
 		AfxMessageBox(_T("CreateProcessA sever error!"));
+		LogPrint("INFO", "开启服务端程序失败\n");
 		exit(1);  
 	}  
 	CloseHandle(sever_pi.hProcess);
 	CloseHandle(sever_pi.hThread);
+	LogPrint("INFO", "开启服务端程序成功\n");
 }
 void CDacrsUIApp::CloseProcess(const string& exename){
 	HANDLE SnapShot,ProcessHandle;  
