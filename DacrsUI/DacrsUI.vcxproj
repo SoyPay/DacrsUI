@@ -215,6 +215,7 @@
     <ClInclude Include="CeXDib.h" />
     <ClInclude Include="ChangeDPI.h" />
     <ClInclude Include="CommonStruct.h" />
+    <ClInclude Include="Log.h" />
     <ClInclude Include="NewSendAddr.h" />
     <ClInclude Include="Out.h" />
     <ClInclude Include="OutGifDlg.h" />
@@ -288,6 +289,7 @@
     <ClCompile Include="json\json_writer.cpp" />
     <ClCompile Include="Language.cpp" />
     <ClCompile Include="ListCtrlCl.cpp" />
+    <ClCompile Include="Log.cpp" />
     <ClCompile Include="MainDlg.cpp" />
     <ClCompile Include="MortgageTardDlg.cpp" />
     <ClCompile Include="MyMutex.cpp" />
