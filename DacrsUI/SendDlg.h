@@ -43,4 +43,6 @@ public:
 	afx_msg void OnBnClickedButtonAddbook();
 	void ModifyComboxItem();
 	void InsertComboxIitem();
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	afx_msg void OnSize(UINT nType, int cx, int cy);
 };

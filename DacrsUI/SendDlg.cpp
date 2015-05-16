@@ -41,6 +41,7 @@ BEGIN_MESSAGE_MAP(CSendDlg, CDialogBar)
 	ON_WM_CREATE()
 	ON_WM_ERASEBKGND()
 	ON_BN_CLICKED(IDC_BUTTON_ADDBOOK, &CSendDlg::OnBnClickedButtonAddbook)
+	ON_WM_SIZE()
 END_MESSAGE_MAP()
 
 
@@ -403,4 +404,119 @@ void CSendDlg::InsertComboxIitem()
 
 	int item = m_addrbook.GetCount();
 	m_addrbook.InsertString(item,addressd);
+}
+
+
+BOOL CSendDlg::PreTranslateMessage(MSG* pMsg)
+{
+	// TODO: 在此添加专用代码和/或调用基类
+	if (pMsg->message==WM_KEYDOWN)
+	{
+		BOOL bCtrl=::GetKeyState(VK_CONTROL)&0x8000;
+		BOOL bShift=::GetKeyState(VK_SHIFT)&0x8000;
+
+		// only gets here if CTRL key is pressed
+		BOOL bAlt=::GetKeyState(VK_MENU)&0x8000;
+		switch( pMsg->wParam )
+		{
+		case 'V':
+			{
+				if (GetDlgItem(IDC_EDIT_DESADDRESS) == this->GetFocus())
+				{
+					HWND hWnd = GetSafeHwnd(); // 获取安全窗口句柄
+					::OpenClipboard(hWnd); // 打开剪贴板
+					HANDLE hClipMemory = ::GetClipboardData(CF_TEXT);// 获取剪贴板数据句柄
+					DWORD dwLength = GlobalSize(hClipMemory); // 返回指定内存区域的当前大小
+					LPBYTE lpClipMemory = (LPBYTE)GlobalLock(hClipMemory); // 锁定内存
+					CString message = CString(lpClipMemory); // 保存得到的文本数据
+					GlobalUnlock(hClipMemory); // 内存解锁
+					::CloseClipboard(); // 关闭剪贴板
+					if (bCtrl)
+					{
+						uistruct::ADDRBOOKLIST listaddr;
+						int nItem =  theApp.m_SqliteDeal.FindDB(_T("addrbook") ,message,_T("address") ,&listaddr) ;
+						if (listaddr.size() != 0)
+						{
+							uistruct::ADDRBOOK_t addrbook = *listaddr.begin();
+							GetDlgItem(IDC_EDIT2)->SetWindowText(addrbook.lebel);
+						}
+						
+					}
+					
+				}
+
+			}
+			break;
+		}
+	}
+	return CDialogBar::PreTranslateMessage(pMsg);
+}
+
+
+void CSendDlg::OnSize(UINT nType, int cx, int cy)
+{
+	CDialogBar::OnSize(nType, cx, cy);
+	if( NULL != GetSafeHwnd() ) {
+		const int div = 100 ;
+
+		CRect rc ;
+		GetClientRect( rc ) ;
+
+		
+		CWnd *pst = GetDlgItem( IDC_COMBO_ADDR_OUT ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL , (rc.Width()/100)*24 , (rc.Height()/100)*12 , (rc.Width()/100)*37, rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
+
+		pst = GetDlgItem( IDC_STATIC_XM ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL , (rc.Width()/100)*70 ,(rc.Height()/100)*12 , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
+		
+		pst = GetDlgItem( IDC_EDIT_DESADDRESS ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL , (rc.Width()/100)*24 ,(rc.Height()/100)*23, (rc.Width()/100)*37, (rc.Height()/100)*7 ,SWP_SHOWWINDOW ) ; 
+		}
+		
+		pst = GetDlgItem( IDC_BUTTON_ADDBOOK ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL , (rc.Width()/100)*62 ,(rc.Height()/100)*23-2 , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
+
+		pst = GetDlgItem( IDC_EDIT2) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL , (rc.Width()/100)*24 ,(rc.Height()/100)*34, rect.Width(), (rc.Height()/100)*7  ,SWP_SHOWWINDOW ) ; 
+		}
+		pst = GetDlgItem( IDC_EDIT_MONEY) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL , (rc.Width()/100)*24 ,(rc.Height()/100)*46, rect.Width(), (rc.Height()/100)*7  ,SWP_SHOWWINDOW ) ; 
+		}
+		
+		pst = GetDlgItem( IDC_COMBO2) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL , (rc.Width()/100)*36 ,(rc.Height()/100)*47, rect.Width(), (rc.Height()/100)*7  ,SWP_SHOWWINDOW ) ; 
+		}
+
+		pst = GetDlgItem( IDC_SENDTRNSFER) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL , (rc.Width()/100)*90 ,(rc.Height()/100)*65, rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
+	}
+	// TODO: 在此处添加消息处理程序代码
 }
