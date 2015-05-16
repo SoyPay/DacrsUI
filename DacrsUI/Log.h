@@ -36,8 +36,9 @@ static inline int LogTrace(const char* category, int line, const char* file, con
 		strTemp = strTemp.Right(strTemp.GetLength()-nPos-1);
 	}
 	CString strHeader = GetLogHead(line, (LPSTR)(LPCTSTR)strTemp, category);
-	strHeader.Format(_T("%s%s"),strHeader, format);
-	return LogPrintStr(category,  strHeader);
+	CString pTemp;
+	pTemp.Format(_T("%s%s"),strHeader, format);
+	return LogPrintStr(category,  pTemp);
 }
 
 extern CString GetCurrentWorkDir();

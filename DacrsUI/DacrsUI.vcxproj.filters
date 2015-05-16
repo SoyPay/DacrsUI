@@ -642,6 +642,9 @@
     <None Include="res\addr_book_black_ground.bmp">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="res\target.bmp">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="资源文件">
