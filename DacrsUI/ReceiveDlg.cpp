@@ -331,13 +331,13 @@ void CReceiveDlg::OnSize(UINT nType, int cx, int cy)
 		GetClientRect( rc ) ;
 		CButton *pList = (CButton*)GetDlgItem(IDC_LIST_SHOW);
 		if( NULL != pList ) {	
-		   pList->SetWindowPos(NULL ,32, 21 , 837 , 408 , SWP_SHOWWINDOW);
+			pList->SetWindowPos(NULL ,32, 21 , 837 , 408 , SWP_SHOWWINDOW);
 		}
 		CButton *pButton = (CButton*)GetDlgItem(IDC_BUTTON_JHDZ);
 		if( NULL != pButton ) {	
-		   CRect m_BtnRc ;
-		   pButton->GetClientRect(&m_BtnRc);
-		   pButton->SetWindowPos(NULL ,900 - 3*(103 + 5) - 23 , 600 - 72 - 32 - 46 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
+			CRect m_BtnRc ;
+			pButton->GetClientRect(&m_BtnRc);
+			pButton->SetWindowPos(NULL ,900 - 3*(103 + 5) - 23 , 600 - 72 - 32 - 46 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
 		}
 		pButton = (CButton*)GetDlgItem(IDC_BUTTON_NEWADDRESS);
 		if( NULL != pButton ) {	
