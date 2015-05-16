@@ -1686,3 +1686,46 @@ BOOL  CSqliteDeal::GetaddrBookData(map<CString,uistruct::ADDRBOOK_t>* pListInfo)
 	sqlite3_free_table(m_pResult);
 	return TRUE ;
 }
+int	 CSqliteDeal::FindDB(const CString strTabName , const CString strP, const CString strSource,uistruct::ADDRBOOKLIST *listaddr )
+{
+	if ( NULL == m_pSqliteRead ) {
+		if ( !OpenSqlite(theApp.str_InsPath) ) return -1 ;
+	}
+
+	CString strSql = _T("SELECT * FROM ") + strTabName + _T(" WHERE ") + strSource + _T(" ='") + strP+ _T("'") ;
+
+	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	if ( nResult != SQLITE_OK ){
+		sqlite3_close(m_pSqliteRead);  
+		sqlite3_free(m_pzErrMsg);  
+		m_pSqliteRead = NULL ;
+		return 0 ;
+	}
+
+	int nIndex = m_nCol;
+	CString strValue ;
+	uistruct::ADDRBOOK_t listdata;
+	for(int i = 0; i < m_nRow ; i++) {
+		for(int j = 0; j < m_nCol; j++ ){
+			switch (j)
+			{
+			case 0:
+				{
+					strValue.Format(_T("%s") , m_pResult[nIndex] );
+					listdata.lebel = strValue;
+				}
+				break;
+			case 1:
+				{
+					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					listdata.address = strValue;
+				}
+				break;
+			}
+			++nIndex ;
+		}
+		listaddr->push_back(listdata);
+	}
+	sqlite3_free_table(m_pResult);
+	return m_nRow;
+}
