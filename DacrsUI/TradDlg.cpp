@@ -37,6 +37,7 @@ void CTradDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogBar::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LIST_LISTTX, m_listCtrl);
+	DDX_Control(pDX, IDC_BUTTON_TXDETAIL, m_rBtnTxdetail);
 	//DDX_Control(pDX, IDC_PROGRESS, v_linkCtrl1);
 	//DDX_Control(pDX, IDC_MFCLINK2, v_linkCtrl2);
 }
@@ -48,6 +49,8 @@ BEGIN_MESSAGE_MAP(CTradDlg, CDialogBar)
 	ON_BN_CLICKED(IDC_BUTTON_TXDETAIL, &CTradDlg::OnBnClickedButtonTxdetail)
 	ON_NOTIFY(NM_DBLCLK, IDC_LIST_LISTTX, &CTradDlg::OnNMDblclkListListtx)
 	ON_MESSAGE(MSG_USER_TRANSRECORD_UI , &CTradDlg::OnShowListCtrl )
+
+	ON_WM_SIZE()
 END_MESSAGE_MAP()
 
 
@@ -71,7 +74,7 @@ int CTradDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (CDialogBar::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
-	SetBkBmpNid(IDB_BITMAP_TRAD_BJ);
+	SetBkBmpNid(IDB_BITMAP_RECEIVE);
 	// TODO:  在此添加您专用的创建代码
 
 	return 0;
@@ -121,11 +124,11 @@ BOOL CTradDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 			CString		name ;
 			UINT		size ;
 		} listcol[5]  = {
-			{"	交易hash" ,      255},
-			{"交易类型" ,      130},
-			{"源地址" ,      275}, 
-			{"目的地址" ,  100}, 
-			{"金额" ,      100}
+			{"	交易hash" ,      250},
+			{"交易类型" ,        81},
+			{"源地址" ,          200}, 
+			{"目的地址" ,        200}, 
+			{"金额" ,            100}
 		};
 		m_listCtrl.SetBkColor(RGB(240,240,240));       
 		m_listCtrl.SetRowHeigt(23);               
@@ -133,11 +136,22 @@ BOOL CTradDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_listCtrl.SetHeaderFontHW(15,0);
 		m_listCtrl.SetHeaderBKColor(32,30,32,8); 
 		m_listCtrl.SetHeaderTextColor(RGB(255,255,255)); //设置头部字体颜色
-		m_listCtrl.SetTextColor(RGB(0,0,0));  
+		m_listCtrl.SetTextColor(RGB(0,0,0)); 
 		for( int i = 0 ; i < 5 ; i++  ) {
 			m_listCtrl.InsertColumn(i,listcol[i].name,LVCFMT_CENTER,listcol[i].size);
 		}
 		m_listCtrl.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_HEADERDRAGDROP );// |LVS_SINGLESEL  );
+
+		m_rBtnTxdetail.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
+		m_rBtnTxdetail.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+		m_rBtnTxdetail.SetWindowText("查看交易详情") ;
+		m_rBtnTxdetail.SetFontEx(20 , _T("微软雅黑"));
+		m_rBtnTxdetail.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
+		m_rBtnTxdetail.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+		m_rBtnTxdetail.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
+		m_rBtnTxdetail.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
+		m_rBtnTxdetail.SizeToContent();
+
 		OninitializeList();
 	}
 	return bRes ;
@@ -315,3 +329,25 @@ void CTradDlg::InsertItemData()
 	 }
 	 return 0;
  }
+
+void CTradDlg::OnSize(UINT nType, int cx, int cy)
+{
+	CDialogBar::OnSize(nType, cx, cy);
+
+	// TODO: 在此处添加消息处理程序代码
+	if( NULL != GetSafeHwnd() ) {
+		const int div = 100 ;
+		CRect rc  ;
+		GetClientRect( rc ) ;
+		CButton *pList = (CButton*)GetDlgItem(IDC_LIST_LISTTX);
+		if( NULL != pList ) {	
+			pList->SetWindowPos(NULL ,32, 21 , 837 , 408 , SWP_SHOWWINDOW);
+		}
+		CButton *pButton = (CButton*)GetDlgItem(IDC_BUTTON_TXDETAIL);
+		if( NULL != pButton ) {	
+			CRect m_BtnRc ;
+			pButton->GetClientRect(&m_BtnRc);
+			pButton->SetWindowPos(NULL ,900 - 1*(103 + 5)- 23 , 600 - 72 - 32 - 46 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
+		}
+	}
+}
