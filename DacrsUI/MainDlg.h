@@ -66,4 +66,5 @@ public:
 	afx_msg void OnBnClickedButtonImportwallet();
 	afx_msg void OnBnClickedButtonDumpwallet();
 	afx_msg void OnSize(UINT nType, int cx, int cy);
+	void SetShowCtrol();
 };
