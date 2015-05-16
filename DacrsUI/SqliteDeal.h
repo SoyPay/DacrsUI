@@ -23,6 +23,7 @@ public:
 	int	   FindDB(const CString strTabName , const CString strP, const CString strSource,uistruct::DARK_RECORD *darkrecord );
 	int	   FindDB(const CString strTabName , const CString strP, const CString strSource,uistruct::TRANSRECORDLIST* pListInfo);
 	int	   FindDB(const CString strTabName , const CString strP, const CString strSource,uistruct::LISTADDR_t *listaddr );
+	int	   FindDB(const CString strTabName , const CString strP, const CString strSource,uistruct::ADDRBOOKLIST *listaddr );
 	BOOL   InsertData(const CString strTabName ,const CString strSourceData );
 	BOOL   EmptyTabData(const CString strTabName );
 	BOOL   Updatabase(const CString strTabName , const CString strSourceData , const CString strW );

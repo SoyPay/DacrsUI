@@ -404,3 +404,49 @@ void CSendDlg::InsertComboxIitem()
 	int item = m_addrbook.GetCount();
 	m_addrbook.InsertString(item,addressd);
 }
+
+
+BOOL CSendDlg::PreTranslateMessage(MSG* pMsg)
+{
+	// TODO: 在此添加专用代码和/或调用基类
+	if (pMsg->message==WM_KEYDOWN)
+	{
+		BOOL bCtrl=::GetKeyState(VK_CONTROL)&0x8000;
+		BOOL bShift=::GetKeyState(VK_SHIFT)&0x8000;
+
+		// only gets here if CTRL key is pressed
+		BOOL bAlt=::GetKeyState(VK_MENU)&0x8000;
+		switch( pMsg->wParam )
+		{
+		case 'V':
+			{
+				if (GetDlgItem(IDC_EDIT_DESADDRESS) == this->GetFocus())
+				{
+					HWND hWnd = GetSafeHwnd(); // 获取安全窗口句柄
+					::OpenClipboard(hWnd); // 打开剪贴板
+					HANDLE hClipMemory = ::GetClipboardData(CF_TEXT);// 获取剪贴板数据句柄
+					DWORD dwLength = GlobalSize(hClipMemory); // 返回指定内存区域的当前大小
+					LPBYTE lpClipMemory = (LPBYTE)GlobalLock(hClipMemory); // 锁定内存
+					CString message = CString(lpClipMemory); // 保存得到的文本数据
+					GlobalUnlock(hClipMemory); // 内存解锁
+					::CloseClipboard(); // 关闭剪贴板
+					if (bCtrl)
+					{
+						uistruct::ADDRBOOKLIST listaddr;
+						int nItem =  theApp.m_SqliteDeal.FindDB(_T("addrbook") ,message,_T("address") ,&listaddr) ;
+						if (listaddr.size() != 0)
+						{
+							uistruct::ADDRBOOK_t addrbook = *listaddr.begin();
+							GetDlgItem(IDC_EDIT2)->SetWindowText(addrbook.lebel);
+						}
+						
+					}
+					
+				}
+
+			}
+			break;
+		}
+	}
+	return CDialogBar::PreTranslateMessage(pMsg);
+}
