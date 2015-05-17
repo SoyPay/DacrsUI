@@ -145,6 +145,7 @@
     <None Include="res\diya_logo_4.bmp" />
     <None Include="res\dlg_balck_ground.bmp" />
     <None Include="res\dlg_bj.bmp" />
+    <None Include="res\exit_bj.bmp" />
     <None Include="res\import_wallet.bmp" />
     <None Include="res\IPO.bmp" />
     <None Include="res\ipo_1.bmp" />
