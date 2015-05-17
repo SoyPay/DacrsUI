@@ -195,6 +195,7 @@ void  CTradDlg::OninitializeList()
 	uistruct::TRANSRECORDLIST pListInfo;
 	theApp.m_SqliteDeal.GetRevtransactionDatta(&pListInfo); 
 
+	TRACE("TX Count:%d",pListInfo.size());
 	if (pListInfo.size() == 0)
 	{
 		return;
