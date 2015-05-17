@@ -425,7 +425,7 @@ BOOL CSqliteDeal::GetRevtransactionDatta(uistruct::TRANSRECORDLIST* pListInfo)
 	}
 	pListInfo->clear() ;
 
-	CString strSql = _T("SELECT * FROM revtransaction order by confirmHeight desc");
+	CString strSql = _T("SELECT * FROM revtransaction");
 //	EnterCriticalSection( &cs_UpDataResult) ;
 	int nResult = sqlite3_get_table(m_pSqliteWrite,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
 	if ( nResult != SQLITE_OK ){
