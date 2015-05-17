@@ -1,8 +1,18 @@
 #pragma once
 #include <string>
+#include "tinyformat.h"
 using namespace std;
 #define LogPrint(tag, ...) LogTrace(tag, __LINE__, __FILE__, __VA_ARGS__);
 
+#define MAKE_ERROR_AND_TRACE_FUNC(n)                                        \
+	/*   Print to debug.log if -debug=category switch is given OR category is NULL. */ \
+	template<TINYFORMAT_ARGTYPES(n)>                                          \
+	static inline int LogTrace(const char* category, int line, const char* file, const char* format, TINYFORMAT_VARARGS(n))  \
+	{                                                                         \
+		return LogPrintStr(category, GetLogHead(line,file,category) + tfm::format(format, TINYFORMAT_PASSARGS(n))); \
+	}   
+
+TINYFORMAT_FOREACH_ARGNUM(MAKE_ERROR_AND_TRACE_FUNC)
 
 struct DebugLogFile
 {
@@ -25,20 +35,12 @@ struct DebugLogFile
 	CMutex *m_clsMutex;
 };
 
-extern CString GetLogHead(int line, const char* file, const char* category);
+extern string GetLogHead(int line, const char* file, const char* category);
 
-extern int LogPrintStr(const char* category, const CString &str);
+extern int LogPrintStr(const char* category, const string &str);
 
 static inline int LogTrace(const char* category, int line, const char* file, const char* format) {
-	CString strTemp = file;
-	int nPos = strTemp.ReverseFind('\\');
-	if(nPos > 0) {
-		strTemp = strTemp.Right(strTemp.GetLength()-nPos-1);
-	}
-	CString strHeader = GetLogHead(line, (LPSTR)(LPCTSTR)strTemp, category);
-	CString pTemp;
-	pTemp.Format(_T("%s%s"),strHeader, format);
-	return LogPrintStr(category,  pTemp);
+	return LogPrintStr(category,   GetLogHead(line, file, category)+format);
 }
 
 extern CString GetCurrentWorkDir();
