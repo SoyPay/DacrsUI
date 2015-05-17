@@ -228,7 +228,6 @@ int CDacrsUIDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		m_pStatusBar->Create(this, IDD_DIALOG_STATUS,CBRS_ALIGN_BOTTOM | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_HIDE_INPLACE,2) ;
 		m_pStatusBar->SetWindowPos(NULL , 0 , rect.Height() - 32  , rect.Width() ,32 , SWP_SHOWWINDOW) ;
 		m_pStatusBar->ShowWindow(SW_SHOW) ;
-		m_pStatusBar->LoadGifing(TRUE);
 	}
 	//TRACE("wwwwwCProgStatusBar\r\n");
 	if( NULL == m_pMainDlg ){
@@ -280,8 +279,6 @@ int CDacrsUIDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		m_pOutGifDlg = new COutGifDlg ;
 		m_pOutGifDlg->Create(COutGifDlg::IDD , this) ;
 		m_pOutGifDlg->ShowWindow(SW_HIDE) ;
-		m_pOutGifDlg->LoadGifing(TRUE);
-		m_pOutGifDlg->SetWindowPos(NULL , 800 , 480 , 0 , 0 ,SWP_NOSIZE );
 	}
 
 	//¼ÓÈëµ½m_dlgMap
@@ -619,13 +616,11 @@ void CDacrsUIDlg::OnBnClickedButtonClose()
 	COut outdlg;
 	if ( IDOK == outdlg.DoModal()){
 		BeginWaitCursor();
-	/*	if ( NULL != m_pOutGifDlg ) {
+		if ( NULL != m_pOutGifDlg ) {
 			m_pOutGifDlg->ShowWindow(SW_SHOW) ;
-		}*/
-		/*::PostThreadMessage( theApp.GetMtHthrdId() , MSG_USER_OUT , 0 , 0 ) ;
-		SetTimer( 0x10 , 3000 , NULL ) ; */
-		Close();
-		Sleep(200);
+		}
+		::PostThreadMessage( theApp.GetMtHthrdId() , MSG_USER_OUT , 0 , 0 ) ;
+		SetTimer( 0x10 , 2000 , NULL ) ; 
 	}else{
 		;
 	}
@@ -645,12 +640,12 @@ void CDacrsUIDlg::OnTimer(UINT_PTR nIDEvent)
 
 		DestroyDlg();
 
-		//if ( NULL != m_pOutGifDlg ) {
+		if ( NULL != m_pOutGifDlg ) {
 			m_pOutGifDlg->ShowWindow(SW_HIDE) ;
-		//	m_pOutGifDlg->LoadGifing(FALSE);
-		//	delete m_pOutGifDlg ;
-		//	m_pOutGifDlg = NULL ;
-		//}
+			m_pOutGifDlg->LoadGifing(FALSE);
+			delete m_pOutGifDlg ;
+			m_pOutGifDlg = NULL ;
+		}
 		theApp.m_bOutApp = TRUE ;
 	}
 	CDialogEx::OnTimer(nIDEvent);
