@@ -123,7 +123,7 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 
 		if (!theApp.IsSysnBlock )
 		{
-			::MessageBox( this->GetSafeHwnd() ,_T("还未同步完成,不能发交易") , _T("提示") , MB_ICONINFORMATION ) ;
+			::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
 			return;
 		}
 		strCommand.Format(_T("%s %s %s %lld"),_T("sendtoaddress") ,data.address ,strMaddress ,REAL_MONEY(dSendMoney));
@@ -497,18 +497,20 @@ void CSendDlg::OnSize(UINT nType, int cx, int cy)
 			pst->GetClientRect( rect ) ;
 			pst->SetWindowPos( NULL , (rc.Width()/100)*24 ,(rc.Height()/100)*34, rect.Width(), (rc.Height()/100)*7  ,SWP_SHOWWINDOW ) ; 
 		}
+		int with = 0;
 		pst = GetDlgItem( IDC_EDIT_MONEY) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
 			pst->SetWindowPos( NULL , (rc.Width()/100)*24 ,(rc.Height()/100)*46, rect.Width(), (rc.Height()/100)*7  ,SWP_SHOWWINDOW ) ; 
+			with = rect.Width();
 		}
 		
 		pst = GetDlgItem( IDC_COMBO2) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL , (rc.Width()/100)*36 ,(rc.Height()/100)*47, rect.Width(), (rc.Height()/100)*7  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL , (rc.Width()/100)*25 +with,(rc.Height()/100)*47-3, rect.Width(), (rc.Height()/100)*7  ,SWP_SHOWWINDOW ) ; 
 		}
 
 		pst = GetDlgItem( IDC_SENDTRNSFER) ;
@@ -517,6 +519,7 @@ void CSendDlg::OnSize(UINT nType, int cx, int cy)
 			pst->GetClientRect( rect ) ;
 			pst->SetWindowPos( NULL , (rc.Width()/100)*90 ,(rc.Height()/100)*65, rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
+
 	}
 	// TODO: 在此处添加消息处理程序代码
 }

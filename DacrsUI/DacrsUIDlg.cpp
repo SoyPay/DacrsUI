@@ -439,15 +439,68 @@ void    CDacrsUIDlg::SyncAddrInfo()
 	map<CString,uistruct::LISTADDR_t> pListInfo;
 	theApp.m_SqliteDeal.GetListaddrData(&pListInfo);
 
+	/// 数据库中没有的地址要插入
 	map<CString,int> SListInfo;
+	uistruct::LISTADDR_t listaddr;
 	for(int i = 0; i < root.size(); ++i){
 		//address
 		CString address;
 		address.Format( _T("%s") , root[i]["addr"].asCString() ) ;		
 		SListInfo[address] = i;
 
+		memset(&listaddr , 0 , sizeof(uistruct::LISTADDR_t));
+		//address
+		CString strData;
+		strData.Format( _T("%s") , root[i]["addr"].asCString() ) ;
+		strncpy(listaddr.address  , strData , strlen(strData) > sizeof(listaddr.address) ? sizeof(listaddr.address):strlen(strData));
+		//RegID
+		strData.Format( _T("%s") , root[i]["regid"].asCString() ) ;
+		strncpy(listaddr.RegID  , strData , strlen(strData) > sizeof(listaddr.RegID) ? sizeof(listaddr.RegID):strlen(strData));
+		//金额
+		double fmoney = 0.0 ;  
+		fmoney = root[i]["balance"].asDouble(); 
+		listaddr.fMoney = fmoney ;
+		//是否支持冷挖矿
+		listaddr.nColdDig = root[i]["haveminerkey"].asBool() ;
+
+		//是否注册GetLength();
+		CString strSign ;
+		strSign.Format(_T("%s") ,listaddr.RegID ) ;
+		if ( 3 <= strSign.GetLength() ) {
+			listaddr.bSign    = 1 ;
+		}else{
+			listaddr.bSign   = 0 ;
+		}
+		CString strSourceData,feild;
+		feild.Format(_T("address"));
+		strSourceData.Format(_T("%s"),listaddr.address);
+
+		uistruct::LISTADDR_t addrsql;
+		int item = theApp.m_SqliteDeal.FindDB(_T("MYWALLET") ,strSourceData, feild,&addrsql) ;
+
+		if (item == 0 )
+		{
+			strSourceData.Format(_T("'%s' , '%s' , '%.8f' , '%d' ,'%d','%s'") , listaddr.address ,listaddr.RegID ,listaddr.fMoney ,listaddr.nColdDig ,listaddr.bSign,listaddr.Lebel ) ;
+			if (!theApp.m_SqliteDeal.InsertData(_T("MYWALLET") ,strSourceData ) )
+			{
+				TRACE(_T("MYWALLET数据插入失败!") );
+				TRACE("insert:%d\r\n",i);
+			}
+		}else{
+			if (listaddr.fMoney != addrsql.fMoney || listaddr.bSign != addrsql.bSign)
+			{
+				CString strSourceData,strWhere;
+				strSourceData.Format(_T("regid = '%s', money = %.8f ,coldig =%d,sign =%d") ,listaddr.RegID ,listaddr.fMoney ,listaddr.nColdDig ,listaddr.bSign ) ;
+				strWhere.Format(_T("address = '%s'") , listaddr.address  ) ;
+				if ( !theApp.m_SqliteDeal.Updatabase(_T("MYWALLET") , strSourceData , strWhere ) ){
+					TRACE(_T("MYWALLET数据更新失败!") );
+				}
+			}
+		}
+
 	}
 
+	////// 剔除数据库中钱包没有的地址
 	map<CString,uistruct::LISTADDR_t>::const_iterator it;
 	for (it= pListInfo.begin();it != pListInfo.end();it++)
 	{
@@ -571,6 +624,11 @@ void CDacrsUIDlg::OnBnClickedButtonClose()
 	}else{
 		;
 	}
+}
+
+void CDacrsUIDlg::Close() {
+	::PostThreadMessage( theApp.GetMtHthrdId() , MSG_USER_OUT , 0 , 0 );
+	SetTimer( 0x10 , 3000 , NULL); 
 }
 void CDacrsUIDlg::OnTimer(UINT_PTR nIDEvent)
 {

@@ -583,6 +583,13 @@ void CMainDlg::ClearCtrlText()
 
 	m_strTranNum.SetWindowText(_T("")) ;
 
+
+	GetDlgItem(IDC_STATIC_DES1)->SetWindowText(_T(""));
+	GetDlgItem(IDC_STATIC_DES2)->SetWindowText(_T("")) ;
+	GetDlgItem(IDC_STATIC_DES3)->SetWindowText(_T("")) ;
+	GetDlgItem(IDC_STATIC_DES4)->SetWindowText(_T("")) ;
+	GetDlgItem(IDC_STATIC_DES5)->SetWindowText(_T("")) ;
+
 	GetDlgItem(IDC_TX1)->SetWindowText(_T("")) ;
 	GetDlgItem(IDC_TX2)->SetWindowText(_T("")) ;
 	GetDlgItem(IDC_TX3)->SetWindowText(_T("")) ;
@@ -651,7 +658,8 @@ void CMainDlg::OnBnClickedButtonImportwallet()
 		{
 			MessageBox(_T("导入钱包成功请重新启动钱包"));
 			//PostMessage(WM_CLOSE);
-			::PostThreadMessage( theApp.GetMtHthrdId() , MSG_USER_OUT , 0 , 0 ) ;
+			//::PostThreadMessage( theApp.GetMtHthrdId() , MSG_USER_OUT , 0 , 0 );
+			((CDacrsUIDlg*)(this->GetParent()))->Close();
 		}else
 		{
 			MessageBox(_T("导入钱包失败"));
@@ -762,20 +770,20 @@ void CMainDlg::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*4 ,(rc.Height()/100)*67  , rect.Width()*2, rect.Height()  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*4 ,(rc.Height()/100)*67  , (rc.Width()/100)*30, rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
 
 		pst = GetDlgItem( IDC_STATIC_DES1 ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*35+4 ,(rc.Height()/100)*67  , rect.Width()*2, rect.Height()  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*35+4 ,(rc.Height()/100)*67  , (rc.Width()/100)*30, rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
 		pst = GetDlgItem( IDC_STATIC_TARGET1 ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*33+4 ,(rc.Height()/100)*67  , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*33+4 ,(rc.Height()/100)*67  ,  (rc.Width()/100)*3, rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
 		pst = GetDlgItem( IDC_TX_JY2 ) ;
 		if ( NULL != pst ) {
@@ -788,21 +796,21 @@ void CMainDlg::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*4 ,(rc.Height()/100)*75 , rect.Width()*2, rect.Height()  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*4 ,(rc.Height()/100)*75 , (rc.Width()/100)*30, rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
 
 		pst = GetDlgItem( IDC_STATIC_DES2 ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*35+4 ,(rc.Height()/100)*75  , rect.Width()*2, rect.Height()  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*35+4 ,(rc.Height()/100)*75  , (rc.Width()/100)*30, rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
 
 		pst = GetDlgItem( IDC_STATIC_TARGET2) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*33+4 ,(rc.Height()/100)*75  , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*33+4 ,(rc.Height()/100)*75  , (rc.Width()/100)*3, rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
 
 		pst = GetDlgItem( IDC_TX_JY3 ) ;
@@ -816,70 +824,70 @@ void CMainDlg::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*4 ,(rc.Height()/100)*82 , rect.Width()*2, rect.Height()  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*4 ,(rc.Height()/100)*82 , (rc.Width()/100)*30, rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
 
 		pst = GetDlgItem( IDC_STATIC_DES3 ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*35+4 ,(rc.Height()/100)*82  , rect.Width()*2, rect.Height()  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*35+4 ,(rc.Height()/100)*82  , (rc.Width()/100)*30, rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
 
 		pst = GetDlgItem( IDC_STATIC_TARGET3) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*33+4 ,(rc.Height()/100)*82  , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*33+4 ,(rc.Height()/100)*82  , (rc.Width()/100)*3, rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
 
 		pst = GetDlgItem( IDC_TX_JY4 ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*66 ,(rc.Height()/100)*82  , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*66 ,(rc.Height()/100)*82  , (rc.Width()/100)*30, rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
 
 		pst = GetDlgItem( IDC_TX4 ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*4 ,(rc.Height()/100)*89 , rect.Width()*2, rect.Height()  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*4 ,(rc.Height()/100)*89 , (rc.Width()/100)*30, rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
 
 		pst = GetDlgItem( IDC_STATIC_DES4 ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*35+4 ,(rc.Height()/100)*89  , rect.Width()*2, rect.Height()  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*35+4 ,(rc.Height()/100)*89  , (rc.Width()/100)*30, rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
 
 		pst = GetDlgItem( IDC_STATIC_TARGET4) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*33+4 ,(rc.Height()/100)*89  , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*33+4 ,(rc.Height()/100)*89  , (rc.Width()/100)*3, rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
 
 		pst = GetDlgItem( IDC_TX_JY5 ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*66 ,(rc.Height()/100)*89 , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*66 ,(rc.Height()/100)*89 ,  (rc.Width()/100)*30, rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
 
 		pst = GetDlgItem( IDC_TX5 ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*4 ,(rc.Height()/100)*97 , rect.Width()*2, rect.Height()  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*4 ,(rc.Height()/100)*97 , (rc.Width()/100)*30, rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
 
 		pst = GetDlgItem( IDC_STATIC_DES5 ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*35+4 ,(rc.Height()/100)*97  , rect.Width()*2, rect.Height()  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*35+4 ,(rc.Height()/100)*97  , (rc.Width()/100)*30, rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
 
 		
@@ -887,14 +895,14 @@ void CMainDlg::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*33+4 ,(rc.Height()/100)*97 , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*33+4 ,(rc.Height()/100)*97, (rc.Width()/100)*3, rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
 
 		pst = GetDlgItem( IDC_TX_JY7 ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*66 ,(rc.Height()/100)*97 , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*66 ,(rc.Height()/100)*97 ,  (rc.Width()/100)*30, rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
 		pst = GetDlgItem( IDC_ALLTXDETAIL ) ;
 		if ( NULL != pst ) {
