@@ -66,7 +66,7 @@ void COutGifDlg::LoadGifing( BOOL bState )
 					CRect rc ;
 					GetClientRect( rc ) ;
 					Invalidate() ;
-					m_ProgressWnd->SetWindowPos( NULL ,  rc.Width()- 18 , (rc.Height()/2)-8 ,  0 , 0 ,SWP_SHOWWINDOW|SWP_NOSIZE ) ;
+					m_ProgressWnd->SetWindowPos( NULL ,  0 , 0 ,  0 , 0 ,SWP_NOSIZE ) ;
 					((CGIFControl*)m_ProgressWnd)->Play();
 				}
 			}else{
@@ -103,13 +103,20 @@ BOOL COutGifDlg::OnInitDialog()
 	CDialogEx::OnInitDialog();
 
 	// TODO:  在此添加额外的初始化
+	int x = GetSystemMetrics(SM_CXSCREEN);
+	int y = GetSystemMetrics(SM_CYSCREEN);
+
+	SetWindowPos(NULL , x/2 - 175 , y/2 - 50  , 454 ,141 , SWP_SHOWWINDOW) ;
+
 	if ( NULL == m_ProgressWnd ) {
 		m_ProgressWnd = new CGIFControl ;
 		m_ProgressWnd->Create(_T("") , WS_CHILD | SS_OWNERDRAW | WS_VISIBLE | SS_NOTIFY , \
-			CRect(20,20,36,36) , this, 112 ) ;
+			 CRect(0,0,454,141)  , this, 113 ) ;
 	}
 
-	SetBkBmpNid( IDB_BITMAP_BAR3 ) ;
+	SetBkBmpNid( IDB_BITMAP_EXIT_BJ ) ;
+
+	LoadGifing(TRUE);
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE
 }
