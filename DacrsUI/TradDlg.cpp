@@ -281,10 +281,13 @@ void CTradDlg::InsertItemData()
 	string strTemp = postmsg.GetData();
 	txdetail.JsonToStruct(strTemp.c_str());
 
+	int count = m_listCtrl.GetItemCount();
+
 	CString strShowData;
 	int nSubIdx = 0;
 	strShowData.Format(_T("%s"), txdetail.txhash);
-	m_listCtrl.InsertItem(0,strShowData);
+	m_listCtrl.InsertItem(count,strShowData);
+	LogPrint("INFO", "insert new item tx hash%s\n", strShowData.GetBuffer());
 
 	string txtype = txdetail.txtype;
 	if (!strcmp(txtype.c_str(),"REWARD_TX"))
@@ -303,17 +306,19 @@ void CTradDlg::InsertItemData()
 	{
 		strShowData.Format(_T("%s") ,_T("注册应用交易")) ;
 	}
-	m_listCtrl.SetItemText( 0 , ++nSubIdx, strShowData) ;
+	m_listCtrl.SetItemText( count , ++nSubIdx, strShowData) ;
 
 
 	strShowData.Format(_T("%s") ,txdetail.addr.c_str()) ;
-	m_listCtrl.SetItemText(0 , ++nSubIdx , strShowData ) ;
+	m_listCtrl.SetItemText(count , ++nSubIdx , strShowData ) ;
 
 	strShowData.Format(_T("%s") ,txdetail.desaddr.c_str()) ;
-	m_listCtrl.SetItemText(0 , ++nSubIdx , strShowData ) ;
+	m_listCtrl.SetItemText(count , ++nSubIdx , strShowData ) ;
 
 	strShowData.Format(_T("%.8f") , txdetail.money ) ;
-	m_listCtrl.SetItemText(0 , ++nSubIdx , strShowData ) ;
+	m_listCtrl.SetItemText(count , ++nSubIdx , strShowData ) ;
+
+    m_listCtrl.EnsureVisible(count, FALSE);
 }
  LRESULT CTradDlg::OnShowListCtrl(  WPARAM wParam, LPARAM lParam )
  {
@@ -322,6 +327,7 @@ void CTradDlg::InsertItemData()
 	 {
 	 case WM_INSERT:
 		 {
+			 LogPrint("INFO", "Receive message WM_INSERT\n");
 			 InsertItemData();
 		 }
 		 break;

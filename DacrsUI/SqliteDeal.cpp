@@ -2,25 +2,36 @@
 #include "DacrsUI.h"
 #include "SqliteDeal.h"
 #include "CommonStruct.h"
+#include "MyMutex.h"
 
 CSqliteDeal::CSqliteDeal(void)
 {
 	m_pSqliteRead = NULL;
 	m_pSqliteWrite = NULL;
-	m_pzErrMsg  = NULL;
-	m_pResult   = NULL;
-	m_nRow = -1 ;
-	m_nCol = -1 ;
+	//m_pzErrMsg  = NULL;
+	//m_pResult   = NULL;
+	//m_nRow = -1 ;
+	//m_nCol = -1 ;
+	m_pCs = new CCriticalSection();
 	//初始化临界
 	InitializeCriticalSection(&(cs_UpDataResult) ) ;
 }
 
 CSqliteDeal::~CSqliteDeal(void)
 {
+	if( NULL != m_pSqliteRead ) {
+		delete m_pSqliteRead;
+		m_pSqliteRead = NULL;
+	}
 	if ( NULL != m_pSqliteWrite ) {
        sqlite3_close(m_pSqliteWrite);
 	   m_pSqliteWrite = NULL ;
 	}
+	if( NULL != m_pCs ) {
+		delete m_pCs;
+		m_pCs = NULL;
+	}
+
 }
 
 BOOL CSqliteDeal::OpenSqlite(CString strPath, BOOL bOperateFlag)
@@ -57,94 +68,112 @@ strSource:要比较的字段值
 ***************************************/
 int CSqliteDeal::FindDB(const CString strTabName ,const CString strP, const CString strSource )
 {
+	LOCK(m_pCs);
 	if ( NULL == m_pSqliteRead ) {
 		if ( !OpenSqlite(theApp.str_InsPath) ) return -1 ;
 	}
-	
+	char    **  ppResult;    //结果
+	int         nRow;       //行数
+	int         nCol;       //列数
+	char *pzErrMsg;
 	CString strSql = _T("SELECT * FROM ") + strTabName + _T(" WHERE ") + strSource + _T(" ='") + strP + _T("'");
 
 //	EnterCriticalSection( &cs_UpDataResult) ;
-	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(), &ppResult, &nRow, &nCol, &pzErrMsg);
 	if ( nResult != SQLITE_OK ){
 		 sqlite3_close(m_pSqliteRead);  
-		 sqlite3_free(m_pzErrMsg);  
+		 sqlite3_free(pzErrMsg);  
 		 m_pSqliteRead = NULL ;
 		 return -1 ;
 	}
-	sqlite3_free_table(m_pResult);
+	sqlite3_free_table(ppResult);
 //	LeaveCriticalSection (&cs_UpDataResult) ;
-	return m_nRow ;
+	return nRow;
 }
 int  CSqliteDeal::FindInDB(const CString strTabName , const CString strP, const CString strSource ){
+	LOCK(m_pCs);
 	if ( NULL == m_pSqliteRead ) {
 		if ( !OpenSqlite(theApp.str_InsPath) ) return -1 ;
 	}
+	char    **ppResult;		//结果
+	int      nRow;			//行数
+	int      nCol;			//列数
+	char    *pzErrMsg;    //错误信息
 
 	CString strSql = _T("SELECT * FROM ") + strTabName + _T(" WHERE ") + strSource + _T(" = ") + strP;
 
 //	EnterCriticalSection( &cs_UpDataResult) ;
-	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(), &ppResult, &nRow, &nCol, &pzErrMsg);
 	if ( nResult != SQLITE_OK ){
 		sqlite3_close(m_pSqliteRead);  
-		sqlite3_free(m_pzErrMsg);  
+		sqlite3_free(pzErrMsg);  
 		m_pSqliteRead = NULL ;
 		return -1 ;
 	}
-	sqlite3_free_table(m_pResult);
+	sqlite3_free_table(ppResult);
 //	LeaveCriticalSection (&cs_UpDataResult) ;
-	return m_nRow ;
+	return nRow;
 }
 int CSqliteDeal::GetTableCount(const CString strTabName){
+	LOCK(m_pCs);
 	if ( NULL == m_pSqliteRead ) {
 		if ( !OpenSqlite(theApp.str_InsPath) ) return -1 ;
 	}
+	char    **  ppResult;    //结果
+	int         nRow;       //行数
+	int         nCol;       //列数
+	char    *pzErrMsg;    //错误信息
 
 	CString strSql = _T("SELECT * FROM ") + strTabName;
 
 //	EnterCriticalSection( &cs_UpDataResult) ;
-	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(), &ppResult, &nRow, &nCol, &pzErrMsg);
 	if ( nResult != SQLITE_OK ){
 		sqlite3_close(m_pSqliteRead);  
-		sqlite3_free(m_pzErrMsg);  
+		sqlite3_free(pzErrMsg);  
 		m_pSqliteRead = NULL ;
 		return -1 ;
 	}
-	sqlite3_free_table(m_pResult);
+	sqlite3_free_table(ppResult);
 //	LeaveCriticalSection (&cs_UpDataResult) ;
-	return m_nRow ;
+	return nRow;
 }
 BOOL CSqliteDeal::DeleteData(const CString strTabName,const CString strSourceData , const CString strW){
+	LOCK(m_pCs);
 	if ( NULL == m_pSqliteWrite ) {
 		if ( !OpenSqlite(theApp.str_InsPath, TRUE) ) return -1 ;
 	}
-
+	char    **  ppResult;    //结果
+	int         nRow;       //行数
+	int         nCol;       //列数
+	char    *pzErrMsg;    //错误信息
 	CString strSql = _T("delete from ") + strTabName + _T(" WHERE ") + strSourceData + _T(" ='") + strW + _T("'");
 
 //	EnterCriticalSection( &cs_UpDataResult) ;
-	int nResult = sqlite3_get_table(m_pSqliteWrite,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	int nResult = sqlite3_get_table(m_pSqliteWrite, strSql.GetBuffer(), &ppResult, &nRow, &nCol, &pzErrMsg);
 	if ( nResult != SQLITE_OK ){
 		sqlite3_close(m_pSqliteWrite);  
-		sqlite3_free(m_pzErrMsg);  
+		sqlite3_free(pzErrMsg);  
 		m_pSqliteWrite = NULL ;
 		return -1 ;
 	}
-	sqlite3_free_table(m_pResult);
+	sqlite3_free_table(ppResult);
 //	LeaveCriticalSection (&cs_UpDataResult) ;
-	return m_nRow ;
+	return nRow ;
 }
 BOOL  CSqliteDeal::CreateTabe(const CString strTabName,const CString strFiled){
-
+	LOCK(m_pCs);
 	if ( NULL == m_pSqliteWrite ) {
 		if ( !OpenSqlite(theApp.str_InsPath, TRUE) ) return -1 ;
 	}
-
+	char    *pzErrMsg;    //错误信息
 	CString strSql = _T("create table  ") + strTabName + _T("(") + strFiled + _T(");");
 
 //	EnterCriticalSection( &cs_UpDataResult) ;
-	int nResult = sqlite3_exec( m_pSqliteWrite , strSql.GetBuffer() , NULL , NULL , &m_pzErrMsg );
+	int nResult = sqlite3_exec( m_pSqliteWrite , strSql.GetBuffer() , NULL , NULL , &pzErrMsg );
 	if ( nResult != SQLITE_OK ){
 		sqlite3_close(m_pSqliteWrite);  
-		sqlite3_free(m_pzErrMsg);  
+		sqlite3_free(pzErrMsg);  
 		m_pSqliteWrite = NULL ;
 		return FALSE ;
 	}
@@ -153,52 +182,64 @@ BOOL  CSqliteDeal::CreateTabe(const CString strTabName,const CString strFiled){
 }
 
 BOOL  CSqliteDeal::IsExistTabe(const CString strTabName){
+	LOCK(m_pCs);
 	if ( NULL == m_pSqliteRead ) {
 		if ( !OpenSqlite(theApp.str_InsPath) ) return -1 ;
 	}
 	CString strSql = _T("select count(type) from sqlite_master where type='table' and name =");
 	strSql.AppendFormat("'%s'",strTabName);
 
+
+	char    **  ppResult;    //结果
+	int         nRow;       //行数
+	int         nCol;       //列数
+	char    *pzErrMsg;    //错误信息
+
 //	EnterCriticalSection( &cs_UpDataResult) ;
 	bool tableIsExisted = FALSE;
-	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(), &ppResult, &nRow, &nCol, &pzErrMsg);
 	if ( nResult != SQLITE_OK ){
 		sqlite3_close(m_pSqliteRead);  
-		sqlite3_free(m_pzErrMsg);  
+		sqlite3_free(pzErrMsg);  
 		m_pSqliteRead = NULL ;
 		return FALSE ;
 	}
-	int nIndex = m_nCol;
+	int nIndex = nCol;
 	CString strValue ;
-	int result = atoi(m_pResult[nIndex] ) ;
+	int result = atoi(ppResult[nIndex] ) ;
 	tableIsExisted = result;
-	sqlite3_free_table(m_pResult);
+	sqlite3_free_table(ppResult);
 //	LeaveCriticalSection (&cs_UpDataResult) ;
 	return tableIsExisted ;
 }
 int   CSqliteDeal::FindDB(const CString strTabName , const CString strP, const CString strSource,uistruct::P2P_BET_RECORD_t * p2pbetrecord ){
+	LOCK(m_pCs);
 	if ( NULL == m_pSqliteRead ) {
 		if ( !OpenSqlite(theApp.str_InsPath) ) return -1 ;
 	}
+	char    **  ppResult;    //结果
+	int         nRow;       //行数
+	int         nCol;       //列数
+	char    *pzErrMsg;    //错误信息
 
 	CString strSql = _T("SELECT * FROM ") + strTabName + _T(" WHERE ") + strSource + _T(" ='") + strP + _T("'");
 
 //	EnterCriticalSection( &cs_UpDataResult) ;
-	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(), &ppResult, &nRow, &nCol, &pzErrMsg);
 	if ( nResult != SQLITE_OK ){
 		sqlite3_close(m_pSqliteRead);  
-		sqlite3_free(m_pzErrMsg);  
+		sqlite3_free(pzErrMsg);  
 		m_pSqliteRead = NULL ;
 		return -1 ;
 	}
-	int nIndex = m_nCol;
+	int nIndex = nCol;
 	CString strValue ;
-	for(int j = 0; j < m_nCol; j++ ){
+	for(int j = 0; j < nCol; j++ ){
 		switch (j)
 		{
 		case 0:
 			{
-				strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+				strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 				SYSTEMTIME curTime ;
 				sscanf(strValue,"%04d-%02d-%02d %02d:%02d:%02d",&curTime.wYear, &curTime.wMonth, &curTime.wDay, &curTime.wHour, &curTime.wMinute, &curTime.wSecond);
 				p2pbetrecord->sendtime = UiFun::SystemTimeToTimet(curTime);
@@ -206,7 +247,7 @@ int   CSqliteDeal::FindDB(const CString strTabName , const CString strP, const C
 			break;
 		case 1:
 			{
-				strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+				strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 				SYSTEMTIME curTime ;
 				sscanf(strValue,"%04d-%02d-%02d %02d:%02d:%02d",&curTime.wYear, &curTime.wMonth, &curTime.wDay, &curTime.wHour, &curTime.wMinute, &curTime.wSecond);
 				p2pbetrecord->recvtime = atoi(strValue);
@@ -214,82 +255,82 @@ int   CSqliteDeal::FindDB(const CString strTabName , const CString strP, const C
 			break;
 		case 2:
 			{
-				strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+				strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 				p2pbetrecord->timeout =atoi(strValue) ;
 			}
 			break;
 		case 3:
 			{
-				strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+				strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 				memcpy(p2pbetrecord->tx_hash,strValue,sizeof(p2pbetrecord->tx_hash));
 			}
 			break;
 		case 4:
 			{
-				strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+				strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 				memcpy(p2pbetrecord->left_addr,strValue,sizeof(p2pbetrecord->left_addr));
 			}
 			break;
 		case 5:
 			{
-				strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+				strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 				memcpy(p2pbetrecord->right_addr,strValue,sizeof(p2pbetrecord->right_addr));
 			}
 			break;
 		case 6:
 			{
-				strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+				strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 				p2pbetrecord->amount = atol(strValue);
 			}
 			break;
 		case 7:
 			{
-				strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+				strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 				memcpy(p2pbetrecord->content,strValue,sizeof(p2pbetrecord->content));
 			}
 			break;
 		case 8:
 			{
-				strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+				strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 				p2pbetrecord->actor = atoi(strValue);
 			}
 			break;
 		case 9:
 			{
-				strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+				strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 				p2pbetrecord->comfirmed = atoi(strValue);
 			}
 			break;
 		case 10:
 			{
-				strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+				strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 				p2pbetrecord->height = atoi(strValue);
 			}
 			break;
 		case 11:
 			{
-				strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+				strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 				p2pbetrecord->state = atoi(strValue);
 			}
 			break;
 		case 12:
 			{
-				strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+				strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 				memcpy(p2pbetrecord->relate_hash,strValue,sizeof(p2pbetrecord->relate_hash));
 			}
 			break;
 		case 13:
 			{
-				strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+				strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 				p2pbetrecord->guessnum = atoi(strValue);
 			}
 			break;
 		}
 		++nIndex ;
 	}
-	sqlite3_free_table(m_pResult);
+	sqlite3_free_table(ppResult);
 //	LeaveCriticalSection (&cs_UpDataResult) ;
-	return m_nRow ;
+	return nRow ;
 }
 /***************************************
 strTabName: 表名
@@ -297,16 +338,19 @@ strSourceData: 要插入的数据
 ***************************************/
 BOOL CSqliteDeal::InsertData(const CString strTabName ,const CString strSourceData )
 {
+	LOCK(m_pCs);
 	if ( NULL == m_pSqliteWrite ) {
 		if ( !OpenSqlite(theApp.str_InsPath, TRUE) ) return FALSE ;
 	}
 
+	char    *pzErrMsg;    //错误信息
 	CString strSql = _T("INSERT INTO ") + strTabName + _T(" VALUES( ") + strSourceData + _T(" )") ;
-
-	int nResult = sqlite3_exec( m_pSqliteWrite , strSql.GetBuffer() , NULL , NULL , &m_pzErrMsg );
+	TRACE("sql:%s\n", strSql.GetBuffer());
+	int nResult = sqlite3_exec(m_pSqliteWrite , strSql.GetBuffer() , NULL , NULL , &pzErrMsg);
 	if ( nResult != SQLITE_OK ){
+		TRACE("nResult:%d error:%s\n", nResult, pzErrMsg);
 		sqlite3_close(m_pSqliteWrite);  
-		sqlite3_free(m_pzErrMsg);  
+		sqlite3_free(pzErrMsg);  
 		m_pSqliteWrite = NULL ;
 		return FALSE ;
 	}
@@ -314,15 +358,17 @@ BOOL CSqliteDeal::InsertData(const CString strTabName ,const CString strSourceDa
 }
 BOOL CSqliteDeal::EmptyTabData(const CString strTabName )
 {
+	LOCK(m_pCs);
 	if ( NULL == m_pSqliteWrite ) {
 		if ( !OpenSqlite(theApp.str_InsPath, TRUE)) return FALSE ;
 	}
+	char    *pzErrMsg;    //错误信息
 
 	CString strSql = _T("DELETE FROM ") + strTabName ;
-	int nResult = sqlite3_exec( m_pSqliteWrite , strSql.GetBuffer() , NULL , NULL , &m_pzErrMsg );
+	int nResult = sqlite3_exec( m_pSqliteWrite , strSql.GetBuffer() , NULL , NULL , &pzErrMsg );
 	if ( nResult != SQLITE_OK ){
 		sqlite3_close(m_pSqliteWrite);  
-		sqlite3_free(m_pzErrMsg);  
+		sqlite3_free(pzErrMsg);  
 		m_pSqliteWrite = NULL ;
 		return FALSE ;
 	}
@@ -330,15 +376,16 @@ BOOL CSqliteDeal::EmptyTabData(const CString strTabName )
 }
 BOOL CSqliteDeal::Updatabase(const CString strTabName , const CString strSourceData , const CString strW )
 {
+	LOCK(m_pCs);
 	if ( NULL == m_pSqliteWrite ) {
 		if ( !OpenSqlite(theApp.str_InsPath, TRUE)) return FALSE ;
 	}
-
+	char    *pzErrMsg;    //错误信息
 	CString strSql = _T("UPDATE ") + strTabName + _T(" SET ") + strSourceData + _T(" WHERE ") + strW ;
-	int nResult = sqlite3_exec( m_pSqliteWrite , strSql.GetBuffer() , NULL , NULL , &m_pzErrMsg );
+	int nResult = sqlite3_exec( m_pSqliteWrite , strSql.GetBuffer() , NULL , NULL , &pzErrMsg );
 	if ( nResult != SQLITE_OK ){
 		sqlite3_close(m_pSqliteWrite);  
-		sqlite3_free(m_pzErrMsg);  
+		sqlite3_free(pzErrMsg);  
 		m_pSqliteWrite = NULL ;
 		return FALSE ;
 	}
@@ -347,61 +394,66 @@ BOOL CSqliteDeal::Updatabase(const CString strTabName , const CString strSourceD
 
 BOOL CSqliteDeal::GetListaddrData(map<CString,uistruct::LISTADDR_t> *pListInfo)
 {
+	LOCK(m_pCs);
 	if (NULL == pListInfo ) return FALSE ;
 	if ( NULL == m_pSqliteRead ) {
 		if ( !OpenSqlite(theApp.str_InsPath) ) return FALSE ;
 	}
 	pListInfo->clear() ;
 
+	char    **  ppResult;    //结果
+	int         nRow;       //行数
+	int         nCol;       //列数
+	char    *pzErrMsg;    //错误信息
 	CString strSql = _T("SELECT * FROM MYWALLET");
 //	EnterCriticalSection( &cs_UpDataResult) ;
-	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(), &ppResult, &nRow, &nCol, &pzErrMsg);
 	if ( nResult != SQLITE_OK ){
 		sqlite3_close(m_pSqliteRead);  
-		sqlite3_free(m_pzErrMsg);  
+		sqlite3_free(pzErrMsg);  
 		m_pSqliteRead = NULL ;
 		return FALSE ;
 	}
-	int nIndex = m_nCol;
+	int nIndex = nCol;
 	CString strValue ;
 	uistruct::LISTADDR_t listdata;
-	for(int i = 0; i < m_nRow ; i++) {
+	for(int i = 0; i < nRow ; i++) {
 		memset(&listdata , 0 , sizeof(uistruct::LISTADDR_t));
-		for(int j = 0; j < m_nCol; j++ ){
+		for(int j = 0; j < nCol; j++ ){
 			switch (j)
 			{
 			case 0:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					memcpy(listdata.address , strValue , sizeof(listdata.address));
 				}
 				break;
 			case 1:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					memcpy(listdata.RegID , strValue , sizeof(listdata.RegID));
 				}
 				break;
 			case 2:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					listdata.fMoney = atof(strValue);
 				}
 				break;
 			case 3:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					listdata.nColdDig = atoi(strValue) ;
 				}
 				break;
 			case 4:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					listdata.bSign = atoi(strValue) ;
 				}
 			case 5:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					memcpy(listdata.Lebel , strValue , sizeof(listdata.Lebel));
 				}
 				break;
@@ -413,123 +465,129 @@ BOOL CSqliteDeal::GetListaddrData(map<CString,uistruct::LISTADDR_t> *pListInfo)
 		key.Format(_T("%s"),listdata.address);
 		(*pListInfo)[key] = listdata;
 	}
-	sqlite3_free_table(m_pResult);
+	sqlite3_free_table(ppResult);
 //	LeaveCriticalSection (&cs_UpDataResult) ;
 	return TRUE ;
 }
 BOOL CSqliteDeal::GetRevtransactionDatta(uistruct::TRANSRECORDLIST* pListInfo)
 {
+	LOCK(m_pCs);
 	if (NULL == pListInfo ) return FALSE ;
-	if ( NULL == m_pSqliteWrite ) {
+	if ( NULL == m_pSqliteRead ) {
 		if ( !OpenSqlite(theApp.str_InsPath, TRUE)) return FALSE ;
 	}
 	pListInfo->clear() ;
 
+	char    **  ppResult;    //结果
+	int         nRow;       //行数
+	int         nCol;       //列数
+	char    *pzErrMsg;    //错误信息
+
 	CString strSql = _T("SELECT * FROM revtransaction");
 //	EnterCriticalSection( &cs_UpDataResult) ;
-	int nResult = sqlite3_get_table(m_pSqliteWrite,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&ppResult,&nRow,&nCol,&pzErrMsg);
 	if ( nResult != SQLITE_OK ){
-		sqlite3_close(m_pSqliteWrite);  
-		sqlite3_free(m_pzErrMsg);  
-		m_pSqliteWrite = NULL ;
+		sqlite3_close(m_pSqliteRead);  
+		sqlite3_free(pzErrMsg);  
+		m_pSqliteRead = NULL ;
 		return FALSE ;
 	}
 
 	//读数据库
-	int nIndex = m_nCol;
+	int nIndex = nCol;
 	CString strValue  ;
 	uistruct::REVTRANSACTION_t listdata;
-	for(int i = 0; i < m_nRow ; i++) {
+	for(int i = 0; i < nRow ; i++) {
 		Json::Value root;
-		for(int j = 0; j < m_nCol; j++ ){
+		for(int j = 0; j < nCol; j++ ){
 			switch (j)
 			{
 			case 0:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					root["hash"] = strValue.GetString();
 				}
 				break;
 			case 1:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					root["txtype"] = strValue.GetString();
 				}
 				break;
 			case 2:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					root["ver"] = atoi(strValue);
 				}
 				break;
 			case 3:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					root["addr"] = strValue.GetString();
 				}
 				break;
 			case 4:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					root["pubkey"] =  strValue.GetString();
 				}
 				break;
 			case 5:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					root["miner_pubkey"] = strValue.GetString();
 				}
 				break;
 			case 6:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ; 
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ; 
 					root["fees"] = (INT64)(strtod (strValue, NULL)*100000000);
 				}
 				break;
 			case 7:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					root["height"] = atoi(strValue);
 				}
 				break;
 			case 8:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					root["desaddr"] = strValue.GetString();
 				}
 				break;
 			case 9:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					root["money"] = (INT64)(strtod (strValue, NULL)*100000000);
 				}
 				break;
 			case 10:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					root["Contract"] =  strValue.GetString();
 				}
 				break;
 			case 11:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					root["confirmedHeight"] = atoi(strValue);
 				}
 				break;
 			case 12:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					root["confirmedtime"] = atoi(strValue);
 				}
 				break;
 			case 13:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					root["blockhash"] = strValue.GetString();
 				}
 			case 14:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					root["state"] = atoi(strValue);
 				}
 				break;
@@ -539,41 +597,47 @@ BOOL CSqliteDeal::GetRevtransactionDatta(uistruct::TRANSRECORDLIST* pListInfo)
 		listdata.JsonToStruct(root.toStyledString());
 		pListInfo->push_back(listdata) ;
 	}
-	sqlite3_free_table(m_pResult);
+	sqlite3_free_table(ppResult);
 //	LeaveCriticalSection (&cs_UpDataResult) ;
 	return TRUE ;
 
 }
 BOOL  CSqliteDeal::GetRecorBetData(uistruct::P2PBETRECORDLIST* pListInfo)
 {
+	LOCK(m_pCs);
 	if (NULL == pListInfo ) return FALSE ;
 	if ( NULL == m_pSqliteRead ) {
 		if ( !OpenSqlite(theApp.str_InsPath) ) return FALSE ;
 	}
 	pListInfo->clear() ;
 	
+	char    **  ppResult;    //结果
+	int         nRow;       //行数
+	int         nCol;       //列数
+	char    *pzErrMsg;    //错误信息
+
 	CString strSql = _T("SELECT * FROM p2p_bet_record");
 //	EnterCriticalSection( &cs_UpDataResult) ;
-	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&ppResult, &nRow, &nCol, &pzErrMsg);
 	if ( nResult != SQLITE_OK ){
 		sqlite3_close(m_pSqliteRead);  
-		sqlite3_free(m_pzErrMsg);  
+		sqlite3_free(pzErrMsg);  
 		m_pSqliteRead = NULL ;
 		return FALSE ;
 	}
 
 	//读数据库
-	int nIndex = m_nCol;
+	int nIndex = nCol;
 	CString strValue ;
 	uistruct::P2P_BET_RECORD_t p2pbetrecord;
-	for(int i = 0; i < m_nRow ; i++) {
+	for(int i = 0; i < nRow ; i++) {
 		memset(&p2pbetrecord , 0 , sizeof(uistruct::P2P_BET_RECORD_t));
-		for(int j = 0; j < m_nCol; j++ ){
+		for(int j = 0; j < nCol; j++ ){
 			switch (j)
 			{
 			case 0:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					SYSTEMTIME curTime ;
 					sscanf(strValue,"%04d-%02d-%02d %02d:%02d:%02d",&curTime.wYear, &curTime.wMonth, &curTime.wDay, &curTime.wHour, &curTime.wMinute, &curTime.wSecond);
 					p2pbetrecord.sendtime = UiFun::SystemTimeToTimet(curTime);
@@ -581,7 +645,7 @@ BOOL  CSqliteDeal::GetRecorBetData(uistruct::P2PBETRECORDLIST* pListInfo)
 				break;
 			case 1:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					SYSTEMTIME curTime ;
 					sscanf(strValue,"%04d-%02d-%02d %02d:%02d:%02d",&curTime.wYear, &curTime.wMonth, &curTime.wDay, &curTime.wHour, &curTime.wMinute, &curTime.wSecond);
 					p2pbetrecord.recvtime = atoi(strValue);
@@ -589,73 +653,73 @@ BOOL  CSqliteDeal::GetRecorBetData(uistruct::P2PBETRECORDLIST* pListInfo)
 				break;
 			case 2:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					p2pbetrecord.timeout =atoi(strValue) ;
 				}
 				break;
 			case 3:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					memcpy(p2pbetrecord.tx_hash,strValue,sizeof(p2pbetrecord.tx_hash));
 				}
 				break;
 			case 4:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					memcpy(p2pbetrecord.left_addr,strValue,sizeof(p2pbetrecord.left_addr));
 				}
 				break;
 			case 5:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					memcpy(p2pbetrecord.right_addr,strValue,sizeof(p2pbetrecord.right_addr));
 				}
 				break;
 			case 6:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					p2pbetrecord.amount = atol(strValue);
 				}
 				break;
 			case 7:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					memcpy(p2pbetrecord.content,strValue,sizeof(p2pbetrecord.content));
 				}
 				break;
 			case 8:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					p2pbetrecord.actor = atoi(strValue);
 				}
 				break;
 			case 9:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					p2pbetrecord.comfirmed = atoi(strValue);
 				}
 				break;
 			case 10:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					p2pbetrecord.height = atoi(strValue);
 				}
 				break;
 			case 11:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					p2pbetrecord.state = atoi(strValue);
 				}
 				break;
 			case 12:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					memcpy(p2pbetrecord.relate_hash,strValue,sizeof(p2pbetrecord.relate_hash));
 				}
 				break;
 			case 13:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					p2pbetrecord.guessnum = atoi(strValue);
 				}
 				break;
@@ -664,18 +728,16 @@ BOOL  CSqliteDeal::GetRecorBetData(uistruct::P2PBETRECORDLIST* pListInfo)
 		}
 		pListInfo->push_back(p2pbetrecord) ;
 	}
-	sqlite3_free_table(m_pResult);
+	sqlite3_free_table(ppResult);
 //	LeaveCriticalSection (&cs_UpDataResult) ;
 	return TRUE ;
 }
 BOOL  CSqliteDeal::UpdataP2pBetRecord()
 {
+	LOCK(m_pCs);
 	uistruct::P2PBETRECORDLIST pTransaction;
 	GetRecorBetData(&pTransaction);
 	if (0 == pTransaction.size() ) return FALSE ;
-	if ( NULL == m_pSqliteWrite ) {
-		if ( !OpenSqlite(theApp.str_InsPath) ) return FALSE ;
-	}
 
 	vector<string> vSignHash;
 	std::vector<uistruct::P2P_BET_RECORD_t>::const_iterator const_it;
@@ -815,40 +877,47 @@ BOOL  CSqliteDeal::UpdataP2pBetRecord()
 }
 BOOL   CSqliteDeal::GetRecorP2Pool(uistruct::P2PLIST* pListInfo)
 {
+	LOCK(m_pCs);
 	if (NULL == pListInfo ) return FALSE ;
 	if ( NULL == m_pSqliteRead ) {
 		if ( !OpenSqlite(theApp.str_InsPath) ) return FALSE ;
 	}
 	pListInfo->clear() ;
 
+
+	char    **  ppResult;    //结果
+	int         nRow;       //行数
+	int         nCol;       //列数
+	char    *pzErrMsg;    //错误信息
+
 	CString strSql = _T("SELECT * FROM p2ppool");
 //	EnterCriticalSection( &cs_UpDataResult) ;
-	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(), &ppResult, &nRow, &nCol, &pzErrMsg);
 	if ( nResult != SQLITE_OK ){
 		sqlite3_close(m_pSqliteRead);  
-		sqlite3_free(m_pzErrMsg);  
+		sqlite3_free(pzErrMsg);  
 		m_pSqliteRead = NULL ;
 		return FALSE ;
 	}
 
 	//读数据库
-	int nIndex = m_nCol;
+	int nIndex = nCol;
 	CString strValue ;
 	uistruct::LISTP2POOL_T p2pool;
-	for(int i = 0; i < m_nRow ; i++) {
+	for(int i = 0; i < nRow ; i++) {
 		memset(&p2pool , 0 , sizeof(uistruct::LISTP2POOL_T));
-		for(int j = 0; j < m_nCol; j++ ){
+		for(int j = 0; j < nCol; j++ ){
 			switch (j)
 			{
 			case 0:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					p2pool.hash = strValue;
 				}
 				break;
 			case 1:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					p2pool.data = strValue;
 				}
 				break;
@@ -857,40 +926,46 @@ BOOL   CSqliteDeal::GetRecorP2Pool(uistruct::P2PLIST* pListInfo)
 		}
 		pListInfo->push_back(p2pool) ;
 	}
-	sqlite3_free_table(m_pResult);
+	sqlite3_free_table(ppResult);
 //	LeaveCriticalSection (&cs_UpDataResult) ;
 	return TRUE ;
 }
 BOOL  CSqliteDeal::GetRecorDarkData(uistruct::DARKRECORDLIST* pListInfo)
 {
+	LOCK(m_pCs);
 	if (NULL == pListInfo ) return FALSE ;
 	if ( NULL == m_pSqliteRead ) {
 		if ( !OpenSqlite(theApp.str_InsPath) ) return FALSE ;
 	}
 	pListInfo->clear() ;
 
+	char    **  ppResult;    //结果
+	int         nRow;       //行数
+	int         nCol;       //列数
+	char    *pzErrMsg;    //错误信息
+
 	CString strSql = _T("SELECT * FROM dark_record");
 //	EnterCriticalSection( &cs_UpDataResult) ;
-	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(), &ppResult, &nRow, &nCol, &pzErrMsg);
 	if ( nResult != SQLITE_OK ){
 		sqlite3_close(m_pSqliteRead);  
-		sqlite3_free(m_pzErrMsg);  
+		sqlite3_free(pzErrMsg);  
 		m_pSqliteRead = NULL ;
 		return FALSE ;
 	}
 
 	//读数据库
-	int nIndex = m_nCol;
+	int nIndex = nCol;
 	CString strValue ;
 	uistruct::DARK_RECORD darkrecord;
-	for(int i = 0; i < m_nRow ; i++) {
+	for(int i = 0; i < nRow ; i++) {
 		memset(&darkrecord , 0 , sizeof(uistruct::DARK_RECORD));
-		for(int j = 0; j < m_nCol; j++ ){
+		for(int j = 0; j < nCol; j++ ){
 			switch (j)
 			{
 			case 0:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					SYSTEMTIME curTime ;
 					sscanf(strValue,"%04d-%02d-%02d %02d:%02d:%02d",&curTime.wYear, &curTime.wMonth, &curTime.wDay, &curTime.wHour, &curTime.wMinute, &curTime.wSecond);
 					darkrecord.sendtime = UiFun::SystemTimeToTimet(curTime);
@@ -898,7 +973,7 @@ BOOL  CSqliteDeal::GetRecorDarkData(uistruct::DARKRECORDLIST* pListInfo)
 				break;
 			case 1:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					SYSTEMTIME curTime ;
 					sscanf(strValue,"%04d-%02d-%02d %02d:%02d:%02d",&curTime.wYear, &curTime.wMonth, &curTime.wDay, &curTime.wHour, &curTime.wMinute, &curTime.wSecond);
 					darkrecord.recvtime = atoi(strValue);
@@ -906,49 +981,49 @@ BOOL  CSqliteDeal::GetRecorDarkData(uistruct::DARKRECORDLIST* pListInfo)
 				break;
 			case 2:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					memcpy(darkrecord.tx_hash,strValue,sizeof(darkrecord.tx_hash));
 				}
 				break;
 			case 3:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					memcpy(darkrecord.left_addr,strValue,sizeof(darkrecord.left_addr));
 				}
 				break;
 			case 4:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					memcpy(darkrecord.right_addr,strValue,sizeof(darkrecord.right_addr));
 				}
 				break;
 			case 5:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					darkrecord.amount = atol(strValue);
 				}
 				break;
 			case 6:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					darkrecord.actor = atoi(strValue);
 				}
 				break;
 			case 7:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					darkrecord.comfirmed = atoi(strValue);
 				}
 				break;
 			case 8:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					darkrecord.state = atoi(strValue);
 				}
 				break;
 			case 9:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					memcpy(darkrecord.relate_hash,strValue,sizeof(darkrecord.relate_hash));
 				}
 				break;
@@ -957,12 +1032,13 @@ BOOL  CSqliteDeal::GetRecorDarkData(uistruct::DARKRECORDLIST* pListInfo)
 		}
 		pListInfo->push_back(darkrecord) ;
 	}
-	sqlite3_free_table(m_pResult);
+	sqlite3_free_table(ppResult);
 //	LeaveCriticalSection (&cs_UpDataResult) ;
 	return TRUE ;
 }
 
 BOOL CSqliteDeal::UpdataDarkRecord(){
+	LOCK(m_pCs);
 	uistruct::DARKRECORDLIST pTransaction;
 	GetRecorDarkData(&pTransaction);
 	if (0 == pTransaction.size() ) return FALSE ;
@@ -1094,28 +1170,34 @@ BOOL CSqliteDeal::UpdataDarkRecord(){
 	return true;
 }
 int   CSqliteDeal::FindDB(const CString strTabName , const CString strP, const CString strSource,uistruct::DARK_RECORD *darkrecord ){
-	if ( NULL == m_pSqliteWrite ) {
+	LOCK(m_pCs);
+	if ( NULL == m_pSqliteRead ) {
 		if ( !OpenSqlite(theApp.str_InsPath) ) return -1 ;
 	}
+
+	char    **  ppResult;    //结果
+	int         nRow;       //行数
+	int         nCol;       //列数
+	char    *pzErrMsg;    //错误信息
 
 	CString strSql = _T("SELECT * FROM ") + strTabName + _T(" WHERE ") + strSource + _T(" ='") + strP + _T("'");
 
 //	EnterCriticalSection( &cs_UpDataResult) ;
-	int nResult = sqlite3_get_table(m_pSqliteWrite,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&ppResult,&nRow,&nCol,&pzErrMsg);
 	if ( nResult != SQLITE_OK ){
-		sqlite3_close(m_pSqliteWrite);  
-		sqlite3_free(m_pzErrMsg);  
-		m_pSqliteWrite = NULL ;
+		sqlite3_close(m_pSqliteRead);  
+		sqlite3_free(pzErrMsg);  
+		m_pSqliteRead = NULL ;
 		return -1 ;
 	}
-	int nIndex = m_nCol;
+	int nIndex = nCol;
 	CString strValue ;
-	for(int j = 0; j < m_nCol; j++ ){
+	for(int j = 0; j < nCol; j++ ){
 		switch (j)
 		{
 		case 0:
 			{
-				strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+				strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 				SYSTEMTIME curTime ;
 				sscanf(strValue,"%04d-%02d-%02d %02d:%02d:%02d",&curTime.wYear, &curTime.wMonth, &curTime.wDay, &curTime.wHour, &curTime.wMinute, &curTime.wSecond);
 				darkrecord->sendtime = UiFun::SystemTimeToTimet(curTime);
@@ -1123,7 +1205,7 @@ int   CSqliteDeal::FindDB(const CString strTabName , const CString strP, const C
 			break;
 		case 1:
 			{
-				strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+				strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 				SYSTEMTIME curTime ;
 				sscanf(strValue,"%04d-%02d-%02d %02d:%02d:%02d",&curTime.wYear, &curTime.wMonth, &curTime.wDay, &curTime.wHour, &curTime.wMinute, &curTime.wSecond);
 				darkrecord->recvtime = atoi(strValue);
@@ -1131,61 +1213,61 @@ int   CSqliteDeal::FindDB(const CString strTabName , const CString strP, const C
 			break;
 		case 2:
 			{
-				strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+				strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 				memcpy(darkrecord->tx_hash,strValue,sizeof(darkrecord->tx_hash));
 			}
 			break;
 		case 3:
 			{
-				strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+				strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 				memcpy(darkrecord->left_addr,strValue,sizeof(darkrecord->left_addr));
 			}
 			break;
 		case 4:
 			{
-				strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+				strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 				memcpy(darkrecord->right_addr,strValue,sizeof(darkrecord->right_addr));
 			}
 			break;
 		case 5:
 			{
-				strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+				strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 				darkrecord->amount = atol(strValue);
 			}
 			break;
 		case 6:
 			{
-				strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+				strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 				darkrecord->actor = atoi(strValue);
 			}
 			break;
 		case 7:
 			{
-				strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+				strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 				darkrecord->comfirmed = atoi(strValue);
 			}
 			break;
 		case 8:
 			{
-				strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+				strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 				darkrecord->state = atoi(strValue);
 			}
 			break;
 		case 9:
 			{
-				strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+				strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 				memcpy(darkrecord->relate_hash,strValue,sizeof(darkrecord->relate_hash));
 			}
 			break;
 		}
 		++nIndex ;
 	}
-	sqlite3_free_table(m_pResult);
+	sqlite3_free_table(ppResult);
 	//LeaveCriticalSection (&cs_UpDataResult) ;
-	return m_nRow ;
+	return nRow ;
 }
 BOOL   CSqliteDeal::isExistTx(CString tablename,CString filed ,CString txhash){
-
+	LOCK(m_pCs);
 	CString strCommand,strShowData;
 	strCommand.Format(_T("%s %s"),_T("gettxdetail") ,txhash );
 	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
@@ -1207,36 +1289,45 @@ BOOL   CSqliteDeal::isExistTx(CString tablename,CString filed ,CString txhash){
 	return flag;
 }
 BOOL CSqliteDeal::isinBlock(){
-
+	LOCK(m_pCs);
 	if ( NULL == m_pSqliteRead ) {
 		if ( !OpenSqlite(theApp.str_InsPath) ) return FALSE ;
 	}
 
+	char    **  ppResult;    //结果
+	int         nRow;       //行数
+	int         nCol;       //列数
+	char    *pzErrMsg;    //错误信息
+
+
 	CString strSql = _T("SELECT * FROM tip_block");
 //	EnterCriticalSection( &cs_UpDataResult) ;
-	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(), &ppResult, &nRow, &nCol, &pzErrMsg);
 	if ( nResult != SQLITE_OK ){
+		LogPrint("INFO", "isinBlock error%s\n", pzErrMsg);
 		sqlite3_close(m_pSqliteRead);  
-		sqlite3_free(m_pzErrMsg);  
+		sqlite3_free(pzErrMsg);  
 		m_pSqliteRead = NULL ;
+		
 		return FALSE ;
 	}
-	if (m_nCol == 0)
-	{
-		return false;
-	}
+	
 	//读数据库
 	bool flag = true;
-	int nIndex = m_nCol;
+	int nIndex = nCol;
 
+	if (nCol == 0)
+	{
+		flag = false;
+	}
 	CString strCommand , strValue ,strShowData ;
-	for(int i = 0; i < m_nRow ; i++) {
-		for(int j = 0; j < m_nCol; j++ ){
+	for(int i = 0; i < nRow ; i++) {
+		for(int j = 0; j < nCol; j++ ){
 			switch (j)
 			{
 			case 0:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 
 					if(strValue == _T("")){
 						strCommand.Format(_T("%s %d"),_T("getblock") ,-1 );
@@ -1288,11 +1379,12 @@ BOOL CSqliteDeal::isinBlock(){
 			++nIndex ;
 		}
 	}
-	sqlite3_free_table(m_pResult);
+	sqlite3_free_table(ppResult);
 //	LeaveCriticalSection (&cs_UpDataResult) ;
 	return flag ;
 }
 void  CSqliteDeal::UpdataAllTableData(BOOL flag){
+	LOCK(m_pCs);
 	///// 不用更新所所有的数据库表
 	if (flag)
 	{
@@ -1302,8 +1394,11 @@ void  CSqliteDeal::UpdataAllTableData(BOOL flag){
 	if ( NULL == m_pSqliteRead ) {
 		if ( !OpenSqlite(theApp.str_InsPath) ) return  ;
 	}
+	char    **  ppResult;    //结果
+	int         nRow;       //行数
+	int         nCol;       //列数
+	char    *pzErrMsg;    //错误信息
 
-	char    **  pResult; 
 	CString strSql = _T("SELECT * FROM revtransaction");
 	//int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
 	//if ( nResult != SQLITE_OK ){
@@ -1313,10 +1408,10 @@ void  CSqliteDeal::UpdataAllTableData(BOOL flag){
 	//	return  ;
 	//}
 	//读数据库
-	int nIndex = m_nCol;
-	int nTempRow = m_nRow;
-	int nTempCol = m_nCol;
-	CString strCommand , strValue ,strShowData ;
+	//int nIndex = m_nCol;
+	//int nTempRow = m_nRow;
+	//int nTempCol = m_nCol;
+	//CString strCommand , strValue ,strShowData ;
 	//for(int i = 0; i < nTempRow ; i++) {
 	//		strValue.Format(_T("%s") , pResult[nIndex] ) ;
 	//		isExistTx(_T("revtransaction"),_T("hash"),strValue);
@@ -1326,48 +1421,51 @@ void  CSqliteDeal::UpdataAllTableData(BOOL flag){
 
 
 	strSql = _T("SELECT * FROM dark_record");
-	 int nResult = sqlite3_get_table(m_pSqliteWrite,strSql.GetBuffer(),&pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	 int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&ppResult,&nRow,&nCol,&pzErrMsg);
 	if ( nResult != SQLITE_OK ){
-		sqlite3_close(m_pSqliteWrite);  
-		sqlite3_free(m_pzErrMsg);  
-		m_pSqliteWrite = NULL ;
+		LogPrint("INFO", "UpdataAllTableData error:%s\n", pzErrMsg);
+		sqlite3_close(m_pSqliteRead);  
+		sqlite3_free(pzErrMsg);  
+		m_pSqliteRead = NULL ;
 		return  ;
 	}
 	//读数据库
-	nIndex = m_nCol;
-	 nTempRow = m_nRow;
-	 nTempCol = m_nCol;
+	int nIndex = nCol;
+	int nTempRow = nRow;
+	int nTempCol = nCol;
+	CString strCommand , strValue ,strShowData ;
 	for(int i = 0; i < nTempRow ; i++) {
-			strValue.Format(_T("%s") , pResult[nIndex+2] ) ;
+			strValue.Format(_T("%s") , ppResult[nIndex+2] ) ;
 			isExistTx(_T("dark_record"),_T("tx_hash"),strValue);
 			nIndex +=nTempCol ;
 	}
-	sqlite3_free_table(pResult);
+	sqlite3_free_table(ppResult);
 
 	strSql = _T("SELECT * FROM p2p_bet_record");
-	 nResult = sqlite3_get_table(m_pSqliteWrite,strSql.GetBuffer(),&pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	 nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&ppResult,&nRow,&nCol,&pzErrMsg);
 	if ( nResult != SQLITE_OK ){
-		sqlite3_close(m_pSqliteWrite);  
-		sqlite3_free(m_pzErrMsg);  
-		m_pSqliteWrite = NULL ;
+		LogPrint("INFO", "UpdataAllTableData select p2p_bet_record error:%s\n", pzErrMsg);
+		sqlite3_close(m_pSqliteRead);  
+		sqlite3_free(pzErrMsg);  
+		m_pSqliteRead = NULL ;
 		return  ;
 	}
 	//读数据库
-	 nIndex = m_nCol;
-	 nTempRow = m_nRow;
-	 nTempCol = m_nCol;
+	 nIndex = nCol;
+	 nTempRow = nRow;
+	 nTempCol = nCol;
 	for(int i = 0; i < nTempRow ; i++) {
-		strValue.Format(_T("%s") , pResult[nIndex+3] ) ;
+		strValue.Format(_T("%s") , ppResult[nIndex+3] ) ;
 		isExistTx(_T("p2p_bet_record"),_T("tx_hash"),strValue);
 		nIndex +=nTempCol ;
 	}
-	sqlite3_free_table(pResult);
+	sqlite3_free_table(ppResult);
 
 	//EmptyTabData(_T("MYWALLET"));
 	//theApp.UpdataAddressData();
 }
 void  CSqliteDeal::UpdataAllTable(){
-
+	LOCK(m_pCs);
 	CString filed =_T("");
 	if (!IsExistTabe(_T("MYWALLET")))
 	{
@@ -1409,118 +1507,125 @@ void  CSqliteDeal::UpdataAllTable(){
 }
 
 int	CSqliteDeal::FindDB(const CString strTabName , const CString strP, const CString strSource,uistruct::TRANSRECORDLIST* pListInfo){
+	LOCK(m_pCs);
 	if ( NULL == m_pSqliteRead ) {
 		if ( !OpenSqlite(theApp.str_InsPath) ) return -1 ;
 	}
+	char    **  ppResult;    //结果
+	int         nRow;       //行数
+	int         nCol;       //列数
+	char    *pzErrMsg;    //错误信息
+
 
 	CString strSql = _T("SELECT * FROM ") + strTabName + _T(" WHERE ") + strSource + _T(" =") + strP;
 
 	pListInfo->clear() ;
 //	EnterCriticalSection( &cs_UpDataResult) ;
-	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&ppResult,&nRow,&nCol,&pzErrMsg);
 	if ( nResult != SQLITE_OK ){
+		LogPrint("INFO", "FindDB error:%s\n", pzErrMsg);
 		sqlite3_close(m_pSqliteRead);  
-		sqlite3_free(m_pzErrMsg);  
+		sqlite3_free(pzErrMsg);  
 		m_pSqliteRead = NULL ;
 		return FALSE ;
 	}
 
 	//读数据库
-	int nIndex = m_nCol;
+	int nIndex = nCol;
 	CString strValue  ;
 	uistruct::REVTRANSACTION_t listdata;
-	for(int i = 0; i < m_nRow ; i++) {
+	for(int i = 0; i < nRow ; i++) {
 		Json::Value root;
-		for(int j = 0; j < m_nCol; j++ ){
+		for(int j = 0; j < nCol; j++ ){
 			switch (j)
 			{
 			case 0:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					root["hash"] = strValue.GetString();
 				}
 				break;
 			case 1:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					root["txtype"] = strValue.GetString();
 				}
 				break;
 			case 2:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					root["ver"] = atoi(strValue);
 				}
 				break;
 			case 3:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					root["addr"] = strValue.GetString();
 				}
 				break;
 			case 4:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					root["pubkey"] =  strValue.GetString();
 				}
 				break;
 			case 5:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					root["miner_pubkey"] = strValue.GetString();
 				}
 				break;
 			case 6:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ; 
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ; 
 					root["fees"] = (INT64)(strtod (strValue, NULL)*100000000);
 				}
 				break;
 			case 7:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					root["height"] = atoi(strValue);
 				}
 				break;
 			case 8:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					root["desaddr"] = strValue.GetString();
 				}
 				break;
 			case 9:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					root["money"] = (INT64)(strtod (strValue, NULL)*100000000);
 				}
 				break;
 			case 10:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					root["Contract"] =  strValue.GetString();
 				}
 				break;
 			case 11:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					root["confirmHeight"] = atoi(strValue);
 				}
 				break;
 			case 12:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					root["confirmedtime"] = atoi(strValue);
 				}
 				break;
 			case 13:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					root["blockhash"] = strValue.GetString();
 				}
 				break;
 			case 14:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					root["state"] = atoi(strValue);
 				}
 				break;
@@ -1530,64 +1635,71 @@ int	CSqliteDeal::FindDB(const CString strTabName , const CString strP, const CSt
 		listdata.JsonToStruct(root.toStyledString());
 		pListInfo->push_back(listdata) ;
 	}
-	sqlite3_free_table(m_pResult);
+	sqlite3_free_table(ppResult);
 	//LeaveCriticalSection (&cs_UpDataResult) ;
 	return TRUE ;
 
 }
 int	 CSqliteDeal::FindDB(const CString strTabName , const CString strP, const CString strSource,uistruct::LISTADDR_t *listaddr ){
+	LOCK(m_pCs);
 	if ( NULL == m_pSqliteRead ) {
 		if ( !OpenSqlite(theApp.str_InsPath) ) return -1 ;
 	}
+	char    **  ppResult;    //结果
+	int         nRow;       //行数
+	int         nCol;       //列数
+	char    *pzErrMsg;    //错误信息
+
 
 	CString strSql = _T("SELECT * FROM ") + strTabName + _T(" WHERE ") + strSource + _T(" ='") + strP+ _T("'") ;
 
-	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&ppResult,&nRow,&nCol,&pzErrMsg);
 	if ( nResult != SQLITE_OK ){
+		LogPrint("INFO", "FindDB2 error:%s\n", pzErrMsg);
 		sqlite3_close(m_pSqliteRead);  
-		sqlite3_free(m_pzErrMsg);  
+		sqlite3_free(pzErrMsg);  
 		m_pSqliteRead = NULL ;
 		return 0 ;
 	}
 
-	int nIndex = m_nCol;
+	int nIndex = nCol;
 	CString strValue ;
-	for(int i = 0; i < m_nRow ; i++) {
-		for(int j = 0; j < m_nCol; j++ ){
+	for(int i = 0; i < nRow ; i++) {
+		for(int j = 0; j < nCol; j++ ){
 			switch (j)
 			{
 			case 0:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					memcpy(listaddr->address , strValue , sizeof(listaddr->address));
 				}
 				break;
 			case 1:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					memcpy(listaddr->RegID , strValue , sizeof(listaddr->RegID));
 				}
 				break;
 			case 2:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					listaddr->fMoney = atof(strValue);
 				}
 				break;
 			case 3:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					listaddr->nColdDig = atoi(strValue) ;
 				}
 				break;
 			case 4:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					listaddr->bSign = atoi(strValue) ;
 				}
 			case 5:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					memcpy(listaddr->Lebel , strValue , sizeof(listaddr->Lebel));
 				}
 				break;
@@ -1595,84 +1707,103 @@ int	 CSqliteDeal::FindDB(const CString strTabName , const CString strP, const CS
 			++nIndex ;
 		}
 	}
-	sqlite3_free_table(m_pResult);
-	return m_nRow;
+	sqlite3_free_table(ppResult);
+	return nRow;
 }
 string CSqliteDeal::GetColSum(const CString strTabName , const CString strP, const CString strSource){
+	LOCK(m_pCs);
 	if ( NULL == m_pSqliteRead ) {
 		if ( !OpenSqlite(theApp.str_InsPath) ) return "" ;
 	}
+	char    **  ppResult;    //结果
+	int         nRow;       //行数
+	int         nCol;       //列数
+	char    *pzErrMsg;    //错误信息
 
 	CString strSql = _T("SELECT sum(money) FROM ") + strTabName + _T(" WHERE ") + strSource + _T(" =") + strP;
 
-	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(), &ppResult, &nRow, &nCol, &pzErrMsg);
 	if ( nResult != SQLITE_OK ){
+		LogPrint("INFO", "GetColSum error:%s\n", pzErrMsg);
 		sqlite3_close(m_pSqliteRead);  
-		sqlite3_free(m_pzErrMsg);  
+		sqlite3_free(pzErrMsg);  
 		m_pSqliteRead = NULL ;
 		return "" ;
 	}
-	int nIndex = m_nCol;
+	int nIndex = nCol;
 	CString strValue  ;
-	strValue.Format(_T("%s"),m_pResult[nIndex]);
-	sqlite3_free_table(m_pResult);
+	strValue.Format(_T("%s"),ppResult[nIndex]);
+	sqlite3_free_table(ppResult);
 	return strValue.GetString() ;
 }
 string  CSqliteDeal::GetColSum(const CString strTabName,const CString filed)
 {
+	LOCK(m_pCs);
 	if ( NULL == m_pSqliteRead ) {
 		if ( !OpenSqlite(theApp.str_InsPath) ) return "" ;
 	}
+	char    **  ppResult;    //结果
+	int         nRow;       //行数
+	int         nCol;       //列数
+	char    *pzErrMsg;    //错误信息
 
 	CString strSql = _T("SELECT sum(")+filed+_T(") FROM ") + strTabName;
 
-	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&ppResult,&nRow,&nCol,&pzErrMsg);
 	if ( nResult != SQLITE_OK ){
+		LogPrint("INFO", "GetColSum2 error:%s\n", pzErrMsg);
 		sqlite3_close(m_pSqliteRead);  
-		sqlite3_free(m_pzErrMsg);  
+		sqlite3_free(pzErrMsg);  
 		m_pSqliteRead = NULL ;
 		return "" ;
 	}
-	int nIndex = m_nCol;
+	int nIndex = nCol;
 	CString strValue  ;
-	strValue.Format(_T("%s"),m_pResult[nIndex]);
-	sqlite3_free_table(m_pResult);
+	strValue.Format(_T("%s"),ppResult[nIndex]);
+	sqlite3_free_table(ppResult);
 	return strValue.GetString() ;
 
 }
 
 BOOL  CSqliteDeal::GetaddrBookData(map<CString,uistruct::ADDRBOOK_t>* pListInfo)
 {
+	LOCK(m_pCs);
 	if (NULL == pListInfo ) return FALSE ;
 	if ( NULL == m_pSqliteRead ) {
 		if ( !OpenSqlite(theApp.str_InsPath) ) return FALSE ;
 	}
 	pListInfo->clear() ;
 
+	char    **  ppResult;    //结果
+	int         nRow;       //行数
+	int         nCol;       //列数
+	char    *pzErrMsg;    //错误信息
+
 	CString strSql = _T("SELECT * FROM addrbook");
-	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&ppResult,&nRow,&nCol,&pzErrMsg);
 	if ( nResult != SQLITE_OK ){
+		LogPrint("INFO", "GetaddrBookData error:%s\n", pzErrMsg);
 		sqlite3_close(m_pSqliteRead);  
-		sqlite3_free(m_pzErrMsg);  
+		sqlite3_free(pzErrMsg);  
 		m_pSqliteRead = NULL ;
 		return FALSE ;
 	}
-	int nIndex = m_nCol;
+	int nIndex = nCol;
 	CString strValue ;
 	uistruct::ADDRBOOK_t listdata;
-	for(int i = 0; i < m_nRow ; i++) {
-		for(int j = 0; j < m_nCol; j++ ){
+	for(int i = 0; i < nRow ; i++) {
+		for(int j = 0; j < nCol; j++ ){
 			switch (j)
 			{
 			case 0:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] );
+					strValue.Format(_T("%s") , ppResult[nIndex] );
 					listdata.lebel = strValue;
 				}
 				break;
 			case 1:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					listdata.address = strValue;
 				}
 				break;
@@ -1683,41 +1814,48 @@ BOOL  CSqliteDeal::GetaddrBookData(map<CString,uistruct::ADDRBOOK_t>* pListInfo)
 		key.Format(_T("%s"),listdata.address);
 		(*pListInfo)[key] = listdata;
 	}
-	sqlite3_free_table(m_pResult);
+	sqlite3_free_table(ppResult);
 	return TRUE ;
 }
 int	 CSqliteDeal::FindDB(const CString strTabName , const CString strP, const CString strSource,uistruct::ADDRBOOKLIST *listaddr )
 {
+	LOCK(m_pCs);
 	if ( NULL == m_pSqliteRead ) {
 		if ( !OpenSqlite(theApp.str_InsPath) ) return -1 ;
 	}
 
+	char    **  ppResult;    //结果
+	int         nRow;       //行数
+	int         nCol;       //列数
+	char    *pzErrMsg;    //错误信息
+
 	CString strSql = _T("SELECT * FROM ") + strTabName + _T(" WHERE ") + strSource + _T(" ='") + strP+ _T("'") ;
 
-	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&m_pResult,&m_nRow,&m_nCol,&m_pzErrMsg);
+	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&ppResult,&nRow,&nCol,&pzErrMsg);
 	if ( nResult != SQLITE_OK ){
+		LogPrint("INFO", "FindDB3 error:%s\n", pzErrMsg);
 		sqlite3_close(m_pSqliteRead);  
-		sqlite3_free(m_pzErrMsg);  
+		sqlite3_free(pzErrMsg);  
 		m_pSqliteRead = NULL ;
 		return 0 ;
 	}
 
-	int nIndex = m_nCol;
+	int nIndex = nCol;
 	CString strValue ;
 	uistruct::ADDRBOOK_t listdata;
-	for(int i = 0; i < m_nRow ; i++) {
-		for(int j = 0; j < m_nCol; j++ ){
+	for(int i = 0; i < nRow ; i++) {
+		for(int j = 0; j < nCol; j++ ){
 			switch (j)
 			{
 			case 0:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] );
+					strValue.Format(_T("%s") , ppResult[nIndex] );
 					listdata.lebel = strValue;
 				}
 				break;
 			case 1:
 				{
-					strValue.Format(_T("%s") , m_pResult[nIndex] ) ;
+					strValue.Format(_T("%s") , ppResult[nIndex] ) ;
 					listdata.address = strValue;
 				}
 				break;
@@ -1726,6 +1864,6 @@ int	 CSqliteDeal::FindDB(const CString strTabName , const CString strP, const CS
 		}
 		listaddr->push_back(listdata);
 	}
-	sqlite3_free_table(m_pResult);
-	return m_nRow;
+	sqlite3_free_table(ppResult);
+	return nRow;
 }

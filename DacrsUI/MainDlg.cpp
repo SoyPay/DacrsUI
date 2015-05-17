@@ -293,7 +293,8 @@ void CMainDlg::SetCtrlText()
 		GetDlgItem(IDC_STATIC_DES1)->SetWindowText(strDes) ;
 		GetDlgItem(IDC_TX1)->SetWindowText(strShowData) ;
 		GetDlgItem(IDC_TX_JY2)->SetWindowText(strCommand) ;
-		GetDlgItem(IDC_STATIC_TARGET1)->ShowWindow(SW_SHOW);
+		//GetDlgItem(IDC_STATIC_TARGET1)->ShowWindow(SW_SHOW
+		GetDlgItem(IDC_STATIC_TARGET1)->ShowWindow(SW_HIDE);
 	}
 	
 	addr1 = maindlg.addr2;
@@ -318,7 +319,7 @@ void CMainDlg::SetCtrlText()
 		GetDlgItem(IDC_STATIC_DES2)->SetWindowText(strDes) ;
 		GetDlgItem(IDC_TX2)->SetWindowText(strShowData) ;
 		GetDlgItem(IDC_TX_JY3)->SetWindowText(strCommand) ;
-		GetDlgItem(IDC_STATIC_TARGET2)->ShowWindow(SW_SHOW);
+		GetDlgItem(IDC_STATIC_TARGET2)->ShowWindow(SW_HIDE);
 	}
 
 	addr1 = maindlg.addr3;
@@ -344,7 +345,7 @@ void CMainDlg::SetCtrlText()
 		GetDlgItem(IDC_STATIC_DES3)->SetWindowText(strDes) ;
 		GetDlgItem(IDC_TX3)->SetWindowText(strShowData) ;
 		GetDlgItem(IDC_TX_JY4)->SetWindowText(strCommand) ;
-		GetDlgItem(IDC_STATIC_TARGET3)->ShowWindow(SW_SHOW);
+		GetDlgItem(IDC_STATIC_TARGET3)->ShowWindow(SW_HIDE);
 	}
 	addr1 = maindlg.addr4;
 	if (addr1 != "")
@@ -369,7 +370,7 @@ void CMainDlg::SetCtrlText()
 		GetDlgItem(IDC_STATIC_DES4)->SetWindowText(strDes) ;
 		GetDlgItem(IDC_TX4)->SetWindowText(strShowData) ;
 		GetDlgItem(IDC_TX_JY5)->SetWindowText(strCommand) ;
-		GetDlgItem(IDC_STATIC_TARGET4)->ShowWindow(SW_SHOW);
+		GetDlgItem(IDC_STATIC_TARGET4)->ShowWindow(SW_HIDE);
 	}
 	addr1 = maindlg.addr5;
 	if (addr1 != "")
@@ -393,7 +394,7 @@ void CMainDlg::SetCtrlText()
 		GetDlgItem(IDC_STATIC_DES5)->SetWindowText(strDes) ;
 		GetDlgItem(IDC_TX5)->SetWindowText(strShowData) ;
 		GetDlgItem(IDC_TX_JY7)->SetWindowText(strCommand) ;
-		GetDlgItem(IDC_STATIC_TARGET5)->ShowWindow(SW_SHOW);
+		GetDlgItem(IDC_STATIC_TARGET5)->ShowWindow(SW_HIDE);
 	}
 	Invalidate();
 }
