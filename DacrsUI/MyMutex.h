@@ -12,3 +12,19 @@ public:
 private:
 	CRITICAL_SECTION m_cs;
 };
+
+class CAutoMutex
+{
+public:
+	CAutoMutex(CCriticalSection  *pCs){
+		m_pCs = pCs;
+		m_pCs->Lock();
+	}
+	~CAutoMutex(){
+		m_pCs->Unlock();
+	}
+private:
+	CCriticalSection *m_pCs;
+};
+
+#define LOCK(cs) CAutoMutex autoMutex(cs);

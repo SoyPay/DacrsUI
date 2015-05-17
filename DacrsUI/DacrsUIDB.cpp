@@ -238,7 +238,7 @@ void CDacrsUIApp::UpdatarevAppRecord(string txdetail){
 	}
 }
 void CDacrsUIApp::InsertarevtransactionData(string hash){
-
+	LogPrint("INFO", "InsertarevtransactionData tx hash:%s\n", hash.c_str());
 	CString strCommand,strShowData;
 	strCommand.Format(_T("%s %s"),_T("gettxdetail") ,hash.c_str() );
 	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
@@ -274,6 +274,7 @@ void CDacrsUIApp::InsertarevtransactionData(string hash){
 
 		//// 数据插入了，更新到交易详情界面
 		CPostMsg Postmsg(MSG_USER_TRANSRECORD_UI,WM_INSERT);
+		DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_TRANSRECORD_UI ,WM_INSERT,0);
 		string temp =root.toStyledString();
 		Postmsg.SetData(temp.c_str());	
 		m_UiTxDetailQueue.push(Postmsg);

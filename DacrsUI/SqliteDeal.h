@@ -10,10 +10,7 @@ public:
 private:
 	sqlite3 *   m_pSqliteWrite; //写连接
 	sqlite3 *   m_pSqliteRead;  //读连接
-	char    *   m_pzErrMsg ;  //错误信息
-	char    **  m_pResult;    //结果
-	int         m_nRow;       //行数
-	int         m_nCol;       //列数
+	CCriticalSection  * m_pCs;
 
 public:
 	int    FindDB(const CString strTabName , const CString strP, const CString strSource );
