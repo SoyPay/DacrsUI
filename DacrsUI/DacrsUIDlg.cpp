@@ -619,7 +619,7 @@ void CDacrsUIDlg::OnBnClickedButtonClose()
 		if ( NULL != m_pOutGifDlg ) {
 			CRect rc;
 			GetWindowRect(&rc);	
-			m_pOutGifDlg->SetWindowPos(NULL , (rc.left + rc.right)/2 - 454/2 , (rc.top + rc.bottom)/2 - 141/2  , 454 ,141 , SWP_SHOWWINDOW);
+			m_pOutGifDlg->SetWindowPos(NULL , (rc.left + rc.right)/2 - 300/2 , (rc.top + rc.bottom)/2 - 100/2  , 300 ,100 , SWP_SHOWWINDOW);
 			m_pOutGifDlg->ShowWindow(SW_SHOW) ;
 		}
 		::PostThreadMessage( theApp.GetMtHthrdId() , MSG_USER_OUT , 0 , 0 ) ;

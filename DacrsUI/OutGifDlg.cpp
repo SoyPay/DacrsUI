@@ -106,12 +106,12 @@ BOOL COutGifDlg::OnInitDialog()
 	int x = GetSystemMetrics(SM_CXSCREEN);
 	int y = GetSystemMetrics(SM_CYSCREEN);
 
-	SetWindowPos(NULL , x/2 - 175 , y/2 - 50  , 454 ,141 , SWP_SHOWWINDOW) ;
+	SetWindowPos(NULL , x/2 - 175 , y/2 - 50  , 300 ,100 , SWP_SHOWWINDOW) ;
 
 	if ( NULL == m_ProgressWnd ) {
 		m_ProgressWnd = new CGIFControl ;
 		m_ProgressWnd->Create(_T("") , WS_CHILD | SS_OWNERDRAW | WS_VISIBLE | SS_NOTIFY , \
-			 CRect(0,0,454,141)  , this, 113 ) ;
+			 CRect(0,0,300,100)  , this, 113 ) ;
 	}
 
 	SetBkBmpNid( IDB_BITMAP_EXIT_BJ ) ;
