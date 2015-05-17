@@ -127,10 +127,10 @@ BOOL CAddrBook::OnInitDialog()
 	m_listCtrl.SetBkColor(RGB(240,240,240));       
 	m_listCtrl.SetRowHeigt(23);               
 	m_listCtrl.SetHeaderHeight(1.5);         
-	m_listCtrl.SetHeaderFontHW(16,0);
-	m_listCtrl.SetHeaderBKColor(217,126,34,0); 
+	m_listCtrl.SetHeaderFontHW(15,0);
+	m_listCtrl.SetHeaderBKColor(222,224,218,0); 
 	//m_listCtrl.SetHeaderBKColor(240,240,240,0);
-	m_listCtrl.SetHeaderTextColor(RGB(255,255,255)); //设置头部字体颜色
+	m_listCtrl.SetHeaderTextColor(RGB(0,0,0)); //设置头部字体颜色
 	m_listCtrl.SetTextColor(RGB(0,0,0));  
 	for( int i = 0 ; i < 2 ; i++  ) {
 		m_listCtrl.InsertColumn(i,listcol[i].name,LVCFMT_CENTER,listcol[i].size);
