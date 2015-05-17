@@ -153,6 +153,8 @@ BOOL CTradDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_rBtnTxdetail.SizeToContent();
 
 		OninitializeList();
+
+		theApp.SubscribeMsg( theApp.GetMtHthrdId() , GetSafeHwnd() , MSG_USER_TRANSRECORD_UI ) ;
 	}
 	return bRes ;
 }
@@ -292,19 +294,19 @@ void CTradDlg::InsertItemData()
 	string txtype = txdetail.txtype;
 	if (!strcmp(txtype.c_str(),"REWARD_TX"))
 	{
-		strShowData.Format(_T("%s") ,_T("挖矿奖励交易")) ;
+		strShowData.Format(_T("%s") ,_T("挖矿")) ;
 	}else if (!strcmp(txtype.c_str(),"REG_ACCT_TX"))
 	{
-		strShowData.Format(_T("%s") ,_T("注册账户交易")) ;
+		strShowData.Format(_T("%s") ,_T("激活")) ;
 	}else if (!strcmp(txtype.c_str(),"COMMON_TX"))
 	{
-		strShowData.Format(_T("%s") ,_T("转账交易")) ;
+		strShowData.Format(_T("%s") ,_T("转账")) ;
 	}else if (!strcmp(txtype.c_str(),"CONTRACT_TX"))
 	{
-		strShowData.Format(_T("%s") ,_T("合约交易")) ;
+		strShowData.Format(_T("%s") ,_T("合约")) ;
 	}else if (!strcmp(txtype.c_str(),"REG_APP_TX"))
 	{
-		strShowData.Format(_T("%s") ,_T("注册应用交易")) ;
+		strShowData.Format(_T("%s") ,_T("注册")) ;
 	}
 	m_listCtrl.SetItemText( count , ++nSubIdx, strShowData) ;
 
