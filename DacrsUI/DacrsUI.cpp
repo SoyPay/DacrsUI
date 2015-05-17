@@ -445,7 +445,8 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 							strHash.TrimLeft("'");
 							strHash.TrimRight("'");
 //							theApp.cs_SqlData.Lock();
-							int nItem =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.FindDB(_T("revtransaction") ,strHash,_T("hash") ) ;
+							int nItem =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.FindDB(_T("revtransaction") ,strHash,_T("hash") );
+							LogPrint("INFO", "receive tx hash:%s\n", strHash.GetBuffer());
 //							theApp.cs_SqlData.Unlock();
 							if (nItem == 0)
 							{
