@@ -648,6 +648,9 @@
     <None Include="res\target.bmp">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="res\exit_bj.bmp">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="资源文件">
