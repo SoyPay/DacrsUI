@@ -270,6 +270,7 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TradDlg.h" />
     <ClInclude Include="UiHead.h" />
+    <ClInclude Include="Z:\dacrs_release\dacrs\src\tinyformat.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AddApp.cpp" />

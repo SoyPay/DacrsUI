@@ -1131,6 +1131,7 @@ void CDacrsUIApp::StartSeverProcess(const CStringA& strdir){
 	///// 启动前先关闭系统中dacrs-d.exe进程
 	CloseProcess("dacrs-d.exe");
 	LogPrint("INFO", "关闭服务端成功\n");
+	LogPrint("INFO", "close %d test\n", 1);
 	
 	STARTUPINFOA si; 
 	memset(&si, 0, sizeof(STARTUPINFO));  

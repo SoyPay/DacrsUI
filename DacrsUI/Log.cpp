@@ -9,7 +9,7 @@ CLogParamCfg logParamCfg;
 static map<CString,DebugLogFile> g_DebugLogs;
 
 
-int LogPrintStr(const char* category, const CString &str) {
+int LogPrintStr(const char* category, const string &str) {
 
 	if (!logParamCfg.bLogFlag)
 		return 0;
@@ -36,24 +36,28 @@ int LogPrintStr(const char* category, const CString &str) {
 		strTimestamps = strDate + strTime;
 		ret += fprintf(log.m_fileout, "%s ", strTimestamps.GetBuffer());
 	}
-	if (str.GetLength()>0 && str.GetAt(str.GetLength()-1) == '\n') {
+	if (!str.empty() && str[str.size()-1] == '\n') {
 		log.m_newLine = true;
 	} else {
 		log.m_newLine = false;
 	}
-	ret = fwrite((LPSTR)(LPCTSTR)str, 1, str.GetLength(), log.m_fileout);
+	ret = fwrite(str.data(), 1, str.size(), log.m_fileout);
 	log.m_clsMutex->Unlock();
 	return ret;
 }
 
-CString GetLogHead(int line, const char* file, const char* category) {
+string GetLogHead(int line, const char* file, const char* category) {
 	
-	if(logParamCfg.bPrintFileLine){
-		CString strLogHead(_T(""));
-		strLogHead.Format(_T("[%s:%d]%s: "), file, line, category != NULL ? category : "");
-		return strLogHead;
+	CString strTemp = file;
+	int nPos = strTemp.ReverseFind('\\');
+	if(nPos > 0) {
+		strTemp = strTemp.Right(strTemp.GetLength()-nPos-1);
 	}
-	return CString(_T(""));
+
+	if(logParamCfg.bPrintFileLine){
+		return tfm::format("[%s:%d]%s: ", (LPSTR)(LPCTSTR)strTemp, line, category != NULL ? category : "");
+	}
+	return string("");
 }
 
 static void DebugPrintInit() {

@@ -330,6 +330,9 @@
     <ClInclude Include="TxDetailDlg.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Z:\dacrs_release\dacrs\src\tinyformat.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
