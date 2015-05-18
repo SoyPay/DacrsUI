@@ -272,6 +272,7 @@ void CDacrsUIApp::InsertarevtransactionData(string hash){
 			transcion.desaddr.c_str(), transcion.money,transcion.Contract.c_str(),transcion.confirmedHeight,transcion.confirmedtime,transcion.blockhash.c_str(),transcion.state) ;
 		m_SqliteDeal.InsertData(_T("revtransaction") ,strSourceData ) ;
 
+		LogPrint("INFO","%s/r/n",strSourceData);
 		//// 数据插入了，更新到交易详情界面
 		CPostMsg Postmsg(MSG_USER_TRANSRECORD_UI,WM_INSERT);
 		DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_TRANSRECORD_UI ,WM_INSERT,0);

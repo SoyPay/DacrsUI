@@ -20,8 +20,10 @@ CSqliteDeal::CSqliteDeal(void)
 CSqliteDeal::~CSqliteDeal(void)
 {
 	if( NULL != m_pSqliteRead ) {
-		delete m_pSqliteRead;
-		m_pSqliteRead = NULL;
+		//delete m_pSqliteRead;
+		//m_pSqliteRead = NULL;
+		sqlite3_close(m_pSqliteRead);
+		m_pSqliteRead = NULL ;
 	}
 	if ( NULL != m_pSqliteWrite ) {
        sqlite3_close(m_pSqliteWrite);
