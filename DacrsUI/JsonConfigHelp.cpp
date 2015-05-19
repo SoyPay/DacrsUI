@@ -78,6 +78,7 @@ void CJsonConfigHelp::ReadP2PCfgData(const Json::Value& root)
 
 }
 
+
 void CJsonConfigHelp::ReadAnonymCfgData(const Json::Value& root)
 {
 	Json::Value anonym = root["anonym"];
