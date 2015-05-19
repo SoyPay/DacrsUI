@@ -211,9 +211,9 @@ int CDacrsUIDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	//初始化RPC Cmd
 	InitialRpcCmd();
+
 	LoadListDataInfo();//加载数据库信息
 
-	//TRACE("wwwwwLoadListDataInfo\r\n");
 	//TOP
 	if( NULL == m_pTitleBar ){
 		m_pTitleBar = new CIndTitleBar ;
@@ -427,7 +427,7 @@ void CDacrsUIDlg::InitialRpcCmd()
 void    CDacrsUIDlg::SyncAddrInfo()
 {
 	CString strCommand;
-	strCommand.Format(_T("%s"),_T("listaddr"));
+	strCommand.Format(_T("%s"),"listaddr");
 	CStringA strShowData ;
 
 	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
@@ -437,7 +437,7 @@ void    CDacrsUIDlg::SyncAddrInfo()
 	if (!reader.parse(strShowData.GetString(), root)) 
 		return  ;
 	map<CString,uistruct::LISTADDR_t> pListInfo;
-	theApp.m_SqliteDeal.GetListaddrData(&pListInfo);
+	theApp.m_SqliteDeal.GetWalletAddressList(_T(" 1=1 "), (&pListInfo));
 
 	/// 数据库中没有的地址要插入
 	map<CString,int> SListInfo;
@@ -471,33 +471,31 @@ void    CDacrsUIDlg::SyncAddrInfo()
 		}else{
 			listaddr.bSign   = 0 ;
 		}
-		CString strSourceData,feild;
-		feild.Format(_T("address"));
-		strSourceData.Format(_T("%s"),listaddr.address);
-
+	
+		CString strCond;
+		strCond.Format(_T(" address = '%s' "), listaddr.address);
 		uistruct::LISTADDR_t addrsql;
-		int item = theApp.m_SqliteDeal.FindDB(_T("MYWALLET") ,strSourceData, feild,&addrsql) ;
+		int item = theApp.m_SqliteDeal.GetWalletAddressItem(strCond, &addrsql) ;
 
-		if (item == 0 )
+		if (strlen(addrsql.address) == 0 )
 		{
-			strSourceData.Format(_T("'%s' , '%s' , '%.8f' , '%d' ,'%d','%s'") , listaddr.address ,listaddr.RegID ,listaddr.fMoney ,listaddr.nColdDig ,listaddr.bSign,listaddr.Lebel ) ;
-			if (!theApp.m_SqliteDeal.InsertData(_T("MYWALLET") ,strSourceData ) )
+			CString strData;
+			strData.Format(_T("'%s' , '%s' , '%.8f' , '%d' ,'%d','%s'") , listaddr.address ,listaddr.RegID ,listaddr.fMoney ,listaddr.nColdDig ,listaddr.bSign,listaddr.Label ) ;
+			if (!theApp.m_SqliteDeal.InsertTableItem(_T("t_wallet_address") ,strData ))
 			{
-				TRACE(_T("MYWALLET数据插入失败!") );
-				TRACE("insert:%d\r\n",i);
+				TRACE("INSERT t_wallet_address data failed!\n");
 			}
 		}else{
 			if (listaddr.fMoney != addrsql.fMoney || listaddr.bSign != addrsql.bSign)
 			{
 				CString strSourceData,strWhere;
-				strSourceData.Format(_T("regid = '%s', money = %.8f ,coldig =%d,sign =%d") ,listaddr.RegID ,listaddr.fMoney ,listaddr.nColdDig ,listaddr.bSign ) ;
+				strSourceData.Format(_T("reg_id = '%s', money = %.8f ,cold_dig =%d, sign =%d") ,listaddr.RegID ,listaddr.fMoney ,listaddr.nColdDig ,listaddr.bSign ) ;
 				strWhere.Format(_T("address = '%s'") , listaddr.address  ) ;
-				if ( !theApp.m_SqliteDeal.Updatabase(_T("MYWALLET") , strSourceData , strWhere ) ){
-					TRACE(_T("MYWALLET数据更新失败!") );
+				if ( !theApp.m_SqliteDeal.UpdateTableItem(_T("t_wallet_address") , strSourceData , strWhere ) ){
+					TRACE("UPDATE t_wallet_address data failed!\n");
 				}
 			}
 		}
-
 	}
 
 	////// 剔除数据库中钱包没有的地址
@@ -506,21 +504,18 @@ void    CDacrsUIDlg::SyncAddrInfo()
 	{
 		if (SListInfo.count(it->first) <= 0)
 		{
-			CString strSourceData,feild;
-			feild.Format(_T("address"));
-			strSourceData.Format(_T("%s"),it->first);
-			int item = theApp.m_SqliteDeal.DeleteData(_T("MYWALLET"),feild,strSourceData);
+			CString strCond;
+			strCond.Format(_T(" address='%s' "), it->first);
+			int item = theApp.m_SqliteDeal.DeleteTableItem(_T("t_wallet_address"), strCond);
 		}
 	}
 }
 void  CDacrsUIDlg::LoadListDataInfo()
 {
 	//加载连表数据,没有的表创建
-	theApp.cs_SqlData.Lock();
-	theApp.m_SqliteDeal.UpdataAllTable();
-	theApp.m_SqliteDeal.UpdataAllTableData(theApp.m_SqliteDeal.isinBlock());
+
 	SyncAddrInfo();
-	theApp.cs_SqlData.Unlock();
+	
 }
 void CDacrsUIDlg::CloseThread()
 {

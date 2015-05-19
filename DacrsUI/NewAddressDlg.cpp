@@ -190,17 +190,17 @@ void CNewAddressDlg::OnBnClickedButtonScdz()
 		return  ;
 	CString addr = root["addr"].asCString();
 
-	CString Leble;
-	GetDlgItem(IDC_EDIT_Leble)->GetWindowText(Leble);
+	CString Lable;
+	GetDlgItem(IDC_EDIT_Lable)->GetWindowText(Lable);
 
 	uistruct::LISTADDR_t newaddr; 
 	memcpy(newaddr.address,addr,sizeof(newaddr.address));
 	newaddr.nColdDig = nCold;
-	memcpy(newaddr.Lebel,Leble,sizeof(newaddr.Lebel));
+	memcpy(newaddr.Label,Lable,sizeof(newaddr.Label));
 
 	CString strSourceData;
 	double money = 0.0;
-	strSourceData.Format(_T("'%s' , '%s' , '%.8f' , '%d' ,'%d','%s'") , addr ,"",money ,nCold ,0,Leble) ;
+	strSourceData.Format(_T("'%s' , '%s' , '%.8f' , '%d' ,'%d','%s'") , addr ,"",money ,nCold ,0,Lable) ;
 	uistruct::DATABASEINFO_t   pDatabase;
 	pDatabase.strSource = strSourceData;
 	pDatabase.strcutjson = newaddr.ToJson();

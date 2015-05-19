@@ -123,12 +123,14 @@ BOOL CTradDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		struct LISTCol {
 			CString		name ;
 			UINT		size ;
-		} listcol[5]  = {
-			{"	交易hash" ,      250},
-			{"交易类型" ,        60},
-			{"源地址" ,          210}, 
-			{"目的地址" ,        210}, 
-			{"金额" ,            100}
+		} listcol[6]  = {
+			{"序号",          50},
+			{"交易类型" ,      60},
+			{"源地址" ,       230}, 
+			{"金额",          100},
+			{"目的地址" ,     230},
+			{"交易ID" ,     300}
+			
 		};
 		m_listCtrl.SetBkColor(RGB(240,240,240));       
 		m_listCtrl.SetRowHeigt(23);               
@@ -137,14 +139,14 @@ BOOL CTradDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_listCtrl.SetHeaderBKColor(32,30,32,8); 
 		m_listCtrl.SetHeaderTextColor(RGB(255,255,255)); //设置头部字体颜色
 		m_listCtrl.SetTextColor(RGB(0,0,0)); 
-		for( int i = 0 ; i < 5 ; i++  ) {
+		for( int i = 0 ; i < 6 ; i++  ) {
 			m_listCtrl.InsertColumn(i,listcol[i].name,LVCFMT_CENTER,listcol[i].size);
 		}
 		m_listCtrl.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_HEADERDRAGDROP );// |LVS_SINGLESEL  );
 
 		m_rBtnTxdetail.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
 		m_rBtnTxdetail.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		m_rBtnTxdetail.SetWindowText("查看交易详情") ;
+		m_rBtnTxdetail.SetWindowText("查看详情") ;
 		m_rBtnTxdetail.SetFontEx(20 , _T("微软雅黑"));
 		m_rBtnTxdetail.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		m_rBtnTxdetail.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
@@ -167,22 +169,18 @@ void CTradDlg::OnBnClickedButtonTxdetail()
 	POSITION pos = m_listCtrl.GetFirstSelectedItemPosition() ;
 	if ( pos ) {
 		int nRow = m_listCtrl.GetNextSelectedItem(pos) ;
-		CString strtxhash = m_listCtrl.GetItemText(nRow,0);
-		//uistruct::REVTRANSACTION_t txdetail;
-		CString findstr;
-		findstr.Format(_T("'%s'"),strtxhash);
-		uistruct::TRANSRECORDLIST  txdetail;
-	
-		int nItem =  theApp.m_SqliteDeal.FindDB(_T("revtransaction") , findstr ,_T("hash"),&txdetail ) ;
-		if (nItem != 0)
+		CString strtxhash = m_listCtrl.GetItemText(nRow, 5);
+		uistruct::REVTRANSACTION_t  txdetail;
+	    CString strCond;
+		strCond.Format(_T(" hash='%s' "), strtxhash);
+		int nItem =  theApp.m_SqliteDeal.GetTransactionItem( strCond ,&txdetail ) ;
+		if (txdetail.txhash != _T(""))
 		{
-			uistruct::REVTRANSACTION_t fisrt = *txdetail.begin();
-			theApp.m_strAddress.Format(_T("%s") ,fisrt.ToJson().c_str() ) ;
+			theApp.m_strAddress.Format(_T("%s") ,txdetail.ToJson().c_str() ) ;
 		}else
 		{		
 			theApp.m_strAddress =_T("");
 		}
-
 		CTxDetailDlg dlg;
 		dlg.DoModal();
 
@@ -195,9 +193,9 @@ void CTradDlg::OnBnClickedButtonTxdetail()
 void  CTradDlg::OninitializeList()
 {
 	uistruct::TRANSRECORDLIST pListInfo;
-	theApp.m_SqliteDeal.GetRevtransactionDatta(&pListInfo); 
+	theApp.m_SqliteDeal.GetTransactionList(_T(" 1=1 "), &pListInfo); 
 
-	TRACE("TX Count:%d",pListInfo.size());
+	LogPrint("INFO","OninitializeList TX:%d\r\n",pListInfo.size())
 	if (pListInfo.size() == 0)
 	{
 		return;
@@ -208,8 +206,8 @@ void  CTradDlg::OninitializeList()
 	std::vector<uistruct::REVTRANSACTION_t>::const_iterator const_it;
 	for ( const_it = pListInfo.begin() ; const_it != pListInfo.end() ; const_it++ ) {
 		nSubIdx = 0;
-		strShowData.Format(_T("%s"), const_it->txhash);
-		m_listCtrl.InsertItem(i,strShowData);
+		strShowData.Format(_T("%d"), i+1);
+		m_listCtrl.InsertItem(i, strShowData);					//序号
 
 		string txtype = const_it->txtype;
 		if (!strcmp(txtype.c_str(),"REWARD_TX"))
@@ -228,17 +226,21 @@ void  CTradDlg::OninitializeList()
 		{
 			strShowData.Format(_T("%s") ,_T("注册")) ;
 		}
-		m_listCtrl.SetItemText( i , ++nSubIdx, strShowData) ;
+		m_listCtrl.SetItemText( i , ++nSubIdx, strShowData);   //交易类型
 
-
-		strShowData.Format(_T("%s") ,const_it->addr.c_str()) ;
-		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
-
-		strShowData.Format(_T("%s") ,const_it->desaddr.c_str()) ;
-		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
+		strShowData.Format(_T("%s") ,const_it->addr.c_str());
+		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData );   //源地址
 
 		strShowData.Format(_T("%.8f") , const_it->money ) ;
-		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
+		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData );   //交易金额
+
+		strShowData.Format(_T("%s") ,const_it->desaddr.c_str());
+		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData );   //目的地址
+
+		
+
+		strShowData.Format(_T("%s"), const_it->txhash); 
+		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData );  //交易hash
 
 		i++;
 	}
@@ -251,17 +253,14 @@ void CTradDlg::OnNMDblclkListListtx(NMHDR *pNMHDR, LRESULT *pResult)
 	if(-1 != pNMItemActivate->iItem) 
 	{  
 		int nRow = pNMItemActivate->iItem;
-		CString strtxhash =m_listCtrl.GetItemText(nRow, 0);
-		CString findstr;
-		findstr.Format(_T("'%s'"),strtxhash);
-		uistruct::TRANSRECORDLIST  txdetail;
-
-		int nItem =  theApp.m_SqliteDeal.FindDB(_T("revtransaction") , findstr ,_T("hash"),&txdetail ) ;
-
-		if (nItem != 0)
+		CString strtxhash =m_listCtrl.GetItemText(nRow, 5);
+		uistruct::REVTRANSACTION_t  txdetail;
+		CString strCond;
+		strCond.Format(_T(" hash='%s' "), strtxhash);
+		int nItem =  theApp.m_SqliteDeal.GetTransactionItem( strCond ,&txdetail ) ;
+		if (txdetail.txhash != _T(""))
 		{
-			uistruct::REVTRANSACTION_t fisrt = *txdetail.begin();
-			theApp.m_strAddress.Format(_T("%s") ,fisrt.ToJson().c_str() ) ;
+			theApp.m_strAddress.Format(_T("%s") ,txdetail.ToJson().c_str() ) ;
 		}else
 		{		
 			theApp.m_strAddress =_T("");
@@ -283,14 +282,14 @@ void CTradDlg::InsertItemData()
 	string strTemp = postmsg.GetData();
 	txdetail.JsonToStruct(strTemp.c_str());
 
+	LogPrint("INFO","CTradDlg Insert tx;%s\r\n",txdetail.txhash);
 	int count = m_listCtrl.GetItemCount();
 
 	CString strShowData;
 	int nSubIdx = 0;
-	strShowData.Format(_T("%s"), txdetail.txhash);
-	m_listCtrl.InsertItem(count,strShowData);
-	LogPrint("INFO", "insert new item tx hash%s\n", strShowData.GetBuffer());
-
+	strShowData.Format(_T("%d"), count+1);
+	m_listCtrl.InsertItem(count,strShowData);       //序号
+	
 	string txtype = txdetail.txtype;
 	if (!strcmp(txtype.c_str(),"REWARD_TX"))
 	{
@@ -308,20 +307,24 @@ void CTradDlg::InsertItemData()
 	{
 		strShowData.Format(_T("%s") ,_T("注册")) ;
 	}
-	m_listCtrl.SetItemText( count , ++nSubIdx, strShowData) ;
-
+	m_listCtrl.SetItemText( count , ++nSubIdx, strShowData); //交易类型
 
 	strShowData.Format(_T("%s") ,txdetail.addr.c_str()) ;
-	m_listCtrl.SetItemText(count , ++nSubIdx , strShowData ) ;
-
-	strShowData.Format(_T("%s") ,txdetail.desaddr.c_str()) ;
-	m_listCtrl.SetItemText(count , ++nSubIdx , strShowData ) ;
+	m_listCtrl.SetItemText(count , ++nSubIdx , strShowData );//源地址
 
 	strShowData.Format(_T("%.8f") , txdetail.money ) ;
-	m_listCtrl.SetItemText(count , ++nSubIdx , strShowData ) ;
+	m_listCtrl.SetItemText(count , ++nSubIdx , strShowData );//金额
+
+	strShowData.Format(_T("%s") ,txdetail.desaddr.c_str());
+	m_listCtrl.SetItemText(count , ++nSubIdx , strShowData );//目的地址
+
+	strShowData.Format(_T("%s"), txdetail.txhash);
+	m_listCtrl.SetItemText( count , ++nSubIdx, strShowData); //交易hash
+	LogPrint("INFO", "insert new item tx hash%s\n", txdetail.txhash.GetString());
 
     m_listCtrl.EnsureVisible(count, FALSE);
 }
+
  LRESULT CTradDlg::OnShowListCtrl(  WPARAM wParam, LPARAM lParam )
  {
 	 int type = (int)wParam;

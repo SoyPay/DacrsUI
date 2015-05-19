@@ -222,7 +222,7 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 				theApp.m_MsgQueue.pushFront(postblockmsg); 
 				LoadGifing(false);
 				m_walletui = true;
-				theApp.IsSysnBlock = true;
+				theApp.IsSyncBlock = true;
 			}
 			Invalidate(); 
 			//InvalidateRect(m_bmpsig);
@@ -246,7 +246,7 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 		theApp.m_MsgQueue.pushFront(postblockmsg); 
 		LoadGifing(false);
 		m_walletui = true;
-		theApp.IsSysnBlock = true;
+		theApp.IsSyncBlock = true;
 	}
 	if ( m_walletui && !m_prosshiden) {
 		m_strNeting.SetWindowText(_T("ÍøÂçÒÑÍ¬²½")) ;
