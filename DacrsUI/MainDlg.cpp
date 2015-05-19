@@ -130,46 +130,47 @@ void CMainDlg::OnnitCtrlText()
 	ClearCtrlText();
 	CString strCommand,strShowData;
 	strCommand.Format(_T("0"));
-//	theApp.cs_SqlData.Lock();
-	string nmoney =  theApp.m_SqliteDeal.GetColSum(_T("MYWALLET") ,_T("money") ) ;
-//	theApp.cs_SqlData.Unlock();
-	if (!strcmp(nmoney.c_str(),"(null)"))
+
+	double dmoney =  theApp.m_SqliteDeal.GetTableItemSum(_T("t_wallet_address") ,_T("money"), _T(" 1=1 "));
+
+	if (-1 == dmoney)
 	{
 		m_strOver.SetWindowText(_T("0.0")) ;
 	}else{
-		CString strMoney = _T(nmoney.c_str());
+		CString strMoney;
+		strMoney.Format(_T("%.3lf"), dmoney);
 		strMoney = CSoyPayHelp::getInstance()->DisPlayMoney(strMoney);
 		m_strOver.SetWindowText(strMoney.GetString()) ;
 	}
 
-	strCommand.Format(_T("0"));
-//	theApp.cs_SqlData.Lock();
-	 nmoney =  theApp.m_SqliteDeal.GetColSum(_T("revtransaction") , strCommand ,_T("confirmHeight")) ;
-//	theApp.cs_SqlData.Unlock();
+	CString strCond;
+	strCond.Format(_T(" confirm_height = 0 "));
 
-	if (!strcmp(nmoney.c_str(),"(null)"))
+	dmoney =  theApp.m_SqliteDeal.GetTableItemSum(_T("t_transaction") , _T("money") , strCond) ;
+
+
+	if (dmoney<0)
 	{
 		GetDlgItem(IDC_STATIC_NOTCOF)->SetWindowText(_T("0.0")) ;
 	}else{
-		GetDlgItem(IDC_STATIC_NOTCOF)->SetWindowText(nmoney.c_str()) ;
+		CString strMoney;
+		strMoney.Format(_T("%.3lf"), dmoney);
+		GetDlgItem(IDC_STATIC_NOTCOF)->SetWindowText(strMoney) ;
 	}
 	
 
-//	theApp.cs_SqlData.Lock();
-	int nItem =  theApp.m_SqliteDeal.GetTableCount(_T("revtransaction")) ;
-//	theApp.cs_SqlData.Unlock();
+
+	int nItem =  theApp.m_SqliteDeal.GetTableCountItem(_T("t_transaction"), _T(" 1=1 ")) ;
+
 
 	strCommand.Format(_T("%d"),nItem);
 	m_strTranNum.SetWindowText(strCommand) ;
 
-	CString Where,strSource;
-	//Where.Format(_T("'COMMON_TX' order by confirmedtime"));
-	Where.Format(_T("'COMMON_TX' order by confirmedtime desc limit 5"));
-	strSource.Format(_T("txtype"));
 	uistruct::TRANSRECORDLIST pTransaction;
-//	theApp.cs_SqlData.Lock();
-	theApp.m_SqliteDeal.FindDB(_T("revtransaction"),Where,strSource,&pTransaction);
-//	theApp.cs_SqlData.Unlock();
+	CString strSource;
+	strCond.Format(_T(" txtype='COMMON_TX' order by confirmed_time desc limit 5"));
+	theApp.m_SqliteDeal.GetTransactionList(strCond,&pTransaction);
+
 
 	int i = 1;
 	strCommand.Format(_T("IDC_TX%d"),nItem);
@@ -408,6 +409,7 @@ BOOL CMainDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_rBtnImportWallet.LoadBitmaps(IDB_BITMAP_IMPORTWALLET,IDB_BITMAP_IMPORTWALLET,IDB_BITMAP_IMPORTWALLET,IDB_BITMAP_IMPORTWALLET);
 		m_rBtnDumpWallet.LoadBitmaps(IDB_BITMAP_DUMPWALLET,IDB_BITMAP_DUMPWALLET,IDB_BITMAP_DUMPWALLET,IDB_BITMAP_DUMPWALLET);
 		UpdateData(0);
+		SetShowCtrol();
 		OnnitCtrlText();
 		GetUrlServer();
 		onnitLinkText();

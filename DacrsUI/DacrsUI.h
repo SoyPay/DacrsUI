@@ -131,18 +131,18 @@ public:
 	CMyQueue m_UiReciveDlgQueue;
 	CMyQueue m_UiSendDlgQueue;
 	CMyQueue m_UiTxDetailQueue;
-	void UpdataBetPoolData();
-	void UpdataAddressData();
-	void InsertarevtransactionData(string hash);
-	void UpdatarevtransactionData(string hash);
-	void SysncevtransactionData(string obj);
-	void UpdatarevAppRecord(string txdetail);
+	void UpdateQuizPoolData();
+	void UpdateAddressData();
+	void InsertTransaction(string hash);
+	void UpdateTransaction(string hash);
+	void SyncTransaction(string obj);
+	void UpdateAppRecord(string txdetail);
 	void InsertAddbook(uistruct::ADDRBOOK_t );
-	void UpdataAddbook(uistruct::ADDRBOOK_t );
-	void ClearRevstranson();
-	void GetMainDlgStruc();
+	void UpdateAddbook(uistruct::ADDRBOOK_t );
+	void ClearTransaction();
+	void GetMainDlgStruct();
 	BOOL RunOnlyOneApp();
-	void SendRecvieUiMes(int message,CString jsonaddr);
+	void SendUIMsg(int message,CString jsonaddr);
 	void CheckPathValid(const CStringA& strDir);
 public:
 	bool isStartMainDlg;
@@ -152,7 +152,8 @@ public:
 
 	CSplashThread* pSplashThread;
 	int blocktipheight;
-	bool IsSysnBlock;
+	bool IsSyncBlock;
+	bool IsSyncTx;
 };
 
 

@@ -65,6 +65,7 @@ static void DebugPrintInit() {
 	set<CString>::iterator iterLogFile = logfiles.begin();
 	for (; iterLogFile!=logfiles.end(); ++iterLogFile) {
 		FILE* fileout = NULL;
+		CString strWorkDir(_T(""));
 		CString pathDebug = GetCurrentWorkDir();
 		CString fileName = *iterLogFile + ".log";
 		pathDebug +=  "\\" + fileName;
@@ -80,7 +81,16 @@ static void DebugPrintInit() {
 
 CString GetCurrentWorkDir() 
 {
-	const DWORD dwPathLength = 1024;
+
+	char strPath[MAX_PATH] ;
+	GetModuleFileName( AfxGetApp()->m_hInstance , strPath , MAX_PATH );
+	CString str=strPath;
+	int i=str.ReverseFind('\\');
+	CString strFullPath;
+	strFullPath = str.Left(i);
+	return strFullPath;
+
+	/*const DWORD dwPathLength = 1024;
 	char pFileName[dwPathLength];
 	int nPos = GetCurrentDirectory( dwPathLength, pFileName); 
 
@@ -88,7 +98,7 @@ CString GetCurrentWorkDir()
 	if( nPos < 0 ) 
 		return CString(""); 
 	else 
-		return csFullPath; 
+		return csFullPath; */
 }
 
 void InitLogCfg()
