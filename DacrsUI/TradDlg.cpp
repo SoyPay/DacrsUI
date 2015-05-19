@@ -195,7 +195,6 @@ void  CTradDlg::OninitializeList()
 	uistruct::TRANSRECORDLIST pListInfo;
 	theApp.m_SqliteDeal.GetTransactionList(_T(" 1=1 "), &pListInfo); 
 
-	LogPrint("INFO","OninitializeList TX:%d\r\n",pListInfo.size())
 	if (pListInfo.size() == 0)
 	{
 		return;
@@ -282,7 +281,6 @@ void CTradDlg::InsertItemData()
 	string strTemp = postmsg.GetData();
 	txdetail.JsonToStruct(strTemp.c_str());
 
-	LogPrint("INFO","CTradDlg Insert tx;%s\r\n",txdetail.txhash);
 	int count = m_listCtrl.GetItemCount();
 
 	CString strShowData;
@@ -320,7 +318,6 @@ void CTradDlg::InsertItemData()
 
 	strShowData.Format(_T("%s"), txdetail.txhash);
 	m_listCtrl.SetItemText( count , ++nSubIdx, strShowData); //½»Ò×hash
-	LogPrint("INFO", "insert new item tx hash%s\n", txdetail.txhash.GetString());
 
     m_listCtrl.EnsureVisible(count, FALSE);
 }
@@ -332,7 +329,6 @@ void CTradDlg::InsertItemData()
 	 {
 	 case WM_INSERT:
 		 {
-			 LogPrint("INFO", "Receive message WM_INSERT\n");
 			 InsertItemData();
 		 }
 		 break;
