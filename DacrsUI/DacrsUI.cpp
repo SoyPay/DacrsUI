@@ -455,7 +455,6 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 							CString strCondition(_T(""));
 							strCondition.Format(" hash = '%s' ", strHash);
 							int nItem =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.GetTableCountItem(_T("t_transaction") ,strCondition);
-							LogPrint("INFO", "receive tx hash:%s\n", strHash.GetBuffer());
 							if (nItem == 0)
 							{
 								((CDacrsUIApp*)pParam)->InsertTransaction(strHash.GetString() ) ;
