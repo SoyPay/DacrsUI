@@ -261,14 +261,12 @@ void CDacrsUIApp::InsertTransaction(string hash){
 			transcion.desaddr.c_str(), transcion.money,transcion.Contract.c_str(),transcion.confirmedHeight,transcion.confirmedtime,transcion.blockhash.c_str(),transcion.state) ;
 		m_SqliteDeal.InsertTableItem(_T("t_transaction") ,strSourceData ) ;
 
-		LogPrint("INFO","%s\n",strSourceData);
 		//// 数据插入了，更新到交易详情界面
 		CPostMsg Postmsg(MSG_USER_TRANSRECORD_UI,WM_INSERT);
 		string temp =root.toStyledString();
 		Postmsg.SetData(temp.c_str());	
 		m_UiTxDetailQueue.push(Postmsg);
 		DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_TRANSRECORD_UI ,WM_INSERT,0);
-		LogPrint("INFO","Insert tx;%s\r\n",transcion.txhash);
 	}
 }
 void  CDacrsUIApp::InsertAddbook(uistruct::ADDRBOOK_t addr)
