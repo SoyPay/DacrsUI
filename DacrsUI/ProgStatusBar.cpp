@@ -78,7 +78,7 @@ void CProgStatusBar::LoadGifing( BOOL bState )
 					CRect rc ;
 					GetClientRect( rc ) ;
 					Invalidate() ;
-					m_ProgressWnd->SetWindowPos( NULL , rc.Width()- 18 , (rc.Height()/2)-8 , 0 , 0 , \
+					m_ProgressWnd->SetWindowPos( NULL , rc.Width()+880 , rc.Height()+8 , 0 , 0 , \
 						SWP_SHOWWINDOW|SWP_NOSIZE ) ;
 					((CGIFControl*)m_ProgressWnd)->Play();
 				}
@@ -173,6 +173,7 @@ BOOL CProgStatusBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UIN
 		m_progress.SendMessage(PBM_SETBKCOLOR, 0, RGB(66, 65, 63));//±³¾°É«
 		m_progress.SendMessage(PBM_SETBARCOLOR, 0, RGB(254, 153, 0));//Ç°¾°É«
 
+		LoadGifing(TRUE);
 		//CPostMsg postmsg(MSG_USER_UP_PROGRESS,0);
 		//theApp.m_MsgQueue.pushFront(postmsg);
 	}
