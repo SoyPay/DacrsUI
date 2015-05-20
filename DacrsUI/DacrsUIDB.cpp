@@ -13,7 +13,7 @@
 #endif
 
 
-void CDacrsUIApp::UpdataBetPoolData()
+void CDacrsUIApp::UpdateQuizPoolData()
 {
 	Json::Reader reader;  
 	Json::Value root; 
@@ -48,12 +48,12 @@ void CDacrsUIApp::UpdataBetPoolData()
 			string strTemp = CSoyPayHelp::getInstance()->HexStr(vnTemp);
 
 			/// 查找数据库中此赌约是否正在接赌
-			uistruct::P2P_BET_RECORD_t  betrecord;
-			CString findhash;
-			findhash.Format(_T("%s"),strTemp.c_str());
-//			theApp.cs_SqlData.Lock();
-			int nItem =  theApp.m_SqliteDeal.FindDB(_T("p2p_bet_record") , findhash ,_T("tx_hash"),&betrecord ) ;
-//			theApp.cs_SqlData.Unlock();
+			uistruct::P2P_QUIZ_RECORD_t  betrecord;
+			CString strCond;
+			strCond.Format(_T(" tx_hash = '%s' "), strTemp);
+
+			int nItem =  theApp.m_SqliteDeal.GetP2PQuizRecordItem(strCond, &betrecord );
+
 			if (nItem != 0 && betrecord.state == 4) ////此赌约正在接赌，只是在block中没有确认
 			{
 				continue;
@@ -77,16 +77,13 @@ void CDacrsUIApp::UpdataBetPoolData()
 			if (DBbet.betstate == 0x00)
 			{
 				CString strSourceData;
-				strSourceData.Format(_T("'%s' , '%s'") ,txhash,nValue) ;
-//				theApp.cs_SqlData.Lock();
-				m_SqliteDeal.InsertData(_T("p2ppool") ,strSourceData ) ;
-//				theApp.cs_SqlData.Unlock();
-
+				strSourceData.Format(_T("'%s' , '%s'") , txhash, nValue);
+				m_SqliteDeal.InsertTableItem(_T("t_quiz_pool") ,strSourceData);
 			}
 		}
 	}
 }
-void CDacrsUIApp::UpdataAddressData(){
+void CDacrsUIApp::UpdateAddressData(){
 	CString strCommand;
 	strCommand.Format(_T("%s"),_T("listaddr"));
 	CStringA strShowData ;
@@ -127,38 +124,38 @@ void CDacrsUIApp::UpdataAddressData(){
 		feild.Format(_T("address"));
 		strSourceData.Format(_T("%s"),listaddr.address);
 
+		CString strCond;
+		strCond.Format(_T(" address = '%s' "), listaddr.address);
 		uistruct::LISTADDR_t addrsql;
-		int item = m_SqliteDeal.FindDB(_T("MYWALLET") ,strSourceData, feild,&addrsql) ;
+		int item = m_SqliteDeal.GetWalletAddressItem(strCond, &addrsql) ;
 
-		if (item == 0 )
+		if (strlen(addrsql.address) == 0 )
 		{
-			strSourceData.Format(_T("'%s' , '%s' , '%.8f' , '%d' ,'%d','%s'") , listaddr.address ,listaddr.RegID ,listaddr.fMoney ,listaddr.nColdDig ,listaddr.bSign,listaddr.Lebel ) ;
-			if (!m_SqliteDeal.InsertData(_T("MYWALLET") ,strSourceData ) )
+			strSourceData.Format(_T("'%s' , '%s' , '%.8f' , '%d' ,'%d','%s'") , listaddr.address ,listaddr.RegID ,listaddr.fMoney ,listaddr.nColdDig ,listaddr.bSign,listaddr.Label ) ;
+			if (!m_SqliteDeal.InsertTableItem(_T("t_wallet_address") ,strSourceData ) )
 			{
-				TRACE(_T("MYWALLET数据插入失败!") );
-				TRACE("insert:%d\r\n",i);
+				TRACE("Insert t_wallet_address error!\n");
 			}
 			
 			string Temp = listaddr.ToJson();
-			SendRecvieUiMes((int)WM_UP_NEWADDRESS,Temp.c_str());
+			SendUIMsg((int)WM_UP_NEWADDRESS,Temp.c_str());
 		}else{
 			if (listaddr.fMoney != addrsql.fMoney || listaddr.bSign != addrsql.bSign)
 			{
 				CString strSourceData,strWhere;
-				strSourceData.Format(_T("regid = '%s', money = %.8f ,coldig =%d,sign =%d") ,listaddr.RegID ,listaddr.fMoney ,listaddr.nColdDig ,listaddr.bSign ) ;
+				strSourceData.Format(_T("reg_id = '%s', money = %.8f ,cold_dig =%d,sign =%d") ,listaddr.RegID ,listaddr.fMoney ,listaddr.nColdDig ,listaddr.bSign ) ;
 				strWhere.Format(_T("address = '%s'") , listaddr.address  ) ;
-				if ( !m_SqliteDeal.Updatabase(_T("MYWALLET") , strSourceData , strWhere ) ){
-					TRACE(_T("MYWALLET数据更新失败!") );
+				if ( !m_SqliteDeal.UpdateTableItem(_T("t_wallet_address") , strSourceData , strWhere ) ){
+					TRACE(_T("Update t_wallet_address failed!") );
 				}
-
 				string Temp = listaddr.ToJson();
-				SendRecvieUiMes((int)WM_UP_ADDRESS,Temp.c_str());
+				SendUIMsg((int)WM_UP_ADDRESS,Temp.c_str());
 			}
 		}
 	}
 }
 
-void CDacrsUIApp::UpdatarevtransactionData(string hash){
+void CDacrsUIApp::UpdateTransaction(string hash){
 
 	CString strCommand,strShowData;
 	strCommand.Format(_T("%s %s"),_T("gettxdetail") ,hash.c_str() );
@@ -181,16 +178,16 @@ void CDacrsUIApp::UpdatarevtransactionData(string hash){
 		if (transcion.JsonToStruct(root.toStyledString()))
 		{
 			CString strSourceData,strWhere;
-			strSourceData.Format(_T("confirmHeight = %d , confirmedtime = '%d' ,blockhash ='%s'") ,transcion.confirmedHeight,transcion.confirmedtime,transcion.blockhash.c_str() ) ;
+			strSourceData.Format(_T("confirm_height = %d , confirmed_time = '%d' ,block_hash ='%s'") ,transcion.confirmedHeight,transcion.confirmedtime,transcion.blockhash.c_str() ) ;
 			strWhere.Format(_T("hash = '%s'") , hash.c_str() ) ;
-			if ( !m_SqliteDeal.Updatabase(_T("revtransaction") , strSourceData , strWhere ) ){
-				TRACE(_T("revtransaction数据更新失败!") );
+			if ( !m_SqliteDeal.UpdateTableItem(_T("t_transaction") , strSourceData , strWhere ) ){
+				TRACE(_T("update t_transaction failed\n"));
 			}
 		}
 	}
 }
 
-void CDacrsUIApp::UpdatarevAppRecord(string txdetail){
+void CDacrsUIApp::UpdateAppRecord(string txdetail){
 	uistruct::REVTRANSACTION_t transcion;
 	if (transcion.JsonToStruct(txdetail))
 	{
@@ -223,22 +220,23 @@ void CDacrsUIApp::UpdatarevAppRecord(string txdetail){
 			vHash.assign(Openbet.txhash,Openbet.txhash+sizeof(Openbet.txhash));
 			reverse(vHash.begin(),vHash.end());
 			string hexHash = CSoyPayHelp::getInstance()->HexStr(vHash);
-			int nItem =  theApp.m_SqliteDeal.FindDB(_T("p2p_bet_record") , hexHash.c_str() ,_T("tx_hash")) ;
+			CString strCond;
+			strCond.Format(_T(" tx_hash='%s' "), hexHash.c_str());
+			int nItem =  theApp.m_SqliteDeal.GetTableCountItem(_T("t_p2p_quiz"), strCond) ;
 			if (nItem != 0)
 			{
 				CString strSourceData,strWhere;
 				strSourceData.Format(_T("recvtime = %d ,guessnum ='%s'") ,transcion.confirmedtime,(int)Openbet.dhash[32] ) ;
 				strWhere.Format(_T("tx_hash = '%s'") , hexHash.c_str() ) ;
-				if ( !m_SqliteDeal.Updatabase(_T("p2p_bet_record") , strSourceData , strWhere ) ){
-					TRACE(_T("p2p_bet_record数据更新失败!") );
+				if ( !m_SqliteDeal.UpdateTableItem(_T("t_p2p_quiz") , strSourceData , strWhere)){
+					TRACE(_T("t_p2p_quiz数据更新失败!") );
 				}
 
 			}
 		}
 	}
 }
-void CDacrsUIApp::InsertarevtransactionData(string hash){
-	LogPrint("INFO", "InsertarevtransactionData tx hash:%s\n", hash.c_str());
+void CDacrsUIApp::InsertTransaction(string hash){
 	CString strCommand,strShowData;
 	strCommand.Format(_T("%s %s"),_T("gettxdetail") ,hash.c_str() );
 	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
@@ -257,80 +255,56 @@ void CDacrsUIApp::InsertarevtransactionData(string hash){
 	uistruct::REVTRANSACTION_t transcion;
 	if (transcion.JsonToStruct(root.toStyledString()))
 	{
-		int nItem =  theApp.m_SqliteDeal.FindDB(_T("MYWALLET") , transcion.addr.c_str() ,_T("address")) ;
-		int nItem1 =  theApp.m_SqliteDeal.FindDB(_T("MYWALLET") , transcion.desaddr.c_str() ,_T("address")) ;
-		if (nItem != 0)
-		{
-			transcion.state = 1;        //// 扣钱
-		}else if (nItem1 != 0)
-		{
-			transcion.state = 2;        ////价钱
-		}
 		CString strSourceData;
 		strSourceData.Format(_T("'%s' , '%s' ,'%d' ,'%s' ,'%s' ,'%s' , '%.8f' ,'%d' ,'%s' , '%.8f' ,'%s' ,'%d','%d','%s',%d") , transcion.txhash ,\
 			transcion.txtype.c_str() ,transcion.ver ,transcion.addr.c_str() ,transcion.pubkey.c_str(),transcion.miner_pubkey.c_str(),transcion.fees,transcion.height,\
 			transcion.desaddr.c_str(), transcion.money,transcion.Contract.c_str(),transcion.confirmedHeight,transcion.confirmedtime,transcion.blockhash.c_str(),transcion.state) ;
-		m_SqliteDeal.InsertData(_T("revtransaction") ,strSourceData ) ;
+		m_SqliteDeal.InsertTableItem(_T("t_transaction") ,strSourceData ) ;
 
-		LogPrint("INFO","%s/r/n",strSourceData);
 		//// 数据插入了，更新到交易详情界面
 		CPostMsg Postmsg(MSG_USER_TRANSRECORD_UI,WM_INSERT);
-		DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_TRANSRECORD_UI ,WM_INSERT,0);
 		string temp =root.toStyledString();
 		Postmsg.SetData(temp.c_str());	
 		m_UiTxDetailQueue.push(Postmsg);
+		DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_TRANSRECORD_UI ,WM_INSERT,0);
 	}
 }
 void  CDacrsUIApp::InsertAddbook(uistruct::ADDRBOOK_t addr)
 {
 	CString strSourceData;
-	strSourceData.Format(_T("'%s' , '%s' ") , addr.lebel,addr.address ) ;
-	m_SqliteDeal.InsertData(_T("addrbook") ,strSourceData ) ;
+	strSourceData.Format(_T("'%s' , '%s' ") , addr.label, addr.address ) ;
+	m_SqliteDeal.InsertTableItem(_T("t_address_book") ,strSourceData ) ;
 }
-void  CDacrsUIApp::UpdataAddbook(uistruct::ADDRBOOK_t addr)
+void  CDacrsUIApp::UpdateAddbook(uistruct::ADDRBOOK_t addr)
 {
 	CString strSourceData,strWhere;
-	strSourceData.Format(_T("Lebel = '%s'") ,addr.lebel ) ;
+	strSourceData.Format(_T("Label = '%s'") ,addr.label ) ;
 	strWhere.Format(_T("address = '%s'") ,addr.address ) ;
-	if ( !m_SqliteDeal.Updatabase(_T("addrbook") , strSourceData , strWhere ) ){
-		TRACE(_T("addrbook数据更新失败!") );
+	if ( !m_SqliteDeal.UpdateTableItem(_T("t_address_book") , strSourceData , strWhere)){
+		TRACE(_T("t_address_book数据更新失败!") );
 	}
 }
-void CDacrsUIApp:: SysncevtransactionData(string obj)
+void CDacrsUIApp:: SyncTransaction(string obj)
 {
 	uistruct::REVTRANSACTION_t transcion;
 	if (transcion.JsonToStruct(obj))
 	{
-		int txitem = theApp.m_SqliteDeal.FindDB(_T("revtransaction") , transcion.txhash ,_T("hash")) ;
+		/*CString strCond;
+		strCond.Format(_T(" hash = '%s' "), transcion.txhash);
+		int txitem = theApp.m_SqliteDeal.GetTableCountItem(_T("t_transaction") , strCond);
 		if (txitem != 0)
 		{
 			return;
-		}
-		int nItem =  theApp.m_SqliteDeal.FindDB(_T("MYWALLET") , transcion.addr.c_str() ,_T("address")) ;
-		int nItem1 =  theApp.m_SqliteDeal.FindDB(_T("MYWALLET") , transcion.desaddr.c_str() ,_T("address")) ;
-		if (nItem != 0)
-		{
-			transcion.state = 1;        //// 扣钱
-		}else if (nItem1 != 0)
-		{
-			transcion.state = 2;        ////价钱
-		}
+		}*/
+		transcion.state = 0;
 		CString strSourceData;
 		strSourceData.Format(_T("'%s' , '%s' ,'%d' ,'%s' ,'%s' ,'%s' , '%.8f' ,'%d' ,'%s' , '%.8f' ,'%s' ,'%d','%d','%s',%d") , transcion.txhash ,\
 			transcion.txtype.c_str() ,transcion.ver ,transcion.addr.c_str() ,transcion.pubkey.c_str(),transcion.miner_pubkey.c_str(),transcion.fees,transcion.height,\
 			transcion.desaddr.c_str(), transcion.money,transcion.Contract.c_str(),transcion.confirmedHeight,transcion.confirmedtime,transcion.blockhash.c_str(),transcion.state) ;
-		m_SqliteDeal.InsertData(_T("revtransaction") ,strSourceData ) ;
+		m_SqliteDeal.InsertTableItem(_T("t_transaction") ,strSourceData );
 	}
 }
-void CDacrsUIApp::ClearRevstranson()
+void CDacrsUIApp::ClearTransaction()
 {
-	if (m_SqliteDeal.IsExistTabe(_T("revtransaction")))
-	{
-		m_SqliteDeal.EmptyTabData(_T("revtransaction"));
-	}else{
-		CString  filed;
-		filed = _T(" hash text, txtype text,ver INT, addr text, pubkey text,miner_pubkey text,fees double,height INT, desaddr text,money double, Contract text,confirmHeight INT,confirmedtime INT,blockhash text,state INT");
-		m_SqliteDeal.CreateTabe(_T("revtransaction"),filed);
-	}
-	
+	m_SqliteDeal.ClearTableData(_T("t_transaction"));
 }

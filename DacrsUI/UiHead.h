@@ -96,11 +96,11 @@ namespace uistruct {
 		double  fMoney      ;   //金额
 		int     nColdDig    ;   //是否支持冷挖矿 1:代表支持  ， 0:代表不支持
 		int     bSign       ;   //是否注册       1:已注册    ,  0:没注册
-		char    Lebel[34]       ;
+		char    Label[34]       ;
 		LISTADDR(){
 			memset(address,0,sizeof(address));
 			memset(RegID,0,sizeof(RegID));
-			memset(Lebel,0,sizeof(Lebel));
+			memset(Label,0,sizeof(Label));
 			fMoney = 0.0;
 			nColdDig =0;
 			bSign = 0;
@@ -112,7 +112,7 @@ namespace uistruct {
 			root["fMoney"] = fMoney;
 			root["nColdDig"] = nColdDig;
 			root["bSign"] = bSign;
-			root["Lebel"] = Lebel;
+			root["Label"] = Label;
 			return root.toStyledString();
 		}
 		bool JsonToStruct(string json){
@@ -127,8 +127,8 @@ namespace uistruct {
 			this->fMoney = root["fMoney"].asDouble();
 			this->nColdDig = root["nColdDig"].asInt();
 			this->bSign = root["bSign"].asInt();
-			temp = root["Lebel"].asCString();
-			memcpy(Lebel,temp,sizeof(Lebel));
+			temp = root["Label"].asCString();
+			memcpy(Label,temp,sizeof(Label));
 	
 			return true;
 		}
@@ -152,24 +152,40 @@ namespace uistruct {
 		unsigned char acceptebetdata;
 	}DB_DATA_t;
 	
-	typedef struct P2P_BET_RECORD {
-		time_t sendtime       ;     //发送时间
-		time_t recvtime       ;     //接收时间
-		int    timeout        ;     //超时
+	typedef struct P2P_QUIZ_RECORD {
+		time_t send_time       ;     //发送时间
+		time_t recv_time       ;     //接收时间
+		int    time_out        ;     //超时
 		char   tx_hash[64+1]    ;      //发赌约hash
 		char   left_addr[34+1]  ;		//发赌约地址
 		char   right_addr[34+1] ;		//接受赌约地址
 		INT64  amount  ;				//金额
 		char   content[33]    ;       //明文 
 		int    actor  ;               // 0 发起赌约 1 接受赌约 2 即使发起赌约又是接受赌约
-		int    comfirmed      ;        // 是否已确认
+		int    confirmed      ;        // 是否已确认
 		int    height         ;           //确定高度
 		int    state          ;         //0 发起状态 1 接赌状态 2 揭赌状态 3 已经超过揭赌时间 4 正在接赌 5正在揭赌
 		char   relate_hash[64+1];          //接赌hash
-		int guessnum;      //接猜的数字 
-	}P2P_BET_RECORD_t;
+		int    guess_num;      //接猜的数字
+		P2P_QUIZ_RECORD(){
+			send_time = 0;
+			recv_time = 0;
+			time_out = 0;
+			memset(tx_hash, 0, 65);
+			memset(left_addr, 0, 35);
+			memset(right_addr, 0, 35);
+			amount = 0;
+			memset(content, 0, 33);
+			actor = 0;
+			confirmed =0;
+			height = 0;
+			state = 0;
+			memset(relate_hash, 0, 65);
+			guess_num = 0;
+		}
+	}P2P_QUIZ_RECORD_t;
 
-	typedef std::vector<P2P_BET_RECORD_t> P2PBETRECORDLIST ;
+	typedef std::vector<P2P_QUIZ_RECORD_t> P2PBETRECORDLIST ;
 
 	typedef struct {                 //赌约应用数据库结构
 		unsigned char betstate;        //00未接赌 01接赌
@@ -431,16 +447,16 @@ namespace uistruct {
 	}MINDLG_T;
 
 	typedef struct ADDRBOOK{   
-		CString    lebel;   //address
+		CString    label;   //address
 		CString    address  ;   //RegID
 		ADDRBOOK(){
-			lebel = _T("");
+			label = _T("");
 			address = _T("");
 		}
 		string ToJson(){
 			Json::Value root;
 			root["address"] = address.GetString();
-			root["lebel"] = lebel.GetString();
+			root["label"] = label.GetString();
 			return root.toStyledString();
 		}
 		bool JsonToStruct(string json){
@@ -448,7 +464,7 @@ namespace uistruct {
 			Json::Value root; 
 			if (!reader.parse(json, root)) 
 				return false ;
-			this->lebel = root["lebel"].asCString();
+			this->label = root["label"].asCString();
 			this->address = root["address"].asCString();
 			return true;
 		}

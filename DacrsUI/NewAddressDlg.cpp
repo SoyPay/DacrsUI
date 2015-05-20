@@ -190,21 +190,21 @@ void CNewAddressDlg::OnBnClickedButtonScdz()
 		return  ;
 	CString addr = root["addr"].asCString();
 
-	CString Leble;
-	GetDlgItem(IDC_EDIT_Leble)->GetWindowText(Leble);
+	CString Lable;
+	GetDlgItem(IDC_EDIT_Lable)->GetWindowText(Lable);
 
 	uistruct::LISTADDR_t newaddr; 
 	memcpy(newaddr.address,addr,sizeof(newaddr.address));
 	newaddr.nColdDig = nCold;
-	memcpy(newaddr.Lebel,Leble,sizeof(newaddr.Lebel));
+	memcpy(newaddr.Label,Lable,sizeof(newaddr.Label));
 
 	CString strSourceData;
 	double money = 0.0;
-	strSourceData.Format(_T("'%s' , '%s' , '%.8f' , '%d' ,'%d','%s'") , addr ,"",money ,nCold ,0,Leble) ;
+	strSourceData.Format(_T("'%s' , '%s' , '%.8f' , '%d' ,'%d','%s'") , addr ,"",money ,nCold ,0,Lable) ;
 	uistruct::DATABASEINFO_t   pDatabase;
 	pDatabase.strSource = strSourceData;
 	pDatabase.strcutjson = newaddr.ToJson();
-	pDatabase.strTabName =  _T("MYWALLET");
+	pDatabase.strTabName =  _T("t_wallet_address");
 	CPostMsg postmsg(MSG_USER_INSERT_DATA,0);
 	string  strTemp = pDatabase.ToJson();
 	postmsg.SetData(strTemp.c_str());
@@ -212,8 +212,12 @@ void CNewAddressDlg::OnBnClickedButtonScdz()
 
 	
 
-	strCommand.Format(_T("恭喜生成新地址%s"),addr);
-	::MessageBox( this->GetSafeHwnd() ,strCommand , _T("提示") , MB_ICONINFORMATION ) ;
+	strCommand.Format(_T("恭喜生成新地址:\n%s"),addr);
+
+	if(IDOK == ::MessageBox( this->GetSafeHwnd() ,strCommand , _T("提示") , MB_ICONINFORMATION ))
+	{
+		EndDialog(IDOK);
+	}
 	//if (IDYES == ::MessageBox( this->GetSafeHwnd() ,_T("恭喜生成新地址") , _T("提示") , MB_YESNO|MB_ICONINFORMATION ) ){
 	//	EndDialog(IDOK);
 	//}

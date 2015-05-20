@@ -38,25 +38,25 @@ END_MESSAGE_MAP()
 void CNewSendAddr::OnBnClickedOk()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	CString lebel =_T("");
+	CString label =_T("");
 	CString addr  = _T("");
-	GetDlgItem(IDC_EDIT_Lebel)->GetWindowText(lebel);
+	GetDlgItem(IDC_EDIT_Label)->GetWindowText(label);
 	GetDlgItem(IDC_EDIT_ADDR)->GetWindowText(addr);
 	if (addr == _T(""))
 	{
 		::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
 	}
-	CString strSource;
-	CString strP;
-	strP.Format(_T("address"));
-	strSource.Format(_T("'%s'"),addr);
-	int  item = theApp.m_SqliteDeal.FindInDB(_T("addrbook") , strSource ,strP);
-	if (item != 0)
+	uistruct::ADDRBOOK_t sAddrBookItem;
+	CString strCond;
+	strCond.Format(_T(" address='%s' "), addr);
+	
+	int  item = theApp.m_SqliteDeal.GetAddressBookItem(strCond, &sAddrBookItem);
+	if (sAddrBookItem.address != _T(""))
 	{
 		::MessageBox( this->GetSafeHwnd() ,_T("地址簿中已存在此地址") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
-	m_selectAddr.lebel = lebel;
+	m_selectAddr.label = label;
 	m_selectAddr.address = addr;
 	CDialogEx::OnOK();
 }

@@ -121,7 +121,7 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 			return;
 		}
 
-		if (!theApp.IsSysnBlock )
+		if (!theApp.IsSyncBlock )
 		{
 			::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
 			return;
@@ -153,9 +153,9 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 			CString strHash,strHash1 ;
 			strHash.Format(_T("'%s'") , root["hash"].asCString() );
 			strHash1.Format(_T("%s") , root["hash"].asCString() );
-//			theApp.cs_SqlData.Lock();
-			int nItem =  theApp.m_SqliteDeal.FindDB(_T("revtransaction") , strHash1 ,_T("hash") ) ;
-//			theApp.cs_SqlData.Unlock();
+			CString strCond;
+			strCond.Format(_T(" hash='%s' "), strHash1);
+			int nItem =  theApp.m_SqliteDeal.GetTableCountItem(_T("t_transaction") , strCond) ;
 
 			if ( 0 == nItem ) {
 
@@ -167,19 +167,19 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 
 		CString strData;
 		if ( pos >=0 ) {
-			strData.Format( _T("转账成功\n%s") , root["hash"].asCString() ) ;
+			strData.Format( _T("转账交易发送成功，金额：%.4lf\n%s") , dSendMoney, root["hash"].asCString() ) ;
 		}else{
 			strData.Format( _T("转账失败!") ) ;
 		}
 		::MessageBox( this->GetSafeHwnd() ,strData , _T("提示") , MB_ICONINFORMATION ) ;
 
 		//// 插入数据库,将收款人添加到地址簿
-		CString lebel;
-		GetDlgItem(IDC_EDIT2)->GetWindowTextA(lebel);
+		CString label;
+		GetDlgItem(IDC_EDIT2)->GetWindowTextA(label);
 		CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_UP_ADDRBOOK);
 		uistruct::ADDRBOOK_t addr;
 		addr.address = strMaddress;
-		addr.lebel = lebel;
+		addr.label = label;
 		string temp =addr.ToJson();
 		postmsg.SetData(temp.c_str());
 		theApp.m_MsgQueue.push(postmsg);
@@ -216,9 +216,7 @@ void CSendDlg::OnCbnSelchangeCombo1()
 }
 BOOL CSendDlg::AddListaddrDataBox(){
 
-//	theApp.cs_SqlData.Lock();
-	theApp.m_SqliteDeal.GetListaddrData(&m_mapAddrInfo);
-//	theApp.cs_SqlData.Unlock();
+	theApp.m_SqliteDeal.GetWalletAddressList(_T(" 1=1 "), &m_mapAddrInfo);
 
 	if ( 0 == m_mapAddrInfo.size() ) return FALSE ;
 
@@ -354,7 +352,7 @@ void CSendDlg::OnBnClickedButtonAddbook()
 		uistruct::ADDRBOOK_t addr;
 		addrbook.GetAddrbook(addr);
 		GetDlgItem(IDC_EDIT_DESADDRESS)->SetWindowTextA(addr.address);
-		GetDlgItem(IDC_EDIT2)->SetWindowTextA(addr.lebel);
+		GetDlgItem(IDC_EDIT2)->SetWindowTextA(addr.label);
 	}
 }
 void CSendDlg::ModifyComboxItem(){
@@ -433,12 +431,13 @@ BOOL CSendDlg::PreTranslateMessage(MSG* pMsg)
 					::CloseClipboard(); // 关闭剪贴板
 					if (bCtrl)
 					{
-						uistruct::ADDRBOOKLIST listaddr;
-						int nItem =  theApp.m_SqliteDeal.FindDB(_T("addrbook") ,message,_T("address") ,&listaddr) ;
-						if (listaddr.size() != 0)
+						uistruct::ADDRBOOK_t addrBook;
+						CString strCond;
+						strCond.Format(_T(" address='%s' "), message);
+						int nItem =  theApp.m_SqliteDeal.GetAddressBookItem( strCond, &addrBook) ;
+						if (addrBook.label != _T(""))
 						{
-							uistruct::ADDRBOOK_t addrbook = *listaddr.begin();
-							GetDlgItem(IDC_EDIT2)->SetWindowText(addrbook.lebel);
+							GetDlgItem(IDC_EDIT2)->SetWindowText(addrBook.label);
 						}
 						
 					}

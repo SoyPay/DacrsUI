@@ -52,9 +52,8 @@ END_MESSAGE_MAP()
 void CReceiveDlg::ShowListInfo()
 {
 
-//	theApp.cs_SqlData.Lock();
-	theApp.m_SqliteDeal.GetListaddrData(&m_MapAddrInfo);
-//	theApp.cs_SqlData.Unlock();
+
+	theApp.m_SqliteDeal.GetWalletAddressList(_T(" 1=1 "), &m_MapAddrInfo);
 
 	if ( 0 == m_MapAddrInfo.size() ) return  ;
 
@@ -71,7 +70,7 @@ void CReceiveDlg::ShowListInfo()
 		m_listCtrl.InsertItem(i,strOrder);
 
 		uistruct::LISTADDR_t address = const_it->second;
-		strShowData.Format(_T("%s") ,address.Lebel) ;
+		strShowData.Format(_T("%s") ,address.Label) ;
 		m_listCtrl.SetItemText( i , ++nSubIdx, strShowData) ;
 		//m_listCtrl.SetItemData(item , (DWORD_PTR)&(*const_it)) ;
 
@@ -252,7 +251,7 @@ void CReceiveDlg::OnBnClickedButtonSignAccount()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	
-	if (!theApp.IsSysnBlock )
+	if (!theApp.IsSyncBlock )
 	{
 		::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送激活交易") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
@@ -439,7 +438,7 @@ void   CReceiveDlg::ModifyListCtrlItem()
 		
 			int nSubIdx = 1;
 			CString  strShowData;
-			strShowData.Format(_T("%s") ,addr.Lebel) ;
+			strShowData.Format(_T("%s") ,addr.Label) ;
 			//m_listCtrl.SetItemData(i , (DWORD_PTR)&(*m_pListaddrInfo.rbegin())) ;
 
 		//	uistruct::LISTADDR_t *pListAddr1 = (uistruct::LISTADDR_t*)m_listCtrl.GetItemData(i);
@@ -498,7 +497,7 @@ void   CReceiveDlg::InsertListCtrlItem()
 	
 	m_listCtrl.InsertItem( i , strOrder);  //序号
 	CString  strShowData;
-	strShowData.Format(_T("%s") ,addr.Lebel) ;
+	strShowData.Format(_T("%s") ,addr.Label) ;
 	m_listCtrl.SetItemText( i , ++nSubIdx, strShowData ) ; //标签
 	
 	m_MapAddrInfo[addressd]=addr;
