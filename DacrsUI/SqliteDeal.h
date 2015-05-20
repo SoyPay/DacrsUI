@@ -1,6 +1,8 @@
 #pragma once
 #include "CommonStruct.h"
 
+typedef int (*CallBackFunc)(void * para, int n_column, char ** column_value, char ** column_name);
+
 class CSqliteDeal
 {
 public:
@@ -9,42 +11,43 @@ public:
 	~CSqliteDeal(void);
 private:
 	sqlite3 *   m_pSqliteWrite; //写连接
-	sqlite3 *   m_pSqliteRead;  //读连接
 	CCriticalSection  * m_pCs;
 
+private:
+	void   CheckFailedCode(int retCode);
+
 public:
-	int    FindDB(const CString strTabName , const CString strP, const CString strSource );
-	int    FindInDB(const CString strTabName , const CString strP, const CString strSource );
-	int    GetTableCount(const CString strTabName);
-	int    FindDB(const CString strTabName , const CString strP, const CString strSource,uistruct::P2P_BET_RECORD_t * pResult );
-	int	   FindDB(const CString strTabName , const CString strP, const CString strSource,uistruct::DARK_RECORD *darkrecord );
-	int	   FindDB(const CString strTabName , const CString strP, const CString strSource,uistruct::TRANSRECORDLIST* pListInfo);
-	int	   FindDB(const CString strTabName , const CString strP, const CString strSource,uistruct::LISTADDR_t *listaddr );
-	int	   FindDB(const CString strTabName , const CString strP, const CString strSource,uistruct::ADDRBOOKLIST *listaddr );
-	BOOL   InsertData(const CString strTabName ,const CString strSourceData );
-	BOOL   EmptyTabData(const CString strTabName );
-	BOOL   Updatabase(const CString strTabName , const CString strSourceData , const CString strW );
-	BOOL   DeleteData(const CString strTabName, const CString strSourceData , const CString strW);
-	BOOL   CreateTabe(const CString strTabName,const CString strFiled);
-	BOOL   IsExistTabe(const CString strTabName);
-	string GetColSum(const CString strTabName , const CString strP, const CString strSource);
-	string GetColSum(const CString strTabName,const CString filed);
-public:
-	BOOL   OpenSqlite(CString strPath, BOOL bOperFlag=FALSE) ;    //打开数据库  FALSE:read TRUE:write 
-public:
-	BOOL   GetListaddrData(map<CString,uistruct::LISTADDR_t>* pListInfo); 
-	BOOL   GetRevtransactionDatta(uistruct::TRANSRECORDLIST* pListInfo); 
-	BOOL   GetRecorBetData(uistruct::P2PBETRECORDLIST* pListInfo); 
-	BOOL   GetRecorDarkData(uistruct::DARKRECORDLIST* pListInfo);
-	BOOL   GetRecorP2Pool(uistruct::P2PLIST* pListInfo);
-	BOOL   GetaddrBookData(map<CString,uistruct::ADDRBOOK_t>* pListInfo); 
-	BOOL   isExistTx(CString tablename,CString filed ,CString txhash);
-	BOOL   isinBlock();
 	void   UpdataAllTableData(BOOL flag);
-	void   UpdataAllTable();
+	BOOL   UpdateP2pBetRecord();
+	BOOL   UpdateDarkRecord();
+
 public:
-	BOOL   UpdataP2pBetRecord();
-	BOOL   UpdataDarkRecord();
-public:
-		CRITICAL_SECTION        cs_UpDataResult;  //数据库获取结果
+	sqlite3**   GetDBConnect();
+	BOOL       InitializationDB();
+	BOOL	   BeginDBTransaction();
+	BOOL	   CommitDbTransaction();
+	BOOL	   ExcuteSQL(sqlite3** ppDb, CallBackFunc pFunc, CString strSQL, void *pPara);
+	int		   GetTableCountItem(const CString &strTabName ,const CString &strCondition);
+	int		   DeleteTableItem(const CString &strTabName, const CString &strCondition);
+	BOOL       InsertTableItem(const CString &strTabName ,const CString &strSourceData);
+	BOOL       ClearTableData(const CString &strTabName);
+	BOOL       UpdateTableItem(const CString &strTabName , const CString &strSourceData , const CString &strW);
+	int        GetWalletAddressItem(const CString &strCond, uistruct::LISTADDR_t *pAddr);
+	int        GetWalletAddressList(const CString &strCondition, map<CString,uistruct::LISTADDR_t> *pListInfo);
+	int        GetP2PQuizRecordItem(const CString &strCondition, uistruct::P2P_QUIZ_RECORD_t * p2pQuizRecord);
+	int        GetP2PQuizRecordList(const CString &strCondition, uistruct::P2PBETRECORDLIST * p2pQuizRecordList);
+	int        GetP2PQuizPoolItem(const CString &strCondition, uistruct::LISTP2POOL_T* pPoolItem);
+	int        GetP2PQuizPoolList(const CString &strCondition, uistruct::P2PLIST* pPoolList);
+	int        GetTipBlockHash(char *pBlockHash);
+	BOOL       IsBlockTipInChain();
+	double     GetTableItemSum(const CString &strTabName, const CString &stdFieldName, const CString &strCond);
+	BOOL       GetAddressBookItem(const CString &strCond, uistruct::ADDRBOOK_t *pAddrBook);
+	BOOL       GetAddressBookList(const CString &strCond, map<CString,uistruct::ADDRBOOK_t>* pAddrBookMap);
+	BOOL       GetTransactionItem(const CString &strCond, uistruct::REVTRANSACTION_t *pTxItem);
+	BOOL       GetTransactionList(const CString &strCond, uistruct::TRANSRECORDLIST *pTxList);
+	BOOL       IsExistTx(CString tablename,CString filed ,CString txhash);
 };
+
+
+extern int GetTransactionData( void *para, int n_column, char **column_value, char **column_name);
+

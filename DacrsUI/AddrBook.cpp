@@ -68,7 +68,7 @@ void CAddrBook::OnBnClickedButtonAddaddrbook()
 		int count = m_listCtrl.GetItemCount();
 		int nSubIdx = 0;
 
-		strShowData.Format(_T("%s") ,addr.lebel) ;
+		strShowData.Format(_T("%s") ,addr.label) ;
 		m_listCtrl.InsertItem( count ,strShowData) ;
 
 		strShowData.Format(_T("%s") ,addr.address) ;
@@ -193,7 +193,7 @@ void CAddrBook::SetBkBmpNid( UINT nBitmapIn )
 }
 bool CAddrBook::LoadAddrBook()
 {
-	theApp.m_SqliteDeal.GetaddrBookData(&m_mapAddrInfo);
+	theApp.m_SqliteDeal.GetAddressBookList(_T(" 1=1 "), &m_mapAddrInfo);
 
 	if ( 0 == m_mapAddrInfo.size() ) return FALSE ;
 
@@ -205,7 +205,7 @@ bool CAddrBook::LoadAddrBook()
 	for ( const_it = m_mapAddrInfo.begin() ; const_it != m_mapAddrInfo.end() ; const_it++ ) {
 		nSubIdx = 0;
 		uistruct::ADDRBOOK_t address = const_it->second;
-		strShowData.Format(_T("%s") ,address.lebel) ;
+		strShowData.Format(_T("%s") ,address.label) ;
 		m_listCtrl.InsertItem(i,strShowData);
 
 		strShowData.Format(_T("%s") ,address.address) ;
@@ -228,9 +228,9 @@ void CAddrBook::OnBnClickedOk()
 	POSITION pos = m_listCtrl.GetFirstSelectedItemPosition() ;
 	if ( pos ) {
 		int nRow = m_listCtrl.GetNextSelectedItem(pos) ;
-		CString Lebel =m_listCtrl.GetItemText(nRow, 0);
+		CString Label =m_listCtrl.GetItemText(nRow, 0);
 		CString addr =m_listCtrl.GetItemText(nRow, 1);
-		m_selectAddr.lebel = Lebel;
+		m_selectAddr.label = Label;
 		m_selectAddr.address = addr;
 		}else{
 			StrShow.Format(_T("ÇëÑ¡ÔñµØÖ·!\n"));
@@ -257,7 +257,7 @@ void CAddrBook::OnBnClickedButtonDeleitem()
 				CString Leble = m_listCtrl.GetItemText(nRow, 0); 
 				CString address = m_listCtrl.GetItemText(nRow, 1); 
 				addr.address = address;
-				addr.lebel = Leble;
+				addr.label = Leble;
 				string temp =addr.ToJson();
 				postmsg.SetData(temp.c_str());
 				theApp.m_MsgQueue.push(postmsg);
@@ -280,9 +280,9 @@ void CAddrBook::OnNMDblclkList1(NMHDR *pNMHDR, LRESULT *pResult)
 	if(-1 != pNMItemActivate->iItem) 
 	{  
 		int nRow = pNMItemActivate->iItem;
-		CString Lebel =m_listCtrl.GetItemText(nRow, 0);
+		CString Label =m_listCtrl.GetItemText(nRow, 0);
 		CString addr =m_listCtrl.GetItemText(nRow, 1);
-		m_selectAddr.lebel = Lebel;
+		m_selectAddr.label = Label;
 		m_selectAddr.address = addr;
 		CDialogEx::OnOK();
 	}  
