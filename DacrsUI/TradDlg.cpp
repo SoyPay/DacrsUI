@@ -126,10 +126,10 @@ BOOL CTradDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		} listcol[6]  = {
 			{"序号",          50},
 			{"交易类型" ,      60},
-			{"源地址" ,       230}, 
+			{"源地址" ,       220}, 
 			{"金额",          100},
-			{"目的地址" ,     230},
-			{"交易ID" ,     300}
+			{"目的地址" ,     220},
+			{"交易ID" ,     400}
 			
 		};
 		m_listCtrl.SetBkColor(RGB(240,240,240));       
