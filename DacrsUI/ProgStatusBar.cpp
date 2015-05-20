@@ -154,7 +154,7 @@ BOOL CProgStatusBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UIN
 
 		m_strVersion.SetFont(90, _T("宋体"));				//设置显示字体和大小
 		m_strVersion.SetTextColor(RGB(255,255,255));	    //字体颜色
-		m_strVersion.SetWindowText(_T("版本:V1.0.0.5beta")) ;
+		m_strVersion.SetWindowText(_T("版本:V1.0.0.6beta")) ;
 
 
 		if ( NULL == m_ProgressWnd ) {
@@ -222,7 +222,7 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 				theApp.m_MsgQueue.pushFront(postblockmsg); 
 				LoadGifing(false);
 				m_walletui = true;
-				theApp.IsSysnBlock = true;
+				theApp.IsSyncBlock = true;
 			}
 			Invalidate(); 
 			//InvalidateRect(m_bmpsig);
@@ -246,7 +246,7 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 		theApp.m_MsgQueue.pushFront(postblockmsg); 
 		LoadGifing(false);
 		m_walletui = true;
-		theApp.IsSysnBlock = true;
+		theApp.IsSyncBlock = true;
 	}
 	if ( m_walletui && !m_prosshiden) {
 		m_strNeting.SetWindowText(_T("网络已同步")) ;

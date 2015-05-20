@@ -46,7 +46,8 @@ CDacrsUIApp::CDacrsUIApp()
 	m_bOutApp = FALSE ;
 	m_bReIndexServer = FALSE;
 	blocktipheight = 0;
-	IsSysnBlock = FALSE;
+	IsSyncBlock = FALSE;
+	IsSyncTx = FALSE;
 }
 
 
@@ -117,12 +118,11 @@ BOOL CDacrsUIApp::InitInstance()
 	//初始化日志配置参数
 	InitLogCfg();
 
-	OnInitList() ;
 	//打开sqlite3数据库
-	m_SqliteDeal.OpenSqlite(str_InsPath, TRUE) ;
-
+	m_SqliteDeal.InitializationDB();
+	
 	/// 清空交易记录
-	ClearRevstranson();
+	ClearTransaction();
 
 	CString temprpc = m_rpcport;
 	CString tempuiport = m_uirpcport;
@@ -142,7 +142,6 @@ BOOL CDacrsUIApp::InitInstance()
 	//连接block
 	//连接到服务器
 	CSynchronousSocket te;
-	//SOCKET nSocket = te.OnblockConnnect(_T("127.0.0.1"),atoi(m_uirpcport) ) ;
 	SOCKET nSocket = te.OnblockConnnect(m_severip,atoi(m_uirpcport) ) ;
 	if ( INVALID_SOCKET != nSocket ){
 		TRACE("nSocket OK\n");
@@ -397,7 +396,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 			continue;
 		}
 		CDacrsUIDlg *pDlg = (CDacrsUIDlg*)(((CDacrsUIApp*)pParam)->m_pMainWnd) ;
-		if (pDlg == NULL && Postmsg.GetUItype() != MSG_USER_STARTPROCESS_UI&&Postmsg.GetDatatype() !=WM_SYS_REVTRANSACTION){
+		if (pDlg == NULL && Postmsg.GetUItype() != MSG_USER_STARTPROCESS_UI&&Postmsg.GetDatatype() !=WM_SYNC_TRANSACTION){
 			pUiDemeDlg->m_MsgQueue.push(Postmsg);
 			Sleep(100); 
 			//TRACE("push message:MSG_USER_STARTPROCESS_UI\n");
@@ -413,7 +412,12 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 				{
 					theApp.isStartMainDlg = true;
 				}
-				
+				if(theApp.IsSyncTx){
+					theApp.IsSyncTx = FALSE;
+					theApp.m_SqliteDeal.CommitDbTransaction();
+					TRACE("Sync Tx commit transaction\n");
+					LogPrint("INFO", "Sync Tx commit transaction\n");
+				}
 			}
 			break;
 		case MSG_USER_GET_UPDATABASE:
@@ -424,14 +428,18 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 				case WM_UP_ADDRESS:
 					{
 						//更新钱包地址数据库
-						((CDacrsUIApp*)pParam)->UpdataAddressData();
+						((CDacrsUIApp*)pParam)->UpdateAddressData();
 					}
 					break;
-				case WM_SYS_REVTRANSACTION:
+				case WM_SYNC_TRANSACTION:
 					{
+						if(!theApp.IsSyncTx) {
+							theApp.IsSyncTx = TRUE;
+							theApp.m_SqliteDeal.BeginDBTransaction();
+						}
 						CString txData = Postmsg.GetData();
 						if ( _T("") != txData ) {
-							((CDacrsUIApp*)pParam)->SysncevtransactionData(txData.GetString()) ;
+							((CDacrsUIApp*)pParam)->SyncTransaction(txData.GetString()) ;
 						}
 					}
 					break;
@@ -444,15 +452,14 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 							strHash.Format("%s",pHash);
 							strHash.TrimLeft("'");
 							strHash.TrimRight("'");
-//							theApp.cs_SqlData.Lock();
-							int nItem =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.FindDB(_T("revtransaction") ,strHash,_T("hash") );
-							LogPrint("INFO", "receive tx hash:%s\n", strHash.GetBuffer());
-//							theApp.cs_SqlData.Unlock();
+							CString strCondition(_T(""));
+							strCondition.Format(" hash = '%s' ", strHash);
+							int nItem =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.GetTableCountItem(_T("t_transaction") ,strCondition);
 							if (nItem == 0)
 							{
-								((CDacrsUIApp*)pParam)->InsertarevtransactionData(strHash.GetString() ) ;
+								((CDacrsUIApp*)pParam)->InsertTransaction(strHash.GetString() ) ;
 							}else{
-								((CDacrsUIApp*)pParam)->UpdatarevtransactionData(strHash.GetString() );
+								((CDacrsUIApp*)pParam)->UpdateTransaction(strHash.GetString() );
 							}
 						}
 					}
@@ -461,51 +468,43 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 					{
 						CString txDetail = Postmsg.GetData();
 						if ( _T("") != txDetail ) {
-							((CDacrsUIApp*)pParam)->UpdatarevAppRecord(txDetail.GetString());
+							((CDacrsUIApp*)pParam)->UpdateAppRecord(txDetail.GetString());
 						}
 					}
 				case WM_P2P_BET_RECORD:
 					{
 						//更新数据库赌约数据库列表
-//						theApp.cs_SqlData.Lock();
-						((CDacrsUIApp*)pParam)->m_SqliteDeal.UpdataP2pBetRecord(); 
-//						theApp.cs_SqlData.Unlock();
+						((CDacrsUIApp*)pParam)->m_SqliteDeal.UpdateP2pBetRecord(); 
 					}
 					break;
 				case WM_DARK_RECORD:
 					{
 						//更新数据库抵押数据库列表
-//						theApp.cs_SqlData.Lock();
-						((CDacrsUIApp*)pParam)->m_SqliteDeal.UpdataDarkRecord(); 
-//						theApp.cs_SqlData.Unlock();
+						((CDacrsUIApp*)pParam)->m_SqliteDeal.UpdateDarkRecord(); 
 					}
 					break;
 				case WM_UP_BETPOOL:
 					{
 						/// 赌约池数据库列表
-//						theApp.cs_SqlData.Lock();
-						bool flag =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.EmptyTabData(_T("p2ppool") );
-//						theApp.cs_SqlData.Unlock();
+						bool flag =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.ClearTableData(_T("t_quiz_pool"));
 						if (flag ) 
 						{
-							((CDacrsUIApp*)pParam)->UpdataBetPoolData();
+							((CDacrsUIApp*)pParam)->UpdateQuizPoolData();
 						}
 					}
 					break;
 				case WM_UP_BlLOCKTIP:
 					{
 						//更新最新blocktip数据库
-//						theApp.cs_SqlData.Lock();
-						if ( ((CDacrsUIApp*)pParam)->m_SqliteDeal.EmptyTabData(_T("tip_block") ) ) {
+						if ( ((CDacrsUIApp*)pParam)->m_SqliteDeal.ClearTableData(_T("t_chain_tip") ) ) {
 
 							CString pHash = Postmsg.GetData();
 							if ( _T("") != pHash ) {
 								CString strinsert;
 								strinsert.Format("'%s'",pHash);
-								((CDacrsUIApp*)pParam)->m_SqliteDeal.InsertData(_T("tip_block") ,strinsert ) ;
+								((CDacrsUIApp*)pParam)->m_SqliteDeal.InsertTableItem(_T("t_chain_tip") ,strinsert ) ;
 							}
 						}
-//						theApp.cs_SqlData.Unlock();
 					}
 					break;
 				case WM_UP_ADDRBOOK:
@@ -514,14 +513,15 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 						uistruct::ADDRBOOK_t addr;
 						if (addr.JsonToStruct(josnaddr.GetString()))
 						{
-							CString strSource;
-							strSource.Format(_T("'%s'"),addr);
-							int nItem =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.FindInDB(_T("addrbook") ,strSource,_T("address") ) ;
-							if (nItem == 0)
+							CString strCond;
+							strCond.Format(_T(" address='%s' "), addr.address);
+							
+							int nItem =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.GetTableCountItem(_T("t_address_book"), strCond);
+							if (0 == nItem)
 							{
 								((CDacrsUIApp*)pParam)->InsertAddbook(addr) ;
 							}else{
-								((CDacrsUIApp*)pParam)->UpdataAddbook(addr);
+								((CDacrsUIApp*)pParam)->UpdateAddbook(addr);
 							}
 						}
 					}
@@ -532,9 +532,9 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 						uistruct::ADDRBOOK_t addr;
 						if (addr.JsonToStruct(josnaddr.GetString()))
 						{
-							CString strSource;
-							strSource.Format(_T("%s"),addr.address);
-							((CDacrsUIApp*)pParam)->m_SqliteDeal.DeleteData(_T("addrbook"),_T("address"),strSource );
+							CString strCond;
+							strCond.Format(_T(" address='%s' "), addr.address);
+							((CDacrsUIApp*)pParam)->m_SqliteDeal.DeleteTableItem(_T("t_address_book"),strCond);
 						}
 					}
 					break;
@@ -559,20 +559,18 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 				uistruct::DATABASEINFO_t   pDatabase; // = (uistruct::DATABASEINFO_t *)Postmsg.GetStrPoint();
 				string strTemp = Postmsg.GetData();
 				pDatabase.JsonToStruct(strTemp.c_str());
-//				theApp.cs_SqlData.Lock();
-				((CDacrsUIApp*)pParam)->m_SqliteDeal.InsertData(pDatabase.strTabName.c_str() ,pDatabase.strSource.c_str() ) ;
-//				theApp.cs_SqlData.Unlock();
-				if ( !strcmp(pDatabase.strTabName.c_str() , _T("p2p_bet_record")) ){
+				((CDacrsUIApp*)pParam)->m_SqliteDeal.InsertTableItem(pDatabase.strTabName.c_str() ,pDatabase.strSource.c_str()) ;
+				if ( !strcmp(pDatabase.strTabName.c_str() , _T("t_p2p_quiz")) ){
 					Postmsg.SetType(MSG_USER_INSERT_DATA,WM_P2P_BET_RECORD);
-				}else if (!strcmp(pDatabase.strTabName.c_str() , _T("dark_record")) )
+				}else if (!strcmp(pDatabase.strTabName.c_str() , _T("t_dark_record")) )
 				{
 					Postmsg.SetType(MSG_USER_INSERT_DATA,WM_DARK_RECORD);
-				}else if (!strcmp(pDatabase.strTabName.c_str() , _T("MYWALLET")))
+				}else if (!strcmp(pDatabase.strTabName.c_str() , _T("t_wallet_address")))
 				{
 					uistruct::LISTADDR_t addr; 
 					addr.JsonToStruct(pDatabase.strcutjson.c_str());
 					string Temp = addr.ToJson();
-					((CDacrsUIApp*)pParam)->SendRecvieUiMes((int)WM_UP_NEWADDRESS,Temp.c_str());
+					((CDacrsUIApp*)pParam)->SendUIMsg((int)WM_UP_NEWADDRESS,Temp.c_str());
 					Postmsg.SetType(MSG_USER_INSERT_DATA,WM_UP_ADDRESS);
 				}
 
@@ -583,14 +581,14 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 				uistruct::DATABASEINFO_t pDatabase;// = (uistruct::DATABASEINFO_t *)Postmsg.GetStrPoint();
 				string strTemp = Postmsg.GetData();
 				pDatabase.JsonToStruct(strTemp.c_str());
-//				theApp.cs_SqlData.Lock();
-				if ( !((CDacrsUIApp*)pParam)->m_SqliteDeal.Updatabase(pDatabase.strTabName.c_str() , pDatabase.strSource.c_str() , pDatabase.strWhere.c_str() ) ){
-					TRACE(_T("p2p_bet_record数据更新失败!") );
+
+				if ( !((CDacrsUIApp*)pParam)->m_SqliteDeal.UpdateTableItem(pDatabase.strTabName.c_str() , pDatabase.strSource.c_str() , pDatabase.strWhere.c_str() ) ){
+					TRACE(_T("t_p2p_quiz数据更新失败!") );
 				}
-//				theApp.cs_SqlData.Unlock();
-				if ( !strcmp(pDatabase.strTabName.c_str() , _T("p2p_bet_record")) ){
+
+				if ( !strcmp(pDatabase.strTabName.c_str() , _T("t_p2p_quiz")) ){
 					Postmsg.SetType(MSG_USER_UPDATA_DATA,WM_P2P_BET_RECORD);
-				}else if (!strcmp(pDatabase.strTabName.c_str() , _T("dark_record")) )
+				}else if (!strcmp(pDatabase.strTabName.c_str() , _T("t_dark_record")) )
 				{
 					Postmsg.SetType(MSG_USER_UPDATA_DATA,WM_DARK_RECORD);
 				}
@@ -734,7 +732,7 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 			//插入到数据库
 			CString txData ;
 			txData.Format(_T("%s") , obj.toStyledString().c_str() );
-			CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_SYS_REVTRANSACTION);
+			CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_SYNC_TRANSACTION);
 			postmsg.SetData(txData);
 			pApp->m_MsgQueue.push(postmsg);
 			
@@ -1067,7 +1065,7 @@ int CDacrsUIApp::SendPostThread(DWORD msgtype)
 			{	
 				if(pDlg->dlgType == CMainDlg::IDD)
 				{
-					GetMainDlgStruc();
+					GetMainDlgStruct();
 					DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_MAIN_UI , 0,0);
 				}
 				UpdatManUiTimeLast = tempTimemsg;
@@ -1132,7 +1130,6 @@ void CDacrsUIApp::StartSeverProcess(const CStringA& strdir){
 	///// 启动前先关闭系统中dacrs-d.exe进程
 	CloseProcess("dacrs-d.exe");
 	LogPrint("INFO", "关闭服务端成功\n");
-	LogPrint("INFO", "close %d test\n", 1);
 	
 	STARTUPINFOA si; 
 	memset(&si, 0, sizeof(STARTUPINFO));  
@@ -1288,7 +1285,7 @@ void CDacrsUIApp::UpdataUIData(){
 		//	DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_ACCEPTRECOD_UI,0,0);
 		//	break;
 		case CMainDlg::IDD:
-			GetMainDlgStruc();
+			GetMainDlgStruct();
 			DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_MAIN_UI , 0,0);
 			break;
 		//case DIALOG_SIGN_ACCOUNTS:
@@ -1304,48 +1301,46 @@ void CDacrsUIApp::UpdataUIData(){
 	}
 }
 
-void CDacrsUIApp::GetMainDlgStruc()
+void CDacrsUIApp::GetMainDlgStruct()
 {
 	uistruct::MINDLG_T maindlg;
 	CString strCommand,strShowData;
 	strCommand.Format(_T("0"));
 //	theApp.cs_SqlData.Lock();
-	string nmoney =  theApp.m_SqliteDeal.GetColSum(_T("MYWALLET") ,_T("money") ) ;
+	double nmoney =  theApp.m_SqliteDeal.GetTableItemSum(_T("t_wallet_address") ,_T("money"), _T(" 1=1 "));
 //	theApp.cs_SqlData.Unlock();
-	if (!strcmp(nmoney.c_str(),"(null)"))
+	if (nmoney < 0)
 	{
 		maindlg.money = "0.0";
 	}else{
-		maindlg.money = nmoney;
+		CString strmoney;
+		strmoney.Format(_T("%.3lf"),nmoney);
+		maindlg.money = strmoney;
 	}
 
-	strCommand.Format(_T("0"));
-//	theApp.cs_SqlData.Lock();
-	nmoney =  theApp.m_SqliteDeal.GetColSum(_T("revtransaction") , strCommand ,_T("confirmHeight")) ;
-//	theApp.cs_SqlData.Unlock();
+	CString strCond;
+	strCond.Format(_T(" confirm_height = 0 "));
 
-	if (!strcmp(nmoney.c_str(),"(null)"))
+	nmoney =  theApp.m_SqliteDeal.GetTableItemSum(_T("t_transaction") , _T("money") , strCond) ;
+
+	if (nmoney <0)
 	{
 		maindlg.unconfirmmoney = _T("0.0");
 	}else{
-		maindlg.unconfirmmoney = nmoney;
+		CString strmoney;
+		strmoney.Format(_T("%.3lf"),nmoney);
+		maindlg.unconfirmmoney = strmoney;
 	}
 
-
-//	theApp.cs_SqlData.Lock();
-	int nItem =  theApp.m_SqliteDeal.GetTableCount(_T("revtransaction")) ;
-//	theApp.cs_SqlData.Unlock();
+	int nItem =  theApp.m_SqliteDeal.GetTableCountItem(_T("t_transaction"), _T(" 1=1 "));
 
 	strCommand.Format(_T("%d"),nItem);
 	maindlg.itemcount = strCommand.GetString();
 
-	CString Where,strSource;
-	Where.Format(_T("'COMMON_TX' order by confirmedtime desc limit 5"));
-	strSource.Format(_T("txtype"));
 	uistruct::TRANSRECORDLIST pTransaction;
-//	theApp.cs_SqlData.Lock();
-	theApp.m_SqliteDeal.FindDB(_T("revtransaction"),Where,strSource,&pTransaction);
-//	theApp.cs_SqlData.Unlock();
+	strCond.Format(_T(" tx_type='COMMON_TX' order by confirmed_time desc limit 5"));
+	theApp.m_SqliteDeal.GetTransactionList(strCond, &pTransaction);
+
 
 	int i = 1;
 	if (pTransaction.size() != 0  ) {
@@ -1409,7 +1404,7 @@ BOOL CDacrsUIApp::RunOnlyOneApp()
 	return TRUE;
 }
 //// 通知发送界面或者接受界面地址的内容改变了获取要插入新地址
-void CDacrsUIApp::SendRecvieUiMes(int message,CString jsonaddr){
+void CDacrsUIApp::SendUIMsg(int message,CString jsonaddr){
 
 	//m_UiReciveDlgQueue.clear();
 	CPostMsg Postmsg(MSG_USER_MAIN_UI,message);

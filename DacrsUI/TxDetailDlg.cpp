@@ -55,8 +55,8 @@ void CTxDetailDlg::ShowTxDetail(CString jsontx)
 	{
 		strShowData.AppendFormat(_T("%s") ,_T("注册应用交易")) ;
 	}
-	      txdetail.Format(_T("交易类型: %s\r\n\r\n"),strShowData);
-	txdetail.AppendFormat(_T("交易hash: %s\r\n\r\n"),tx.txhash);
+	txdetail.Format(_T("交易类型: %s\r\n\r\n"),strShowData);
+	txdetail.AppendFormat(_T("交易ID: %s\r\n\r\n"),tx.txhash);
 	txdetail.AppendFormat(_T("版本号:   %d\r\n\r\n"),tx.ver);
 	txdetail.AppendFormat(_T("源地址:   %s\r\n\r\n"),tx.addr.c_str());
 	if (tx.pubkey != "")

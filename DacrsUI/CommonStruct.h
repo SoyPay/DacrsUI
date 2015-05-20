@@ -45,7 +45,7 @@ static const ULONGLONG COIN = 100000000;
 #define WM_UP_NEWADDRESS        WM_USER+25
 #define WM_UP_ADDRBOOK          WM_USER+26
 #define WM_UP_DELETERBOOK       WM_USER+27
-#define WM_SYS_REVTRANSACTION   WM_USER+28
+#define WM_SYNC_TRANSACTION     WM_USER+28
 #define WM_INSERT               WM_USER+29
 #define WINDOW_TAG				_T("Dacrs-UIDemo")
 
