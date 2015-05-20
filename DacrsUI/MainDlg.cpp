@@ -168,7 +168,7 @@ void CMainDlg::OnnitCtrlText()
 
 	uistruct::TRANSRECORDLIST pTransaction;
 	CString strSource;
-	strCond.Format(_T(" txtype='COMMON_TX' order by confirmed_time desc limit 5"));
+	strCond.Format(_T(" tx_type='COMMON_TX' order by confirmed_time desc limit 5"));
 	theApp.m_SqliteDeal.GetTransactionList(strCond,&pTransaction);
 
 

@@ -170,7 +170,7 @@ BOOL CSqliteDeal::ExcuteSQL(sqlite3** ppDb, CallBackFunc pFunc, CString strSQL, 
 	TRACE("%s\n", strSQL);
 	if ( nResult != SQLITE_OK ){
 		if(pzErrMsg != NULL) {
-			LogPrint("INFO", "call ExcuteSQL retCode:%d error:%s\n,SQL:%s\n", nResult, pzErrMsg, strSQL);
+			LogPrint("INFO", "call ExcuteSQL retCode:%d, error:%s,SQL:%s\n", nResult, pzErrMsg, strSQL);
 		}else {
 			LogPrint("INFO", "call ExcuteSQL error retCode:%d, SQL:%s\n", nResult, strSQL);
 		}
@@ -423,7 +423,7 @@ int CallGetTipBlockHash(void *para, int n_column, char ** column_value, char ** 
 int CallGetTableItemSum(void *para, int n_column, char ** column_value, char ** column_name)
 {
 	if(NULL == column_value[0])
-		return -1;
+		return 0;
 	
 	if(1 == n_column && !strcmp(column_name[0],"total"))
 		*(double *)para = strtod (column_value[0], NULL);
@@ -714,7 +714,7 @@ BOOL  CSqliteDeal::UpdateP2pBetRecord()
 		std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue.GetString());
 		uistruct::P2P_QUIZ_RECORD_t  betrecord;
 		//theApp.cs_SqlData.Lock();
-		//int nItem =  theApp.m_SqliteDeal.FindDB(_T("p2p_bet_record") , txhash ,_T("tx_hash"),&betrecord ) ;
+		//int nItem =  theApp.m_SqliteDeal.FindDB(_T("t_p2p_quiz") , txhash ,_T("tx_hash"),&betrecord ) ;
 		//theApp.cs_SqlData.Unlock();
 		CString strCond;
 		strCond.Format(_T(" tx_hash='%s' "), txhash);
@@ -728,8 +728,8 @@ BOOL  CSqliteDeal::UpdateP2pBetRecord()
 				strWhere.Format(_T("tx_hash = '%s'") , txhash );
 
 				//更新数据
-				if ( !UpdateTableItem(_T("p2p_bet_record") , strField , strWhere )) {
-					TRACE(_T("p2p_bet_record:更新数据失败!  Hash: %s") , txhash );
+				if ( !UpdateTableItem(_T("t_p2p_quiz") , strField , strWhere )) {
+					TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , txhash );
 				}
 			}
 			continue;
@@ -780,7 +780,7 @@ BOOL  CSqliteDeal::UpdateP2pBetRecord()
 				state = 3;                              ///说明超时了
 			}
 		}
-		//更新数据库  update p2p_bet_record set timeout=15 where actor=0; 
+		//更新数据库  update t_p2p_quiz set timeout=15 where actor=0; 
 		CString strSql , strField  , strWhere;
 		vTemp.clear();
 		vTemp.assign(DBbet.acceptbetid,DBbet.acceptbetid+sizeof(DBbet.acceptbetid));
@@ -803,7 +803,7 @@ BOOL  CSqliteDeal::UpdateP2pBetRecord()
 
 		//更新数据
 		if ( !UpdateTableItem(_T("t_p2p_quiz") , strField , strWhere )) {
-			TRACE(_T("p2p_bet_record:更新数据失败!  Hash: %s") , txhash );
+			TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , txhash );
 		}
 	}
 	return true;
@@ -860,10 +860,10 @@ BOOL CSqliteDeal::UpdateDarkRecord(){
 		std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue.GetString());
 		uistruct::DARK_RECORD  betrecord;
 		//theApp.cs_SqlData.Lock();
-		//int nItem =  theApp.m_SqliteDeal.FindDB(_T("dark_record") , txhash ,_T("tx_hash"),&betrecord ) ;
+		//int nItem =  theApp.m_SqliteDeal.FindDB(_T("t_dark_record") , txhash ,_T("tx_hash"),&betrecord ) ;
 		//theApp.cs_SqlData.Unlock();
 
-	//	int nItem =  Get(_T("dark_record") , txhash ,_T("tx_hash"),&betrecord ) ;
+	//	int nItem =  Get(_T("t_dark_record") , txhash ,_T("tx_hash"),&betrecord ) ;
 		int nItem(0);
 		if (vTemp.size() == 0)  /// 此条数据在应用数据库中被删除了,确认收货了
 		{
@@ -874,8 +874,8 @@ BOOL CSqliteDeal::UpdateDarkRecord(){
 				strWhere.Format(_T("tx_hash = '%s'") , txhash );
 
 				//更新数据
-				if ( !UpdateTableItem(_T("dark_record") , strField , strWhere )) {
-					TRACE(_T("p2p_bet_record:更新数据失败!  Hash: %s") , txhash );
+				if ( !UpdateTableItem(_T("t_dark_record") , strField , strWhere )) {
+					TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , txhash );
 				}
 			}else if (nItem != 0 && betrecord.state == 6)
 			{
@@ -884,8 +884,8 @@ BOOL CSqliteDeal::UpdateDarkRecord(){
 				strWhere.Format(_T("tx_hash = '%s'") , txhash );
 
 				//更新数据
-				if ( !UpdateTableItem(_T("dark_record") , strField , strWhere )) {
-					TRACE(_T("p2p_bet_record:更新数据失败!  Hash: %s") , txhash );
+				if ( !UpdateTableItem(_T("t_dark_record") , strField , strWhere )) {
+					TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , txhash );
 				}
 			}
 			continue;
@@ -938,7 +938,7 @@ BOOL CSqliteDeal::UpdateDarkRecord(){
 
 		//更新数据
 		if ( !UpdateTableItem(_T("t_dark_record") , strField , strWhere )) {
-			TRACE(_T("p2p_bet_record:更新数据失败!  Hash: %s") , txhash );
+			TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , txhash );
 		}
 	}
 	return true;
@@ -1007,7 +1007,7 @@ void  CSqliteDeal::UpdataAllTableData(BOOL flag){
 	int         nCol;       //列数
 	char    *pzErrMsg;    //错误信息
 
-	CString strSql = _T("SELECT * FROM dark_record");
+	CString strSql = _T("SELECT * FROM t_dark_record");
 	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&ppResult,&nRow,&nCol,&pzErrMsg);
 	if ( nResult != SQLITE_OK ){
 		LogPrint("INFO", "UpdataAllTableData error:%s\n", pzErrMsg);
@@ -1023,15 +1023,15 @@ void  CSqliteDeal::UpdataAllTableData(BOOL flag){
 	CString strCommand , strValue ,strShowData ;
 	for(int i = 0; i < nTempRow ; i++) {
 		strValue.Format(_T("%s") , ppResult[nIndex+2] ) ;
-		isExistTx(_T("dark_record"),_T("tx_hash"),strValue);
+		isExistTx(_T("t_dark_record"),_T("tx_hash"),strValue);
 		nIndex +=nTempCol ;
 	}
 	sqlite3_free_table(ppResult);
 
-	strSql = _T("SELECT * FROM p2p_bet_record");
+	strSql = _T("SELECT * FROM t_p2p_quiz");
 	nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&ppResult,&nRow,&nCol,&pzErrMsg);
 	if ( nResult != SQLITE_OK ){
-		LogPrint("INFO", "UpdataAllTableData select p2p_bet_record error:%s\n", pzErrMsg);
+		LogPrint("INFO", "UpdataAllTableData select t_p2p_quiz error:%s\n", pzErrMsg);
 		sqlite3_close(m_pSqliteRead);  
 		sqlite3_free(pzErrMsg);  
 		m_pSqliteRead = NULL ;
@@ -1043,7 +1043,7 @@ void  CSqliteDeal::UpdataAllTableData(BOOL flag){
 	nTempCol = nCol;
 	for(int i = 0; i < nTempRow ; i++) {
 		strValue.Format(_T("%s") , ppResult[nIndex+3] ) ;
-		isExistTx(_T("p2p_bet_record"),_T("tx_hash"),strValue);
+		isExistTx(_T("t_p2p_quiz"),_T("tx_hash"),strValue);
 		nIndex +=nTempCol ;
 	}
 	sqlite3_free_table(ppResult);

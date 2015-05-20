@@ -486,7 +486,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 				case WM_UP_BETPOOL:
 					{
 						/// 赌约池数据库列表
-						bool flag =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.ClearTableData(_T("p2ppool"));
+						bool flag =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.ClearTableData(_T("t_quiz_pool"));
 						if (flag ) 
 						{
 							((CDacrsUIApp*)pParam)->UpdateQuizPoolData();
@@ -560,12 +560,12 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 				string strTemp = Postmsg.GetData();
 				pDatabase.JsonToStruct(strTemp.c_str());
 				((CDacrsUIApp*)pParam)->m_SqliteDeal.InsertTableItem(pDatabase.strTabName.c_str() ,pDatabase.strSource.c_str()) ;
-				if ( !strcmp(pDatabase.strTabName.c_str() , _T("p2p_bet_record")) ){
+				if ( !strcmp(pDatabase.strTabName.c_str() , _T("t_p2p_quiz")) ){
 					Postmsg.SetType(MSG_USER_INSERT_DATA,WM_P2P_BET_RECORD);
-				}else if (!strcmp(pDatabase.strTabName.c_str() , _T("dark_record")) )
+				}else if (!strcmp(pDatabase.strTabName.c_str() , _T("t_dark_record")) )
 				{
 					Postmsg.SetType(MSG_USER_INSERT_DATA,WM_DARK_RECORD);
-				}else if (!strcmp(pDatabase.strTabName.c_str() , _T("MYWALLET")))
+				}else if (!strcmp(pDatabase.strTabName.c_str() , _T("t_wallet_address")))
 				{
 					uistruct::LISTADDR_t addr; 
 					addr.JsonToStruct(pDatabase.strcutjson.c_str());
@@ -583,12 +583,12 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 				pDatabase.JsonToStruct(strTemp.c_str());
 
 				if ( !((CDacrsUIApp*)pParam)->m_SqliteDeal.UpdateTableItem(pDatabase.strTabName.c_str() , pDatabase.strSource.c_str() , pDatabase.strWhere.c_str() ) ){
-					TRACE(_T("p2p_bet_record数据更新失败!") );
+					TRACE(_T("t_p2p_quiz数据更新失败!") );
 				}
 
-				if ( !strcmp(pDatabase.strTabName.c_str() , _T("p2p_bet_record")) ){
+				if ( !strcmp(pDatabase.strTabName.c_str() , _T("t_p2p_quiz")) ){
 					Postmsg.SetType(MSG_USER_UPDATA_DATA,WM_P2P_BET_RECORD);
-				}else if (!strcmp(pDatabase.strTabName.c_str() , _T("dark_record")) )
+				}else if (!strcmp(pDatabase.strTabName.c_str() , _T("t_dark_record")) )
 				{
 					Postmsg.SetType(MSG_USER_UPDATA_DATA,WM_DARK_RECORD);
 				}
