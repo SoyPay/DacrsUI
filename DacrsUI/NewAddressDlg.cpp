@@ -204,7 +204,7 @@ void CNewAddressDlg::OnBnClickedButtonScdz()
 	uistruct::DATABASEINFO_t   pDatabase;
 	pDatabase.strSource = strSourceData;
 	pDatabase.strcutjson = newaddr.ToJson();
-	pDatabase.strTabName =  _T("MYWALLET");
+	pDatabase.strTabName =  _T("t_wallet_address");
 	CPostMsg postmsg(MSG_USER_INSERT_DATA,0);
 	string  strTemp = pDatabase.ToJson();
 	postmsg.SetData(strTemp.c_str());
@@ -212,8 +212,12 @@ void CNewAddressDlg::OnBnClickedButtonScdz()
 
 	
 
-	strCommand.Format(_T("恭喜生成新地址%s"),addr);
-	::MessageBox( this->GetSafeHwnd() ,strCommand , _T("提示") , MB_ICONINFORMATION ) ;
+	strCommand.Format(_T("恭喜生成新地址:\n%s"),addr);
+
+	if(IDOK == ::MessageBox( this->GetSafeHwnd() ,strCommand , _T("提示") , MB_ICONINFORMATION ))
+	{
+		EndDialog(IDOK);
+	}
 	//if (IDYES == ::MessageBox( this->GetSafeHwnd() ,_T("恭喜生成新地址") , _T("提示") , MB_YESNO|MB_ICONINFORMATION ) ){
 	//	EndDialog(IDOK);
 	//}
