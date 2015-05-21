@@ -100,6 +100,7 @@ public:
 	void		 DispatchMsg( unsigned int threadID , UINT msg , WPARAM wParam , LPARAM lParam ) ;
 public:
 	CString      m_betScritptid;
+	CString      m_ipoScritptid;
 	CString      m_darkScritptid;
 	CDarkTxCfg		m_DarkCfg;
 	CP2PBetCfg		m_P2PBetCfg;
