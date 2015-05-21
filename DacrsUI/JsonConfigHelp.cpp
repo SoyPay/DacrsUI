@@ -96,6 +96,7 @@ void CJsonConfigHelp::ReadScriptCfgData(const Json::Value& root){
 	ASSERT(!script.isNull());
 	m_Scriptid.strScriptBetid = script["betscript"].asCString();
 	m_Scriptid.strSrcriptDarkid = script["darkscript"].asCString();
+	m_Scriptid.m_ipoScritptid = script["iposcript"].asCString();
 }
 void CJsonConfigHelp::GetMainCfgData(CMainCfg& mainCfg)
 {

@@ -7,6 +7,7 @@ class CScriptCfg
 public:
 	CString	strScriptBetid;
 	CString	strSrcriptDarkid;
+	CString	m_ipoScritptid;
 };
 class CMainCfg 
 {
