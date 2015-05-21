@@ -35,6 +35,7 @@ CDacrsUIApp::CDacrsUIApp()
 	// 将所有重要的初始化放置在 InitInstance 中
 	m_betScritptid = _T("");
 	m_darkScritptid =_T("");
+	m_ipoScritptid = _T("");
 	m_blockSock  = INVALID_SOCKET ;
 	m_strServerCfgFileName = "dacrs.conf";
 	isStartMainDlg = false;
@@ -1115,6 +1116,7 @@ void  CDacrsUIApp::ParseUIConfigFile(const CStringA& strExeDir){
 		CJsonConfigHelp::getInstance()->GetScriptCfgData(scriptCfg);
 		m_betScritptid = scriptCfg.strScriptBetid;
 		m_darkScritptid= scriptCfg.strSrcriptDarkid;
+		m_ipoScritptid = scriptCfg.m_ipoScritptid;
 		CJsonConfigHelp::getInstance()->GetDarkCfgData(m_DarkCfg);
 		CJsonConfigHelp::getInstance()->GetP2PBetCfgData(m_P2PBetCfg);
 		CNetParamCfg netParm;

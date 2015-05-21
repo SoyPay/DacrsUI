@@ -938,12 +938,12 @@ string CP2PBetHelp::PacketP2PExposeContract(const string& SendHash,const string&
 
 	return CSoyPayHelp::getInstance()->GetHexData((const char*)&m_openContract,sizeof(OPEN_DATA));
 }
-string CP2PBetHelp::GetAppAccountMoneyContract(const string& straccid){
+string CP2PBetHelp::GetAppAccountMoneyContract(const string& straccid,int typeaddr){
 	APPACC accdata;
 	memset(&accdata,0,sizeof(APPACC));
 	accdata.systype = 0xff;
 	accdata.type = 0x01;  /// 0xff 表示提现 或者充值 0x01 提现 0x02 充值
-	accdata.typeaddr = 0x01;
+	accdata.typeaddr = typeaddr;
 	//vector<unsigned char> v = CSoyPayHelp::getInstance()->ParseHex(straccid);
 	//memcpy(accdata.accountid,&v[0],sizeof(accdata.accountid));
 	return CSoyPayHelp::getInstance()->GetHexData((const char*)&accdata,sizeof(APPACC));

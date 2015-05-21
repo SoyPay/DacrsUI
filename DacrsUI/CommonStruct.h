@@ -395,7 +395,7 @@ public:
 	string PacketP2PSendContract(int64_t nMoney,int nHeight,const string& strRandomHash);
 	string PacketP2PAcceptContract(int64_t nMoney, const string& strSendHash,char nData );
 	string PacketP2PExposeContract(const string& SendHash,const string& strRandomHash);
-	string GetAppAccountMoneyContract(const string& straccid);
+	string GetAppAccountMoneyContract(const string& straccid,int typeaddr);
 	string GetReChangContract();
 private:
 	SEND_DATA		m_sendContract;
