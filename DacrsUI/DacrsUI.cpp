@@ -806,8 +806,11 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 			
 				/// ¸üÐÂÇ®°ü
 				CPostMsg postuimsg(MSG_USER_GET_UPDATABASE,WM_UP_ADDRESS);
-			
 				pApp->m_MsgQueue.push(postuimsg);
+
+				CPostMsg postpoolmsg(MSG_USER_GET_UPDATABASE,WM_UP_BETPOOL);
+				pApp->m_MsgQueue.push(postpoolmsg);
+				
 				RecivetxMsgTimeLast = tempTimemsg;
 			}
 			break;
@@ -1416,6 +1419,9 @@ void CDacrsUIApp::SendUIMsg(int message,CString jsonaddr){
 
 	m_UiSendDlgQueue.push(Postmsg);
 	DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_SEND_UI ,message,0);
+
+	m_UiP2pDlgQueue.push(Postmsg);
+	DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_P2P_UI ,message,0);
 }
 
 void CDacrsUIApp::CheckPathValid(const CStringA& strDir)
