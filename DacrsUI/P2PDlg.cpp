@@ -38,12 +38,9 @@ void CP2PDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BUTTON_WITHD , m_rBtnWithd);
 	DDX_Control(pDX, IDC_BUTTON_RECH , m_rBtnRech);
 	DDX_Control(pDX, IDC_BUTTON_MALE , m_rBtnMale);
-	DDX_Control(pDX, IDC_BUTTON_WOMAN , m_rBtnWoman);
-
+	DDX_Control(pDX, IDC_BUTTON_WOMAN , m_rBtnWoman); 
+	DDX_Control(pDX, IDC_COMBO_ADDRES, m_addrbook);
 	DDX_Control(pDX, IDC_LIST_BONUS, m_BonusListBox);
-	
-	DDX_Control(pDX, IDC_COMBO_ADDRES , m_addrbook);
-	//DDX_Control(pDX, IDC_LIST_RECORD, m_RecordListBox);
 }
 
 
@@ -155,32 +152,24 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_rBtnRech.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(255, 255, 255));
 		m_rBtnRech.SizeToContent();
 
+		HINSTANCE hInstance = AfxGetInstanceHandle();
+		m_BonusListBox.CreateTitle();
 		m_BonusListBox.InsertStr(0,this->GetSafeHwnd());
-		m_BonusListBox.SetIndexInage(0 , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2PBUT);
-		m_BonusListBox.SetIndexString(0 , _T("51800-68"), _T("接"), _T("1000SMC"), _T("接"));//
+		m_BonusListBox.SetIndexInage(0 , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2P_LISTBOX_BUT);
+		m_BonusListBox.SetIndexString(0 , _T("51801-68"), _T("接"), _T("1001SMC"), _T("接D"));//
+
+		m_BonusListBox.InsertStr(1,this->GetSafeHwnd());
+		m_BonusListBox.SetIndexInage(1 , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2P_LISTBOX_BUT);
+		m_BonusListBox.SetIndexString(1 , _T("51802-68"), _T("接1"), _T("1002SMC"), _T("接1"));//
 
 		AddListaddrDataBox();
 		QueryNotDrawBalance();
 		OnListPool();
 		theApp.SubscribeMsg( theApp.GetMtHthrdId() , GetSafeHwnd() , MSG_USER_P2P_UI ) ;
-		//m_BonusListBox.InsertStr(1,this->GetSafeHwnd());
-		//m_BonusListBox.SetIndexInage(1 , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2PBUT);
-		//m_BonusListBox.SetIndexString(1 , _T("51801-68"), _T("接1"), _T("1001SMC"), _T("接1"));//
-
-
-		//m_RecordListBox.InsertStr(0,this->GetSafeHwnd());
-		//m_RecordListBox.SetIndexInage(0 , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2PBUT);
-		//m_RecordListBox.SetIndexString(0 , _T("51800-68"), _T("接"), _T("1000SMC"), _T("接"));//
 	}
 	return bRes ;
 }
-LRESULT CP2PDlg::onBnCLick( WPARAM wParam, LPARAM lParam )
-{
-	CString str;
-	str.Format(_T("adc:%d") , (int)lParam ) ;
-	AfxMessageBox(str);
-	return 1 ;
-}
+
 
 void CP2PDlg::OnSize(UINT nType, int cx, int cy)
 {
@@ -188,16 +177,11 @@ void CP2PDlg::OnSize(UINT nType, int cx, int cy)
 
 	// TODO: 在此处添加消息处理程序代码
 	if( NULL != GetSafeHwnd() ) {
-		CWnd *pW = (CWnd*)GetDlgItem(IDC_LIST_BONUS);
-		if( NULL != pW ) {	
-			pW->SetWindowPos(NULL ,454, 80 , 432 , 178 , SWP_SHOWWINDOW);
-		}
-		pW = (CWnd*)GetDlgItem(IDC_LIST_RECORD);
-		if( NULL != pW ) {	
-			pW->SetWindowPos(NULL ,10, 352 , 877 , 135 , SWP_SHOWWINDOW);
+		CWnd *pst = GetDlgItem( IDC_LIST_BONUS ) ;
+		if ( NULL != pst ) {
+			pst->SetWindowPos( NULL ,455 , 55 , 432, 203  ,SWP_SHOWWINDOW ) ; 
 		}
 	}
-
 }
 
 
@@ -653,7 +637,7 @@ void CP2PDlg::OnListPool()
 		double dmoney = (DBbet.money*1.0)/COIN;
 		money.Format(_T("%.4f"),dmoney);
 		m_BonusListBox.InsertStr(i,this->GetSafeHwnd());
-		m_BonusListBox.SetIndexInage(i , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2PBUT);
+	//	m_BonusListBox.SetIndexInage(i , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2PBUT);
 		m_BonusListBox.SetIndexString(i , addr, _T("接"), money, _T("接"));
 
 
@@ -693,3 +677,9 @@ void CP2PDlg::OnListPool()
 		i++;
 	}
 }
+ LRESULT CP2PDlg::onBnCLick( WPARAM wParam, LPARAM lParam )
+ {
+	 ::MessageBox( this->GetSafeHwnd() ,_T("4566") , _T("提示") , MB_ICONINFORMATION ) ;
+	 return 0;
+
+ }

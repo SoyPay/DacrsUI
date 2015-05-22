@@ -1,13 +1,12 @@
 // ButtonEx.cpp : ŽÀ‘•ƒtƒ@ƒCƒ‹
 //
-
 #include "stdafx.h"
-#include "DacrsUI.h"
 #include "ButtonEx.h"
+
 
 // CButtonEx
 
-//IMPLEMENT_DYNAMIC(CButtonEx, CShadeButtonST)
+IMPLEMENT_DYNAMIC(CButtonEx, CShadeButtonST)
 
 CButtonEx::CButtonEx()
 {

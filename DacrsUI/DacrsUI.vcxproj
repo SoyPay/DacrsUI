@@ -20,7 +20,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
-    <UseOfMfc>Static</UseOfMfc>
+    <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -178,10 +178,10 @@
     <None Include="res\newaddr-2.bmp" />
     <None Include="res\newaddr-3.bmp" />
     <None Include="res\P2P.bmp" />
-    <None Include="res\p2p_but.bmp" />
     <None Include="res\p2p_button_1.bmp" />
     <None Include="res\p2p_button_2.bmp" />
     <None Include="res\p2p_dlg.bmp" />
+    <None Include="res\p2p_list_box_but.bmp" />
     <None Include="res\progress1.bmp" />
     <None Include="res\progress2.bmp" />
     <None Include="res\progress3.bmp" />
@@ -234,7 +234,6 @@
     <ClInclude Include="Out.h" />
     <ClInclude Include="OutGifDlg.h" />
     <ClInclude Include="ReCharge.h" />
-    <ClInclude Include="RecordListBox.h" />
     <ClInclude Include="TxDetailDlg.h" />
     <ClInclude Include="UseListBox.h" />
     <ClInclude Include="XProgressCtrl.h" />
@@ -324,7 +323,6 @@
     <ClCompile Include="ProgStatusBar.cpp" />
     <ClCompile Include="ReceiveDlg.cpp" />
     <ClCompile Include="ReCharge.cpp" />
-    <ClCompile Include="RecordListBox.cpp" />
     <ClCompile Include="RoundButton.cpp" />
     <ClCompile Include="RpcCmd.cpp" />
     <ClCompile Include="SendDlg.cpp" />

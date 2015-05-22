@@ -154,9 +154,6 @@
     <ClCompile Include="UseListBox.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="RecordListBox.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="ReCharge.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -351,11 +348,8 @@
     <ClInclude Include="UseListBox.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="RecordListBox.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="ReCharge.h">
-      <Filter>头文件</Filter>
+      <Filter>源文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -702,7 +696,7 @@
     <None Include="res\sister_3.bmp">
       <Filter>资源文件</Filter>
     </None>
-    <None Include="res\p2p_but.bmp">
+    <None Include="res\p2p_list_box_but.bmp">
       <Filter>资源文件</Filter>
     </None>
   </ItemGroup>
