@@ -436,7 +436,7 @@ namespace uistruct {
 			this->addr2 = root["addr2"].asString();
 			this->addr3 = root["addr3"].asString();
 			this->addr4 = root["addr4"].asString();
-			this->addr5 = root["addr4"].asString();
+			this->addr5 = root["addr5"].asString();
 			return true;
 		}
 	}MINDLG_T;
