@@ -69,6 +69,7 @@ public:
 	INT64	AcceptBetnFee;
 	INT64	OpenBetnFee;
 	INT64	GetAppAmountnFee;
+	INT64   GetRechangeFee;
 };
 
 class CNetParamCfg

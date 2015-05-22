@@ -75,6 +75,7 @@ void CJsonConfigHelp::ReadP2PCfgData(const Json::Value& root)
 	m_P2PBetCfg.AcceptBetnFee = p2pbet["AcceptBetnFee"].asInt64();
 	m_P2PBetCfg.OpenBetnFee = p2pbet["OpenBetnFee"].asInt64();
 	m_P2PBetCfg.GetAppAmountnFee = p2pbet["GetAppAmountnFee"].asInt64();
+	m_P2PBetCfg.GetRechangeFee = p2pbet["GetRechangeFee"].asInt64();
 
 }
 
@@ -97,6 +98,8 @@ void CJsonConfigHelp::ReadScriptCfgData(const Json::Value& root){
 	m_Scriptid.strScriptBetid = script["betscript"].asCString();
 	m_Scriptid.strSrcriptDarkid = script["darkscript"].asCString();
 	m_Scriptid.m_ipoScritptid = script["iposcript"].asCString();
+	
+	
 }
 void CJsonConfigHelp::GetMainCfgData(CMainCfg& mainCfg)
 {

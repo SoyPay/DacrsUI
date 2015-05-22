@@ -145,7 +145,7 @@ void CRpcCmd::RPCCommandToJson(const CString& strRPCCommand,CStringA& strSendDat
 			pos = rpcCommand.Find(" ");
 		}
 
-		if (IsAllDigtal(rpcCommand)) //&& rpcCommand.GetLength() != 12)
+		if (IsAllDigtal(rpcCommand) && method != _T("gethash")) //&& rpcCommand.GetLength() != 12)
 		{
 			INT64 param;
 			sscanf(rpcCommand,"%lld",&param);

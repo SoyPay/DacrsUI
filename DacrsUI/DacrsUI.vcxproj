@@ -120,7 +120,11 @@
     <None Include="res\alltrade1.bmp" />
     <None Include="res\bak_wallet.bmp" />
     <None Include="res\bitmap1.bmp" />
+    <None Include="res\bitmap11.bmp" />
     <None Include="res\bitmap4.bmp" />
+    <None Include="res\bother_1.bmp" />
+    <None Include="res\bother_2.bmp" />
+    <None Include="res\bother_3.bmp" />
     <None Include="res\button_bar.bmp" />
     <None Include="res\button_bar_3.bmp" />
     <None Include="res\button_black_ground.bmp" />
@@ -174,6 +178,9 @@
     <None Include="res\newaddr-2.bmp" />
     <None Include="res\newaddr-3.bmp" />
     <None Include="res\P2P.bmp" />
+    <None Include="res\p2p_but.bmp" />
+    <None Include="res\p2p_button_1.bmp" />
+    <None Include="res\p2p_button_2.bmp" />
     <None Include="res\p2p_dlg.bmp" />
     <None Include="res\progress1.bmp" />
     <None Include="res\progress2.bmp" />
@@ -194,6 +201,9 @@
     <None Include="res\sig_1.bmp" />
     <None Include="res\sig_2.bmp" />
     <None Include="res\sig_3.bmp" />
+    <None Include="res\sister_1.bmp" />
+    <None Include="res\sister_2.bmp" />
+    <None Include="res\sister_3.bmp" />
     <None Include="res\target.bmp" />
     <None Include="res\Tip.bmp" />
     <None Include="res\tradedetail_logo_1.bmp" />
@@ -215,6 +225,7 @@
     <ClInclude Include="AddrBook.h" />
     <ClInclude Include="BmpBtn.h" />
     <ClInclude Include="BtnST.h" />
+    <ClInclude Include="ButtonEx.h" />
     <ClInclude Include="CeXDib.h" />
     <ClInclude Include="ChangeDPI.h" />
     <ClInclude Include="CommonStruct.h" />
@@ -222,7 +233,10 @@
     <ClInclude Include="NewSendAddr.h" />
     <ClInclude Include="Out.h" />
     <ClInclude Include="OutGifDlg.h" />
+    <ClInclude Include="ReCharge.h" />
+    <ClInclude Include="RecordListBox.h" />
     <ClInclude Include="TxDetailDlg.h" />
+    <ClInclude Include="UseListBox.h" />
     <ClInclude Include="XProgressCtrl.h" />
     <ClInclude Include="DacrsUI.h" />
     <ClInclude Include="DacrsUIDlg.h" />
@@ -278,6 +292,7 @@
     <ClCompile Include="AddrBook.cpp" />
     <ClCompile Include="BmpBtn.cpp" />
     <ClCompile Include="BtnST.cpp" />
+    <ClCompile Include="ButtonEx.cpp" />
     <ClCompile Include="CeXDib.cpp" />
     <ClCompile Include="ChangeDPI.cpp" />
     <ClCompile Include="CommonStruct.cpp" />
@@ -308,6 +323,8 @@
     <ClCompile Include="PostMsg.cpp" />
     <ClCompile Include="ProgStatusBar.cpp" />
     <ClCompile Include="ReceiveDlg.cpp" />
+    <ClCompile Include="ReCharge.cpp" />
+    <ClCompile Include="RecordListBox.cpp" />
     <ClCompile Include="RoundButton.cpp" />
     <ClCompile Include="RpcCmd.cpp" />
     <ClCompile Include="SendDlg.cpp" />
@@ -325,6 +342,7 @@
     <ClCompile Include="TradDlg.cpp" />
     <ClCompile Include="TxDetailDlg.cpp" />
     <ClCompile Include="UiHead.cpp" />
+    <ClCompile Include="UseListBox.cpp" />
     <ClCompile Include="XProgressCtrl.cpp" />
   </ItemGroup>
   <ItemGroup>
