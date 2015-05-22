@@ -614,6 +614,7 @@ void CDacrsUIDlg::OnBnClickedButtonClose()
 		if ( NULL != m_pOutGifDlg ) {
 			CRect rc;
 			GetWindowRect(&rc);	
+			m_pOutGifDlg->LoadGifing(TRUE);
 			m_pOutGifDlg->SetWindowPos(NULL , (rc.left + rc.right)/2 - 300/2 , (rc.top + rc.bottom)/2 - 100/2  , 300 ,100 , SWP_SHOWWINDOW);
 			m_pOutGifDlg->ShowWindow(SW_SHOW) ;
 		}

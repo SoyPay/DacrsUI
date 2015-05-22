@@ -198,7 +198,7 @@ void CIpoDlg::OnBnClickedButtonDrawal()
 
 	CString strCommand , strMaddress , strMoney;
 	
-	string strContractData = m_P2PBetHelp.GetAppAccountMoneyContract(addr.GetString(),2);
+	string strContractData = m_P2PBetHelp.GetAppAccountMoneyContract(addr.GetString(),1,2);
 
 	CString strTxFee;
 	GetDlgItem(IDC_EDIT_GETFEE)->GetWindowText(strTxFee) ;

@@ -25,6 +25,7 @@ using namespace std;
 // 有关此类的实现，请参阅 DacrsUI.cpp
 //
 #define		MSG_TITLE_LBUTTON_DOWN		(WM_USER + 0x0001)
+#define     WM_BN_CLICK  WM_USER + 100
 
 class CDacrsUIApp : public CWinApp
 {
@@ -132,6 +133,7 @@ public:
 	CMyQueue m_UiReciveDlgQueue;
 	CMyQueue m_UiSendDlgQueue;
 	CMyQueue m_UiTxDetailQueue;
+	CMyQueue m_UiP2pDlgQueue;
 	void UpdateQuizPoolData();
 	void UpdateAddressData();
 	void InsertTransaction(string hash);

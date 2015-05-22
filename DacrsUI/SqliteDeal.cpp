@@ -74,7 +74,7 @@ BOOL CSqliteDeal::InitializationDB(){
 	strCondition = _T("type='table' and name='t_p2p_quiz'");
 	if(!GetTableCountItem(strTableName, strCondition))
 	{
-		CString createSQL(_T("CREATE TABLE t_p2p_quiz(send_time TEXT,recv_time TEXT,time_out INT,tx_hash TEXT, left_addr TEXT, right_addr TEXT, amount INT, content TEXT, actor INT, comfirmed INT, height INT, state INT, relate_hash TEXT, guess_num INT)"));
+		CString createSQL(_T("CREATE TABLE t_p2p_quiz(send_time TEXT,recv_time TEXT,time_out INT,tx_hash TEXT, left_addr TEXT, right_addr TEXT, amount double, content TEXT, actor INT, comfirmed INT, height INT, state INT, relate_hash TEXT, guess_num INT)"));
 		if(!ExcuteSQL(pDBConn, NULL, createSQL, NULL))
 		{
 			LogPrint("INFO", "Create table t_p2p_quiz failed\n");
@@ -519,7 +519,7 @@ int CSqliteDeal::GetP2PQuizPoolList(const CString &strCondition, uistruct::P2PLI
 {
 	sqlite3 ** pDBConn = GetDBConnect();
 	CString strSQL(_T(""));
-	strSQL = _T("SELECT * FROM t_p2p_quiz WHERE ") + strCondition;
+	strSQL = _T("SELECT * FROM t_quiz_pool WHERE ") + strCondition;
 	ExcuteSQL(pDBConn, &CallGetP2PQuizPoolList, strSQL, (void *)pPoolList);
 	return 0;
 }
