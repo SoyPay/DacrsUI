@@ -1,7 +1,6 @@
 #pragma once
 #include "ButtonEx.h"
 #include "StaticTrans.h"
-
 #include <map>
 using namespace std;
 
@@ -37,6 +36,11 @@ public:
 
 protected:
 	DECLARE_MESSAGE_MAP()	
+private:
+	CStaticTrans   * m_pTitleSta1; //¾²Ì¬¿ò1
+	CStaticTrans   * m_pTitleSta2; //¾²Ì¬¿ò2
+	CStaticTrans   * m_pTitleSta3; //¾²Ì¬¿ò3
+	CStaticTrans   * m_pTitleSta4; //¾²Ì¬¿ò4
 public:
 	button_map m_mButton;
 	UINT m_uID;
@@ -52,6 +56,7 @@ public:
 	List_AppendData *GetAppendDataInfo(int iIndex);
 	void    SetIndexInage(int iIndex ,  UINT nButImage1 , UINT nButImage2  );
 	void    SetIndexString(int iIndex , CString strBut1 ,CString strBut2 ,CString strSta1 ,CString strSta2 );
+	void    CreateTitle();
 };
 
 

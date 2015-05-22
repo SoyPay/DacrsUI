@@ -5,8 +5,7 @@
 
 class CButtonEx : public CShadeButtonST
 {
-	//DECLARE_DYNAMIC(CButtonEx)
-
+	DECLARE_DYNAMIC(CButtonEx)
 public:
 	CButtonEx();
 	CButtonEx( int nItem, int nSubItem, CRect rect, HWND hParent );

@@ -37,7 +37,7 @@ using namespace std;
 
 
 #define MSG_USER_END			        WM_USER+800	    //ÍË³öÏß³Ì
-
+#define WM_BN_CLICK						WM_USER+801
 //enum
 enum {
 	LANGUAGE_CN = 0x01,
