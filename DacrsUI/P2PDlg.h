@@ -5,21 +5,21 @@
 #include "TabCtrl.h"
 #include "BetRecord.h"
 #include "SendRecord.h"
-// CP2PDlg å¯¹è¯æ¡†
+// CP2PDlg ¶Ô»°¿ò
 
 class CP2PDlg : public CDialogBar
 {
 	DECLARE_DYNAMIC(CP2PDlg)
 
 public:
-	CP2PDlg();   // Â±ÃªÃ—Â¼Â¹Â¹Ã”Ã¬ÂºÂ¯ÃŠÃ½
+	CP2PDlg();   // ±ê×¼¹¹Ôìº¯Êı
 	virtual ~CP2PDlg();
 
-// Â¶Ã”Â»Â°Â¿Ã²ÃŠÃ½Â¾Ã
+// ¶Ô»°¿òÊı¾İ
 	enum { IDD = IDD_DIALOG_P2P };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ã–Â§Â³Ã–
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ö§³Ö
 
 	DECLARE_MESSAGE_MAP()
 public:
@@ -68,7 +68,7 @@ public:
 	afx_msg void OnBnClickedButtonWoman();
 	void OnListPool();
 	void AcceptBet(CString hash,CString money);
+	bool CheckBalance();
 	CCTabCtrl m_tab;
 	afx_msg void OnTcnSelchangeTab(NMHDR *pNMHDR, LRESULT *pResult);
-	bool CheckBalance();
 };
