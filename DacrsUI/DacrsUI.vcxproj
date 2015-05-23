@@ -229,6 +229,7 @@
     <ClInclude Include="CeXDib.h" />
     <ClInclude Include="ChangeDPI.h" />
     <ClInclude Include="CommonStruct.h" />
+    <ClInclude Include="GuessNum.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="NewSendAddr.h" />
     <ClInclude Include="Out.h" />
@@ -299,6 +300,7 @@
     <ClCompile Include="DacrsUIDB.cpp" />
     <ClCompile Include="DacrsUIDlg.cpp" />
     <ClCompile Include="GIFControl.cpp" />
+    <ClCompile Include="GuessNum.cpp" />
     <ClCompile Include="HeaderCtrlCl.cpp" />
     <ClCompile Include="IndTitleBar.cpp" />
     <ClCompile Include="IpoDlg.cpp" />

@@ -154,7 +154,7 @@ namespace uistruct {
 		char   tx_hash[64+1]    ;      //发赌约hash
 		char   left_addr[34+1]  ;		//发赌约地址
 		char   right_addr[34+1] ;		//接受赌约地址
-		INT64  amount  ;				//金额
+		double  amount  ;				//金额
 		char   content[33]    ;       //明文 
 		int    actor  ;               // 0 发起赌约 1 接受赌约 2 即使发起赌约又是接受赌约
 		int    confirmed      ;        // 是否已确认
