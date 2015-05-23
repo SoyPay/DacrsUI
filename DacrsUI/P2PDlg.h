@@ -57,4 +57,5 @@ public:
 	void SendBet(int rewardnum);
 	afx_msg void OnBnClickedButtonWoman();
 	void OnListPool();
+	void AcceptBet(CString hash,CString money);
 };

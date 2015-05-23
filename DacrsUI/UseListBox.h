@@ -12,11 +12,13 @@ typedef struct _ListBox_Data
 	CButtonEx * pBut1; //°´Å¥1
 	CButtonEx * pBut2; //°´Å¥2
 	CStaticTrans   * pSta1; //¾²Ì¬¿ò1
+	CString       pstr;
 	_ListBox_Data()
 	{
 		pBut1 = NULL ;
 		pBut2 = NULL ;
 		pSta1 = NULL ;
+		pstr = _T("");
 	}
 } List_AppendData;
 

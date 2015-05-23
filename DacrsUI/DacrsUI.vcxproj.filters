@@ -157,6 +157,9 @@
     <ClCompile Include="ReCharge.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="GuessNum.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BmpBtn.h">
@@ -350,6 +353,9 @@
     </ClInclude>
     <ClInclude Include="ReCharge.h">
       <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GuessNum.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -76,8 +76,11 @@ void CDacrsUIApp::UpdateQuizPoolData()
 
 			if (DBbet.betstate == 0x00)
 			{
+				std::vector<unsigned char> txTemp = CSoyPayHelp::getInstance()->ParseHex(txhash.GetString());
+				reverse(txTemp.begin(),txTemp.end());
+				string newTxhash =  CSoyPayHelp::getInstance()->HexStr(txTemp);
 				CString strSourceData;
-				strSourceData.Format(_T("'%s' , '%s'") , txhash, nValue);
+				strSourceData.Format(_T("'%s' , '%s'") , newTxhash.c_str(), nValue);
 				m_SqliteDeal.InsertTableItem(_T("t_quiz_pool") ,strSourceData);
 			}
 		}
