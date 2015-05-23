@@ -198,12 +198,12 @@ List_AppendData* CUseListBox::GetAppendDataInfo(int iIndex)
 	}
 	return NULL ;
 }
-void CUseListBox::SetIndexInage(int iIndex ,  UINT nButImage1 , UINT nButImage2  )
+void CUseListBox::SetIndexInage(int iIndex , UINT nButImage  )
 {
 	List_AppendData *pData = GetAppendDataInfo(iIndex) ;
 	if ( NULL != pData ) {
 		pData->pBut2->SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		pData->pBut2->SetBitmaps( nButImage2 , RGB(255, 255, 0) , nButImage2 , RGB(255, 255, 255) );
+		pData->pBut2->SetBitmaps( nButImage , RGB(255, 255, 0) , nButImage , RGB(255, 255, 255) );
 	}
 }
 void CUseListBox::SetIndexBackCol(int iIndex ,  int nline ,COLORREF   col)
