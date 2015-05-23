@@ -51,6 +51,7 @@ public:
 	List_ReAppendData *GetAppendDataInfo(int iIndex);
 	void    SetIndexBackCol(int iIndex ,  int nline ,COLORREF   col);
 	void    SetIndexString(int iIndex , CString strBut1 ,CString strSta1 ,CString strSta2 ,CString strSta3 ,CString strSta4  );
+	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 };
 
 

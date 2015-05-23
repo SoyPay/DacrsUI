@@ -51,6 +51,7 @@ BEGIN_MESSAGE_MAP(CTradDlg, CDialogBar)
 	ON_MESSAGE(MSG_USER_TRANSRECORD_UI , &CTradDlg::OnShowListCtrl )
 
 	ON_WM_SIZE()
+	ON_WM_MOUSEWHEEL()
 END_MESSAGE_MAP()
 
 
@@ -358,4 +359,11 @@ void CTradDlg::OnSize(UINT nType, int cx, int cy)
 			pButton->SetWindowPos(NULL ,900 - 1*(103 + 5)- 23 , 600 - 72 - 32 - 46 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
 		}
 	}
+}
+
+
+BOOL CTradDlg::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	return CDialogBar::OnMouseWheel(nFlags, zDelta, pt);
 }

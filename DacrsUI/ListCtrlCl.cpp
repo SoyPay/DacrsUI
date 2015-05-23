@@ -32,6 +32,7 @@ BEGIN_MESSAGE_MAP(CListCtrlCl, CListCtrl)
 	ON_WM_MEASUREITEM()
 	ON_WM_MEASUREITEM_REFLECT()
 	ON_WM_PAINT()
+	ON_WM_MOUSEWHEEL()
 END_MESSAGE_MAP()
 
 
@@ -397,4 +398,12 @@ void CListCtrlCl::OnPaint()
 		}
 		dc.SelectObject(pOldPen);
 	}
+}
+
+
+BOOL CListCtrlCl::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	TRACE("X=%d, Y=%d\n", pt.x, pt.y);
+	return CListCtrl::OnMouseWheel(nFlags, zDelta, pt);
 }

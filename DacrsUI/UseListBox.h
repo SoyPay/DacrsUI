@@ -57,6 +57,7 @@ public:
 	void    SetIndexBackCol(int iIndex ,  int nline ,COLORREF   col);
 	void    SetIndexString(int iIndex , CString strSta0 ,CString strBut2 ,CString strSta1 ,CString strSta2 );
 	void    CreateTitle();
+	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 };
 
 

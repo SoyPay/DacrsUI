@@ -25,6 +25,7 @@ BEGIN_MESSAGE_MAP(CRecordListBox, CListBox)
 	ON_WM_DESTROY()
 	ON_WM_ERASEBKGND()
 	ON_WM_MOUSEMOVE()
+	ON_WM_MOUSEWHEEL()
 END_MESSAGE_MAP()
 
 
@@ -152,35 +153,35 @@ void CRecordListBox::updateListBoxButtonPos()
 			List_ReAppendData *pData = (List_ReAppendData*)iter->second;
 			if ( NULL != pData ) {
 				pData->pSta0->SetFont(110, _T("楷体"));				//设置显示字体和大小
-				pData->pSta0->SetTextColor(RGB(0,0,0));			    //字体颜色
+				//pData->pSta0->SetTextColor(RGB(0,0,0));			    //字体颜色
 				pData->pSta0->ShowWindow( SW_SHOW );
 				//pData->pSta0->SetBackColor(RGB(0,0,0));	
 				pData->pSta0->ModifyStyle(0,SS_CENTERIMAGE|SS_CENTER);
 				pData->pSta0->SetWindowPos(NULL , 10 , pData->nItem*35+10 , 305 , 29 , SWP_SHOWWINDOW );
 
 				pData->pSta1->SetFont(110, _T("楷体"));				//设置显示字体和大小
-				pData->pSta1->SetTextColor(RGB(0,0,0));			    //字体颜色
+				//pData->pSta1->SetTextColor(RGB(0,0,0));			    //字体颜色
 				pData->pSta1->ShowWindow( SW_SHOW );
 				//pData->pSta0->SetBackColor(RGB(0,0,0));	
 				pData->pSta1->ModifyStyle(0,SS_CENTERIMAGE|SS_CENTER);
 				pData->pSta1->SetWindowPos(NULL , 305 + 10 + 25 , pData->nItem*35+10 , 80 , 29 , SWP_SHOWWINDOW );	
 
 				pData->pSta2->SetFont(110, _T("宋体"));				//设置显示字体和大小
-				pData->pSta2->SetTextColor(RGB(0,0,0));			    //字体颜色
+				//pData->pSta2->SetTextColor(RGB(0,0,0));			    //字体颜色
 				pData->pSta2->ShowWindow( SW_SHOW );
 				//pData->pSta0->SetBackColor(RGB(0,0,0));	
 				pData->pSta2->ModifyStyle(0,SS_CENTERIMAGE|SS_CENTER);
 				pData->pSta2->SetWindowPos(NULL , 305 + 10 + 50 +80  , pData->nItem*35 +10 , 80 , 29 , SWP_SHOWWINDOW );
 
 				pData->pSta3->SetFont(110, _T("宋体"));				//设置显示字体和大小
-				pData->pSta3->SetTextColor(RGB(0,0,0));			    //字体颜色
+				//pData->pSta3->SetTextColor(RGB(0,0,0));			    //字体颜色
 				pData->pSta3->ShowWindow( SW_SHOW );
 				//pData->pSta0->SetBackColor(RGB(0,0,0));	
 				pData->pSta3->ModifyStyle(0,SS_CENTERIMAGE|SS_CENTER);
 				pData->pSta3->SetWindowPos(NULL , 305 + 10 + 75 +160 , pData->nItem*35 +10 , 80 , 29 , SWP_SHOWWINDOW );
 
 				pData->pSta4->SetFont(110, _T("宋体"));				//设置显示字体和大小
-				pData->pSta4->SetTextColor(RGB(0,0,0));			    //字体颜色
+				//pData->pSta4->SetTextColor(RGB(0,0,0));			    //字体颜色
 				pData->pSta4->ShowWindow( SW_SHOW );
 				//pData->pSta0->SetBackColor(RGB(0,0,0));	
 				pData->pSta4->ModifyStyle(0,SS_CENTERIMAGE|SS_CENTER);
@@ -208,19 +209,19 @@ void CRecordListBox::SetIndexBackCol(int iIndex ,  int nline ,COLORREF   col)
 		switch (nline)
 		{
 		case 0:
-			pData->pSta0->SetBackColor(col);
+			pData->pSta0->SetTextColor(col);
 			break;
 		case 1:
-			pData->pSta1->SetBackColor(col);
+			pData->pSta1->SetTextColor(col);
 			break;
 		case 2:
-			pData->pSta2->SetBackColor(col);
+			pData->pSta2->SetTextColor(col);
 			break;
 		case 3:
-			pData->pSta3->SetBackColor(col);
+			pData->pSta3->SetTextColor(col);
 			break;
 		case 4:
-			pData->pSta4->SetBackColor(col);
+			pData->pSta4->SetTextColor(col);
 			break;
 		}
 	}
@@ -250,4 +251,12 @@ void CRecordListBox::SetIndexString(int iIndex , CString strBut1 ,CString strSta
 		pData->pSta4->SetWindowText(strSta4);
 		pData->pSta4->ShowWindow(SW_SHOW);
 	}
+}
+
+BOOL CRecordListBox::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	return TRUE ;
+	return CListBox::OnMouseWheel(nFlags, zDelta, pt);
+
 }
