@@ -35,6 +35,7 @@ void CBetRecord::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CBetRecord, CDialogEx)
 	ON_WM_ERASEBKGND()
 	ON_WM_CREATE()
+	ON_WM_SIZE()
 END_MESSAGE_MAP()
 
 
@@ -95,8 +96,34 @@ BOOL CBetRecord::Create(LPCTSTR lpszTemplateName, CWnd* pParentWnd)
 	if ( bRes ){
 		UpdateData(0);
 		m_ListBox.InsertStr(0,this->GetSafeHwnd());
-		m_ListBox.SetIndexInage(0 , IDB_BITMAP_REG_LONG);
-		m_ListBox.SetIndexString(0 , _T("aaaaaa"), _T("接"), _T("vbvvvvv"), _T("ddddddd") , _T("2015-01-01 01:02:03"));
+		m_ListBox.SetIndexBackCol(0 , 0 , RGB(181,185,212));
+		m_ListBox.SetIndexBackCol(0 , 1 , RGB(181,185,212));
+		m_ListBox.SetIndexBackCol(0 , 2 , RGB(181,185,212));
+		m_ListBox.SetIndexBackCol(0 , 3 , RGB(181,185,212));
+		m_ListBox.SetIndexBackCol(0 , 4 , RGB(181,185,212));
+		m_ListBox.SetIndexString(0 , _T("durCyWC8MTdQdpCo9QXZ5wxSyL9jtyDFri"), _T("+100"), _T("vbvvvvv"), _T("ddddddd") , _T("2015-01-01 01:02:03"));
+
+		m_ListBox.InsertStr(1,this->GetSafeHwnd());
+		m_ListBox.SetIndexBackCol(1 , 0,RGB(255,76,0));
+		m_ListBox.SetIndexBackCol(1 , 1 , RGB(255,76,0));
+		m_ListBox.SetIndexBackCol(1 , 2 , RGB(255,76,0));
+		m_ListBox.SetIndexBackCol(1 , 3 , RGB(255,76,0));
+		m_ListBox.SetIndexBackCol(1 , 4 , RGB(255,76,0));
+		m_ListBox.SetIndexString(1 , _T("durCyWC8MTdQdpCo9QXZ5wxSyL9jtyDFri"), _T("+100"), _T("vbvvvvv"), _T("ddddddd") , _T("2015-01-01 01:02:03"));
 	}
 	return bRes;
+}
+
+
+void CBetRecord::OnSize(UINT nType, int cx, int cy)
+{
+	CDialogEx::OnSize(nType, cx, cy);
+
+	// TODO: 在此处添加消息处理程序代码
+	if( NULL != GetSafeHwnd() ) {
+		CWnd *pst = GetDlgItem( IDC_LIST_BOX ) ;
+		if ( NULL != pst ) {
+			pst->SetWindowPos( NULL ,0 , 33 , 875, 185  ,SWP_SHOWWINDOW ) ; 
+		}
+	}
 }
