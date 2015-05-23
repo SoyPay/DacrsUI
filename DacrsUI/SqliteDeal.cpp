@@ -510,7 +510,7 @@ int CSqliteDeal::GetP2PQuizPoolItem(const CString &strCondition, uistruct::LISTP
 {
 	sqlite3 ** pDBConn = GetDBConnect();
 	CString strSQL(_T(""));
-	strSQL = _T("SELECT * FROM t_p2p_quiz WHERE ") + strCondition;
+	strSQL = _T("SELECT * FROM t_quiz_pool WHERE ") + strCondition;
 	ExcuteSQL(pDBConn, &CallGetP2PQuizPoolItem, strSQL, (void *)pPoolItem);
 	return 0;
 }
