@@ -328,6 +328,12 @@ void  CP2PDlg::QueryNotDrawBalance()
 void CP2PDlg::OnBnClickedButtonWithd()
 {
 	// TODO: 在此添加控件通知处理程序代码
+
+	if (!CheckBalance())
+	{
+		return;
+	}
+
 	if (!CheckRegIDValid( theApp.m_betScritptid )) return ;
 
 	CString strShowData ;
@@ -454,14 +460,27 @@ void CP2PDlg::SendBet(int rewardnum)
 {
 	// TODO: 在此添加控件通知处理程序代码  PacketP2PSendContract
 
-
+	if (!CheckBalance())
+	{
+		return;
+	}
 	if (!CheckRegIDValid( theApp.m_betScritptid )) return ;
+
+	CString strMoney;
+	((CStatic*)GetDlgItem(IDC_STATIC_BALANCE))->GetWindowText(strMoney);
+	double balance =atof(strMoney);
 
 	CString strTxMoney;
 	GetDlgItem(IDC_EDIT_MONEY)->GetWindowText(strTxMoney) ;
 	if (strTxMoney == _T(""))
 	{
 		::MessageBox( this->GetSafeHwnd() ,_T("金额不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		return ;
+	}
+
+	if (atof(strTxMoney) > balance)
+	{
+		::MessageBox( this->GetSafeHwnd() ,_T("赌注金额大于账户余额") , _T("提示") , MB_ICONINFORMATION ) ;
 		return ;
 	}
 
@@ -667,7 +686,7 @@ void CP2PDlg::OnListPool()
 }
  LRESULT CP2PDlg::onBnCLick( WPARAM wParam, LPARAM lParam )
  {
-	 ::MessageBox( this->GetSafeHwnd() ,_T("4566") , _T("提示") , MB_ICONINFORMATION ) ;
+	// ::MessageBox( this->GetSafeHwnd() ,_T("4566") , _T("提示") , MB_ICONINFORMATION ) ;
 	 int row = (int)wParam;
 	// CString hash = m_BonusListBox.GetItemText(row,4);
 	List_AppendData* pinf = m_BonusListBox.GetAppendDataInfo(row);
@@ -680,6 +699,10 @@ void CP2PDlg::OnListPool()
 }
 void CP2PDlg::AcceptBet(CString hash,CString money)
  {
+	 if (!CheckBalance())
+	 {
+		 return;
+	 }
 	 if (!CheckRegIDValid( theApp.m_betScritptid )) return ;
 
 	 CString addr;
@@ -752,9 +775,9 @@ void CP2PDlg::AcceptBet(CString hash,CString money)
 		 //// 查找数据库中是否存在此记录
 		 CString conditon;
 		 conditon.Format(_T("tx_hash ='%s'") , hash );
-		 uistruct::LISTP2POOL_T pPoolItem;
-		 int nItem =  theApp.m_SqliteDeal.GetP2PQuizPoolItem(conditon ,&pPoolItem ) ;
-		 if (nItem == 0) ///此记录不存在,插入记录
+		 uistruct::P2P_QUIZ_RECORD_t pPoolItem;
+		 int nItem =  theApp.m_SqliteDeal.GetP2PQuizRecordItem(conditon ,&pPoolItem ) ;
+		 if (strlen(pPoolItem.tx_hash) == 0) ///此记录不存在,插入记录
 		 {
 			 uistruct::P2P_QUIZ_RECORD_t p2pbetrecord ;
 			 memset(&p2pbetrecord , 0 , sizeof(uistruct::P2P_QUIZ_RECORD_t));
@@ -817,4 +840,16 @@ void CP2PDlg::AcceptBet(CString hash,CString money)
 		 }
 	 }
 	 ::MessageBox( this->GetSafeHwnd() ,strTip , _T("提示") , MB_ICONINFORMATION ) ;
+ }
+ bool CP2PDlg::CheckBalance()
+ {
+	 CString strMoney;
+	 ((CStatic*)GetDlgItem(IDC_STATIC_BALANCE))->GetWindowText(strMoney);
+	 double money =atof(strMoney);
+	if (money == 0.0)
+	{
+		::MessageBox( this->GetSafeHwnd() ,_T("账户金额为零,请先充值") , _T("提示") , MB_ICONINFORMATION ) ;
+		return false;
+	}
+	return true;
  }

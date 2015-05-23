@@ -134,9 +134,9 @@ void CRpcCmd::RPCCommandToJson(const CString& strRPCCommand,CStringA& strSendDat
 			//if (param.GetLength()<10&&IsAllDigtal(param))
 			if (IsAllDigtal(param))
 			{
-				INT64 param;
-				sscanf(rpcCommand,"%lld",&param);
-				root["params"].append(param);
+				INT64 nparam;
+				sscanf(param,"%lld",&nparam);
+				root["params"].append(nparam);
 			}
 			else
 			{
