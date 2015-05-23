@@ -153,14 +153,34 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_rBtnRech.SizeToContent();
 
 		HINSTANCE hInstance = AfxGetInstanceHandle();
-		m_BonusListBox.CreateTitle();
+		//m_BonusListBox.CreateTitle();
 		m_BonusListBox.InsertStr(0,this->GetSafeHwnd());
 		m_BonusListBox.SetIndexInage(0 , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2P_LISTBOX_BUT);
 		m_BonusListBox.SetIndexString(0 , _T("51801-68"), _T("接"), _T("1001SMC"), _T("接D"));//
 
 		m_BonusListBox.InsertStr(1,this->GetSafeHwnd());
 		m_BonusListBox.SetIndexInage(1 , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2P_LISTBOX_BUT);
-		m_BonusListBox.SetIndexString(1 , _T("51802-68"), _T("接1"), _T("1002SMC"), _T("接1"));//
+		m_BonusListBox.SetIndexString(1 , _T("51802-69"), _T("接1"), _T("1002SMC"), _T("接1"));//
+
+		m_BonusListBox.InsertStr(2,this->GetSafeHwnd());
+		m_BonusListBox.SetIndexInage(2 , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2P_LISTBOX_BUT);
+		m_BonusListBox.SetIndexString(2 , _T("51802-70"), _T("接2"), _T("1002SMC"), _T("接2"));//
+
+		m_BonusListBox.InsertStr(3,this->GetSafeHwnd());
+		m_BonusListBox.SetIndexInage(3 , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2P_LISTBOX_BUT);
+		m_BonusListBox.SetIndexString(3 , _T("51802-71"), _T("接3"), _T("1002SMC"), _T("接3"));//
+
+		m_BonusListBox.InsertStr(4,this->GetSafeHwnd());
+		m_BonusListBox.SetIndexInage(4 , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2P_LISTBOX_BUT);
+		m_BonusListBox.SetIndexString(4 , _T("51802-72"), _T("接4"), _T("1002SMC"), _T("接4"));//
+
+		m_BonusListBox.InsertStr(5,this->GetSafeHwnd());
+		m_BonusListBox.SetIndexInage(5 , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2P_LISTBOX_BUT);
+		m_BonusListBox.SetIndexString(5 , _T("51802-73"), _T("接5"), _T("1002SMC"), _T("接5"));//
+
+		m_BonusListBox.InsertStr(6,this->GetSafeHwnd());
+		m_BonusListBox.SetIndexInage(6 , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2P_LISTBOX_BUT);
+		m_BonusListBox.SetIndexString(6 , _T("51802-74"), _T("接6"), _T("1002SMC"), _T("接6"));//
 
 		AddListaddrDataBox();
 		QueryNotDrawBalance();
@@ -179,7 +199,7 @@ void CP2PDlg::OnSize(UINT nType, int cx, int cy)
 	if( NULL != GetSafeHwnd() ) {
 		CWnd *pst = GetDlgItem( IDC_LIST_BONUS ) ;
 		if ( NULL != pst ) {
-			pst->SetWindowPos( NULL ,455 , 55 , 432, 203  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,455 , 85 , 432, 167  ,SWP_SHOWWINDOW ) ; 
 		}
 	}
 }
