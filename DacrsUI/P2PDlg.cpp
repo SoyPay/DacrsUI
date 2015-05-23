@@ -203,10 +203,6 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_pDialog.push_back(&m_SendRecord) ;
 		OnSelectShowWin(0);
 
-		m_BonusListBox.InsertStr(0,this->GetSafeHwnd());
-		m_BonusListBox.SetIndexInage(0 , IDB_BITMAP_P2P_LISTBOX_BUT);
-		m_BonusListBox.SetIndexString(0 , _T("durCyWC8MTdQdpCo9QXZ5wxSyL9jtyDFri"), _T("½Ó"), _T("22222"), _T("22222"));
-
 		AddListaddrDataBox();
 		QueryNotDrawBalance();
 		OnListPool();

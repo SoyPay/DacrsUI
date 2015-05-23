@@ -24,7 +24,9 @@ public:
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
+	afx_msg LRESULT onBnCLick( WPARAM wParam, LPARAM lParam );
 public:
 	CSendListBox    m_listBox ;
 	virtual BOOL Create(LPCTSTR lpszTemplateName, CWnd* pParentWnd = NULL);
+	void Showlistbox(CString address);
 };

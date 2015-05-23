@@ -102,14 +102,54 @@ BOOL CBetRecord::Create(LPCTSTR lpszTemplateName, CWnd* pParentWnd)
 		m_ListBox.SetIndexBackCol(0 , 3 , RGB(181,185,212));
 		m_ListBox.SetIndexBackCol(0 , 4 , RGB(181,185,212));
 		m_ListBox.SetIndexString(0 , _T("durCyWC8MTdQdpCo9QXZ5wxSyL9jtyDFri"), _T("+100"), _T("vbvvvvv"), _T("ddddddd") , _T("2015-01-01 01:02:03"));
-
+		
 		m_ListBox.InsertStr(1,this->GetSafeHwnd());
-		m_ListBox.SetIndexBackCol(1 , 0,RGB(255,76,0));
+		m_ListBox.SetIndexBackCol(1 , 0,  RGB(255,76,0));
 		m_ListBox.SetIndexBackCol(1 , 1 , RGB(255,76,0));
 		m_ListBox.SetIndexBackCol(1 , 2 , RGB(255,76,0));
 		m_ListBox.SetIndexBackCol(1 , 3 , RGB(255,76,0));
 		m_ListBox.SetIndexBackCol(1 , 4 , RGB(255,76,0));
 		m_ListBox.SetIndexString(1 , _T("durCyWC8MTdQdpCo9QXZ5wxSyL9jtyDFri"), _T("+100"), _T("vbvvvvv"), _T("ddddddd") , _T("2015-01-01 01:02:03"));
+	    
+		m_ListBox.InsertStr(2,this->GetSafeHwnd());
+		m_ListBox.SetIndexBackCol(2 , 0,  RGB(255,76,0));
+		m_ListBox.SetIndexBackCol(2 , 1 , RGB(255,76,0));
+		m_ListBox.SetIndexBackCol(2 , 2 , RGB(255,76,0));
+		m_ListBox.SetIndexBackCol(2 , 3 , RGB(255,76,0));
+		m_ListBox.SetIndexBackCol(2 , 4 , RGB(255,76,0));
+		m_ListBox.SetIndexString(2 , _T("durCyWC8MTdQdpCo9QXZ5wxSyL9jtyDFri"), _T("+100"), _T("vbvvvvv"), _T("ddddddd") , _T("2015-01-01 01:02:03"));
+		
+		m_ListBox.InsertStr(3,this->GetSafeHwnd());
+		m_ListBox.SetIndexBackCol(3 , 0,  RGB(255,76,0));
+		m_ListBox.SetIndexBackCol(3 , 1 , RGB(255,76,0));
+		m_ListBox.SetIndexBackCol(3 , 2 , RGB(255,76,0));
+		m_ListBox.SetIndexBackCol(3 , 3 , RGB(255,76,0));
+		m_ListBox.SetIndexBackCol(3 , 4 , RGB(255,76,0));
+		m_ListBox.SetIndexString(3 , _T("durCyWC8MTdQdpCo9QXZ5wxSyL9jtyDFri"), _T("+100"), _T("vbvvvvv"), _T("ddddddd") , _T("2015-01-01 01:02:03"));
+
+		m_ListBox.InsertStr(4,this->GetSafeHwnd());
+		m_ListBox.SetIndexBackCol(4 , 0,  RGB(255,76,0));
+		m_ListBox.SetIndexBackCol(4 , 1 , RGB(255,76,0));
+		m_ListBox.SetIndexBackCol(4 , 2 , RGB(255,76,0));
+		m_ListBox.SetIndexBackCol(4 , 3 , RGB(255,76,0));
+		m_ListBox.SetIndexBackCol(4 , 4 , RGB(255,76,0));
+		m_ListBox.SetIndexString(4 , _T("durCyWC8MTdQdpCo9QXZ5wxSyL9jtyDFri"), _T("+100"), _T("vbvvvvv"), _T("ddddddd") , _T("2015-01-01 01:02:03"));
+
+		m_ListBox.InsertStr(5,this->GetSafeHwnd());
+		m_ListBox.SetIndexBackCol(5 , 0,  RGB(255,76,0));
+		m_ListBox.SetIndexBackCol(5 , 1 , RGB(255,76,0));
+		m_ListBox.SetIndexBackCol(5 , 2 , RGB(255,76,0));
+		m_ListBox.SetIndexBackCol(5 , 3 , RGB(255,76,0));
+		m_ListBox.SetIndexBackCol(5 , 4 , RGB(255,76,0));
+		m_ListBox.SetIndexString(5 , _T("durCyWC8MTdQdpCo9QXZ5wxSyL9jtyDFri"), _T("+100"), _T("vbvvvvv"), _T("ddddddd") , _T("2015-01-01 01:02:03"));
+
+		m_ListBox.InsertStr(6,this->GetSafeHwnd());
+		m_ListBox.SetIndexBackCol(6 , 0,  RGB(255,76,0));
+		m_ListBox.SetIndexBackCol(6 , 1 , RGB(255,76,0));
+		m_ListBox.SetIndexBackCol(6 , 2 , RGB(255,76,0));
+		m_ListBox.SetIndexBackCol(6 , 3 , RGB(255,76,0));
+		m_ListBox.SetIndexBackCol(6 , 4 , RGB(255,76,0));
+		m_ListBox.SetIndexString(6 , _T("durCyWC8MTdQdpCo9QXZ5wxSyL9jtyDFri"), _T("+100"), _T("vbvvvvv"), _T("ddddddd") , _T("2015-01-01 01:02:03"));
 	}
 	return bRes;
 }
