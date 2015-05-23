@@ -48,6 +48,10 @@ public:
 	afx_msg void OnDestroy();
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+public:
+	List_ReAppendData *GetAppendDataInfo(int iIndex);
+	void    SetIndexInage(int iIndex ,  UINT nButImage1);
+	void    SetIndexString(int iIndex , CString strBut1 ,CString strSta1 ,CString strSta2 ,CString strSta3 ,CString strSta4  );
 };
 
 

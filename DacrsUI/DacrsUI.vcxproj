@@ -107,6 +107,7 @@
     <None Include="json\json_internalmap.inl" />
     <None Include="json\json_valueiterator.inl" />
     <None Include="ReadMe.txt" />
+    <None Include="res\360_tabctrlex.bmp" />
     <None Include="res\activate_addr_1.bmp" />
     <None Include="res\activate_addr_2.bmp" />
     <None Include="res\activate_addr_3.bmp" />
@@ -119,6 +120,7 @@
     <None Include="res\add_app_4.bmp" />
     <None Include="res\alltrade1.bmp" />
     <None Include="res\bak_wallet.bmp" />
+    <None Include="res\bet_record.bmp" />
     <None Include="res\bitmap1.bmp" />
     <None Include="res\bitmap11.bmp" />
     <None Include="res\bitmap4.bmp" />
@@ -150,6 +152,7 @@
     <None Include="res\dlg_balck_ground.bmp" />
     <None Include="res\dlg_bj.bmp" />
     <None Include="res\exit_bj.bmp" />
+    <None Include="res\green_long_button.bmp" />
     <None Include="res\import_wallet.bmp" />
     <None Include="res\IPO.bmp" />
     <None Include="res\ipo_1.bmp" />
@@ -187,6 +190,7 @@
     <None Include="res\progress3.bmp" />
     <None Include="res\progress4.bmp" />
     <None Include="res\Receive.bmp" />
+    <None Include="res\red_long_button.bmp" />
     <None Include="res\rev_logo_1.bmp" />
     <None Include="res\rev_logo_2.bmp" />
     <None Include="res\rev_logo_3.bmp" />
@@ -223,6 +227,7 @@
   <ItemGroup>
     <ClInclude Include="AddApp.h" />
     <ClInclude Include="AddrBook.h" />
+    <ClInclude Include="BetRecord.h" />
     <ClInclude Include="BmpBtn.h" />
     <ClInclude Include="BtnST.h" />
     <ClInclude Include="ButtonEx.h" />
@@ -235,6 +240,9 @@
     <ClInclude Include="Out.h" />
     <ClInclude Include="OutGifDlg.h" />
     <ClInclude Include="ReCharge.h" />
+    <ClInclude Include="RecordListBox.h" />
+    <ClInclude Include="SendRecord.h" />
+    <ClInclude Include="TabCtrl.h" />
     <ClInclude Include="TxDetailDlg.h" />
     <ClInclude Include="UseListBox.h" />
     <ClInclude Include="XProgressCtrl.h" />
@@ -290,6 +298,7 @@
   <ItemGroup>
     <ClCompile Include="AddApp.cpp" />
     <ClCompile Include="AddrBook.cpp" />
+    <ClCompile Include="BetRecord.cpp" />
     <ClCompile Include="BmpBtn.cpp" />
     <ClCompile Include="BtnST.cpp" />
     <ClCompile Include="ButtonEx.cpp" />
@@ -325,9 +334,11 @@
     <ClCompile Include="ProgStatusBar.cpp" />
     <ClCompile Include="ReceiveDlg.cpp" />
     <ClCompile Include="ReCharge.cpp" />
+    <ClCompile Include="RecordListBox.cpp" />
     <ClCompile Include="RoundButton.cpp" />
     <ClCompile Include="RpcCmd.cpp" />
     <ClCompile Include="SendDlg.cpp" />
+    <ClCompile Include="SendRecord.cpp" />
     <ClCompile Include="ShadeButtonST.cpp" />
     <ClCompile Include="SignAccountsDlg.cpp" />
     <ClCompile Include="SplashThread.cpp" />
@@ -339,6 +350,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="SynchronousSocket.cpp" />
+    <ClCompile Include="TabCtrl.cpp" />
     <ClCompile Include="TradDlg.cpp" />
     <ClCompile Include="TxDetailDlg.cpp" />
     <ClCompile Include="UiHead.cpp" />

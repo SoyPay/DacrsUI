@@ -42,6 +42,9 @@ void CP2PDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BUTTON_WOMAN , m_rBtnWoman); 
 	DDX_Control(pDX, IDC_COMBO_ADDRES, m_addrbook);
 	DDX_Control(pDX, IDC_LIST_BONUS, m_BonusListBox);
+	DDX_Control(pDX, IDC_BUTTON_REFRESH_1, m_rBtnRefresh1);
+	DDX_Control(pDX, IDC_BUTTON_REFRESH_2, m_rBtnRefresh2);
+	DDX_Control(pDX, IDC_TAB, m_tab);
 }
 
 
@@ -56,6 +59,7 @@ BEGIN_MESSAGE_MAP(CP2PDlg, CDialogBar)
 	ON_BN_CLICKED(IDC_BUTTON_RECH, &CP2PDlg::OnBnClickedButtonRech)
 	ON_BN_CLICKED(IDC_BUTTON_MALE, &CP2PDlg::OnBnClickedButtonMale)
 	ON_BN_CLICKED(IDC_BUTTON_WOMAN, &CP2PDlg::OnBnClickedButtonWoman)
+	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB, &CP2PDlg::OnTcnSelchangeTab)
 END_MESSAGE_MAP()
 
 
@@ -115,7 +119,7 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 	BOOL bRes = CDialogBar::Create(pParentWnd, nIDTemplate, nStyle, nID);
 	if ( bRes ) {
 		m_rBtnMale.LoadBitmaps(IDB_BITMAP_SISTER_1,IDB_BITMAP_SISTER_3,IDB_BITMAP_SISTER_2,IDB_BITMAP_SISTER_1);
-		m_rBtnWoman.LoadBitmaps(IDB_BITMAP_BOTHER_1,IDB_BITMAP_BOTHER_3,IDB_BITMAP_BOTHER_2,IDB_BITMAP_BOTHER_1);
+		m_rBtnWoman.LoadBitmaps(IDB_BITMAP_BOTHER_1,IDB_BITMAP_BOTHER_3,IDB_BITMAP_BOTHER_2,IDB_BITMAP_BOTHER_1);;
 		UpdateData(0);
 		m_Balance.SetFont(120, _T("黑体"));				//设置显示字体和大小
 		m_Balance.SetTextColor(RGB(0,0,0));			    //字体颜色	
@@ -153,35 +157,56 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_rBtnRech.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(255, 255, 255));
 		m_rBtnRech.SizeToContent();
 
-		HINSTANCE hInstance = AfxGetInstanceHandle();
-		//m_BonusListBox.CreateTitle();
-		//m_BonusListBox.InsertStr(0,this->GetSafeHwnd());
-		//m_BonusListBox.SetIndexInage(0 , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2P_LISTBOX_BUT);
-		//m_BonusListBox.SetIndexString(0 , _T("51801-68"), _T("接"), _T("1001SMC"), _T("接D"));//
+		m_rBtnRefresh1.SetBitmaps( IDB_BITMAP_P2PBUTTON_2 , RGB(255, 255, 0) , IDB_BITMAP_P2PBUTTON_2 , RGB(255, 255, 255) );
+		m_rBtnRefresh1.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+		m_rBtnRefresh1.SetWindowText("刷新") ;
+		m_rBtnRefresh1.SetFontEx(20 , _T("微软雅黑"));
+		m_rBtnRefresh1.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(255, 255, 255));
+		m_rBtnRefresh1.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+		m_rBtnRefresh1.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(255, 255, 255));
+		m_rBtnRefresh1.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(255, 255, 255));
 
-		//m_BonusListBox.InsertStr(1,this->GetSafeHwnd());
-		//m_BonusListBox.SetIndexInage(1 , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2P_LISTBOX_BUT);
-		//m_BonusListBox.SetIndexString(1 , _T("51802-69"), _T("接1"), _T("1002SMC"), _T("接1"));//
+		m_rBtnRefresh2.SetBitmaps( IDB_BITMAP_P2PBUTTON_2 , RGB(255, 255, 0) , IDB_BITMAP_P2PBUTTON_2 , RGB(255, 255, 255) );
+		m_rBtnRefresh2.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+		m_rBtnRefresh2.SetWindowText("刷新") ;
+		m_rBtnRefresh2.SetFontEx(20 , _T("微软雅黑"));
+		m_rBtnRefresh2.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(255, 255, 255));
+		m_rBtnRefresh2.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+		m_rBtnRefresh2.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(255, 255, 255));
+		m_rBtnRefresh2.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(255, 255, 255));
 
-		//m_BonusListBox.InsertStr(2,this->GetSafeHwnd());
-		//m_BonusListBox.SetIndexInage(2 , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2P_LISTBOX_BUT);
-		//m_BonusListBox.SetIndexString(2 , _T("51802-70"), _T("接2"), _T("1002SMC"), _T("接2"));//
+		m_rBtnRefresh1.SizeToContent();
 
-		//m_BonusListBox.InsertStr(3,this->GetSafeHwnd());
-		//m_BonusListBox.SetIndexInage(3 , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2P_LISTBOX_BUT);
-		//m_BonusListBox.SetIndexString(3 , _T("51802-71"), _T("接3"), _T("1002SMC"), _T("接3"));//
+		m_tab.InsertItem(0,_T("投注记录"));  //添加参数一选项卡 
+		m_tab.InsertItem(1,_T("发起记录"));  //添加参数二选项卡 
 
-		//m_BonusListBox.InsertStr(4,this->GetSafeHwnd());
-		//m_BonusListBox.SetIndexInage(4 , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2P_LISTBOX_BUT);
-		//m_BonusListBox.SetIndexString(4 , _T("51802-72"), _T("接4"), _T("1002SMC"), _T("接4"));//
+		CSize sz(80,30);
+		m_tab.SetItemSize(sz);
+		m_tab.SetMinTabWidth(80);
+		m_tab.SetItemPadding(6);
 
-		//m_BonusListBox.InsertStr(5,this->GetSafeHwnd());
-		//m_BonusListBox.SetIndexInage(5 , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2P_LISTBOX_BUT);
-		//m_BonusListBox.SetIndexString(5 , _T("51802-73"), _T("接5"), _T("1002SMC"), _T("接5"));//
+		if ( !m_BetRecord.Create( (LPCTSTR)CBetRecord::IDD , &m_tab ))
+			return -1;
 
-		//m_BonusListBox.InsertStr(6,this->GetSafeHwnd());
-		//m_BonusListBox.SetIndexInage(6 , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2P_LISTBOX_BUT);
-		//m_BonusListBox.SetIndexString(6 , _T("51802-74"), _T("接6"), _T("1002SMC"), _T("接6"));//
+		if ( !m_SendRecord.Create( CSendRecord::IDD , &m_tab ))
+			return -1;
+
+		CRect rc;
+		m_tab.GetClientRect(rc);
+		rc.bottom -= 1;
+		rc.left += 1;
+		rc.top += 33;
+		rc.right -= 2;
+		m_BetRecord.MoveWindow(&rc);
+		m_SendRecord.MoveWindow(&rc);
+		m_pDialog.push_back(&m_BetRecord) ;
+		m_pDialog.push_back(&m_SendRecord) ;
+		OnSelectShowWin(0);
+
+
+		/*m_BonusListBox.InsertStr(0,this->GetSafeHwnd());
+		m_BonusListBox.SetIndexInage(0 , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2P_LISTBOX_BUT);
+		m_BonusListBox.SetIndexString(0 , _T("aaaaaa"), _T("接"), _T("vbvvvvv"), _T("ddddddd"));*/
 
 		AddListaddrDataBox();
 		QueryNotDrawBalance();
@@ -190,7 +215,20 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 	}
 	return bRes ;
 }
-
+void CP2PDlg::OnSelectShowWin(int nCurSelTab)
+{
+	int nCurSelTabTmp = 0 ;
+	std::vector<CDialog*>::iterator itDialog = m_pDialog.begin();
+	for (;itDialog != m_pDialog.end();itDialog++)
+	{  
+		if(nCurSelTabTmp == nCurSelTab ){
+			(*itDialog)->ShowWindow(SW_SHOW);
+		}else{
+			(*itDialog)->ShowWindow(SW_HIDE);
+		}
+		nCurSelTabTmp++ ;
+	}
+}
 
 void CP2PDlg::OnSize(UINT nType, int cx, int cy)
 {
@@ -201,6 +239,18 @@ void CP2PDlg::OnSize(UINT nType, int cx, int cy)
 		CWnd *pst = GetDlgItem( IDC_LIST_BONUS ) ;
 		if ( NULL != pst ) {
 			pst->SetWindowPos( NULL ,455 , 85 , 432, 167  ,SWP_SHOWWINDOW ) ; 
+		}
+		pst = GetDlgItem( IDC_BUTTON_REFRESH_1 ) ;
+		if ( NULL != pst ) {
+			pst->SetWindowPos( NULL ,800 , 20 ,  0 , 0 , SWP_NOSIZE ) ; 
+		}
+		pst = GetDlgItem( IDC_TAB ) ;
+		if ( NULL != pst ) {
+			pst->SetWindowPos( NULL ,10 , 268 ,  878 , 218 , SWP_SHOWWINDOW ) ; 
+		}
+		pst = GetDlgItem( IDC_BUTTON_REFRESH_2 ) ;
+		if ( NULL != pst ) {
+			pst->SetWindowPos( NULL ,800 , 270 ,  0 , 0 , SWP_NOSIZE ) ; 
 		}
 	}
 }
@@ -667,14 +717,13 @@ void CP2PDlg::OnListPool()
 }
  LRESULT CP2PDlg::onBnCLick( WPARAM wParam, LPARAM lParam )
  {
-	 ::MessageBox( this->GetSafeHwnd() ,_T("4566") , _T("提示") , MB_ICONINFORMATION ) ;
-	 int row = (int)wParam;
-	// CString hash = m_BonusListBox.GetItemText(row,4);
-	List_AppendData* pinf = m_BonusListBox.GetAppendDataInfo(row);
-	CString hash = pinf->pstr;
-	CString money;
-	pinf->pSta1->GetWindowText(money);
-	AcceptBet(hash,money);
+	List_AppendData* pinf = m_BonusListBox.GetAppendDataInfo((int)wParam);
+	if ( NULL != pinf ) { 
+		CString hash = pinf->pstr;
+		CString money;
+		pinf->pSta1->GetWindowText(money);
+		AcceptBet(hash,money);
+	}
 	return 0;
 
 }
@@ -817,4 +866,11 @@ void CP2PDlg::AcceptBet(CString hash,CString money)
 		 }
 	 }
 	 ::MessageBox( this->GetSafeHwnd() ,strTip , _T("提示") , MB_ICONINFORMATION ) ;
+ }
+
+ void CP2PDlg::OnTcnSelchangeTab(NMHDR *pNMHDR, LRESULT *pResult)
+ {
+	 // TODO: 在此添加控件通知处理程序代码
+	 OnSelectShowWin(m_tab.GetCurSel());
+	 *pResult = 0;
  }
