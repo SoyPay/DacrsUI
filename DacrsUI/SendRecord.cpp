@@ -28,12 +28,14 @@ CSendRecord::~CSendRecord()
 void CSendRecord::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_LIST_BOX, m_listBox);
 }
 
 
 BEGIN_MESSAGE_MAP(CSendRecord, CDialogEx)
 	ON_WM_ERASEBKGND()
 	ON_WM_CREATE()
+	ON_WM_SIZE()
 END_MESSAGE_MAP()
 
 
@@ -81,6 +83,36 @@ int CSendRecord::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 
 	// TODO:  在此添加您专用的创建代码
-
+	SetBkBmpNid(IDB_BITMAP_SEND_BET) ;
 	return 0;
+}
+
+
+void CSendRecord::OnSize(UINT nType, int cx, int cy)
+{
+	CDialogEx::OnSize(nType, cx, cy);
+
+	// TODO: 在此处添加消息处理程序代码
+	if( NULL != GetSafeHwnd() ) {
+		CWnd *pst = GetDlgItem( IDC_LIST_BOX ) ;
+		if ( NULL != pst ) {
+			pst->SetWindowPos( NULL ,0 , 33 , 875, 185  ,SWP_SHOWWINDOW ) ; 
+		}
+	}
+}
+
+
+BOOL CSendRecord::Create(LPCTSTR lpszTemplateName, CWnd* pParentWnd)
+{
+	// TODO: 在此添加专用代码和/或调用基类
+
+	BOOL bRes = CDialogEx::Create(lpszTemplateName, pParentWnd);
+	if ( bRes ) { 
+		UpdateData(0);
+
+		m_listBox.InsertStr(0,this->GetSafeHwnd());
+		m_listBox.SetIndexInage(0 , IDB_BITMAP_P2P_LISTBOX_BUT);
+		m_listBox.SetIndexString(0 , _T("durCyWC8MTdQdpCo9QXZ5wxSyL9jtyDFri"), _T("2011-01-01 01:01:01"), _T("10000"), _T("接"));
+	}
+	return bRes ;
 }
