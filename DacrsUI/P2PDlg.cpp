@@ -639,41 +639,6 @@ void CP2PDlg::OnListPool()
 		m_BonusListBox.InsertStr(i,this->GetSafeHwnd());
 	//	m_BonusListBox.SetIndexInage(i , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2PBUT);
 		m_BonusListBox.SetIndexString(i , addr, _T("接"), money, _T("接"));
-
-
-		//nSubIdx = 0;
-		//CString strOrder("");
-		//strOrder.Format(_T("%d"), i+1);
-		//m_listCtrl.InsertItem(i,strOrder);
-
-		//uistruct::LISTADDR_t address = const_it->second;
-		//strShowData.Format(_T("%s") ,address.Label) ;
-		//m_listCtrl.SetItemText( i , ++nSubIdx, strShowData) ;
-		//m_listCtrl.SetItemData(item , (DWORD_PTR)&(*const_it)) ;
-
-
-		//strShowData.Format(_T("%s") ,address.address) ;
-		//m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
-
-		//if (address.bSign == 1)
-		//{
-		//	strShowData.Format(_T("已激活")) ;
-		//}else{
-		//	strShowData.Format(_T("未激活")) ;
-		//}
-
-		//m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
-		//strShowData.Format(_T("%.8f") , address.fMoney ) ;
-		//m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
-
-		//if (address.nColdDig== 1)
-		//{
-		//	strShowData.Format(_T("支持")) ;
-		//}else{
-		//	strShowData.Format(_T("不支持")) ;
-		//}
-		//m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
-
 		i++;
 	}
 }
