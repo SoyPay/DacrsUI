@@ -160,6 +160,18 @@
     <ClCompile Include="GuessNum.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="TabCtrl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="BetRecord.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SendRecord.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RecordListBox.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BmpBtn.h">
@@ -355,6 +367,18 @@
       <Filter>源文件</Filter>
     </ClInclude>
     <ClInclude Include="GuessNum.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="TabCtrl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BetRecord.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SendRecord.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RecordListBox.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -703,6 +727,18 @@
       <Filter>资源文件</Filter>
     </None>
     <None Include="res\p2p_list_box_but.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\360_tabctrlex.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\bet_record.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\green_long_button.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\red_long_button.bmp">
       <Filter>资源文件</Filter>
     </None>
   </ItemGroup>

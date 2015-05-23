@@ -2,7 +2,9 @@
 #include "RoundButton.h"
 #include "UseListBox.h"
 #include "CommonStruct.h"
-#include "RecordListBox.h"
+#include "TabCtrl.h"
+#include "BetRecord.h"
+#include "SendRecord.h"
 // CP2PDlg ¶Ô»°¿ò
 
 class CP2PDlg : public CDialogBar
@@ -35,11 +37,19 @@ public:
 	CShadeButtonST         m_rBtnRech;
 	CRoundButton           m_rBtnMale;
 	CRoundButton           m_rBtnWoman;
+	CShadeButtonST         m_rBtnRefresh1;
+	CShadeButtonST         m_rBtnRefresh2;
 
 	CUseListBox            m_BonusListBox;
 	//CRecordListBox         m_RecordListBox;
 	CComboBox			   m_addrbook;
 	CP2PBetHelp		                    m_P2PBetHelp;
+public:
+	CBetRecord            m_BetRecord     ;
+	CSendRecord           m_SendRecord    ;
+
+	std::vector<CDialog*> m_pDialog;
+	void      OnSelectShowWin(int nCurSelTab);
 public:
 	afx_msg LRESULT onBnCLick( WPARAM wParam, LPARAM lParam );
 	afx_msg LRESULT OnShowListCtrol(  WPARAM wParam, LPARAM lParam ) ;
@@ -58,4 +68,6 @@ public:
 	afx_msg void OnBnClickedButtonWoman();
 	void OnListPool();
 	void AcceptBet(CString hash,CString money);
+	CCTabCtrl m_tab;
+	afx_msg void OnTcnSelchangeTab(NMHDR *pNMHDR, LRESULT *pResult);
 };
