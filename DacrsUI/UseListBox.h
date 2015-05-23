@@ -53,7 +53,7 @@ public:
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 public:
 	List_AppendData *GetAppendDataInfo(int iIndex);
-	void    SetIndexInage(int iIndex ,  UINT nButImage1 , UINT nButImage2  );
+	void    SetIndexInage(int iIndex , UINT nButImage  );
 	void    SetIndexBackCol(int iIndex ,  int nline ,COLORREF   col);
 	void    SetIndexString(int iIndex , CString strSta0 ,CString strBut2 ,CString strSta1 ,CString strSta2 );
 	void    CreateTitle();
