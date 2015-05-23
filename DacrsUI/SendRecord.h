@@ -1,5 +1,5 @@
 #pragma once
-
+#include "SendListBox.h"
 
 // CSendRecord ¶Ô»°¿ò
 
@@ -23,4 +23,8 @@ public:
 	void		     SetBkBmpNid( UINT nBitmapIn ) ;
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+	afx_msg void OnSize(UINT nType, int cx, int cy);
+public:
+	CSendListBox    m_listBox ;
+	virtual BOOL Create(LPCTSTR lpszTemplateName, CWnd* pParentWnd = NULL);
 };
