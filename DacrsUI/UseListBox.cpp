@@ -226,6 +226,7 @@ void CUseListBox::SetIndexString(int iIndex , CString strBut1 ,CString strBut2 ,
 		pData->pSta1->ShowWindow(SW_HIDE);
 		pData->pSta1->SetWindowText(strSta1);
 		pData->pSta1->ShowWindow(SW_SHOW);
+		pData->pstr = strSta2;
 
 	}
 }

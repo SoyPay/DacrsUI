@@ -7,6 +7,7 @@
 #include "afxdialogex.h"
 #include "Out.h"
 #include "ReCharge.h"
+#include "GuessNum.h"
 
 #define OUT_HEIGHT  10
 
@@ -154,33 +155,33 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 
 		HINSTANCE hInstance = AfxGetInstanceHandle();
 		//m_BonusListBox.CreateTitle();
-		m_BonusListBox.InsertStr(0,this->GetSafeHwnd());
-		m_BonusListBox.SetIndexInage(0 , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2P_LISTBOX_BUT);
-		m_BonusListBox.SetIndexString(0 , _T("51801-68"), _T("接"), _T("1001SMC"), _T("接D"));//
+		//m_BonusListBox.InsertStr(0,this->GetSafeHwnd());
+		//m_BonusListBox.SetIndexInage(0 , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2P_LISTBOX_BUT);
+		//m_BonusListBox.SetIndexString(0 , _T("51801-68"), _T("接"), _T("1001SMC"), _T("接D"));//
 
-		m_BonusListBox.InsertStr(1,this->GetSafeHwnd());
-		m_BonusListBox.SetIndexInage(1 , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2P_LISTBOX_BUT);
-		m_BonusListBox.SetIndexString(1 , _T("51802-69"), _T("接1"), _T("1002SMC"), _T("接1"));//
+		//m_BonusListBox.InsertStr(1,this->GetSafeHwnd());
+		//m_BonusListBox.SetIndexInage(1 , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2P_LISTBOX_BUT);
+		//m_BonusListBox.SetIndexString(1 , _T("51802-69"), _T("接1"), _T("1002SMC"), _T("接1"));//
 
-		m_BonusListBox.InsertStr(2,this->GetSafeHwnd());
-		m_BonusListBox.SetIndexInage(2 , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2P_LISTBOX_BUT);
-		m_BonusListBox.SetIndexString(2 , _T("51802-70"), _T("接2"), _T("1002SMC"), _T("接2"));//
+		//m_BonusListBox.InsertStr(2,this->GetSafeHwnd());
+		//m_BonusListBox.SetIndexInage(2 , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2P_LISTBOX_BUT);
+		//m_BonusListBox.SetIndexString(2 , _T("51802-70"), _T("接2"), _T("1002SMC"), _T("接2"));//
 
-		m_BonusListBox.InsertStr(3,this->GetSafeHwnd());
-		m_BonusListBox.SetIndexInage(3 , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2P_LISTBOX_BUT);
-		m_BonusListBox.SetIndexString(3 , _T("51802-71"), _T("接3"), _T("1002SMC"), _T("接3"));//
+		//m_BonusListBox.InsertStr(3,this->GetSafeHwnd());
+		//m_BonusListBox.SetIndexInage(3 , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2P_LISTBOX_BUT);
+		//m_BonusListBox.SetIndexString(3 , _T("51802-71"), _T("接3"), _T("1002SMC"), _T("接3"));//
 
-		m_BonusListBox.InsertStr(4,this->GetSafeHwnd());
-		m_BonusListBox.SetIndexInage(4 , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2P_LISTBOX_BUT);
-		m_BonusListBox.SetIndexString(4 , _T("51802-72"), _T("接4"), _T("1002SMC"), _T("接4"));//
+		//m_BonusListBox.InsertStr(4,this->GetSafeHwnd());
+		//m_BonusListBox.SetIndexInage(4 , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2P_LISTBOX_BUT);
+		//m_BonusListBox.SetIndexString(4 , _T("51802-72"), _T("接4"), _T("1002SMC"), _T("接4"));//
 
-		m_BonusListBox.InsertStr(5,this->GetSafeHwnd());
-		m_BonusListBox.SetIndexInage(5 , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2P_LISTBOX_BUT);
-		m_BonusListBox.SetIndexString(5 , _T("51802-73"), _T("接5"), _T("1002SMC"), _T("接5"));//
+		//m_BonusListBox.InsertStr(5,this->GetSafeHwnd());
+		//m_BonusListBox.SetIndexInage(5 , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2P_LISTBOX_BUT);
+		//m_BonusListBox.SetIndexString(5 , _T("51802-73"), _T("接5"), _T("1002SMC"), _T("接5"));//
 
-		m_BonusListBox.InsertStr(6,this->GetSafeHwnd());
-		m_BonusListBox.SetIndexInage(6 , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2P_LISTBOX_BUT);
-		m_BonusListBox.SetIndexString(6 , _T("51802-74"), _T("接6"), _T("1002SMC"), _T("接6"));//
+		//m_BonusListBox.InsertStr(6,this->GetSafeHwnd());
+		//m_BonusListBox.SetIndexInage(6 , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2P_LISTBOX_BUT);
+		//m_BonusListBox.SetIndexString(6 , _T("51802-74"), _T("接6"), _T("1002SMC"), _T("接6"));//
 
 		AddListaddrDataBox();
 		QueryNotDrawBalance();
@@ -573,7 +574,7 @@ void CP2PDlg::SendBet(int rewardnum)
 
 		uistruct::DATABASEINFO_t   pDatabase;
 		pDatabase.strSource = strSourceData.GetString();
-		pDatabase.strTabName =  _T("p2p_bet_record");
+		pDatabase.strTabName =  _T("t_p2p_quiz");
 		CPostMsg postmsg(MSG_USER_INSERT_DATA,0);
 		string strTemp = pDatabase.ToJson();
 		CString strShow;
@@ -656,15 +657,164 @@ void CP2PDlg::OnListPool()
 
 		double dmoney = (DBbet.money*1.0)/COIN;
 		money.Format(_T("%.4f"),dmoney);
+		CString txhash ;
+		txhash.Format(_T("%s"),const_it->hash.c_str());
 		m_BonusListBox.InsertStr(i,this->GetSafeHwnd());
-	//	m_BonusListBox.SetIndexInage(i , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2PBUT);
-		m_BonusListBox.SetIndexString(i , addr, _T("接"), money, _T("接"));
+		m_BonusListBox.SetIndexInage(i , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2P_LISTBOX_BUT);
+		m_BonusListBox.SetIndexString(i , addr, _T("接"), money, txhash);
 		i++;
 	}
 }
  LRESULT CP2PDlg::onBnCLick( WPARAM wParam, LPARAM lParam )
  {
 	 ::MessageBox( this->GetSafeHwnd() ,_T("4566") , _T("提示") , MB_ICONINFORMATION ) ;
-	 return 0;
+	 int row = (int)wParam;
+	// CString hash = m_BonusListBox.GetItemText(row,4);
+	List_AppendData* pinf = m_BonusListBox.GetAppendDataInfo(row);
+	CString hash = pinf->pstr;
+	CString money;
+	pinf->pSta1->GetWindowText(money);
+	AcceptBet(hash,money);
+	return 0;
 
+}
+void CP2PDlg::AcceptBet(CString hash,CString money)
+ {
+	 if (!CheckRegIDValid( theApp.m_betScritptid )) return ;
+
+	 CString addr;
+	 int sel = m_addrbook.GetCurSel();
+	 m_addrbook.GetLBText(sel,addr);
+
+	 if (addr == _T(""))
+	 {
+		 ::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		 return;
+	 }
+	 //// 查询地址是否激活
+	 CString strCond;
+	 strCond.Format(_T(" address = '%s' "), addr);
+	 uistruct::LISTADDR_t addrsql;
+	 int item = theApp.m_SqliteDeal.GetWalletAddressItem(strCond, &addrsql) ;
+	 if (!addrsql.bSign)
+	 {
+		 ::MessageBox( this->GetSafeHwnd() ,_T("账户未激活不能发生合约交易") , _T("提示") , MB_ICONINFORMATION ) ;
+		 return;
+	 }
+
+	 CGuessNum guessdlg;
+	 if (IDOK != guessdlg.DoModal())
+	 {
+		 return;
+	 }
+	 char guess = atoi(theApp.m_strAddress);
+
+	 string strContractData,strHash;
+	 strHash= CSoyPayHelp::getInstance()->GetReverseHash(hash.GetString());
+	 strContractData = m_P2PBetHelp.PacketP2PAcceptContract((INT64)REAL_MONEY(atof(money)) ,strHash,guess);
+
+	 if (  theApp.m_P2PBetCfg.AcceptBetnFee < 10000  ) {
+		 return ;
+	 }
+
+	 CString strShowData;
+	 string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_betScritptid.GetBuffer(),addr.GetString(),strContractData,0,theApp.m_P2PBetCfg.AcceptBetnFee,0);
+	 CSoyPayHelp::getInstance()->SendContacrRpc(strData.c_str(),strShowData);
+
+	 Json::Reader reader;  
+	 Json::Value root; 
+	 if (!reader.parse(strShowData.GetString(), root)) 
+		 return  ;
+	 BOOL bRes = FALSE ;
+	 CString strTip;
+	 int pos = strShowData.Find("hash");
+
+	 if ( pos >=0 ) {
+		 //插入到交易记录数据库
+		 CString strHash ;
+		 strHash.Format(_T("'%s'") , root["hash"].asCString() );
+		CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_REVTRANSACTION);
+		postmsg.SetData(strHash);
+		theApp.m_MsgQueue.push(postmsg);
+	 }
+	 if ( pos >=0 ) {
+		 bRes = TRUE ;
+		 strTip.Format( _T("恭喜接赌成功!\n%s") , root["hash"].asCString() ) ;
+	 }else{
+		 strTip.Format( _T("接赌失败!") ) ;
+	 }
+
+	 //保存到数据库
+	 if ( bRes ) {
+
+		 //插入到交易记录数据库
+
+		 //// 查找数据库中是否存在此记录
+		 CString conditon;
+		 conditon.Format(_T("tx_hash ='%s'") , hash );
+		 uistruct::LISTP2POOL_T pPoolItem;
+		 int nItem =  theApp.m_SqliteDeal.GetP2PQuizPoolItem(conditon ,&pPoolItem ) ;
+		 if (nItem == 0) ///此记录不存在,插入记录
+		 {
+			 uistruct::P2P_QUIZ_RECORD_t p2pbetrecord ;
+			 memset(&p2pbetrecord , 0 , sizeof(uistruct::P2P_QUIZ_RECORD_t));
+			 SYSTEMTIME curTime ;
+			 memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
+			 GetLocalTime( &curTime ) ;
+			 CString strSendTime;
+			 strSendTime.Format("%04d-%02d-%02d %02d:%02d:%02d",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+			 p2pbetrecord.send_time = UiFun::SystemTimeToTimet(curTime);
+
+			 memcpy(p2pbetrecord.tx_hash ,hash , sizeof(p2pbetrecord.tx_hash));
+			 p2pbetrecord.tx_hash[64] = '\0';
+
+			 CString txhash = root["hash"].asCString();
+			 memcpy(p2pbetrecord.relate_hash ,root["hash"].asCString() , sizeof(p2pbetrecord.tx_hash));
+			 p2pbetrecord.relate_hash[64] = '\0';
+
+			 memcpy(p2pbetrecord.right_addr ,addr , sizeof(p2pbetrecord.right_addr));
+			 p2pbetrecord.amount = atof(money);
+
+			 p2pbetrecord.actor  = 1 ;
+			 p2pbetrecord.guess_num = (int)guess ;
+			 //插入到数据库
+			 CString strSourceData ;
+			 strSourceData.Format(_T("'%s','%s','%d','%s' , '%s' , '%s' , '%ld'") , \
+				 strSendTime , _T("") , p2pbetrecord.time_out , \
+				 p2pbetrecord.tx_hash ,  p2pbetrecord.left_addr , p2pbetrecord.right_addr ,p2pbetrecord.amount);
+
+			 strSourceData.AppendFormat(",'%s' ,'%d','%d','%d','%d','%s','%d'",p2pbetrecord.content ,p2pbetrecord.actor ,p2pbetrecord.confirmed ,p2pbetrecord.height ,p2pbetrecord.state ,\
+				 p2pbetrecord.relate_hash ,p2pbetrecord.guess_num ) ;
+
+			 uistruct::DATABASEINFO_t   pDatabase;
+			 pDatabase.strSource = strSourceData.GetString();
+			 pDatabase.strTabName =  _T("t_p2p_quiz");
+			 CPostMsg postmsg(MSG_USER_INSERT_DATA,0);
+			 string strTemp = pDatabase.ToJson();
+			 CString datastr;
+			 datastr.Format(_T("%s"),strTemp.c_str());
+			 postmsg.SetData(datastr);
+			 theApp.m_MsgQueue.push(postmsg);
+
+		 }else{        ///更新记录
+			 CString txhash = root["hash"].asCString();
+			 CString strSourceData  , strW ;
+			 strSourceData.Format(_T("actor = %d , relate_hash = '%s' ,right_addr ='%s',") , 2 , txhash ,addr ) ;
+			 strSourceData.AppendFormat(" guess_num = %d,state = %d", (int)guess,4);
+			 strW.Format(_T("tx_hash = '%s'") , hash ) ;
+
+			 uistruct::DATABASEINFO_t DatabaseInfo;
+			 DatabaseInfo.strSource = strSourceData.GetString();
+			 DatabaseInfo.strWhere = strW.GetString() ;
+			 DatabaseInfo.strTabName = _T("t_p2p_quiz");
+			 CPostMsg postmsg(MSG_USER_UPDATA_DATA,0);
+			 string strTemp = DatabaseInfo.ToJson();
+			 CString datastr;
+			 datastr.Format(_T("%s"),strTemp.c_str());
+			 postmsg.SetData(datastr);
+			 theApp.m_MsgQueue.push(postmsg);
+
+		 }
+	 }
+	 ::MessageBox( this->GetSafeHwnd() ,strTip , _T("提示") , MB_ICONINFORMATION ) ;
  }
