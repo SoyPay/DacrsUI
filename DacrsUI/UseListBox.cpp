@@ -75,7 +75,7 @@ void CUseListBox::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 void CUseListBox::MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct)
 {
 	// TODO:  添加您的代码以确定指定项的大小
-	lpMeasureItemStruct->itemHeight = 50;
+	lpMeasureItemStruct->itemHeight = 35;
 }
 void CUseListBox::InsertStr(int iIndex,HWND hMain)
 {
@@ -83,8 +83,8 @@ void CUseListBox::InsertStr(int iIndex,HWND hMain)
 	pData->nItem = iIndex ;
 	CRect rcClient(0 ,0 , 0 , 0);
 	DWORD dwStyle =  WS_CHILD | WS_VISIBLE;
-	pData->pBut1 = new CButtonEx(iIndex,0,rcClient,hMain);
-	pData->pBut1->Create(_T(""),dwStyle, rcClient, this, ++m_uID);
+	pData->pSta0 = new CStaticTrans;
+	pData->pSta0->Create(_T(""),dwStyle, rcClient, this, ++m_uID);
 
 	pData->pBut2 = new CButtonEx(iIndex,1,rcClient,hMain);
 	pData->pBut2->Create(_T(""),dwStyle, rcClient, this, ++m_uID);
@@ -125,12 +125,18 @@ void CUseListBox::updateListBoxButtonPos()
 		   iterUp = m_mButton.find(iLine);
 		   List_AppendData *pData = (List_AppendData*)iter->second;
 		   if ( NULL != pData ) {
-              pData->pBut1->ShowWindow( SW_SHOW );
-			  pData->pBut1->SetWindowPos(NULL , 10 , pData->nItem*50 +20 , 254 , 35 , SWP_SHOWWINDOW );
-			  pData->pBut2->ShowWindow( SW_SHOW );
-			  pData->pBut2->SetWindowPos(NULL , 370 , pData->nItem*50 +20 , 43 , 33 , SWP_SHOWWINDOW );
+			  pData->pSta0->SetFont(90, _T("宋体"));				//设置显示字体和大小
+			  pData->pSta0->SetTextColor(RGB(0,0,0));			    //字体颜色
+              pData->pSta0->ShowWindow( SW_SHOW );
+			  pData->pSta0->SetWindowPos(NULL , 10 , pData->nItem*35 +10 , 275 , 35 , SWP_SHOWWINDOW );
+
+			  pData->pSta1->SetFont(90, _T("宋体"));				//设置显示字体和大小
+			  pData->pSta1->SetTextColor(RGB(0,0,0));			    //字体颜色
 			  pData->pSta1->ShowWindow( SW_SHOW );
-			  pData->pSta1->SetWindowPos(NULL , 280 , pData->nItem*50 +30 , 80 , 25 , SWP_SHOWWINDOW );
+			  pData->pSta1->SetWindowPos(NULL , 275+10+25 , pData->nItem*35 +10 , 40 , 25 , SWP_SHOWWINDOW );
+
+			  pData->pBut2->ShowWindow( SW_SHOW );
+			  pData->pBut2->SetWindowPos(NULL , 275+10+50 +40 , pData->nItem*35 , 43 , 33 , SWP_SHOWWINDOW );
 		   }
 		   iLine++;
 		}
@@ -154,8 +160,8 @@ void CUseListBox::OnDestroy()
 	{
 		List_AppendData * pData = (List_AppendData *)GetItemDataPtr(i);
 		if ( NULL != pData ) {
-			delete pData->pBut1;
-			pData->pBut1 = NULL ;
+			delete pData->pSta0;
+			pData->pSta0 = NULL ;
 			delete pData->pBut2;
 			pData->pBut2 = NULL ;
 
@@ -196,33 +202,42 @@ void CUseListBox::SetIndexInage(int iIndex ,  UINT nButImage1 , UINT nButImage2 
 {
 	List_AppendData *pData = GetAppendDataInfo(iIndex) ;
 	if ( NULL != pData ) {
-		pData->pBut1->SetAlign(CButtonST::ST_ALIGN_OVERLAP);
 		pData->pBut2->SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		pData->pBut1->SetBitmaps( nButImage1 , RGB(255, 255, 0) , nButImage1 , RGB(255, 255, 255) );
 		pData->pBut2->SetBitmaps( nButImage2 , RGB(255, 255, 0) , nButImage2 , RGB(255, 255, 255) );
 	}
 }
-void CUseListBox::SetIndexString(int iIndex , CString strBut1 ,CString strBut2 ,CString strSta1 ,CString strSta2 )
+void CUseListBox::SetIndexBackCol(int iIndex ,  int nline ,COLORREF   col)
 {
 	List_AppendData *pData = GetAppendDataInfo(iIndex) ;
 	if ( NULL != pData ) {
-		pData->pBut1->SetWindowText(strBut1) ;
+		switch (nline)
+		{
+		case 0:
+			pData->pSta0->SetBackColor(col);
+			break;
+		case 1:
+			break;
+		case 2:
+			pData->pSta1->SetBackColor(col);
+			break;
+		}
+	}
+}
+void CUseListBox::SetIndexString(int iIndex , CString strSta0 ,CString strBut2 ,CString strSta1 ,CString strSta2 )
+{
+	List_AppendData *pData = GetAppendDataInfo(iIndex) ;
+	if ( NULL != pData ) {
+		pData->pSta0->ShowWindow(SW_HIDE);
+		pData->pSta0->SetWindowText(strSta0);
+		pData->pSta0->ShowWindow(SW_SHOW);
+
 		pData->pBut2->SetWindowText(strBut2) ;
-
-		pData->pBut1->SetFontEx(20 , _T("微软雅黑"));
-		pData->pBut1->SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
-		pData->pBut1->SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
-		pData->pBut1->SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
-		pData->pBut1->SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
-
 		pData->pBut2->SetFontEx(20 , _T("微软雅黑"));
 		pData->pBut2->SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		pData->pBut2->SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 		pData->pBut2->SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
 		pData->pBut2->SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
 
-		pData->pSta1->SetFont(90, _T("宋体"));				//设置显示字体和大小
-		pData->pSta1->SetTextColor(RGB(0,0,0));			    //字体颜色
 		pData->pSta1->ShowWindow(SW_HIDE);
 		pData->pSta1->SetWindowText(strSta1);
 		pData->pSta1->ShowWindow(SW_SHOW);

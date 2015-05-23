@@ -9,13 +9,13 @@ using namespace std;
 typedef struct _ListBox_Data 
 {
 	int         nItem; //行数
-	CButtonEx * pBut1; //按钮1
+	CStaticTrans * pSta0; //按钮1
 	CButtonEx * pBut2; //按钮2
 	CStaticTrans   * pSta1; //静态框1
 	CString       pstr;
 	_ListBox_Data()
 	{
-		pBut1 = NULL ;
+		pSta0 = NULL ;
 		pBut2 = NULL ;
 		pSta1 = NULL ;
 		pstr = _T("");
@@ -54,7 +54,8 @@ public:
 public:
 	List_AppendData *GetAppendDataInfo(int iIndex);
 	void    SetIndexInage(int iIndex ,  UINT nButImage1 , UINT nButImage2  );
-	void    SetIndexString(int iIndex , CString strBut1 ,CString strBut2 ,CString strSta1 ,CString strSta2 );
+	void    SetIndexBackCol(int iIndex ,  int nline ,COLORREF   col);
+	void    SetIndexString(int iIndex , CString strSta0 ,CString strBut2 ,CString strSta1 ,CString strSta2 );
 	void    CreateTitle();
 };
 

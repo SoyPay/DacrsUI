@@ -69,7 +69,7 @@ void CRecordListBox::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 void CRecordListBox::MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct)
 {
 	// TODO:  添加您的代码以确定指定项的大小
-	lpMeasureItemStruct->itemHeight = 50;
+	lpMeasureItemStruct->itemHeight = 35;
 }
 void CRecordListBox::OnDestroy()
 {
@@ -81,8 +81,8 @@ void CRecordListBox::OnDestroy()
 	{
 		List_ReAppendData * pData = (List_ReAppendData *)GetItemDataPtr(i);
 		if ( NULL != pData ) {
-			delete pData->pBut1;
-			pData->pBut1 = NULL ;
+			delete pData->pSta0;
+			pData->pSta0 = NULL ;
 
 			delete pData->pSta1;
 			pData->pSta1 = NULL ;
@@ -119,20 +119,20 @@ void CRecordListBox::InsertStr(int iIndex,HWND hMain)
 	pData->nItem = iIndex ;
 	CRect rcClient(0 ,0 , 0 , 0);
 	DWORD dwStyle =  WS_CHILD | WS_VISIBLE;
-	pData->pBut1 = new CButtonEx(iIndex,0,rcClient,hMain);
-	pData->pBut1->Create(_T(""),dwStyle, rcClient, this, ++m_uID);
+	pData->pSta0 = new CStaticTrans;
+	pData->pSta0->Create(_T("") , WS_CHILD | WS_VISIBLE , rcClient, this, ++m_uID) ;
 
 	pData->pSta1 = new CStaticTrans;
-	pData->pSta1->Create(_T("1") , WS_CHILD | WS_VISIBLE , rcClient, this, ++m_uID) ;
+	pData->pSta1->Create(_T("") , WS_CHILD | WS_VISIBLE , rcClient, this, ++m_uID) ;
 
 	pData->pSta2 = new CStaticTrans;
-	pData->pSta2->Create(_T("2") , WS_CHILD | WS_VISIBLE , rcClient, this, ++m_uID) ;
+	pData->pSta2->Create(_T("") , WS_CHILD | WS_VISIBLE , rcClient, this, ++m_uID) ;
 
 	pData->pSta3 = new CStaticTrans;
-	pData->pSta3->Create(_T("3") , WS_CHILD | WS_VISIBLE , rcClient, this, ++m_uID) ;
+	pData->pSta3->Create(_T("") , WS_CHILD | WS_VISIBLE , rcClient, this, ++m_uID) ;
 
 	pData->pSta4 = new CStaticTrans;
-	pData->pSta4->Create(_T("4") , WS_CHILD | WS_VISIBLE , rcClient, this, ++m_uID) ;
+	pData->pSta4->Create(_T("") , WS_CHILD | WS_VISIBLE , rcClient, this, ++m_uID) ;
 
 	m_mButton.insert( make_pair( iIndex, pData ) );
 
@@ -151,33 +151,40 @@ void CRecordListBox::updateListBoxButtonPos()
 			iterUp = m_mButton.find(iLine);
 			List_ReAppendData *pData = (List_ReAppendData*)iter->second;
 			if ( NULL != pData ) {
-				pData->pBut1->SetFontEx(20 , _T("微软雅黑"));
-				pData->pBut1->SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
-				pData->pBut1->SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
-				pData->pBut1->SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
-				pData->pBut1->SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
-				pData->pBut1->ShowWindow( SW_HIDE );
-				pData->pBut1->SetWindowPos(NULL , 0 , pData->nItem*50 +15 , 240 , 29 , SWP_SHOWWINDOW );
+				pData->pSta0->SetFont(110, _T("楷体"));				//设置显示字体和大小
+				pData->pSta0->SetTextColor(RGB(0,0,0));			    //字体颜色
+				pData->pSta0->ShowWindow( SW_SHOW );
+				//pData->pSta0->SetBackColor(RGB(0,0,0));	
+				pData->pSta0->ModifyStyle(0,SS_CENTERIMAGE|SS_CENTER);
+				pData->pSta0->SetWindowPos(NULL , 10 , pData->nItem*35+10 , 305 , 29 , SWP_SHOWWINDOW );
 
-				pData->pSta1->SetFont(90, _T("宋体"));				//设置显示字体和大小
+				pData->pSta1->SetFont(110, _T("楷体"));				//设置显示字体和大小
 				pData->pSta1->SetTextColor(RGB(0,0,0));			    //字体颜色
 				pData->pSta1->ShowWindow( SW_SHOW );
-				pData->pSta1->SetWindowPos(NULL , 10 , pData->nItem*50 +25 , 60 , 29 , SWP_SHOWWINDOW );	
+				//pData->pSta0->SetBackColor(RGB(0,0,0));	
+				pData->pSta1->ModifyStyle(0,SS_CENTERIMAGE|SS_CENTER);
+				pData->pSta1->SetWindowPos(NULL , 305 + 10 + 25 , pData->nItem*35+10 , 80 , 29 , SWP_SHOWWINDOW );	
 
-				pData->pSta2->SetFont(90, _T("宋体"));				//设置显示字体和大小
+				pData->pSta2->SetFont(110, _T("宋体"));				//设置显示字体和大小
 				pData->pSta2->SetTextColor(RGB(0,0,0));			    //字体颜色
 				pData->pSta2->ShowWindow( SW_SHOW );
-				pData->pSta2->SetWindowPos(NULL , 370 , pData->nItem*50 +25 , 60 , 29 , SWP_SHOWWINDOW );
+				//pData->pSta0->SetBackColor(RGB(0,0,0));	
+				pData->pSta2->ModifyStyle(0,SS_CENTERIMAGE|SS_CENTER);
+				pData->pSta2->SetWindowPos(NULL , 305 + 10 + 50 +80  , pData->nItem*35 +10 , 80 , 29 , SWP_SHOWWINDOW );
 
-				pData->pSta3->SetFont(90, _T("宋体"));				//设置显示字体和大小
+				pData->pSta3->SetFont(110, _T("宋体"));				//设置显示字体和大小
 				pData->pSta3->SetTextColor(RGB(0,0,0));			    //字体颜色
 				pData->pSta3->ShowWindow( SW_SHOW );
-				pData->pSta3->SetWindowPos(NULL , 440 , pData->nItem*50 +25 , 60 , 29 , SWP_SHOWWINDOW );
+				//pData->pSta0->SetBackColor(RGB(0,0,0));	
+				pData->pSta3->ModifyStyle(0,SS_CENTERIMAGE|SS_CENTER);
+				pData->pSta3->SetWindowPos(NULL , 305 + 10 + 75 +160 , pData->nItem*35 +10 , 80 , 29 , SWP_SHOWWINDOW );
 
-				pData->pSta4->SetFont(90, _T("宋体"));				//设置显示字体和大小
+				pData->pSta4->SetFont(110, _T("宋体"));				//设置显示字体和大小
 				pData->pSta4->SetTextColor(RGB(0,0,0));			    //字体颜色
 				pData->pSta4->ShowWindow( SW_SHOW );
-				pData->pSta4->SetWindowPos(NULL , 510 , pData->nItem*50 +25 , 100 , 29 , SWP_SHOWWINDOW );
+				//pData->pSta0->SetBackColor(RGB(0,0,0));	
+				pData->pSta4->ModifyStyle(0,SS_CENTERIMAGE|SS_CENTER);
+				pData->pSta4->SetWindowPos(NULL , 305 + 10 + 100 +240 , pData->nItem*35 +10 , 200 , 29 , SWP_SHOWWINDOW );
 			}
 			iLine++;
 		}
@@ -194,20 +201,37 @@ List_ReAppendData* CRecordListBox::GetAppendDataInfo(int iIndex)
 	}
 	return NULL ;
 }
-void CRecordListBox::SetIndexInage(int iIndex ,  UINT nButImage1 )
+void CRecordListBox::SetIndexBackCol(int iIndex ,  int nline ,COLORREF   col)
 {
 	List_ReAppendData *pData = GetAppendDataInfo(iIndex) ;
 	if ( NULL != pData ) {
-		pData->pBut1->SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		pData->pBut1->SetBitmaps( nButImage1 , RGB(255, 255, 0) , nButImage1 , RGB(255, 255, 255) );
+		switch (nline)
+		{
+		case 0:
+			pData->pSta0->SetBackColor(col);
+			break;
+		case 1:
+			pData->pSta1->SetBackColor(col);
+			break;
+		case 2:
+			pData->pSta2->SetBackColor(col);
+			break;
+		case 3:
+			pData->pSta3->SetBackColor(col);
+			break;
+		case 4:
+			pData->pSta4->SetBackColor(col);
+			break;
+		}
 	}
 }
 void CRecordListBox::SetIndexString(int iIndex , CString strBut1 ,CString strSta1 ,CString strSta2 ,CString strSta3 ,CString strSta4  )
 {
 	List_ReAppendData *pData = GetAppendDataInfo(iIndex) ;
 	if ( NULL != pData ) {
-		pData->pBut1->SetWindowText(strBut1) ;
-		pData->pBut1->ShowWindow( SW_HIDE );
+		pData->pSta1->ShowWindow(SW_HIDE);
+		pData->pSta0->SetWindowText(strBut1) ;
+		pData->pSta0->ShowWindow( SW_SHOW );
 
 		pData->pSta1->ShowWindow(SW_HIDE);
 		pData->pSta1->SetWindowText(strSta1);
@@ -225,6 +249,5 @@ void CRecordListBox::SetIndexString(int iIndex , CString strBut1 ,CString strSta
 		pData->pSta4->ShowWindow(SW_HIDE);
 		pData->pSta4->SetWindowText(strSta4);
 		pData->pSta4->ShowWindow(SW_SHOW);
-
 	}
 }
