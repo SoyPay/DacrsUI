@@ -1,4 +1,4 @@
-// P2PDlg.cpp : ÃŠÂµÃÃ–ÃÃ„Â¼Ã¾
+// P2PDlg.cpp : ÊµÏÖÎÄ¼ş
 //
 
 #include "stdafx.h"
@@ -11,7 +11,7 @@
 
 #define OUT_HEIGHT  10
 
-// CP2PDlg Â¶Ã”Â»Â°Â¿Ã²
+// CP2PDlg ¶Ô»°¿ò
 
 IMPLEMENT_DYNAMIC(CP2PDlg, CDialogBar)
 
@@ -42,6 +42,9 @@ void CP2PDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BUTTON_WOMAN , m_rBtnWoman); 
 	DDX_Control(pDX, IDC_COMBO_ADDRES, m_addrbook);
 	DDX_Control(pDX, IDC_LIST_BONUS, m_BonusListBox);
+	DDX_Control(pDX, IDC_BUTTON_REFRESH_1, m_rBtnRefresh1);
+	DDX_Control(pDX, IDC_BUTTON_REFRESH_2, m_rBtnRefresh2);
+	DDX_Control(pDX, IDC_TAB, m_tab);
 }
 
 
@@ -56,10 +59,11 @@ BEGIN_MESSAGE_MAP(CP2PDlg, CDialogBar)
 	ON_BN_CLICKED(IDC_BUTTON_RECH, &CP2PDlg::OnBnClickedButtonRech)
 	ON_BN_CLICKED(IDC_BUTTON_MALE, &CP2PDlg::OnBnClickedButtonMale)
 	ON_BN_CLICKED(IDC_BUTTON_WOMAN, &CP2PDlg::OnBnClickedButtonWoman)
+	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB, &CP2PDlg::OnTcnSelchangeTab)
 END_MESSAGE_MAP()
 
 
-// CP2PDlg ÃÃ»ÃÂ¢Â´Â¦Ã€Ã­Â³ÃŒÃÃ²
+// CP2PDlg ÏûÏ¢´¦Àí³ÌĞò
 void CP2PDlg::SetBkBmpNid( UINT nBitmapIn ) 
 {
 	if( NULL != m_pBmp ) {
@@ -79,7 +83,7 @@ int CP2PDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (CDialogBar::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
-	// TODO:  Ã”ÃšÂ´Ã‹ÃŒÃ­Â¼Ã“Ã„ÃºÃ—Â¨Ã“ÃƒÂµÃ„Â´Â´Â½Â¨Â´ÃºÃ‚Ã«
+	// TODO:  ÔÚ´ËÌí¼ÓÄú×¨ÓÃµÄ´´½¨´úÂë
 	SetBkBmpNid(IDB_BITMAP_P2P_BJ);
 	return 0;
 }
@@ -87,7 +91,7 @@ int CP2PDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 BOOL CP2PDlg::OnEraseBkgnd(CDC* pDC)
 {
-	// TODO: Ã”ÃšÂ´Ã‹ÃŒÃ­Â¼Ã“ÃÃ»ÃÂ¢Â´Â¦Ã€Ã­Â³ÃŒÃÃ²Â´ÃºÃ‚Ã«ÂºÃ/Â»Ã²ÂµÃ·Ã“ÃƒÃ„Â¬ÃˆÃÃ–Âµ
+	// TODO: ÔÚ´ËÌí¼ÓÏûÏ¢´¦Àí³ÌĞò´úÂëºÍ/»òµ÷ÓÃÄ¬ÈÏÖµ
 	CRect   rect; 
 	GetClientRect(&rect); 
 
@@ -110,33 +114,33 @@ BOOL CP2PDlg::OnEraseBkgnd(CDC* pDC)
 
 BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 {
-	// TODO: Ã”ÃšÂ´Ã‹ÃŒÃ­Â¼Ã“Ã—Â¨Ã“ÃƒÂ´ÃºÃ‚Ã«ÂºÃ/Â»Ã²ÂµÃ·Ã“ÃƒÂ»Ã¹Ã€Ã 
+	// TODO: ÔÚ´ËÌí¼Ó×¨ÓÃ´úÂëºÍ/»òµ÷ÓÃ»ùÀà
 
 	BOOL bRes = CDialogBar::Create(pParentWnd, nIDTemplate, nStyle, nID);
 	if ( bRes ) {
 		m_rBtnMale.LoadBitmaps(IDB_BITMAP_SISTER_1,IDB_BITMAP_SISTER_3,IDB_BITMAP_SISTER_2,IDB_BITMAP_SISTER_1);
 		m_rBtnWoman.LoadBitmaps(IDB_BITMAP_BOTHER_1,IDB_BITMAP_BOTHER_3,IDB_BITMAP_BOTHER_2,IDB_BITMAP_BOTHER_1);
 		UpdateData(0);
-		m_Balance.SetFont(120, _T("ÂºÃšÃŒÃ¥"));				//Ã‰Ã¨Ã–ÃƒÃÃ”ÃŠÂ¾Ã—Ã–ÃŒÃ¥ÂºÃÂ´Ã³ÃÂ¡
-		m_Balance.SetTextColor(RGB(0,0,0));			    //Ã—Ã–ÃŒÃ¥Ã‘Ã•Ã‰Â«	
+		m_Balance.SetFont(120, _T("ºÚÌå"));				//ÉèÖÃÏÔÊ¾×ÖÌåºÍ´óĞ¡
+		m_Balance.SetTextColor(RGB(0,0,0));			    //×ÖÌåÑÕÉ«	
 		m_Balance.SetWindowText(_T("100.00SMC"));
 
-		m_NotDraw.SetFont(120, _T("ÂºÃšÃŒÃ¥"));				//Ã‰Ã¨Ã–ÃƒÃÃ”ÃŠÂ¾Ã—Ã–ÃŒÃ¥ÂºÃÂ´Ã³ÃÂ¡
-		m_NotDraw.SetTextColor(RGB(0,0,0));			    //Ã—Ã–ÃŒÃ¥Ã‘Ã•Ã‰Â«	
+		m_NotDraw.SetFont(120, _T("ºÚÌå"));				//ÉèÖÃÏÔÊ¾×ÖÌåºÍ´óĞ¡
+		m_NotDraw.SetTextColor(RGB(0,0,0));			    //×ÖÌåÑÕÉ«	
 		m_NotDraw.SetWindowText(_T("50.01SMC"));
 
-		m_Dw.SetFont(120, _T("ÂºÃšÃŒÃ¥"));				//Ã‰Ã¨Ã–ÃƒÃÃ”ÃŠÂ¾Ã—Ã–ÃŒÃ¥ÂºÃÂ´Ã³ÃÂ¡
-		m_Dw.SetTextColor(RGB(0,0,0));			    //Ã—Ã–ÃŒÃ¥Ã‘Ã•Ã‰Â«	
+		m_Dw.SetFont(120, _T("ºÚÌå"));				//ÉèÖÃÏÔÊ¾×ÖÌåºÍ´óĞ¡
+		m_Dw.SetTextColor(RGB(0,0,0));			    //×ÖÌåÑÕÉ«	
 		m_Dw.SetWindowText(_T("SMC"));
 
-		m_VS.SetFont(120, _T("ÂºÃšÃŒÃ¥"));				//Ã‰Ã¨Ã–ÃƒÃÃ”ÃŠÂ¾Ã—Ã–ÃŒÃ¥ÂºÃÂ´Ã³ÃÂ¡
-		m_VS.SetTextColor(RGB(0,0,0));			    //Ã—Ã–ÃŒÃ¥Ã‘Ã•Ã‰Â«	
+		m_VS.SetFont(120, _T("ºÚÌå"));				//ÉèÖÃÏÔÊ¾×ÖÌåºÍ´óĞ¡
+		m_VS.SetTextColor(RGB(0,0,0));			    //×ÖÌåÑÕÉ«	
 		m_VS.SetWindowText(_T(" VS"));
 
 		m_rBtnWithd.SetBitmaps( IDB_BITMAP_P2PBUTTON_1 , RGB(255, 255, 0) , IDB_BITMAP_P2PBUTTON_1 , RGB(255, 255, 255) );
 		m_rBtnWithd.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		m_rBtnWithd.SetWindowText("ÃŒÃ¡ÃÃ–") ;
-		m_rBtnWithd.SetFontEx(20 , _T("ÃÂ¢ÃˆÃ­Ã‘Ã…ÂºÃš"));
+		m_rBtnWithd.SetWindowText("ÌáÏÖ") ;
+		m_rBtnWithd.SetFontEx(20 , _T("Î¢ÈíÑÅºÚ"));
 		m_rBtnWithd.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(255, 255, 255));
 		m_rBtnWithd.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 		m_rBtnWithd.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(255, 255, 255));
@@ -145,8 +149,8 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 
 		m_rBtnRech.SetBitmaps( IDB_BITMAP_P2PBUTTON_2 , RGB(255, 255, 0) , IDB_BITMAP_P2PBUTTON_2 , RGB(255, 255, 255) );
 		m_rBtnRech.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		m_rBtnRech.SetWindowText("Â³Ã¤Ã–Âµ") ;
-		m_rBtnRech.SetFontEx(20 , _T("ÃÂ¢ÃˆÃ­Ã‘Ã…ÂºÃš"));
+		m_rBtnRech.SetWindowText("³äÖµ") ;
+		m_rBtnRech.SetFontEx(20 , _T("Î¢ÈíÑÅºÚ"));
 		m_rBtnRech.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(255, 255, 255));
 		m_rBtnRech.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 		m_rBtnRech.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(255, 255, 255));
@@ -155,8 +159,8 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 
 		m_rBtnRefresh1.SetBitmaps( IDB_BITMAP_P2PBUTTON_2 , RGB(255, 255, 0) , IDB_BITMAP_P2PBUTTON_2 , RGB(255, 255, 255) );
 		m_rBtnRefresh1.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		m_rBtnRefresh1.SetWindowText("åˆ·æ–°") ;
-		m_rBtnRefresh1.SetFontEx(20 , _T("å¾®è½¯é›…é»‘"));
+		m_rBtnRefresh1.SetWindowText("Ë¢ĞÂ") ;
+		m_rBtnRefresh1.SetFontEx(20 , _T("Î¢ÈíÑÅºÚ"));
 		m_rBtnRefresh1.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(255, 255, 255));
 		m_rBtnRefresh1.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 		m_rBtnRefresh1.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(255, 255, 255));
@@ -164,8 +168,8 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 
 		m_rBtnRefresh2.SetBitmaps( IDB_BITMAP_P2PBUTTON_2 , RGB(255, 255, 0) , IDB_BITMAP_P2PBUTTON_2 , RGB(255, 255, 255) );
 		m_rBtnRefresh2.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		m_rBtnRefresh2.SetWindowText("åˆ·æ–°") ;
-		m_rBtnRefresh2.SetFontEx(20 , _T("å¾®è½¯é›…é»‘"));
+		m_rBtnRefresh2.SetWindowText("Ë¢ĞÂ") ;
+		m_rBtnRefresh2.SetFontEx(20 , _T("Î¢ÈíÑÅºÚ"));
 		m_rBtnRefresh2.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(255, 255, 255));
 		m_rBtnRefresh2.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 		m_rBtnRefresh2.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(255, 255, 255));
@@ -173,8 +177,8 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 
 		m_rBtnRefresh1.SizeToContent();
 
-		m_tab.InsertItem(0,_T("æŠ•æ³¨è®°å½•"));  //æ·»åŠ å‚æ•°ä¸€é€‰é¡¹å¡ 
-		m_tab.InsertItem(1,_T("å‘èµ·è®°å½•"));  //æ·»åŠ å‚æ•°äºŒé€‰é¡¹å¡ 
+		m_tab.InsertItem(0,_T("Í¶×¢¼ÇÂ¼"));  //Ìí¼Ó²ÎÊıÒ»Ñ¡Ïî¿¨ 
+		m_tab.InsertItem(1,_T("·¢Æğ¼ÇÂ¼"));  //Ìí¼Ó²ÎÊı¶şÑ¡Ïî¿¨ 
 
 		CSize sz(80,30);
 		m_tab.SetItemSize(sz);
@@ -202,7 +206,7 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 
 		/*m_BonusListBox.InsertStr(0,this->GetSafeHwnd());
 		m_BonusListBox.SetIndexInage(0 , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2P_LISTBOX_BUT);
-		m_BonusListBox.SetIndexString(0 , _T("aaaaaa"), _T("æ¥"), _T("vbvvvvv"), _T("ddddddd"));*/
+		m_BonusListBox.SetIndexString(0 , _T("aaaaaa"), _T("½Ó"), _T("vbvvvvv"), _T("ddddddd"));*/
 
 		AddListaddrDataBox();
 		QueryNotDrawBalance();
@@ -230,7 +234,7 @@ void CP2PDlg::OnSize(UINT nType, int cx, int cy)
 {
 	CDialogBar::OnSize(nType, cx, cy);
 
-	// TODO: Ã”ÃšÂ´Ã‹Â´Â¦ÃŒÃ­Â¼Ã“ÃÃ»ÃÂ¢Â´Â¦Ã€Ã­Â³ÃŒÃÃ²Â´ÃºÃ‚Ã«
+	// TODO: ÔÚ´Ë´¦Ìí¼ÓÏûÏ¢´¦Àí³ÌĞò´úÂë
 	if( NULL != GetSafeHwnd() ) {
 		CWnd *pst = GetDlgItem( IDC_LIST_BONUS ) ;
 		if ( NULL != pst ) {
@@ -254,7 +258,7 @@ void CP2PDlg::OnSize(UINT nType, int cx, int cy)
 
 void CP2PDlg::OnCbnSelchangeComboAddres()
 {
-	// TODO: Ã”ÃšÂ´Ã‹ÃŒÃ­Â¼Ã“Â¿Ã˜Â¼Ã¾ÃÂ¨Ã–ÂªÂ´Â¦Ã€Ã­Â³ÃŒÃÃ²Â´ÃºÃ‚Ã«
+	// TODO: ÔÚ´ËÌí¼Ó¿Ø¼şÍ¨Öª´¦Àí³ÌĞò´úÂë
 	CString text;
 	int sel = m_addrbook.GetCurSel();
 	m_addrbook.GetLBText(sel,text);
@@ -317,9 +321,9 @@ BOOL CP2PDlg::AddListaddrDataBox(){
 
 	if ( 0 == m_mapAddrInfo.size() ) return FALSE ;
 
-	//Ã‡Ã¥Â³Ã½ComBoxÂ¿Ã˜Â¼Ã¾
+	//Çå³ıComBox¿Ø¼ş
 	((CComboBox*)GetDlgItem(IDC_COMBO_ADDRES))->ResetContent();
-	//Â¼Ã“Ã”Ã˜ÂµÂ½ComBoxÂ¿Ã˜Â¼Ã¾
+	//¼ÓÔØµ½ComBox¿Ø¼ş
 	int nItem = 0;
 	std::map<CString,uistruct::LISTADDR_t>::const_iterator const_it;
 	for ( const_it = m_mapAddrInfo.begin() ; const_it != m_mapAddrInfo.end() ; const_it++ ) {
@@ -337,7 +341,7 @@ BOOL CP2PDlg::AddListaddrDataBox(){
 }
 LRESULT CP2PDlg::OnShowListCtrol( WPARAM wParam, LPARAM lParam ) 
 {
-	//Â¸Ã¼ÃÃ‚ÃŠÃ½Â¾Ã
+	//¸üĞÂÊı¾İ
 	int type = (int)wParam;
 	switch(type)
 	{
@@ -373,7 +377,7 @@ void  CP2PDlg::QueryNotDrawBalance()
 
 void CP2PDlg::OnBnClickedButtonWithd()
 {
-	// TODO: Ã”ÃšÂ´Ã‹ÃŒÃ­Â¼Ã“Â¿Ã˜Â¼Ã¾ÃÂ¨Ã–ÂªÂ´Â¦Ã€Ã­Â³ÃŒÃÃ²Â´ÃºÃ‚Ã«
+	// TODO: ÔÚ´ËÌí¼Ó¿Ø¼şÍ¨Öª´¦Àí³ÌĞò´úÂë
 
 	if (!CheckBalance())
 	{
@@ -391,7 +395,7 @@ void CP2PDlg::OnBnClickedButtonWithd()
 
 	if (addr == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("ÂµÃ˜Ã–Â·Â²Â»Ã„ÃœÃÂªÂ¿Ã•") , _T("ÃŒÃ¡ÃŠÂ¾") , MB_ICONINFORMATION ) ;
+		::MessageBox( this->GetSafeHwnd() ,_T("µØÖ·²»ÄÜÎª¿Õ") , _T("ÌáÊ¾") , MB_ICONINFORMATION ) ;
 		return;
 	}
 
@@ -401,7 +405,7 @@ void CP2PDlg::OnBnClickedButtonWithd()
 
 	INT64 strTxFee = theApp.m_P2PBetCfg.GetAppAmountnFee;
 	if (  strTxFee < 10000  ) {
-		::MessageBox( this->GetSafeHwnd() ,_T("ÃÂ¡Â·Ã‘Â²Â»Ã—Ã£") , _T("ÃŒÃ¡ÃŠÂ¾") , MB_ICONINFORMATION ) ;
+		::MessageBox( this->GetSafeHwnd() ,_T("Ğ¡·Ñ²»×ã") , _T("ÌáÊ¾") , MB_ICONINFORMATION ) ;
 		return ;
 	}
 
@@ -418,7 +422,7 @@ void CP2PDlg::OnBnClickedButtonWithd()
 	int pos = strShowData.Find("hash");
 
 	if ( pos >=0 ) {
-		//Â²Ã¥ÃˆÃ«ÂµÂ½Â½Â»Ã’Ã—Â¼Ã‡Ã‚Â¼ÃŠÃ½Â¾ÃÂ¿Ã¢
+		//²åÈëµ½½»Ò×¼ÇÂ¼Êı¾İ¿â
 		CString strHash;
 		strHash.Format(_T("'%s'") , root["hash"].asCString() );
 		CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_REVTRANSACTION);
@@ -428,17 +432,17 @@ void CP2PDlg::OnBnClickedButtonWithd()
 
 	if ( pos >=0 ) {
 		bRes = TRUE ;
-		strTip.Format( _T("Â¹Â§ÃÂ²ÃŒÃ¡ÃÃ–Â³Ã‰Â¹Â¦!\n%s") , root["hash"].asCString() ) ;
+		strTip.Format( _T("¹§Ï²ÌáÏÖ³É¹¦!\n%s") , root["hash"].asCString() ) ;
 	}else{
-		strTip.Format( _T("ÃŒÃ¡ÃÃ–ÃŠÂ§Â°Ãœ!") ) ;
+		strTip.Format( _T("ÌáÏÖÊ§°Ü!") ) ;
 	}
-	::MessageBox( this->GetSafeHwnd() ,strTip , _T("ÃŒÃ¡ÃŠÂ¾") , MB_ICONINFORMATION ) ;
+	::MessageBox( this->GetSafeHwnd() ,strTip , _T("ÌáÊ¾") , MB_ICONINFORMATION ) ;
 }
 
 
 void CP2PDlg::OnBnClickedButtonRech()
 {
-	// TODO: Ã”ÃšÂ´Ã‹ÃŒÃ­Â¼Ã“Â¿Ã˜Â¼Ã¾ÃÂ¨Ã–ÂªÂ´Â¦Ã€Ã­Â³ÃŒÃÃ²Â´ÃºÃ‚Ã«
+	// TODO: ÔÚ´ËÌí¼Ó¿Ø¼şÍ¨Öª´¦Àí³ÌĞò´úÂë
 
 	CReCharge outdlg;
 	if ( IDOK != outdlg.DoModal()){
@@ -449,7 +453,7 @@ void CP2PDlg::OnBnClickedButtonRech()
 
 	if (theApp.m_strAddress == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("Â½Ã°Â¶Ã®Â²Â»Ã„ÃœÃÂªÂ¿Ã•") , _T("ÃŒÃ¡ÃŠÂ¾") , MB_ICONINFORMATION ) ;
+		::MessageBox( this->GetSafeHwnd() ,_T("½ğ¶î²»ÄÜÎª¿Õ") , _T("ÌáÊ¾") , MB_ICONINFORMATION ) ;
 		return ;
 	}
 	CString strShowData ;
@@ -459,7 +463,7 @@ void CP2PDlg::OnBnClickedButtonRech()
 
 	if (addr == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("ÂµÃ˜Ã–Â·Â²Â»Ã„ÃœÃÂªÂ¿Ã•") , _T("ÃŒÃ¡ÃŠÂ¾") , MB_ICONINFORMATION ) ;
+		::MessageBox( this->GetSafeHwnd() ,_T("µØÖ·²»ÄÜÎª¿Õ") , _T("ÌáÊ¾") , MB_ICONINFORMATION ) ;
 		return;
 	}
 
@@ -469,7 +473,7 @@ void CP2PDlg::OnBnClickedButtonRech()
 
 	INT64 strTxFee = theApp.m_P2PBetCfg.GetAppAmountnFee;
 	if (  strTxFee < 10000  ) {
-		::MessageBox( this->GetSafeHwnd() ,_T("ÃÂ¡Â·Ã‘Â²Â»Ã—Ã£") , _T("ÃŒÃ¡ÃŠÂ¾") , MB_ICONINFORMATION ) ;
+		::MessageBox( this->GetSafeHwnd() ,_T("Ğ¡·Ñ²»×ã") , _T("ÌáÊ¾") , MB_ICONINFORMATION ) ;
 		return ;
 	}
 
@@ -485,7 +489,7 @@ void CP2PDlg::OnBnClickedButtonRech()
 	int pos = strShowData.Find("hash");
 
 	if ( pos >=0 ) {
-		//Â²Ã¥ÃˆÃ«ÂµÂ½Â½Â»Ã’Ã—Â¼Ã‡Ã‚Â¼ÃŠÃ½Â¾ÃÂ¿Ã¢
+		//²åÈëµ½½»Ò×¼ÇÂ¼Êı¾İ¿â
 		CString strHash;
 		strHash.Format(_T("'%s'") , root["hash"].asCString() );
 		CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_REVTRANSACTION);
@@ -495,16 +499,16 @@ void CP2PDlg::OnBnClickedButtonRech()
 
 	if ( pos >=0 ) {
 		bRes = TRUE ;
-		strTip.Format( _T("Â¹Â§ÃÂ²Â³Ã¤Ã–ÂµÂ³Ã‰Â¹Â¦!\n%s") , root["hash"].asCString() ) ;
+		strTip.Format( _T("¹§Ï²³äÖµ³É¹¦!\n%s") , root["hash"].asCString() ) ;
 	}else{
-		strTip.Format( _T("Â³Ã¤Ã–ÂµÃŠÂ§Â°Ãœ!") ) ;
+		strTip.Format( _T("³äÖµÊ§°Ü!") ) ;
 	}
-	::MessageBox( this->GetSafeHwnd() ,strTip , _T("ÃŒÃ¡ÃŠÂ¾") , MB_ICONINFORMATION ) ;
+	::MessageBox( this->GetSafeHwnd() ,strTip , _T("ÌáÊ¾") , MB_ICONINFORMATION ) ;
 }
 
 void CP2PDlg::SendBet(int rewardnum)
 {
-	// TODO: Ã”ÃšÂ´Ã‹ÃŒÃ­Â¼Ã“Â¿Ã˜Â¼Ã¾ÃÂ¨Ã–ÂªÂ´Â¦Ã€Ã­Â³ÃŒÃÃ²Â´ÃºÃ‚Ã«  PacketP2PSendContract
+	// TODO: ÔÚ´ËÌí¼Ó¿Ø¼şÍ¨Öª´¦Àí³ÌĞò´úÂë  PacketP2PSendContract
 
 	if (!CheckBalance())
 	{
@@ -520,13 +524,13 @@ void CP2PDlg::SendBet(int rewardnum)
 	GetDlgItem(IDC_EDIT_MONEY)->GetWindowText(strTxMoney) ;
 	if (strTxMoney == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("Â½Ã°Â¶Ã®Â²Â»Ã„ÃœÃÂªÂ¿Ã•") , _T("ÃŒÃ¡ÃŠÂ¾") , MB_ICONINFORMATION ) ;
+		::MessageBox( this->GetSafeHwnd() ,_T("½ğ¶î²»ÄÜÎª¿Õ") , _T("ÌáÊ¾") , MB_ICONINFORMATION ) ;
 		return ;
 	}
 
 	if (atof(strTxMoney) > balance)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("èµŒæ³¨é‡‘é¢å¤§äºè´¦æˆ·ä½™é¢") , _T("æç¤º") , MB_ICONINFORMATION ) ;
+		::MessageBox( this->GetSafeHwnd() ,_T("¶Ä×¢½ğ¶î´óÓÚÕË»§Óà¶î") , _T("ÌáÊ¾") , MB_ICONINFORMATION ) ;
 		return ;
 	}
 
@@ -536,17 +540,17 @@ void CP2PDlg::SendBet(int rewardnum)
 
 	if (addr == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("ÂµÃ˜Ã–Â·Â²Â»Ã„ÃœÃÂªÂ¿Ã•") , _T("ÃŒÃ¡ÃŠÂ¾") , MB_ICONINFORMATION ) ;
+		::MessageBox( this->GetSafeHwnd() ,_T("µØÖ·²»ÄÜÎª¿Õ") , _T("ÌáÊ¾") , MB_ICONINFORMATION ) ;
 		return;
 	}
-	//// Â²Ã©Ã‘Â¯ÂµÃ˜Ã–Â·ÃŠÃ‡Â·Ã±Â¼Â¤Â»Ã®
+	//// ²éÑ¯µØÖ·ÊÇ·ñ¼¤»î
 	CString strCond;
 	strCond.Format(_T(" address = '%s' "), addr);
 	uistruct::LISTADDR_t addrsql;
 	int item = theApp.m_SqliteDeal.GetWalletAddressItem(strCond, &addrsql) ;
 	if (!addrsql.bSign)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("Ã•Ã‹Â»Â§ÃÂ´Â¼Â¤Â»Ã®Â²Â»Ã„ÃœÂ·Â¢Ã‰ÃºÂºÃÃ”Â¼Â½Â»Ã’Ã—") , _T("ÃŒÃ¡ÃŠÂ¾") , MB_ICONINFORMATION ) ;
+		::MessageBox( this->GetSafeHwnd() ,_T("ÕË»§Î´¼¤»î²»ÄÜ·¢ÉúºÏÔ¼½»Ò×") , _T("ÌáÊ¾") , MB_ICONINFORMATION ) ;
 		return;
 	}
 	char strTemp[34];
@@ -580,7 +584,7 @@ void CP2PDlg::SendBet(int rewardnum)
 
 	INT64 strTxFee = theApp.m_P2PBetCfg.SendBetFee;
 	if (  strTxFee < 10000  ) {
-		::MessageBox( this->GetSafeHwnd() ,_T("ÃÂ¡Â·Ã‘Â²Â»Ã—Ã£") , _T("ÃŒÃ¡ÃŠÂ¾") , MB_ICONINFORMATION ) ;
+		::MessageBox( this->GetSafeHwnd() ,_T("Ğ¡·Ñ²»×ã") , _T("ÌáÊ¾") , MB_ICONINFORMATION ) ;
 		return ;
 	}
 	
@@ -594,7 +598,7 @@ void CP2PDlg::SendBet(int rewardnum)
 	pos = strShowData.Find("hash");
 
 	if ( pos >=0 ) {
-		//Â²Ã¥ÃˆÃ«ÂµÂ½Â½Â»Ã’Ã—Â¼Ã‡Ã‚Â¼ÃŠÃ½Â¾ÃÂ¿Ã¢
+		//²åÈëµ½½»Ò×¼ÇÂ¼Êı¾İ¿â
 		CString strHash ;
 		strHash.Format(_T("'%s'") , root["hash"].asCString() );
 		CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_REVTRANSACTION);
@@ -604,12 +608,12 @@ void CP2PDlg::SendBet(int rewardnum)
 
 	if ( pos >=0 ) {
 		bRes = TRUE ;
-		strTip.Format( _T("Â¹Â§ÃÂ²Â·Â¢Ã‹ÃÂ¶Ã„Ã”Â¼Â³Ã‰Â¹Â¦!\n%s") , root["hash"].asCString() ) ;
+		strTip.Format( _T("¹§Ï²·¢ËÍ¶ÄÔ¼³É¹¦!\n%s") , root["hash"].asCString() ) ;
 	}else{
-		strTip.Format( _T("Â·Â¢Ã‹ÃÂ¶Ã„Ã”Â¼ÃŠÂ§Â°Ãœ!") ) ;
+		strTip.Format( _T("·¢ËÍ¶ÄÔ¼Ê§°Ü!") ) ;
 	}
 
-	//Â±Â£Â´Ã¦ÂµÂ½ÃŠÃ½Â¾ÃÂ¿Ã¢
+	//±£´æµ½Êı¾İ¿â
 	if ( bRes ) {
 		uistruct::P2P_QUIZ_RECORD_t p2pbetrecord ;
 		memset(&p2pbetrecord , 0 , sizeof(uistruct::P2P_QUIZ_RECORD_t));
@@ -628,7 +632,7 @@ void CP2PDlg::SendBet(int rewardnum)
 
 		p2pbetrecord.actor  = 0 ;
 		p2pbetrecord.state  = 0 ;
-		//Â²Ã¥ÃˆÃ«ÂµÂ½ÃŠÃ½Â¾ÃÂ¿Ã¢
+		//²åÈëµ½Êı¾İ¿â
 		CString strSourceData;
 		strSourceData.Format(_T("'%s','%s','%d','%s' , '%s' , '%s' , '%lf'") , \
 			strSendTime , _T("") , p2pbetrecord.time_out , \
@@ -647,21 +651,21 @@ void CP2PDlg::SendBet(int rewardnum)
 		postmsg.SetData(strShow);
 		theApp.m_MsgQueue.push(postmsg);
 	}
-	::MessageBox( this->GetSafeHwnd() ,strTip , _T("ÃŒÃ¡ÃŠÂ¾") , MB_ICONINFORMATION ) ;
+	::MessageBox( this->GetSafeHwnd() ,strTip , _T("ÌáÊ¾") , MB_ICONINFORMATION ) ;
 }
 
 void CP2PDlg::OnBnClickedButtonMale()
 {
-	// TODO: Ã”ÃšÂ´Ã‹ÃŒÃ­Â¼Ã“Â¿Ã˜Â¼Ã¾ÃÂ¨Ã–ÂªÂ´Â¦Ã€Ã­Â³ÃŒÃÃ²Â´ÃºÃ‚Ã«
+	// TODO: ÔÚ´ËÌí¼Ó¿Ø¼şÍ¨Öª´¦Àí³ÌĞò´úÂë
 	CString strTxMoney;
 	GetDlgItem(IDC_EDIT_MONEY)->GetWindowText(strTxMoney) ;
 	if (strTxMoney == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("Â½Ã°Â¶Ã®Â²Â»Ã„ÃœÃÂªÂ¿Ã•") , _T("ÃŒÃ¡ÃŠÂ¾") , MB_ICONINFORMATION ) ;
+		::MessageBox( this->GetSafeHwnd() ,_T("½ğ¶î²»ÄÜÎª¿Õ") , _T("ÌáÊ¾") , MB_ICONINFORMATION ) ;
 		return ;
 	}
 	CString strDisplay;
-	strDisplay.Format(_T("ÃˆÂ·Â¶Â¨Ã’ÂªÂ·Â¢Ã‹ÃÂ¶Ã„Ã”Â¼ÃƒÃƒ--->Â½Ã°Â¶Ã®:%s"), strTxMoney);
+	strDisplay.Format(_T("È·¶¨Òª·¢ËÍ¶ÄÔ¼ÃÃ--->½ğ¶î:%s"), strTxMoney);
 	COut outdlg(NULL, strDisplay,100);
 	if ( IDOK != outdlg.DoModal()){
 		return;
@@ -672,16 +676,16 @@ void CP2PDlg::OnBnClickedButtonMale()
 
 void CP2PDlg::OnBnClickedButtonWoman()
 {
-	// TODO: Ã”ÃšÂ´Ã‹ÃŒÃ­Â¼Ã“Â¿Ã˜Â¼Ã¾ÃÂ¨Ã–ÂªÂ´Â¦Ã€Ã­Â³ÃŒÃÃ²Â´ÃºÃ‚Ã«
+	// TODO: ÔÚ´ËÌí¼Ó¿Ø¼şÍ¨Öª´¦Àí³ÌĞò´úÂë
 	CString strTxMoney;
 	GetDlgItem(IDC_EDIT_MONEY)->GetWindowText(strTxMoney) ;
 	if (strTxMoney == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("Â½Ã°Â¶Ã®Â²Â»Ã„ÃœÃÂªÂ¿Ã•") , _T("ÃŒÃ¡ÃŠÂ¾") , MB_ICONINFORMATION ) ;
+		::MessageBox( this->GetSafeHwnd() ,_T("½ğ¶î²»ÄÜÎª¿Õ") , _T("ÌáÊ¾") , MB_ICONINFORMATION ) ;
 		return ;
 	}
 	CString strDisplay;
-	strDisplay.Format(_T("ÃˆÂ·Â¶Â¨Ã’ÂªÂ·Â¢Ã‹ÃÂ¶Ã„Ã”Â¼Â¸Ã§--->Â½Ã°Â¶Ã®:%s"), strTxMoney);
+	strDisplay.Format(_T("È·¶¨Òª·¢ËÍ¶ÄÔ¼¸ç--->½ğ¶î:%s"), strTxMoney);
 	COut outdlg(NULL, strDisplay,100);
 	if ( IDOK != outdlg.DoModal()){
 		return;
@@ -726,7 +730,7 @@ void CP2PDlg::OnListPool()
 		txhash.Format(_T("%s"),const_it->hash.c_str());
 		m_BonusListBox.InsertStr(i,this->GetSafeHwnd());
 		m_BonusListBox.SetIndexInage(i , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2P_LISTBOX_BUT);
-		m_BonusListBox.SetIndexString(i , addr, _T("Â½Ã“"), money, txhash);
+		m_BonusListBox.SetIndexString(i , addr, _T("½Ó"), money, txhash);
 		i++;
 	}
 }
@@ -756,17 +760,17 @@ void CP2PDlg::AcceptBet(CString hash,CString money)
 
 	 if (addr == _T(""))
 	 {
-		 ::MessageBox( this->GetSafeHwnd() ,_T("ÂµÃ˜Ã–Â·Â²Â»Ã„ÃœÃÂªÂ¿Ã•") , _T("ÃŒÃ¡ÃŠÂ¾") , MB_ICONINFORMATION ) ;
+		 ::MessageBox( this->GetSafeHwnd() ,_T("µØÖ·²»ÄÜÎª¿Õ") , _T("ÌáÊ¾") , MB_ICONINFORMATION ) ;
 		 return;
 	 }
-	 //// Â²Ã©Ã‘Â¯ÂµÃ˜Ã–Â·ÃŠÃ‡Â·Ã±Â¼Â¤Â»Ã®
+	 //// ²éÑ¯µØÖ·ÊÇ·ñ¼¤»î
 	 CString strCond;
 	 strCond.Format(_T(" address = '%s' "), addr);
 	 uistruct::LISTADDR_t addrsql;
 	 int item = theApp.m_SqliteDeal.GetWalletAddressItem(strCond, &addrsql) ;
 	 if (!addrsql.bSign)
 	 {
-		 ::MessageBox( this->GetSafeHwnd() ,_T("Ã•Ã‹Â»Â§ÃÂ´Â¼Â¤Â»Ã®Â²Â»Ã„ÃœÂ·Â¢Ã‰ÃºÂºÃÃ”Â¼Â½Â»Ã’Ã—") , _T("ÃŒÃ¡ÃŠÂ¾") , MB_ICONINFORMATION ) ;
+		 ::MessageBox( this->GetSafeHwnd() ,_T("ÕË»§Î´¼¤»î²»ÄÜ·¢ÉúºÏÔ¼½»Ò×") , _T("ÌáÊ¾") , MB_ICONINFORMATION ) ;
 		 return;
 	 }
 
@@ -798,7 +802,7 @@ void CP2PDlg::AcceptBet(CString hash,CString money)
 	 int pos = strShowData.Find("hash");
 
 	 if ( pos >=0 ) {
-		 //Â²Ã¥ÃˆÃ«ÂµÂ½Â½Â»Ã’Ã—Â¼Ã‡Ã‚Â¼ÃŠÃ½Â¾ÃÂ¿Ã¢
+		 //²åÈëµ½½»Ò×¼ÇÂ¼Êı¾İ¿â
 		 CString strHash ;
 		 strHash.Format(_T("'%s'") , root["hash"].asCString() );
 		CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_REVTRANSACTION);
@@ -807,22 +811,22 @@ void CP2PDlg::AcceptBet(CString hash,CString money)
 	 }
 	 if ( pos >=0 ) {
 		 bRes = TRUE ;
-		 strTip.Format( _T("Â¹Â§ÃÂ²Â½Ã“Â¶Ã„Â³Ã‰Â¹Â¦!\n%s") , root["hash"].asCString() ) ;
+		 strTip.Format( _T("¹§Ï²½Ó¶Ä³É¹¦!\n%s") , root["hash"].asCString() ) ;
 	 }else{
-		 strTip.Format( _T("Â½Ã“Â¶Ã„ÃŠÂ§Â°Ãœ!") ) ;
+		 strTip.Format( _T("½Ó¶ÄÊ§°Ü!") ) ;
 	 }
 
-	 //Â±Â£Â´Ã¦ÂµÂ½ÃŠÃ½Â¾ÃÂ¿Ã¢
+	 //±£´æµ½Êı¾İ¿â
 	 if ( bRes ) {
 
-		 //Â²Ã¥ÃˆÃ«ÂµÂ½Â½Â»Ã’Ã—Â¼Ã‡Ã‚Â¼ÃŠÃ½Â¾ÃÂ¿Ã¢
+		 //²åÈëµ½½»Ò×¼ÇÂ¼Êı¾İ¿â
 
-		 //// Â²Ã©Ã•Ã’ÃŠÃ½Â¾ÃÂ¿Ã¢Ã–ÃÃŠÃ‡Â·Ã±Â´Ã¦Ã”ÃšÂ´Ã‹Â¼Ã‡Ã‚Â¼
+		 //// ²éÕÒÊı¾İ¿âÖĞÊÇ·ñ´æÔÚ´Ë¼ÇÂ¼
 		 CString conditon;
 		 conditon.Format(_T("tx_hash ='%s'") , hash );
 		 uistruct::P2P_QUIZ_RECORD_t pPoolItem;
 		 int nItem =  theApp.m_SqliteDeal.GetP2PQuizRecordItem(conditon ,&pPoolItem ) ;
-		 if (strlen(pPoolItem.tx_hash) == 0) ///æ­¤è®°å½•ä¸å­˜åœ¨,æ’å…¥è®°å½•
+		 if (strlen(pPoolItem.tx_hash) == 0) ///´Ë¼ÇÂ¼²»´æÔÚ,²åÈë¼ÇÂ¼
 		 {
 			 uistruct::P2P_QUIZ_RECORD_t p2pbetrecord ;
 			 memset(&p2pbetrecord , 0 , sizeof(uistruct::P2P_QUIZ_RECORD_t));
@@ -845,7 +849,7 @@ void CP2PDlg::AcceptBet(CString hash,CString money)
 
 			 p2pbetrecord.actor  = 1 ;
 			 p2pbetrecord.guess_num = (int)guess ;
-			 //Â²Ã¥ÃˆÃ«ÂµÂ½ÃŠÃ½Â¾ÃÂ¿Ã¢
+			 //²åÈëµ½Êı¾İ¿â
 			 CString strSourceData ;
 			 strSourceData.Format(_T("'%s','%s','%d','%s' , '%s' , '%s' , '%ld'") , \
 				 strSendTime , _T("") , p2pbetrecord.time_out , \
@@ -864,7 +868,7 @@ void CP2PDlg::AcceptBet(CString hash,CString money)
 			 postmsg.SetData(datastr);
 			 theApp.m_MsgQueue.push(postmsg);
 
-		 }else{        ///Â¸Ã¼ÃÃ‚Â¼Ã‡Ã‚Â¼
+		 }else{        ///¸üĞÂ¼ÇÂ¼
 			 CString txhash = root["hash"].asCString();
 			 CString strSourceData  , strW ;
 			 strSourceData.Format(_T("actor = %d , relate_hash = '%s' ,right_addr ='%s',") , 2 , txhash ,addr ) ;
@@ -884,22 +888,23 @@ void CP2PDlg::AcceptBet(CString hash,CString money)
 
 		 }
 	 }
-	 ::MessageBox( this->GetSafeHwnd() ,strTip , _T("ÃŒÃ¡ÃŠÂ¾") , MB_ICONINFORMATION ) ;
+	 ::MessageBox( this->GetSafeHwnd() ,strTip , _T("ÌáÊ¾") , MB_ICONINFORMATION ) ;
  }
  bool CP2PDlg::CheckBalance()
  {
- void CP2PDlg::OnTcnSelchangeTab(NMHDR *pNMHDR, LRESULT *pResult)
+	 CString strMoney;
 	 ((CStatic*)GetDlgItem(IDC_STATIC_BALANCE))->GetWindowText(strMoney);
 	 double money =atof(strMoney);
 	if (money == 0.0)
-		::MessageBox( this->GetSafeHwnd() ,_T("è´¦æˆ·é‡‘é¢ä¸ºé›¶,è¯·å…ˆå……å€¼") , _T("æç¤º") , MB_ICONINFORMATION ) ;
-	 *pResult = 0;
+	{
+		::MessageBox( this->GetSafeHwnd() ,_T("ÕË»§½ğ¶îÎªÁã,ÇëÏÈ³äÖµ") , _T("ÌáÊ¾") , MB_ICONINFORMATION ) ;
+		return false;
+	}
 	return true;
  }
- 
-  void CP2PDlg::OnTcnSelchangeTab(NMHDR *pNMHDR, LRESULT *pResult)
+ void CP2PDlg::OnTcnSelchangeTab(NMHDR *pNMHDR, LRESULT *pResult)
  {
-	 // TODO: åœ¨æ­¤æ·»åŠ æ§ä»¶é€šçŸ¥å¤„ç†ç¨‹åºä»£ç 
+	 // TODO: ÔÚ´ËÌí¼Ó¿Ø¼şÍ¨Öª´¦Àí³ÌĞò´úÂë
 	 OnSelectShowWin(m_tab.GetCurSel());
 	 *pResult = 0;
  }
