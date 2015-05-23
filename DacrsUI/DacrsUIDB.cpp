@@ -71,7 +71,7 @@ void CDacrsUIApp::UpdateQuizPoolData()
 			if (!reader.parse(strShowData.GetString(), root1)) 
 				return;
 			int curheight =root1["blocks"].asInt();
-			if(curheight >=(confirheight+DBbet.hight+500))
+			if(curheight >=(confirheight+500))
 				continue;
 
 			if (DBbet.betstate == 0x00)
