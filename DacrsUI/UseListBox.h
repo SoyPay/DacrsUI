@@ -12,13 +12,11 @@ typedef struct _ListBox_Data
 	CButtonEx * pBut1; //°´Å¥1
 	CButtonEx * pBut2; //°´Å¥2
 	CStaticTrans   * pSta1; //¾²Ì¬¿ò1
-	CStaticTrans   * pSta2; //¾²Ì¬¿ò1
 	_ListBox_Data()
 	{
 		pBut1 = NULL ;
 		pBut2 = NULL ;
 		pSta1 = NULL ;
-		pSta2 = NULL ;
 	}
 } List_AppendData;
 
@@ -39,8 +37,6 @@ protected:
 private:
 	CStaticTrans   * m_pTitleSta1; //¾²Ì¬¿ò1
 	CStaticTrans   * m_pTitleSta2; //¾²Ì¬¿ò2
-	CStaticTrans   * m_pTitleSta3; //¾²Ì¬¿ò3
-	CStaticTrans   * m_pTitleSta4; //¾²Ì¬¿ò4
 public:
 	button_map m_mButton;
 	UINT m_uID;
