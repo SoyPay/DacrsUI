@@ -203,10 +203,9 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_pDialog.push_back(&m_SendRecord) ;
 		OnSelectShowWin(0);
 
-
-		/*m_BonusListBox.InsertStr(0,this->GetSafeHwnd());
-		m_BonusListBox.SetIndexInage(0 , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2P_LISTBOX_BUT);
-		m_BonusListBox.SetIndexString(0 , _T("aaaaaa"), _T("½Ó"), _T("vbvvvvv"), _T("ddddddd"));*/
+		m_BonusListBox.InsertStr(0,this->GetSafeHwnd());
+		m_BonusListBox.SetIndexInage(0 , IDB_BITMAP_REG_LONG, IDB_BITMAP_P2P_LISTBOX_BUT);
+		m_BonusListBox.SetIndexString(0 , _T("durCyWC8MTdQdpCo9QXZ5wxSyL9jtyDFri"), _T("½Ó"), _T("22222"), _T("22222"));
 
 		AddListaddrDataBox();
 		QueryNotDrawBalance();
@@ -729,7 +728,7 @@ void CP2PDlg::OnListPool()
 		CString txhash ;
 		txhash.Format(_T("%s"),const_it->hash.c_str());
 		m_BonusListBox.InsertStr(i,this->GetSafeHwnd());
-		m_BonusListBox.SetIndexInage(i , IDB_BITMAP_P2PBUTTON_2, IDB_BITMAP_P2P_LISTBOX_BUT);
+		m_BonusListBox.SetIndexInage(i , IDB_BITMAP_REG_LONG, IDB_BITMAP_P2P_LISTBOX_BUT);
 		m_BonusListBox.SetIndexString(i , addr, _T("½Ó"), money, txhash);
 		i++;
 	}

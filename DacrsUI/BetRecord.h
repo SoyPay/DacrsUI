@@ -26,4 +26,5 @@ public:
 	virtual BOOL Create(LPCTSTR lpszTemplateName, CWnd* pParentWnd = NULL);
 public:
 	CRecordListBox            m_ListBox;
+	afx_msg void OnSize(UINT nType, int cx, int cy);
 };
