@@ -127,3 +127,55 @@ void CBetRecord::OnSize(UINT nType, int cx, int cy)
 		}
 	}
 }
+void CBetRecord::Showlistbox(CString address)
+{
+	//// 查找数据库中是否存在此记录
+	CString conditon;
+	conditon.Format(_T("right_addr ='%s' and actor = 1 or actor = 2") , address);
+	uistruct::P2PBETRECORDLIST  pPoolItem;
+	int nItem =  theApp.m_SqliteDeal.GetP2PQuizRecordList(conditon ,&pPoolItem ) ;
+	if (pPoolItem.size() == 0) ///此记录不存在,插入记录
+	{
+		int i = 0;
+		std::vector<uistruct::P2P_QUIZ_RECORD_t>::const_iterator const_it;
+		for (const_it = pPoolItem.begin();const_it!=pPoolItem.end();const_it++)
+		{
+			CString dmoney,reward,result,guess;
+			dmoney.Format(_T("%.4f"),const_it->amount);
+			if (const_it->guess_num == 0)
+			{
+				guess.Format(_T("%s"),"妹");
+			}else
+			{
+				guess.Format(_T("%s"),"哥");
+			}
+
+			///说明开奖了
+			if (const_it->state == 2)
+			{
+				SYSTEMTIME curTime =UiFun::Time_tToSystemTime(const_it->recv_time);
+				CString strTime;
+				strTime.Format("%04d-%02d-%02d %02d:%02d:%02d",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+				if (const_it->guess_num == const_it->content[32])
+				{
+					reward.Format(_T("+%.4f"),const_it->amount);
+				}else
+				{
+					reward.Format(_T("-%.4f"),const_it->amount);
+				}
+				if (const_it->content[32] == 0)
+				{
+					result.Format(_T("%s"),"妹");
+				}else
+				{
+					result.Format(_T("%s"),"哥");
+				}
+				m_ListBox.SetIndexString(i , address,reward, result, guess , strTime);
+
+			}else{
+				m_ListBox.SetIndexString(i , address,dmoney, _T("--"), guess , _T("--"));
+			}
+			i++;
+		}
+	}
+}

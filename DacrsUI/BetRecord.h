@@ -27,4 +27,5 @@ public:
 public:
 	CRecordListBox            m_ListBox;
 	afx_msg void OnSize(UINT nType, int cx, int cy);
+	void Showlistbox(CString address);
 };
