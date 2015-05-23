@@ -31,6 +31,7 @@ class CUseListBox : public CListBox
 public:
 	CUseListBox();
 	virtual ~CUseListBox();
+public:
 
 protected:
 	DECLARE_MESSAGE_MAP()	
