@@ -51,6 +51,7 @@ public:
 	void    SetIndexInage(int iIndex ,  UINT nButImage );
 	void    SetIndexBackCol(int iIndex ,  int nline ,COLORREF   col);
 	void    SetIndexString(int iIndex , CString strSta0 ,CString strSta1 ,CString strSta2 ,CString strBut0 );
+	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 };
 
 

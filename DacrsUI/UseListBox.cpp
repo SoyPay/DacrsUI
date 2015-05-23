@@ -26,6 +26,7 @@ BEGIN_MESSAGE_MAP(CUseListBox, CListBox)
 	ON_WM_DESTROY()
 	ON_WM_ERASEBKGND()
 	ON_WM_MOUSEMOVE()
+	ON_WM_MOUSEWHEEL()
 END_MESSAGE_MAP()
 
 
@@ -126,12 +127,12 @@ void CUseListBox::updateListBoxButtonPos()
 		   List_AppendData *pData = (List_AppendData*)iter->second;
 		   if ( NULL != pData ) {
 			  pData->pSta0->SetFont(90, _T("宋体"));				//设置显示字体和大小
-			  pData->pSta0->SetTextColor(RGB(0,0,0));			    //字体颜色
+			 // pData->pSta0->SetTextColor(RGB(0,0,0));			    //字体颜色
               pData->pSta0->ShowWindow( SW_SHOW );
 			  pData->pSta0->SetWindowPos(NULL , 10 , pData->nItem*35 +10 , 275 , 35 , SWP_SHOWWINDOW );
 
 			  pData->pSta1->SetFont(90, _T("宋体"));				//设置显示字体和大小
-			  pData->pSta1->SetTextColor(RGB(0,0,0));			    //字体颜色
+			//  pData->pSta1->SetTextColor(RGB(0,0,0));			    //字体颜色
 			  pData->pSta1->ShowWindow( SW_SHOW );
 			  pData->pSta1->SetWindowPos(NULL , 275+10+25 , pData->nItem*35 +10 , 40 , 25 , SWP_SHOWWINDOW );
 
@@ -213,12 +214,12 @@ void CUseListBox::SetIndexBackCol(int iIndex ,  int nline ,COLORREF   col)
 		switch (nline)
 		{
 		case 0:
-			pData->pSta0->SetBackColor(col);
+			pData->pSta0->SetTextColor(col);
 			break;
 		case 1:
 			break;
 		case 2:
-			pData->pSta1->SetBackColor(col);
+			pData->pSta1->SetTextColor(col);
 			break;
 		}
 	}
@@ -246,3 +247,11 @@ void CUseListBox::SetIndexString(int iIndex , CString strSta0 ,CString strBut2 ,
 	}
 }
 
+
+
+BOOL CUseListBox::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	return TRUE ;
+	return CListBox::OnMouseWheel(nFlags, zDelta, pt);
+}
