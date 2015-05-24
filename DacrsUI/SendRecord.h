@@ -29,4 +29,8 @@ public:
 	CSendListBox    m_listBox ;
 	virtual BOOL Create(LPCTSTR lpszTemplateName, CWnd* pParentWnd = NULL);
 	void Showlistbox(CString address);
+	void OpenBet(CString txhash);
+private:
+	CString          m_addr;
+	CP2PBetHelp		                    m_P2PBetHelp;
 };

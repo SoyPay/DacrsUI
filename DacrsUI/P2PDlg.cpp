@@ -18,6 +18,7 @@ IMPLEMENT_DYNAMIC(CP2PDlg, CDialogBar)
 CP2PDlg::CP2PDlg()
 {
 	m_pBmp = NULL ;
+	m_seltab = 0;
 }
 
 CP2PDlg::~CP2PDlg()
@@ -60,6 +61,8 @@ BEGIN_MESSAGE_MAP(CP2PDlg, CDialogBar)
 	ON_BN_CLICKED(IDC_BUTTON_MALE, &CP2PDlg::OnBnClickedButtonMale)
 	ON_BN_CLICKED(IDC_BUTTON_WOMAN, &CP2PDlg::OnBnClickedButtonWoman)
 	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB, &CP2PDlg::OnTcnSelchangeTab)
+	ON_BN_CLICKED(IDC_BUTTON_REFRESH_2, &CP2PDlg::OnBnClickedButtonRefresh2)
+	ON_BN_CLICKED(IDC_BUTTON_REFRESH_1, &CP2PDlg::OnBnClickedButtonRefresh1)
 END_MESSAGE_MAP()
 
 
@@ -212,6 +215,7 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 }
 void CP2PDlg::OnSelectShowWin(int nCurSelTab)
 {
+	m_seltab = nCurSelTab;
 	int nCurSelTabTmp = 0 ;
 	std::vector<CDialog*>::iterator itDialog = m_pDialog.begin();
 	for (;itDialog != m_pDialog.end();itDialog++)
@@ -288,12 +292,15 @@ void CP2PDlg::OnCbnSelchangeComboAddres()
 		((CStatic*)GetDlgItem(IDC_STATIC_BALANCE))->SetWindowText(strShowData);
 		Invalidate();
 	}
+
+	ShowListItem(0);
+	ShowListItem(1);
 }
 
 void CP2PDlg::InsertComboxIitem()
 {
 	CPostMsg postmsg;
-	if (!theApp.m_UiSendDlgQueue.pop(postmsg))
+	if (!theApp.m_UiP2pDlgQueue.pop(postmsg))
 	{
 		return ;
 	}
@@ -343,7 +350,11 @@ LRESULT CP2PDlg::OnShowListCtrol( WPARAM wParam, LPARAM lParam )
 	case WM_UP_NEWADDRESS:
 		{
 			InsertComboxIitem();
-			break;
+		}
+		break;
+	case WM_UP_ADDRESS:
+		{
+			OnCbnSelchangeComboAddres();
 		}
 		break;
 	default:
@@ -689,6 +700,7 @@ void CP2PDlg::OnBnClickedButtonWoman()
 }
 void CP2PDlg::OnListPool()
 {
+	m_BonusListBox.ResetContent();
 	uistruct::P2PLIST pPoolList;
 	theApp.m_SqliteDeal.GetP2PQuizPoolList(_T(" 1=1 "), &pPoolList);
 	if (pPoolList.size() == 0)
@@ -846,7 +858,7 @@ void CP2PDlg::AcceptBet(CString hash,CString money)
 			 p2pbetrecord.guess_num = (int)guess ;
 			 //插入到数据库
 			 CString strSourceData ;
-			 strSourceData.Format(_T("'%s','%s','%d','%s' , '%s' , '%s' , '%ld'") , \
+			 strSourceData.Format(_T("'%s','%s','%d','%s' , '%s' , '%s' , '%lf'") , \
 				 strSendTime , _T("") , p2pbetrecord.time_out , \
 				 p2pbetrecord.tx_hash ,  p2pbetrecord.left_addr , p2pbetrecord.right_addr ,p2pbetrecord.amount);
 
@@ -902,4 +914,35 @@ void CP2PDlg::AcceptBet(CString hash,CString money)
 	 // TODO: 在此添加控件通知处理程序代码
 	 OnSelectShowWin(m_tab.GetCurSel());
 	 *pResult = 0;
+ }
+ void    CP2PDlg::ShowListItem(int seltab)
+ {
+	 CString addr;
+	 int sel = m_addrbook.GetCurSel();
+	 m_addrbook.GetLBText(sel,addr);
+
+	 if (addr == _T(""))
+	 {
+		 return;
+	 }
+	 if (seltab == 0)
+	 {
+		 m_BetRecord.Showlistbox(addr);
+	 }else if (seltab == 1)
+	 {
+		 m_SendRecord.Showlistbox(addr);
+	 }
+ }
+
+ void CP2PDlg::OnBnClickedButtonRefresh2()
+ {
+	 // TODO: 在此添加控件通知处理程序代码
+	 ShowListItem(m_seltab);
+ }
+
+
+ void CP2PDlg::OnBnClickedButtonRefresh1()
+ {
+	 // TODO: 在此添加控件通知处理程序代码
+	 OnListPool();
  }
