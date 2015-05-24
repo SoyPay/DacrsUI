@@ -59,6 +59,7 @@ CDacrsUIApp theApp;
 BOOL  EnableDebugPrivilege();
 // CDacrsUIApp 初始化
 
+
 BOOL CDacrsUIApp::InitInstance()
 {
 	// 如果一个运行在 Windows XP 上的应用程序清单指定要
@@ -77,7 +78,6 @@ BOOL CDacrsUIApp::InitInstance()
 	{
 		return FALSE;
 	}
-
 
 	AfxEnableControlContainer();
 
@@ -472,10 +472,11 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 							((CDacrsUIApp*)pParam)->UpdateAppRecord(txDetail.GetString());
 						}
 					}
+					break;
 				case WM_P2P_BET_RECORD:
 					{
 						//更新数据库赌约数据库列表
-						((CDacrsUIApp*)pParam)->m_SqliteDeal.UpdateP2pBetRecord(); 
+						//((CDacrsUIApp*)pParam)->UpdateP2pBetRecord(); 
 					}
 					break;
 				case WM_DARK_RECORD:
@@ -767,8 +768,9 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 			break;
 		case APP_TRANSATION_TYPE:
 		 {
+			 Json::Value obj =msgValue["transation"]; 
 			 CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_APP_TRANSATION);
-			 postmsg.SetData(msgValue.toStyledString().c_str());
+			 postmsg.SetData(obj.toStyledString().c_str());
 			 pApp->m_MsgQueue.push(postmsg);
 		 }
 		  break;
@@ -810,7 +812,10 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 
 				CPostMsg postpoolmsg(MSG_USER_GET_UPDATABASE,WM_UP_BETPOOL);
 				pApp->m_MsgQueue.push(postpoolmsg);
-				
+
+				CPostMsg postp2pmsg(MSG_USER_P2P_UI,WM_UP_ADDRESS);
+				pApp->m_UiP2pDlgQueue.push(postp2pmsg);
+
 				RecivetxMsgTimeLast = tempTimemsg;
 			}
 			break;

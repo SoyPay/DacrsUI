@@ -937,13 +937,14 @@ string CP2PBetHelp::PacketP2PAcceptContract(int64_t nMoney, const string& strSen
 	return CSoyPayHelp::getInstance()->GetHexData((const char*)&m_acceptContract,sizeof(ACCEPT_DATA));
 }
 
-string CP2PBetHelp::PacketP2PExposeContract(const string& SendHash,const string& strRandomHash)
+string CP2PBetHelp::PacketP2PExposeContract(const string& SendHash,const string& strRandomHash,const string& AcceptHash,int outheight)
 {
 	memset(&m_openContract,0,sizeof(OPEN_DATA));
 	m_openContract.type = TX_OPENBET;
 	memcpy(m_openContract.txhash,SendHash.c_str(),HASH_SIZE);
 	memcpy(m_openContract.dhash,strRandomHash.c_str(),sizeof(m_openContract.dhash));
-
+	memcpy(m_openContract.accepthash,AcceptHash.c_str(),sizeof(m_openContract.accepthash));
+	m_openContract.out_heitht = outheight;
 	return CSoyPayHelp::getInstance()->GetHexData((const char*)&m_openContract,sizeof(OPEN_DATA));
 }
 string CP2PBetHelp::GetAppAccountMoneyContract(const string& straccid,int type,int typeaddr){

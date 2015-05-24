@@ -215,7 +215,8 @@ int CallGetP2PQuizRecordItem(void *para, int n_column, char ** column_value, cha
 	memcpy(p2pQuizRecord->right_addr,strValue,sizeof(p2pQuizRecord->right_addr));
 	
 	strValue.Format(_T("%s") , column_value[6] ) ;
-	p2pQuizRecord->amount = atol(strValue);
+	
+	p2pQuizRecord->amount = strtod(strValue,NULL);
 		
 	strValue.Format(_T("%s") , column_value[7] ) ;
 	memcpy(p2pQuizRecord->content,strValue,sizeof(p2pQuizRecord->content));
