@@ -228,7 +228,9 @@ typedef struct {
 typedef struct {
 	unsigned char type;
 	unsigned char txhash[32];		//发起对赌的哈希，也是对赌数据的关键字
+	unsigned char accepthash[32];		//接赌对赌的哈希，也是对赌数据的关键字
 	unsigned char dhash[33];        //32 个随机数 + 中奖数
+	int out_heitht;
 } OPEN_DATA;
 
 typedef struct {
@@ -395,7 +397,7 @@ class CP2PBetHelp
 public:
 	string PacketP2PSendContract(int64_t nMoney,int nHeight,const string& strRandomHash);
 	string PacketP2PAcceptContract(int64_t nMoney, const string& strSendHash,char nData );
-	string PacketP2PExposeContract(const string& SendHash,const string& strRandomHash);
+	string PacketP2PExposeContract(const string& SendHash,const string& strRandomHash,const string& AcceptHash,int outheight);
 	string GetAppAccountMoneyContract(const string& straccid,int type,int typeaddr);
 	string GetReChangContract();
 private:

@@ -141,6 +141,9 @@ public:
 	void UpdateAppRecord(string txdetail);
 	void InsertAddbook(uistruct::ADDRBOOK_t );
 	void UpdateAddbook(uistruct::ADDRBOOK_t );
+	BOOL UpdateP2pBetRecord();
+	void OpenBetRecord(vector<unsigned char> openbet,uistruct::REVTRANSACTION_t transcion);
+	void AcceptBetRecord(vector<unsigned char> acceptbet,uistruct::REVTRANSACTION_t transcion);
 	void ClearTransaction();
 	void GetMainDlgStruct();
 	BOOL RunOnlyOneApp();

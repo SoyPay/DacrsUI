@@ -47,6 +47,7 @@ public:
 public:
 	CBetRecord            m_BetRecord     ;
 	CSendRecord           m_SendRecord    ;
+	int                   m_seltab;
 
 	std::vector<CDialog*> m_pDialog;
 	void      OnSelectShowWin(int nCurSelTab);
@@ -71,4 +72,7 @@ public:
 	bool CheckBalance();
 	CCTabCtrl m_tab;
 	afx_msg void OnTcnSelchangeTab(NMHDR *pNMHDR, LRESULT *pResult);
+	void   ShowListItem(int seltab);
+	afx_msg void OnBnClickedButtonRefresh2();
+	afx_msg void OnBnClickedButtonRefresh1();
 };
