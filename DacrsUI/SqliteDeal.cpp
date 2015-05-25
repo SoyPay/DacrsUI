@@ -29,15 +29,22 @@ BOOL CSqliteDeal::InitializationDB(){
 	sqlite3 **pDBConn = GetDBConnect(); //获取数据库连接
 	CString strTableName(_T("sqlite_master"));
 	CString strCondition(_T("type='table' and name = 't_wallet_address'"));
-	if(!GetTableCountItem(strTableName, strCondition))
+	if(GetTableCountItem(strTableName, strCondition))
 	{
-		CString createSQL(_T("CREATE TABLE t_wallet_address(address TEXT, reg_id TEXT, money DOUBLE, cold_dig INT, sign INT, label TEXT)"));
-		if(!ExcuteSQL(pDBConn, NULL, createSQL, NULL))
+		CString strSQL(_T("DROP TABLE t_wallet_address"));
+		if(!ExcuteSQL(pDBConn, NULL, strSQL, NULL))
 		{
-			LogPrint("INFO", "Create table t_wallet_address failed\n");
+			LogPrint("INFO", "Drop table t_wallet_address failed\n");
 			return FALSE;
 		}
 	}
+	CString createSQL(_T("CREATE TABLE t_wallet_address(address TEXT PRIMARY KEY, reg_id TEXT, money DOUBLE, cold_dig INT, sign INT, label TEXT)"));
+	if(!ExcuteSQL(pDBConn, NULL, createSQL, NULL))
+	{
+		LogPrint("INFO", "Create table t_wallet_address failed\n");
+		return FALSE;
+	}
+
 	strCondition = _T("type='table' and name= 't_chain_tip'");
 	if(!GetTableCountItem(strTableName, strCondition))
 	{
