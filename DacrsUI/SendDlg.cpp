@@ -257,6 +257,7 @@ LRESULT CSendDlg::OnShowListaddrData( WPARAM wParam, LPARAM lParam )
 	case WM_UP_ADDRESS:
 		{
 			ModifyComboxItem();
+			OnCbnSelchangeCombo1();
 			break;
 		}
 		break;

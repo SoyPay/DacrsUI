@@ -148,6 +148,33 @@
     <ClCompile Include="TxDetailDlg.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="ButtonEx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="UseListBox.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ReCharge.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GuessNum.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="TabCtrl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="BetRecord.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SendRecord.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RecordListBox.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SendListBox.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BmpBtn.h">
@@ -331,6 +358,33 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Z:\dacrs_release\dacrs\src\tinyformat.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonEx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="UseListBox.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ReCharge.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GuessNum.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="TabCtrl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BetRecord.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SendRecord.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RecordListBox.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SendListBox.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -649,6 +703,51 @@
       <Filter>资源文件</Filter>
     </None>
     <None Include="res\exit_bj.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\bitmap11.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\p2p_button_1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\p2p_button_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\bother_1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\bother_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\bother_3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\sister_1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\sister_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\sister_3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\p2p_list_box_but.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\360_tabctrlex.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\bet_record.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\green_long_button.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\red_long_button.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\send_bet_record.bmp">
       <Filter>资源文件</Filter>
     </None>
   </ItemGroup>
