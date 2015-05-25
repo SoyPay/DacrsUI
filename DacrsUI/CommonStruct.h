@@ -16,7 +16,7 @@
 using namespace std;
 typedef long long  int64_t;
 static const ULONGLONG COIN = 100000000;
-#define REAL_MONEY(x) (ULONGLONG)((x)*COIN)
+#define REAL_MONEY(x) (INT64)((x)*COIN)
 
 #define BEGIN(a)            ((char*)&(a))
 #define END(a)              ((char*)&((&(a))[1]))
@@ -228,7 +228,9 @@ typedef struct {
 typedef struct {
 	unsigned char type;
 	unsigned char txhash[32];		//发起对赌的哈希，也是对赌数据的关键字
+	unsigned char accepthash[32];		//接赌对赌的哈希，也是对赌数据的关键字
 	unsigned char dhash[33];        //32 个随机数 + 中奖数
+	int out_heitht;
 } OPEN_DATA;
 
 typedef struct {
@@ -329,6 +331,7 @@ public:
 	bool	GetErrorMsg(const string& strRecvData,string& strErrorMsg);
 	string	Setgenerate(bool bStart);
 	string  GetFullRegID(const string& strRegID);
+	CString  GetNotFullRegID(std::vector<unsigned char>strRegID);
 
 	template<typename T>
 	std::string HexStr(const T itbegin, const T itend, bool fSpaces = false);
@@ -394,8 +397,8 @@ class CP2PBetHelp
 public:
 	string PacketP2PSendContract(int64_t nMoney,int nHeight,const string& strRandomHash);
 	string PacketP2PAcceptContract(int64_t nMoney, const string& strSendHash,char nData );
-	string PacketP2PExposeContract(const string& SendHash,const string& strRandomHash);
-	string GetAppAccountMoneyContract(const string& straccid);
+	string PacketP2PExposeContract(const string& SendHash,const string& strRandomHash,const string& AcceptHash,int outheight);
+	string GetAppAccountMoneyContract(const string& straccid,int type,int typeaddr);
 	string GetReChangContract();
 private:
 	SEND_DATA		m_sendContract;

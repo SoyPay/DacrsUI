@@ -7,6 +7,7 @@ class CScriptCfg
 public:
 	CString	strScriptBetid;
 	CString	strSrcriptDarkid;
+	CString	m_ipoScritptid;
 };
 class CMainCfg 
 {
@@ -68,6 +69,7 @@ public:
 	INT64	AcceptBetnFee;
 	INT64	OpenBetnFee;
 	INT64	GetAppAmountnFee;
+	INT64   GetRechangeFee;
 };
 
 class CNetParamCfg

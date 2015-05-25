@@ -100,6 +100,7 @@ public:
 	void		 DispatchMsg( unsigned int threadID , UINT msg , WPARAM wParam , LPARAM lParam ) ;
 public:
 	CString      m_betScritptid;
+	CString      m_ipoScritptid;
 	CString      m_darkScritptid;
 	CDarkTxCfg		m_DarkCfg;
 	CP2PBetCfg		m_P2PBetCfg;
@@ -131,6 +132,7 @@ public:
 	CMyQueue m_UiReciveDlgQueue;
 	CMyQueue m_UiSendDlgQueue;
 	CMyQueue m_UiTxDetailQueue;
+	CMyQueue m_UiP2pDlgQueue;
 	void UpdateQuizPoolData();
 	void UpdateAddressData();
 	void InsertTransaction(string hash);
@@ -139,6 +141,9 @@ public:
 	void UpdateAppRecord(string txdetail);
 	void InsertAddbook(uistruct::ADDRBOOK_t );
 	void UpdateAddbook(uistruct::ADDRBOOK_t );
+	BOOL UpdateP2pBetRecord();
+	void OpenBetRecord(vector<unsigned char> openbet,uistruct::REVTRANSACTION_t transcion);
+	void AcceptBetRecord(vector<unsigned char> acceptbet,uistruct::REVTRANSACTION_t transcion);
 	void ClearTransaction();
 	void GetMainDlgStruct();
 	BOOL RunOnlyOneApp();
