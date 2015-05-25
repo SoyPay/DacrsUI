@@ -35,6 +35,7 @@ CDacrsUIApp::CDacrsUIApp()
 	// 将所有重要的初始化放置在 InitInstance 中
 	m_betScritptid = _T("");
 	m_darkScritptid =_T("");
+	m_ipoScritptid = _T("");
 	m_blockSock  = INVALID_SOCKET ;
 	m_strServerCfgFileName = "dacrs.conf";
 	isStartMainDlg = false;
@@ -58,6 +59,7 @@ CDacrsUIApp theApp;
 BOOL  EnableDebugPrivilege();
 // CDacrsUIApp 初始化
 
+
 BOOL CDacrsUIApp::InitInstance()
 {
 	// 如果一个运行在 Windows XP 上的应用程序清单指定要
@@ -76,7 +78,6 @@ BOOL CDacrsUIApp::InitInstance()
 	{
 		return FALSE;
 	}
-
 
 	AfxEnableControlContainer();
 
@@ -471,10 +472,11 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 							((CDacrsUIApp*)pParam)->UpdateAppRecord(txDetail.GetString());
 						}
 					}
+					break;
 				case WM_P2P_BET_RECORD:
 					{
 						//更新数据库赌约数据库列表
-						((CDacrsUIApp*)pParam)->m_SqliteDeal.UpdateP2pBetRecord(); 
+						//((CDacrsUIApp*)pParam)->UpdateP2pBetRecord(); 
 					}
 					break;
 				case WM_DARK_RECORD:
@@ -766,8 +768,9 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 			break;
 		case APP_TRANSATION_TYPE:
 		 {
+			 Json::Value obj =msgValue["transation"]; 
 			 CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_APP_TRANSATION);
-			 postmsg.SetData(msgValue.toStyledString().c_str());
+			 postmsg.SetData(obj.toStyledString().c_str());
 			 pApp->m_MsgQueue.push(postmsg);
 		 }
 		  break;
@@ -805,8 +808,14 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 			
 				/// 更新钱包
 				CPostMsg postuimsg(MSG_USER_GET_UPDATABASE,WM_UP_ADDRESS);
-			
 				pApp->m_MsgQueue.push(postuimsg);
+
+				CPostMsg postpoolmsg(MSG_USER_GET_UPDATABASE,WM_UP_BETPOOL);
+				pApp->m_MsgQueue.push(postpoolmsg);
+
+				CPostMsg postp2pmsg(MSG_USER_P2P_UI,WM_UP_ADDRESS);
+				pApp->m_UiP2pDlgQueue.push(postp2pmsg);
+
 				RecivetxMsgTimeLast = tempTimemsg;
 			}
 			break;
@@ -1115,6 +1124,7 @@ void  CDacrsUIApp::ParseUIConfigFile(const CStringA& strExeDir){
 		CJsonConfigHelp::getInstance()->GetScriptCfgData(scriptCfg);
 		m_betScritptid = scriptCfg.strScriptBetid;
 		m_darkScritptid= scriptCfg.strSrcriptDarkid;
+		m_ipoScritptid = scriptCfg.m_ipoScritptid;
 		CJsonConfigHelp::getInstance()->GetDarkCfgData(m_DarkCfg);
 		CJsonConfigHelp::getInstance()->GetP2PBetCfgData(m_P2PBetCfg);
 		CNetParamCfg netParm;
@@ -1414,6 +1424,9 @@ void CDacrsUIApp::SendUIMsg(int message,CString jsonaddr){
 
 	m_UiSendDlgQueue.push(Postmsg);
 	DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_SEND_UI ,message,0);
+
+	m_UiP2pDlgQueue.push(Postmsg);
+	DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_P2P_UI ,message,0);
 }
 
 void CDacrsUIApp::CheckPathValid(const CStringA& strDir)

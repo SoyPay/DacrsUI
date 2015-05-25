@@ -191,7 +191,7 @@ void CNewAddressDlg::OnBnClickedButtonScdz()
 	CString addr = root["addr"].asCString();
 
 	CString Lable;
-	GetDlgItem(IDC_EDIT_Lable)->GetWindowText(Lable);
+	GetDlgItem(IDC_EDIT_Leble)->GetWindowText(Lable);
 
 	uistruct::LISTADDR_t newaddr; 
 	memcpy(newaddr.address,addr,sizeof(newaddr.address));

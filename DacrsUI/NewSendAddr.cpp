@@ -40,7 +40,7 @@ void CNewSendAddr::OnBnClickedOk()
 	// TODO: 在此添加控件通知处理程序代码
 	CString label =_T("");
 	CString addr  = _T("");
-	GetDlgItem(IDC_EDIT_Label)->GetWindowText(label);
+	GetDlgItem(IDC_EDIT_Lebel)->GetWindowText(label);
 	GetDlgItem(IDC_EDIT_ADDR)->GetWindowText(addr);
 	if (addr == _T(""))
 	{

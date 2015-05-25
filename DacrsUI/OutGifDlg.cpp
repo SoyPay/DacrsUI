@@ -116,7 +116,7 @@ BOOL COutGifDlg::OnInitDialog()
 
 	SetBkBmpNid( IDB_BITMAP_EXIT_BJ ) ;
 
-	LoadGifing(TRUE);
+	//LoadGifing(TRUE);
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE
 }

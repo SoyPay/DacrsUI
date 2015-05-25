@@ -765,11 +765,19 @@ string CSoyPayHelp::GetFullRegID(const string& strRegID)
 }
 
 
-
-
-
-
-
+CString  CSoyPayHelp::GetNotFullRegID(std::vector<unsigned char>strRegID)
+{
+	int nHeight = 0;
+	short nIndex = 0;
+	if (strRegID.size()==6)
+	{
+		memcpy(&nHeight, &strRegID[0], sizeof(nHeight));
+		memcpy(&nIndex, &strRegID[4], sizeof(nIndex));
+	}
+	CString ret;
+	ret.Format("%d-%d",nHeight,nIndex);
+	return ret;
+}
 
 
 
@@ -929,21 +937,22 @@ string CP2PBetHelp::PacketP2PAcceptContract(int64_t nMoney, const string& strSen
 	return CSoyPayHelp::getInstance()->GetHexData((const char*)&m_acceptContract,sizeof(ACCEPT_DATA));
 }
 
-string CP2PBetHelp::PacketP2PExposeContract(const string& SendHash,const string& strRandomHash)
+string CP2PBetHelp::PacketP2PExposeContract(const string& SendHash,const string& strRandomHash,const string& AcceptHash,int outheight)
 {
 	memset(&m_openContract,0,sizeof(OPEN_DATA));
 	m_openContract.type = TX_OPENBET;
 	memcpy(m_openContract.txhash,SendHash.c_str(),HASH_SIZE);
 	memcpy(m_openContract.dhash,strRandomHash.c_str(),sizeof(m_openContract.dhash));
-
+	memcpy(m_openContract.accepthash,AcceptHash.c_str(),sizeof(m_openContract.accepthash));
+	m_openContract.out_heitht = outheight;
 	return CSoyPayHelp::getInstance()->GetHexData((const char*)&m_openContract,sizeof(OPEN_DATA));
 }
-string CP2PBetHelp::GetAppAccountMoneyContract(const string& straccid){
+string CP2PBetHelp::GetAppAccountMoneyContract(const string& straccid,int type,int typeaddr){
 	APPACC accdata;
 	memset(&accdata,0,sizeof(APPACC));
 	accdata.systype = 0xff;
-	accdata.type = 0x01;  /// 0xff 表示提现 或者充值 0x01 提现 0x02 充值
-	accdata.typeaddr = 0x01;
+	accdata.type = type;  /// 0xff 表示提现 或者充值 0x01 提现 0x02 充值
+	accdata.typeaddr = typeaddr;   /// 0x01是regid 0x02是base58地址
 	//vector<unsigned char> v = CSoyPayHelp::getInstance()->ParseHex(straccid);
 	//memcpy(accdata.accountid,&v[0],sizeof(accdata.accountid));
 	return CSoyPayHelp::getInstance()->GetHexData((const char*)&accdata,sizeof(APPACC));

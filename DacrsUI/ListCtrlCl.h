@@ -55,6 +55,7 @@ public:
 	// ×ÖÌå¿í¶È
 	int m_fontWith;
 	afx_msg void OnPaint();
+	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 };
 
 

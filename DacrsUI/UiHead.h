@@ -17,32 +17,27 @@ using namespace std;
 #define LANGUAGE_FILE_CN		"\\Config\\Language_CN.ini"
 #define LANGUAGE_FILE_EN		"\\Config\\Language_EN.ini"
 
-#define MSG_USER_ACCEPTRECOD_UI			    WM_USER+103	    //更新到AcceptBetRecod界面
-#define MSG_USER_DARK_UI			        WM_USER+104	    //更新到Dark界面
 #define MSG_USER_MAIN_UI			        WM_USER+105	    //更新到Mian界面
+#define MSG_USER_TRANSRECORD_UI			    WM_USER+106	    //更新到TransRecord界面
+#define MSG_USER_GET_UPDATABASE             WM_USER+107     //从数据库中获取数据
+#define MSG_USER_SHOW_INIT                  WM_USER+108    //显示服务器初始化 
+#define MSG_USER_UP_PROGRESS			    WM_USER+109	    //更新进度条  1131
+#define MSG_USER_INSERT_DATA                WM_USER+110    //插入数据到数据库
+#define MSG_USER_UPDATA_DATA                WM_USER+111	    //更新数据到数据库
+#define MSG_USER_SEND_UI			        WM_USER+112    //更新到转账  1138
+#define MSG_USER_RECIVE_UI			        WM_USER+113    //更新到接受页面
+#define MSG_USER_STARTPROCESS_UI			WM_USER+114    //更新启动的界面
+#define MSG_USER_UPDATA_UI			        WM_USER+115   //更新到接受页面
+#define MSG_USER_P2P_UI			            WM_USER+116	    //更新到P2P界面
 
-#define MSG_USER_SENDRECOD_UI			    WM_USER+106	    //更新到SendRecord界面
-#define MSG_USER_TRANSRECORD_UI			    WM_USER+107	    //更新到TransRecord界面
-#define MSG_USER_BETPOOL_UI			        WM_USER+108	    //更新到CAcceptBetDlg界面
-#define MSG_USER_GET_UPDATABASE             WM_USER+109     //从数据库中获取数据
-#define MSG_USER_SHOW_INIT                  WM_USER+110     //显示服务器初始化 
-#define MSG_USER_SENDDARK_UI			    WM_USER+111	    //更新到发送Dark界面
-#define MSG_USER_ACCEPTDARK_UI			    WM_USER+112	    //更新到接受Dark界面
-#define MSG_USER_SENDBET_UI			        WM_USER+113	    //更新到接受p2p界面
-#define MSG_USER_UP_PROGRESS			    WM_USER+114	    //更新进度条  1131
-#define MSG_USER_INSERT_DATA                WM_USER+115	    //插入数据到数据库
-#define MSG_USER_UPDATA_DATA                WM_USER+116	    //更新数据到数据库
-#define MSG_USER_SEND_UI			        WM_USER+117    //更新到转账  1138
-#define MSG_USER_RECIVE_UI			        WM_USER+118    //更新到接受页面
-#define MSG_USER_STARTPROCESS_UI			WM_USER+119    //更新启动的界面
-#define MSG_USER_UPDATA_UI			        WM_USER+120   //更新到接受页面
+
 
 #define MSG_USER_QUITTHREAD			        WM_USER+200	    //退出线程
 #define MSG_USER_OUT                        WM_USER+201     //退出软件
 
 
 #define MSG_USER_END			        WM_USER+800	    //退出线程
-
+#define WM_BN_CLICK						WM_USER+801
 //enum
 enum {
 	LANGUAGE_CN = 0x01,
@@ -159,7 +154,7 @@ namespace uistruct {
 		char   tx_hash[64+1]    ;      //发赌约hash
 		char   left_addr[34+1]  ;		//发赌约地址
 		char   right_addr[34+1] ;		//接受赌约地址
-		INT64  amount  ;				//金额
+		double  amount  ;				//金额
 		char   content[33]    ;       //明文 
 		int    actor  ;               // 0 发起赌约 1 接受赌约 2 即使发起赌约又是接受赌约
 		int    confirmed      ;        // 是否已确认
@@ -441,7 +436,7 @@ namespace uistruct {
 			this->addr2 = root["addr2"].asString();
 			this->addr3 = root["addr3"].asString();
 			this->addr4 = root["addr4"].asString();
-			this->addr5 = root["addr4"].asString();
+			this->addr5 = root["addr5"].asString();
 			return true;
 		}
 	}MINDLG_T;

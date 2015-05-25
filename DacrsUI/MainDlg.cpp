@@ -352,18 +352,6 @@ void CMainDlg::SetCtrlText()
 	if (addr1 != "")
 	{
 		temp.JsonToStruct(addr1);
-		//if (temp.state == 1)
-		//{
-		//	strCommand.Format(_T("-%.8f"),temp.money*COIN);
-		//	strShowData.Format(_T("%s "),temp.addr.c_str());
-		//	m_strTrading4.SetTextColor(RGB(255,0,0));
-		//}else if (temp.state == 2)
-		//{
-		//	strCommand.Format(_T("+%.8f"),temp.money*COIN);
-		//	strShowData.Format(_T("%s "),temp.desaddr.c_str());
-		//	m_strTrading4.SetTextColor(RGB(166,162,247));
-		//}
-
 		strCommand.Format(_T("%.4f"),temp.money*COIN);
 		strShowData.Format(_T("%s"),temp.addr.c_str());
 		strDes.Format(_T("%s"),temp.desaddr.c_str());
@@ -377,17 +365,6 @@ void CMainDlg::SetCtrlText()
 	if (addr1 != "")
 	{
 		temp.JsonToStruct(addr1);
-		//if (temp.state == 1)
-		//{
-		//	strCommand.Format(_T("-%.8f"),temp.money*COIN);
-		//	strShowData.Format(_T("%s "),temp.addr.c_str());
-		//	m_strTrading5.SetTextColor(RGB(255,0,0));
-		//}else if (temp.state == 2)
-		//{
-		//	strCommand.Format(_T("+%.8f"),temp.money*COIN);
-		//	strShowData.Format(_T("%s "),temp.desaddr.c_str());
-		//	m_strTrading5.SetTextColor(RGB(166,162,247));
-		//}
 		strCommand.Format(_T("%.4f"),temp.money*COIN);
 		strShowData.Format(_T("%s"),temp.addr.c_str());
 		strDes.Format(_T("%s"),temp.desaddr.c_str());
