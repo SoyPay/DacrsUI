@@ -138,7 +138,7 @@ BOOL CDacrsUIApp::InitInstance()
 	//启动服务程序
 	StartSeverProcess(str_InsPath);
 	m_bServerState = true;
-	Sleep(1000);
+//	Sleep(1000);
 
 	//连接block
 	//连接到服务器
