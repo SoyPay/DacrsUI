@@ -212,7 +212,7 @@ void CDacrsUIApp::OpenBetRecord(vector<unsigned char> openbet,uistruct::REVTRANS
 	if (nItem != 0)
 	{
 		CString strSourceData,strWhere;
-		strSourceData.Format(_T("comfirmed = %d ,height = %d  ,guessnum =%d,state=2") ,transcion.confirmedtime,transcion.confirmedHeight,(int)Openbet.dhash[32] ) ;
+		strSourceData.Format(_T("comfirmed = %d ,height = %d  ,guess_num =%d,state=2") ,transcion.confirmedtime,transcion.confirmedHeight,(int)Openbet.dhash[32] ) ;
 		strWhere.Format(_T("tx_hash = '%s'") , hexHash.c_str() ) ;
 		if ( !m_SqliteDeal.UpdateTableItem(_T("t_p2p_quiz") , strSourceData , strWhere)){
 			TRACE(_T("t_p2p_quiz数据更新失败!") );

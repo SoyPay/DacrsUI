@@ -10,8 +10,9 @@ typedef struct _ListBox_Data
 {
 	int         nItem; //ÐÐÊý
 	CStaticTrans * pSta0; //°´Å¥1
-	CButtonEx * pBut2; //°´Å¥2
 	CStaticTrans   * pSta1; //¾²Ì¬¿ò1
+	CStaticTrans   * pSta2; //¾²Ì¬¿ò1
+	CButtonEx * pBut2; //°´Å¥2
 	CString       pstr;
 	_ListBox_Data()
 	{
@@ -55,7 +56,7 @@ public:
 	List_AppendData *GetAppendDataInfo(int iIndex);
 	void    SetIndexInage(int iIndex , UINT nButImage  );
 	void    SetIndexBackCol(int iIndex ,  int nline ,COLORREF   col);
-	void    SetIndexString(int iIndex , CString strSta0 ,CString strBut2 ,CString strSta1 ,CString strSta2 );
+	void    SetIndexString(int iIndex , CString strSta0 ,CString strSta1 ,CString strSta2 ,CString strBut2 ,CString strSta3 );
 	void    DeleteAllIndex();
 	void    DeleteIndex(int iIndex);
 	void    CreateTitle();
