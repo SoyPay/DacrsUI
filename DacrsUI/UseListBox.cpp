@@ -130,7 +130,7 @@ void CUseListBox::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	CDC *pDC = CDC::FromHandle(lpDrawItemStruct->hDC);
 	pDC->DrawText(line, line.GetLength(), &rectName,DT_VCENTER|DT_SINGLELINE|DT_VCENTER);
 
-	updateListBoxButtonPos();
+	//updateListBoxButtonPos();
 	dc.Detach();
 }
 
@@ -171,11 +171,15 @@ void CUseListBox::DeleteAllIndex()
 		if ( NULL != pData ) {
 			delete pData->pSta0;
 			pData->pSta0 = NULL ;
+
 			delete pData->pBut2;
 			pData->pBut2 = NULL ;
 
 			delete pData->pSta1;
 			pData->pSta1 = NULL ;
+
+			delete pData->pSta2;
+			pData->pSta2 = NULL ;
 
 			delete pData;
 			pData = NULL;
@@ -196,6 +200,9 @@ void CUseListBox::DeleteIndex(int iIndex)
 
 		delete pData->pSta1;
 		pData->pSta1 = NULL ;
+
+		delete pData->pSta2;
+		pData->pSta2 = NULL ;
 
 		delete pData;
 		pData = NULL;
