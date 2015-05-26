@@ -203,13 +203,13 @@ void CSendRecord::Showlistbox(CString address)
 				}else{
 					if ((const_it->time_out + const_it->height)> theApp.blocktipheight && theApp.IsSyncBlock)
 					{
-						m_listBox.SetIndexString(i , sendaddr, acceptaddr,SendTime,strTime, result,guess,reward, _T("开"),const_it->tx_hash);
+						m_listBox.SetIndexString(i , sendaddr, acceptaddr,SendTime,strTime, result,_T("--"),reward, _T("开"),const_it->tx_hash);
 					}else if(theApp.IsSyncBlock){
 						reward.Format(_T("-%.4f"),const_it->amount);
 						m_listBox.SetIndexString(i , sendaddr, acceptaddr,SendTime,strTime, result,guess,reward, _T("超时"),const_it->tx_hash);
 					}else{
 						pinf->pBut0->EnableWindow(true);
-						m_listBox.SetIndexString(i , sendaddr, acceptaddr,SendTime,strTime, result,guess,reward, _T("开"),const_it->tx_hash);
+						m_listBox.SetIndexString(i , sendaddr, acceptaddr,SendTime,strTime, result,_T("--"),reward, _T("开"),const_it->tx_hash);
 					}
 					
 				}
