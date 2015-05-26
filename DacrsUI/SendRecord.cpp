@@ -203,6 +203,7 @@ void CSendRecord::Showlistbox(CString address)
 				}else{
 					if ((const_it->time_out + const_it->height)> theApp.blocktipheight && theApp.IsSyncBlock)
 					{
+						pinf->pBut0->EnableWindow(true);
 						m_listBox.SetIndexString(i , sendaddr, acceptaddr,SendTime,strTime, result,_T("--"),reward, _T("¿ª"),const_it->tx_hash);
 					}else if(theApp.IsSyncBlock){
 						reward.Format(_T("-%.4f"),const_it->amount);
