@@ -748,11 +748,12 @@ void CP2PDlg::OnListPool()
 
 		double dmoney = (DBbet.money*1.0)/COIN;
 		money.Format(_T("%.4f"),dmoney);
-		CString txhash ;
+		CString txhash, line;
+		line.Format(_T("%d"),i);
 		txhash.Format(_T("%s"),const_it->hash.c_str());
 		m_BonusListBox.InsertStr(i,this->GetSafeHwnd());
 		m_BonusListBox.SetIndexInage(i , IDB_BITMAP_P2P_LISTBOX_BUT);
-		m_BonusListBox.SetIndexString(i , regid, _T("½Ó"), money, txhash);
+		m_BonusListBox.SetIndexString(i , line,regid, _T("½Ó"), money, txhash);
 		i++;
 	}
 }
@@ -772,8 +773,8 @@ void CP2PDlg::OnListPool()
 			std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(pPoolList.data);
 			memcpy(&DBbet, &vTemp[0], sizeof(DBbet));
 			CString money,adddr;
-			pinf->pSta1->GetWindowText(money);
-			pinf->pSta0->GetWindowText(adddr);
+			pinf->pSta2->GetWindowText(money);
+			pinf->pSta1->GetWindowText(adddr);
 			AcceptBet(hash,money,adddr,DBbet.hight);
 		}
 		

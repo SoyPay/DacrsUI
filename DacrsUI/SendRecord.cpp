@@ -168,6 +168,9 @@ void CSendRecord::Showlistbox(CString address)
 			m_listBox.SetIndexInage(i , IDB_BITMAP_P2P_LISTBOX_BUT);
 			m_listBox.SetIndexBackCol(i, 0, RGB(242,32,32));
 
+			List_SendAppendData* pinf = m_listBox.GetAppendDataInfo(i);
+			pinf->pBut0->EnableWindow(false);
+
 			int rrrr = const_it->content[32];
 			///说明开奖了
 			if (const_it->state == 2 || const_it->state == 1)
@@ -205,6 +208,7 @@ void CSendRecord::Showlistbox(CString address)
 						reward.Format(_T("-%.4f"),const_it->amount);
 						m_listBox.SetIndexString(i , sendaddr, acceptaddr,SendTime,strTime, result,guess,reward, _T("超时"),const_it->tx_hash);
 					}else{
+						pinf->pBut0->EnableWindow(true);
 						m_listBox.SetIndexString(i , sendaddr, acceptaddr,SendTime,strTime, result,guess,reward, _T("开"),const_it->tx_hash);
 					}
 					
