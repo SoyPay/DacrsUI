@@ -18,7 +18,6 @@ private:
 
 public:
 	void   UpdataAllTableData(BOOL flag);
-	BOOL   UpdateP2pBetRecord();
 	BOOL   UpdateDarkRecord();
 
 public:

@@ -163,14 +163,14 @@ void CBetRecord::OnSize(UINT nType, int cx, int cy)
 	if( NULL != GetSafeHwnd() ) {
 		CWnd *pst = GetDlgItem( IDC_LIST_BOX ) ;
 		if ( NULL != pst ) {
-			pst->SetWindowPos( NULL ,0 , 33 , 875, 185  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,0 , 33 , 875, 150  ,SWP_SHOWWINDOW ) ; 
 		}
 	}
 }
 void CBetRecord::Showlistbox(CString address)
 {
 	//// 查找数据库中是否存在此记录
-	m_ListBox.ResetContent();
+	m_ListBox.DeleteAllIndex();
 	CString conditon;
 	conditon.Format(_T("right_addr ='%s' and (actor = 1 or actor = 2)") , address);
 	uistruct::P2PBETRECORDLIST  pPoolItem;
@@ -181,9 +181,10 @@ void CBetRecord::Showlistbox(CString address)
 		std::vector<uistruct::P2P_QUIZ_RECORD_t>::const_iterator const_it;
 		for (const_it = pPoolItem.begin();const_it!=pPoolItem.end();const_it++)
 		{
-			CString dmoney,reward,result,guess;
+			CString dmoney,reward,result,guess,Sendaddr;
+			Sendaddr.Format(_T("%s"),const_it->left_addr);
 			dmoney.Format(_T("%.4f"),const_it->amount);
-			if (const_it->guess_num == 0)
+			if (const_it->guess_num == 1)
 			{
 				guess.Format(_T("%s"),"妹");
 			}else
@@ -196,12 +197,17 @@ void CBetRecord::Showlistbox(CString address)
 			m_ListBox.SetIndexBackCol(0 , 2 , RGB(181,185,212));
 			m_ListBox.SetIndexBackCol(0 , 3 , RGB(181,185,212));
 			m_ListBox.SetIndexBackCol(0 , 4 , RGB(181,185,212));
+
+			SYSTEMTIME curTime =UiFun::Time_tToSystemTime(const_it->send_time);
+			CString sendTime,reciveTime;
+			sendTime.Format("%04d-%02d-%02d %02d:%02d:%02d",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+			SYSTEMTIME rTime =UiFun::Time_tToSystemTime(const_it->recv_time);
+			reciveTime.Format("%04d-%02d-%02d %02d:%02d:%02d",rTime.wYear, rTime.wMonth, rTime.wDay, rTime.wHour, rTime.wMinute, rTime.wSecond);
+
+			reward.Format(_T("%.4f"),const_it->amount);
 			///说明开奖了
 			if (const_it->state == 2)
 			{
-				SYSTEMTIME curTime =UiFun::Time_tToSystemTime(const_it->recv_time);
-				CString strTime;
-				strTime.Format("%04d-%02d-%02d %02d:%02d:%02d",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
 				if (const_it->guess_num == const_it->content[32])
 				{
 					reward.Format(_T("+%.4f"),const_it->amount);
@@ -209,17 +215,25 @@ void CBetRecord::Showlistbox(CString address)
 				{
 					reward.Format(_T("-%.4f"),const_it->amount);
 				}
-				if (const_it->content[32] == 0)
+				if (const_it->content[32] == 1)
 				{
 					result.Format(_T("%s"),"妹");
 				}else
 				{
 					result.Format(_T("%s"),"哥");
 				}
-				m_ListBox.SetIndexString(i , address,reward, result, guess , strTime);
+				m_ListBox.SetIndexString(i , Sendaddr,address,sendTime,reciveTime, result,guess, reward);
 
 			}else{
-				m_ListBox.SetIndexString(i , address,dmoney, _T("--"), guess , _T("--"));
+				if ((const_it->time_out + const_it->height)> theApp.blocktipheight&& theApp.IsSyncBlock)
+				{
+					m_ListBox.SetIndexString(i , Sendaddr,address,sendTime,reciveTime, _T("未开奖"),guess,reward);
+				}else if(theApp.IsSyncBlock){
+					reward.Format(_T("+%.4f"),const_it->amount);
+					m_ListBox.SetIndexString(i , Sendaddr,address,sendTime,reciveTime, _T("超时"),guess,reward);
+				}else{
+					m_ListBox.SetIndexString(i , Sendaddr,address,sendTime,reciveTime, _T("未开奖"),guess,reward);
+				}
 			}
 			i++;
 		}
