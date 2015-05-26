@@ -313,8 +313,10 @@ void CSendListBox::DeleteAllIndex()
 
 			delete pData;
 			pData = NULL;
+			DeleteString(i);
 		}
 	}
+		m_mButton.clear();
 }
 void CSendListBox::DeleteIndex(int iIndex)
 {
@@ -334,6 +336,13 @@ void CSendListBox::DeleteIndex(int iIndex)
 
 		delete pData;
 		pData = NULL;
+	}
+
+	DeleteString(iIndex);
+	SendButton_map::iterator iter = m_mButton.find(iIndex);
+	if (iter != m_mButton.end())
+	{
+		m_mButton.erase(iter);
 	}
 }
 BOOL CSendListBox::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)

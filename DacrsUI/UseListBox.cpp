@@ -97,34 +97,40 @@ void CUseListBox::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	List_AppendData * pData =(List_AppendData *) GetItemDataPtr(lpDrawItemStruct->itemID);
 	TRACE1("DrawItem:%d\r\n",lpDrawItemStruct->itemID);
 
-	if (pData == NULL)
-	{
-		int b = 5;
-	}
-	//获取列表数据
-	CString str;
-	GetText(lpDrawItemStruct->itemID,str);
-	if (lpDrawItemStruct->itemAction | ODA_SELECT && lpDrawItemStruct->itemState & ODS_SELECTED)
-	{
-		CBrush t_brush1;
-		t_brush1.CreateSolidBrush(RGB(229,239,244));
-		dc.FillRect(&lpDrawItemStruct->rcItem,&t_brush1);
+	//if (pData == NULL)
+	//{
+	//	int b = 5;
+	//}
+	////获取列表数据
+	//CString str;
+	//GetText(lpDrawItemStruct->itemID,str);
+	//if (lpDrawItemStruct->itemAction | ODA_SELECT && lpDrawItemStruct->itemState & ODS_SELECTED)
+	//{
+	//	CBrush t_brush1;
+	//	t_brush1.CreateSolidBrush(RGB(229,239,244));
+	//	dc.FillRect(&lpDrawItemStruct->rcItem,&t_brush1);
 
-	}
-	else
-	{
-  		CBrush t_brush1;
- 		t_brush1.CreateSolidBrush(RGB(255,255,255));
- 		dc.FillRect(&lpDrawItemStruct->rcItem,&t_brush1);
-	}
+	//}
+	//else
+	//{
+ // 		CBrush t_brush1;
+ //		t_brush1.CreateSolidBrush(RGB(255,255,255));
+ //		dc.FillRect(&lpDrawItemStruct->rcItem,&t_brush1);
+	//}
 	//底部边线
-	CPen t_pen(PS_SOLID,1,RGB(0,0,0));
-	dc.SelectObject(t_pen);
-	dc.MoveTo(0,lpDrawItemStruct->rcItem.bottom-1);
-	dc.LineTo(lpDrawItemStruct->rcItem.right,lpDrawItemStruct->rcItem.bottom-1);
+	//CPen t_pen(PS_SOLID,1,RGB(0,0,0));
+	//dc.SelectObject(t_pen);
+	//dc.MoveTo(0,lpDrawItemStruct->rcItem.bottom-1);
+	//dc.LineTo(lpDrawItemStruct->rcItem.right,lpDrawItemStruct->rcItem.bottom-1);
 
+	m_rectListBox = lpDrawItemStruct->rcItem;
+	CRect rectName(m_rectListBox.left + 60, m_rectListBox.top,m_rectListBox.left + 300, m_rectListBox.top + 40);
+	CString line;
+	line.Format(_T("%d"),pData->nItem);
+	CDC *pDC = CDC::FromHandle(lpDrawItemStruct->hDC);
+	pDC->DrawText(line, line.GetLength(), &rectName,DT_VCENTER|DT_SINGLELINE|DT_VCENTER);
 
-
+	updateListBoxButtonPos();
 	dc.Detach();
 }
 
@@ -171,11 +177,14 @@ void CUseListBox::DeleteAllIndex()
 			delete pData;
 			pData = NULL;
 		}
+		DeleteString(i);
 	}
+	m_mButton.clear();
 }
 void CUseListBox::DeleteIndex(int iIndex)
 {
 	List_AppendData * pData = (List_AppendData *)GetItemDataPtr(iIndex);
+
 	if ( NULL != pData ) {
 		delete pData->pSta0;
 		pData->pSta0 = NULL ;
@@ -188,6 +197,14 @@ void CUseListBox::DeleteIndex(int iIndex)
 		delete pData;
 		pData = NULL;
 	}
+
+	DeleteString(iIndex);
+	button_map::iterator iter = m_mButton.find(iIndex);
+	if (iter != m_mButton.end())
+	{
+		m_mButton.erase(iter);
+	}
+
 }
 void CUseListBox::CreateTitle()
 {
