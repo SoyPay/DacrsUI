@@ -27,13 +27,63 @@ BEGIN_MESSAGE_MAP(CUseListBox, CListBox)
 	ON_WM_ERASEBKGND()
 	ON_WM_MOUSEMOVE()
 	ON_WM_MOUSEWHEEL()
+	ON_WM_VSCROLL()
+	ON_CONTROL_REFLECT(LBN_SELCHANGE, &CUseListBox::OnLbnSelchange)
 END_MESSAGE_MAP()
 
 
 
 // CUseListBox 消息处理程序
 
-
+//void CUseListBox::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
+//{
+//
+//	// TODO:  添加您的代码以绘制指定项
+//	CDC *pDC = CDC::FromHandle(lpDrawItemStruct->hDC);
+//	COLORREF crOldTextColor = pDC->GetTextColor();
+//	COLORREF crOldBkColor = pDC->GetBkColor();
+//
+//	m_rectListBox = lpDrawItemStruct->rcItem;
+//
+//	//pData->pSta0->SetFont(90, _T("宋体"));				//设置显示字体和大小
+//	//// pData->pSta0->SetTextColor(RGB(0,0,0));			    //字体颜色
+//	//pData->pSta0->ShowWindow( SW_SHOW );
+//	//pData->pSta0->SetWindowPos(NULL , 20 , pData->nItem*35 +10 , 275 , 35 , SWP_SHOWWINDOW );
+//
+//	//pData->pSta1->SetFont(90, _T("宋体"));				//设置显示字体和大小
+//	////  pData->pSta1->SetTextColor(RGB(0,0,0));			    //字体颜色
+//	//pData->pSta1->ShowWindow( SW_SHOW );
+//	//pData->pSta1->SetWindowPos(NULL , 275+10+25 , pData->nItem*35 +10 , 40 , 25 , SWP_SHOWWINDOW );
+//
+//	//pData->pBut2->ShowWindow( SW_SHOW );
+//	//pData->pBut2->SetWindowPos(NULL , 275+10+50 +40 , pData->nItem*35 , 43 , 33 , SWP_SHOWWINDOW );
+//	// 列表Item中的图标位置
+//	CRect rectIcon(m_rectListBox.left + 10, m_rectListBox.top + 5,m_rectListBox.left + 50, m_rectListBox.top + 45);
+//	// 列表Item中的软件名称的文本位置
+//	CRect rectName(m_rectListBox.left + 60, m_rectListBox.top + 5,m_rectListBox.left + 300, m_rectListBox.top + 45);
+//	// 列表Items中的软件是否安装的文本位置
+//	CRect rectIsInstall(m_rectListBox.left + 300, m_rectListBox.top + 5,m_rectListBox.left + 800, m_rectListBox.top + 45);
+//
+//	List_AppendData * pData =(List_AppendData *) GetItemDataPtr(lpDrawItemStruct->itemID);
+//	//m_iCurIndex = pItem->nID;
+//
+//	if ((lpDrawItemStruct->itemAction | ODA_SELECT) &&
+//		(lpDrawItemStruct->itemState & ODS_SELECTED))
+//	{
+//		// 选中状态
+//		pDC->SetTextColor(RGB(0,0,0));
+//		pDC->FillSolidRect(&m_rectListBox,RGB(182,218,243));
+//	}
+//	else
+//	{
+//		// 未选中状态
+//		pDC->SetTextColor(RGB(27,73,115));
+//		pDC->FillSolidRect(&m_rectListBox, crOldBkColor);
+//	}
+////	pDC->set
+//	//updateListBoxButtonPos();
+//
+//}
 
 void CUseListBox::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 {
@@ -45,31 +95,42 @@ void CUseListBox::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	CDC dc;
 	dc.Attach(lpDrawItemStruct->hDC);
 	List_AppendData * pData =(List_AppendData *) GetItemDataPtr(lpDrawItemStruct->itemID);
+	TRACE1("DrawItem:%d\r\n",lpDrawItemStruct->itemID);
 
-	//获取列表数据
-	CString str;
-	GetText(lpDrawItemStruct->itemID,str);
-	if (lpDrawItemStruct->itemAction | ODA_SELECT && lpDrawItemStruct->itemState & ODS_SELECTED)
-	{
-		CBrush t_brush1;
-		t_brush1.CreateSolidBrush(RGB(229,239,244));
-		dc.FillRect(&lpDrawItemStruct->rcItem,&t_brush1);
+	//if (pData == NULL)
+	//{
+	//	int b = 5;
+	//}
+	////获取列表数据
+	//CString str;
+	//GetText(lpDrawItemStruct->itemID,str);
+	//if (lpDrawItemStruct->itemAction | ODA_SELECT && lpDrawItemStruct->itemState & ODS_SELECTED)
+	//{
+	//	CBrush t_brush1;
+	//	t_brush1.CreateSolidBrush(RGB(229,239,244));
+	//	dc.FillRect(&lpDrawItemStruct->rcItem,&t_brush1);
 
-	}
-	else
-	{
-  		CBrush t_brush1;
- 		t_brush1.CreateSolidBrush(RGB(255,255,255));
- 		dc.FillRect(&lpDrawItemStruct->rcItem,&t_brush1);
-	}
+	//}
+	//else
+	//{
+ // 		CBrush t_brush1;
+ //		t_brush1.CreateSolidBrush(RGB(255,255,255));
+ //		dc.FillRect(&lpDrawItemStruct->rcItem,&t_brush1);
+	//}
 	//底部边线
-	CPen t_pen(PS_SOLID,1,RGB(0,0,0));
-	dc.SelectObject(t_pen);
-	dc.MoveTo(0,lpDrawItemStruct->rcItem.bottom-1);
-	dc.LineTo(lpDrawItemStruct->rcItem.right,lpDrawItemStruct->rcItem.bottom-1);
+	//CPen t_pen(PS_SOLID,1,RGB(0,0,0));
+	//dc.SelectObject(t_pen);
+	//dc.MoveTo(0,lpDrawItemStruct->rcItem.bottom-1);
+	//dc.LineTo(lpDrawItemStruct->rcItem.right,lpDrawItemStruct->rcItem.bottom-1);
 
+	m_rectListBox = lpDrawItemStruct->rcItem;
+	CRect rectName(m_rectListBox.left + 60, m_rectListBox.top,m_rectListBox.left + 300, m_rectListBox.top + 40);
+	CString line;
+	line.Format(_T("%d"),pData->nItem);
+	CDC *pDC = CDC::FromHandle(lpDrawItemStruct->hDC);
+	pDC->DrawText(line, line.GetLength(), &rectName,DT_VCENTER|DT_SINGLELINE|DT_VCENTER);
 
-
+	updateListBoxButtonPos();
 	dc.Detach();
 }
 
@@ -100,6 +161,51 @@ void CUseListBox::InsertStr(int iIndex,HWND hMain)
 
 	updateListBoxButtonPos();
 }
+void CUseListBox::DeleteAllIndex()
+{	
+	for (int i=0; i< GetCount(); i++) {
+		List_AppendData * pData = (List_AppendData *)GetItemDataPtr(i);
+		if ( NULL != pData ) {
+			delete pData->pSta0;
+			pData->pSta0 = NULL ;
+			delete pData->pBut2;
+			pData->pBut2 = NULL ;
+
+			delete pData->pSta1;
+			pData->pSta1 = NULL ;
+
+			delete pData;
+			pData = NULL;
+		}
+		DeleteString(i);
+	}
+	m_mButton.clear();
+}
+void CUseListBox::DeleteIndex(int iIndex)
+{
+	List_AppendData * pData = (List_AppendData *)GetItemDataPtr(iIndex);
+
+	if ( NULL != pData ) {
+		delete pData->pSta0;
+		pData->pSta0 = NULL ;
+		delete pData->pBut2;
+		pData->pBut2 = NULL ;
+
+		delete pData->pSta1;
+		pData->pSta1 = NULL ;
+
+		delete pData;
+		pData = NULL;
+	}
+
+	DeleteString(iIndex);
+	button_map::iterator iter = m_mButton.find(iIndex);
+	if (iter != m_mButton.end())
+	{
+		m_mButton.erase(iter);
+	}
+
+}
 void CUseListBox::CreateTitle()
 {
 	if ( NULL == m_pTitleSta1 ) {
@@ -129,7 +235,7 @@ void CUseListBox::updateListBoxButtonPos()
 			  pData->pSta0->SetFont(90, _T("宋体"));				//设置显示字体和大小
 			 // pData->pSta0->SetTextColor(RGB(0,0,0));			    //字体颜色
               pData->pSta0->ShowWindow( SW_SHOW );
-			  pData->pSta0->SetWindowPos(NULL , 10 , pData->nItem*35 +10 , 275 , 35 , SWP_SHOWWINDOW );
+			  pData->pSta0->SetWindowPos(NULL , 20 , pData->nItem*35 +10 , 275 , 35 , SWP_SHOWWINDOW );
 
 			  pData->pSta1->SetFont(90, _T("宋体"));				//设置显示字体和大小
 			//  pData->pSta1->SetTextColor(RGB(0,0,0));			    //字体颜色
@@ -246,12 +352,39 @@ void CUseListBox::SetIndexString(int iIndex , CString strSta0 ,CString strBut2 ,
 
 	}
 }
-
-
-
 BOOL CUseListBox::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
 	return TRUE ;
 	return CListBox::OnMouseWheel(nFlags, zDelta, pt);
+}
+void CUseListBox::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	if (nSBCode !=4&&nSBCode!=5)
+	{
+		return;
+	}
+	CString str ;
+	str.Format("nSBCode:%d      nPos:%d    \n" ,nSBCode , nPos ) ;
+	TRACE(str);
+	SCROLLINFO   scrollInfo;  
+	memset(&scrollInfo,   0,   sizeof(SCROLLINFO));  
+	scrollInfo.cbSize   =   sizeof(SCROLLINFO);  
+	scrollInfo.fMask     =   SIF_ALL;  
+	GetScrollInfo(SB_VERT,   &scrollInfo,   SIF_ALL);  
+
+	int   nScrollWidth   =   0;  
+	if(GetCount()   >   1   &&   ((int)scrollInfo.nMax >=   (int)scrollInfo.nPage))  {
+		 
+	}
+	
+
+	CListBox::OnVScroll(nSBCode, nPos, pScrollBar);
+}
+
+
+void CUseListBox::OnLbnSelchange()
+{
+	// TODO: 在此添加控件通知处理程序代码
 }

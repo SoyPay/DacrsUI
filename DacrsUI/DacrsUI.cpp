@@ -1425,10 +1425,13 @@ void CDacrsUIApp::SendUIMsg(int message,CString jsonaddr){
 	m_UiSendDlgQueue.push(Postmsg);
 	DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_SEND_UI ,message,0);
 
+}
+void CDacrsUIApp::SendP2pMsg(int message,CString jsonaddr)
+{
+	CPostMsg Postmsg(MSG_USER_MAIN_UI,message);
 	m_UiP2pDlgQueue.push(Postmsg);
 	DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_P2P_UI ,message,0);
 }
-
 void CDacrsUIApp::CheckPathValid(const CStringA& strDir)
 {
 	BOOL bExist = FALSE;

@@ -154,6 +154,10 @@ void CDacrsUIApp::UpdateAddressData(){
 				}
 				string Temp = listaddr.ToJson();
 				SendUIMsg((int)WM_UP_ADDRESS,Temp.c_str());
+				if (listaddr.bSign != addrsql.bSign)
+				{
+					SendP2pMsg((int)WM_UP_ADDRESS,Temp.c_str());
+				}
 			}
 		}
 	}
@@ -208,7 +212,7 @@ void CDacrsUIApp::OpenBetRecord(vector<unsigned char> openbet,uistruct::REVTRANS
 	if (nItem != 0)
 	{
 		CString strSourceData,strWhere;
-		strSourceData.Format(_T("recv_time = %d ,guessnum =%d,state=2") ,transcion.confirmedtime,(int)Openbet.dhash[32] ) ;
+		strSourceData.Format(_T("comfirmed = %d ,height = %d  ,guessnum =%d,state=2") ,transcion.confirmedtime,transcion.confirmedHeight,(int)Openbet.dhash[32] ) ;
 		strWhere.Format(_T("tx_hash = '%s'") , hexHash.c_str() ) ;
 		if ( !m_SqliteDeal.UpdateTableItem(_T("t_p2p_quiz") , strSourceData , strWhere)){
 			TRACE(_T("t_p2p_quiz数据更新失败!") );
@@ -230,22 +234,52 @@ void CDacrsUIApp::AcceptBetRecord(vector<unsigned char> acceptbet,uistruct::REVT
 	string SendTxhash =  CSoyPayHelp::getInstance()->HexStr(txTemp);
 
 
+	SYSTEMTIME curTime =UiFun::Time_tToSystemTime(transcion.confirmedtime);
+	CString strTime;
+	strTime.Format("%04d-%02d-%02d %02d:%02d:%02d",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+
+	CString strCommand,strShowData;
+	strCommand.Format(_T("%s %s"),_T("getaccountinfo") ,transcion.addr.c_str() );
+	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
+
+	if (strShowData  ==_T("")){		
+		return;
+	}
+	Json::Reader reader;  
+	Json::Value root; 
+	if (!reader.parse(strShowData.GetString(), root)) {		
+		return;
+	}
+	CString desaddr = root["RegID"].asCString();
 	CString strCond,strField;
 	strCond.Format(_T(" tx_hash='%s' "), SendTxhash.c_str());
 	
-	int nComfirmed = 0 ;
-	if ( 0 != transcion.confirmedtime ) {
-		nComfirmed = 1 ;
-	}
-	strField.Format(_T("send_time = %ld , ") , transcion.confirmedtime) ;
-	strField.AppendFormat(" right_addr = '%s' ,",transcion.addr.c_str() );
-	strField.AppendFormat(_T("comfirmed = %d ,height = %d ,state = %d ,relate_hash = '%s' ,guess_num = %d ") ,nComfirmed ,transcion.confirmedtime ,1 ,transcion.txhash ,(int)acceptcbet.data) ;
+	strField.AppendFormat(" right_addr = '%s' ,",desaddr );
+	strField.AppendFormat(_T("recv_time = '%s' ,height = %d ,state = %d ,relate_hash = '%s' ,guess_num = %d ") ,strTime ,transcion.confirmedHeight ,1 ,transcion.txhash ,(int)acceptcbet.data) ;
 
 	//更新数据
 	if ( !m_SqliteDeal.UpdateTableItem(_T("t_p2p_quiz") ,strField,strCond )) {
 		TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , SendTxhash );
 	}
 
+}
+void CDacrsUIApp::SendBetRecord(vector<unsigned char> sendbet,uistruct::REVTRANSACTION_t transcion)
+{
+	if(sendbet.size()==0)
+		return;
+
+	SYSTEMTIME curTime =UiFun::Time_tToSystemTime(transcion.confirmedtime);
+	CString strTime;
+	strTime.Format("%04d-%02d-%02d %02d:%02d:%02d",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+
+	CString strCond,strField;
+	strCond.Format(_T(" tx_hash='%s' "), transcion.txhash);
+	strField.AppendFormat(_T("send_time='%s',height = %d") ,strTime ,transcion.confirmedHeight ) ;
+
+	//更新数据
+	if ( !m_SqliteDeal.UpdateTableItem(_T("t_p2p_quiz") ,strField,strCond )) {
+		TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , transcion.txhash );
+	}
 }
 void CDacrsUIApp::UpdateAppRecord(string txdetail){
 	uistruct::REVTRANSACTION_t transcion;
@@ -274,6 +308,9 @@ void CDacrsUIApp::UpdateAppRecord(string txdetail){
 			}else if (vTemp[0] == TX_ACCEPTBET)
 			{
 				AcceptBetRecord(vTemp,transcion);
+			}else if (vTemp[0] == TX_SENDBET)
+			{
+				SendBetRecord(vTemp,transcion);
 			}
 		}
 	}
