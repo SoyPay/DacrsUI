@@ -235,6 +235,10 @@ void CP2PDlg::OnSize(UINT nType, int cx, int cy)
 
 	// TODO: 在此处添加消息处理程序代码
 	if( NULL != GetSafeHwnd() ) {
+
+		CRect rc ;
+		GetClientRect( rc ) ;
+
 		CWnd *pst = GetDlgItem( IDC_LIST_BONUS ) ;
 		if ( NULL != pst ) {
 			pst->SetWindowPos( NULL ,455 , 85 , 432, 167  ,SWP_SHOWWINDOW ) ; 
@@ -251,6 +255,72 @@ void CP2PDlg::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			pst->SetWindowPos( NULL ,800 , 270 ,  0 , 0 , SWP_NOSIZE ) ; 
 		}
+
+		pst = GetDlgItem( IDC_STATIC_BALANCE ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*12 , (rc.Height()/100)*7 ,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
+		}
+		
+		pst = GetDlgItem( IDC_STATIC_NOT_DRAW ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*12 , (rc.Height()/100)*14 ,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
+		}
+		
+		pst = GetDlgItem( IDC_BUTTON_WITHD ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*30 , (rc.Height()/100)*9 ,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
+		}
+		
+		pst = GetDlgItem( IDC_BUTTON_RECH ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*42 , (rc.Height()/100)*9 ,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
+		}
+		
+		pst = GetDlgItem( IDC_COMBO_ADDRES ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*12 , (rc.Height()/100)*21 ,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
+		}
+		
+		pst = GetDlgItem( IDC_EDIT_MONEY ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*14 , (rc.Height()/100)*42,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
+		}
+		
+		pst = GetDlgItem( IDC_STATIC_DW ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*40 , (rc.Height()/100)*42,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
+		}
+
+		pst = GetDlgItem( IDC_BUTTON_MALE ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*17 , (rc.Height()/100)*52+2,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
+		}
+
+		pst = GetDlgItem( IDC_BUTTON_WOMAN ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*33 ,  (rc.Height()/100)*52+2,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
+		}
+
+		
+
 	}
 }
 
@@ -936,6 +1006,7 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
  }
  bool CP2PDlg::CheckBalance()
  {
+	 OnCbnSelchangeComboAddres();
 	 CString strMoney;
 	 ((CStatic*)GetDlgItem(IDC_STATIC_BALANCE))->GetWindowText(strMoney);
 	 double money =atof(strMoney);

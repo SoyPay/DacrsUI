@@ -208,6 +208,7 @@ void CBetRecord::Showlistbox(CString address)
 			///说明开奖了
 			if (const_it->state == 2)
 			{
+				int rewardnum = (int)const_it->content[32];
 				if (const_it->guess_num == const_it->content[32])
 				{
 					reward.Format(_T("+%.4f"),const_it->amount);
