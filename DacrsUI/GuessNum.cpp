@@ -52,7 +52,7 @@ void CGuessNum::OnBnClickedOk()
 	theApp.m_strAddress=_T("");
 	char guess = 0x00;
 	guess = ((CButton *)GetDlgItem(IDC_RADIO_MAN))->GetCheck();
-	theApp.m_strAddress.Format(_T("%d"),(int)guess);
+	theApp.m_strAddress.Format(_T("%d"),((int)(guess+1)));
 	CDialogEx::OnOK();
 }
 
