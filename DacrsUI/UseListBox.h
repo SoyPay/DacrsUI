@@ -56,8 +56,14 @@ public:
 	void    SetIndexInage(int iIndex , UINT nButImage  );
 	void    SetIndexBackCol(int iIndex ,  int nline ,COLORREF   col);
 	void    SetIndexString(int iIndex , CString strSta0 ,CString strBut2 ,CString strSta1 ,CString strSta2 );
+	void    DeleteAllIndex();
+	void    DeleteIndex(int iIndex);
 	void    CreateTitle();
 	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
+	afx_msg void OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
+	afx_msg void OnLbnSelchange();
+public:
+	  CRect m_rectListBox;      // 列表项到绘制Rect
 };
 
 

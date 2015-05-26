@@ -68,7 +68,7 @@ public:
 	void SendBet(int rewardnum);
 	afx_msg void OnBnClickedButtonWoman();
 	void OnListPool();
-	void AcceptBet(CString hash,CString money);
+	void AcceptBet(CString hash,CString money,CString sendaddr,int timeout);
 	bool CheckBalance();
 	CCTabCtrl m_tab;
 	afx_msg void OnTcnSelchangeTab(NMHDR *pNMHDR, LRESULT *pResult);

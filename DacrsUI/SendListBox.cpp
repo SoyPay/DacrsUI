@@ -126,6 +126,20 @@ void CSendListBox::InsertStr(int iIndex,HWND hMain)
 	pData->pSta2 = new CStaticTrans;
 	pData->pSta2->Create(_T("") , WS_CHILD | WS_VISIBLE , rcClient, this, ++m_uID) ;
 
+
+	pData->pSta3 = new CStaticTrans;
+	pData->pSta3->Create(_T("") , WS_CHILD | WS_VISIBLE , rcClient, this, ++m_uID) ;
+
+	pData->pSta4 = new CStaticTrans;
+	pData->pSta4->Create(_T("") , WS_CHILD | WS_VISIBLE , rcClient, this, ++m_uID) ;
+
+
+	pData->pSta5 = new CStaticTrans;
+	pData->pSta5->Create(_T("") , WS_CHILD | WS_VISIBLE , rcClient, this, ++m_uID) ;
+
+	pData->pSta6 = new CStaticTrans;
+	pData->pSta6->Create(_T("") , WS_CHILD | WS_VISIBLE , rcClient, this, ++m_uID) ;
+
 	pData->pBut0 = new CButtonEx(iIndex,1,rcClient,hMain);
 	pData->pBut0->Create(_T(""),dwStyle, rcClient, this, ++m_uID);
 
@@ -152,24 +166,46 @@ void CSendListBox::updateListBoxButtonPos()
 				pData->pSta0->ShowWindow( SW_SHOW );
 				//pData->pSta0->SetBackColor(RGB(0,0,0));	
 				pData->pSta0->ModifyStyle(0,SS_CENTERIMAGE|SS_CENTER);
-				pData->pSta0->SetWindowPos(NULL , 10 , pData->nItem*35+10 , 305 , 29 , SWP_SHOWWINDOW );
+				pData->pSta0->SetWindowPos(NULL , 45 , pData->nItem*35+10 , 40 , 29 , SWP_SHOWWINDOW );
 
 				pData->pSta1->SetFont(110, _T("楷体"));				//设置显示字体和大小
 				//pData->pSta1->SetTextColor(RGB(0,0,0));			    //字体颜色
 				pData->pSta1->ShowWindow( SW_SHOW );
 				//pData->pSta0->SetBackColor(RGB(0,0,0));	
 				pData->pSta1->ModifyStyle(0,SS_CENTERIMAGE|SS_CENTER);
-				pData->pSta1->SetWindowPos(NULL , 305 + 10 + 30 , pData->nItem*35+10 , 200 , 29 , SWP_SHOWWINDOW );	
+				pData->pSta1->SetWindowPos(NULL , 150 , pData->nItem*35+10 , 40 , 29 , SWP_SHOWWINDOW );	
 
 				pData->pSta2->SetFont(110, _T("宋体"));				//设置显示字体和大小
 				//pData->pSta2->SetTextColor(RGB(0,0,0));			    //字体颜色
 				pData->pSta2->ShowWindow( SW_SHOW );
 				//pData->pSta0->SetBackColor(RGB(0,0,0));	
 				pData->pSta2->ModifyStyle(0,SS_CENTERIMAGE|SS_CENTER);
-				pData->pSta2->SetWindowPos(NULL , 305 + 10 + 60 +200  , pData->nItem*35 +10 , 80 , 29 , SWP_SHOWWINDOW );
+				pData->pSta2->SetWindowPos(NULL , 220  , pData->nItem*35 +10 , 150 , 29 , SWP_SHOWWINDOW );
+
+				pData->pSta3->SetFont(110, _T("宋体"));				//设置显示字体和大小
+				//pData->pSta3->SetTextColor(RGB(0,0,0));			    //字体颜色
+				pData->pSta3->ShowWindow( SW_SHOW );
+				//pData->pSta0->SetBackColor(RGB(0,0,0));	
+				pData->pSta3->ModifyStyle(0,SS_CENTERIMAGE|SS_CENTER);
+				pData->pSta3->SetWindowPos(NULL , 400 , pData->nItem*35 +10 , 150, 29 , SWP_SHOWWINDOW );
+
+				pData->pSta4->SetFont(110, _T("宋体"));				//设置显示字体和大小
+				pData->pSta4->ShowWindow( SW_SHOW );	
+				pData->pSta4->ModifyStyle(0,SS_CENTERIMAGE|SS_CENTER);
+				pData->pSta4->SetWindowPos(NULL , 570 , pData->nItem*35 +10 , 50 , 29 , SWP_SHOWWINDOW );
+
+				pData->pSta5->SetFont(110, _T("宋体"));				//设置显示字体和大小
+				pData->pSta5->ShowWindow( SW_SHOW );	
+				pData->pSta5->ModifyStyle(0,SS_CENTERIMAGE|SS_CENTER);
+				pData->pSta5->SetWindowPos(NULL , 650 , pData->nItem*35 +10 , 30 , 29 , SWP_SHOWWINDOW );
+
+				pData->pSta6->SetFont(110, _T("宋体"));				//设置显示字体和大小
+				pData->pSta6->ShowWindow( SW_SHOW );	
+				pData->pSta6->ModifyStyle(0,SS_CENTERIMAGE|SS_CENTER);
+				pData->pSta6->SetWindowPos(NULL ,710 , pData->nItem*35 +10 , 100 , 29 , SWP_SHOWWINDOW );
 
 				pData->pBut0->ShowWindow( SW_SHOW );
-				pData->pBut0->SetWindowPos(NULL , 305 + 10 + 90 +280 , pData->nItem*35 +10 , 43 , 33 , SWP_SHOWWINDOW );
+				pData->pBut0->SetWindowPos(NULL , 810 , pData->nItem*35 +10 , 43 , 33 , SWP_SHOWWINDOW );
 
 			}
 			iLine++;
@@ -213,7 +249,7 @@ void CSendListBox::SetIndexBackCol(int iIndex ,  int nline ,COLORREF   col)
 		}
 	}
 }
-void CSendListBox::SetIndexString(int iIndex , CString strSta0 ,CString strSta1 ,CString strSta2 ,CString strBut0,CString pstr )
+void CSendListBox::SetIndexString(int iIndex , CString strSta0 ,CString strSta1 ,CString strSta2 ,CString strBut3 ,CString strBut4 ,CString strBut5 ,CString strBut6 ,CString strbutton,CString pstr)
 {
 	List_SendAppendData *pData = GetAppendDataInfo(iIndex) ;
 	if ( NULL != pData ) {
@@ -229,20 +265,124 @@ void CSendListBox::SetIndexString(int iIndex , CString strSta0 ,CString strSta1 
 		pData->pSta2->SetWindowText(strSta2);
 		pData->pSta2->ShowWindow(SW_SHOW);
 
-		
-		pData->pBut0->SetWindowText(strBut0);
-		pData->pBut0->SetFontEx(20 , _T("微软雅黑"));
-		pData->pBut0->SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
-		pData->pBut0->SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
-		pData->pBut0->SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
-		pData->pBut0->SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
+		pData->pSta3->ShowWindow(SW_HIDE);
+		pData->pSta3->SetWindowText(strBut3);
+		pData->pSta3->ShowWindow(SW_SHOW);
+
+		pData->pSta4->ShowWindow(SW_HIDE);
+		pData->pSta4->SetWindowText(strBut4);
+		pData->pSta4->ShowWindow(SW_SHOW);
+
+		pData->pSta5->ShowWindow(SW_HIDE);
+		pData->pSta5->SetWindowText(strBut5);
+		pData->pSta5->ShowWindow(SW_SHOW);
+
+		pData->pSta6->ShowWindow(SW_HIDE);
+		pData->pSta6->SetWindowText(strBut6);
+		pData->pSta6->ShowWindow(SW_SHOW);
+
+		pData->pBut0->ShowWindow(SW_HIDE);
+		pData->pBut0->SetWindowText(strbutton);
+		pData->pBut0->ShowWindow(SW_SHOW);
+		//pData->pBut0->SetWindowText(strBut0);
+		//pData->pBut0->SetFontEx(20 , _T("微软雅黑"));
+		//pData->pBut0->SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
+		//pData->pBut0->SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+		//pData->pBut0->SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
+		//pData->pBut0->SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
 		pData->pstr.Format(_T("%s") ,pstr ) ;
 	}
+	//RefushHorizontalScrollBar();
 }
+void CSendListBox::DeleteAllIndex()
+{	
+	for (int i=0; i< GetCount(); i++) {
+		List_SendAppendData * pData = (List_SendAppendData *)GetItemDataPtr(i);
+		if ( NULL != pData ) {
+			delete pData->pSta0;
+			pData->pSta0 = NULL ;
 
+			delete pData->pSta1;
+			pData->pSta1 = NULL ;
+
+			delete pData->pSta2;
+			pData->pSta2 = NULL ;
+
+			delete pData->pBut0;
+			pData->pBut0 = NULL ;
+
+			delete pData;
+			pData = NULL;
+			DeleteString(i);
+		}
+	}
+		m_mButton.clear();
+}
+void CSendListBox::DeleteIndex(int iIndex)
+{
+	List_SendAppendData * pData = (List_SendAppendData *)GetItemDataPtr(iIndex);
+	if ( NULL != pData ) {
+		delete pData->pSta0;
+		pData->pSta0 = NULL ;
+
+		delete pData->pSta1;
+		pData->pSta1 = NULL ;
+
+		delete pData->pSta2;
+		pData->pSta2 = NULL ;
+
+		delete pData->pBut0;
+		pData->pBut0 = NULL ;
+
+		delete pData;
+		pData = NULL;
+	}
+
+	DeleteString(iIndex);
+	SendButton_map::iterator iter = m_mButton.find(iIndex);
+	if (iter != m_mButton.end())
+	{
+		m_mButton.erase(iter);
+	}
+}
 BOOL CSendListBox::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
 	return TRUE ;
 	return CListBox::OnMouseWheel(nFlags, zDelta, pt);
+}
+void CSendListBox::RefushHorizontalScrollBar( void )
+{
+	CDC *pDC = this->GetDC();
+	if ( NULL == pDC )
+	{
+		return;
+	}
+
+
+
+	int nCount = this->GetCount();
+	if ( nCount < 1 )
+	{
+		this->SetHorizontalExtent( 0 );
+		return;
+	}
+
+
+
+	int nMaxExtent = 0;
+	CString szText;
+	for ( int i = 0; i < nCount; ++i )
+	{
+		this->GetText( i, szText );
+		CSize &cs = pDC->GetTextExtent( szText );
+		if ( cs.cx > nMaxExtent )
+		{
+			nMaxExtent = cs.cx;
+		}
+	}
+
+
+
+	this->SetHorizontalExtent( nMaxExtent );
 }
