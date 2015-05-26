@@ -155,6 +155,9 @@ void CUseListBox::InsertStr(int iIndex,HWND hMain)
 	pSta->Create(_T("") , WS_CHILD | WS_VISIBLE , rcClient, this, ++m_uID) ;
 	pData->pSta1 = pSta ;
 
+	pData->pSta2 = new CStaticTrans;
+	pData->pSta2->Create(_T(""),dwStyle, rcClient, this, ++m_uID);
+
 	m_mButton.insert( make_pair( iIndex, pData ) );
 
 	int i = SetItemDataPtr(InsertString(iIndex,_T("")),pData);
@@ -235,12 +238,15 @@ void CUseListBox::updateListBoxButtonPos()
 			  pData->pSta0->SetFont(90, _T("宋体"));				//设置显示字体和大小
 			 // pData->pSta0->SetTextColor(RGB(0,0,0));			    //字体颜色
               pData->pSta0->ShowWindow( SW_SHOW );
-			  pData->pSta0->SetWindowPos(NULL , 20 , pData->nItem*35 +10 , 275 , 35 , SWP_SHOWWINDOW );
+			  pData->pSta0->SetWindowPos(NULL , 40 , pData->nItem*35 +10 , 60 , 35 , SWP_SHOWWINDOW );
 
 			  pData->pSta1->SetFont(90, _T("宋体"));				//设置显示字体和大小
-			//  pData->pSta1->SetTextColor(RGB(0,0,0));			    //字体颜色
 			  pData->pSta1->ShowWindow( SW_SHOW );
-			  pData->pSta1->SetWindowPos(NULL , 275+10+25 , pData->nItem*35 +10 , 40 , 25 , SWP_SHOWWINDOW );
+			  pData->pSta1->SetWindowPos(NULL , 150 , pData->nItem*35 +10 , 60 , 25 , SWP_SHOWWINDOW );
+
+			  pData->pSta2->SetFont(90, _T("宋体"));				//设置显示字体和大小
+			  pData->pSta2->ShowWindow( SW_SHOW );
+			  pData->pSta2->SetWindowPos(NULL , 250 , pData->nItem*35 +10 , 100 , 25 , SWP_SHOWWINDOW );
 
 			  pData->pBut2->ShowWindow( SW_SHOW );
 			  pData->pBut2->SetWindowPos(NULL , 275+10+50 +40 , pData->nItem*35 , 43 , 33 , SWP_SHOWWINDOW );
@@ -274,6 +280,9 @@ void CUseListBox::OnDestroy()
 
 			delete pData->pSta1;
 			pData->pSta1 = NULL ;
+
+			delete pData->pSta2;
+			pData->pSta2 = NULL ;
 
 			delete pData;
 			pData = NULL;
@@ -330,7 +339,7 @@ void CUseListBox::SetIndexBackCol(int iIndex ,  int nline ,COLORREF   col)
 		}
 	}
 }
-void CUseListBox::SetIndexString(int iIndex , CString strSta0 ,CString strBut2 ,CString strSta1 ,CString strSta2 )
+void CUseListBox::SetIndexString(int iIndex , CString strSta0 ,CString strSta1 ,CString strSta2 ,CString strBut2 ,CString strSta3 )
 {
 	List_AppendData *pData = GetAppendDataInfo(iIndex) ;
 	if ( NULL != pData ) {
@@ -338,17 +347,22 @@ void CUseListBox::SetIndexString(int iIndex , CString strSta0 ,CString strBut2 ,
 		pData->pSta0->SetWindowText(strSta0);
 		pData->pSta0->ShowWindow(SW_SHOW);
 
-		pData->pBut2->SetWindowText(strBut2) ;
+		pData->pSta1->ShowWindow(SW_HIDE);
+		pData->pSta1->SetWindowText(strSta1);
+		pData->pSta1->ShowWindow(SW_SHOW);
+
+		pData->pSta2->ShowWindow(SW_HIDE);
+		pData->pSta2->SetWindowText(strBut2);
+		pData->pSta2->ShowWindow(SW_SHOW);
+
+		pData->pBut2->SetWindowText(strSta2) ;
 		pData->pBut2->SetFontEx(20 , _T("微软雅黑"));
 		pData->pBut2->SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		pData->pBut2->SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 		pData->pBut2->SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
 		pData->pBut2->SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
 
-		pData->pSta1->ShowWindow(SW_HIDE);
-		pData->pSta1->SetWindowText(strSta1);
-		pData->pSta1->ShowWindow(SW_SHOW);
-		pData->pstr.Format(_T("%s") ,strSta2 ) ;
+		pData->pstr.Format(_T("%s") ,strSta3 ) ;
 
 	}
 }
