@@ -144,10 +144,12 @@ public:
 	BOOL UpdateP2pBetRecord();
 	void OpenBetRecord(vector<unsigned char> openbet,uistruct::REVTRANSACTION_t transcion);
 	void AcceptBetRecord(vector<unsigned char> acceptbet,uistruct::REVTRANSACTION_t transcion);
+	void SendBetRecord(vector<unsigned char> sendbet,uistruct::REVTRANSACTION_t transcion);
 	void ClearTransaction();
 	void GetMainDlgStruct();
 	BOOL RunOnlyOneApp();
 	void SendUIMsg(int message,CString jsonaddr);
+	void SendP2pMsg(int message,CString jsonaddr);
 	void CheckPathValid(const CStringA& strDir);
 public:
 	bool isStartMainDlg;
