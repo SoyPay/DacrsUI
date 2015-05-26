@@ -307,7 +307,9 @@ void CRecordListBox::DeleteAllIndex()
 			delete pData;
 			pData = NULL;
 		}
+		DeleteString(i);
 	}
+		m_mButton.clear();
 }
 void CRecordListBox::DeleteIndex(int iIndex)
 {
@@ -335,6 +337,13 @@ void CRecordListBox::DeleteIndex(int iIndex)
 		pData->pSta6 = NULL ;
 		delete pData;
 		pData = NULL;
+	}
+
+	DeleteString(iIndex);
+	ReButton_map::iterator iter = m_mButton.find(iIndex);
+	if (iter != m_mButton.end())
+	{
+		m_mButton.erase(iter);
 	}
 }
 BOOL CRecordListBox::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
