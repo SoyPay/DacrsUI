@@ -313,10 +313,10 @@ void CSendListBox::DeleteAllIndex()
 
 			delete pData;
 			pData = NULL;
-			DeleteString(i);
 		}
 	}
-		m_mButton.clear();
+	ResetContent();
+	m_mButton.clear();
 }
 void CSendListBox::DeleteIndex(int iIndex)
 {
