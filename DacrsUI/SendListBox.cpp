@@ -70,7 +70,7 @@ void CSendListBox::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 void CSendListBox::MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct)
 {
 	// TODO:  添加您的代码以确定指定项的大小
-	lpMeasureItemStruct->itemHeight = 35;
+	lpMeasureItemStruct->itemHeight = 28;
 }
 void CSendListBox::OnDestroy()
 {
@@ -166,46 +166,46 @@ void CSendListBox::updateListBoxButtonPos()
 				pData->pSta0->ShowWindow( SW_SHOW );
 				//pData->pSta0->SetBackColor(RGB(0,0,0));	
 				pData->pSta0->ModifyStyle(0,SS_CENTERIMAGE|SS_CENTER);
-				pData->pSta0->SetWindowPos(NULL , 45 , pData->nItem*35+10 , 40 , 29 , SWP_SHOWWINDOW );
+				pData->pSta0->SetWindowPos(NULL , 45 , pData->nItem*28+10 , 40 , 29 , SWP_SHOWWINDOW );
 
 				pData->pSta1->SetFont(110, _T("楷体"));				//设置显示字体和大小
 				//pData->pSta1->SetTextColor(RGB(0,0,0));			    //字体颜色
 				pData->pSta1->ShowWindow( SW_SHOW );
 				//pData->pSta0->SetBackColor(RGB(0,0,0));	
 				pData->pSta1->ModifyStyle(0,SS_CENTERIMAGE|SS_CENTER);
-				pData->pSta1->SetWindowPos(NULL , 150 , pData->nItem*35+10 , 40 , 29 , SWP_SHOWWINDOW );	
+				pData->pSta1->SetWindowPos(NULL , 150 , pData->nItem*28+10 , 40 , 29 , SWP_SHOWWINDOW );	
 
 				pData->pSta2->SetFont(110, _T("宋体"));				//设置显示字体和大小
 				//pData->pSta2->SetTextColor(RGB(0,0,0));			    //字体颜色
 				pData->pSta2->ShowWindow( SW_SHOW );
 				//pData->pSta0->SetBackColor(RGB(0,0,0));	
 				pData->pSta2->ModifyStyle(0,SS_CENTERIMAGE|SS_CENTER);
-				pData->pSta2->SetWindowPos(NULL , 220  , pData->nItem*35 +10 , 150 , 29 , SWP_SHOWWINDOW );
+				pData->pSta2->SetWindowPos(NULL , 220  , pData->nItem*28 +10 , 150 , 29 , SWP_SHOWWINDOW );
 
 				pData->pSta3->SetFont(110, _T("宋体"));				//设置显示字体和大小
 				//pData->pSta3->SetTextColor(RGB(0,0,0));			    //字体颜色
 				pData->pSta3->ShowWindow( SW_SHOW );
 				//pData->pSta0->SetBackColor(RGB(0,0,0));	
 				pData->pSta3->ModifyStyle(0,SS_CENTERIMAGE|SS_CENTER);
-				pData->pSta3->SetWindowPos(NULL , 400 , pData->nItem*35 +10 , 150, 29 , SWP_SHOWWINDOW );
+				pData->pSta3->SetWindowPos(NULL , 400 , pData->nItem*28 +10 , 150, 29 , SWP_SHOWWINDOW );
 
 				pData->pSta4->SetFont(110, _T("宋体"));				//设置显示字体和大小
 				pData->pSta4->ShowWindow( SW_SHOW );	
 				pData->pSta4->ModifyStyle(0,SS_CENTERIMAGE|SS_CENTER);
-				pData->pSta4->SetWindowPos(NULL , 570 , pData->nItem*35 +10 , 50 , 29 , SWP_SHOWWINDOW );
+				pData->pSta4->SetWindowPos(NULL , 570 , pData->nItem*28 +10 , 50 , 29 , SWP_SHOWWINDOW );
 
 				pData->pSta5->SetFont(110, _T("宋体"));				//设置显示字体和大小
 				pData->pSta5->ShowWindow( SW_SHOW );	
 				pData->pSta5->ModifyStyle(0,SS_CENTERIMAGE|SS_CENTER);
-				pData->pSta5->SetWindowPos(NULL , 650 , pData->nItem*35 +10 , 30 , 29 , SWP_SHOWWINDOW );
+				pData->pSta5->SetWindowPos(NULL , 650 , pData->nItem*28 +10 , 30 , 29 , SWP_SHOWWINDOW );
 
 				pData->pSta6->SetFont(110, _T("宋体"));				//设置显示字体和大小
 				pData->pSta6->ShowWindow( SW_SHOW );	
 				pData->pSta6->ModifyStyle(0,SS_CENTERIMAGE|SS_CENTER);
-				pData->pSta6->SetWindowPos(NULL ,710 , pData->nItem*35 +10 , 100 , 29 , SWP_SHOWWINDOW );
+				pData->pSta6->SetWindowPos(NULL ,710 , pData->nItem*28 +10 , 100 , 29 , SWP_SHOWWINDOW );
 
 				pData->pBut0->ShowWindow( SW_SHOW );
-				pData->pBut0->SetWindowPos(NULL , 810 , pData->nItem*35 +10 , 43 , 33 , SWP_SHOWWINDOW );
+				pData->pBut0->SetWindowPos(NULL , 810 , pData->nItem*28 +10 , 28 , 21 , SWP_SHOWWINDOW );
 
 			}
 			iLine++;
@@ -284,12 +284,12 @@ void CSendListBox::SetIndexString(int iIndex , CString strSta0 ,CString strSta1 
 		pData->pBut0->ShowWindow(SW_HIDE);
 		pData->pBut0->SetWindowText(strbutton);
 		pData->pBut0->ShowWindow(SW_SHOW);
-		//pData->pBut0->SetWindowText(strBut0);
-		//pData->pBut0->SetFontEx(20 , _T("微软雅黑"));
-		//pData->pBut0->SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
-		//pData->pBut0->SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
-		//pData->pBut0->SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
-		//pData->pBut0->SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
+		pData->pBut0->SetFontEx(20 , _T("微软雅黑"));
+		pData->pBut0->SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
+		pData->pBut0->SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+		pData->pBut0->SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
+		pData->pBut0->SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
+
 		pData->pstr.Format(_T("%s") ,pstr ) ;
 	}
 	//RefushHorizontalScrollBar();

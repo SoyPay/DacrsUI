@@ -40,6 +40,10 @@ public:
 	CShadeButtonST         m_rBtnRefresh1;
 	CShadeButtonST         m_rBtnRefresh2;
 
+	CStaticTrans           m_sCountpage  ;
+	CShadeButtonST         m_rBtnUp;
+	CShadeButtonST         m_rBtnNext;
+
 	CUseListBox            m_BonusListBox;
 	//CRecordListBox         m_RecordListBox;
 	CComboBox			   m_addrbook;
