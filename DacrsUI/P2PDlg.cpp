@@ -67,6 +67,7 @@ BEGIN_MESSAGE_MAP(CP2PDlg, CDialogBar)
 	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB, &CP2PDlg::OnTcnSelchangeTab)
 	ON_BN_CLICKED(IDC_BUTTON_REFRESH_2, &CP2PDlg::OnBnClickedButtonRefresh2)
 	ON_BN_CLICKED(IDC_BUTTON_REFRESH_1, &CP2PDlg::OnBnClickedButtonRefresh1)
+	ON_NOTIFY(NM_THEMECHANGED, IDC_LIST_BONUS, &CP2PDlg::OnNMThemeChangedListBonus)
 END_MESSAGE_MAP()
 
 
@@ -270,7 +271,7 @@ void CP2PDlg::OnSize(UINT nType, int cx, int cy)
 
 		CWnd *pst = GetDlgItem( IDC_LIST_BONUS ) ;
 		if ( NULL != pst ) {
-			pst->SetWindowPos( NULL ,455 , 85 , 432, 147+5  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,455 , 85 , 432, 147  ,SWP_SHOWWINDOW ) ; 
 		}
 		pst = GetDlgItem( IDC_BUTTON_UP ) ;
 		if ( NULL != pst ) {
@@ -1100,4 +1101,13 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
  {
 	 // TODO: 在此添加控件通知处理程序代码
 	 OnListPool();
+ }
+
+
+ void CP2PDlg::OnNMThemeChangedListBonus(NMHDR *pNMHDR, LRESULT *pResult)
+ {
+	 // 该功能要求使用 Windows XP 或更高版本。
+	 // 符号 _WIN32_WINNT 必须 >= 0x0501。
+	 // TODO: 在此添加控件通知处理程序代码
+	 *pResult = 0;
  }

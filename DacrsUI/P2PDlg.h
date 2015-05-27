@@ -79,4 +79,5 @@ public:
 	void   ShowListItem(int seltab);
 	afx_msg void OnBnClickedButtonRefresh2();
 	afx_msg void OnBnClickedButtonRefresh1();
+	afx_msg void OnNMThemeChangedListBonus(NMHDR *pNMHDR, LRESULT *pResult);
 };
