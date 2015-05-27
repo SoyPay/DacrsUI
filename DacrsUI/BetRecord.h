@@ -25,6 +25,10 @@ public:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	virtual BOOL Create(LPCTSTR lpszTemplateName, CWnd* pParentWnd = NULL);
 public:
+	CShadeButtonST         m_rBtnUp;
+	CShadeButtonST         m_rBtnNext;
+	CStaticTrans           m_sCountpage  ;
+
 	CRecordListBox            m_ListBox;
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	void Showlistbox(CString address);

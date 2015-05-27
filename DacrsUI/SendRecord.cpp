@@ -30,6 +30,9 @@ void CSendRecord::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LIST_BOX, m_listBox);
+	DDX_Control(pDX, IDC_BUTTON_UP, m_rBtnUp);
+	DDX_Control(pDX, IDC_BUTTON_NEXT, m_rBtnNext);
+	DDX_Control(pDX ,IDC_STATIC_COUNT_PAGE ,m_sCountpage ) ;
 }
 
 
@@ -98,7 +101,23 @@ void CSendRecord::OnSize(UINT nType, int cx, int cy)
 	if( NULL != GetSafeHwnd() ) {
 		CWnd *pst = GetDlgItem( IDC_LIST_BOX ) ;
 		if ( NULL != pst ) {
-			pst->SetWindowPos( NULL ,0 , 33 , 875,132 ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,0 , 33 , 875,130 ,SWP_SHOWWINDOW ) ; 
+		}
+		pst = GetDlgItem( IDC_BUTTON_UP ) ;
+		if ( NULL != pst ) {
+			pst->SetWindowPos( NULL ,875-130 , 130+33 , 20, 20  ,SWP_SHOWWINDOW ) ; 
+		}
+		pst = GetDlgItem( IDC_EDIT_PAGE ) ;
+		if ( NULL != pst ) {
+			pst->SetWindowPos( NULL ,875 - 100, 130+33 , 20, 20  ,SWP_SHOWWINDOW ) ; 
+		}
+		pst = GetDlgItem( IDC_BUTTON_NEXT ) ;
+		if ( NULL != pst ) {
+			pst->SetWindowPos( NULL ,875-70 , 130+33 , 20, 20  ,SWP_SHOWWINDOW ) ; 
+		}
+		pst = GetDlgItem( IDC_STATIC_COUNT_PAGE ) ;
+		if ( NULL != pst ) {
+			pst->SetWindowPos( NULL ,875-40 ,130+36 , 20, 20  ,SWP_SHOWWINDOW ) ; 
 		}
 	}
 }
@@ -112,10 +131,27 @@ BOOL CSendRecord::Create(LPCTSTR lpszTemplateName, CWnd* pParentWnd)
 	if ( bRes ) { 
 		UpdateData(0);
 
-		//m_listBox.InsertStr(0,this->GetSafeHwnd());
-		//m_listBox.SetIndexInage(0 , IDB_BITMAP_P2P_LISTBOX_BUT);
-		//m_listBox.SetIndexBackCol(0, 0, RGB(242,32,32));
-		//m_listBox.SetIndexString(0 , _T("durCyWC8MTdQdpCo9QXZ5wxSyL9jtyDFri"), _T("2011-01-01 01:01:01"), _T("10000"), _T("接"));
+		m_sCountpage.SetFont(90, _T("黑体"));				//设置显示字体和大小
+		m_sCountpage.SetTextColor(RGB(0,0,0));			    //字体颜色	
+		m_sCountpage.SetWindowText(_T("共:"));
+
+		m_rBtnUp.SetBitmaps( IDB_BITMAP_UP , RGB(255, 255, 0) , IDB_BITMAP_UP , RGB(255, 255, 255) );
+		m_rBtnUp.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+		m_rBtnUp.SetWindowText("") ;
+		m_rBtnUp.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(255, 255, 255));
+		m_rBtnUp.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+		m_rBtnUp.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(255, 255, 255));
+		m_rBtnUp.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(255, 255, 255));
+		m_rBtnUp.SizeToContent();
+
+		m_rBtnNext.SetBitmaps( IDB_BITMAP_NEXT , RGB(255, 255, 0) , IDB_BITMAP_NEXT , RGB(255, 255, 255) );
+		m_rBtnNext.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+		m_rBtnNext.SetWindowText("") ;
+		m_rBtnNext.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(255, 255, 255));
+		m_rBtnNext.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+		m_rBtnNext.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(255, 255, 255));
+		m_rBtnNext.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(255, 255, 255));
+		m_rBtnNext.SizeToContent();
 	}
 	return bRes ;
 }

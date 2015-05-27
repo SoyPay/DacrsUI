@@ -46,6 +46,10 @@ void CP2PDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BUTTON_REFRESH_1, m_rBtnRefresh1);
 	DDX_Control(pDX, IDC_BUTTON_REFRESH_2, m_rBtnRefresh2);
 	DDX_Control(pDX, IDC_TAB, m_tab);
+
+	DDX_Control(pDX, IDC_BUTTON_UP, m_rBtnUp);
+	DDX_Control(pDX, IDC_BUTTON_NEXT, m_rBtnNext);
+	DDX_Control(pDX ,IDC_STATIC_COUNT_PAGE ,m_sCountpage ) ;
 }
 
 
@@ -126,11 +130,11 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		UpdateData(0);
 		m_Balance.SetFont(120, _T("黑体"));				//设置显示字体和大小
 		m_Balance.SetTextColor(RGB(0,0,0));			    //字体颜色	
-		m_Balance.SetWindowText(_T("100.00SMC"));
+		//Balance.SetWindowText(_T("100.00SMC"));
 
 		m_NotDraw.SetFont(120, _T("黑体"));				//设置显示字体和大小
 		m_NotDraw.SetTextColor(RGB(0,0,0));			    //字体颜色	
-		m_NotDraw.SetWindowText(_T("50.01SMC"));
+		//NotDraw.SetWindowText(_T("50.01SMC"));
 
 		m_Dw.SetFont(120, _T("黑体"));				//设置显示字体和大小
 		m_Dw.SetTextColor(RGB(0,0,0));			    //字体颜色	
@@ -139,6 +143,10 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_VS.SetFont(120, _T("黑体"));				//设置显示字体和大小
 		m_VS.SetTextColor(RGB(0,0,0));			    //字体颜色	
 		m_VS.SetWindowText(_T(" VS"));
+
+		m_sCountpage.SetFont(90, _T("黑体"));				//设置显示字体和大小
+		m_sCountpage.SetTextColor(RGB(0,0,0));			    //字体颜色	
+		m_sCountpage.SetWindowText(_T("共:"));
 
 		m_rBtnWithd.SetBitmaps( IDB_BITMAP_P2PBUTTON_1 , RGB(255, 255, 0) , IDB_BITMAP_P2PBUTTON_1 , RGB(255, 255, 255) );
 		m_rBtnWithd.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
@@ -168,6 +176,7 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_rBtnRefresh1.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 		m_rBtnRefresh1.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(255, 255, 255));
 		m_rBtnRefresh1.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(255, 255, 255));
+		m_rBtnRefresh1.SizeToContent();
 
 		m_rBtnRefresh2.SetBitmaps( IDB_BITMAP_P2PBUTTON_2 , RGB(255, 255, 0) , IDB_BITMAP_P2PBUTTON_2 , RGB(255, 255, 255) );
 		m_rBtnRefresh2.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
@@ -177,8 +186,28 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_rBtnRefresh2.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 		m_rBtnRefresh2.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(255, 255, 255));
 		m_rBtnRefresh2.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(255, 255, 255));
+		m_rBtnRefresh2.SizeToContent();
 
-		m_rBtnRefresh1.SizeToContent();
+		
+		m_rBtnUp.SetBitmaps( IDB_BITMAP_UP , RGB(255, 255, 0) , IDB_BITMAP_UP , RGB(255, 255, 255) );
+		m_rBtnUp.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+		m_rBtnUp.SetWindowText("") ;
+		m_rBtnUp.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(255, 255, 255));
+		m_rBtnUp.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+		m_rBtnUp.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(255, 255, 255));
+		m_rBtnUp.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(255, 255, 255));
+		m_rBtnUp.SizeToContent();
+
+		m_rBtnNext.SetBitmaps( IDB_BITMAP_NEXT , RGB(255, 255, 0) , IDB_BITMAP_NEXT , RGB(255, 255, 255) );
+		m_rBtnNext.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+		m_rBtnNext.SetWindowText("") ;
+		m_rBtnNext.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(255, 255, 255));
+		m_rBtnNext.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+		m_rBtnNext.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(255, 255, 255));
+		m_rBtnNext.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(255, 255, 255));
+		m_rBtnNext.SizeToContent();
+
+		
 
 		m_tab.InsertItem(0,_T("投注记录"));  //添加参数一选项卡 
 		m_tab.InsertItem(1,_T("发起记录"));  //添加参数二选项卡 
@@ -241,7 +270,23 @@ void CP2PDlg::OnSize(UINT nType, int cx, int cy)
 
 		CWnd *pst = GetDlgItem( IDC_LIST_BONUS ) ;
 		if ( NULL != pst ) {
-			pst->SetWindowPos( NULL ,455 , 85 , 432, 167  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,455 , 85 , 432, 147+5  ,SWP_SHOWWINDOW ) ; 
+		}
+		pst = GetDlgItem( IDC_BUTTON_UP ) ;
+		if ( NULL != pst ) {
+			pst->SetWindowPos( NULL ,455+380-60 , 232 + 5 , 20, 20  ,SWP_SHOWWINDOW ) ; 
+		}
+		pst = GetDlgItem( IDC_EDIT_PAGE ) ;
+		if ( NULL != pst ) {
+			pst->SetWindowPos( NULL ,455+386-40, 232 + 5 , 20, 20  ,SWP_SHOWWINDOW ) ; 
+		}
+		pst = GetDlgItem( IDC_BUTTON_NEXT ) ;
+		if ( NULL != pst ) {
+			pst->SetWindowPos( NULL ,455+392-20 , 232 + 5 , 20, 20  ,SWP_SHOWWINDOW ) ; 
+		}
+		pst = GetDlgItem( IDC_STATIC_COUNT_PAGE ) ;
+		if ( NULL != pst ) {
+			pst->SetWindowPos( NULL ,455+392 , 232 + 8 , 20, 20  ,SWP_SHOWWINDOW ) ; 
 		}
 		pst = GetDlgItem( IDC_BUTTON_REFRESH_1 ) ;
 		if ( NULL != pst ) {
@@ -295,7 +340,7 @@ void CP2PDlg::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*14 , (rc.Height()/100)*42,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*14 , (rc.Height()/100)*42,  rect.Width() , rect.Height() + 5 , SWP_SHOWWINDOW ) ; 
 		}
 		
 		pst = GetDlgItem( IDC_STATIC_DW ) ;
@@ -318,6 +363,8 @@ void CP2PDlg::OnSize(UINT nType, int cx, int cy)
 			pst->GetClientRect( rect ) ;
 			pst->SetWindowPos( NULL ,(rc.Width()/100)*33 ,  (rc.Height()/100)*52+2,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
 		}
+
+
 
 		
 
