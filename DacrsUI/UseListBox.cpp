@@ -94,13 +94,7 @@ void CUseListBox::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	List_AppendData * pData =(List_AppendData *) GetItemDataPtr(lpDrawItemStruct->itemID);
 	TRACE1("DrawItem:%d\r\n",lpDrawItemStruct->itemID);
 	ASSERT(pData);
-	RECT retitem = lpDrawItemStruct->rcItem;
-	pData->pSta0->MoveWindow(retitem.left,retitem.top + 1,60,25);
-
-	pData->pSta0->SetWindowPos(NULL , 40 , lpDrawItemStruct->rcItem.top , 60 , 35 , SWP_SHOWWINDOW );
-	pData->pSta1->SetWindowPos(NULL , 150 , lpDrawItemStruct->rcItem.top , 60 , 25 , SWP_SHOWWINDOW );
-	pData->pSta2->SetWindowPos(NULL , 250 , lpDrawItemStruct->rcItem.top , 100 , 25 , SWP_SHOWWINDOW );
-	pData->pBut2->SetWindowPos(NULL , 275+10+50 +40 , lpDrawItemStruct->rcItem.top , 43 , 33 , SWP_SHOWWINDOW );
+	InvalidateListBox();
 
 	UpdateWindow();
 	Invalidate();
@@ -156,8 +150,8 @@ void CUseListBox::DeleteAllIndex()
 			delete pData;
 			pData = NULL;
 		}
-		DeleteString(i);
 	}
+	ResetContent();
 	m_mButton.clear();
 }
 void CUseListBox::DeleteIndex(int iIndex)
@@ -187,6 +181,26 @@ void CUseListBox::DeleteIndex(int iIndex)
 		m_mButton.erase(iter);
 	}
 
+}
+void CUseListBox::InvalidateListBox()
+{
+	for (int i=0; i<GetCount(); i++)
+	{
+		List_AppendData * pData = (List_AppendData *)GetItemDataPtr(i);
+		if ( NULL != pData ) {
+			pData->pSta0->ShowWindow( SW_HIDE );
+			pData->pSta0->ShowWindow( SW_SHOW );
+
+			pData->pSta1->ShowWindow( SW_HIDE );
+			pData->pSta1->ShowWindow( SW_SHOW );
+
+			pData->pSta2->ShowWindow( SW_HIDE );
+			pData->pSta2->ShowWindow( SW_SHOW );
+
+			pData->pBut2->ShowWindow( SW_HIDE );
+			pData->pBut2->ShowWindow( SW_SHOW );
+		}
+	}
 }
 void CUseListBox::updateListBoxButtonPos()
 {
@@ -331,6 +345,7 @@ BOOL CUseListBox::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 void CUseListBox::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	return  ;
 	CListBox::OnVScroll(nSBCode, nPos, pScrollBar);
 }
 
@@ -346,4 +361,11 @@ void CUseListBox::OnPaint()
 	CPaintDC dc(this); // device context for painting
 	// TODO: 在此处添加消息处理程序代码
 	// 不为绘图消息调用 CListBox::OnPaint()
+}
+
+
+BOOL CUseListBox::PreTranslateMessage(MSG* pMsg)
+{
+	// TODO: 在此添加专用代码和/或调用基类
+	return CListBox::PreTranslateMessage(pMsg);
 }

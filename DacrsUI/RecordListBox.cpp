@@ -307,9 +307,9 @@ void CRecordListBox::DeleteAllIndex()
 			delete pData;
 			pData = NULL;
 		}
-		DeleteString(i);
 	}
-		m_mButton.clear();
+	ResetContent();
+	m_mButton.clear();
 }
 void CRecordListBox::DeleteIndex(int iIndex)
 {

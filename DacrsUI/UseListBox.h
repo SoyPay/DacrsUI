@@ -42,6 +42,7 @@ public:
 	button_map m_mButton;
 	UINT m_uID;
 	void updateListBoxButtonPos();
+	void InvalidateListBox();
 public:
 	virtual void DrawItem(LPDRAWITEMSTRUCT /*lpDrawItemStruct*/);
 	virtual void MeasureItem(LPMEASUREITEMSTRUCT /*lpMeasureItemStruct*/);
@@ -62,6 +63,7 @@ public:
 public:
 	  CRect m_rectListBox;      // 列表项到绘制Rect
 	  afx_msg void OnPaint();
+	  virtual BOOL PreTranslateMessage(MSG* pMsg);
 };
 
 
