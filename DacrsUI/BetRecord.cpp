@@ -175,6 +175,7 @@ void CBetRecord::Showlistbox(CString address)
 	CString temp;
 	temp.Format(_T("共:%d"),m_pagecount);
 	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(temp);
+	Invalidate();
 	OnShowPagePool(1);
 	//if (pPoolItem.size() != 0) ///此记录不存在,插入记录
 	//{
@@ -252,6 +253,10 @@ void  CBetRecord::OnShowPagePool(int page)
 
 
 	m_ListBox.DeleteAllIndex();
+	CString strpage;
+	strpage.Format(_T("%d"),page);
+	GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(strpage);
+
 	m_curpage = page;
 	int index = (page-1)*m_pagesize;
 	int count = (m_PoolList.size() -index)>=m_pagesize?m_pagesize:(m_PoolList.size() -index);
@@ -265,6 +270,7 @@ void  CBetRecord::OnShowPagePool(int page)
 		Sendaddr.Format(_T("%s"),const_it.left_addr);
 		address.Format(_T("%s"),const_it.right_addr);
 		dmoney.Format(_T("%.4f"),const_it.amount);
+
 		if (const_it.guess_num == 1)
 		{
 			guess.Format(_T("%s"),"妹");
@@ -281,9 +287,9 @@ void  CBetRecord::OnShowPagePool(int page)
 
 		SYSTEMTIME curTime =UiFun::Time_tToSystemTime(const_it.send_time);
 		CString sendTime,reciveTime;
-		sendTime.Format("%04d-%02d-%02d %02d:%02d:%02d",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+		sendTime.Format("%02d-%02d %02d:%02d:%02d", curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
 		SYSTEMTIME rTime =UiFun::Time_tToSystemTime(const_it.recv_time);
-		reciveTime.Format("%04d-%02d-%02d %02d:%02d:%02d",rTime.wYear, rTime.wMonth, rTime.wDay, rTime.wHour, rTime.wMinute, rTime.wSecond);
+		reciveTime.Format("%02d-%02d %02d:%02d:%02d",rTime.wMonth, rTime.wDay, rTime.wHour, rTime.wMinute, rTime.wSecond);
 
 		reward.Format(_T("%.4f"),const_it.amount);
 		///说明开奖了
@@ -304,6 +310,7 @@ void  CBetRecord::OnShowPagePool(int page)
 			{
 				result.Format(_T("%s"),"哥");
 			}
+			//m_ListBox.SetIndexString(i , Sendaddr,address,sendTime,reciveTime, result,guess, dmoney);
 			m_ListBox.SetIndexString(i , Sendaddr,address,sendTime,reciveTime, result,guess, reward);
 
 		}else{
