@@ -765,6 +765,9 @@
     <None Include="res\p2p_list.bmp">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="res\p2p_button_3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="资源文件">
