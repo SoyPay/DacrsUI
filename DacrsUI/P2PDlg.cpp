@@ -282,21 +282,21 @@ void CP2PDlg::OnSize(UINT nType, int cx, int cy)
 		}
 		pst = GetDlgItem( IDC_BUTTON_UP ) ;
 		if ( NULL != pst ) {
-			pst->SetWindowPos( NULL ,875-140 , 232 + 5 , 20, 20  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,875-129 , 232 + 5 , 20, 20  ,SWP_SHOWWINDOW ) ; 
 		}
 		pst = GetDlgItem( IDC_EDIT_PAGE ) ;
 		if ( NULL != pst ) {
-			pst->SetWindowPos( NULL ,875-115, 232 + 5 , 40, 20  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,875-115+11, 232 + 5 , 40, 20  ,SWP_SHOWWINDOW ) ; 
 		}
 		pst = GetDlgItem( IDC_BUTTON_NEXT ) ;
 		if ( NULL != pst ) {
-			pst->SetWindowPos( NULL ,875-70 , 232 + 5 , 20, 20  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,875-70+11 , 232 + 5 , 20, 20  ,SWP_SHOWWINDOW ) ; 
 		}
 		pst = GetDlgItem( IDC_STATIC_COUNT_PAGE ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,875-50 , 232 + 8 , 50, 30  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,875-50+11 , 232 + 8 , 50, 30  ,SWP_SHOWWINDOW ) ; 
 		}
 		pst = GetDlgItem( IDC_BUTTON_REFRESH_1 ) ;
 		if ( NULL != pst ) {
@@ -1092,6 +1092,8 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
  {
 	 CString addr;
 	 int sel = m_addrbook.GetCurSel();
+	 if(sel == -1)
+		 return;
 	 m_addrbook.GetLBText(sel,addr);
 
 	 if (addr == _T(""))
