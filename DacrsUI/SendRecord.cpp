@@ -177,6 +177,7 @@ void CSendRecord::Showlistbox(CString address)
 {
 	//// 查找数据库中是否存在此记录
 	m_addr = address;
+	m_curpage = 0;
 	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(_T(""));
 	m_PoolList.clear();
 	CString conditon;
