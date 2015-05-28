@@ -70,6 +70,10 @@ void CReceiveDlg::ShowListInfo()
 		m_listCtrl.InsertItem(i,strOrder);
 
 		uistruct::LISTADDR_t address = const_it->second;
+
+		strShowData.Format(_T("%s") ,address.RegID) ;
+		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
+
 		strShowData.Format(_T("%s") ,address.Label) ;
 		m_listCtrl.SetItemText( i , ++nSubIdx, strShowData) ;
 		//m_listCtrl.SetItemData(item , (DWORD_PTR)&(*const_it)) ;
@@ -86,8 +90,6 @@ void CReceiveDlg::ShowListInfo()
 		}
 
 		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
-		strShowData.Format(_T("%.8f") , address.fMoney ) ;
-		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
 
 		if (address.nColdDig== 1)
 		{
@@ -97,8 +99,9 @@ void CReceiveDlg::ShowListInfo()
 		}
 		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
 
-		strShowData.Format(_T("%s") ,address.RegID) ;
+		strShowData.Format(_T("%.8f") , address.fMoney ) ;
 		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
+
 		i++;
 	}
 	if ( 17 <= m_MapAddrInfo.size() )  {
@@ -121,12 +124,13 @@ BOOL CReceiveDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT n
 			UINT		size ;
 		} listcol[7]  = {
 							{"ÐòºÅ" ,      50},
+							{"ÕË»§ID" ,    100},
 							{"±êÇ©" ,      100},
 							{"µØÖ·" ,      230}, 
 							{"¼¤»î×´Ì¬" ,  80}, 
-							{"Óà¶î" ,      172},
-							{"Ö§³ÖÀäÍÚ¿ó" ,60} ,
-							{"ÕË»§ID" ,96}
+							{"ÀäÍÚ¿ó" ,100},
+							{"Óà¶î" ,      170}
+							
 						};
 		m_listCtrl.SetBkColor(RGB(240,240,240));       
 		m_listCtrl.SetRowHeigt(23);               
@@ -135,7 +139,7 @@ BOOL CReceiveDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT n
 		m_listCtrl.SetHeaderBKColor(32,30,32,8); 
 		m_listCtrl.SetHeaderTextColor(RGB(255,255,255)); //ÉèÖÃÍ·²¿×ÖÌåÑÕÉ«
 		m_listCtrl.SetTextColor(RGB(0,0,0));  
-		for( int i = 0 ; i < 7 ; i++  ) {
+		for( int i = 0 ; i <7 ; i++  ) {
 			m_listCtrl.InsertColumn(i,listcol[i].name,LVCFMT_CENTER,listcol[i].size);
 		}
 		m_listCtrl.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_HEADERDRAGDROP );// |LVS_SINGLESEL  );
@@ -441,6 +445,9 @@ void   CReceiveDlg::ModifyListCtrlItem()
 		
 			int nSubIdx = 1;
 			CString  strShowData;
+			strShowData.Format(_T("%s") ,addr.RegID ) ;
+			m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
+
 			strShowData.Format(_T("%s") ,addr.Label) ;
 			//m_listCtrl.SetItemData(i , (DWORD_PTR)&(*m_pListaddrInfo.rbegin())) ;
 
@@ -457,8 +464,6 @@ void   CReceiveDlg::ModifyListCtrlItem()
 			}
 
 			m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
-			strShowData.Format(_T("%.8f") ,addr.fMoney ) ;
-			m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
 
 			if (addr.nColdDig== 1)
 			{
@@ -468,7 +473,7 @@ void   CReceiveDlg::ModifyListCtrlItem()
 			}
 			m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
 
-			strShowData.Format(_T("%s") ,addr.RegID ) ;
+			strShowData.Format(_T("%.8f") ,addr.fMoney ) ;
 			m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
 			break;
 		}
@@ -503,6 +508,9 @@ void   CReceiveDlg::InsertListCtrlItem()
 	
 	m_listCtrl.InsertItem( i , strOrder);  //ÐòºÅ
 	CString  strShowData;
+	strShowData.Format(_T("%s") ,addr.RegID ) ;
+	m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
+
 	strShowData.Format(_T("%s") ,addr.Label) ;
 	m_listCtrl.SetItemText( i , ++nSubIdx, strShowData ) ; //±êÇ©
 	
@@ -519,8 +527,6 @@ void   CReceiveDlg::InsertListCtrlItem()
 	}
 
 	m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
-	strShowData.Format(_T("%.8f") , addr.fMoney ) ;
-	m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
 
 	if (addr.nColdDig== 1)
 	{
@@ -530,6 +536,7 @@ void   CReceiveDlg::InsertListCtrlItem()
 	}
 	m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
 
-	strShowData.Format(_T("%s") ,addr.RegID ) ;
+	strShowData.Format(_T("%.8f") , addr.fMoney ) ;
 	m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
+
 }
