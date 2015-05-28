@@ -843,6 +843,7 @@ void CP2PDlg::OnBnClickedButtonWoman()
 void CP2PDlg::OnListPool()
 {
 	m_PoolList.clear();
+	m_curpage = 0;
 	theApp.m_SqliteDeal.GetP2PQuizPoolList(_T(" 1=1 "), &m_PoolList);
 	m_pagecount = (m_PoolList.size()%m_pagesize)==0?(m_PoolList.size()/m_pagesize):(m_PoolList.size()/m_pagesize)+1;
 	
