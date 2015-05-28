@@ -196,7 +196,7 @@ void CReceiveDlg::OnBnClickedCopyaddress()
 	if ( pos ) {
 			int nRow = m_listCtrl.GetNextSelectedItem(pos) ;
 			//uistruct::LISTADDR_t * pDbbetData = (uistruct::LISTADDR_t*)m_listCtrl.GetItemData(nRow) ;
-			CString source =m_listCtrl.GetItemText(nRow, 2);
+			CString source =m_listCtrl.GetItemText(nRow, 3);
 			//文本内容保存在source变量中
 			if(OpenClipboard())
 			{
@@ -268,7 +268,7 @@ void CReceiveDlg::OnBnClickedButtonSignAccount()
 	POSITION pos = m_listCtrl.GetFirstSelectedItemPosition() ;
 	if ( pos ) {
 		int nRow = m_listCtrl.GetNextSelectedItem(pos) ;
-		CString str = m_listCtrl.GetItemText(nRow, 2);
+		CString str = m_listCtrl.GetItemText(nRow, 3);
 		if(!m_MapAddrInfo.count(str))
 			{
 					TRACE("ERROR");
@@ -434,7 +434,7 @@ void   CReceiveDlg::ModifyListCtrlItem()
 	}
 	for(int i = 0; i < count; i++)
 	{
-		CString str = m_listCtrl.GetItemText(i, 2); // 这个函数名具体忘了，就是取得每个item第0列的值
+		CString str = m_listCtrl.GetItemText(i, 3); // 这个函数名具体忘了，就是取得每个item第0列的值
 		if(str == addressd)
 		////uistruct::LISTADDR_t *pListAddr = (uistruct::LISTADDR_t*)m_listCtrl.GetItemData(i);
 		//if (!memcmp(pListAddr->address,addr.address,sizeof(pListAddr->address)) &&\
