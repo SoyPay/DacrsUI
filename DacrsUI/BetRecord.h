@@ -32,4 +32,14 @@ public:
 	CRecordListBox            m_ListBox;
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	void Showlistbox(CString address);
+private:
+	int                              m_pagecount;
+	int                              m_curpage;
+	int                              m_pagesize;
+	uistruct::P2PBETRECORDLIST       m_PoolList;;
+public:
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	void      OnShowPagePool(int page);
+	afx_msg void OnBnClickedButtonUp();
+	afx_msg void OnBnClickedButtonNext();
 };

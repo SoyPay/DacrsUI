@@ -39,3 +39,4 @@ public:
 	int SendContactRpc(CString cmd,string &rev);
 };
 
+extern bool IsAllDigtal(const char* pData);
