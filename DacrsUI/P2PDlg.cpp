@@ -850,6 +850,7 @@ void CP2PDlg::OnListPool()
 	temp.Format(_T("¹²:%d"),m_pagecount);
 	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(temp);
 	Invalidate();
+	m_BonusListBox.DeleteAllIndex();
 	OnShowPagePool(1);
 	//if (pPoolList.size() == 0)
 	//{
