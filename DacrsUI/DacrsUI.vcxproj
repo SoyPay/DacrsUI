@@ -188,6 +188,7 @@
     <None Include="res\p2p_button_1.bmp" />
     <None Include="res\p2p_button_2.bmp" />
     <None Include="res\p2p_dlg.bmp" />
+    <None Include="res\p2p_list.bmp" />
     <None Include="res\p2p_list_box_but.bmp" />
     <None Include="res\progress1.bmp" />
     <None Include="res\progress2.bmp" />

@@ -119,11 +119,12 @@ void CUseListBox::InsertStr(int iIndex,HWND hMain)
 
 	CStaticTrans *pSta = new CStaticTrans;
 	pSta->Create(_T("") , WS_CHILD | WS_VISIBLE , rcClient, this, ++m_uID) ;
+	pSta->ModifyStyle(SS_LEFT|SS_RIGHT,SS_CENTER,TRUE);
 	pData->pSta1 = pSta ;
 
 	pData->pSta2 = new CStaticTrans;
 	pData->pSta2->Create(_T(""),dwStyle, rcClient, this, ++m_uID);
-
+	pData->pSta2->ModifyStyle(SS_LEFT|SS_RIGHT,SS_CENTER,TRUE);
 	m_mButton.insert( make_pair( iIndex, pData ) );
 
 	int i = SetItemDataPtr(InsertString(iIndex,_T("")),pData);
@@ -220,11 +221,11 @@ void CUseListBox::updateListBoxButtonPos()
 
 			  pData->pSta1->SetFont(110, _T("宋体"));				//设置显示字体和大小
 			  pData->pSta1->ShowWindow( SW_SHOW );
-			  pData->pSta1->SetWindowPos(NULL , 150 , pData->nItem*28 +10 , 60 , 25 , SWP_SHOWWINDOW );
+			  pData->pSta1->SetWindowPos(NULL , 100 , pData->nItem*28 +10 , 100 , 25 , SWP_SHOWWINDOW );
 
 			  pData->pSta2->SetFont(110, _T("宋体"));				//设置显示字体和大小
 			  pData->pSta2->ShowWindow( SW_SHOW );
-			  pData->pSta2->SetWindowPos(NULL , 250 , pData->nItem*28 +10 , 100 , 25 , SWP_SHOWWINDOW );
+			  pData->pSta2->SetWindowPos(NULL , 210 , pData->nItem*28 +10 , 150 , 25 , SWP_SHOWWINDOW );
 
 			  pData->pBut2->ShowWindow( SW_SHOW );
 			  pData->pBut2->SetWindowPos(NULL , 275+10+50 +40 , pData->nItem*28 + 10 , 28 , 21 , SWP_SHOWWINDOW );

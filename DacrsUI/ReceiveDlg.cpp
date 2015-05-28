@@ -97,6 +97,8 @@ void CReceiveDlg::ShowListInfo()
 		}
 		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
 
+		strShowData.Format(_T("%s") ,address.RegID) ;
+		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
 		i++;
 	}
 	if ( 17 <= m_MapAddrInfo.size() )  {
@@ -117,13 +119,14 @@ BOOL CReceiveDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT n
 		struct LISTCol {
 			CString		name ;
 			UINT		size ;
-		} listcol[6]  = {
+		} listcol[7]  = {
 							{"序号" ,      50},
-							{"标签" ,      130},
-							{"地址" ,      275}, 
-							{"激活状态" ,  100}, 
+							{"标签" ,      100},
+							{"地址" ,      230}, 
+							{"激活状态" ,  80}, 
 							{"余额" ,      172},
-							{"支持冷挖矿" ,104} 
+							{"支持冷挖矿" ,60} ,
+							{"账户ID" ,96}
 						};
 		m_listCtrl.SetBkColor(RGB(240,240,240));       
 		m_listCtrl.SetRowHeigt(23);               
@@ -132,7 +135,7 @@ BOOL CReceiveDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT n
 		m_listCtrl.SetHeaderBKColor(32,30,32,8); 
 		m_listCtrl.SetHeaderTextColor(RGB(255,255,255)); //设置头部字体颜色
 		m_listCtrl.SetTextColor(RGB(0,0,0));  
-		for( int i = 0 ; i < 6 ; i++  ) {
+		for( int i = 0 ; i < 7 ; i++  ) {
 			m_listCtrl.InsertColumn(i,listcol[i].name,LVCFMT_CENTER,listcol[i].size);
 		}
 		m_listCtrl.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_HEADERDRAGDROP );// |LVS_SINGLESEL  );
@@ -464,6 +467,9 @@ void   CReceiveDlg::ModifyListCtrlItem()
 				strShowData.Format(_T("不支持")) ;
 			}
 			m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
+
+			strShowData.Format(_T("%s") ,addr.RegID ) ;
+			m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
 			break;
 		}
 	}
@@ -522,5 +528,8 @@ void   CReceiveDlg::InsertListCtrlItem()
 	}else{
 		strShowData.Format(_T("不支持")) ;
 	}
+	m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
+
+	strShowData.Format(_T("%s") ,addr.RegID ) ;
 	m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
 }
