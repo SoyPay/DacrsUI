@@ -182,7 +182,7 @@ BOOL CProgStatusBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UIN
 
 LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam ) 
 {
-	TRACE("OnShowProgressCtrl:%s\r\n","OnShowProgressCtrl");
+//	TRACE("OnShowProgressCtrl:%s\r\n","OnShowProgressCtrl");
 	CPostMsg postmsg;
 	if (!theApp.m_UimsgQueue.pop(postmsg))
 	{
@@ -238,6 +238,7 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 	CString strText;
 	strText.AppendFormat("剩余 ~%d 块没有同步到本地", pBlockchanged.tips-pBlockchanged.high);
 	m_progress.SetDefinedStr(strText);
+	m_progress.Invalidate();
 
 	if ((pBlockchanged.tips-pBlockchanged.high)<10&& !m_walletui)
 	{
