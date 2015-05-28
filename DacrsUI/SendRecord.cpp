@@ -188,6 +188,7 @@ void CSendRecord::Showlistbox(CString address)
 	CString temp;
 	temp.Format(_T("共:%d"),m_pagecount);
 	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(temp);
+	Invalidate();
 	OnShowPagePool(1);
 	//if (pPoolItem.size() != 0) ///此记录不存在,插入记录
 	//{
@@ -406,6 +407,10 @@ void  CSendRecord::OnShowPagePool(int page)
 
 
 	m_listBox.DeleteAllIndex();
+	CString strpage;
+	strpage.Format(_T("%d"),page);
+	GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(strpage);
+
 	m_curpage = page;
 	int index = (page-1)*m_pagesize;
 	int count = (m_PoolList.size() -index)>=m_pagesize?m_pagesize:(m_PoolList.size() -index);
@@ -421,7 +426,7 @@ void  CSendRecord::OnShowPagePool(int page)
 
 		SYSTEMTIME curTime =UiFun::Time_tToSystemTime(const_it.send_time);
 		CString SendTime;
-		SendTime.Format("%04d-%02d-%02d %02d:%02d:%02d",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+		SendTime.Format("%02d-%02d %02d:%02d:%02d",curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
 
 		CString dmoney,reward,result,guess;
 		if (const_it.content[32] == 1)
@@ -434,7 +439,7 @@ void  CSendRecord::OnShowPagePool(int page)
 
 		reward.Format(_T("%.4f"),const_it.amount);
 		m_listBox.InsertStr(i,this->GetSafeHwnd());
-		m_listBox.SetIndexInage(i , IDB_BITMAP_P2P_LISTBOX_BUT);
+		m_listBox.SetIndexInage(i , IDB_BITMAP_P2PLIST);
 		m_listBox.SetIndexBackCol(i, 0, RGB(242,32,32));
 
 		List_SendAppendData* pinf = m_listBox.GetAppendDataInfo(i);
@@ -446,7 +451,7 @@ void  CSendRecord::OnShowPagePool(int page)
 		{
 			SYSTEMTIME curTime =UiFun::Time_tToSystemTime(const_it.recv_time);
 			CString strTime;
-			strTime.Format("%04d-%02d-%02d %02d:%02d:%02d",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+			strTime.Format("%02d-%02d %02d:%02d:%02d",curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
 
 			if (const_it.guess_num == 1)
 			{
@@ -466,20 +471,24 @@ void  CSendRecord::OnShowPagePool(int page)
 
 			CString recaddr;
 			recaddr.Format(_T("%s"),const_it.right_addr);
+			CString time = 0;
+			curTime.wMinute = (curTime.wMinute+const_it.time_out)>60?(curTime.wMinute+const_it.time_out)-60:(curTime.wMinute+const_it.time_out);
+			curTime.wHour = (curTime.wMinute+const_it.time_out)>60?curTime.wHour+1:curTime.wHour;
+			time.Format("%02d:%02d:%02d",curTime.wHour, curTime.wMinute, curTime.wSecond);
 			if (const_it.state == 2)
 			{
-				m_listBox.SetIndexString(i ,sendaddr, acceptaddr,SendTime,strTime, result,guess, reward,_T("已开"),const_it.tx_hash);
+				m_listBox.SetIndexString(i ,sendaddr, acceptaddr,SendTime,strTime, result,guess, reward,time,_T("已开"),const_it.tx_hash);
 			}else{
 				if ((const_it.time_out + const_it.height)> theApp.blocktipheight && theApp.IsSyncBlock)
 				{
 					pinf->pBut0->EnableWindow(true);
-					m_listBox.SetIndexString(i , sendaddr, acceptaddr,SendTime,strTime, result,_T("--"),reward, _T("开"),const_it.tx_hash);
+					m_listBox.SetIndexString(i , sendaddr, acceptaddr,SendTime,strTime, result,_T("--"),reward,time, _T("开"),const_it.tx_hash);
 				}else if(theApp.IsSyncBlock){
 					reward.Format(_T("-%.4f"),const_it.amount);
-					m_listBox.SetIndexString(i , sendaddr, acceptaddr,SendTime,strTime, result,guess,reward, _T("超时"),const_it.tx_hash);
+					m_listBox.SetIndexString(i , sendaddr, acceptaddr,SendTime,strTime, result,guess,reward,time, _T("超时"),const_it.tx_hash);
 				}else{
 					pinf->pBut0->EnableWindow(true);
-					m_listBox.SetIndexString(i , sendaddr, acceptaddr,SendTime,strTime, result,_T("--"),reward, _T("开"),const_it.tx_hash);
+					m_listBox.SetIndexString(i , sendaddr, acceptaddr,SendTime,strTime, result,_T("--"),reward,time, _T("开"),const_it.tx_hash);
 				}
 
 			}
@@ -490,13 +499,13 @@ void  CSendRecord::OnShowPagePool(int page)
 			reward.Format(_T("%.4f"),const_it.amount);
 			if (const_it.state == 0 &&(500 + const_it.height)> theApp.blocktipheight&& theApp.IsSyncBlock )
 			{
-				m_listBox.SetIndexString(i , sendaddr, acceptaddr,SendTime,_T("--"), result,_T("--"),reward,_T("未接"),const_it.tx_hash);
+				m_listBox.SetIndexString(i , sendaddr, acceptaddr,SendTime,_T("--"), result,_T("--"),reward,_T(""),_T("未接"),const_it.tx_hash);
 			}else if(theApp.IsSyncBlock){
 				reward.Format(_T("-%.4f"),const_it.amount);
-				m_listBox.SetIndexString(i , sendaddr, acceptaddr,SendTime,_T("--"), result,_T("--"),reward,_T("超时"),const_it.tx_hash);
+				m_listBox.SetIndexString(i , sendaddr, acceptaddr,SendTime,_T("--"), result,_T("--"),reward,_T(""),_T("超时"),const_it.tx_hash);
 			}else
 			{
-				m_listBox.SetIndexString(i , sendaddr, acceptaddr,SendTime,_T("--"), result,_T("--"),reward,_T("未接"),const_it.tx_hash);
+				m_listBox.SetIndexString(i , sendaddr, acceptaddr,SendTime,_T("--"), result,_T("--"),reward,_T(""),_T("未接"),const_it.tx_hash);
 			}
 
 		}

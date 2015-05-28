@@ -762,6 +762,9 @@
     <None Include="res\Bitmap_up.bmp">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="res\p2p_list.bmp">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="资源文件">

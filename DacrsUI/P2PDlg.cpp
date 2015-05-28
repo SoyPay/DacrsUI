@@ -849,6 +849,7 @@ void CP2PDlg::OnListPool()
 	CString temp;
 	temp.Format(_T("¹²:%d"),m_pagecount);
 	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(temp);
+	Invalidate();
 	OnShowPagePool(1);
 	//if (pPoolList.size() == 0)
 	//{
@@ -1134,6 +1135,9 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 
 
 	 m_BonusListBox.DeleteAllIndex();
+	 CString strpage;
+	 strpage.Format(_T("%d"),page);
+	GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(strpage);
 	 m_curpage = page;
 	 int index = (page-1)*m_pagesize;
 	 int count = (m_PoolList.size() -index)>=m_pagesize?m_pagesize:(m_PoolList.size() -index);
@@ -1155,6 +1159,7 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 
 		 double dmoney = (DBbet.money*1.0)/COIN;
 		 money.Format(_T("%.4f"),dmoney);
+
 		 CString txhash, line;
 		 line.Format(_T("%d"),i);
 		 txhash.Format(_T("%s"),const_it.hash.c_str());
