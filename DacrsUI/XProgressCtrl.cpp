@@ -120,7 +120,6 @@ void CXProgressCtrl::OnPaint()
 	{
 		strText.Append(m_strDefined);
 	}
-
 	dc.SetBkMode(TRANSPARENT);  
 	dc.SetTextColor(m_clrTextColor);  
 
