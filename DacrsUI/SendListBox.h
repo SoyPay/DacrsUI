@@ -16,6 +16,7 @@ typedef struct _SendListBox_Data
 	CStaticTrans   * pSta4; //¾²Ì¬¿ò1
 	CStaticTrans   * pSta5; //¾²Ì¬¿ò1
 	CStaticTrans   * pSta6; //¾²Ì¬¿ò1
+	CStaticTrans   * pSta7; //¾²Ì¬¿ò1
 	CButtonEx   * pBut0; //¾²Ì¬¿ò1
 	CString      pstr;
 	_SendListBox_Data()
@@ -28,6 +29,7 @@ typedef struct _SendListBox_Data
 		pSta4= NULL ;
 		pSta5= NULL ;
 		pSta6= NULL ;
+		pSta7= NULL ;
 		pstr = _T("");
 	}
 } List_SendAppendData;
@@ -60,7 +62,7 @@ public:
 	List_SendAppendData *GetAppendDataInfo(int iIndex);
 	void    SetIndexInage(int iIndex ,  UINT nButImage );
 	void    SetIndexBackCol(int iIndex ,  int nline ,COLORREF   col);
-	void    SetIndexString(int iIndex , CString strSta0 ,CString strSta1 ,CString strSta2 ,CString strBut3 ,CString strBut4 ,CString strBut5 ,CString strBut6 ,CString strbutton,CString pstr =_T(""));
+	void    SetIndexString(int iIndex , CString strSta0 ,CString strSta1 ,CString strSta2 ,CString strBut3 ,CString strBut4 ,CString strBut5 ,CString strBut6 ,CString strBut7,CString strbutton,CString pstr =_T(""));
 	void    DeleteAllIndex();
 	void    DeleteIndex(int iIndex);
 	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);

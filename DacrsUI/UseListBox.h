@@ -38,13 +38,11 @@ public:
 
 protected:
 	DECLARE_MESSAGE_MAP()	
-private:
-	CStaticTrans   * m_pTitleSta1; //静态框1
-	CStaticTrans   * m_pTitleSta2; //静态框2
 public:
 	button_map m_mButton;
 	UINT m_uID;
 	void updateListBoxButtonPos();
+	void InvalidateListBox();
 public:
 	virtual void DrawItem(LPDRAWITEMSTRUCT /*lpDrawItemStruct*/);
 	virtual void MeasureItem(LPMEASUREITEMSTRUCT /*lpMeasureItemStruct*/);
@@ -59,12 +57,13 @@ public:
 	void    SetIndexString(int iIndex , CString strSta0 ,CString strSta1 ,CString strSta2 ,CString strBut2 ,CString strSta3 );
 	void    DeleteAllIndex();
 	void    DeleteIndex(int iIndex);
-	void    CreateTitle();
 	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 	afx_msg void OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 	afx_msg void OnLbnSelchange();
 public:
 	  CRect m_rectListBox;      // 列表项到绘制Rect
+	  afx_msg void OnPaint();
+	  virtual BOOL PreTranslateMessage(MSG* pMsg);
 };
 
 
