@@ -138,11 +138,11 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		UpdateData(0);
 		m_Balance.SetFont(120, _T("黑体"));				//设置显示字体和大小
 		m_Balance.SetTextColor(RGB(0,0,0));			    //字体颜色	
-		//Balance.SetWindowText(_T("100.00SMC"));
+		m_Balance.SetWindowText(_T(""));
 
 		m_NotDraw.SetFont(120, _T("黑体"));				//设置显示字体和大小
 		m_NotDraw.SetTextColor(RGB(0,0,0));			    //字体颜色	
-		//NotDraw.SetWindowText(_T("50.01SMC"));
+		m_NotDraw.SetWindowText(_T(""));
 
 		m_Dw.SetFont(120, _T("黑体"));				//设置显示字体和大小
 		m_Dw.SetTextColor(RGB(0,0,0));			    //字体颜色	
@@ -186,7 +186,7 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_rBtnRefresh1.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(255, 255, 255));
 		m_rBtnRefresh1.SizeToContent();
 
-		m_rBtnRefresh2.SetBitmaps( IDB_BITMAP_P2PBUTTON_2 , RGB(255, 255, 0) , IDB_BITMAP_P2PBUTTON_2 , RGB(255, 255, 255) );
+		m_rBtnRefresh2.SetBitmaps( IDB_BITMAP_BUTTON3 , RGB(255, 255, 0) , IDB_BITMAP_BUTTON3 , RGB(255, 255, 255) );
 		m_rBtnRefresh2.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
 		m_rBtnRefresh2.SetWindowText("刷新") ;
 		m_rBtnRefresh2.SetFontEx(20 , _T("微软雅黑"));
@@ -322,7 +322,7 @@ void CP2PDlg::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*12 , (rc.Height()/100)*14 ,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*12 , (rc.Height()/100)*13 ,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
 		}
 		
 		pst = GetDlgItem( IDC_BUTTON_WITHD ) ;
@@ -343,7 +343,7 @@ void CP2PDlg::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*12 , (rc.Height()/100)*21 ,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*12 , (rc.Height()/100)*20 ,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
 		}
 		
 		pst = GetDlgItem( IDC_EDIT_MONEY ) ;
@@ -357,7 +357,7 @@ void CP2PDlg::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*40 , (rc.Height()/100)*42,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*39 , (rc.Height()/100)*42,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
 		}
 
 		pst = GetDlgItem( IDC_BUTTON_MALE ) ;
@@ -843,6 +843,7 @@ void CP2PDlg::OnBnClickedButtonWoman()
 void CP2PDlg::OnListPool()
 {
 	m_PoolList.clear();
+	m_curpage = 0;
 	theApp.m_SqliteDeal.GetP2PQuizPoolList(_T(" 1=1 "), &m_PoolList);
 	m_pagecount = (m_PoolList.size()%m_pagesize)==0?(m_PoolList.size()/m_pagesize):(m_PoolList.size()/m_pagesize)+1;
 	
@@ -850,6 +851,7 @@ void CP2PDlg::OnListPool()
 	temp.Format(_T("共:%d"),m_pagecount);
 	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(temp);
 	Invalidate();
+	m_BonusListBox.DeleteAllIndex();
 	OnShowPagePool(1);
 	//if (pPoolList.size() == 0)
 	//{

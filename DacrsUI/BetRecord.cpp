@@ -164,6 +164,7 @@ void CBetRecord::Showlistbox(CString address)
 	//// 查找数据库中是否存在此记录
 	//m_ListBox.DeleteAllIndex();
 	m_PoolList.clear();
+	m_curpage = 0;
 	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(_T(""));
 	CString conditon;
 	conditon.Format(_T("right_addr ='%s' and (actor = 1 or actor = 2)") , address);
@@ -176,6 +177,7 @@ void CBetRecord::Showlistbox(CString address)
 	temp.Format(_T("共:%d"),m_pagecount);
 	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(temp);
 	Invalidate();
+	m_ListBox.DeleteAllIndex();
 	OnShowPagePool(1);
 	//if (pPoolItem.size() != 0) ///此记录不存在,插入记录
 	//{
