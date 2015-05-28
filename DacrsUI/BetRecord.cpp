@@ -176,6 +176,7 @@ void CBetRecord::Showlistbox(CString address)
 	temp.Format(_T("共:%d"),m_pagecount);
 	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(temp);
 	Invalidate();
+	m_ListBox.DeleteAllIndex();
 	OnShowPagePool(1);
 	//if (pPoolItem.size() != 0) ///此记录不存在,插入记录
 	//{
