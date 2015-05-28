@@ -36,4 +36,14 @@ public:
 private:
 	CString          m_addr;
 	CP2PBetHelp		                    m_P2PBetHelp;
+private:
+	int                              m_pagecount;
+	int                              m_curpage;
+	int                              m_pagesize;
+	uistruct::P2PBETRECORDLIST       m_PoolList;;
+public:
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	void      OnShowPagePool(int page);
+	afx_msg void OnBnClickedButtonUp();
+	afx_msg void OnBnClickedButtonNext();
 };

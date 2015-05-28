@@ -8,6 +8,7 @@
 #include "Out.h"
 #include "ReCharge.h"
 #include "GuessNum.h"
+#include "RpcCmd.h"
 
 #define OUT_HEIGHT  10
 
@@ -19,6 +20,10 @@ CP2PDlg::CP2PDlg()
 {
 	m_pBmp = NULL ;
 	m_seltab = 0;
+	m_pagecount = 0;
+	m_curpage = 0;
+	m_PoolList.clear();
+	m_pagesize = 5;
 }
 
 CP2PDlg::~CP2PDlg()
@@ -68,6 +73,8 @@ BEGIN_MESSAGE_MAP(CP2PDlg, CDialogBar)
 	ON_BN_CLICKED(IDC_BUTTON_REFRESH_2, &CP2PDlg::OnBnClickedButtonRefresh2)
 	ON_BN_CLICKED(IDC_BUTTON_REFRESH_1, &CP2PDlg::OnBnClickedButtonRefresh1)
 	ON_NOTIFY(NM_THEMECHANGED, IDC_LIST_BONUS, &CP2PDlg::OnNMThemeChangedListBonus)
+	ON_BN_CLICKED(IDC_BUTTON_UP, &CP2PDlg::OnBnClickedButtonUp)
+	ON_BN_CLICKED(IDC_BUTTON_NEXT, &CP2PDlg::OnBnClickedButtonNext)
 END_MESSAGE_MAP()
 
 
@@ -275,19 +282,21 @@ void CP2PDlg::OnSize(UINT nType, int cx, int cy)
 		}
 		pst = GetDlgItem( IDC_BUTTON_UP ) ;
 		if ( NULL != pst ) {
-			pst->SetWindowPos( NULL ,455+380-60 , 232 + 5 , 20, 20  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,875-140 , 232 + 5 , 20, 20  ,SWP_SHOWWINDOW ) ; 
 		}
 		pst = GetDlgItem( IDC_EDIT_PAGE ) ;
 		if ( NULL != pst ) {
-			pst->SetWindowPos( NULL ,455+386-40, 232 + 5 , 20, 20  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,875-115, 232 + 5 , 40, 20  ,SWP_SHOWWINDOW ) ; 
 		}
 		pst = GetDlgItem( IDC_BUTTON_NEXT ) ;
 		if ( NULL != pst ) {
-			pst->SetWindowPos( NULL ,455+392-20 , 232 + 5 , 20, 20  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,875-70 , 232 + 5 , 20, 20  ,SWP_SHOWWINDOW ) ; 
 		}
 		pst = GetDlgItem( IDC_STATIC_COUNT_PAGE ) ;
 		if ( NULL != pst ) {
-			pst->SetWindowPos( NULL ,455+392 , 232 + 8 , 20, 20  ,SWP_SHOWWINDOW ) ; 
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,875-50 , 232 + 8 , 50, 30  ,SWP_SHOWWINDOW ) ; 
 		}
 		pst = GetDlgItem( IDC_BUTTON_REFRESH_1 ) ;
 		if ( NULL != pst ) {
@@ -833,47 +842,52 @@ void CP2PDlg::OnBnClickedButtonWoman()
 }
 void CP2PDlg::OnListPool()
 {
-	m_BonusListBox.DeleteAllIndex();
-	uistruct::P2PLIST pPoolList;
-	theApp.m_SqliteDeal.GetP2PQuizPoolList(_T(" 1=1 "), &pPoolList);
-	if (pPoolList.size() == 0)
-	{
-		return ;
-	}
+	m_PoolList.clear();
+	theApp.m_SqliteDeal.GetP2PQuizPoolList(_T(" 1=1 "), &m_PoolList);
+	m_pagecount = (m_PoolList.size()%m_pagesize)==0?(m_PoolList.size()/m_pagesize):(m_PoolList.size()/m_pagesize)+1;
+	
+	CString temp;
+	temp.Format(_T("共:%d"),m_pagecount);
+	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(temp);
+	OnShowPagePool(1);
+	//if (pPoolList.size() == 0)
+	//{
+	//	return ;
+	//}
 
-	int nSubIdx = 0 , i = 0 ;
-	CString strShowData = _T("");
-	std::vector<uistruct::LISTP2POOL_T>::const_iterator const_it;
-	for ( const_it = pPoolList.begin() ; const_it != pPoolList.end() ; const_it++ ) {
+	//int nSubIdx = 0 , i = 0 ;
+	//CString strShowData = _T("");
+	//std::vector<uistruct::LISTP2POOL_T>::const_iterator const_it;
+	//for ( const_it = pPoolList.begin() ; const_it != pPoolList.end() ; const_it++ ) {
 
-		string nValue = const_it->data;
-		uistruct::DBBET_DATA DBbet;
-		memset(&DBbet , 0 , sizeof(uistruct::DBBET_DATA));
-		std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue);
-		memcpy(&DBbet, &vTemp[0], sizeof(DBbet));
+	//	string nValue = const_it->data;
+	//	uistruct::DBBET_DATA DBbet;
+	//	memset(&DBbet , 0 , sizeof(uistruct::DBBET_DATA));
+	//	std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue);
+	//	memcpy(&DBbet, &vTemp[0], sizeof(DBbet));
 
-		CString addr,money;
-		std::vector<unsigned char> vSendid;
-		vSendid.assign(DBbet.sendbetid,DBbet.sendbetid+sizeof(DBbet.sendbetid));
+	//	CString addr,money;
+	//	std::vector<unsigned char> vSendid;
+	//	vSendid.assign(DBbet.sendbetid,DBbet.sendbetid+sizeof(DBbet.sendbetid));
 
-		CString regid = CSoyPayHelp::getInstance()->GetNotFullRegID(vSendid);
-		//CString strCond;
-		//strCond.Format(_T(" reg_id = '%s' "), regid);
-		//uistruct::LISTADDR_t addrsql;
-		//int item = theApp.m_SqliteDeal.GetWalletAddressItem(strCond, &addrsql) ;
+	//	CString regid = CSoyPayHelp::getInstance()->GetNotFullRegID(vSendid);
+	//	//CString strCond;
+	//	//strCond.Format(_T(" reg_id = '%s' "), regid);
+	//	//uistruct::LISTADDR_t addrsql;
+	//	//int item = theApp.m_SqliteDeal.GetWalletAddressItem(strCond, &addrsql) ;
 
-		//addr.Format(_T("%s"),addrsql.address);
+	//	//addr.Format(_T("%s"),addrsql.address);
 
-		double dmoney = (DBbet.money*1.0)/COIN;
-		money.Format(_T("%.4f"),dmoney);
-		CString txhash, line;
-		line.Format(_T("%d"),i);
-		txhash.Format(_T("%s"),const_it->hash.c_str());
-		m_BonusListBox.InsertStr(i,this->GetSafeHwnd());
-		m_BonusListBox.SetIndexInage(i , IDB_BITMAP_P2P_LISTBOX_BUT);
-		m_BonusListBox.SetIndexString(i , line,regid, _T("接"), money, txhash);
-		i++;
-	}
+	//	double dmoney = (DBbet.money*1.0)/COIN;
+	//	money.Format(_T("%.4f"),dmoney);
+	//	CString txhash, line;
+	//	line.Format(_T("%d"),i);
+	//	txhash.Format(_T("%s"),const_it->hash.c_str());
+	//	m_BonusListBox.InsertStr(i,this->GetSafeHwnd());
+	//	m_BonusListBox.SetIndexInage(i , IDB_BITMAP_P2P_LISTBOX_BUT);
+	//	m_BonusListBox.SetIndexString(i , line,regid, _T("接"), money, txhash);
+	//	i++;
+	//}
 }
  LRESULT CP2PDlg::onBnCLick( WPARAM wParam, LPARAM lParam )
  {
@@ -1110,4 +1124,83 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 	 // 符号 _WIN32_WINNT 必须 >= 0x0501。
 	 // TODO: 在此添加控件通知处理程序代码
 	 *pResult = 0;
+ }
+ void  CP2PDlg::OnShowPagePool(int page)
+ {
+	 if (page >m_pagecount || page == m_curpage || page <= 0)
+	 {
+		 return;
+	 }
+
+
+	 m_BonusListBox.DeleteAllIndex();
+	 m_curpage = page;
+	 int index = (page-1)*m_pagesize;
+	 int count = (m_PoolList.size() -index)>=m_pagesize?m_pagesize:(m_PoolList.size() -index);
+	 int i =0;
+	 for (int k = index;k< (index+count);k++)
+	 {
+		 uistruct::LISTP2POOL_T const_it = m_PoolList.at(i);
+		 string nValue = const_it.data;
+		 uistruct::DBBET_DATA DBbet;
+		 memset(&DBbet , 0 , sizeof(uistruct::DBBET_DATA));
+		 std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue);
+		 memcpy(&DBbet, &vTemp[0], sizeof(DBbet));
+
+		 CString addr,money;
+		 std::vector<unsigned char> vSendid;
+		 vSendid.assign(DBbet.sendbetid,DBbet.sendbetid+sizeof(DBbet.sendbetid));
+
+		 CString regid = CSoyPayHelp::getInstance()->GetNotFullRegID(vSendid);
+
+		 double dmoney = (DBbet.money*1.0)/COIN;
+		 money.Format(_T("%.4f"),dmoney);
+		 CString txhash, line;
+		 line.Format(_T("%d"),i);
+		 txhash.Format(_T("%s"),const_it.hash.c_str());
+		 m_BonusListBox.InsertStr(i,this->GetSafeHwnd());
+		 m_BonusListBox.SetIndexInage(i , IDB_BITMAP_P2P_LISTBOX_BUT);
+		 m_BonusListBox.SetIndexString(i , line,regid, _T("接"), money, txhash);
+		 i++;
+	 }
+ }
+
+ BOOL CP2PDlg::PreTranslateMessage(MSG* pMsg)
+ {
+	 // TODO: 在此添加专用代码和/或调用基类
+	 if(pMsg->message == WM_KEYDOWN)  
+	 {   
+		 if(pMsg->wParam == VK_RETURN)  
+		 {  
+			 if (GetDlgItem(IDC_EDIT_PAGE) == this->GetFocus())
+			 {
+				 CString num;
+				 GetDlgItem(IDC_EDIT_PAGE)->GetWindowText(num);
+				 if (IsAllDigtal(num))
+				 {
+					 OnShowPagePool(atoi(num));
+				 }else
+				 {
+					  GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T(""));
+					::MessageBox( this->GetSafeHwnd() ,_T("输入有误,请输入数字") , _T("提示") , MB_ICONINFORMATION ) ;
+				 }
+				 return TRUE;
+			 }
+		 }  
+	 }  
+	 return CDialogBar::PreTranslateMessage(pMsg);
+ }
+
+
+ void CP2PDlg::OnBnClickedButtonUp()
+ {
+	 // TODO: 在此添加控件通知处理程序代码
+	 OnShowPagePool((m_curpage-1));
+ }
+
+
+ void CP2PDlg::OnBnClickedButtonNext()
+ {
+	 // TODO: 在此添加控件通知处理程序代码
+	 OnShowPagePool((m_curpage+1));
  }
