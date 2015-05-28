@@ -40,6 +40,10 @@ public:
 	CShadeButtonST         m_rBtnRefresh1;
 	CShadeButtonST         m_rBtnRefresh2;
 
+	CStaticTrans           m_sCountpage  ;
+	CShadeButtonST         m_rBtnUp;
+	CShadeButtonST         m_rBtnNext;
+
 	CUseListBox            m_BonusListBox;
 	//CRecordListBox         m_RecordListBox;
 	CComboBox			   m_addrbook;
@@ -51,6 +55,7 @@ public:
 
 	std::vector<CDialog*> m_pDialog;
 	void      OnSelectShowWin(int nCurSelTab);
+	void      OnShowPagePool(int page);
 public:
 	afx_msg LRESULT onBnCLick( WPARAM wParam, LPARAM lParam );
 	afx_msg LRESULT OnShowListCtrol(  WPARAM wParam, LPARAM lParam ) ;
@@ -75,4 +80,15 @@ public:
 	void   ShowListItem(int seltab);
 	afx_msg void OnBnClickedButtonRefresh2();
 	afx_msg void OnBnClickedButtonRefresh1();
+	afx_msg void OnNMThemeChangedListBonus(NMHDR *pNMHDR, LRESULT *pResult);
+private:
+	int                   m_pagecount;
+	int                   m_curpage;
+	int                   m_pagesize;
+	uistruct::P2PLIST     m_PoolList;
+public:
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	
+	afx_msg void OnBnClickedButtonUp();
+	afx_msg void OnBnClickedButtonNext();
 };

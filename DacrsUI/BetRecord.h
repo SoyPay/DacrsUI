@@ -25,7 +25,21 @@ public:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	virtual BOOL Create(LPCTSTR lpszTemplateName, CWnd* pParentWnd = NULL);
 public:
+	CShadeButtonST         m_rBtnUp;
+	CShadeButtonST         m_rBtnNext;
+	CStaticTrans           m_sCountpage  ;
+
 	CRecordListBox            m_ListBox;
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	void Showlistbox(CString address);
+private:
+	int                              m_pagecount;
+	int                              m_curpage;
+	int                              m_pagesize;
+	uistruct::P2PBETRECORDLIST       m_PoolList;;
+public:
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	void      OnShowPagePool(int page);
+	afx_msg void OnBnClickedButtonUp();
+	afx_msg void OnBnClickedButtonNext();
 };
