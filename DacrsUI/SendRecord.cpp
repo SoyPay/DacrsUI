@@ -158,6 +158,8 @@ BOOL CSendRecord::Create(LPCTSTR lpszTemplateName, CWnd* pParentWnd)
 		m_rBtnNext.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(255, 255, 255));
 		m_rBtnNext.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(255, 255, 255));
 		m_rBtnNext.SizeToContent();
+
+		GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(_T("¹²:0"));
 	}
 	return bRes ;
 }
