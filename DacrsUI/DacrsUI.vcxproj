@@ -124,6 +124,10 @@
     <None Include="res\bitmap1.bmp" />
     <None Include="res\bitmap11.bmp" />
     <None Include="res\bitmap4.bmp" />
+    <None Include="res\Bitmap_begin.bmp" />
+    <None Include="res\Bitmap_end.bmp" />
+    <None Include="res\Bitmap_next.bmp" />
+    <None Include="res\Bitmap_up.bmp" />
     <None Include="res\bother_1.bmp" />
     <None Include="res\bother_2.bmp" />
     <None Include="res\bother_3.bmp" />
@@ -184,6 +188,7 @@
     <None Include="res\p2p_button_1.bmp" />
     <None Include="res\p2p_button_2.bmp" />
     <None Include="res\p2p_dlg.bmp" />
+    <None Include="res\p2p_list.bmp" />
     <None Include="res\p2p_list_box_but.bmp" />
     <None Include="res\progress1.bmp" />
     <None Include="res\progress2.bmp" />

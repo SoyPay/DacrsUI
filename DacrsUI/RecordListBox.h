@@ -1,5 +1,6 @@
 #pragma once
 #include "StaticTrans.h"
+#include "ShadeButtonST.h"
 #include <map>
 using namespace std;
 

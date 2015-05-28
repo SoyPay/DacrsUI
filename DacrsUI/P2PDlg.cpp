@@ -8,6 +8,7 @@
 #include "Out.h"
 #include "ReCharge.h"
 #include "GuessNum.h"
+#include "RpcCmd.h"
 
 #define OUT_HEIGHT  10
 
@@ -19,6 +20,10 @@ CP2PDlg::CP2PDlg()
 {
 	m_pBmp = NULL ;
 	m_seltab = 0;
+	m_pagecount = 0;
+	m_curpage = 0;
+	m_PoolList.clear();
+	m_pagesize = 5;
 }
 
 CP2PDlg::~CP2PDlg()
@@ -46,6 +51,10 @@ void CP2PDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BUTTON_REFRESH_1, m_rBtnRefresh1);
 	DDX_Control(pDX, IDC_BUTTON_REFRESH_2, m_rBtnRefresh2);
 	DDX_Control(pDX, IDC_TAB, m_tab);
+
+	DDX_Control(pDX, IDC_BUTTON_UP, m_rBtnUp);
+	DDX_Control(pDX, IDC_BUTTON_NEXT, m_rBtnNext);
+	DDX_Control(pDX ,IDC_STATIC_COUNT_PAGE ,m_sCountpage ) ;
 }
 
 
@@ -63,6 +72,9 @@ BEGIN_MESSAGE_MAP(CP2PDlg, CDialogBar)
 	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB, &CP2PDlg::OnTcnSelchangeTab)
 	ON_BN_CLICKED(IDC_BUTTON_REFRESH_2, &CP2PDlg::OnBnClickedButtonRefresh2)
 	ON_BN_CLICKED(IDC_BUTTON_REFRESH_1, &CP2PDlg::OnBnClickedButtonRefresh1)
+	ON_NOTIFY(NM_THEMECHANGED, IDC_LIST_BONUS, &CP2PDlg::OnNMThemeChangedListBonus)
+	ON_BN_CLICKED(IDC_BUTTON_UP, &CP2PDlg::OnBnClickedButtonUp)
+	ON_BN_CLICKED(IDC_BUTTON_NEXT, &CP2PDlg::OnBnClickedButtonNext)
 END_MESSAGE_MAP()
 
 
@@ -126,11 +138,11 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		UpdateData(0);
 		m_Balance.SetFont(120, _T("黑体"));				//设置显示字体和大小
 		m_Balance.SetTextColor(RGB(0,0,0));			    //字体颜色	
-		m_Balance.SetWindowText(_T("100.00SMC"));
+		//Balance.SetWindowText(_T("100.00SMC"));
 
 		m_NotDraw.SetFont(120, _T("黑体"));				//设置显示字体和大小
 		m_NotDraw.SetTextColor(RGB(0,0,0));			    //字体颜色	
-		m_NotDraw.SetWindowText(_T("50.01SMC"));
+		//NotDraw.SetWindowText(_T("50.01SMC"));
 
 		m_Dw.SetFont(120, _T("黑体"));				//设置显示字体和大小
 		m_Dw.SetTextColor(RGB(0,0,0));			    //字体颜色	
@@ -139,6 +151,10 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_VS.SetFont(120, _T("黑体"));				//设置显示字体和大小
 		m_VS.SetTextColor(RGB(0,0,0));			    //字体颜色	
 		m_VS.SetWindowText(_T(" VS"));
+
+		m_sCountpage.SetFont(90, _T("黑体"));				//设置显示字体和大小
+		m_sCountpage.SetTextColor(RGB(0,0,0));			    //字体颜色	
+		m_sCountpage.SetWindowText(_T("共:"));
 
 		m_rBtnWithd.SetBitmaps( IDB_BITMAP_P2PBUTTON_1 , RGB(255, 255, 0) , IDB_BITMAP_P2PBUTTON_1 , RGB(255, 255, 255) );
 		m_rBtnWithd.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
@@ -168,6 +184,7 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_rBtnRefresh1.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 		m_rBtnRefresh1.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(255, 255, 255));
 		m_rBtnRefresh1.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(255, 255, 255));
+		m_rBtnRefresh1.SizeToContent();
 
 		m_rBtnRefresh2.SetBitmaps( IDB_BITMAP_P2PBUTTON_2 , RGB(255, 255, 0) , IDB_BITMAP_P2PBUTTON_2 , RGB(255, 255, 255) );
 		m_rBtnRefresh2.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
@@ -177,8 +194,28 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_rBtnRefresh2.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 		m_rBtnRefresh2.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(255, 255, 255));
 		m_rBtnRefresh2.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(255, 255, 255));
+		m_rBtnRefresh2.SizeToContent();
 
-		m_rBtnRefresh1.SizeToContent();
+		
+		m_rBtnUp.SetBitmaps( IDB_BITMAP_UP , RGB(255, 255, 0) , IDB_BITMAP_UP , RGB(255, 255, 255) );
+		m_rBtnUp.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+		m_rBtnUp.SetWindowText("") ;
+		m_rBtnUp.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(255, 255, 255));
+		m_rBtnUp.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+		m_rBtnUp.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(255, 255, 255));
+		m_rBtnUp.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(255, 255, 255));
+		m_rBtnUp.SizeToContent();
+
+		m_rBtnNext.SetBitmaps( IDB_BITMAP_NEXT , RGB(255, 255, 0) , IDB_BITMAP_NEXT , RGB(255, 255, 255) );
+		m_rBtnNext.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+		m_rBtnNext.SetWindowText("") ;
+		m_rBtnNext.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(255, 255, 255));
+		m_rBtnNext.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+		m_rBtnNext.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(255, 255, 255));
+		m_rBtnNext.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(255, 255, 255));
+		m_rBtnNext.SizeToContent();
+
+		
 
 		m_tab.InsertItem(0,_T("投注记录"));  //添加参数一选项卡 
 		m_tab.InsertItem(1,_T("发起记录"));  //添加参数二选项卡 
@@ -235,9 +272,31 @@ void CP2PDlg::OnSize(UINT nType, int cx, int cy)
 
 	// TODO: 在此处添加消息处理程序代码
 	if( NULL != GetSafeHwnd() ) {
+
+		CRect rc ;
+		GetClientRect( rc ) ;
+
 		CWnd *pst = GetDlgItem( IDC_LIST_BONUS ) ;
 		if ( NULL != pst ) {
-			pst->SetWindowPos( NULL ,455 , 85 , 432, 167  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,455 , 85 , 432, 147  ,SWP_SHOWWINDOW ) ; 
+		}
+		pst = GetDlgItem( IDC_BUTTON_UP ) ;
+		if ( NULL != pst ) {
+			pst->SetWindowPos( NULL ,875-140 , 232 + 5 , 20, 20  ,SWP_SHOWWINDOW ) ; 
+		}
+		pst = GetDlgItem( IDC_EDIT_PAGE ) ;
+		if ( NULL != pst ) {
+			pst->SetWindowPos( NULL ,875-115, 232 + 5 , 40, 20  ,SWP_SHOWWINDOW ) ; 
+		}
+		pst = GetDlgItem( IDC_BUTTON_NEXT ) ;
+		if ( NULL != pst ) {
+			pst->SetWindowPos( NULL ,875-70 , 232 + 5 , 20, 20  ,SWP_SHOWWINDOW ) ; 
+		}
+		pst = GetDlgItem( IDC_STATIC_COUNT_PAGE ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,875-50 , 232 + 8 , 50, 30  ,SWP_SHOWWINDOW ) ; 
 		}
 		pst = GetDlgItem( IDC_BUTTON_REFRESH_1 ) ;
 		if ( NULL != pst ) {
@@ -251,6 +310,74 @@ void CP2PDlg::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			pst->SetWindowPos( NULL ,800 , 270 ,  0 , 0 , SWP_NOSIZE ) ; 
 		}
+
+		pst = GetDlgItem( IDC_STATIC_BALANCE ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*12 , (rc.Height()/100)*7 ,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
+		}
+		
+		pst = GetDlgItem( IDC_STATIC_NOT_DRAW ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*12 , (rc.Height()/100)*14 ,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
+		}
+		
+		pst = GetDlgItem( IDC_BUTTON_WITHD ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*30 , (rc.Height()/100)*9 ,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
+		}
+		
+		pst = GetDlgItem( IDC_BUTTON_RECH ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*42 , (rc.Height()/100)*9 ,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
+		}
+		
+		pst = GetDlgItem( IDC_COMBO_ADDRES ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*12 , (rc.Height()/100)*21 ,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
+		}
+		
+		pst = GetDlgItem( IDC_EDIT_MONEY ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*14 , (rc.Height()/100)*42,  rect.Width() , rect.Height() + 5 , SWP_SHOWWINDOW ) ; 
+		}
+		
+		pst = GetDlgItem( IDC_STATIC_DW ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*40 , (rc.Height()/100)*42,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
+		}
+
+		pst = GetDlgItem( IDC_BUTTON_MALE ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*17 , (rc.Height()/100)*52+2,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
+		}
+
+		pst = GetDlgItem( IDC_BUTTON_WOMAN ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*33 ,  (rc.Height()/100)*52+2,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
+		}
+
+
+
+		
+
 	}
 }
 
@@ -715,47 +842,53 @@ void CP2PDlg::OnBnClickedButtonWoman()
 }
 void CP2PDlg::OnListPool()
 {
-	m_BonusListBox.DeleteAllIndex();
-	uistruct::P2PLIST pPoolList;
-	theApp.m_SqliteDeal.GetP2PQuizPoolList(_T(" 1=1 "), &pPoolList);
-	if (pPoolList.size() == 0)
-	{
-		return ;
-	}
+	m_PoolList.clear();
+	theApp.m_SqliteDeal.GetP2PQuizPoolList(_T(" 1=1 "), &m_PoolList);
+	m_pagecount = (m_PoolList.size()%m_pagesize)==0?(m_PoolList.size()/m_pagesize):(m_PoolList.size()/m_pagesize)+1;
+	
+	CString temp;
+	temp.Format(_T("共:%d"),m_pagecount);
+	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(temp);
+	Invalidate();
+	OnShowPagePool(1);
+	//if (pPoolList.size() == 0)
+	//{
+	//	return ;
+	//}
 
-	int nSubIdx = 0 , i = 0 ;
-	CString strShowData = _T("");
-	std::vector<uistruct::LISTP2POOL_T>::const_iterator const_it;
-	for ( const_it = pPoolList.begin() ; const_it != pPoolList.end() ; const_it++ ) {
+	//int nSubIdx = 0 , i = 0 ;
+	//CString strShowData = _T("");
+	//std::vector<uistruct::LISTP2POOL_T>::const_iterator const_it;
+	//for ( const_it = pPoolList.begin() ; const_it != pPoolList.end() ; const_it++ ) {
 
-		string nValue = const_it->data;
-		uistruct::DBBET_DATA DBbet;
-		memset(&DBbet , 0 , sizeof(uistruct::DBBET_DATA));
-		std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue);
-		memcpy(&DBbet, &vTemp[0], sizeof(DBbet));
+	//	string nValue = const_it->data;
+	//	uistruct::DBBET_DATA DBbet;
+	//	memset(&DBbet , 0 , sizeof(uistruct::DBBET_DATA));
+	//	std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue);
+	//	memcpy(&DBbet, &vTemp[0], sizeof(DBbet));
 
-		CString addr,money;
-		std::vector<unsigned char> vSendid;
-		vSendid.assign(DBbet.sendbetid,DBbet.sendbetid+sizeof(DBbet.sendbetid));
+	//	CString addr,money;
+	//	std::vector<unsigned char> vSendid;
+	//	vSendid.assign(DBbet.sendbetid,DBbet.sendbetid+sizeof(DBbet.sendbetid));
 
-		CString regid = CSoyPayHelp::getInstance()->GetNotFullRegID(vSendid);
-		//CString strCond;
-		//strCond.Format(_T(" reg_id = '%s' "), regid);
-		//uistruct::LISTADDR_t addrsql;
-		//int item = theApp.m_SqliteDeal.GetWalletAddressItem(strCond, &addrsql) ;
+	//	CString regid = CSoyPayHelp::getInstance()->GetNotFullRegID(vSendid);
+	//	//CString strCond;
+	//	//strCond.Format(_T(" reg_id = '%s' "), regid);
+	//	//uistruct::LISTADDR_t addrsql;
+	//	//int item = theApp.m_SqliteDeal.GetWalletAddressItem(strCond, &addrsql) ;
 
-		//addr.Format(_T("%s"),addrsql.address);
+	//	//addr.Format(_T("%s"),addrsql.address);
 
-		double dmoney = (DBbet.money*1.0)/COIN;
-		money.Format(_T("%.4f"),dmoney);
-		CString txhash, line;
-		line.Format(_T("%d"),i);
-		txhash.Format(_T("%s"),const_it->hash.c_str());
-		m_BonusListBox.InsertStr(i,this->GetSafeHwnd());
-		m_BonusListBox.SetIndexInage(i , IDB_BITMAP_P2P_LISTBOX_BUT);
-		m_BonusListBox.SetIndexString(i , line,regid, _T("接"), money, txhash);
-		i++;
-	}
+	//	double dmoney = (DBbet.money*1.0)/COIN;
+	//	money.Format(_T("%.4f"),dmoney);
+	//	CString txhash, line;
+	//	line.Format(_T("%d"),i);
+	//	txhash.Format(_T("%s"),const_it->hash.c_str());
+	//	m_BonusListBox.InsertStr(i,this->GetSafeHwnd());
+	//	m_BonusListBox.SetIndexInage(i , IDB_BITMAP_P2P_LISTBOX_BUT);
+	//	m_BonusListBox.SetIndexString(i , line,regid, _T("接"), money, txhash);
+	//	i++;
+	//}
 }
  LRESULT CP2PDlg::onBnCLick( WPARAM wParam, LPARAM lParam )
  {
@@ -936,6 +1069,7 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
  }
  bool CP2PDlg::CheckBalance()
  {
+	 OnCbnSelchangeComboAddres();
 	 CString strMoney;
 	 ((CStatic*)GetDlgItem(IDC_STATIC_BALANCE))->GetWindowText(strMoney);
 	 double money =atof(strMoney);
@@ -982,4 +1116,96 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
  {
 	 // TODO: 在此添加控件通知处理程序代码
 	 OnListPool();
+ }
+
+
+ void CP2PDlg::OnNMThemeChangedListBonus(NMHDR *pNMHDR, LRESULT *pResult)
+ {
+	 // 该功能要求使用 Windows XP 或更高版本。
+	 // 符号 _WIN32_WINNT 必须 >= 0x0501。
+	 // TODO: 在此添加控件通知处理程序代码
+	 *pResult = 0;
+ }
+ void  CP2PDlg::OnShowPagePool(int page)
+ {
+	 if (page >m_pagecount || page == m_curpage || page <= 0)
+	 {
+		 return;
+	 }
+
+
+	 m_BonusListBox.DeleteAllIndex();
+	 CString strpage;
+	 strpage.Format(_T("%d"),page);
+	GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(strpage);
+	 m_curpage = page;
+	 int index = (page-1)*m_pagesize;
+	 int count = (m_PoolList.size() -index)>=m_pagesize?m_pagesize:(m_PoolList.size() -index);
+	 int i =0;
+	 for (int k = index;k< (index+count);k++)
+	 {
+		 uistruct::LISTP2POOL_T const_it = m_PoolList.at(i);
+		 string nValue = const_it.data;
+		 uistruct::DBBET_DATA DBbet;
+		 memset(&DBbet , 0 , sizeof(uistruct::DBBET_DATA));
+		 std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue);
+		 memcpy(&DBbet, &vTemp[0], sizeof(DBbet));
+
+		 CString addr,money;
+		 std::vector<unsigned char> vSendid;
+		 vSendid.assign(DBbet.sendbetid,DBbet.sendbetid+sizeof(DBbet.sendbetid));
+
+		 CString regid = CSoyPayHelp::getInstance()->GetNotFullRegID(vSendid);
+
+		 double dmoney = (DBbet.money*1.0)/COIN;
+		 money.Format(_T("%.4f"),dmoney);
+
+		 CString txhash, line;
+		 line.Format(_T("%d"),i);
+		 txhash.Format(_T("%s"),const_it.hash.c_str());
+		 m_BonusListBox.InsertStr(i,this->GetSafeHwnd());
+		 m_BonusListBox.SetIndexInage(i , IDB_BITMAP_P2P_LISTBOX_BUT);
+		 m_BonusListBox.SetIndexString(i , line,regid, _T("接"), money, txhash);
+		 i++;
+	 }
+ }
+
+ BOOL CP2PDlg::PreTranslateMessage(MSG* pMsg)
+ {
+	 // TODO: 在此添加专用代码和/或调用基类
+	 if(pMsg->message == WM_KEYDOWN)  
+	 {   
+		 if(pMsg->wParam == VK_RETURN)  
+		 {  
+			 if (GetDlgItem(IDC_EDIT_PAGE) == this->GetFocus())
+			 {
+				 CString num;
+				 GetDlgItem(IDC_EDIT_PAGE)->GetWindowText(num);
+				 if (IsAllDigtal(num))
+				 {
+					 OnShowPagePool(atoi(num));
+				 }else
+				 {
+					  GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T(""));
+					::MessageBox( this->GetSafeHwnd() ,_T("输入有误,请输入数字") , _T("提示") , MB_ICONINFORMATION ) ;
+				 }
+				 return TRUE;
+			 }
+		 }  
+	 }  
+	 return CDialogBar::PreTranslateMessage(pMsg);
+ }
+
+
+ void CP2PDlg::OnBnClickedButtonUp()
+ {
+	 // TODO: 在此添加控件通知处理程序代码
+	 OnShowPagePool((m_curpage-1));
+ }
+
+
+ void CP2PDlg::OnBnClickedButtonNext()
+ {
+	 // TODO: 在此添加控件通知处理程序代码
+	 OnShowPagePool((m_curpage+1));
  }

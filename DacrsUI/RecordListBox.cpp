@@ -70,7 +70,7 @@ void CRecordListBox::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 void CRecordListBox::MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct)
 {
 	// TODO:  添加您的代码以确定指定项的大小
-	lpMeasureItemStruct->itemHeight = 35;
+	lpMeasureItemStruct->itemHeight = 28;
 }
 void CRecordListBox::OnDestroy()
 {
@@ -127,24 +127,31 @@ void CRecordListBox::InsertStr(int iIndex,HWND hMain)
 	DWORD dwStyle =  WS_CHILD | WS_VISIBLE;
 	pData->pSta0 = new CStaticTrans;
 	pData->pSta0->Create(_T("") , WS_CHILD | WS_VISIBLE , rcClient, this, ++m_uID) ;
+	pData->pSta0->ModifyStyle(SS_LEFT|SS_RIGHT,SS_CENTER,TRUE);
 
 	pData->pSta1 = new CStaticTrans;
 	pData->pSta1->Create(_T("") , WS_CHILD | WS_VISIBLE , rcClient, this, ++m_uID) ;
+	pData->pSta1->ModifyStyle(SS_LEFT|SS_RIGHT,SS_CENTER,TRUE);
 
 	pData->pSta2 = new CStaticTrans;
 	pData->pSta2->Create(_T("") , WS_CHILD | WS_VISIBLE , rcClient, this, ++m_uID) ;
+	pData->pSta2->ModifyStyle(SS_LEFT|SS_RIGHT,SS_CENTER,TRUE);
 
 	pData->pSta3 = new CStaticTrans;
 	pData->pSta3->Create(_T("") , WS_CHILD | WS_VISIBLE , rcClient, this, ++m_uID) ;
+	pData->pSta3->ModifyStyle(SS_LEFT|SS_RIGHT,SS_CENTER,TRUE);
 
 	pData->pSta4 = new CStaticTrans;
 	pData->pSta4->Create(_T("") , WS_CHILD | WS_VISIBLE , rcClient, this, ++m_uID) ;
+	pData->pSta4->ModifyStyle(SS_LEFT|SS_RIGHT,SS_CENTER,TRUE);
 
 	pData->pSta5= new CStaticTrans;
 	pData->pSta5->Create(_T("") , WS_CHILD | WS_VISIBLE , rcClient, this, ++m_uID) ;
+	pData->pSta5->ModifyStyle(SS_LEFT|SS_RIGHT,SS_CENTER,TRUE);
 
 	pData->pSta6 = new CStaticTrans;
 	pData->pSta6->Create(_T("") , WS_CHILD | WS_VISIBLE , rcClient, this, ++m_uID) ;
+	pData->pSta6->ModifyStyle(SS_LEFT|SS_RIGHT,SS_CENTER,TRUE);
 
 	m_mButton.insert( make_pair( iIndex, pData ) );
 
@@ -165,46 +172,35 @@ void CRecordListBox::updateListBoxButtonPos()
 			if ( NULL != pData ) {
 				pData->pSta0->SetFont(110, _T("楷体"));				//设置显示字体和大小
 				//pData->pSta0->SetTextColor(RGB(0,0,0));			    //字体颜色
-				pData->pSta0->ShowWindow( SW_SHOW );
-				//pData->pSta0->SetBackColor(RGB(0,0,0));	
-				pData->pSta0->ModifyStyle(0,SS_CENTERIMAGE|SS_CENTER);
-				pData->pSta0->SetWindowPos(NULL , 45 , pData->nItem*35+10 , 33 , 29 , SWP_SHOWWINDOW );
+				pData->pSta0->ShowWindow( SW_SHOW );	
+				pData->pSta0->SetWindowPos(NULL ,0 , pData->nItem*28+10 , 100 , 29 , SWP_SHOWWINDOW );
 
 				pData->pSta1->SetFont(110, _T("楷体"));				//设置显示字体和大小
 				//pData->pSta1->SetTextColor(RGB(0,0,0));			    //字体颜色
 				pData->pSta1->ShowWindow( SW_SHOW );
-				//pData->pSta0->SetBackColor(RGB(0,0,0));	
-				pData->pSta1->ModifyStyle(0,SS_CENTERIMAGE|SS_CENTER);
-				pData->pSta1->SetWindowPos(NULL , 180 , pData->nItem*35+10 , 33 , 29 , SWP_SHOWWINDOW );	
+				pData->pSta1->SetWindowPos(NULL , 110 , pData->nItem*28+10 , 100 , 29 , SWP_SHOWWINDOW );	
 
 				pData->pSta2->SetFont(110, _T("宋体"));				//设置显示字体和大小
 				//pData->pSta2->SetTextColor(RGB(0,0,0));			    //字体颜色
 				pData->pSta2->ShowWindow( SW_SHOW );
-				//pData->pSta0->SetBackColor(RGB(0,0,0));	
-				pData->pSta2->ModifyStyle(0,SS_CENTERIMAGE|SS_CENTER);
-				pData->pSta2->SetWindowPos(NULL , 270  , pData->nItem*35 +10 , 150 , 29 , SWP_SHOWWINDOW );
+				pData->pSta2->SetWindowPos(NULL , 220  , pData->nItem*28 +10 , 150 , 29 , SWP_SHOWWINDOW );
 
 				pData->pSta3->SetFont(110, _T("宋体"));				//设置显示字体和大小
 				//pData->pSta3->SetTextColor(RGB(0,0,0));			    //字体颜色
 				pData->pSta3->ShowWindow( SW_SHOW );
-				//pData->pSta0->SetBackColor(RGB(0,0,0));	
-				pData->pSta3->ModifyStyle(0,SS_CENTERIMAGE|SS_CENTER);
-				pData->pSta3->SetWindowPos(NULL , 450 , pData->nItem*35 +10 , 150, 29 , SWP_SHOWWINDOW );
+				pData->pSta3->SetWindowPos(NULL , 380 , pData->nItem*28 +10 , 150, 29 , SWP_SHOWWINDOW );
 
 				pData->pSta4->SetFont(110, _T("宋体"));				//设置显示字体和大小
 				pData->pSta4->ShowWindow( SW_SHOW );	
-				pData->pSta4->ModifyStyle(0,SS_CENTERIMAGE|SS_CENTER);
-				pData->pSta4->SetWindowPos(NULL , 640 , pData->nItem*35 +10 , 50 , 29 , SWP_SHOWWINDOW );
+				pData->pSta4->SetWindowPos(NULL , 560 , pData->nItem*28 +10 , 50 , 29 , SWP_SHOWWINDOW );
 
 				pData->pSta5->SetFont(110, _T("宋体"));				//设置显示字体和大小
 				pData->pSta5->ShowWindow( SW_SHOW );	
-				pData->pSta5->ModifyStyle(0,SS_CENTERIMAGE|SS_CENTER);
-				pData->pSta5->SetWindowPos(NULL , 730 , pData->nItem*35 +10 , 30 , 29 , SWP_SHOWWINDOW );
+				pData->pSta5->SetWindowPos(NULL , 660 , pData->nItem*28 +10 , 38 , 29 , SWP_SHOWWINDOW );
 
 				pData->pSta6->SetFont(110, _T("宋体"));				//设置显示字体和大小
 				pData->pSta6->ShowWindow( SW_SHOW );	
-				pData->pSta6->ModifyStyle(0,SS_CENTERIMAGE|SS_CENTER);
-				pData->pSta6->SetWindowPos(NULL ,770 , pData->nItem*35 +10 , 100 , 29 , SWP_SHOWWINDOW );
+				pData->pSta6->SetWindowPos(NULL ,720 , pData->nItem*28 +10 , 150 , 29 , SWP_SHOWWINDOW );
 			}
 			iLine++;
 		}
@@ -307,9 +303,9 @@ void CRecordListBox::DeleteAllIndex()
 			delete pData;
 			pData = NULL;
 		}
-		DeleteString(i);
 	}
-		m_mButton.clear();
+	ResetContent();
+	m_mButton.clear();
 }
 void CRecordListBox::DeleteIndex(int iIndex)
 {
