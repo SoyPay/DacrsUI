@@ -73,6 +73,10 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 	}
 	CString text;
 	int sel = m_addrbook.GetCurSel();
+	if (sel < 0)
+	{
+		return ;
+	}
 	m_addrbook.GetLBText(sel,text);
 
 	uistruct::LISTADDR_t data;
@@ -196,6 +200,10 @@ void CSendDlg::OnCbnSelchangeCombo1()
 	}
 	CString text;
 	int sel = m_addrbook.GetCurSel();
+	if (sel < 0)
+	{
+		return ;
+	}
 	m_addrbook.GetLBText(sel,text);
 	
 	//m_addrbook.GetWindowText(text) ;
@@ -235,6 +243,10 @@ BOOL CSendDlg::AddListaddrDataBox(){
 
 	CString address;
 	int sel = m_addrbook.GetCurSel();
+	if (sel < 0)
+	{
+		return FALSE;
+	}
 	m_addrbook.GetLBText(sel,address);
 	std::map<CString,uistruct::LISTADDR_t>::const_iterator item = m_mapAddrInfo.find(address);
 

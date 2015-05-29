@@ -387,6 +387,10 @@ void CP2PDlg::OnCbnSelchangeComboAddres()
 	// TODO: 在此添加控件通知处理程序代码
 	CString text;
 	int sel = m_addrbook.GetCurSel();
+	if (sel < 0)
+	{
+		return;
+	}
 	m_addrbook.GetLBText(sel,text);
 
 	//m_addrbook.GetWindowText(text) ;
@@ -460,6 +464,10 @@ BOOL CP2PDlg::AddListaddrDataBox(){
 
 	CString address;
 	int sel = m_addrbook.GetCurSel();
+	if (sel < 0)
+	{
+		return FALSE;
+	}
 	m_addrbook.GetLBText(sel,address);
 	OnCbnSelchangeComboAddres();
 	return TRUE ;
@@ -526,6 +534,10 @@ void CP2PDlg::OnBnClickedButtonWithd()
 	
 	CString addr;
 	int sel = m_addrbook.GetCurSel();
+	if (sel < 0)
+	{
+		return ;
+	}
 	m_addrbook.GetLBText(sel,addr);
 
 	if (addr == _T(""))
@@ -600,6 +612,10 @@ void CP2PDlg::OnBnClickedButtonRech()
 	CString strShowData ;
 	CString addr;
 	int sel = m_addrbook.GetCurSel();
+	if (sel < 0)
+	{
+		return ;
+	}
 	m_addrbook.GetLBText(sel,addr);
 
 	if (addr == _T(""))
@@ -683,6 +699,10 @@ void CP2PDlg::SendBet(int rewardnum)
 
 	CString addr;
 	int sel = m_addrbook.GetCurSel();
+	if (sel < 0)
+	{
+		return ;
+	}
 	m_addrbook.GetLBText(sel,addr);
 
 	if (addr == _T(""))
@@ -933,6 +953,11 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 
 	 CString addr;
 	 int sel = m_addrbook.GetCurSel();
+
+	 if (sel < 0)
+	 {
+		 return ;
+	 }
 	 m_addrbook.GetLBText(sel,addr);
 
 	 if (addr == _T(""))
