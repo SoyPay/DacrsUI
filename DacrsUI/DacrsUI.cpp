@@ -1064,21 +1064,21 @@ int CDacrsUIApp::SendPostThread(DWORD msgtype)
 	//	break;
 	case WM_REVTRANSACTION:
 		{
-			SYSTEMTIME curTime ;
-			memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
-			GetLocalTime( &curTime ) ;
-			static int UpdatManUiTimeLast =0;
-			int tempTimemsg= UiFun::SystemTimeToTimet(curTime);
+			//SYSTEMTIME curTime ;
+			//memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
+			//GetLocalTime( &curTime ) ;
+			//static int UpdatManUiTimeLast =0;
+			//int tempTimemsg= UiFun::SystemTimeToTimet(curTime);
 
-			if ((tempTimemsg - UpdatManUiTimeLast)>10|| UpdatManUiTimeLast == 0)
-			{	
-				if(pDlg->dlgType == CMainDlg::IDD)
-				{
+			//if ((tempTimemsg - UpdatManUiTimeLast)>10|| UpdatManUiTimeLast == 0)
+			//{	
+			//	if(pDlg->dlgType == CMainDlg::IDD)
+			//	{
 					GetMainDlgStruct();
 					DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_MAIN_UI , 0,0);
-				}
-				UpdatManUiTimeLast = tempTimemsg;
-			}
+				//}
+				//UpdatManUiTimeLast = tempTimemsg;
+			//}
 
 		}
 		break;
