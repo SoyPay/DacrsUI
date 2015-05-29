@@ -187,7 +187,7 @@ void CDacrsUIApp::UpdateTransaction(string hash){
 		if (transcion.JsonToStruct(root.toStyledString()))
 		{
 			CString strSourceData,strWhere;
-			strSourceData.Format(_T("send_time =%d,confirm_height = %d , confirmed_time = '%d' ,block_hash ='%s'") ,transcion.confirmedtime,transcion.confirmedHeight,transcion.confirmedtime,transcion.blockhash.c_str() ) ;
+			strSourceData.Format(_T("confirm_height = %d , confirmed_time = %d ,block_hash ='%s'") ,transcion.confirmedHeight,transcion.confirmedtime,transcion.blockhash.c_str() ) ;
 			strWhere.Format(_T("hash = '%s'") , hash.c_str() ) ;
 			if ( !m_SqliteDeal.UpdateTableItem(_T("t_transaction") , strSourceData , strWhere ) ){
 				TRACE(_T("update t_transaction failed\n"));
@@ -344,7 +344,7 @@ void CDacrsUIApp::InsertTransaction(string hash){
 			int nItem1 =  theApp.m_SqliteDeal.GetTableCountItem(_T("t_wallet_address"),conditon) ;
 			if (nItem1 !=0&nItem != 0)
 			{
-				transcion.state = 1; 
+				transcion.state = 3; 
 			}else if (nItem != 0)
 			{
 				transcion.state = 1;        //// 扣钱
@@ -364,7 +364,7 @@ void CDacrsUIApp::InsertTransaction(string hash){
 
 		//// 数据插入了，更新到交易详情界面
 		CPostMsg Postmsg(MSG_USER_TRANSRECORD_UI,WM_INSERT);
-		string temp =root.toStyledString();
+		string temp =  transcion.ToJson();
 		Postmsg.SetData(temp.c_str());	
 		m_UiTxDetailQueue.push(Postmsg);
 		DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_TRANSRECORD_UI ,WM_INSERT,0);

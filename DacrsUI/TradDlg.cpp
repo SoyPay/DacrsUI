@@ -334,7 +334,7 @@ void CTradDlg::InsertItemData()
 	strShowData.Format(_T("%s") ,txdetail.addr.c_str()) ;
 	m_listCtrl.SetItemText(count , ++nSubIdx , strShowData );//Ô´µØÖ·
 
-	strShowData.Format(_T("%.8f") , txdetail.money ) ;
+	strShowData.Format(_T("%.8f") , (txdetail.money*100000000) ) ;
 	m_listCtrl.SetItemText(count , ++nSubIdx , strShowData );//½ð¶î
 
 	strShowData.Format(_T("%s") ,txdetail.desaddr.c_str());
