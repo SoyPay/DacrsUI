@@ -1,6 +1,7 @@
 ﻿#include "stdafx.h"
 #include "CommonStruct.h"
 #include "DacrsUI.h"
+#include "Out.h"
 
 IMPLEMENT_SINGLETON(CSoyPayHelp)
 
@@ -530,6 +531,12 @@ bool CSoyPayHelp::IsOSVersionBelowXp()
 	}
 	if (!strcmp(swVersion,"5.1")){
 		strcpy( szOSName,"win_xp");    //win_xp 
+		CString strDisplay;
+		strDisplay.Format(_T("这是xp以下的系统有可能不太稳定,是否要退出"));
+		COut outdlg(NULL, strDisplay,100);
+		if ( IDOK == outdlg.DoModal()){
+			exit(0);
+		}
 		return TRUE;
 	}
 	if (!strcmp(swVersion,"5.2")){
