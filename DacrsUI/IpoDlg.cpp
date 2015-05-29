@@ -134,6 +134,12 @@ BOOL CIpoDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_rQueryAmout.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
 		m_rQueryAmout.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
 		m_rQueryAmout.SizeToContent();
+		
+		m_strTx1.SetFont(120, _T("黑体"));				//设置显示字体和大小
+		m_strTx1.SetTextColor(RGB(0,0,0));	
+
+		m_strTx3.SetFont(120, _T("黑体"));				//设置显示字体和大小
+		m_strTx3.SetTextColor(RGB(0,0,0));	
 
 		struct LISTCol {
 			CString		name ;
@@ -141,7 +147,7 @@ BOOL CIpoDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		} listcol[3]  = {
 			{"序号" ,      150},
 			{"金额" ,      300},
-			{"解冻高度" ,      393}
+			{"解冻高度" ,      405}
 		};
 		m_listCtrl.SetBkColor(RGB(240,240,240));       
 		m_listCtrl.SetRowHeigt(23);               
@@ -270,7 +276,7 @@ void CIpoDlg::OnSize(UINT nType, int cx, int cy)
 
 		pst = GetDlgItem( IDC_BUTTON_QUERY ) ;
 		if ( NULL != pst ) {
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*80 ,(rc.Height()/100)*5  , (rc.Width()/100)*13-2, (rc.Height()/100)*9  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*55 ,(rc.Height()/100)*5  , (rc.Width()/100)*13-2, (rc.Height()/100)*9  ,SWP_SHOWWINDOW ) ; 
 		}
 
 		pst = GetDlgItem( IDC_STATIC_FEE ) ;
@@ -292,14 +298,14 @@ void CIpoDlg::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*80 ,(rc.Height()/100)*20  ,(rc.Width()/100)*13-2, (rc.Height()/100)*9   ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*55 ,(rc.Height()/100)*20  ,(rc.Width()/100)*13-2, (rc.Height()/100)*9   ,SWP_SHOWWINDOW ) ; 
 		}
 
 		pst = GetDlgItem( IDC_LIST_SHOW ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*3 ,(rc.Height()/100)*40  , rc.Width()-(rc.Width()/100)*6, (rc.Height()/100)*80  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*3 ,(rc.Height()/100)*30  , rc.Width()-(rc.Width()/100)*5+2, (rc.Height()/100)*83+2  ,SWP_SHOWWINDOW ) ; 
 		}
 	}
 }
