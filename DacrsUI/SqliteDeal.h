@@ -17,7 +17,7 @@ private:
 	void   CheckFailedCode(int retCode);
 
 public:
-	void   UpdataAllTableData(BOOL flag);
+	void   UpdataAllTableData();
 	BOOL   UpdateDarkRecord();
 
 public:

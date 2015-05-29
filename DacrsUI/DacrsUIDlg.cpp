@@ -515,6 +515,7 @@ void  CDacrsUIDlg::LoadListDataInfo()
 	//加载连表数据,没有的表创建
 
 	SyncAddrInfo();
+	theApp.m_SqliteDeal.UpdataAllTableData();
 	
 }
 void CDacrsUIDlg::CloseThread()
