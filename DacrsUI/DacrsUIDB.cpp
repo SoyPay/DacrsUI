@@ -341,6 +341,7 @@ void CDacrsUIApp::InsertTransaction(string hash){
 			CString conditon;
 			conditon.Format(_T("address = '%s'"),transcion.addr.c_str());
 			int nItem =  theApp.m_SqliteDeal.GetTableCountItem(_T("t_wallet_address"),conditon) ;
+			conditon.Format(_T("address = '%s'"),transcion.desaddr.c_str());
 			int nItem1 =  theApp.m_SqliteDeal.GetTableCountItem(_T("t_wallet_address"),conditon) ;
 			if (nItem1 !=0&nItem != 0)
 			{
