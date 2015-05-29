@@ -777,7 +777,8 @@ void CP2PDlg::SendBet(int rewardnum)
 
 	if ( pos >=0 ) {
 		bRes = TRUE ;
-		strTip.Format( _T("恭喜发送赌约成功!\n%s") , root["hash"].asCString() ) ;
+		//strTip.Format( _T("恭喜发送赌约成功!\n%s") , root["hash"].asCString() ) ;
+		strTip.Format( _T("恭喜发送赌约成功，请等待1-2分钟确认确认交易\n%s")) ;
 	}else{
 		strTip.Format( _T("发送赌约失败!") ) ;
 	}
@@ -1014,7 +1015,8 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 	 }
 	 if ( pos >=0 ) {
 		 bRes = TRUE ;
-		 strTip.Format( _T("恭喜接赌成功!\n%s") , root["hash"].asCString() ) ;
+		 //strTip.Format( _T("恭喜接赌成功!\n%s") , root["hash"].asCString() ) ;
+		 strTip.Format( _T("恭喜接赌成功，请等待1-2分钟确认确认交易\n%s")) ;
 	 }else{
 		 strTip.Format( _T("此赌约已经被接!") ) ;
 	 }
