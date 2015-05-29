@@ -156,7 +156,8 @@ void CDacrsUIApp::UpdateAddressData(){
 				SendUIMsg((int)WM_UP_ADDRESS,Temp.c_str());
 				if (listaddr.bSign != addrsql.bSign)
 				{
-					SendP2pMsg((int)WM_UP_ADDRESS,Temp.c_str());
+					/// p2pdlg 激活的地址要插入
+					SendP2pMsg((int)WM_UP_NEWADDRESS,Temp.c_str());
 				}
 			}
 		}

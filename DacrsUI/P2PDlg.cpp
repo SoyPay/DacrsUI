@@ -433,7 +433,7 @@ void CP2PDlg::InsertComboxIitem()
 	addr.JsonToStruct(strTemp.c_str());
 
 	CString addressd;
-	addressd.Format(_T("%s"),addr.address);
+	addressd.Format(_T("%s"),addr.RegID);
 
 	int item = m_addrbook.GetCount();
 	m_addrbook.InsertString(item,addressd);

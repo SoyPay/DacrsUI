@@ -814,7 +814,7 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 				pApp->m_MsgQueue.push(postpoolmsg);
 
 				CPostMsg postp2pmsg(MSG_USER_P2P_UI,WM_UP_ADDRESS);
-				pApp->m_UiP2pDlgQueue.push(postp2pmsg);
+				pApp->m_MsgQueue.push(postp2pmsg);
 
 				RecivetxMsgTimeLast = tempTimemsg;
 			}
@@ -1053,15 +1053,15 @@ int CDacrsUIApp::SendPostThread(DWORD msgtype)
 
 	switch (msgtype)
 	{
-	case WM_UP_ADDRESS:
-		{
+	//case WM_UP_ADDRESS:
+	//	{
 			/*if(pDlg->dlgType == CSendDlg::IDD)
 				DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_SEND_UI , WM_UP_ADDRESS,0);*/
 			/*if(pDlg->dlgType == CReceiveDlg::IDD)
 				DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_RECIVE_UI , 0,0);*/
 
-		}
-		break;
+	//}
+	//	break;
 	case WM_REVTRANSACTION:
 		{
 			SYSTEMTIME curTime ;
@@ -1429,6 +1429,7 @@ void CDacrsUIApp::SendUIMsg(int message,CString jsonaddr){
 void CDacrsUIApp::SendP2pMsg(int message,CString jsonaddr)
 {
 	CPostMsg Postmsg(MSG_USER_MAIN_UI,message);
+	Postmsg.SetData(jsonaddr);
 	m_UiP2pDlgQueue.push(Postmsg);
 	DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_P2P_UI ,message,0);
 }
