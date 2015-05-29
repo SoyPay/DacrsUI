@@ -1174,7 +1174,7 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 	 int i =0;
 	 for (int k = index;k< (index+count);k++)
 	 {
-		 uistruct::LISTP2POOL_T const_it = m_PoolList.at(i);
+		 uistruct::LISTP2POOL_T const_it = m_PoolList.at(k);
 		 string nValue = const_it.data;
 		 uistruct::DBBET_DATA DBbet;
 		 memset(&DBbet , 0 , sizeof(uistruct::DBBET_DATA));
