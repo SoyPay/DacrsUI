@@ -486,6 +486,7 @@ LRESULT CP2PDlg::OnShowListCtrol( WPARAM wParam, LPARAM lParam )
 	case WM_UP_ADDRESS:
 		{
 			OnCbnSelchangeComboAddres();
+			QueryNotDrawBalance();          /// blockchanged 刷新为开奖的数据
 		}
 		break;
 	default:
@@ -1015,7 +1016,7 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 		 bRes = TRUE ;
 		 strTip.Format( _T("恭喜接赌成功!\n%s") , root["hash"].asCString() ) ;
 	 }else{
-		 strTip.Format( _T("接赌失败!") ) ;
+		 strTip.Format( _T("此赌约已经被接!") ) ;
 	 }
 
 	 //保存到数据库
