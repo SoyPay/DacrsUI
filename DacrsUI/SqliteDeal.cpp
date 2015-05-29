@@ -29,26 +29,29 @@ BOOL CSqliteDeal::InitializationDB(){
 	sqlite3 **pDBConn = GetDBConnect(); //获取数据库连接
 	CString strTableName(_T("sqlite_master"));
 	CString strCondition(_T("type='table' and name = 't_wallet_address'"));
-	if(GetTableCountItem(strTableName, strCondition))
+	//if(GetTableCountItem(strTableName, strCondition))
+	//{
+	//	CString strSQL(_T("DROP TABLE t_wallet_address"));
+	//	if(!ExcuteSQL(pDBConn, NULL, strSQL, NULL))
+	//	{
+	//		LogPrint("INFO", "Drop table t_wallet_address failed\n");
+	//		return FALSE;
+	//	}
+	//}
+	if(!GetTableCountItem(strTableName, strCondition)) 
 	{
-		CString strSQL(_T("DROP TABLE t_wallet_address"));
-		if(!ExcuteSQL(pDBConn, NULL, strSQL, NULL))
+		CString createSQL(_T("CREATE TABLE t_wallet_address(address TEXT PRIMARY KEY, reg_id TEXT, money DOUBLE, cold_dig INT, sign INT, label TEXT)"));
+		if(!ExcuteSQL(pDBConn, NULL, createSQL, NULL))
 		{
-			LogPrint("INFO", "Drop table t_wallet_address failed\n");
+			LogPrint("INFO", "Create table t_wallet_address failed\n");
 			return FALSE;
 		}
-	}
-	CString createSQL(_T("CREATE TABLE t_wallet_address(address TEXT PRIMARY KEY, reg_id TEXT, money DOUBLE, cold_dig INT, sign INT, label TEXT)"));
-	if(!ExcuteSQL(pDBConn, NULL, createSQL, NULL))
-	{
-		LogPrint("INFO", "Create table t_wallet_address failed\n");
-		return FALSE;
 	}
 
 	strCondition = _T("type='table' and name= 't_chain_tip'");
 	if(!GetTableCountItem(strTableName, strCondition))
 	{
-		CString createSQL(_T("CREATE TABLE t_chain_tip(block_hash TEXT);"));
+		CString createSQL(_T("CREATE TABLE t_chain_tip(block_hash TEXT PRIMARY KEY);"));
 		if(!ExcuteSQL(pDBConn, NULL, createSQL, NULL))
 		{
 			LogPrint("INFO", "Create table t_chain_tip failed\n");
@@ -59,7 +62,7 @@ BOOL CSqliteDeal::InitializationDB(){
 	strCondition = _T("type='table' and name='t_address_book'");
 	if(!GetTableCountItem(strTableName, strCondition))
 	{
-		CString createSQL(_T("CREATE TABLE t_address_book(Label TEXT,address TEXT)"));
+		CString createSQL(_T("CREATE TABLE t_address_book(Label TEXT,address TEXT PRIMARY KEY)"));
 		if(!ExcuteSQL(pDBConn, NULL, createSQL, NULL))
 		{
 			LogPrint("INFO", "Create table t_address_book failed\n");
@@ -70,7 +73,7 @@ BOOL CSqliteDeal::InitializationDB(){
 	strCondition = _T("type='table' and name='t_dark_record'");
 	if(!GetTableCountItem(strTableName, strCondition))
 	{
-		CString createSQL(_T("CREATE TABLE t_dark_record(send_time TEXT,recv_time TEXT,tx_hash TEXT,left_addr TEXT,right_addr TEXT,amount INT,actor INT,confirmed INT ,state INT,relate_hash TEXT)"));
+		CString createSQL(_T("CREATE TABLE t_dark_record(send_time TEXT,recv_time TEXT,tx_hash TEXT PRIMARY KEY,left_addr TEXT,right_addr TEXT,amount INT,actor INT,confirmed INT ,state INT,relate_hash TEXT)"));
 		if(!ExcuteSQL(pDBConn, NULL, createSQL, NULL))
 		{
 			LogPrint("INFO", "Create table t_dark_record failed\n");
@@ -81,7 +84,7 @@ BOOL CSqliteDeal::InitializationDB(){
 	strCondition = _T("type='table' and name='t_p2p_quiz'");
 	if(!GetTableCountItem(strTableName, strCondition))
 	{
-		CString createSQL(_T("CREATE TABLE t_p2p_quiz(send_time TEXT,recv_time TEXT,time_out INT,tx_hash TEXT, left_addr TEXT, right_addr TEXT, amount double, content TEXT, actor INT, comfirmed INT, height INT, state INT, relate_hash TEXT, guess_num INT)"));
+		CString createSQL(_T("CREATE TABLE t_p2p_quiz(send_time TEXT,recv_time TEXT,time_out INT,tx_hash TEXT PRIMARY KEY, left_addr TEXT, right_addr TEXT, amount double, content TEXT, actor INT, comfirmed INT, height INT, state INT, relate_hash TEXT, guess_num INT)"));
 		if(!ExcuteSQL(pDBConn, NULL, createSQL, NULL))
 		{
 			LogPrint("INFO", "Create table t_p2p_quiz failed\n");
@@ -92,7 +95,7 @@ BOOL CSqliteDeal::InitializationDB(){
 	strCondition = _T("type='table' and name='t_quiz_pool'");
 	if(!GetTableCountItem(strTableName, strCondition))
 	{
-		CString createSQL(_T("CREATE TABLE t_quiz_pool(hash TEXT, data TEXT)"));
+		CString createSQL(_T("CREATE TABLE t_quiz_pool(hash TEXT PRIMARY KEY, data TEXT)"));
 		if(!ExcuteSQL(pDBConn, NULL, createSQL, NULL))
 		{
 			LogPrint("INFO", "Create table t_p2p_quiz failed\n");
@@ -103,7 +106,7 @@ BOOL CSqliteDeal::InitializationDB(){
 	strCondition = _T("type='table' and name='t_transaction'");
 	if(!GetTableCountItem(strTableName, strCondition))
 	{
-		CString createSQL(_T("CREATE TABLE t_transaction(hash TEXT, tx_type TEXT,version INT, src_addr TEXT, pub_key TEXT, miner_pub_key TEXT, fees DOUBLE, height INT, des_addr TEXT, money DOUBLE, contract TEXT, confirm_height INT, confirmed_time INT, block_hash TEXT, state INT)"));
+		CString createSQL(_T("CREATE TABLE t_transaction(hash TEXT PRIMARY KEY, tx_type TEXT,version INT, src_addr TEXT, pub_key TEXT, miner_pub_key TEXT, fees DOUBLE, height INT, des_addr TEXT, money DOUBLE, contract TEXT, confirm_height INT, confirmed_time INT, block_hash TEXT, state INT)"));
 		if(!ExcuteSQL(pDBConn, NULL, createSQL, NULL))
 		{
 			LogPrint("INFO", "Create table t_p2p_quiz failed\n");

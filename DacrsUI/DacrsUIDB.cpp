@@ -335,6 +335,27 @@ void CDacrsUIApp::InsertTransaction(string hash){
 	uistruct::REVTRANSACTION_t transcion;
 	if (transcion.JsonToStruct(root.toStyledString()))
 	{
+
+		if (!strcmp("COMMON_TX",transcion.txtype.c_str()))
+		{
+			CString conditon;
+			conditon.Format(_T("address = '%s'"),transcion.addr.c_str());
+			int nItem =  theApp.m_SqliteDeal.GetTableCountItem(_T("t_wallet_address"),conditon) ;
+			int nItem1 =  theApp.m_SqliteDeal.GetTableCountItem(_T("t_wallet_address"),conditon) ;
+			if (nItem1 !=0&nItem != 0)
+			{
+				transcion.state = 1; 
+			}else if (nItem != 0)
+			{
+				transcion.state = 1;        //// ¿ÛÇ®
+			}else if (nItem1 != 0)
+			{
+				transcion.state = 2;        ////¼ÓÇ®
+			}
+		}
+
+
+
 		CString strSourceData;
 		strSourceData.Format(_T("'%s' , '%s' ,'%d' ,'%s' ,'%s' ,'%s' , '%.8f' ,'%d' ,'%s' , '%.8f' ,'%s' ,'%d','%d','%s',%d") , transcion.txhash ,\
 			transcion.txtype.c_str() ,transcion.ver ,transcion.addr.c_str() ,transcion.pubkey.c_str(),transcion.miner_pubkey.c_str(),transcion.fees,transcion.height,\
@@ -376,7 +397,26 @@ void CDacrsUIApp:: SyncTransaction(string obj)
 		{
 			return;
 		}*/
+
 		transcion.state = 0;
+		if (!strcmp("COMMON_TX",transcion.txtype.c_str()))
+		{
+			CString conditon;
+			conditon.Format(_T("address = '%s'"),transcion.addr.c_str());
+			int nItem =  theApp.m_SqliteDeal.GetTableCountItem(_T("t_wallet_address"),conditon) ;
+			int nItem1 =  theApp.m_SqliteDeal.GetTableCountItem(_T("t_wallet_address"),conditon) ;
+			if (nItem1 !=0&nItem != 0)
+			{
+				transcion.state = 3; 
+			}else if (nItem != 0)
+			{
+				transcion.state = 1;        //// ¿ÛÇ®
+			}else if (nItem1 != 0)
+			{
+				transcion.state = 2;        ////¼ÓÇ®
+			}
+		}
+
 		CString strSourceData;
 		strSourceData.Format(_T("'%s' , '%s' ,'%d' ,'%s' ,'%s' ,'%s' , '%.8f' ,'%d' ,'%s' , '%.8f' ,'%s' ,'%d','%d','%s',%d") , transcion.txhash ,\
 			transcion.txtype.c_str() ,transcion.ver ,transcion.addr.c_str() ,transcion.pubkey.c_str(),transcion.miner_pubkey.c_str(),transcion.fees,transcion.height,\

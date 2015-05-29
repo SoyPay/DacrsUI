@@ -218,7 +218,19 @@ void  CTradDlg::OninitializeList()
 			strShowData.Format(_T("%s") ,_T("激活")) ;
 		}else if (!strcmp(txtype.c_str(),"COMMON_TX"))
 		{
-			strShowData.Format(_T("%s") ,_T("转账")) ;
+			if (const_it->state == 3)
+			{
+				strShowData.Format(_T("%s") ,_T("转账<平>")) ;
+			}else if (const_it->state == 2)
+			{
+				strShowData.Format(_T("%s") ,_T("转账<收>")) ;
+			}else if (const_it->state == 1)
+			{
+				strShowData.Format(_T("%s") ,_T("转账<发>")) ;
+			}else
+			{
+				strShowData.Format(_T("%s") ,_T("转账")) ;
+			}
 		}else if (!strcmp(txtype.c_str(),"CONTRACT_TX"))
 		{
 			strShowData.Format(_T("%s") ,_T("合约")) ;
@@ -298,7 +310,18 @@ void CTradDlg::InsertItemData()
 		strShowData.Format(_T("%s") ,_T("激活")) ;
 	}else if (!strcmp(txtype.c_str(),"COMMON_TX"))
 	{
-		strShowData.Format(_T("%s") ,_T("转账")) ;
+		if (txdetail.state == 3)
+		{
+			strShowData.Format(_T("%s") ,_T("转账<平>")) ;
+		}else if (txdetail.state == 2)
+		{
+			strShowData.Format(_T("%s") ,_T("转账<收>")) ;
+		}else if (txdetail.state == 1)
+		{
+			strShowData.Format(_T("%s") ,_T("转账<发>")) ;
+		}else{
+			strShowData.Format(_T("%s") ,_T("转账")) ;
+		}
 	}else if (!strcmp(txtype.c_str(),"CONTRACT_TX"))
 	{
 		strShowData.Format(_T("%s") ,_T("合约")) ;
