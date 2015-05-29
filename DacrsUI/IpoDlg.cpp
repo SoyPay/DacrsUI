@@ -141,7 +141,7 @@ BOOL CIpoDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		} listcol[3]  = {
 			{"序号" ,      150},
 			{"金额" ,      300},
-			{"解冻高度" ,      379}
+			{"解冻高度" ,      393}
 		};
 		m_listCtrl.SetBkColor(RGB(240,240,240));       
 		m_listCtrl.SetRowHeigt(23);               

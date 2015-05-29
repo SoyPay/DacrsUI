@@ -443,12 +443,13 @@ void   CReceiveDlg::ModifyListCtrlItem()
 			/*pListAddr->fMoney = addr.fMoney;
 			pListAddr->bSign = addr.bSign;*/
 		
-			int nSubIdx = 1;
+			int nSubIdx = 0;
 			CString  strShowData;
 			strShowData.Format(_T("%s") ,addr.RegID ) ;
 			m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
 
 			strShowData.Format(_T("%s") ,addr.Label) ;
+			m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
 			//m_listCtrl.SetItemData(i , (DWORD_PTR)&(*m_pListaddrInfo.rbegin())) ;
 
 		//	uistruct::LISTADDR_t *pListAddr1 = (uistruct::LISTADDR_t*)m_listCtrl.GetItemData(i);
