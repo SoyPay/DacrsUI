@@ -365,7 +365,7 @@ void CSendRecord::OpenBet(CString txhash)
 	if ( pos >=0 ) {
 		bRes = TRUE ;
 		//strTip.Format( _T("恭喜开奖成功!\n%s") , root["hash"].asCString() ) ;
-		 strTip.Format( _T("恭喜开奖成功，请等待1-2分钟确认确认交易\n%s")) ;
+		 strTip.Format( _T("恭喜开奖成功，请等待1-2分钟确认确认交易\n")) ;
 	}else{
 		strTip.Format( _T("开奖失败!") ) ;
 	}
