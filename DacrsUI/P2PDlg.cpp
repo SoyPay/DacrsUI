@@ -500,15 +500,35 @@ void  CP2PDlg::QueryNotDrawBalance()
 	CString strCond;
 	strCond.Format(_T(" state != 2 "));
 
-	double   nmoney =  theApp.m_SqliteDeal.GetTableItemSum(_T("t_p2p_quiz") , _T("amount") , strCond) ;
-	CString srtShow =_T("");
-	if (nmoney <0)
-	{
-		srtShow = _T("0.0");
-	}else{
-		srtShow.Format(_T("%.3lf"),nmoney);
+	//double   nmoney =  theApp.m_SqliteDeal.GetTableItemSum(_T("t_p2p_quiz") , _T("amount") , strCond) ;
+	//CString srtShow =_T("");
+	//if (nmoney <0)
+	//{
+	//	srtShow = _T("0.0");
+	//}else{
+	//	srtShow.Format(_T("%.3lf"),nmoney);
+	//}
+	//((CStatic*)GetDlgItem(IDC_STATIC_NOT_DRAW))->SetWindowText(srtShow);
+
+	uistruct::P2PBETRECORDLIST pPoolList;
+	theApp.m_SqliteDeal.GetP2PQuizRecordList(strCond,&pPoolList);
+
+	double money = 0.0;
+	std::vector<uistruct::P2P_QUIZ_RECORD_t>::const_iterator const_it;
+	for ( const_it = pPoolList.begin() ; const_it != pPoolList.end() ; const_it++ ) {
+		if (const_it->state ==0 &&(500 + const_it->height)> theApp.blocktipheight || const_it->state ==3
+			|| ((const_it->state ==1 || const_it->state ==4) &&(const_it->time_out + const_it->height)> theApp.blocktipheight))
+		{
+			break;
+		}
+		money += const_it->amount; 
 	}
+
+	CString srtShow =_T("");
+	srtShow.Format(_T("%.3lf"),money);
+
 	((CStatic*)GetDlgItem(IDC_STATIC_NOT_DRAW))->SetWindowText(srtShow);
+
 	Invalidate();
 
 }
