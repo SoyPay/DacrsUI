@@ -357,7 +357,7 @@ void CP2PDlg::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*39 , (rc.Height()/100)*42,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*38 , (rc.Height()/100)*43,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
 		}
 
 		pst = GetDlgItem( IDC_BUTTON_MALE ) ;
@@ -489,7 +489,7 @@ LRESULT CP2PDlg::OnShowListCtrol( WPARAM wParam, LPARAM lParam )
 void  CP2PDlg::QueryNotDrawBalance()
 {
 	CString strCond;
-	strCond.Format(_T(" state = 2 "));
+	strCond.Format(_T(" state != 2 "));
 
 	double   nmoney =  theApp.m_SqliteDeal.GetTableItemSum(_T("t_p2p_quiz") , _T("amount") , strCond) ;
 	CString srtShow =_T("");
