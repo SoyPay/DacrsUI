@@ -1002,63 +1002,25 @@ void CSqliteDeal::CheckFailedCode(int retCode)
 
 }
 //todo 重构
-void  CSqliteDeal::UpdataAllTableData(BOOL flag){
-/*	
-	LOCK(m_pCs);
+void  CSqliteDeal::UpdataAllTableData(){
+
+	//LOCK(m_pCs);
 	///// 不用更新所所有的数据库表
-	if (flag)
-	{
-		return ;
-	}
-	//// 更新交易数据库表
-	if ( NULL == m_pSqliteRead ) {
-		if ( !OpenSqlite(theApp.str_InsPath) ) return  ;
-	}
-	char    **  ppResult;    //结果
-	int         nRow;       //行数
-	int         nCol;       //列数
-	char    *pzErrMsg;    //错误信息
+	uistruct::P2PBETRECORDLIST pTransaction;
+	GetP2PQuizRecordList(_T(" 1=1 "), &pTransaction);
 
-	CString strSql = _T("SELECT * FROM t_dark_record");
-	int nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&ppResult,&nRow,&nCol,&pzErrMsg);
-	if ( nResult != SQLITE_OK ){
-		LogPrint("INFO", "UpdataAllTableData error:%s\n", pzErrMsg);
-		sqlite3_close(m_pSqliteRead);  
-		sqlite3_free(pzErrMsg);  
-		m_pSqliteRead = NULL ;
-		return  ;
-	}
-	//读数据库
-	int nIndex = nCol;
-	int nTempRow = nRow;
-	int nTempCol = nCol;
-	CString strCommand , strValue ,strShowData ;
-	for(int i = 0; i < nTempRow ; i++) {
-		strValue.Format(_T("%s") , ppResult[nIndex+2] ) ;
-		isExistTx(_T("t_dark_record"),_T("tx_hash"),strValue);
-		nIndex +=nTempCol ;
-	}
-	sqlite3_free_table(ppResult);
+	if (0 == pTransaction.size() ) return  ;
 
-	strSql = _T("SELECT * FROM t_p2p_quiz");
-	nResult = sqlite3_get_table(m_pSqliteRead,strSql.GetBuffer(),&ppResult,&nRow,&nCol,&pzErrMsg);
-	if ( nResult != SQLITE_OK ){
-		LogPrint("INFO", "UpdataAllTableData select t_p2p_quiz error:%s\n", pzErrMsg);
-		sqlite3_close(m_pSqliteRead);  
-		sqlite3_free(pzErrMsg);  
-		m_pSqliteRead = NULL ;
-		return  ;
+	vector<string> vSignHash;
+	std::vector<uistruct::P2P_QUIZ_RECORD_t>::const_iterator const_it;
+	for (const_it = pTransaction.begin() ; const_it != pTransaction.end() ; const_it++ ) {
+		CString strCondition(_T(""));
+		strCondition.Format(" hash = '%s' or hash = '%s' ", const_it->tx_hash,const_it->relate_hash);
+		int nItem =GetTableCountItem(_T("t_transaction") ,strCondition);
+		if (nItem == 0)
+		{
+			strCondition.Format(" tx_hash = '%s' ", const_it->tx_hash);
+			DeleteTableItem(_T("t_p2p_quiz"),strCondition);
+		}
 	}
-	//读数据库
-	nIndex = nCol;
-	nTempRow = nRow;
-	nTempCol = nCol;
-	for(int i = 0; i < nTempRow ; i++) {
-		strValue.Format(_T("%s") , ppResult[nIndex+3] ) ;
-		isExistTx(_T("t_p2p_quiz"),_T("tx_hash"),strValue);
-		nIndex +=nTempCol ;
-	}
-	sqlite3_free_table(ppResult);
-
-	*/
 }
