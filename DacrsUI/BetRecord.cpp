@@ -269,7 +269,7 @@ void  CBetRecord::OnShowPagePool(int page)
 	std::vector<uistruct::P2P_QUIZ_RECORD_t>::const_iterator const_it;
 	for (int k = index;k< (index+count);k++)
 	{
-		uistruct::P2P_QUIZ_RECORD_t const_it = m_PoolList.at(i);
+		uistruct::P2P_QUIZ_RECORD_t const_it = m_PoolList.at(k);
 		CString dmoney,reward,result,guess,Sendaddr,address;
 		Sendaddr.Format(_T("%s"),const_it.left_addr);
 		address.Format(_T("%s"),const_it.right_addr);
