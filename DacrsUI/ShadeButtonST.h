@@ -50,6 +50,7 @@
 
 class CShadeButtonST : public BASE_BTNST_CLASS
 {
+	DECLARE_DYNAMIC(CShadeButtonST)
 public:
 	CShadeButtonST();
 	virtual ~CShadeButtonST();

@@ -8,6 +8,8 @@ static char THIS_FILE[]=__FILE__;
 #endif
 
 
+IMPLEMENT_DYNAMIC(CShadeButtonST, BASE_BTNST_CLASS)
+
 CShadeButtonST::CShadeButtonST()
 {
 }
