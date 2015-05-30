@@ -11,7 +11,7 @@ class COut : public CDialogEx
 	DECLARE_DYNAMIC(COut)
 
 public:
-	COut(CWnd* pParent = NULL, CString strDisplay=_T(""), int nFontSize=120);   // 标准构造函数
+	COut(CWnd* pParent = NULL, CString strDisplay=_T(""), int nFontSize=120,CString strok=_T(""),CString strNo = _T(""));   // 标准构造函数
 	virtual ~COut();
 
 // 对话框数据
@@ -26,6 +26,8 @@ public:
 	HBITMAP		     m_pBmp; 
 	void		     SetBkBmpNid( UINT nBitmapIn );
 	CString          m_strDisplay;
+	CString          m_strok;
+	CString          m_strno;
 	int              m_nFontSize;//字体大小
 	CStaticTrans     m_Text;
 	CShadeButtonST   m_rBtnOK;
