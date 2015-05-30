@@ -416,6 +416,7 @@ void  CSendRecord::OnShowPagePool(int page)
 	strpage.Format(_T("%d"),page);
 	GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(strpage);
 
+	bool flag = false;
 	m_curpage = page;
 	int index = (page-1)*m_pagesize;
 	int count = (m_PoolList.size() -index)>=m_pagesize?m_pagesize:(m_PoolList.size() -index);
@@ -448,7 +449,7 @@ void  CSendRecord::OnShowPagePool(int page)
 		m_listBox.SetIndexBackCol(i, 0, RGB(242,32,32));
 
 		List_SendAppendData* pinf = m_listBox.GetAppendDataInfo(i);
-		pinf->pBut0->EnableWindow(false);
+		//pinf->pBut0->EnableWindow(false);
 
 		int rrrr = const_it.content[32];
 		///说明开奖了
@@ -487,12 +488,27 @@ void  CSendRecord::OnShowPagePool(int page)
 				if ((const_it.time_out + const_it.height)> theApp.blocktipheight && theApp.IsSyncBlock)
 				{
 					//pinf->pBut0->EnableWindow(true);
+					if (!flag)
+					{
+						CString strCond;
+						uistruct::LISTADDR_t pAddr;
+						strCond.Format(_T("left_addr ='%s'"),const_it.left_addr);
+						theApp.m_SqliteDeal.GetWalletAddressItem(strCond, &pAddr);
+						double minfee = (theApp.m_P2PBetCfg.OpenBetnFee*1.0)/COIN;
+						if (minfee > pAddr.fMoney)
+						{
+							::MessageBox(NULL ,_T("有些赌约未开奖,请先充值") , _T("提示") , MB_ICONINFORMATION ) ;
+						}
+						CString txhash;
+						txhash.Format(_T("%s"),txhash);
+						theApp.OpenBet(txhash);
+						flag = true;
+					}
 					m_listBox.SetIndexString(i , sendaddr, acceptaddr,SendTime,strTime, result,_T("--"),reward,time, _T("待开"),const_it.tx_hash);
 				}else if(theApp.IsSyncBlock && (const_it.time_out + const_it.height)< theApp.blocktipheight){
 					reward.Format(_T("-%.4f"),const_it.amount);
 					m_listBox.SetIndexString(i , sendaddr, acceptaddr,SendTime,strTime, result,guess,reward,time, _T("超时"),const_it.tx_hash);
 				}else{
-					//pinf->pBut0->EnableWindow(true);
 					m_listBox.SetIndexString(i , sendaddr, acceptaddr,SendTime,strTime, result,_T("--"),reward,time, _T("待开"),const_it.tx_hash);
 				}
 
