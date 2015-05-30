@@ -519,10 +519,13 @@ void  CP2PDlg::QueryNotDrawBalance(CString addr)
 	double money = 0.0;
 	std::vector<uistruct::P2P_QUIZ_RECORD_t>::const_iterator const_it;
 	for ( const_it = pPoolList.begin() ; const_it != pPoolList.end() ; const_it++ ) {
-		if (const_it->state ==0 &&(500 + const_it->height)> theApp.blocktipheight || const_it->state ==3
-			|| ((const_it->state ==1 || const_it->state ==4) &&(const_it->time_out + const_it->height)> theApp.blocktipheight))
+		if (theApp.IsSyncBlock)
 		{
-			break;
+			if (const_it->state ==0 &&(500 + const_it->height)< theApp.blocktipheight || const_it->state ==3
+				|| ((const_it->state ==1 || const_it->state ==4) &&(const_it->time_out + const_it->height)< theApp.blocktipheight))
+			{
+				continue;;
+			}
 		}
 		money += const_it->amount; 
 	}
