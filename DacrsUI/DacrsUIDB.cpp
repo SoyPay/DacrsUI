@@ -224,11 +224,6 @@ void CDacrsUIApp::OpenBetRecord(vector<unsigned char> openbet,uistruct::REVTRANS
 
 void CDacrsUIApp::OpenBet(CString txhash)
 {
-	if (!theApp.IsSyncBlock )
-	{
-		::MessageBox(NULL ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
-		return;
-	}
 
 	CString m_addr = _T("");
 
@@ -240,7 +235,7 @@ void CDacrsUIApp::OpenBet(CString txhash)
 	int nItem =  theApp.m_SqliteDeal.GetP2PQuizRecordItem(conditon ,&pPoolItem ) ;
 
 	m_addr = pPoolItem.left_addr;
-	if (m_addr == _T(""))
+	if (m_addr == _T("") || pPoolItem.state == 2) ///////地址不存在或者已经开奖
 	{
 		//::MessageBox(NULL,_T("请选择地址") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
@@ -252,6 +247,12 @@ void CDacrsUIApp::OpenBet(CString txhash)
 	if (strlen(pPoolItem.tx_hash) == 0)
 	{
 		::MessageBox(NULL ,_T("数据库中无此记录") , _T("提示") , MB_ICONINFORMATION ) ;
+	}
+
+	if (!theApp.IsSyncBlock )
+	{
+		::MessageBox(NULL ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
+		return;
 	}
 
 	CString strCommand1;
