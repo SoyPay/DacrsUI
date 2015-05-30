@@ -495,7 +495,7 @@ void  CSendRecord::OnShowPagePool(int page)
 					{
 						CString strCond;
 						uistruct::LISTADDR_t pAddr;
-						strCond.Format(_T("left_addr ='%s'"),const_it.left_addr);
+						strCond.Format(_T("reg_id ='%s'"),const_it.left_addr);
 						theApp.m_SqliteDeal.GetWalletAddressItem(strCond, &pAddr);
 						double minfee = (theApp.m_P2PBetCfg.OpenBetnFee*1.0)/COIN;
 						if (minfee > pAddr.fMoney)
@@ -508,7 +508,7 @@ void  CSendRecord::OnShowPagePool(int page)
 						flag = true;
 					}
 					m_listBox.SetIndexString(i , sendaddr, acceptaddr,SendTime,strTime, result,_T("--"),reward,time, _T("待开"),const_it.tx_hash);
-				}else if(theApp.IsSyncBlock && (const_it.time_out + const_it.height)< theApp.blocktipheight){
+				}else if(theApp.IsSyncBlock && const_it.height != 0 &&(const_it.time_out + const_it.height)< theApp.blocktipheight){
 					m_listBox.SetIndexBackCol(i, 6, RGB(1,127,1));
 					reward.Format(_T("-%.4f"),const_it.amount);
 					m_listBox.SetIndexString(i , sendaddr, acceptaddr,SendTime,strTime, result,guess,reward,time, _T("超时"),const_it.tx_hash);
@@ -525,7 +525,7 @@ void  CSendRecord::OnShowPagePool(int page)
 			if (const_it.state == 0 &&(500 + const_it.height)> theApp.blocktipheight&& theApp.IsSyncBlock )
 			{
 				m_listBox.SetIndexString(i , sendaddr, acceptaddr,SendTime,_T("--"), result,_T("--"),reward,_T(""),_T("未接"),const_it.tx_hash);
-			}else if(theApp.IsSyncBlock&& (500 + const_it.height)< theApp.blocktipheight){
+			}else if(theApp.IsSyncBlock&&const_it.height !=0 && (500 + const_it.height)< theApp.blocktipheight){
 				reward.Format(_T("-%.4f"),const_it.amount);
 				m_listBox.SetIndexString(i , sendaddr, acceptaddr,SendTime,_T("--"), result,_T("--"),reward,_T(""),_T("超时"),const_it.tx_hash);
 			}else

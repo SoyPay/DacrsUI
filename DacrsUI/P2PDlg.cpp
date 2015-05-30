@@ -1242,7 +1242,7 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 		 money.Format(_T("%.4f"),dmoney);
 
 		 CString txhash, line;
-		 line.Format(_T("%d"),i);
+		 line.Format(_T("%d"),(i+1));
 		 txhash.Format(_T("%s"),const_it.hash.c_str());
 		 m_BonusListBox.InsertStr(i,this->GetSafeHwnd());
 		 m_BonusListBox.SetIndexInage(i , IDB_BITMAP_P2P_LISTBOX_BUT);
