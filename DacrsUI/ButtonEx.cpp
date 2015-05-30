@@ -1,6 +1,8 @@
 // ButtonEx.cpp : ŽÀ‘•ƒtƒ@ƒCƒ‹
 //
 #include "stdafx.h"
+#include "DacrsUI.h"
+#include "afxdialogex.h"
 #include "ButtonEx.h"
 
 

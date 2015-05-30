@@ -32,6 +32,9 @@ static char THIS_FILE[] = __FILE__;
 #define	TTS_BALLOON		0x40
 #endif
 
+
+IMPLEMENT_DYNAMIC(CButtonST, CButton)
+
 CButtonST::CButtonST()
 {
 	m_bIsPressed		= FALSE;
