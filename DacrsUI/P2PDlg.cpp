@@ -77,6 +77,7 @@ BEGIN_MESSAGE_MAP(CP2PDlg, CDialogBar)
 	ON_NOTIFY(NM_THEMECHANGED, IDC_LIST_BONUS, &CP2PDlg::OnNMThemeChangedListBonus)
 	ON_BN_CLICKED(IDC_BUTTON_UP, &CP2PDlg::OnBnClickedButtonUp)
 	ON_BN_CLICKED(IDC_BUTTON_NEXT, &CP2PDlg::OnBnClickedButtonNext)
+	ON_WM_TIMER()
 END_MESSAGE_MAP()
 
 
@@ -251,6 +252,9 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		AddListaddrDataBox();
 		OnListPool();
 		theApp.SubscribeMsg( theApp.GetMtHthrdId() , GetSafeHwnd() , MSG_USER_P2P_UI ) ;
+
+		/// 设置定时器刷新界面
+		SetTimer(1,30000,NULL);
 	}
 	return bRes ;
 }
@@ -1289,4 +1293,21 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
  {
 	 // TODO: 在此添加控件通知处理程序代码
 	 OnShowPagePool((m_curpage+1));
+ }
+
+
+ void CP2PDlg::OnTimer(UINT_PTR nIDEvent)
+ {
+	 // TODO: 在此添加消息处理程序代码和/或调用默认值
+	 switch(nIDEvent)
+	 {
+	 case 1:
+		 OnBnClickedButtonRefresh2();
+		 OnBnClickedButtonRefresh1();
+		 break;
+	 default:
+		 break;
+
+	 }
+	 CDialogBar::OnTimer(nIDEvent);
  }
