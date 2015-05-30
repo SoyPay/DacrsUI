@@ -169,7 +169,7 @@ LRESULT CSendRecord::onBnCLick( WPARAM wParam, LPARAM lParam )
 	List_SendAppendData* pinf = m_listBox.GetAppendDataInfo((int)wParam);
 	if ( NULL != pinf ) { 
 		CString hash = pinf->pstr;
-		OpenBet(hash);
+		//OpenBet(hash);
 	}
 	
 	return 0;
@@ -183,7 +183,7 @@ void CSendRecord::Showlistbox(CString address)
 	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(_T(""));
 	m_PoolList.clear();
 	CString conditon;
-	conditon.Format(_T("left_addr ='%s' and (actor = 0 or actor = 2)") , address);
+	conditon.Format(_T("left_addr ='%s' and (actor = 0 or actor = 2) order by send_time desc") , address);
 	//uistruct::P2PBETRECORDLIST  pPoolItem;
 	int nItem =  theApp.m_SqliteDeal.GetP2PQuizRecordList(conditon ,&m_PoolList ) ;
 	m_pagecount = (m_PoolList.size()%m_pagesize)==0?(m_PoolList.size()/m_pagesize):(m_PoolList.size()/m_pagesize)+1;
@@ -486,13 +486,13 @@ void  CSendRecord::OnShowPagePool(int page)
 			}else{
 				if ((const_it.time_out + const_it.height)> theApp.blocktipheight && theApp.IsSyncBlock)
 				{
-					pinf->pBut0->EnableWindow(true);
+					//pinf->pBut0->EnableWindow(true);
 					m_listBox.SetIndexString(i , sendaddr, acceptaddr,SendTime,strTime, result,_T("--"),reward,time, _T("开"),const_it.tx_hash);
-				}else if(theApp.IsSyncBlock){
+				}else if(theApp.IsSyncBlock && (const_it.time_out + const_it.height)< theApp.blocktipheight){
 					reward.Format(_T("-%.4f"),const_it.amount);
 					m_listBox.SetIndexString(i , sendaddr, acceptaddr,SendTime,strTime, result,guess,reward,time, _T("超时"),const_it.tx_hash);
 				}else{
-					pinf->pBut0->EnableWindow(true);
+					//pinf->pBut0->EnableWindow(true);
 					m_listBox.SetIndexString(i , sendaddr, acceptaddr,SendTime,strTime, result,_T("--"),reward,time, _T("开"),const_it.tx_hash);
 				}
 
@@ -505,7 +505,7 @@ void  CSendRecord::OnShowPagePool(int page)
 			if (const_it.state == 0 &&(500 + const_it.height)> theApp.blocktipheight&& theApp.IsSyncBlock )
 			{
 				m_listBox.SetIndexString(i , sendaddr, acceptaddr,SendTime,_T("--"), result,_T("--"),reward,_T(""),_T("未接"),const_it.tx_hash);
-			}else if(theApp.IsSyncBlock){
+			}else if(theApp.IsSyncBlock&& (500 + const_it.height)< theApp.blocktipheight){
 				reward.Format(_T("-%.4f"),const_it.amount);
 				m_listBox.SetIndexString(i , sendaddr, acceptaddr,SendTime,_T("--"), result,_T("--"),reward,_T(""),_T("超时"),const_it.tx_hash);
 			}else

@@ -221,6 +221,129 @@ void CDacrsUIApp::OpenBetRecord(vector<unsigned char> openbet,uistruct::REVTRANS
 
 	}
 }
+
+void CDacrsUIApp::OpenBet(CString txhash)
+{
+	if (!theApp.IsSyncBlock )
+	{
+		::MessageBox(NULL ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
+		return;
+	}
+
+	CString m_addr = _T("");
+
+	if (!CheckRegIDValid( theApp.m_betScritptid )) return ;
+
+	CString conditon;
+	conditon.Format(_T("tx_hash ='%s'") , txhash );
+	uistruct::P2P_QUIZ_RECORD_t pPoolItem;
+	int nItem =  theApp.m_SqliteDeal.GetP2PQuizRecordItem(conditon ,&pPoolItem ) ;
+
+	m_addr = pPoolItem.left_addr;
+	if (m_addr == _T(""))
+	{
+		//::MessageBox(NULL,_T("请选择地址") , _T("提示") , MB_ICONINFORMATION ) ;
+		return;
+	}
+	if (pPoolItem.actor != 0 && pPoolItem.actor != 2)
+	{
+		return;
+	}
+	if (strlen(pPoolItem.tx_hash) == 0)
+	{
+		::MessageBox(NULL ,_T("数据库中无此记录") , _T("提示") , MB_ICONINFORMATION ) ;
+	}
+
+	CString strCommand1;
+	strCommand1.Format(_T("%s %s"),_T("gethash") , pPoolItem.content );
+	CStringA strShowData1 ;
+
+	CSoyPayHelp::getInstance()->SendRpc(strCommand1,strShowData1);
+	int pos1 = strShowData1.Find("hash");
+	if ( pos1 < 0 ) return ;
+
+	Json::Reader reader1;  
+	Json::Value root1; 
+	if (!reader1.parse(strShowData1.GetString(), root1)) 
+		return  ;
+
+	CString strHash1 ;
+	strHash1.Format(_T("%s") ,  root1["hash"].asCString() ) ;
+
+	TRACE(_T("contect:%s\r\n"),pPoolItem.content);
+	TRACE(_T("open:%s\r\n"),strHash1);
+
+	CString randnumber,strShowData,txaccepthash;
+	randnumber.Format(_T("%s"),pPoolItem.content);
+	txaccepthash.Format(_T("%s"),pPoolItem.relate_hash);
+	string sendhash = CSoyPayHelp::getInstance()->GetReverseHash(txhash.GetBuffer());
+	string accepthash = CSoyPayHelp::getInstance()->GetReverseHash(txaccepthash.GetBuffer());
+
+	string number;
+	number.assign(pPoolItem.content,pPoolItem.content+sizeof(pPoolItem.content));
+	CP2PBetHelp m_P2PBetHelp;
+	string strContractData = m_P2PBetHelp.PacketP2PExposeContract(sendhash,number,accepthash,pPoolItem.time_out);
+
+	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_betScritptid.GetBuffer(),m_addr.GetString(),strContractData,0,theApp.m_P2PBetCfg.OpenBetnFee,0);
+	CSoyPayHelp::getInstance()->SendContacrRpc(strData.c_str(),strShowData);
+
+	Json::Reader reader;  
+	Json::Value root;
+	if (!reader.parse(strShowData.GetString(), root)) 
+		return  ;
+	BOOL bRes = FALSE ;
+	CString strTip;
+	int pos = strShowData.Find("hash");
+
+	if ( pos >=0 ) {
+		//插入到交易记录数据库
+		CString strHash ;
+		strHash.Format(_T("'%s'") , root["hash"].asCString() );
+		CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_REVTRANSACTION);
+		postmsg.SetData(strHash);
+		theApp.m_MsgQueue.push(postmsg);
+	}
+
+	if ( pos >=0 ) {
+		bRes = TRUE ;
+		//strTip.Format( _T("恭喜开奖成功!\n%s") , root["hash"].asCString() ) ;
+		strTip.Format( _T("恭喜开奖成功，请等待1-2分钟确认交易\n")) ;
+	}else{
+		strTip.Format( _T("余额不足,请充足!") ) ;
+	}
+
+	//保存到数据库
+	if ( bRes ) {
+
+		//插入到交易记录数据库
+
+		//// 查找数据库中是否存在此记录
+		CString conditon;
+		conditon.Format(_T("tx_hash ='%s'") , txhash );
+		uistruct::P2P_QUIZ_RECORD_t pPoolItem;
+		int nItem =  theApp.m_SqliteDeal.GetP2PQuizRecordItem(conditon ,&pPoolItem ) ;
+		if (strlen(pPoolItem.tx_hash) == 0) ///此记录不存在,插入记录
+		{
+			CString strSourceData  , strW ;
+			strSourceData.Format(_T("state = %d") , 5  ) ;
+			strW.Format(_T("tx_hash = '%s'") , txhash ) ;
+
+			uistruct::DATABASEINFO_t DatabaseInfo;
+			DatabaseInfo.strSource = strSourceData.GetString();
+			DatabaseInfo.strWhere = strW.GetString() ;
+			DatabaseInfo.strTabName = _T("p2p_bet_record");
+			CPostMsg postmsg(MSG_USER_UPDATA_DATA,0);
+			string strtemp = DatabaseInfo.ToJson();
+			CString pstr;
+			pstr.Format(_T("%s"),strtemp.c_str());
+			postmsg.SetData(pstr);
+			theApp.m_MsgQueue.push(postmsg);
+
+
+		}
+	}
+	::MessageBox(NULL,strTip , _T("提示") , MB_ICONINFORMATION ) ;
+}
 void CDacrsUIApp::AcceptBetRecord(vector<unsigned char> acceptbet,uistruct::REVTRANSACTION_t transcion)
 {
 	if(acceptbet.size()==0)
@@ -263,6 +386,7 @@ void CDacrsUIApp::AcceptBetRecord(vector<unsigned char> acceptbet,uistruct::REVT
 		TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , SendTxhash );
 	}
 
+	OpenBet( SendTxhash.c_str());
 }
 void CDacrsUIApp::SendBetRecord(vector<unsigned char> sendbet,uistruct::REVTRANSACTION_t transcion)
 {
