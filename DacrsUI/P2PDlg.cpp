@@ -746,7 +746,7 @@ void CP2PDlg::SendBet(int rewardnum)
 
 	if (atof(strTxMoney) > balance)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("赌注金额大于账户余额") , _T("提示") , MB_ICONINFORMATION ) ;
+		::MessageBox( this->GetSafeHwnd() ,_T("投注金额大于账户余额") , _T("提示") , MB_ICONINFORMATION ) ;
 		return ;
 	}
 
@@ -830,7 +830,7 @@ void CP2PDlg::SendBet(int rewardnum)
 	if ( pos >=0 ) {
 		bRes = TRUE ;
 		//strTip.Format( _T("恭喜发送赌约成功!\n%s") , root["hash"].asCString() ) ;
-		strTip.Format( _T("恭喜发送赌约成功，请等待1-2分钟确认交易\n")) ;
+		strTip.Format( _T("恭喜发送成功，请等待1-2分钟确认交易\n")) ;
 	}else{
 		strTip.Format( _T("发送赌约失败!") ) ;
 	}
@@ -887,7 +887,7 @@ void CP2PDlg::OnBnClickedButtonMale()
 		return ;
 	}
 	CString strDisplay;
-	strDisplay.Format(_T("确定要发送赌约妹--->金额:%s"), strTxMoney);
+	strDisplay.Format(_T("确定要发送妹--->金额:%s"), strTxMoney);
 	COut outdlg(NULL, strDisplay,100);
 	if ( IDOK != outdlg.DoModal()){
 		return;
@@ -907,7 +907,7 @@ void CP2PDlg::OnBnClickedButtonWoman()
 		return ;
 	}
 	CString strDisplay;
-	strDisplay.Format(_T("确定要发送赌约哥--->金额:%s"), strTxMoney);
+	strDisplay.Format(_T("确定要发送哥--->金额:%s"), strTxMoney);
 	COut outdlg(NULL, strDisplay,100);
 	if ( IDOK != outdlg.DoModal()){
 		return;
@@ -1069,9 +1069,9 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 	 if ( pos >=0 ) {
 		 bRes = TRUE ;
 		 //strTip.Format( _T("恭喜接赌成功!\n%s") , root["hash"].asCString() ) ;
-		 strTip.Format( _T("恭喜接赌成功，请等待1-2分钟确认交易\n")) ;
+		 strTip.Format( _T("恭喜接单成功，请等待1-2分钟确认交易\n")) ;
 	 }else{
-		 strTip.Format( _T("此赌约已经被接!") ) ;
+		 strTip.Format( _T("此单已经被接!") ) ;
 	 }
 
 	 //保存到数据库
