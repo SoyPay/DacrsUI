@@ -17,14 +17,15 @@ typedef struct _SendListBox_Data
 	CStaticTrans   * pSta5; //¾²Ì¬¿ò1
 	CStaticTrans   * pSta6; //¾²Ì¬¿ò1
 	CStaticTrans   * pSta7; //¾²Ì¬¿ò1
-	CButtonEx   * pBut0; //¾²Ì¬¿ò1
+	CStaticTrans   * pSta8; //¾²Ì¬¿ò1
+	//CButtonEx   * pBut0; //¾²Ì¬¿ò1
 	CString      pstr;
 	_SendListBox_Data()
 	{
 		pSta0 = NULL ;
 		pSta1 = NULL ;
 		pSta2 = NULL ;
-		pBut0 = NULL ;
+		pSta8 = NULL ;
 		pSta3= NULL ;
 		pSta4= NULL ;
 		pSta5= NULL ;

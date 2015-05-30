@@ -246,12 +246,13 @@ void CDacrsUIApp::OpenBet(CString txhash)
 	}
 	if (strlen(pPoolItem.tx_hash) == 0)
 	{
-		::MessageBox(NULL ,_T("数据库中无此记录") , _T("提示") , MB_ICONINFORMATION ) ;
+		//::MessageBox(NULL ,_T("数据库中无此记录") , _T("提示") , MB_ICONINFORMATION ) ;
+		return;
 	}
 
 	if (!theApp.IsSyncBlock )
 	{
-		::MessageBox(NULL ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
+		//::MessageBox(NULL ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
 
@@ -343,7 +344,7 @@ void CDacrsUIApp::OpenBet(CString txhash)
 
 		}
 	}
-	::MessageBox(NULL,strTip , _T("提示") , MB_ICONINFORMATION ) ;
+	//::MessageBox(NULL,strTip , _T("提示") , MB_ICONINFORMATION ) ;
 }
 void CDacrsUIApp::AcceptBetRecord(vector<unsigned char> acceptbet,uistruct::REVTRANSACTION_t transcion)
 {
