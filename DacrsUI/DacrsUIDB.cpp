@@ -51,7 +51,7 @@ void CDacrsUIApp::UpdateQuizPoolData()
 			/// 查找数据库中此赌约是否正在接赌
 			uistruct::P2P_QUIZ_RECORD_t  betrecord;
 			CString strCond;
-			strCond.Format(_T(" tx_hash = '%s' "), strTemp);
+			strCond.Format(_T(" tx_hash = '%s' "), strTemp.c_str());
 
 			int nItem =  theApp.m_SqliteDeal.GetP2PQuizRecordItem(strCond, &betrecord );
 
