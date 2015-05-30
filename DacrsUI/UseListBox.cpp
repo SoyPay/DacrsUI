@@ -289,8 +289,14 @@ void CUseListBox::SetIndexInage(int iIndex , UINT nButImage  )
 {
 	List_AppendData *pData = GetAppendDataInfo(iIndex) ;
 	if ( NULL != pData ) {
+		//pData->pBut2->SetBitmaps( nButImage , RGB(255, 255, 0) , nButImage , RGB(255, 255, 255) );
+		pData->pBut2->SetBitmaps( nButImage , RGB(255, 255, 0), nButImage , RGB(255, 255, 255) );
 		pData->pBut2->SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		pData->pBut2->SetBitmaps( nButImage , RGB(255, 255, 0) , nButImage , RGB(255, 255, 255) );
+		pData->pBut2->SetFontEx(20 , _T("Î¢ÈíÑÅºÚ"));
+		pData->pBut2->SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(255, 255, 255));
+		pData->pBut2->SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+		pData->pBut2->SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(255, 255, 255));
+		pData->pBut2->SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(255, 255, 255));
 	}
 }
 void CUseListBox::SetIndexBackCol(int iIndex ,  int nline ,COLORREF   col)
@@ -327,11 +333,11 @@ void CUseListBox::SetIndexString(int iIndex , CString strSta0 ,CString strSta1 ,
 		pData->pSta2->ShowWindow(SW_SHOW);
 
 		pData->pBut2->SetWindowText(strSta2) ;
-		pData->pBut2->SetFontEx(20 , _T("Î¢ÈíÑÅºÚ"));
+	/*	pData->pBut2->SetFontEx(20 , _T("Î¢ÈíÑÅºÚ"));
 		pData->pBut2->SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		pData->pBut2->SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 		pData->pBut2->SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
-		pData->pBut2->SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
+		pData->pBut2->SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));*/
 
 		pData->pstr.Format(_T("%s") ,strSta3 ) ;
 
