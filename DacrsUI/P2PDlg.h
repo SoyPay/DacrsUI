@@ -92,4 +92,5 @@ public:
 	
 	afx_msg void OnBnClickedButtonUp();
 	afx_msg void OnBnClickedButtonNext();
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
 };
