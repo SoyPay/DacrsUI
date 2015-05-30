@@ -191,6 +191,7 @@ void CSendRecord::Showlistbox(CString address)
 	CString temp;
 	temp.Format(_T("¹²:%d"),m_pagecount);
 	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(temp);
+	GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T(""));
 	Invalidate();
 	m_listBox.DeleteAllIndex();
 	OnShowPagePool(1);
@@ -446,8 +447,8 @@ void  CSendRecord::OnShowPagePool(int page)
 		reward.Format(_T("%.4f"),const_it.amount);
 		m_listBox.InsertStr(i,this->GetSafeHwnd());
 		m_listBox.SetIndexInage(i , IDB_BITMAP_P2PLIST);
-		m_listBox.SetIndexBackCol(i, 0, RGB(242,32,32));
-
+		m_listBox.SetIndexBackCol(i, 1, RGB(242,32,32));
+		m_listBox.SetIndexBackCol(i, 5, RGB(242,32,32));
 		List_SendAppendData* pinf = m_listBox.GetAppendDataInfo(i);
 		//pinf->pBut0->EnableWindow(false);
 
@@ -469,9 +470,11 @@ void  CSendRecord::OnShowPagePool(int page)
 
 			if (const_it.guess_num == const_it.content[32])
 			{
+				m_listBox.SetIndexBackCol(i, 6, RGB(1,127,1));
 				reward.Format(_T("-%.4f"),const_it.amount);
 			}else
 			{
+				m_listBox.SetIndexBackCol(i, 5, RGB(242,32,32));
 				reward.Format(_T("+%.4f"),const_it.amount);
 			}
 
@@ -506,6 +509,7 @@ void  CSendRecord::OnShowPagePool(int page)
 					}
 					m_listBox.SetIndexString(i , sendaddr, acceptaddr,SendTime,strTime, result,_T("--"),reward,time, _T("´ý¿ª"),const_it.tx_hash);
 				}else if(theApp.IsSyncBlock && (const_it.time_out + const_it.height)< theApp.blocktipheight){
+					m_listBox.SetIndexBackCol(i, 6, RGB(1,127,1));
 					reward.Format(_T("-%.4f"),const_it.amount);
 					m_listBox.SetIndexString(i , sendaddr, acceptaddr,SendTime,strTime, result,guess,reward,time, _T("³¬Ê±"),const_it.tx_hash);
 				}else{
