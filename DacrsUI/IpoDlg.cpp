@@ -267,12 +267,6 @@ void CIpoDlg::OnSize(UINT nType, int cx, int cy)
 			pst->SetWindowPos( NULL ,(rc.Width()/100)*8 ,(rc.Height()/100)*5  , (rc.Width()/100)*40, (rc.Height()/100)*7 ,SWP_SHOWWINDOW ) ; 
 		}
 		
-		pst = GetDlgItem( IDC_STATIC_AMOUNT ) ;
-		if ( NULL != pst ) {
-			CRect rect ;
-			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*49 ,(rc.Height()/100)*5+4  , rect.Width(), (rc.Height()/100)*5  ,SWP_SHOWWINDOW ) ; 
-		}
 
 		pst = GetDlgItem( IDC_BUTTON_QUERY ) ;
 		if ( NULL != pst ) {
@@ -291,6 +285,13 @@ void CIpoDlg::OnSize(UINT nType, int cx, int cy)
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
 			pst->SetWindowPos( NULL , (rc.Width()/100)*8, (rc.Height()/100)*20 , (rc.Width()/100)*15, (rc.Height()/100)*7   ,SWP_SHOWWINDOW ) ; 
+		}
+
+		pst = GetDlgItem( IDC_STATIC_AMOUNT ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*24 ,(rc.Height()/100)*20+4  , rect.Width(), (rc.Height()/100)*5  ,SWP_SHOWWINDOW ) ; 
 		}
 		//
 		//	
