@@ -246,7 +246,8 @@ void CDacrsUIApp::OpenBet(CString txhash)
 	}
 	if (strlen(pPoolItem.tx_hash) == 0)
 	{
-		::MessageBox(NULL ,_T("数据库中无此记录") , _T("提示") , MB_ICONINFORMATION ) ;
+		//::MessageBox(NULL ,_T("数据库中无此记录") , _T("提示") , MB_ICONINFORMATION ) ;
+		return;
 	}
 
 	if (!theApp.IsSyncBlock )
