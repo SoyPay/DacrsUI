@@ -285,9 +285,9 @@ void  CBetRecord::OnShowPagePool(int page)
 		}
 		m_ListBox.InsertStr(i,this->GetSafeHwnd());
 		m_ListBox.SetIndexBackCol(i , 0 , RGB(242,32,32));
-		m_ListBox.SetIndexBackCol(i , 1 , RGB(181,185,212));
-		m_ListBox.SetIndexBackCol(i , 2 , RGB(181,185,212));
-		m_ListBox.SetIndexBackCol(i , 3 , RGB(181,185,212));
+		//m_ListBox.SetIndexBackCol(i , 1 , RGB(181,185,212));
+		//m_ListBox.SetIndexBackCol(i , 2 , RGB(181,185,212));
+		//m_ListBox.SetIndexBackCol(i , 3 , RGB(181,185,212));
 		m_ListBox.SetIndexBackCol(i , 4 , RGB(242,32,32));
 
 		SYSTEMTIME curTime =UiFun::Time_tToSystemTime(const_it.send_time);
@@ -303,11 +303,11 @@ void  CBetRecord::OnShowPagePool(int page)
 			int rewardnum = (int)const_it.content[32];
 			if (const_it.guess_num == const_it.content[32])
 			{
-				m_ListBox.SetIndexBackCol(6 , 4 , RGB(242,32,32));
+				m_ListBox.SetIndexBackCol(i , 6 , RGB(242,32,32));
 				reward.Format(_T("+%.4f"),const_it.amount);
 			}else
 			{
-				m_ListBox.SetIndexBackCol(6 , 4 , RGB(1,127,1));
+				m_ListBox.SetIndexBackCol(i , 6 , RGB(1,127,1));
 				reward.Format(_T("-%.4f"),const_it.amount);
 			}
 			if (const_it.content[32] == 1)
@@ -325,6 +325,7 @@ void  CBetRecord::OnShowPagePool(int page)
 			{
 				m_ListBox.SetIndexString(i , Sendaddr,address,sendTime,reciveTime, _T("Î´¿ª½±"),guess,reward);
 			}else if(theApp.IsSyncBlock){
+				m_ListBox.SetIndexBackCol(i , 6 , RGB(242,32,32));
 				reward.Format(_T("+%.4f"),const_it.amount);
 				m_ListBox.SetIndexString(i , Sendaddr,address,sendTime,reciveTime, _T("³¬Ê±"),guess,reward);
 			}else{

@@ -238,6 +238,12 @@ void CRecordListBox::SetIndexBackCol(int iIndex ,  int nline ,COLORREF   col)
 		case 4:
 			pData->pSta4->SetTextColor(col);
 			break;
+		case 5:
+			pData->pSta5->SetTextColor(col);
+			break;
+		case 6:
+			pData->pSta6->SetTextColor(col);
+			break;
 		}
 	}
 }
