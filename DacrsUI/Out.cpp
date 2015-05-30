@@ -86,7 +86,7 @@ BOOL COut::OnInitDialog()
 	{
 		m_rBtnNO.SetWindowText("È¡ Ïû") ;
 	}else{
-		m_rBtnOK.SetWindowText(m_strno) ;
+		m_rBtnNO.SetWindowText(m_strno) ;
 	}
 	m_rBtnNO.SetFontEx(20 , _T("Î¢ÈíÑÅºÚ"));
 	m_rBtnNO.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
