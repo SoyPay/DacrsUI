@@ -11,11 +11,13 @@
 
 IMPLEMENT_DYNAMIC(COut, CDialogEx)
 
-COut::COut(CWnd* pParent /*=NULL*/, CString strDisplay, int nFontSize)
+COut::COut(CWnd* pParent /*=NULL*/, CString strDisplay, int nFontSize,CString strok,CString strNo )
 	: CDialogEx(COut::IDD, pParent)
 {
 	m_strDisplay = strDisplay;
 	m_nFontSize = nFontSize;
+	m_strok = strok;
+	m_strno = strNo;
 }
 
 COut::~COut()
@@ -62,9 +64,15 @@ BOOL COut::OnInitDialog()
 	}
 	//m_Text.SetWindowPos(NULL ,143 , 55 , 0 , 0 , SWP_NOSIZE);
 
-	m_rBtnOK.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
+	m_rBtnOK.SetBitmaps( IDB_BITMAP_OUTBUTTON , RGB(255, 255, 0) , IDB_BITMAP_OUTBUTTON , RGB(255, 255, 255) );
 	m_rBtnOK.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-	m_rBtnOK.SetWindowText("确 定") ;
+	if (m_strok == _T(""))
+	{
+		m_rBtnOK.SetWindowText("确 定") ;
+	}else{
+		m_rBtnOK.SetWindowText(m_strok) ;
+	}
+	
 	m_rBtnOK.SetFontEx(20 , _T("微软雅黑"));
 	m_rBtnOK.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 	m_rBtnOK.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
@@ -72,9 +80,14 @@ BOOL COut::OnInitDialog()
 	m_rBtnOK.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
 	m_rBtnOK.SizeToContent();
 
-	m_rBtnNO.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
+	m_rBtnNO.SetBitmaps( IDB_BITMAP_OUTBUTTON , RGB(255, 255, 0) , IDB_BITMAP_OUTBUTTON , RGB(255, 255, 255) );
 	m_rBtnNO.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-	m_rBtnNO.SetWindowText("取 消") ;
+	if (m_strno == _T(""))
+	{
+		m_rBtnNO.SetWindowText("取 消") ;
+	}else{
+		m_rBtnOK.SetWindowText(m_strno) ;
+	}
 	m_rBtnNO.SetFontEx(20 , _T("微软雅黑"));
 	m_rBtnNO.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 	m_rBtnNO.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));

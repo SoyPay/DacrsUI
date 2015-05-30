@@ -532,8 +532,8 @@ bool CSoyPayHelp::IsOSVersionBelowXp()
 	if (!strcmp(swVersion,"5.1")){
 		strcpy( szOSName,"win_xp");    //win_xp 
 		CString strDisplay;
-		strDisplay.Format(_T("这是xp以下的系统有可能不太稳定,是否要退出"));
-		COut outdlg(NULL, strDisplay,100);
+		strDisplay.Format(_T("本程序在xp系统不稳定,是否继续"));
+		COut outdlg(NULL, strDisplay,100,_T("继续"),_T("退出"));
 		if ( IDOK == outdlg.DoModal()){
 			exit(0);
 		}
