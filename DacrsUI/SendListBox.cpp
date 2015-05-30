@@ -271,6 +271,24 @@ void CSendListBox::SetIndexBackCol(int iIndex ,  int nline ,COLORREF   col)
 		case 2:
 			pData->pSta2->SetTextColor(col);
 			break;
+		case 3:
+			pData->pSta3->SetTextColor(col);
+			break;
+		case 4:
+			pData->pSta4->SetTextColor(col);
+			break;
+		case 5:
+			pData->pSta5->SetTextColor(col);
+			break;
+		case 6:
+			pData->pSta6->SetTextColor(col);
+			break;
+		case 7:
+			pData->pSta7->SetTextColor(col);
+			break;
+		case 8:
+			pData->pSta8->SetTextColor(col);
+			break;
 		}
 	}
 }
