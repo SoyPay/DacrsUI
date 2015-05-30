@@ -176,7 +176,7 @@ void CMainDlg::OnnitCtrlText()
 	strCommand.Format(_T("IDC_TX%d"),nItem);
 	int item = IDC_TX1;
 	int item1 = IDC_TX_JY2;
-	int pic = IDC_STATIC_TARGET1;
+	//int pic = IDC_STATIC_TARGET1;
 	int desitem = IDC_STATIC_DES1;
 	CString desStr =_T("");
 	if (pTransaction.size() != 0  ) {
@@ -228,15 +228,14 @@ void CMainDlg::OnnitCtrlText()
 			GetDlgItem(item)->SetWindowText(strShowaddr) ;
 			if(item1 <=IDC_TX_JY7)
 			GetDlgItem(item1)->SetWindowText(strSource) ;
-			if (pic <=IDC_STATIC_TARGET5)
-			{
-				GetDlgItem(pic)->ShowWindow(SW_SHOW);
-			}
+			//if (pic <=IDC_STATIC_TARGET5)
+			//{
+			//	GetDlgItem(pic)->ShowWindow(SW_SHOW);
+			//}
 			if (desitem <=IDC_STATIC_DES5)
 			{
-				GetDlgItem(pic)->SetWindowText(desStr);
+				GetDlgItem(desitem)->SetWindowText(desStr);
 			}
-			pic++;
 			item++;
 			item1++;
 			desitem++;
@@ -295,7 +294,7 @@ void CMainDlg::SetCtrlText()
 		GetDlgItem(IDC_TX1)->SetWindowText(strShowData) ;
 		GetDlgItem(IDC_TX_JY2)->SetWindowText(strCommand) ;
 		//GetDlgItem(IDC_STATIC_TARGET1)->ShowWindow(SW_SHOW
-		GetDlgItem(IDC_STATIC_TARGET1)->ShowWindow(SW_HIDE);
+		//GetDlgItem(IDC_STATIC_TARGET1)->ShowWindow(SW_HIDE);
 	}
 	
 	addr1 = maindlg.addr2;
@@ -320,7 +319,7 @@ void CMainDlg::SetCtrlText()
 		GetDlgItem(IDC_STATIC_DES2)->SetWindowText(strDes) ;
 		GetDlgItem(IDC_TX2)->SetWindowText(strShowData) ;
 		GetDlgItem(IDC_TX_JY3)->SetWindowText(strCommand) ;
-		GetDlgItem(IDC_STATIC_TARGET2)->ShowWindow(SW_HIDE);
+		//GetDlgItem(IDC_STATIC_TARGET2)->ShowWindow(SW_HIDE);
 	}
 
 	addr1 = maindlg.addr3;
@@ -346,7 +345,7 @@ void CMainDlg::SetCtrlText()
 		GetDlgItem(IDC_STATIC_DES3)->SetWindowText(strDes) ;
 		GetDlgItem(IDC_TX3)->SetWindowText(strShowData) ;
 		GetDlgItem(IDC_TX_JY4)->SetWindowText(strCommand) ;
-		GetDlgItem(IDC_STATIC_TARGET3)->ShowWindow(SW_HIDE);
+		//GetDlgItem(IDC_STATIC_TARGET3)->ShowWindow(SW_HIDE);
 	}
 	addr1 = maindlg.addr4;
 	if (addr1 != "")
@@ -359,7 +358,7 @@ void CMainDlg::SetCtrlText()
 		GetDlgItem(IDC_STATIC_DES4)->SetWindowText(strDes) ;
 		GetDlgItem(IDC_TX4)->SetWindowText(strShowData) ;
 		GetDlgItem(IDC_TX_JY5)->SetWindowText(strCommand) ;
-		GetDlgItem(IDC_STATIC_TARGET4)->ShowWindow(SW_HIDE);
+		//GetDlgItem(IDC_STATIC_TARGET4)->ShowWindow(SW_HIDE);
 	}
 	addr1 = maindlg.addr5;
 	if (addr1 != "")
@@ -372,7 +371,7 @@ void CMainDlg::SetCtrlText()
 		GetDlgItem(IDC_STATIC_DES5)->SetWindowText(strDes) ;
 		GetDlgItem(IDC_TX5)->SetWindowText(strShowData) ;
 		GetDlgItem(IDC_TX_JY7)->SetWindowText(strCommand) ;
-		GetDlgItem(IDC_STATIC_TARGET5)->ShowWindow(SW_HIDE);
+		//GetDlgItem(IDC_STATIC_TARGET5)->ShowWindow(SW_HIDE);
 	}
 	Invalidate();
 }
@@ -386,7 +385,7 @@ BOOL CMainDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_rBtnImportWallet.LoadBitmaps(IDB_BITMAP_IMPORTWALLET,IDB_BITMAP_IMPORTWALLET,IDB_BITMAP_IMPORTWALLET,IDB_BITMAP_IMPORTWALLET);
 		m_rBtnDumpWallet.LoadBitmaps(IDB_BITMAP_DUMPWALLET,IDB_BITMAP_DUMPWALLET,IDB_BITMAP_DUMPWALLET,IDB_BITMAP_DUMPWALLET);
 		UpdateData(0);
-		SetShowCtrol();
+		//SetShowCtrol();
 		OnnitCtrlText();
 		GetUrlServer();
 		onnitLinkText();
@@ -556,7 +555,7 @@ BOOL CMainDlg::OnEraseBkgnd(CDC* pDC)
 }
 void CMainDlg::ClearCtrlText()
 {
-	SetShowCtrol();
+	//SetShowCtrol();
 	GetDlgItem(IDC_STATIC_AMOUNT)->SetWindowText(_T("")) ;
 
 	GetDlgItem(IDC_STATIC_NOTCOF)->SetWindowText(_T("")) ;
@@ -759,12 +758,12 @@ void CMainDlg::OnSize(UINT nType, int cx, int cy)
 			pst->GetClientRect( rect ) ;
 			pst->SetWindowPos( NULL ,(rc.Width()/100)*35+4 ,(rc.Height()/100)*67  , (rc.Width()/100)*30, rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
-		pst = GetDlgItem( IDC_STATIC_TARGET1 ) ;
-		if ( NULL != pst ) {
-			CRect rect ;
-			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*33+4 ,(rc.Height()/100)*67  ,  (rc.Width()/100)*3, rect.Height()  ,SWP_SHOWWINDOW ) ; 
-		}
+		//pst = GetDlgItem( IDC_STATIC_TARGET1 ) ;
+		//if ( NULL != pst ) {
+		//	CRect rect ;
+		//	pst->GetClientRect( rect ) ;
+		//	pst->SetWindowPos( NULL ,(rc.Width()/100)*33+4 ,(rc.Height()/100)*67  ,  (rc.Width()/100)*3, rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		//}
 		pst = GetDlgItem( IDC_TX_JY2 ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
@@ -786,12 +785,12 @@ void CMainDlg::OnSize(UINT nType, int cx, int cy)
 			pst->SetWindowPos( NULL ,(rc.Width()/100)*35+4 ,(rc.Height()/100)*75  , (rc.Width()/100)*30, rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
 
-		pst = GetDlgItem( IDC_STATIC_TARGET2) ;
-		if ( NULL != pst ) {
-			CRect rect ;
-			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*33+4 ,(rc.Height()/100)*75  , (rc.Width()/100)*3, rect.Height()  ,SWP_SHOWWINDOW ) ; 
-		}
+		//pst = GetDlgItem( IDC_STATIC_TARGET2) ;
+		//if ( NULL != pst ) {
+		//	CRect rect ;
+		//	pst->GetClientRect( rect ) ;
+		//	pst->SetWindowPos( NULL ,(rc.Width()/100)*33+4 ,(rc.Height()/100)*75  , (rc.Width()/100)*3, rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		//}
 
 		pst = GetDlgItem( IDC_TX_JY3 ) ;
 		if ( NULL != pst ) {
@@ -814,12 +813,12 @@ void CMainDlg::OnSize(UINT nType, int cx, int cy)
 			pst->SetWindowPos( NULL ,(rc.Width()/100)*35+4 ,(rc.Height()/100)*82  , (rc.Width()/100)*30, rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
 
-		pst = GetDlgItem( IDC_STATIC_TARGET3) ;
-		if ( NULL != pst ) {
-			CRect rect ;
-			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*33+4 ,(rc.Height()/100)*82  , (rc.Width()/100)*3, rect.Height()  ,SWP_SHOWWINDOW ) ; 
-		}
+		//pst = GetDlgItem( IDC_STATIC_TARGET3) ;
+		//if ( NULL != pst ) {
+		//	CRect rect ;
+		//	pst->GetClientRect( rect ) ;
+		//	pst->SetWindowPos( NULL ,(rc.Width()/100)*33+4 ,(rc.Height()/100)*82  , (rc.Width()/100)*3, rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		//}
 
 		pst = GetDlgItem( IDC_TX_JY4 ) ;
 		if ( NULL != pst ) {
@@ -842,12 +841,12 @@ void CMainDlg::OnSize(UINT nType, int cx, int cy)
 			pst->SetWindowPos( NULL ,(rc.Width()/100)*35+4 ,(rc.Height()/100)*89  , (rc.Width()/100)*30, rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
 
-		pst = GetDlgItem( IDC_STATIC_TARGET4) ;
-		if ( NULL != pst ) {
-			CRect rect ;
-			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*33+4 ,(rc.Height()/100)*89  , (rc.Width()/100)*3, rect.Height()  ,SWP_SHOWWINDOW ) ; 
-		}
+		//pst = GetDlgItem( IDC_STATIC_TARGET4) ;
+		//if ( NULL != pst ) {
+		//	CRect rect ;
+		//	pst->GetClientRect( rect ) ;
+		//	pst->SetWindowPos( NULL ,(rc.Width()/100)*33+4 ,(rc.Height()/100)*89  , (rc.Width()/100)*3, rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		//}
 
 		pst = GetDlgItem( IDC_TX_JY5 ) ;
 		if ( NULL != pst ) {
@@ -871,12 +870,12 @@ void CMainDlg::OnSize(UINT nType, int cx, int cy)
 		}
 
 		
-		pst = GetDlgItem( IDC_STATIC_TARGET5) ;
-		if ( NULL != pst ) {
-			CRect rect ;
-			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*33+4 ,(rc.Height()/100)*97, (rc.Width()/100)*3, rect.Height()  ,SWP_SHOWWINDOW ) ; 
-		}
+		//pst = GetDlgItem( IDC_STATIC_TARGET5) ;
+		//if ( NULL != pst ) {
+		//	CRect rect ;
+		//	pst->GetClientRect( rect ) ;
+		//	pst->SetWindowPos( NULL ,(rc.Width()/100)*33+4 ,(rc.Height()/100)*97, (rc.Width()/100)*3, rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		//}
 
 		pst = GetDlgItem( IDC_TX_JY7 ) ;
 		if ( NULL != pst ) {
@@ -894,9 +893,9 @@ void CMainDlg::OnSize(UINT nType, int cx, int cy)
 }
 void CMainDlg::SetShowCtrol()
 {
-	GetDlgItem(IDC_STATIC_TARGET1)->ShowWindow(SW_HIDE);
+	/*GetDlgItem(IDC_STATIC_TARGET1)->ShowWindow(SW_HIDE);
 	GetDlgItem(IDC_STATIC_TARGET2)->ShowWindow(SW_HIDE);
 	GetDlgItem(IDC_STATIC_TARGET3)->ShowWindow(SW_HIDE);
 	GetDlgItem(IDC_STATIC_TARGET4)->ShowWindow(SW_HIDE);
-	GetDlgItem(IDC_STATIC_TARGET5)->ShowWindow(SW_HIDE);
+	GetDlgItem(IDC_STATIC_TARGET5)->ShowWindow(SW_HIDE);*/
 }
