@@ -59,7 +59,6 @@ CDacrsUIApp theApp;
 BOOL  EnableDebugPrivilege();
 // CDacrsUIApp 初始化
 
-
 BOOL CDacrsUIApp::InitInstance()
 {
 	// 如果一个运行在 Windows XP 上的应用程序清单指定要
@@ -97,14 +96,8 @@ BOOL CDacrsUIApp::InitInstance()
 		return FALSE ;
 	}
 
-	if(CSoyPayHelp::getInstance()->IsOSVersionBelowXp()) {
-		if(!EnableDebugPrivilege())
-			TRACE(_T("Call EnableDebugPrivilege failed!"));
-		//				AfxMessageBox(_T("Call EnableDebugPrivilege failed!"));
-	}
-
-	m_blockAutoDelete = false;
-	m_msgAutoDelete= false;
+	  m_blockAutoDelete = false;
+	  m_msgAutoDelete= false;
 	GetMoFilename( str_InsPath , str_ModuleFilename ); //获取文件路径和文件名称
 
 	CheckPathValid( str_InsPath );
@@ -177,7 +170,7 @@ BOOL CDacrsUIApp::InitInstance()
 		}
 		return FALSE ;
 	}
-
+	
 	//CStartProgress  progdlg ;
 	//progdlg.DoModal();
 	pSplashThread = (CSplashThread*) AfxBeginThread(RUNTIME_CLASS(CSplashThread),THREAD_PRIORITY_NORMAL,0, CREATE_SUSPENDED); 
@@ -191,7 +184,12 @@ BOOL CDacrsUIApp::InitInstance()
 	memset( &WaitTimeLast , 0 , sizeof(SYSTEMTIME) ) ;
 	GetLocalTime( &WaitTimeLast ) ;
 
-	
+
+	if(CSoyPayHelp::getInstance()->IsOSVersionBelowXp()) {
+		if(!EnableDebugPrivilege())
+			TRACE(_T("Call EnableDebugPrivilege failed!"));
+		//				AfxMessageBox(_T("Call EnableDebugPrivilege failed!"));
+	}
 	m_bReIndexServer = TRUE;
 	while(1)
 	{
@@ -1152,10 +1150,8 @@ void CDacrsUIApp::StartSeverProcess(const CStringA& strdir){
 
 	CString str = _T("dacrs-d.exe -datadir=");
 	str.AppendFormat("%s",strdir);
-	if(m_bReIndexServer) {
+	if(m_bReIndexServer)
 		str.Append(_T(" -reindex=1"));
-		LogPrint("INFO", "reindex参数重启服务端\n");
-	}
 	//if (!m_bStartServer)
 	//{
 	//	return ;
