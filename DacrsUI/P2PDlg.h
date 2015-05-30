@@ -65,7 +65,7 @@ public:
 	afx_msg void OnCbnSelchangeComboAddres();
 	void InsertComboxIitem();
 	BOOL AddListaddrDataBox();
-	void QueryNotDrawBalance();
+	void QueryNotDrawBalance(CString addr);
 	afx_msg void OnBnClickedButtonWithd();
 	afx_msg void OnBnClickedButtonRech();
 	afx_msg void OnBnClickedButtonMale();
