@@ -184,6 +184,7 @@
     <None Include="res\newaddr-1.bmp" />
     <None Include="res\newaddr-2.bmp" />
     <None Include="res\newaddr-3.bmp" />
+    <None Include="res\out_buttom.bmp" />
     <None Include="res\P2P.bmp" />
     <None Include="res\p2p_button_1.bmp" />
     <None Include="res\p2p_button_2.bmp" />
