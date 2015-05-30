@@ -129,7 +129,7 @@ BOOL CReceiveDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT n
 							{"µÿ÷∑" ,      230}, 
 							{"º§ªÓ◊¥Ã¨" ,  80}, 
 							{"¿‰Õ⁄øÛ" ,100},
-							{"”‡∂Ó" ,      170}
+							{"”‡∂Ó" ,      168}
 							
 						};
 		m_listCtrl.SetBkColor(RGB(240,240,240));       
