@@ -1006,6 +1006,15 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 	 }
 	 if (!CheckRegIDValid( theApp.m_betScritptid )) return ;
 
+	 CString strTxMoney;
+	 GetDlgItem(IDC_STATIC_BALANCE)->GetWindowText(strTxMoney) ;
+
+	 if (atof(strTxMoney) < atof(money))
+	 {
+		 ::MessageBox( this->GetSafeHwnd() ,_T("接单金额大于账户余额") , _T("提示") , MB_ICONINFORMATION ) ;
+		 return ;
+	 }
+
 	 CString addr;
 	 int sel = m_addrbook.GetCurSel();
 
