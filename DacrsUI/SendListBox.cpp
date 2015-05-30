@@ -106,8 +106,8 @@ void CSendListBox::OnDestroy()
 			delete pData->pSta7;
 			pData->pSta7 = NULL ;
 
-			delete pData->pBut0;
-			pData->pBut0 = NULL ;
+			delete pData->pSta8;
+			pData->pSta8 = NULL ;
 
 			delete pData;
 			pData = NULL;
@@ -158,9 +158,11 @@ void CSendListBox::InsertStr(int iIndex,HWND hMain)
 	pData->pSta7= new CStaticTrans;
 	pData->pSta7->Create(_T("") , WS_CHILD | WS_VISIBLE , rcClient, this, ++m_uID) ;
 
-	pData->pBut0 = new CButtonEx(iIndex,1,rcClient,hMain);
-	pData->pBut0->Create(_T(""),dwStyle, rcClient, this, ++m_uID);
+	//pData->pBut0 = new CButtonEx(iIndex,1,rcClient,hMain);
+	//pData->pBut0->Create(_T(""),dwStyle, rcClient, this, ++m_uID);
 
+	pData->pSta8= new CStaticTrans;
+	pData->pSta8->Create(_T("") , WS_CHILD | WS_VISIBLE , rcClient, this, ++m_uID) ;
 
 	m_mButton.insert( make_pair( iIndex, pData ) );
 
@@ -227,8 +229,8 @@ void CSendListBox::updateListBoxButtonPos()
 				pData->pSta7->ModifyStyle(0,SS_CENTERIMAGE|SS_CENTER);
 				pData->pSta7->SetWindowPos(NULL ,710 , pData->nItem*28 +10 , 70 , 29 , SWP_SHOWWINDOW );
 
-				pData->pBut0->ShowWindow( SW_SHOW );
-				pData->pBut0->SetWindowPos(NULL , 810 , pData->nItem*28 +10 , 45 , 21 , SWP_SHOWWINDOW );
+				pData->pSta8->ShowWindow( SW_SHOW );
+				pData->pSta8->SetWindowPos(NULL , 810 , pData->nItem*28 +10 , 45 , 21 , SWP_SHOWWINDOW );
 
 			}
 			iLine++;
@@ -248,11 +250,11 @@ List_SendAppendData* CSendListBox::GetAppendDataInfo(int iIndex)
 }
 void CSendListBox::SetIndexInage(int iIndex ,  UINT nButImage )
 {
-	List_SendAppendData *pData = GetAppendDataInfo(iIndex) ;
-	if ( NULL != pData ) {
-		pData->pBut0->SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		pData->pBut0->SetBitmaps( nButImage , RGB(255, 255, 0) , nButImage , RGB(255, 255, 255) );
-	}
+	//List_SendAppendData *pData = GetAppendDataInfo(iIndex) ;
+	//if ( NULL != pData ) {
+	//	pData->pBut0->SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+	//	pData->pBut0->SetBitmaps( nButImage , RGB(255, 255, 0) , nButImage , RGB(255, 255, 255) );
+	//}
 }
 void CSendListBox::SetIndexBackCol(int iIndex ,  int nline ,COLORREF   col)
 {
@@ -308,14 +310,14 @@ void CSendListBox::SetIndexString(int iIndex , CString strSta0 ,CString strSta1 
 		pData->pSta7->SetWindowText(strBut7);
 		pData->pSta7->ShowWindow(SW_SHOW);
 
-		pData->pBut0->ShowWindow(SW_HIDE);
-		pData->pBut0->SetWindowText(strbutton);
-		pData->pBut0->ShowWindow(SW_SHOW);
-		pData->pBut0->SetFontEx(20 , _T("Î¢ÈíÑÅºÚ"));
+		pData->pSta8->ShowWindow(SW_HIDE);
+		pData->pSta8->SetWindowText(strbutton);
+		pData->pSta8->ShowWindow(SW_SHOW);
+	/*	pData->pBut0->SetFontEx(20 , _T("Î¢ÈíÑÅºÚ"));
 		pData->pBut0->SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		pData->pBut0->SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 		pData->pBut0->SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
-		pData->pBut0->SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
+		pData->pBut0->SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));*/
 
 		pData->pstr.Format(_T("%s") ,pstr ) ;
 	}
@@ -350,8 +352,8 @@ void CSendListBox::DeleteAllIndex()
 			delete pData->pSta7;
 			pData->pSta7 = NULL ;
 
-			delete pData->pBut0;
-			pData->pBut0 = NULL ;
+			delete pData->pSta8;
+			pData->pSta8 = NULL ;
 
 			delete pData;
 			pData = NULL;
@@ -388,8 +390,8 @@ void CSendListBox::DeleteIndex(int iIndex)
 		delete pData->pSta7;
 		pData->pSta7 = NULL ;
 
-		delete pData->pBut0;
-		pData->pBut0 = NULL ;
+		delete pData->pSta8;
+		pData->pSta8 = NULL ;
 
 		delete pData;
 		pData = NULL;
