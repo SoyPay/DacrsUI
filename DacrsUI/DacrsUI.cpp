@@ -96,8 +96,13 @@ BOOL CDacrsUIApp::InitInstance()
 		return FALSE ;
 	}
 
-	  m_blockAutoDelete = false;
-	  m_msgAutoDelete= false;
+	if(CSoyPayHelp::getInstance()->IsOSVersionBelowXp()) {
+		if(!EnableDebugPrivilege())
+			TRACE(_T("Call EnableDebugPrivilege failed!"));
+		//				AfxMessageBox(_T("Call EnableDebugPrivilege failed!"));
+	}
+	m_blockAutoDelete = false;
+	m_msgAutoDelete= false;
 	GetMoFilename( str_InsPath , str_ModuleFilename ); //获取文件路径和文件名称
 
 	CheckPathValid( str_InsPath );
@@ -184,12 +189,6 @@ BOOL CDacrsUIApp::InitInstance()
 	memset( &WaitTimeLast , 0 , sizeof(SYSTEMTIME) ) ;
 	GetLocalTime( &WaitTimeLast ) ;
 
-
-	if(CSoyPayHelp::getInstance()->IsOSVersionBelowXp()) {
-		if(!EnableDebugPrivilege())
-			TRACE(_T("Call EnableDebugPrivilege failed!"));
-		//				AfxMessageBox(_T("Call EnableDebugPrivilege failed!"));
-	}
 	m_bReIndexServer = TRUE;
 	while(1)
 	{

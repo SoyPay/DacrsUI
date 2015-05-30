@@ -83,6 +83,7 @@
 
 class CButtonST : public CButton
 {
+	DECLARE_DYNAMIC(CButtonST)
 public:
     CButtonST();
 	~CButtonST();
