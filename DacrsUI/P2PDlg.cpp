@@ -244,7 +244,6 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		OnSelectShowWin(0);
 
 		AddListaddrDataBox();
-		QueryNotDrawBalance();
 		OnListPool();
 		theApp.SubscribeMsg( theApp.GetMtHthrdId() , GetSafeHwnd() , MSG_USER_P2P_UI ) ;
 	}
@@ -420,6 +419,7 @@ void CP2PDlg::OnCbnSelchangeComboAddres()
 		Invalidate();
 	}
 
+	QueryNotDrawBalance(text);          /// blockchanged 刷新为开奖的数据
 	ShowListItem(0);
 	ShowListItem(1);
 }
@@ -486,7 +486,6 @@ LRESULT CP2PDlg::OnShowListCtrol( WPARAM wParam, LPARAM lParam )
 	case WM_UP_ADDRESS:
 		{
 			OnCbnSelchangeComboAddres();
-			QueryNotDrawBalance();          /// blockchanged 刷新为开奖的数据
 		}
 		break;
 	default:
@@ -495,10 +494,14 @@ LRESULT CP2PDlg::OnShowListCtrol( WPARAM wParam, LPARAM lParam )
 	}
 	return 0 ;
 }
-void  CP2PDlg::QueryNotDrawBalance()
+void  CP2PDlg::QueryNotDrawBalance(CString addr)
 {
+	if (addr == _T(""))
+	{
+		return;
+	}
 	CString strCond;
-	strCond.Format(_T(" state != 2 "));
+	strCond.Format(_T(" (state != 2) and (left_addr ='%s' or right_addr = '%s') "),addr,addr);
 
 	//double   nmoney =  theApp.m_SqliteDeal.GetTableItemSum(_T("t_p2p_quiz") , _T("amount") , strCond) ;
 	//CString srtShow =_T("");
