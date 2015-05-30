@@ -178,6 +178,7 @@ void CBetRecord::Showlistbox(CString address)
 	CString temp;
 	temp.Format(_T("¹²:%d"),m_pagecount);
 	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(temp);
+	GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T(""));
 	Invalidate();
 	m_ListBox.DeleteAllIndex();
 	OnShowPagePool(1);
@@ -283,11 +284,11 @@ void  CBetRecord::OnShowPagePool(int page)
 			guess.Format(_T("%s"),"¸ç");
 		}
 		m_ListBox.InsertStr(i,this->GetSafeHwnd());
-		m_ListBox.SetIndexBackCol(0 , 0 , RGB(242,32,32));
-		m_ListBox.SetIndexBackCol(0 , 1 , RGB(181,185,212));
-		m_ListBox.SetIndexBackCol(0 , 2 , RGB(181,185,212));
-		m_ListBox.SetIndexBackCol(0 , 3 , RGB(181,185,212));
-		m_ListBox.SetIndexBackCol(0 , 4 , RGB(181,185,212));
+		m_ListBox.SetIndexBackCol(i , 0 , RGB(242,32,32));
+		m_ListBox.SetIndexBackCol(i , 1 , RGB(181,185,212));
+		m_ListBox.SetIndexBackCol(i , 2 , RGB(181,185,212));
+		m_ListBox.SetIndexBackCol(i , 3 , RGB(181,185,212));
+		m_ListBox.SetIndexBackCol(i , 4 , RGB(242,32,32));
 
 		SYSTEMTIME curTime =UiFun::Time_tToSystemTime(const_it.send_time);
 		CString sendTime,reciveTime;
@@ -302,9 +303,11 @@ void  CBetRecord::OnShowPagePool(int page)
 			int rewardnum = (int)const_it.content[32];
 			if (const_it.guess_num == const_it.content[32])
 			{
+				m_ListBox.SetIndexBackCol(6 , 4 , RGB(242,32,32));
 				reward.Format(_T("+%.4f"),const_it.amount);
 			}else
 			{
+				m_ListBox.SetIndexBackCol(6 , 4 , RGB(1,127,1));
 				reward.Format(_T("-%.4f"),const_it.amount);
 			}
 			if (const_it.content[32] == 1)
