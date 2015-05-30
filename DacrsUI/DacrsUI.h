@@ -145,6 +145,7 @@ public:
 	void OpenBetRecord(vector<unsigned char> openbet,uistruct::REVTRANSACTION_t transcion);
 	void AcceptBetRecord(vector<unsigned char> acceptbet,uistruct::REVTRANSACTION_t transcion);
 	void SendBetRecord(vector<unsigned char> sendbet,uistruct::REVTRANSACTION_t transcion);
+	void OpenBet(CString txhash);
 	void ClearTransaction();
 	void GetMainDlgStruct();
 	BOOL RunOnlyOneApp();

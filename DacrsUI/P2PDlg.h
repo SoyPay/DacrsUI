@@ -32,6 +32,7 @@ public:
 	CStaticTrans           m_NotDraw  ;
 	CStaticTrans           m_Dw  ;
 	CStaticTrans           m_VS  ;
+	CStaticTrans           m_money  ;
 
 	CShadeButtonST         m_rBtnWithd;
 	CShadeButtonST         m_rBtnRech;

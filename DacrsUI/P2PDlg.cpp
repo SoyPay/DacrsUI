@@ -55,6 +55,8 @@ void CP2PDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BUTTON_UP, m_rBtnUp);
 	DDX_Control(pDX, IDC_BUTTON_NEXT, m_rBtnNext);
 	DDX_Control(pDX ,IDC_STATIC_COUNT_PAGE ,m_sCountpage ) ;
+	DDX_Control(pDX ,IDC_STATIC_MONEY ,m_money ) ;
+	
 }
 
 
@@ -215,6 +217,9 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_rBtnNext.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(255, 255, 255));
 		m_rBtnNext.SizeToContent();
 
+		m_money.SetFont(120, _T("黑体"));				//设置显示字体和大小
+		m_money.SetTextColor(RGB(0,0,0));			    //字体颜色	
+		m_money.SetWindowText(_T(""));
 		
 
 		m_tab.InsertItem(0,_T("投注记录"));  //添加参数一选项卡 
@@ -345,6 +350,13 @@ void CP2PDlg::OnSize(UINT nType, int cx, int cy)
 			pst->SetWindowPos( NULL ,(rc.Width()/100)*12 , (rc.Height()/100)*20 ,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
 		}
 		
+		pst = GetDlgItem( IDC_STATIC_MONEY ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*32, (rc.Height()/100)*20 ,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
+		}
+
 		pst = GetDlgItem( IDC_EDIT_MONEY ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
@@ -416,6 +428,14 @@ void CP2PDlg::OnCbnSelchangeComboAddres()
 		strShowData.Format(_T("%.8f"),money);
 
 		((CStatic*)GetDlgItem(IDC_STATIC_BALANCE))->SetWindowText(strShowData);
+
+		uistruct::LISTADDR_t pAddr;
+		CString condon;
+		condon.Format(_T("reg_id = '%s'"),text);
+		theApp.m_SqliteDeal.GetWalletAddressItem(condon,&pAddr);
+		condon.Format(_T("%.3f"),pAddr.fMoney);
+		((CStatic*)GetDlgItem(IDC_STATIC_MONEY))->SetWindowText(condon);
+
 		Invalidate();
 	}
 
