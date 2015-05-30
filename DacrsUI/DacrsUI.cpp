@@ -59,7 +59,6 @@ CDacrsUIApp theApp;
 BOOL  EnableDebugPrivilege();
 // CDacrsUIApp 初始化
 
-
 BOOL CDacrsUIApp::InitInstance()
 {
 	// 如果一个运行在 Windows XP 上的应用程序清单指定要
@@ -96,6 +95,7 @@ BOOL CDacrsUIApp::InitInstance()
 	if (!AfxSocketInit()){   //初始化SOCKET
 		return FALSE ;
 	}
+
 	  m_blockAutoDelete = false;
 	  m_msgAutoDelete= false;
 	GetMoFilename( str_InsPath , str_ModuleFilename ); //获取文件路径和文件名称
@@ -183,6 +183,7 @@ BOOL CDacrsUIApp::InitInstance()
 	SYSTEMTIME WaitTimeLast ;
 	memset( &WaitTimeLast , 0 , sizeof(SYSTEMTIME) ) ;
 	GetLocalTime( &WaitTimeLast ) ;
+
 
 	if(CSoyPayHelp::getInstance()->IsOSVersionBelowXp()) {
 		if(!EnableDebugPrivilege())
