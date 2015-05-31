@@ -205,13 +205,25 @@ int CallGetP2PQuizRecordItem(void *para, int n_column, char ** column_value, cha
 
 	CString strValue ;
 	strValue.Format(_T("%s") , column_value[0] ) ;
-	SYSTEMTIME curTime ;
-	sscanf(strValue,"%04d-%02d-%02d %02d:%02d:%02d",&curTime.wYear, &curTime.wMonth, &curTime.wDay, &curTime.wHour, &curTime.wMinute, &curTime.wSecond);
-	p2pQuizRecord->send_time = UiFun::SystemTimeToTimet(curTime);
-			
+	if (strValue == _T(""))
+	{
+		p2pQuizRecord->send_time = 0;
+	}else{
+		SYSTEMTIME curTime ;
+		sscanf(strValue,"%04d-%02d-%02d %02d:%02d:%02d",&curTime.wYear, &curTime.wMonth, &curTime.wDay, &curTime.wHour, &curTime.wMinute, &curTime.wSecond);
+		p2pQuizRecord->send_time = UiFun::SystemTimeToTimet(curTime);
+	}
+	
+	SYSTEMTIME recTime ;
 	strValue.Format(_T("%s") , column_value[1] ) ;
-	sscanf(strValue,"%04d-%02d-%02d %02d:%02d:%02d",&curTime.wYear, &curTime.wMonth, &curTime.wDay, &curTime.wHour, &curTime.wMinute, &curTime.wSecond);
-	p2pQuizRecord->recv_time = UiFun::SystemTimeToTimet(curTime);
+
+	if (strValue == _T(""))
+	{
+		p2pQuizRecord->recv_time = 0;
+	}else{
+		sscanf(strValue,"%04d-%02d-%02d %02d:%02d:%02d",&recTime.wYear, &recTime.wMonth, &recTime.wDay, &recTime.wHour, &recTime.wMinute, &recTime.wSecond);
+		p2pQuizRecord->recv_time = UiFun::SystemTimeToTimet(recTime);
+	}
 			
 	strValue.Format(_T("%s") , column_value[2] ) ;
 	p2pQuizRecord->time_out =atoi(strValue) ;
