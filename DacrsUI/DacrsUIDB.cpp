@@ -388,12 +388,16 @@ void CDacrsUIApp::AcceptBetRecord(vector<unsigned char> acceptbet,uistruct::REVT
 		TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , SendTxhash );
 	}
 
-	OpenBet( SendTxhash.c_str());
+	OpenBet(SendTxhash.c_str());
 }
 void CDacrsUIApp::SendBetRecord(vector<unsigned char> sendbet,uistruct::REVTRANSACTION_t transcion)
 {
 	if(sendbet.size()==0)
 		return;
+
+	SEND_DATA sendbetdata;
+	memset(&sendbetdata,0,sizeof(SEND_DATA));
+	memcpy(&sendbetdata, &sendbet[0],sizeof(SEND_DATA));
 
 	SYSTEMTIME curTime =UiFun::Time_tToSystemTime(transcion.confirmedtime);
 	CString strTime;
@@ -403,10 +407,43 @@ void CDacrsUIApp::SendBetRecord(vector<unsigned char> sendbet,uistruct::REVTRANS
 	strCond.Format(_T(" tx_hash='%s' "), transcion.txhash);
 	strField.AppendFormat(_T("send_time='%s',height = %d") ,strTime ,transcion.confirmedHeight ) ;
 
-	//更新数据
-	if ( !m_SqliteDeal.UpdateTableItem(_T("t_p2p_quiz") ,strField,strCond )) {
-		TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , transcion.txhash );
+	/// 查找数据库中是否存在此记录
+	int item = m_SqliteDeal.GetTableCountItem(_T("t_p2p_quiz"),strCond);
+	if (item != 0)
+	{
+		//更新数据
+		if ( !m_SqliteDeal.UpdateTableItem(_T("t_p2p_quiz") ,strField,strCond )) {
+			TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , transcion.txhash );
+		}
 	}
+	//else{
+	//	strCond.Format(_T(" address='%s' "), transcion.addr);
+	//	uistruct::LISTADDR_t pAddr;
+	//	m_SqliteDeal.GetWalletAddressItem(strCond,&pAddr);
+	//	if (strlen(pAddr.address) != 0)
+	//	{
+	//		//插入到数据库
+	//		CString strSourceData;
+	//		strSourceData.Format(_T("'%s','%s','%d','%s' , '%s' , '%s' , '%lf'") , \
+	//			strSendTime , _T("") , sendbet. , \
+	//			p2pbetrecord.tx_hash ,  p2pbetrecord.left_addr , p2pbetrecord.right_addr ,p2pbetrecord.amount);
+
+	//		strSourceData.AppendFormat(",'%s' ,'%d','%d','%d','%d','%s','%d'",p2pbetrecord.content ,p2pbetrecord.actor ,p2pbetrecord.confirmed ,p2pbetrecord.height ,p2pbetrecord.state ,\
+	//			p2pbetrecord.relate_hash ,p2pbetrecord.guess_num ) ;
+
+	//		uistruct::DATABASEINFO_t   pDatabase;
+	//		pDatabase.strSource = strSourceData.GetString();
+	//		pDatabase.strTabName =  _T("t_p2p_quiz");
+	//		CPostMsg postmsg(MSG_USER_INSERT_DATA,0);
+	//		string strTemp = pDatabase.ToJson();
+	//		CString strShow;
+	//		strShow.Format(_T("%s"),strTemp.c_str());
+	//		postmsg.SetData(strShow);
+	//		theApp.m_MsgQueue.push(postmsg);
+	//	}
+
+	//}
+	
 }
 void CDacrsUIApp::UpdateAppRecord(string txdetail){
 	uistruct::REVTRANSACTION_t transcion;
