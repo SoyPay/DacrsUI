@@ -290,11 +290,23 @@ void  CBetRecord::OnShowPagePool(int page)
 		//m_ListBox.SetIndexBackCol(i , 3 , RGB(181,185,212));
 		m_ListBox.SetIndexBackCol(i , 4 , RGB(242,32,32));
 
-		SYSTEMTIME curTime =UiFun::Time_tToSystemTime(const_it.send_time);
+		
 		CString sendTime,reciveTime;
-		sendTime.Format("%02d-%02d %02d:%02d:%02d", curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
-		SYSTEMTIME rTime =UiFun::Time_tToSystemTime(const_it.recv_time);
-		reciveTime.Format("%02d-%02d %02d:%02d:%02d",rTime.wMonth, rTime.wDay, rTime.wHour, rTime.wMinute, rTime.wSecond);
+		if (const_it.send_time == 0)
+		{
+			sendTime = _T("--");
+		}else{
+			SYSTEMTIME curTime =UiFun::Time_tToSystemTime(const_it.send_time);
+			sendTime.Format("%02d-%02d %02d:%02d:%02d", curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+		}
+		if (const_it.recv_time == 0)
+		{
+			reciveTime =_T("--");
+		}else{
+			SYSTEMTIME rTime =UiFun::Time_tToSystemTime(const_it.recv_time);
+			reciveTime.Format("%02d-%02d %02d:%02d:%02d",rTime.wMonth, rTime.wDay, rTime.wHour, rTime.wMinute, rTime.wSecond);
+		}
+
 
 		reward.Format(_T("%.4f"),const_it.amount);
 		///说明开奖了
