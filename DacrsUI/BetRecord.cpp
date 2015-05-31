@@ -321,10 +321,10 @@ void  CBetRecord::OnShowPagePool(int page)
 			m_ListBox.SetIndexString(i , Sendaddr,address,sendTime,reciveTime, result,guess, reward);
 
 		}else{
-			if ((const_it.time_out + const_it.height)> theApp.blocktipheight&& theApp.IsSyncBlock)
+			if (const_it.height>0 &&(const_it.time_out + const_it.height)> theApp.blocktipheight&& theApp.IsSyncBlock)
 			{
 				m_ListBox.SetIndexString(i , Sendaddr,address,sendTime,reciveTime, _T("Î´¿ª½±"),guess,reward);
-			}else if(theApp.IsSyncBlock){
+			}else if(theApp.IsSyncBlock && const_it.height != 0){
 				m_ListBox.SetIndexBackCol(i , 6 , RGB(242,32,32));
 				reward.Format(_T("+%.4f"),const_it.amount);
 				m_ListBox.SetIndexString(i , Sendaddr,address,sendTime,reciveTime, _T("³¬Ê±"),guess,reward);
