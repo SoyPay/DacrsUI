@@ -429,7 +429,7 @@ void CP2PDlg::OnCbnSelchangeComboAddres()
 			nMoney = root["FreeValues"].asInt64() ;
 		}
 		double money = (nMoney*1.0/COIN);
-		strShowData.Format(_T("%.8f"),money);
+		strShowData.Format(_T("%.4f"),money);
 
 		((CStatic*)GetDlgItem(IDC_STATIC_BALANCE))->SetWindowText(strShowData);
 
@@ -661,6 +661,7 @@ void CP2PDlg::OnBnClickedButtonRech()
 		::MessageBox( this->GetSafeHwnd() ,_T("金额不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
 		return ;
 	}
+
 	CString strShowData ;
 	CString addr;
 	int sel = m_addrbook.GetCurSel();
@@ -673,6 +674,17 @@ void CP2PDlg::OnBnClickedButtonRech()
 	if (addr == _T(""))
 	{
 		::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		return;
+	}
+
+	CString strCondition;
+	strCondition.Format(_T("reg_id = '%s'"),addr);
+	uistruct::LISTADDR_t pAddr;
+	theApp.m_SqliteDeal.GetWalletAddressItem(strCondition,&pAddr);
+	double sub = pAddr.fMoney - atof(theApp.m_strAddress);
+	if (sub <1.0)
+	{
+		::MessageBox( this->GetSafeHwnd() ,_T("系统账户最少余额1smc,作为后续合约交易小费") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
 
