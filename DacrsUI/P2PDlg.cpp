@@ -886,6 +886,13 @@ void CP2PDlg::OnBnClickedButtonMale()
 		::MessageBox( this->GetSafeHwnd() ,_T("金额不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
 		return ;
 	}
+
+	if (atof(strTxMoney)<0.0001)
+	{
+		::MessageBox( this->GetSafeHwnd() ,_T("投注金额必须大于0.0001") , _T("提示") , MB_ICONINFORMATION ) ;
+		return ;
+	}
+
 	CString strDisplay;
 	strDisplay.Format(_T("确定要发送妹--->金额:%s"), strTxMoney);
 	COut outdlg(NULL, strDisplay,100);
@@ -906,6 +913,13 @@ void CP2PDlg::OnBnClickedButtonWoman()
 		::MessageBox( this->GetSafeHwnd() ,_T("金额不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
 		return ;
 	}
+
+	if (atof(strTxMoney)<0.0001)
+	{
+		::MessageBox( this->GetSafeHwnd() ,_T("投注金额必须大于0.0001") , _T("提示") , MB_ICONINFORMATION ) ;
+		return ;
+	}
+
 	CString strDisplay;
 	strDisplay.Format(_T("确定要发送哥--->金额:%s"), strTxMoney);
 	COut outdlg(NULL, strDisplay,100);
