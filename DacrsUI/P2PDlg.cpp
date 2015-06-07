@@ -762,6 +762,7 @@ void CP2PDlg::SendBet(int rewardnum)
 		return ;
 	}
 
+
 	CString addr;
 	int sel = m_addrbook.GetCurSel();
 	if (sel < 0)
@@ -813,7 +814,11 @@ void CP2PDlg::SendBet(int rewardnum)
 	TRACE(_T("sendhash:%s"),strHash);
 	string strContractData;
 	string strRamdHash = CSoyPayHelp::getInstance()->GetReverseHash(strHash.GetString());
-	strContractData = m_P2PBetHelp.PacketP2PSendContract((INT64)REAL_MONEY(atof(strTxMoney)),OUT_HEIGHT ,strRamdHash );
+
+	double money = atof(strTxMoney);
+	CString nTemp;
+	nTemp.Format(_T("%.8f"),money);
+	strContractData = m_P2PBetHelp.PacketP2PSendContract((INT64)REAL_MONEY(atof(nTemp)),OUT_HEIGHT ,strRamdHash );
 
 	INT64 strTxFee = theApp.m_P2PBetCfg.SendBetFee;
 	if (  strTxFee < 10000  ) {
@@ -1009,7 +1014,8 @@ void CP2PDlg::OnListPool()
 			std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(pPoolList.data);
 			memcpy(&DBbet, &vTemp[0], sizeof(DBbet));
 			CString money,adddr;
-			pinf->pSta2->GetWindowText(money);
+			money = pinf->pstr1;
+			//pinf->pSta2->GetWindowText(money);
 			pinf->pSta1->GetWindowText(adddr);
 			AcceptBet(hash,money,adddr,DBbet.hight);
 		}
@@ -1280,12 +1286,14 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 		 double dmoney = (DBbet.money*1.0)/COIN;
 		 money.Format(_T("%.4f"),dmoney);
 
+		 CString strmoney;
+		 strmoney.Format(_T("%.8f"),dmoney);
 		 CString txhash, line;
 		 line.Format(_T("%d"),(i+1));
 		 txhash.Format(_T("%s"),const_it.hash.c_str());
 		 m_BonusListBox.InsertStr(i,this->GetSafeHwnd());
 		 m_BonusListBox.SetIndexInage(i , IDB_BITMAP_P2P_LISTBOX_BUT);
-		 m_BonusListBox.SetIndexString(i , line,regid, _T("½Ó"), money, txhash);
+		 m_BonusListBox.SetIndexString(i , line,regid, _T("½Ó"), money, txhash,strmoney);
 		 i++;
 	 }
  }

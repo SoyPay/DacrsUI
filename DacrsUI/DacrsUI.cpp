@@ -59,13 +59,6 @@ CDacrsUIApp theApp;
 BOOL  EnableDebugPrivilege();
 // CDacrsUIApp 初始化
 
-bool CheckAccVaild(const char account[]){
-	int idlen = sizeof(account);
-	char bb[6];
-	memcpy(bb,account,6);
-	int b = 5;
-	return true;
-}
 BOOL CDacrsUIApp::InitInstance()
 {
 	// 如果一个运行在 Windows XP 上的应用程序清单指定要
@@ -80,8 +73,6 @@ BOOL CDacrsUIApp::InitInstance()
 
 	CWinApp::InitInstance();
 
-	char account[6]={'0','0','0','0','0','1'};
-	CheckAccVaild(account);
 	if (!RunOnlyOneApp())
 	{
 		return FALSE;
@@ -120,9 +111,13 @@ BOOL CDacrsUIApp::InitInstance()
 	//初始化日志配置参数
 	InitLogCfg();
 	//检测自动升级
-	if (Update())
+	int nResult = Update();
+	if (nResult == 1)
 	{
 		return TRUE;
+	}else if(nResult == 0){
+		//// 不更新直接退出
+		exit(0); 
 	}
 
 	if(CSoyPayHelp::getInstance()->IsOSVersionBelowXp()) {
@@ -1229,7 +1224,7 @@ CString GetAppPath()
 	__apppath=csDir;
 	return csDir;
 }
-bool CDacrsUIApp::Update()
+int CDacrsUIApp::Update()
 {
 	CString sPath=str_InsPath+"\\qupdater.exe";
 	LogPrint("INFO","Updata:%s\r\n",sPath);
@@ -1253,14 +1248,15 @@ bool CDacrsUIApp::Update()
 	LogPrint("INFO","Updata OpenProcess:%0x\r\n",ShRun.hProcess);
 	if (!GetExitCodeProcess(ShRun.hProcess, &lResult)) return false;
 	LogPrint("INFO","Updata GetExitCodeProcess:%s\r\n",sPath);
-	if (lResult == 0) return false;
+	if (lResult == 0) return -1;
 	LogPrint("INFO","Updata lResult:%s\r\n",sPath);
 	CString sMsg;
-	sMsg.Format(CLanguage::TranLanguage("MAIN","%d updates found at the website,now to upgrade?"),lResult);
-	if (AfxMessageBox(sMsg, MB_ICONQUESTION | MB_YESNO) != IDYES) return false;
+	//sMsg.Format(CLanguage::TranLanguage("MAIN","%d updates found at the website,now to upgrade?"),lResult);
+	sMsg.Format(CLanguage::TranLanguage("MAIN","检查有%d文件需要更新,现在是否要更新?"),lResult);
+	if (AfxMessageBox(sMsg, MB_ICONQUESTION | MB_YESNO) != IDYES) return 0;
 	ShRun.lpParameters = NULL; 
 	ShellExecuteEx(&ShRun); 
-	return true;
+	return 1;
 }
 DWORD WINAPI Update1(LPVOID lpParam){
 	CString sPath= GetAppPath()+"\\qupdater.exe";
