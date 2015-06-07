@@ -59,6 +59,13 @@ CDacrsUIApp theApp;
 BOOL  EnableDebugPrivilege();
 // CDacrsUIApp 初始化
 
+bool CheckAccVaild(const char account[]){
+	int idlen = sizeof(account);
+	char bb[6];
+	memcpy(bb,account,6);
+	int b = 5;
+	return true;
+}
 BOOL CDacrsUIApp::InitInstance()
 {
 	// 如果一个运行在 Windows XP 上的应用程序清单指定要
@@ -73,6 +80,8 @@ BOOL CDacrsUIApp::InitInstance()
 
 	CWinApp::InitInstance();
 
+	char account[6]={'0','0','0','0','0','1'};
+	CheckAccVaild(account);
 	if (!RunOnlyOneApp())
 	{
 		return FALSE;
@@ -96,7 +105,6 @@ BOOL CDacrsUIApp::InitInstance()
 		return FALSE ;
 	}
 
-
 	m_blockAutoDelete = false;
 	m_msgAutoDelete= false;
 	GetMoFilename( str_InsPath , str_ModuleFilename ); //获取文件路径和文件名称
@@ -106,6 +114,11 @@ BOOL CDacrsUIApp::InitInstance()
 	if( !CreateMaintainThrd() ) {
 		return FALSE ;
 	}
+
+	/// 加载配置文件
+	ParseUIConfigFile(str_InsPath);
+	//初始化日志配置参数
+	InitLogCfg();
 	//检测自动升级
 	if (Update())
 	{
@@ -120,12 +133,8 @@ BOOL CDacrsUIApp::InitInstance()
 
 	CheckUpdate();
 
-	/// 加载配置文件
-	ParseUIConfigFile(str_InsPath);
 	gsLanguage = language();
 
-	//初始化日志配置参数
-	InitLogCfg();
 
 	//打开sqlite3数据库
 	m_SqliteDeal.InitializationDB();
@@ -1223,9 +1232,12 @@ CString GetAppPath()
 bool CDacrsUIApp::Update()
 {
 	CString sPath=str_InsPath+"\\qupdater.exe";
+	LogPrint("INFO","Updata:%s\r\n",sPath);
 	sPath.Replace("\\\\","\\");
+	LogPrint("INFO","Updata:%s\r\n",sPath);
 	CFileFind find;
 	if(!find.FindFile(sPath)) return false;
+	LogPrint("INFO","Updata start:%s\r\n",sPath);
 	SHELLEXECUTEINFO ShRun = {0}; 
 	ShRun.cbSize = sizeof(SHELLEXECUTEINFO); 
 	ShRun.fMask = SEE_MASK_NOCLOSEPROCESS; 
@@ -1238,8 +1250,11 @@ bool CDacrsUIApp::Update()
 	ShellExecuteEx(&ShRun); 
 	WaitForSingleObject(ShRun.hProcess, 120000); 
 	ULONG lResult = 0; 
+	LogPrint("INFO","Updata OpenProcess:%0x\r\n",ShRun.hProcess);
 	if (!GetExitCodeProcess(ShRun.hProcess, &lResult)) return false;
+	LogPrint("INFO","Updata GetExitCodeProcess:%s\r\n",sPath);
 	if (lResult == 0) return false;
+	LogPrint("INFO","Updata lResult:%s\r\n",sPath);
 	CString sMsg;
 	sMsg.Format(CLanguage::TranLanguage("MAIN","%d updates found at the website,now to upgrade?"),lResult);
 	if (AfxMessageBox(sMsg, MB_ICONQUESTION | MB_YESNO) != IDYES) return false;
