@@ -14,6 +14,7 @@ typedef struct _ListBox_Data
 	CStaticTrans   * pSta2; //¾²Ì¬¿ò1
 	CButtonEx * pBut2; //°´Å¥2
 	CString       pstr;
+	CString       pstr1;
 	_ListBox_Data()
 	{
 		pSta0 = NULL ;
@@ -54,7 +55,7 @@ public:
 	List_AppendData *GetAppendDataInfo(int iIndex);
 	void    SetIndexInage(int iIndex , UINT nButImage  );
 	void    SetIndexBackCol(int iIndex ,  int nline ,COLORREF   col);
-	void    SetIndexString(int iIndex , CString strSta0 ,CString strSta1 ,CString strSta2 ,CString strBut2 ,CString strSta3 );
+	void    SetIndexString(int iIndex , CString strSta0 ,CString strSta1 ,CString strSta2 ,CString strBut2 ,CString strSta3,CString strSta4 );
 	void    DeleteAllIndex();
 	void    DeleteIndex(int iIndex);
 	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);

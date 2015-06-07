@@ -316,7 +316,7 @@ void CUseListBox::SetIndexBackCol(int iIndex ,  int nline ,COLORREF   col)
 		}
 	}
 }
-void CUseListBox::SetIndexString(int iIndex , CString strSta0 ,CString strSta1 ,CString strSta2 ,CString strBut2 ,CString strSta3 )
+void CUseListBox::SetIndexString(int iIndex , CString strSta0 ,CString strSta1 ,CString strSta2 ,CString strBut2 ,CString strSta3,CString strSta4 )
 {
 	List_AppendData *pData = GetAppendDataInfo(iIndex) ;
 	if ( NULL != pData ) {
@@ -340,6 +340,7 @@ void CUseListBox::SetIndexString(int iIndex , CString strSta0 ,CString strSta1 ,
 		pData->pBut2->SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));*/
 
 		pData->pstr.Format(_T("%s") ,strSta3 ) ;
+		pData->pstr1.Format(_T("%s") ,strSta4 ) ;
 
 	}
 }
