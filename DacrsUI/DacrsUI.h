@@ -112,7 +112,7 @@ public:
 	void StartSeverProcess(const CStringA& strdir);
 	void CloseProcess(const string& exename);
 	void CheckUpdate();
-	bool Update();
+	int Update();
 	bool GetVersionFromServer(string& strVersion);
 	BOOL					m_bStartServer;
 	PROCESS_INFORMATION		sever_pi; 
