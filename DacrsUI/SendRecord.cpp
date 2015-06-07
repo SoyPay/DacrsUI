@@ -526,7 +526,7 @@ void  CSendRecord::OnShowPagePool(int page)
 			{
 				m_listBox.SetIndexString(i , sendaddr, acceptaddr,SendTime,_T("--"), result,_T("--"),reward,_T(""),_T("Î´½Ó"),const_it.tx_hash);
 			}else if(theApp.IsSyncBlock&&const_it.height !=0 && (500 + const_it.height)< theApp.blocktipheight){
-				reward.Format(_T("-%.4f"),const_it.amount);
+				reward.Format(_T("+%.4f"),const_it.amount);
 				m_listBox.SetIndexString(i , sendaddr, acceptaddr,SendTime,_T("--"), result,_T("--"),reward,_T(""),_T("³¬Ê±"),const_it.tx_hash);
 			}else
 			{
