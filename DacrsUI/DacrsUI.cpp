@@ -112,6 +112,9 @@ BOOL CDacrsUIApp::InitInstance()
 	InitLogCfg();
 	//¼ì²â×Ô¶¯Éý¼¶
 	int nResult = Update();
+	if(-1 == nResult) {
+		nResult = Update();
+	}
 	if (nResult == 1)
 	{
 		return TRUE;
