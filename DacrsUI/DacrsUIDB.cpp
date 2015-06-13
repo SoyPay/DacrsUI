@@ -256,27 +256,8 @@ void CDacrsUIApp::OpenBet(CString txhash)
 		return;
 	}
 
-	CString strCommand1;
-	strCommand1.Format(_T("%s %s"),_T("gethash") , pPoolItem.content );
-	CStringA strShowData1 ;
 
-	CSoyPayHelp::getInstance()->SendRpc(strCommand1,strShowData1);
-	int pos1 = strShowData1.Find("hash");
-	if ( pos1 < 0 ) return ;
-
-	Json::Reader reader1;  
-	Json::Value root1; 
-	if (!reader1.parse(strShowData1.GetString(), root1)) 
-		return  ;
-
-	CString strHash1 ;
-	strHash1.Format(_T("%s") ,  root1["hash"].asCString() ) ;
-
-	TRACE(_T("contect:%s\r\n"),pPoolItem.content);
-	TRACE(_T("open:%s\r\n"),strHash1);
-
-	CString randnumber,strShowData,txaccepthash;
-	randnumber.Format(_T("%s"),pPoolItem.content);
+	CString strShowData,txaccepthash;
 	txaccepthash.Format(_T("%s"),pPoolItem.relate_hash);
 	string sendhash = CSoyPayHelp::getInstance()->GetReverseHash(txhash.GetBuffer());
 	string accepthash = CSoyPayHelp::getInstance()->GetReverseHash(txaccepthash.GetBuffer());
@@ -364,23 +345,23 @@ void CDacrsUIApp::AcceptBetRecord(vector<unsigned char> acceptbet,uistruct::REVT
 	CString strTime;
 	strTime.Format("%04d-%02d-%02d %02d:%02d:%02d",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
 
-	CString strCommand,strShowData;
-	strCommand.Format(_T("%s %s"),_T("getaccountinfo") ,transcion.addr.c_str() );
-	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
+	//CString strCommand,strShowData;
+	//strCommand.Format(_T("%s %s"),_T("getaccountinfo") ,transcion.addr.c_str() );
+	//CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 
-	if (strShowData  ==_T("")){		
-		return;
-	}
-	Json::Reader reader;  
-	Json::Value root; 
-	if (!reader.parse(strShowData.GetString(), root)) {		
-		return;
-	}
-	CString desaddr = root["RegID"].asCString();
+	//if (strShowData  ==_T("")){		
+	//	return;
+	//}
+	//Json::Reader reader;  
+	//Json::Value root; 
+	//if (!reader.parse(strShowData.GetString(), root)) {		
+	//	return;
+	//}
+	//CString desaddr = root["RegID"].asCString();
 	CString strCond,strField;
 	strCond.Format(_T(" tx_hash='%s' "), SendTxhash.c_str());
 	
-	strField.AppendFormat(" right_addr = '%s' ,",desaddr );
+	//strField.AppendFormat(" right_addr = '%s' ,",desaddr );
 	strField.AppendFormat(_T("recv_time = '%s' ,height = %d ,state = %d ,relate_hash = '%s' ,guess_num = %d ") ,strTime ,transcion.confirmedHeight ,1 ,transcion.txhash ,(int)acceptcbet.data) ;
 
 	//更新数据
@@ -449,20 +430,39 @@ void CDacrsUIApp::UpdateAppRecord(string txdetail){
 	uistruct::REVTRANSACTION_t transcion;
 	if (transcion.JsonToStruct(txdetail))
 	{
-		CString strCommand,strShowData;
+		CString strCommand,strShowData,strShow;
 		strCommand.Format(_T("%s %s"),_T("getaccountinfo") ,theApp.m_betScritptid );
 		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 
-		if (strShowData  ==_T("")){		
+		strCommand.Format(_T("%s %s"),_T("getaccountinfo") ,theApp.m_redPacketScriptid );
+		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShow);
+		if (strShowData  ==_T("") && strShow == _T("")){		
 			return;
 		}
 		Json::Reader reader;  
 		Json::Value root; 
-		if (!reader.parse(strShowData.GetString(), root)) {		
-			return;
+
+		Json::Reader reader1;  
+		Json::Value root1; 
+	
+		CString DesAddrBet = _T("");
+		if (reader.parse(strShowData.GetString(), root)) {		
+
+			if (strShowData.Find("Address") >0)
+			{
+				DesAddrBet = root["Address"].asCString();
+			}
 		}
-		CString DesAddr = root["Address"].asCString();
-		if (!strcmp(transcion.desaddr.c_str(),DesAddr))
+		
+		CString DesAddrRedPacket  = _T("");
+		if (reader.parse(strShow.GetString(), root) ) {		
+			if (strShow.Find("Address") >0)
+			{
+				DesAddrRedPacket = root["Address"].asCString();
+			}
+		}
+		
+		if (!strcmp(transcion.desaddr.c_str(),DesAddrBet))
 		{
 			string nValue = transcion.Contract;
 			std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue);
@@ -475,6 +475,23 @@ void CDacrsUIApp::UpdateAppRecord(string txdetail){
 			}else if (vTemp[0] == TX_SENDBET)
 			{
 				SendBetRecord(vTemp,transcion);
+			}
+		}else  if (!strcmp(transcion.desaddr.c_str(),DesAddrRedPacket)){ //// 接龙红包	
+			string nValue = transcion.Contract;
+			std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue);
+			if (vTemp[0] == TX_COMM_SENDREDPACKET)
+			{
+				SendRePacketCommtRecord(vTemp,transcion);
+
+			}else if (vTemp[0] == TX_COMM_ACCEPTREDPACKET)
+			{
+				AcceptRePacketCommtRecord(vTemp,transcion);
+			}else if (vTemp[0] == TX_SPECIAL_SENDREDPACKET)
+			{
+				SendRePacketSpecailRecord(vTemp,transcion);
+			}else if (vTemp[0] == TX_SPECIAL_ACCEPTREDPACKET)
+			{
+				AcceptRePacketSpecailRecord(vTemp,transcion);
 			}
 		}
 	}
@@ -737,4 +754,236 @@ BOOL  CDacrsUIApp::UpdateP2pBetRecord()
 		}
 	}
 	return true;
+}
+
+void CDacrsUIApp::UpdateRedPacketPoolData()
+{
+	Json::Reader reader;  
+	Json::Value root; 
+	Json::Value root1;
+	m_SqliteDeal.ClearTableData(_T("t_quiz_pool"));
+	if(theApp.m_redPacketScriptid != _T(""))
+	{
+		CString strCommand;
+		strCommand.Format(_T("%s %s %s %s"),_T("getscriptvalidedata"),theApp.m_redPacketScriptid.GetBuffer(),_T("100"),_T("1"));
+		CStringA strShowData;		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
+		//m_AppID
+		if (strShowData.Find("key") < 0)
+		{
+			return;
+		}
+		if (!reader.parse(strShowData.GetString(), root)) 
+			return;
+		int size = root.size();
+		for ( int index =0; index < size; ++index )
+		{
+			CString txhash = root[index]["key"].asCString();
+			txhash = txhash.Right(64);
+			CString nValue = root[index]["value"].asCString();
+			uistruct::RED_DATA redPacket;
+			memset(&redPacket , 0 , sizeof(uistruct::RED_DATA));
+			std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue.GetString());
+
+			memcpy(&redPacket, &vTemp[0], sizeof(uistruct::RED_DATA));
+
+			std::vector<unsigned char> txTemp = CSoyPayHelp::getInstance()->ParseHex(txhash.GetString());
+			reverse(txTemp.begin(),txTemp.end());
+			string newTxhash =  CSoyPayHelp::getInstance()->HexStr(txTemp);
+
+			strCommand.Format(_T("%s %s"),_T("gettxdetail"),newTxhash.c_str());
+			CStringA strShowData;
+			CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
+			if (!reader.parse(strShowData.GetString(), root1)) 
+				return;
+			int confirheight =root1["confirmHeight"].asInt();
+
+			if(blocktipheight >=(confirheight+1440))
+				continue;
+
+			if (redPacket.dbdata.fover== 0x00)
+			{
+				std::vector<unsigned char> vSendid;
+				vSendid.assign(redPacket.dbdata.sendRedid,redPacket.dbdata.sendRedid+sizeof(redPacket.dbdata.sendRedid));
+				CString regid = CSoyPayHelp::getInstance()->GetNotFullRegID(vSendid);
+
+				double money = (redPacket.dbdata.amount*1.0)/COIN;
+
+				int packetype = redPacket.dbdata.type;
+				if (packetype == 3)
+				{
+					packetype = 2;
+				}
+				CString strSourceData;
+				strSourceData.Format(_T("'%s' , '%s','%lf','%d','%d','%s'") , newTxhash.c_str(),regid, money,redPacket.dbdata.number,packetype,redPacket.dbdata.message);
+				m_SqliteDeal.InsertTableItem(_T("t_red_packets_pool") ,strSourceData);
+			}
+		}
+	}
+}
+
+void CDacrsUIApp::AcceptRePacketCommtRecord(vector<unsigned char> acceptRedPacket,uistruct::REVTRANSACTION_t transcion){
+
+	if(acceptRedPacket.size()==0)
+		return;
+
+	CString strCond,strField;
+	strCond.Format(_T(" grab_hash='%s' "), transcion.txhash);
+	strField.AppendFormat(_T("grab_time=%d,confirm_height = %d") ,transcion.confirmedtime ,transcion.confirmedHeight ) ;
+
+	/// 查找数据库中是否存在此记录
+	int item = m_SqliteDeal.GetTableCountItem(_T("t_red_packets_grab"),strCond);
+	if (item != 0)
+	{
+		//更新数据
+		if ( !m_SqliteDeal.UpdateTableItem(_T("t_red_packets_grab") ,strField,strCond )) {
+			TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , transcion.txhash );
+		}
+	}
+}
+void CDacrsUIApp::SendRePacketCommtRecord(vector<unsigned char> sendRedPacket,uistruct::REVTRANSACTION_t transcion){
+	if(sendRedPacket.size()==0)
+		return;
+
+	CString strCond,strField;
+	strCond.Format(_T(" send_hash='%s' "), transcion.txhash);
+	strField.AppendFormat(_T("send_time=%d,confirm_height = %d") ,transcion.confirmedtime ,transcion.confirmedHeight ) ;
+
+	/// 查找数据库中是否存在此记录
+	int item = m_SqliteDeal.GetTableCountItem(_T("t_red_packets_send"),strCond);
+	if (item != 0)
+	{
+		//更新数据
+		if ( !m_SqliteDeal.UpdateTableItem(_T("t_red_packets_send") ,strField,strCond )) {
+			TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , transcion.txhash );
+		}
+	}
+}
+
+bool CDacrsUIApp::IsLuckyRedPacket(CString acceptregid,uistruct::RED_DATA redPacket)
+{
+	uistruct::USER_INFO userinfo = redPacket.userinfo[0];
+	for (int i =1;i <redPacket.dbdata.number;i++)
+	{
+		if (userinfo.amount < redPacket.userinfo[i].amount)
+		{
+			userinfo = redPacket.userinfo[i];
+		}
+	}
+	std::vector<unsigned char> vSendid;
+	vSendid.assign(userinfo.regid,userinfo.regid+sizeof(userinfo.regid));
+	string regid = CSoyPayHelp::getInstance()->HexStr(vSendid);
+	if (strcmp(regid.c_str(),acceptregid) == 0)
+	{
+		return true;
+	}
+	return false;
+}
+void CDacrsUIApp::AcceptRePacketSpecailRecord(vector<unsigned char> acceptRedPacket,uistruct::REVTRANSACTION_t transcion){
+	if(acceptRedPacket.size()==0)
+		return;
+
+	CString strCond,strField;
+	strCond.Format(_T(" grab_hash='%s' "), transcion.txhash);
+	strField.AppendFormat(_T("grab_time=%d,confirm_height = %d") ,transcion.confirmedtime ,transcion.confirmedHeight ) ;
+
+	/// 查找数据库中是否存在此记录
+	int item = m_SqliteDeal.GetTableCountItem(_T("t_red_packets_grab"),strCond);
+	if (item != 0)
+	{
+		ACCEPT_RED_PACKET acceptPacket;
+		memset(&acceptPacket , 0 , sizeof(ACCEPT_RED_PACKET));
+		memcpy(&acceptPacket, &acceptRedPacket[0], sizeof(ACCEPT_RED_PACKET));
+
+		vector<unsigned char>vHash;
+		vHash.assign(acceptPacket.redhash,acceptPacket.redhash+sizeof(acceptPacket.redhash));
+		reverse(vHash.begin(),vHash.end());
+		string SendHash = CSoyPayHelp::getInstance()->HexStr(vHash);
+
+		CString strCommand,strShowData;
+		strCommand.Format(_T("%s %s"),_T("gettxdetail") ,SendHash.c_str() );
+		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
+
+		if (strShowData == _T(""))
+		{
+			return;
+		}
+		Json::Reader reader; 
+		Json::Value root;
+		if (!reader.parse(strShowData.GetString(), root)) 
+			return;
+		int npos = strShowData.Find("confirmHeight");
+		int confirHeight = 1440;
+		if ( npos >= 0 ) { //
+			confirHeight += root["confirmHeight"].asInt() ;    //交易被确认的高度
+		}
+
+		CSoyPayHelp::getInstance()->revert((char*)&confirHeight);
+
+		char key[36];
+		memset(key,0,36);
+
+		memcpy(key,&confirHeight,sizeof(confirHeight));
+		memcpy(&key[4],acceptPacket.redhash,sizeof(acceptPacket.redhash));
+
+		vHash.assign(key,key+sizeof(key));
+		string strKeyHex = CSoyPayHelp::getInstance()->HexStr(vHash);
+		strCommand.Format(_T("%s %s %s"),_T("getscriptdata") ,m_redPacketScriptid,strKeyHex.c_str() );
+		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
+
+		if (strShowData == _T("") || strShowData.Find("value") < 0)
+			return;
+
+		if (!reader.parse(strShowData.GetString(), root)) 
+			return;
+
+		CString nValue = root["value"].asCString();
+		uistruct::RED_DATA redPacket;
+		memset(&redPacket , 0 , sizeof(uistruct::RED_DATA));
+		std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue.GetString());
+		memcpy(&redPacket, &vTemp[0], sizeof(uistruct::RED_DATA));
+
+		CString strCond;
+		strCond.Format(_T(" address = '%s' "), transcion.addr.c_str());
+		uistruct::LISTADDR_t addrsql;
+		int item = theApp.m_SqliteDeal.GetWalletAddressItem(strCond, &addrsql) ;
+
+		if (strlen(addrsql.address) == 0 )
+		{
+			return;
+		}
+		string regid = CSoyPayHelp::getInstance()->GetFullRegID(addrsql.RegID);
+		if (IsLuckyRedPacket(regid.c_str(),redPacket))
+		{
+			strCond.Format(_T(" grab_hash='%s' "), transcion.txhash);
+			strField.Format(_T("grab_time=%d,confirm_height = %d,lucky_fortune = 2") ,transcion.confirmedtime ,transcion.confirmedHeight ) ;
+			if ( !m_SqliteDeal.UpdateTableItem(_T("t_red_packets_grab") ,strField,strCond )) {
+				TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , transcion.txhash );
+			}
+		}
+		else{
+			//更新数据
+			strCond.Format(_T(" grab_hash='%s' "), transcion.txhash);
+			if ( !m_SqliteDeal.UpdateTableItem(_T("t_red_packets_grab") ,strField,strCond )) {
+				TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , transcion.txhash );
+			}
+		}
+	}
+}
+void CDacrsUIApp::SendRePacketSpecailRecord(vector<unsigned char> sendRedPacket,uistruct::REVTRANSACTION_t transcion){
+	if(sendRedPacket.size()==0)
+		return;
+
+	CString strCond,strField;
+	strCond.Format(_T(" send_hash='%s' "), transcion.txhash);
+	strField.AppendFormat(_T("send_time=%d,confirm_height = %d") ,transcion.confirmedtime ,transcion.confirmedHeight ) ;
+
+	/// 查找数据库中是否存在此记录
+	int item = m_SqliteDeal.GetTableCountItem(_T("t_red_packets_send"),strCond);
+	if (item != 0)
+	{
+		//更新数据
+		if ( !m_SqliteDeal.UpdateTableItem(_T("t_red_packets_send") ,strField,strCond )) {
+			TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , transcion.txhash );
+		}
+	}
 }

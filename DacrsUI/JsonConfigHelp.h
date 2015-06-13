@@ -8,6 +8,7 @@ public:
 	CString	strScriptBetid;
 	CString	strSrcriptDarkid;
 	CString	m_ipoScritptid;
+	CString m_redpacketScriptid;
 };
 class CMainCfg 
 {
@@ -71,7 +72,14 @@ public:
 	INT64	GetAppAmountnFee;
 	INT64   GetRechangeFee;
 };
-
+class CRedPacketCfg
+{
+public:
+	INT64	SendRedPacketCommFee;
+	INT64	AcceptRedPacketCommFee;
+	INT64	SendRedPacketSpecailFee;
+	INT64	AcceptRedPacketSpecailFee;
+};
 class CNetParamCfg
 {
 public:
@@ -110,6 +118,7 @@ public:
 	void GetScriptCfgData(CScriptCfg& scriptCfg);
 	void GetNetParamCfgData(CNetParamCfg& netparm);
 	void GetLogParamCfg(CLogParamCfg &logCfg);
+	void GetRedPacketCfgData(CRedPacketCfg &redpacketcfg);
 	//void AddItemString(const CString& strFilePath,CAutoComplete &m_comboxinput);
 private:
 	void ReadMainCfgData(const Json::Value& root);
@@ -120,6 +129,7 @@ private:
 	void ReadScriptCfgData(const Json::Value& root);
 	void ReadNetParmCfgData(const Json::Value& root);
 	void ReadLogParamCfg(const Json::Value &root);
+	void ReadRedPacketCfgData(const Json::Value &root);
 	//void AddString(const Json::Value& root,CAutoComplete &m_comboxinput);
 
 
@@ -133,5 +143,6 @@ private:
 	CScriptCfg      m_Scriptid;
 	CNetParamCfg    m_NetParam;
 	CLogParamCfg     m_LogParamCfg;
+	CRedPacketCfg    m_RedPacketCfg;
 };
 
