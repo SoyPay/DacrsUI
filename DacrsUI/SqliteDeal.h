@@ -23,6 +23,7 @@ public:
 public:
 	sqlite3**   GetDBConnect();
 	BOOL       InitializationDB();
+	BOOL       CreatRedPacketTable();
 	BOOL	   BeginDBTransaction();
 	BOOL	   CommitDbTransaction();
 	BOOL	   ExcuteSQL(sqlite3** ppDb, CallBackFunc pFunc, CString strSQL, void *pPara);
@@ -45,6 +46,12 @@ public:
 	BOOL       GetTransactionItem(const CString &strCond, uistruct::REVTRANSACTION_t *pTxItem);
 	BOOL       GetTransactionList(const CString &strCond, uistruct::TRANSRECORDLIST *pTxList);
 	BOOL       IsExistTx(CString tablename,CString filed ,CString txhash);
+	int        GetRedPacketSendItem(const CString &strCondition, uistruct::REDPACKETSEND_t * RedPackeSendRecord);
+	int        GetRedPacketSendRecordList(const CString &strCondition, uistruct::REDPACKETSENDLIST * RedPackeSendRecordList);
+	int        GetRedPacketGrabItem(const CString &strCondition, uistruct::REDPACKETGRAB_t * RedPackeGrabRecord);
+	int        GetRedPacketGrabRecordList(const CString &strCondition, uistruct::REDPACKETGRABLIST * RedPackeGrabRecordList);
+	int        GetRedPacketPoolItem(const CString &strCondition, uistruct::REDPACKETPOOL_t * RedPackePoolRecord);
+	int        GetRedPacketPoolRecordList(const CString &strCondition, uistruct::REDPACKETPOOLLIST * RedPackePoolRecordList);
 };
 
 

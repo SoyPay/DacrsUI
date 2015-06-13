@@ -156,6 +156,8 @@
     <None Include="res\dlg_balck_ground.bmp" />
     <None Include="res\dlg_bj.bmp" />
     <None Include="res\exit_bj.bmp" />
+    <None Include="res\grab_bt.bmp" />
+    <None Include="res\grab_red_packet.bmp" />
     <None Include="res\green_long_button.bmp" />
     <None Include="res\import_wallet.bmp" />
     <None Include="res\IPO.bmp" />
@@ -192,22 +194,32 @@
     <None Include="res\p2p_dlg.bmp" />
     <None Include="res\p2p_list.bmp" />
     <None Include="res\p2p_list_box_but.bmp" />
+    <None Include="res\p2p_red_packet.bmp" />
     <None Include="res\progress1.bmp" />
     <None Include="res\progress2.bmp" />
     <None Include="res\progress3.bmp" />
     <None Include="res\progress4.bmp" />
     <None Include="res\Receive.bmp" />
+    <None Include="res\redpacket_type.bmp" />
+    <None Include="res\red_fresh.bmp" />
+    <None Include="res\red_long_button .bmp" />
     <None Include="res\red_long_button.bmp" />
+    <None Include="res\red_packet_draw.bmp" />
+    <None Include="res\red_packet_pool.bmp" />
+    <None Include="res\red_recharge.bmp" />
     <None Include="res\rev_logo_1.bmp" />
     <None Include="res\rev_logo_2.bmp" />
     <None Include="res\rev_logo_3.bmp" />
     <None Include="res\rev_logo_4.bmp" />
+    <None Include="res\rp_next.bmp" />
+    <None Include="res\rp_up.bmp" />
     <None Include="res\Send.bmp" />
     <None Include="res\send_bet_record.bmp" />
     <None Include="res\send_logo_1.bmp" />
     <None Include="res\send_logo_2.bmp" />
     <None Include="res\send_logo_3.bmp" />
     <None Include="res\send_logo_4.bmp" />
+    <None Include="res\send_red_packet.bmp" />
     <None Include="res\send_ui_blackgruond.bmp" />
     <None Include="res\sig_0.bmp" />
     <None Include="res\sig_1.bmp" />
@@ -233,6 +245,7 @@
     <None Include="res\your_sister_4.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AcceptRedPacketRecord.h" />
     <ClInclude Include="AddApp.h" />
     <ClInclude Include="AddrBook.h" />
     <ClInclude Include="BetRecord.h" />
@@ -242,6 +255,8 @@
     <ClInclude Include="CeXDib.h" />
     <ClInclude Include="ChangeDPI.h" />
     <ClInclude Include="CommonStruct.h" />
+    <ClInclude Include="GrabCommRedPacket.h" />
+    <ClInclude Include="GrabSpecalRedPacket.h" />
     <ClInclude Include="GuessNum.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="NewSendAddr.h" />
@@ -249,8 +264,10 @@
     <ClInclude Include="OutGifDlg.h" />
     <ClInclude Include="ReCharge.h" />
     <ClInclude Include="RecordListBox.h" />
+    <ClInclude Include="RedPacketPoolListBox.h" />
     <ClInclude Include="SendListBox.h" />
     <ClInclude Include="SendRecord.h" />
+    <ClInclude Include="SendRedPacketRecord.h" />
     <ClInclude Include="TabCtrl.h" />
     <ClInclude Include="TxDetailDlg.h" />
     <ClInclude Include="UseListBox.h" />
@@ -305,6 +322,7 @@
     <ClInclude Include="Z:\dacrs_release\dacrs\src\tinyformat.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AcceptRedPacketRecord.cpp" />
     <ClCompile Include="AddApp.cpp" />
     <ClCompile Include="AddrBook.cpp" />
     <ClCompile Include="BetRecord.cpp" />
@@ -318,6 +336,8 @@
     <ClCompile Include="DacrsUIDB.cpp" />
     <ClCompile Include="DacrsUIDlg.cpp" />
     <ClCompile Include="GIFControl.cpp" />
+    <ClCompile Include="GrabCommRedPacket.cpp" />
+    <ClCompile Include="GrabSpecalRedPacket.cpp" />
     <ClCompile Include="GuessNum.cpp" />
     <ClCompile Include="HeaderCtrlCl.cpp" />
     <ClCompile Include="IndTitleBar.cpp" />
@@ -344,11 +364,13 @@
     <ClCompile Include="ReceiveDlg.cpp" />
     <ClCompile Include="ReCharge.cpp" />
     <ClCompile Include="RecordListBox.cpp" />
+    <ClCompile Include="RedPacketPoolListBox.cpp" />
     <ClCompile Include="RoundButton.cpp" />
     <ClCompile Include="RpcCmd.cpp" />
     <ClCompile Include="SendDlg.cpp" />
     <ClCompile Include="SendListBox.cpp" />
     <ClCompile Include="SendRecord.cpp" />
+    <ClCompile Include="SendRedPacketRecord.cpp" />
     <ClCompile Include="ShadeButtonST.cpp" />
     <ClCompile Include="SignAccountsDlg.cpp" />
     <ClCompile Include="SplashThread.cpp" />
