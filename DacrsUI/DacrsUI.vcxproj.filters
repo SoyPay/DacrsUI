@@ -175,6 +175,21 @@
     <ClCompile Include="SendListBox.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="SendRedPacketRecord.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="AcceptRedPacketRecord.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RedPacketPoolListBox.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GrabSpecalRedPacket.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GrabCommRedPacket.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BmpBtn.h">
@@ -385,6 +400,21 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="SendListBox.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SendRedPacketRecord.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="AcceptRedPacketRecord.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RedPacketPoolListBox.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GrabSpecalRedPacket.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GrabCommRedPacket.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -769,6 +799,42 @@
       <Filter>资源文件</Filter>
     </None>
     <None Include="res\out_buttom.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\p2p_red_packet.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\red_long_button .bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\grab_red_packet.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\send_red_packet.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\red_packet_draw.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\redpacket_type.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\red_packet_pool.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\rp_up.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\rp_next.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\red_fresh.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\grab_bt.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\red_recharge.bmp">
       <Filter>资源文件</Filter>
     </None>
   </ItemGroup>

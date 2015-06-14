@@ -565,7 +565,16 @@ template<typename T>
 inline std::string CSoyPayHelp::HexStr(const T& vch, bool fSpaces) {
 	return HexStr(vch.begin(), vch.end(), fSpaces);
 }
+void CSoyPayHelp::revert(char*pchar)
+{
 
+	char temp = pchar[0];
+	(pchar)[0] = (pchar)[3];
+	(pchar)[3] = temp;
+	temp =(pchar)[1];
+	(pchar)[1] = (pchar)[2];
+	(pchar)[2] = temp;
+}
 vector<unsigned char> CSoyPayHelp::ParseHex(const char* psz) {
 	vector<unsigned char> vch;
 	while (true) {
@@ -1094,4 +1103,39 @@ double CSoyPayHelp::GetAccountBalance(CString addr){
 	}
 	double nmoney = (ret*1.0/COIN);
 	return nmoney;
+}
+
+
+string CRedPacketHelp::PacketSendCommContract(int64_t nMoney,int num,const string& message){
+
+	m_sendContract.money = nMoney;
+	m_sendContract.number = num;
+	m_sendContract.nType = TX_COMM_SENDREDPACKET;
+	memcpy(m_sendContract.message,message.c_str(),sizeof(m_sendContract.message));
+
+	return CSoyPayHelp::getInstance()->GetHexData((const char*)&m_sendContract,sizeof(RED_PACKET));
+
+}
+string CRedPacketHelp::PacketAcceptCommContract(const string& strSendHash){
+
+	m_acceptContract.nType = TX_COMM_ACCEPTREDPACKET;
+	memcpy(m_acceptContract.redhash,strSendHash.c_str(),HASH_SIZE);
+
+	return CSoyPayHelp::getInstance()->GetHexData((const char*)&m_acceptContract,sizeof(ACCEPT_RED_PACKET));
+}
+string CRedPacketHelp::PacketSendSecpailContract(int64_t nMoney,int num,const string& message){
+
+	m_sendContract.money = nMoney;
+	m_sendContract.number = num;
+	m_sendContract.nType = TX_SPECIAL_SENDREDPACKET;
+	memcpy(m_sendContract.message,message.c_str(),sizeof(m_sendContract.message));
+
+	return CSoyPayHelp::getInstance()->GetHexData((const char*)&m_sendContract,sizeof(RED_PACKET));
+}
+string CRedPacketHelp::PacketAcceptSecpailContract(const string& strSendHash){
+
+	m_acceptContract.nType = TX_SPECIAL_ACCEPTREDPACKET;
+	memcpy(m_acceptContract.redhash,strSendHash.c_str(),HASH_SIZE);
+
+	return CSoyPayHelp::getInstance()->GetHexData((const char*)&m_acceptContract,sizeof(ACCEPT_RED_PACKET));
 }

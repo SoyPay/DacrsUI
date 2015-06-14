@@ -162,6 +162,7 @@ void CUseListBox::DeleteIndex(int iIndex)
 	if ( NULL != pData ) {
 		delete pData->pSta0;
 		pData->pSta0 = NULL ;
+
 		delete pData->pBut2;
 		pData->pBut2 = NULL ;
 
@@ -246,6 +247,7 @@ void CUseListBox::OnDestroy()
 		if ( NULL != pData ) {
 			delete pData->pSta0;
 			pData->pSta0 = NULL ;
+
 			delete pData->pBut2;
 			pData->pBut2 = NULL ;
 
