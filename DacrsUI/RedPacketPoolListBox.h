@@ -6,43 +6,44 @@ using namespace std;
 
 
 
-typedef struct _ListBox_Data 
+typedef struct _RedListBox_Data 
 {
 	int         nItem; //ÐÐÊý
 	CStaticTrans * pSta0; //°´Å¥1
 	CStaticTrans   * pSta1; //¾²Ì¬¿ò1
 	CStaticTrans   * pSta2; //¾²Ì¬¿ò1
-	CButtonEx * pBut2; //°´Å¥2
-	CString       pstr;
-	CString       pstr1;
-	_ListBox_Data()
+	CStaticTrans   * pSta3; //¾²Ì¬¿ò1
+	CStaticTrans   * pSta4; //¾²Ì¬¿ò1
+	CStaticTrans   * pSta5; //¾²Ì¬¿ò1
+
+	_RedListBox_Data()
 	{
 		pSta0 = NULL ;
-		pBut2 = NULL ;
 		pSta1 = NULL ;
-		pSta2 =  NULL ;
-		pstr = _T("");
-		pstr1 = _T("");
+		pSta2 = NULL ;
+		pSta3 = NULL ;
+		pSta4 = NULL ;
+		pSta5 = NULL ;
 	}
-} List_AppendData;
+} List_RedAppendData;
 
-typedef map<int,List_AppendData*>button_map;
+typedef map<int,List_RedAppendData*>Redbutton_map;
 
 // CUseListBox
 
-class CUseListBox : public CListBox
+class CRedPacketPoolListBox : public CListBox
 {
-	DECLARE_DYNAMIC(CUseListBox)
+	DECLARE_DYNAMIC(CRedPacketPoolListBox)
 
 public:
-	CUseListBox();
-	virtual ~CUseListBox();
+	CRedPacketPoolListBox();
+	virtual ~CRedPacketPoolListBox();
 public:
 
 protected:
 	DECLARE_MESSAGE_MAP()	
 public:
-	button_map m_mButton;
+	Redbutton_map m_mButton;
 	UINT m_uID;
 	void updateListBoxButtonPos();
 	void InvalidateListBox();
@@ -54,15 +55,12 @@ public:
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 public:
-	List_AppendData *GetAppendDataInfo(int iIndex);
+	List_RedAppendData *GetAppendDataInfo(int iIndex);
 	void    SetIndexInage(int iIndex , UINT nButImage  );
 	void    SetIndexBackCol(int iIndex ,  int nline ,COLORREF   col);
-	void    SetIndexString(int iIndex , CString strSta0 ,CString strSta1 ,CString strSta2 ,CString strBut2 ,CString strSta3,CString strSta4 );
+	void   SetIndexString(int iIndex , CString strSta0 ,CString strSta1 ,CString strSta2 ,CString strSta3 ,CString strSta4,CString strSta5);
 	void    DeleteAllIndex();
 	void    DeleteIndex(int iIndex);
-	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
-	afx_msg void OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
-	afx_msg void OnLbnSelchange();
 public:
 	  CRect m_rectListBox;      // ÁÐ±íÏîµ½»æÖÆRect
 	  afx_msg void OnPaint();

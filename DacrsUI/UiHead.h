@@ -29,7 +29,7 @@ using namespace std;
 #define MSG_USER_STARTPROCESS_UI			WM_USER+114    //更新启动的界面
 #define MSG_USER_UPDATA_UI			        WM_USER+115   //更新到接受页面
 #define MSG_USER_P2P_UI			            WM_USER+116	    //更新到P2P界面
-
+#define MSG_USER_REDPACKET_UI			    WM_USER+117	    //更新到P2P界面
 
 
 #define MSG_USER_QUITTHREAD			        WM_USER+200	    //退出线程
@@ -465,6 +465,172 @@ namespace uistruct {
 		}
 	}ADDRBOOK_t;
 	typedef std::vector<ADDRBOOK_t> ADDRBOOKLIST ;
+
+	typedef struct REDPACKETSEND{   
+		CString    send_hash;   //address
+		int        send_time;   //RegID
+		double     amount  ;				//金额
+		int        packet_num;
+		CString    send_acc_id;
+		int        confirm_height;
+		int        packet_type;       //1:普通红包  2:接龙红包
+		REDPACKETSEND(){
+			send_hash =_T("");   //address
+			send_time = 0;;   //RegID
+			amount = 0.0  ;				//金额
+			packet_num = 0;
+			send_acc_id = _T("");
+			confirm_height = 0;
+			packet_type = 0;  
+		}
+		string ToJson(){
+			Json::Value root;
+			root["send_hash"] = send_hash.GetString();
+			root["send_time"] = send_time;
+			root["amount"] = amount;
+			root["packet_num"] = packet_num;
+			root["send_acc_id"] = send_acc_id.GetString();
+			root["confirm_height"] = confirm_height;
+			root["packet_type"] = packet_type;
+			return root.toStyledString();
+		}
+		bool JsonToStruct(string json){
+			Json::Reader reader;  
+			Json::Value root; 
+			if (!reader.parse(json, root)) 
+				return false ;
+			this->send_hash = root["send_hash"].asCString();
+			this->send_time = root["send_time"].asInt();
+			this->amount = root["amount"].asDouble();
+			this->packet_num = root["packet_num"].asInt();
+			this->send_acc_id = root["send_acc_id"].asCString();
+			this->confirm_height = root["confirm_height"].asInt();
+			this->packet_type = root["packet_type"].asInt();
+			return true;
+		}
+	}REDPACKETSEND_t;
+	typedef std::vector<REDPACKETSEND_t> REDPACKETSENDLIST ;
+
+	typedef struct REDPACKETGRAB{   
+		CString    send_hash;   //address
+		CString    grab_hash;
+		int        grab_time;   //RegID
+		double     lucky_amount  ;				//金额
+		CString    send_acc_id;
+		CString    grab_acct_id;
+		int        confirm_height;
+		int        packet_type;       //1:普通红包  2:接龙红包
+		int        lucky_fortune;     /// 1 普通 2 运气王
+		double     total_amount;
+		int         total_num;
+		REDPACKETGRAB(){
+			send_hash =_T("");   //address
+			grab_hash = _T("");
+			grab_time = 0;;   //RegID
+			lucky_amount = 0.0  ;				//金额
+			send_acc_id = _T("");
+			confirm_height = 0;
+			packet_type = 0;  
+			total_amount = 0.0;
+			total_num = 0;
+		}
+		string ToJson(){
+			Json::Value root;
+			root["send_hash"] = send_hash.GetString();
+			root["grab_hash"] = grab_hash.GetString();
+			root["grab_time"] = grab_time;
+			root["lucky_amount"] = lucky_amount;
+			root["send_acc_id"] = send_acc_id.GetString();
+			root["grab_acct_id"] = grab_acct_id.GetString();
+			root["confirm_height"] = confirm_height;
+			root["packet_type"] = packet_type;
+			root["lucky_fortune"] = lucky_fortune;
+			root["total_amount"] = total_amount;
+			root["total_num"] = total_num;
+			return root.toStyledString();
+		}
+		bool JsonToStruct(string json){
+			Json::Reader reader;  
+			Json::Value root; 
+			if (!reader.parse(json, root)) 
+				return false ;
+			this->send_hash = root["label"].asCString();
+			this->grab_hash = root["grab_hash"].asCString();
+			this->grab_time = root["address"].asInt();
+			this->lucky_amount = root["lucky_amount"].asDouble();
+			this->send_acc_id = root["send_acc_id"].asCString();
+			this->grab_acct_id = root["grab_acct_id"].asCString();
+			this->confirm_height = root["confirm_height"].asInt();
+			this->packet_type = root["packet_type"].asInt();
+			this->lucky_fortune = root["lucky_fortune"].asInt();
+			this->total_amount = root["total_amount"].asDouble();
+			this->total_num = root["total_amount"].asInt();
+			return true;
+		}
+	}REDPACKETGRAB_t;
+	typedef std::vector<REDPACKETGRAB_t> REDPACKETGRABLIST ;
+
+	typedef struct REDPACKETPOOL{   
+		CString    send_hash;   //address
+		double     total_amount  ;				//金额
+		CString    send_acc_id;
+		int        packets_num;
+		int        packet_type;       //1:普通红包  2:接龙红包
+		CString    message;
+		REDPACKETPOOL(){
+			send_hash =_T("");   //address
+			total_amount = 0.0  ;				//金额
+			send_acc_id = _T("");
+			packet_type = 0;  
+		}
+		string ToJson(){
+			Json::Value root;
+			root["send_hash"] = send_hash.GetString();
+			root["total_amount"] = total_amount;
+			root["send_acc_id"] = send_acc_id.GetString();
+			root["packets_num"] = packets_num;
+			root["packet_type"] = packet_type;
+			root["message"] = message.GetString();
+			return root.toStyledString();
+		}
+		bool JsonToStruct(string json){
+			Json::Reader reader;  
+			Json::Value root; 
+			if (!reader.parse(json, root)) 
+				return false ;
+			this->send_hash = root["label"].asCString();
+			this->total_amount = root["address"].asDouble();
+			this->send_acc_id = root["send_acc_id"].asCString();
+			this->packets_num = root["packets_num"].asInt();
+			this->packet_type = root["packet_type"].asInt();
+			this->message = root["message"].asCString();
+			return true;
+		}
+	}REDPACKETPOOL_t;
+	typedef std::vector<REDPACKETPOOL_t> REDPACKETPOOLLIST ;
+
+	typedef struct {
+		char          sendRedid[6] ;        //// 发起钱包的id
+		INT64         amount;                     //发起钱包的金额
+		short           number;                       /// 发起钱包的个数
+		char          type;                        /// 红包类型
+		int          timeout;                       //红包超时时间
+		bool          fover;                        // 表示是否抢完
+		unsigned char message[200];                 //广告语
+		short           takennum;                       // 表示第几个红包
+	}RED_PACKETDB;
+
+	typedef struct {
+		char regid[6];
+		INT64 amount;
+	}USER_INFO;
+
+	#define MAX_COUNT       100
+	typedef struct {
+		RED_PACKETDB dbdata;
+		USER_INFO userinfo[MAX_COUNT];
+	}RED_DATA;
+	typedef std::vector<RED_DATA> RED_DATALIST ;
 }
 #pragma pack(pop)
 //UiFun

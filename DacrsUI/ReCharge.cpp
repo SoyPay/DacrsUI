@@ -11,10 +11,13 @@
 
 IMPLEMENT_DYNAMIC(CReCharge, CDialogEx)
 
-CReCharge::CReCharge(CWnd* pParent /*=NULL*/)
+CReCharge::CReCharge(CWnd* pParent /*=NULL*/,CString text,CString strsms,CString strhead)
 	: CDialogEx(CReCharge::IDD, pParent)
 {
 	m_pBmp = NULL ;
+	m_strText = text;
+	m_strSms = strsms;
+	m_strHead = strhead;
 }
 
 CReCharge::~CReCharge()
@@ -50,14 +53,26 @@ END_MESSAGE_MAP()
 void CReCharge::OnBnClickedOk()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	CString strTxMoney;
-	GetDlgItem(IDC_EDIT_MONEY)->GetWindowText(strTxMoney) ;
-	if (strTxMoney == _T(""))
+	if (m_strText == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("金额不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
-		return ;
+		CString strTxMoney;
+		GetDlgItem(IDC_EDIT_MONEY)->GetWindowText(strTxMoney) ;
+		if (strTxMoney == _T(""))
+		{
+			::MessageBox( this->GetSafeHwnd() ,_T("金额不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+			return ;
+		}
+		theApp.m_strAddress = strTxMoney;
+	}else{
+		CString strTxmessage;
+		GetDlgItem(IDC_EDIT_MONEY)->GetWindowText(strTxmessage) ;
+		if (strTxmessage.GetLength() >200)
+		{
+			::MessageBox( this->GetSafeHwnd() ,_T("广告语不能超过两百个字节") , _T("提示") , MB_ICONINFORMATION ) ;
+			return ;
+		}
+		theApp.m_strAddress = strTxmessage;
 	}
-	theApp.m_strAddress = strTxMoney;
 	CDialogEx::OnOK();
 }
 
@@ -77,8 +92,24 @@ BOOL CReCharge::OnInitDialog()
 	// TODO:  在此添加额外的初始化
 	m_Text.SetFont(110, _T("微软雅黑"));				//设置显示字体和大小
 	m_Text.SetTextColor(RGB(255,255,255));	    //字体颜色
-	m_Text.SetWindowText(_T("充值")) ;
+	if (m_strText == _T(""))
+	{
+		m_Text.SetWindowText(_T("充值")) ;
+	}else{
+		m_Text.SetWindowText(m_strText) ;
+	}
+
+	
 	m_Text.SetWindowPos( NULL , 3 , 3 , 200, 20  ,SWP_SHOWWINDOW ) ; 
+	if (m_strHead != _T(""))
+	{
+		((CStatic*)GetDlgItem(IDC_STATIC_DW))->SetWindowText(m_strHead);
+	}
+
+	if (m_strSms != _T(""))
+	{
+		((CStatic*)GetDlgItem(IDC_STATIC))->SetWindowText(m_strSms);
+	}
 
 	m_rBtnClose.SetBitmaps( IDB_BITMAP_CLOSE , RGB(255, 255, 0) , IDB_BITMAP_CLOSE2 , RGB(255, 255, 255) );
 	m_rBtnClose.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
