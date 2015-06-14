@@ -130,7 +130,7 @@ BOOL   CSqliteDeal::CreatRedPacketTable()
 	strCondition = _T("type='table' and name='t_red_packets_send'");
 	if(!GetTableCountItem(strTableName, strCondition))
 	{
-		CString createSQL(_T("CREATE TABLE t_red_packets_send(send_hash TEXT,send_time INT ,total_amount double,packets_num  INT,send_acct_id TEXT, confirm_height INT,packet_type INT)"));
+		CString createSQL(_T("CREATE TABLE t_red_packets_send(send_hash TEXT PRIMARY KEY,send_time INT ,total_amount double,packets_num  INT,send_acct_id TEXT, confirm_height INT,packet_type INT)"));
 		if(!ExcuteSQL(pDBConn, NULL, createSQL, NULL))
 		{
 			LogPrint("INFO", "Create table t_p2p_quiz failed\n");
@@ -141,7 +141,7 @@ BOOL   CSqliteDeal::CreatRedPacketTable()
 	strCondition = _T("type='table' and name='t_red_packets_grab'");
 	if(!GetTableCountItem(strTableName, strCondition))
 	{
-		CString createSQL(_T("CREATE TABLE t_red_packets_grab(send_hash TEXT,grab_hash TEXT,grab_time INT,lucky_amount double,send_acct_id TEXT,grab_acct_id TEXT,confirm_height INT,packet_type INT,lucky_fortune INT,total_amount double,packets_num  INT)"));
+		CString createSQL(_T("CREATE TABLE t_red_packets_grab(send_hash TEXT,grab_hash TEXT PRIMARY KEY,grab_time INT,lucky_amount double,send_acct_id TEXT,grab_acct_id TEXT,confirm_height INT,packet_type INT,lucky_fortune INT,total_amount double,packets_num  INT)"));
 		if(!ExcuteSQL(pDBConn, NULL, createSQL, NULL))
 		{
 			LogPrint("INFO", "Create table t_p2p_quiz failed\n");
@@ -152,7 +152,7 @@ BOOL   CSqliteDeal::CreatRedPacketTable()
 	strCondition = _T("type='table' and name='t_red_packets_pool'");
 	if(!GetTableCountItem(strTableName, strCondition))
 	{
-		CString createSQL(_T("CREATE TABLE t_red_packets_pool(send_hash TEXT,send_acct_id TEXT,total_amount INT,packets_num INT,packet_type INT, message TEXT )"));
+		CString createSQL(_T("CREATE TABLE t_red_packets_pool(send_hash TEXT PRIMARY KEY,send_acct_id TEXT,total_amount INT,packets_num INT,packet_type INT, message TEXT )"));
 		if(!ExcuteSQL(pDBConn, NULL, createSQL, NULL))
 		{
 			LogPrint("INFO", "Create table t_p2p_quiz failed\n");

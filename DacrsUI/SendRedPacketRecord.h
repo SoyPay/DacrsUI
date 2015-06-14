@@ -38,11 +38,13 @@ private:
 	int                              m_pagecount;
 	int                              m_curpage;
 	int                              m_pagesize;
-	uistruct::REDPACKETSENDLIST       m_SendRedPacketList;;
+	uistruct::REDPACKETSENDLIST       m_SendRedPacketList;
+	HBRUSH                          m_hbrush;
 public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	void      OnShowPagePool(int page);
 	afx_msg void OnBnClickedButtonUp();
 	afx_msg void OnBnClickedButtonNext();
 	afx_msg void OnLbnDblclkListBox();
+	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 };
