@@ -56,6 +56,7 @@ public:
 public:
 	List_AppendData *GetAppendDataInfo(int iIndex);
 	void    SetIndexInage(int iIndex , UINT nButImage  );
+	void    SetotherIndexInage(int iIndex , UINT nButImage  );
 	void    SetIndexBackCol(int iIndex ,  int nline ,COLORREF   col);
 	void    SetIndexString(int iIndex , CString strSta0 ,CString strSta1 ,CString strSta2 ,CString strBut2 ,CString strSta3,CString strSta4 );
 	void    DeleteAllIndex();

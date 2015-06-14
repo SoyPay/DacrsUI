@@ -224,7 +224,7 @@ void  CGrabSpecalRedPacket::OnShowPagePool(int page)
 			strShow.Format(_T(("½ÓÁúºì°ü")));
 		}
 		m_BonusListBox.InsertStr(i,this->GetSafeHwnd());
-		m_BonusListBox.SetIndexInage(i , IDB_BITMAP_GRAB_RED);
+		m_BonusListBox.SetotherIndexInage(i , IDB_BITMAP_GRAB_RED);
 		m_BonusListBox.SetIndexString(i , line,const_it.send_acc_id, _T("ÇÀ"), money, const_it.send_hash,strmoney);
 		//m_BonusListBox.SetIndexInage(i , IDB_BITMAP_P2P_LISTBOX_BUT);
 		//m_BonusListBox.SetIndexString(i , line,const_it.send_acc_id, money,strShow,_T("ÇÀ"),const_it.send_hash,strmoney);
