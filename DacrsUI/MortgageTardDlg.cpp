@@ -294,8 +294,6 @@ BOOL CMortgageTardDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, U
 		m_poopDialog.push_back(&m_GrabCommRedPacket) ;
 		m_poopDialog.push_back(&m_GrabSpecailRedPacket) ;
 		OnSelectShowPoolWin(0);
-		OnSelectShowPoolWin(1);
-		OnSelectShowPoolWin(0);
 
 		AddListaddrDataBox();
 		//OnListPool();
