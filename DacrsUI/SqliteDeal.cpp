@@ -1168,7 +1168,7 @@ int CallGetRedPackeGrabRecordItem(void *para, int n_column, char ** column_value
 	strValue.Format(_T("%s") , column_value[9] ) ;
 	RedPacketRecord->total_amount = strtod(strValue,NULL);
 
-	strValue.Format(_T("%s") , column_value[9] ) ;
+	strValue.Format(_T("%s") , column_value[10] ) ;
 	RedPacketRecord->total_num = strtod(strValue,NULL);
 
 	return 0;
