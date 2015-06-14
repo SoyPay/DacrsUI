@@ -49,6 +49,7 @@ BEGIN_MESSAGE_MAP(CGrabCommRedPacket, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_NEXT, &CGrabCommRedPacket::OnBnClickedButtonNext)
 	ON_MESSAGE( WM_BN_CLICK, &CGrabCommRedPacket::onBnCLick)
 	ON_WM_CTLCOLOR()
+	ON_WM_CTLCOLOR()
 END_MESSAGE_MAP()
 
 
@@ -133,7 +134,8 @@ BOOL CGrabCommRedPacket::Create(LPCTSTR lpszTemplateName, CWnd* pParentWnd)
 
 		GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(_T("共:0"));
 	}
-	m_BonusListBox.ShowWindow(SW_HIDE);
+	/// listbox 背景颜色
+	m_hbrush = CreateSolidBrush(RGB(255,236,229));
 	return bRes;
 }
 
@@ -369,7 +371,7 @@ void   CGrabCommRedPacket::AcceptRedPacketComm(CString sendhash,uistruct::REDPAC
 		CString txhash = root["hash"].asCString();
 		//插入到数据库
 		CString strSourceData;
-		strSourceData.Format(_T("'%s','%s','%d','%lf' , '%s' ,'%s' , '%d' , '%d','%d','%lf,'%d''") , \
+		strSourceData.Format(_T("'%s','%s','%d','%lf' , '%s' ,'%s' , '%d' , '%d','%d','%lf','%d'") , \
 			pPoolList.send_hash ,txhash , 0 ,0.0 ,  pPoolList.send_acc_id ,addr ,0,1,0,pPoolList.total_amount,pPoolList.packets_num);
 
 		uistruct::DATABASEINFO_t   pDatabase;
@@ -458,4 +460,22 @@ void   CGrabCommRedPacket::SetTxt(CString addr,CString strwallet)
 {
 	m_addr = addr;
 	m_walletmoney = strwallet;
+}
+
+
+HBRUSH CGrabCommRedPacket::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
+{
+
+	// TODO:  在此更改 DC 的任何特性
+
+	// TODO:  如果默认的不是所需画笔，则返回另一个画笔
+	if (nCtlColor== CTLCOLOR_LISTBOX)
+	{
+		return m_hbrush; 
+	} 
+	else
+	{
+		return  CDialogEx::OnCtlColor(pDC, pWnd, nCtlColor);
+	}
+
 }

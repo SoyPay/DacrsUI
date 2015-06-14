@@ -47,6 +47,7 @@ BEGIN_MESSAGE_MAP(CSendRedPacketRecord, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_UP, &CSendRedPacketRecord::OnBnClickedButtonUp)
 	ON_BN_CLICKED(IDC_BUTTON_NEXT, &CSendRedPacketRecord::OnBnClickedButtonNext)
 	ON_LBN_DBLCLK(IDC_LIST_BOX, &CSendRedPacketRecord::OnLbnDblclkListBox)
+	ON_WM_CTLCOLOR()
 END_MESSAGE_MAP()
 
 
@@ -161,6 +162,10 @@ BOOL CSendRedPacketRecord::Create(LPCTSTR lpszTemplateName, CWnd* pParentWnd)
 
 		GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(_T("共:0"));
 	}
+
+	/// listbox 背景颜色
+	m_hbrush = CreateSolidBrush(RGB(255,252,247));
+
 	return bRes ;
 }
 
@@ -336,5 +341,21 @@ void CSendRedPacketRecord::OnLbnDblclkListBox()
 
 		}
 		::MessageBox( this->GetSafeHwnd() ,showdata, _T("抢红包列表") , MB_ICONINFORMATION ) ;
+	}
+}
+
+
+HBRUSH CSendRedPacketRecord::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
+{
+	// TODO:  在此更改 DC 的任何特性
+
+	// TODO:  如果默认的不是所需画笔，则返回另一个画笔
+	if (nCtlColor== CTLCOLOR_LISTBOX)
+	{
+		return m_hbrush; 
+	} 
+	else
+	{
+		return  CDialogEx::OnCtlColor(pDC, pWnd, nCtlColor);
 	}
 }

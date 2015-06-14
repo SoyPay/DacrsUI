@@ -75,6 +75,7 @@ BEGIN_MESSAGE_MAP(CMortgageTardDlg, CDialogBar)
 	ON_BN_CLICKED(IDC_BUTTON_REFRESH_2, &CMortgageTardDlg::OnBnClickedButtonRefresh2)
 	ON_BN_CLICKED(IDC_BUTTON_SPECAILRED, &CMortgageTardDlg::OnBnClickedButtonSpecailred)
 	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB1, &CMortgageTardDlg::OnTcnSelchangeTab1)
+	ON_WM_CTLCOLOR()
 END_MESSAGE_MAP()
 
 
@@ -287,7 +288,7 @@ BOOL CMortgageTardDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, U
 		m_tabpool.GetClientRect(rc1);
 		rc1.bottom -= 1;
 		rc1.left += 1;
-		rc1.top += 33;
+		rc1.top += 30;
 		rc1.right -= 2;
 		m_GrabCommRedPacket.MoveWindow(&rc1);
 		m_GrabSpecailRedPacket.MoveWindow(&rc1);
@@ -296,6 +297,7 @@ BOOL CMortgageTardDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, U
 		OnSelectShowPoolWin(0);
 
 		AddListaddrDataBox();
+
 		//OnListPool();
 		theApp.SubscribeMsg( theApp.GetMtHthrdId() , GetSafeHwnd() , MSG_USER_REDPACKET_UI ) ;
 	}
@@ -1555,4 +1557,15 @@ void CMortgageTardDlg::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult)
 	// TODO: 在此添加控件通知处理程序代码
 	OnSelectShowPoolWin(m_tabpool.GetCurSel());
 	*pResult = 0;
+}
+
+
+HBRUSH CMortgageTardDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
+{
+	HBRUSH hbr = CDialogBar::OnCtlColor(pDC, pWnd, nCtlColor);
+
+	// TODO:  在此更改 DC 的任何特性
+
+	// TODO:  如果默认的不是所需画笔，则返回另一个画笔
+	return hbr;
 }
