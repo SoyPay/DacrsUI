@@ -213,7 +213,7 @@ void  CAcceptRedPacketRecord::OnShowPagePool(int page)
 	{
 		uistruct::REDPACKETGRAB_t const_it = m_AcceptRedPacketList.at(k);
 		CString amount,Sendaddr,address,luckeMoney,strnum,type;
-		Sendaddr.Format(_T("%s"),const_it.grab_acct_id);
+		Sendaddr.Format(_T("%s"),const_it.send_acc_id);
 		amount.Format(_T("%.4f"),const_it.total_amount);
 
 		if (const_it.packet_type == 1)
