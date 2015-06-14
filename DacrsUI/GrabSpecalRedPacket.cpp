@@ -280,7 +280,7 @@ LRESULT CGrabSpecalRedPacket::onBnCLick( WPARAM wParam, LPARAM lParam )
 		theApp.m_SqliteDeal.GetRedPacketPoolItem(conditon, &pPoolList);
 		if (pPoolList.send_hash.GetLength() != 0)
 		{
-			if (pPoolList.packet_type == 1)
+			if (pPoolList.packet_type == 2)
 			{
 				AcceptRedPackeSpecail(pPoolList.send_hash,pPoolList);
 			}

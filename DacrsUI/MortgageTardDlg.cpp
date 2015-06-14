@@ -649,10 +649,11 @@ void CMortgageTardDlg::OnCbnSelchangeComboAddres()
 			nMoney = root["FreeValues"].asInt64() ;
 		}
 		double money = (nMoney*1.0/COIN);
-		strShowData.Format(_T("%.4f"),money);
+		CString strText= _T("");
+		strText.Format(_T("%.4f"),money);
 
 		//// Ó¦ÓÃÕË»§Óà¶î
-		((CStatic*)GetDlgItem(IDC_STATIC_BALANCE))->SetWindowText(strShowData);
+		((CStatic*)GetDlgItem(IDC_STATIC_BALANCE))->SetWindowText(strText);
 
 		
 		pos = strShowData.Find("vFreezedFund");
@@ -1538,7 +1539,7 @@ bool  CMortgageTardDlg::IsAcceptRedPacket(CString account,uistruct::REDPACKETPOO
 }
 void CMortgageTardDlg::SetGrabParam()
 {
-	CString walletaddr;
+	CString walletaddr,balance;
 	((CStatic*)GetDlgItem(IDC_STATIC_MONEY4))->GetWindowText(walletaddr);
 	CString addr;
 	int sel = m_addrbook.GetCurSel();
@@ -1549,6 +1550,8 @@ void CMortgageTardDlg::SetGrabParam()
 	m_addrbook.GetLBText(sel,addr);
 
 	m_GrabCommRedPacket.SetTxt(addr,walletaddr);
+	((CStatic*)GetDlgItem(IDC_STATIC_BALANCE))->GetWindowText(balance);
+	m_GrabSpecailRedPacket.SetTxt(addr,walletaddr,balance);
 
 }
 
