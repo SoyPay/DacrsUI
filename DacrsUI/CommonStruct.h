@@ -47,6 +47,7 @@ static const ULONGLONG COIN = 100000000;
 #define WM_UP_DELETERBOOK       WM_USER+27
 #define WM_SYNC_TRANSACTION     WM_USER+28
 #define WM_INSERT               WM_USER+29
+#define WM_REDPACKETPOOL              WM_USER+30
 #define WINDOW_TAG				_T("Dacrs-UIDemo")
 
 typedef enum
@@ -246,12 +247,34 @@ typedef struct {
 	ULONGLONG money;
 }ORDER_DATA;
 
+////		抢红包
+typedef struct {
+	unsigned char nType;
+	int64_t money;
+	long number;
+	unsigned char message[200];
+}RED_PACKET;
+
+typedef struct {
+	unsigned char nType;
+	unsigned char redhash[32];
+}ACCEPT_RED_PACKET;
+
+
 enum TXTYPE{
 	TX_SENDBET = 0x01,
 	TX_ACCEPTBET = 0x02,
 	TX_OPENBET = 0x03,
 	TX_WITHDRAWAL = 0x04,
 };
+
+enum REDPACKETTYPE{
+	TX_COMM_SENDREDPACKET = 0x01,
+	TX_COMM_ACCEPTREDPACKET = 0x02,
+	TX_SPECIAL_SENDREDPACKET = 0x03,
+	TX_SPECIAL_ACCEPTREDPACKET = 0x04
+};
+
 enum OPERATE{
 	OP_SYSTEMACC = 0x00,
 	OP_APPACC = 0x01,
@@ -350,6 +373,7 @@ public:
 	CString DisPlayMoney(CString &strMoney);
 
 	bool IsOSVersionBelowXp();
+	void revert(char*pchar);
 };
 
 //*******************************担保交易************************************************
@@ -406,7 +430,18 @@ private:
 	OPEN_DATA		m_openContract;
 };
 
-
+//********************************抢红包************************************
+class CRedPacketHelp
+{
+public:
+	string PacketSendCommContract(int64_t nMoney,int num,const string& message);
+	string PacketAcceptCommContract(const string& strSendHash);
+	string PacketSendSecpailContract(int64_t nMoney,int num,const string& message);
+	string PacketAcceptSecpailContract(const string& strSendHash);
+private:
+	RED_PACKET		m_sendContract;
+	ACCEPT_RED_PACKET		m_acceptContract;
+};
 
 
 

@@ -25,6 +25,7 @@ void CJsonConfigHelp::ReadJsonConfig(const CString& strFilePath)
 		ReadP2PCfgData(root);
 		ReadNetParmCfgData(root);
 		ReadLogParamCfg(root);
+		ReadRedPacketCfgData(root);
 	}
 	ifs.close();
 }
@@ -98,7 +99,7 @@ void CJsonConfigHelp::ReadScriptCfgData(const Json::Value& root){
 	m_Scriptid.strScriptBetid = script["betscript"].asCString();
 	m_Scriptid.strSrcriptDarkid = script["darkscript"].asCString();
 	m_Scriptid.m_ipoScritptid = script["iposcript"].asCString();
-	
+	m_Scriptid.m_redpacketScriptid = script["redpacketscript"].asCString();
 	
 }
 void CJsonConfigHelp::GetMainCfgData(CMainCfg& mainCfg)
@@ -240,4 +241,16 @@ void CJsonConfigHelp::ReadLogParamCfg(const Json::Value &root)
 void CJsonConfigHelp::GetLogParamCfg(CLogParamCfg &logCfg)
 {
 	logCfg = m_LogParamCfg;
+}
+
+void CJsonConfigHelp::ReadRedPacketCfgData(const Json::Value &root){
+	Json::Value redpacketparam = root["redpacket"];
+	ASSERT(!redpacketparam.isNull());
+	m_RedPacketCfg.SendRedPacketCommFee = redpacketparam["sendredcommFee"].asInt64();
+	m_RedPacketCfg.AcceptRedPacketCommFee= redpacketparam["acceptredcommFee"].asInt64();
+	m_RedPacketCfg.SendRedPacketSpecailFee =redpacketparam["sendredspecalFee"].asInt64();
+	m_RedPacketCfg.AcceptRedPacketSpecailFee =  redpacketparam["acceptredspecalFee"].asInt64();
+}
+void CJsonConfigHelp::GetRedPacketCfgData(CRedPacketCfg &redpacketcfg){
+	redpacketcfg = m_RedPacketCfg;
 }
