@@ -49,6 +49,7 @@ BEGIN_MESSAGE_MAP(CGrabSpecalRedPacket, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_UP, &CGrabSpecalRedPacket::OnBnClickedButtonUp)
 	ON_BN_CLICKED(IDC_BUTTON_NEXT, &CGrabSpecalRedPacket::OnBnClickedButtonNext)
 	ON_MESSAGE( WM_BN_CLICK, &CGrabSpecalRedPacket::onBnCLick)
+	ON_WM_CTLCOLOR()
 END_MESSAGE_MAP()
 
 
@@ -133,6 +134,9 @@ BOOL CGrabSpecalRedPacket::Create(LPCTSTR lpszTemplateName, CWnd* pParentWnd)
 
 		GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(_T("共:0"));
 	}
+
+	/// listbox 背景颜色
+	m_hbrush = CreateSolidBrush(RGB(255,236,229));
 	return bRes;
 }
 
@@ -464,4 +468,19 @@ void   CGrabSpecalRedPacket::SetTxt(CString addr,CString strwallet,CString strba
 	m_addr = addr;
 	m_walletmoney = strwallet;
 	m_balance = strbalance;
+}
+
+HBRUSH CGrabSpecalRedPacket::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
+{
+	// TODO:  在此更改 DC 的任何特性
+
+	// TODO:  如果默认的不是所需画笔，则返回另一个画笔
+	if (nCtlColor== CTLCOLOR_LISTBOX)
+	{
+		return m_hbrush; 
+	} 
+	else
+	{
+		return  CDialogEx::OnCtlColor(pDC, pWnd, nCtlColor);
+	}
 }

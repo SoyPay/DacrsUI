@@ -828,7 +828,7 @@ void CDacrsUIApp::AcceptRePacketCommtRecord(vector<unsigned char> acceptRedPacke
 
 	CString strCond,strField;
 	strCond.Format(_T(" grab_hash='%s' "), transcion.txhash);
-	strField.AppendFormat(_T("grab_time=%d,confirm_height = %d") ,transcion.confirmedtime ,transcion.confirmedHeight ) ;
+	strField.AppendFormat(_T("grab_time=%d,confirm_height = %d,lucky_fortune = 1") ,transcion.confirmedtime ,transcion.confirmedHeight ) ;
 
 	/// 查找数据库中是否存在此记录
 	int item = m_SqliteDeal.GetTableCountItem(_T("t_red_packets_grab"),strCond);
@@ -884,7 +884,7 @@ void CDacrsUIApp::AcceptRePacketSpecailRecord(vector<unsigned char> acceptRedPac
 
 	CString strCond,strField;
 	strCond.Format(_T(" grab_hash='%s' "), transcion.txhash);
-	strField.AppendFormat(_T("grab_time=%d,confirm_height = %d") ,transcion.confirmedtime ,transcion.confirmedHeight ) ;
+	strField.AppendFormat(_T("grab_time=%d,confirm_height = %d,,lucky_fortune = 1") ,transcion.confirmedtime ,transcion.confirmedHeight ) ;
 
 	/// 查找数据库中是否存在此记录
 	int item = m_SqliteDeal.GetTableCountItem(_T("t_red_packets_grab"),strCond);

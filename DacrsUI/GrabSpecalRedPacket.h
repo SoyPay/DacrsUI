@@ -41,6 +41,7 @@ private:
 	int                              m_pagesize;
 	uistruct::REDPACKETPOOLLIST     m_PoolList;
 	CRedPacketHelp		   m_RedPacketHelp;
+	HBRUSH                          m_hbrush;
 public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	void      OnShowPagePool(int page);
@@ -50,4 +51,5 @@ public:
 	void      AcceptRedPackeSpecail(CString sendhash,uistruct::REDPACKETPOOL_t pPoolList);
 	bool      IsAcceptRedPacket(CString account,uistruct::REDPACKETPOOL_t pPoolList);
 	void      SetTxt(CString addr,CString strwallet,CString strbalance);
+	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 };
