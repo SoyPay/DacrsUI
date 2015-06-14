@@ -239,6 +239,7 @@ BOOL CDacrsUIApp::InitInstance()
 
 	CDacrsUIDlg dlg;
 	m_pMainWnd = &dlg;
+	
 	INT_PTR nResponse = dlg.DoModal();
 	if (nResponse == IDOK)
 	{
