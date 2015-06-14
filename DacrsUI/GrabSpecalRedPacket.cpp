@@ -449,7 +449,7 @@ bool  CGrabSpecalRedPacket::IsAcceptRedPacket(CString account,uistruct::REDPACKE
 
 		for (int i =0;i <redPacket.dbdata.number;i++)
 		{
-			uistruct::USER_INFO userinfo = redPacket.userinfo[0];
+			uistruct::USER_INFO userinfo = redPacket.userinfo[i];
 			std::vector<unsigned char> vSendid;
 			vSendid.assign(userinfo.regid,userinfo.regid+sizeof(userinfo.regid));
 			string regid  =CSoyPayHelp::getInstance()->GetNotFullRegID(vSendid);
