@@ -828,13 +828,89 @@ void CDacrsUIApp::AcceptRePacketCommtRecord(vector<unsigned char> acceptRedPacke
 
 	CString strCond,strField;
 	strCond.Format(_T(" grab_hash='%s' "), transcion.txhash);
-	strField.AppendFormat(_T("grab_time=%d,confirm_height = %d,lucky_fortune = 1") ,transcion.confirmedtime ,transcion.confirmedHeight ) ;
+	//strField.AppendFormat(_T("grab_time=%d,confirm_height = %d,lucky_fortune = 1") ,transcion.confirmedtime ,transcion.confirmedHeight ) ;
 
 	/// 查找数据库中是否存在此记录
+	//int item = m_SqliteDeal.GetTableCountItem(_T("t_red_packets_grab"),strCond);
+	//if (item != 0)
+	//{
+	//	//更新数据
+	//	if ( !m_SqliteDeal.UpdateTableItem(_T("t_red_packets_grab") ,strField,strCond )) {
+	//		TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , transcion.txhash );
+	//	}
+	//}
+
 	int item = m_SqliteDeal.GetTableCountItem(_T("t_red_packets_grab"),strCond);
 	if (item != 0)
 	{
+		ACCEPT_RED_PACKET acceptPacket;
+		memset(&acceptPacket , 0 , sizeof(ACCEPT_RED_PACKET));
+		memcpy(&acceptPacket, &acceptRedPacket[0], sizeof(ACCEPT_RED_PACKET));
+
+		vector<unsigned char>vHash;
+		vHash.assign(acceptPacket.redhash,acceptPacket.redhash+sizeof(acceptPacket.redhash));
+		reverse(vHash.begin(),vHash.end());
+		string SendHash = CSoyPayHelp::getInstance()->HexStr(vHash);
+
+		CString strCommand,strShowData;
+		strCommand.Format(_T("%s %s"),_T("gettxdetail") ,SendHash.c_str() );
+		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
+
+		if (strShowData == _T(""))
+		{
+			return;
+		}
+		Json::Reader reader; 
+		Json::Value root;
+		if (!reader.parse(strShowData.GetString(), root)) 
+			return;
+		int npos = strShowData.Find("confirmHeight");
+		int confirHeight = 1440;
+		if ( npos >= 0 ) { //
+			confirHeight += root["confirmHeight"].asInt() ;    //交易被确认的高度
+		}
+
+		CSoyPayHelp::getInstance()->revert((char*)&confirHeight);
+
+		char key[36];
+		memset(key,0,36);
+
+		memcpy(key,&confirHeight,sizeof(confirHeight));
+		memcpy(&key[4],acceptPacket.redhash,sizeof(acceptPacket.redhash));
+
+		vHash.assign(key,key+sizeof(key));
+		string strKeyHex = CSoyPayHelp::getInstance()->HexStr(vHash);
+		strCommand.Format(_T("%s %s %s"),_T("getscriptdata") ,m_redPacketScriptid,strKeyHex.c_str() );
+		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
+
+		if (strShowData == _T("") || strShowData.Find("value") < 0)
+			return;
+
+		if (!reader.parse(strShowData.GetString(), root)) 
+			return;
+
+		CString nValue = root["value"].asCString();
+		uistruct::RED_DATA redPacket;
+		memset(&redPacket , 0 , sizeof(uistruct::RED_DATA));
+		std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue.GetString());
+		memcpy(&redPacket, &vTemp[0], sizeof(uistruct::RED_DATA));
+
+		CString strCond;
+		strCond.Format(_T(" address = '%s' "), transcion.addr.c_str());
+		uistruct::LISTADDR_t addrsql;
+		int item = theApp.m_SqliteDeal.GetWalletAddressItem(strCond, &addrsql) ;
+
+		if (strlen(addrsql.address) == 0 )
+		{
+			return;
+		}
+		string regid = CSoyPayHelp::getInstance()->GetFullRegID(addrsql.RegID);
+		INT64 GetAmout = GetRedPacketAmount(regid.c_str(),redPacket);
+		double money = (GetAmout*1.0)/COIN;
+
 		//更新数据
+		strField.Format(_T("grab_time=%d,confirm_height = %d,lucky_fortune = 1,lucky_amount=%lf") ,transcion.confirmedtime ,transcion.confirmedHeight,money ) ;
+		strCond.Format(_T(" grab_hash='%s' "), transcion.txhash);
 		if ( !m_SqliteDeal.UpdateTableItem(_T("t_red_packets_grab") ,strField,strCond )) {
 			TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , transcion.txhash );
 		}
@@ -858,7 +934,23 @@ void CDacrsUIApp::SendRePacketCommtRecord(vector<unsigned char> sendRedPacket,ui
 		}
 	}
 }
+INT64 CDacrsUIApp::GetRedPacketAmount(CString acceptregid,uistruct::RED_DATA redPacket)
+{
 
+	for (int i =0;i <redPacket.dbdata.takennum;i++)
+	{
+		uistruct::USER_INFO userinfo = redPacket.userinfo[i];
+		std::vector<unsigned char> vSendid;
+		vSendid.assign(userinfo.regid,userinfo.regid+sizeof(userinfo.regid));
+		string regid = CSoyPayHelp::getInstance()->HexStr(vSendid);
+		if (strcmp(regid.c_str(),acceptregid) == 0)
+		{
+			return userinfo.amount;
+		}
+	}
+
+	return 0;
+}
 bool CDacrsUIApp::IsLuckyRedPacket(CString acceptregid,uistruct::RED_DATA redPacket)
 {
 	uistruct::USER_INFO userinfo = redPacket.userinfo[0];
@@ -884,7 +976,6 @@ void CDacrsUIApp::AcceptRePacketSpecailRecord(vector<unsigned char> acceptRedPac
 
 	CString strCond,strField;
 	strCond.Format(_T(" grab_hash='%s' "), transcion.txhash);
-	strField.AppendFormat(_T("grab_time=%d,confirm_height = %d,lucky_fortune = 1") ,transcion.confirmedtime ,transcion.confirmedHeight ) ;
 
 	/// 查找数据库中是否存在此记录
 	int item = m_SqliteDeal.GetTableCountItem(_T("t_red_packets_grab"),strCond);
@@ -952,16 +1043,19 @@ void CDacrsUIApp::AcceptRePacketSpecailRecord(vector<unsigned char> acceptRedPac
 			return;
 		}
 		string regid = CSoyPayHelp::getInstance()->GetFullRegID(addrsql.RegID);
+		INT64 GetAmout = GetRedPacketAmount(regid.c_str(),redPacket);
+		double money = (GetAmout*1.0)/COIN;
 		if (IsLuckyRedPacket(regid.c_str(),redPacket))
 		{
 			strCond.Format(_T(" grab_hash='%s' "), transcion.txhash);
-			strField.Format(_T("grab_time=%d,confirm_height = %d,lucky_fortune = 2") ,transcion.confirmedtime ,transcion.confirmedHeight ) ;
+			strField.Format(_T("grab_time=%d,confirm_height = %d,lucky_fortune = 2,lucky_amount=%lf") ,transcion.confirmedtime ,transcion.confirmedHeight, money) ;
 			if ( !m_SqliteDeal.UpdateTableItem(_T("t_red_packets_grab") ,strField,strCond )) {
 				TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , transcion.txhash );
 			}
 		}
 		else{
 			//更新数据
+			strField.Format(_T("grab_time=%d,confirm_height = %d,lucky_fortune = 1,lucky_amount=%lf") ,transcion.confirmedtime ,transcion.confirmedHeight,money ) ;
 			strCond.Format(_T(" grab_hash='%s' "), transcion.txhash);
 			if ( !m_SqliteDeal.UpdateTableItem(_T("t_red_packets_grab") ,strField,strCond )) {
 				TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , transcion.txhash );
