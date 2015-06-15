@@ -113,6 +113,9 @@ BOOL CDacrsUIApp::InitInstance()
 	InitLogCfg();
 	//¼ì²â×Ô¶¯Éý¼¶
 	int nResult = Update();
+	if(-1 == nResult) {
+		nResult = Update();
+	}
 	if (nResult == 1)
 	{
 		return TRUE;
@@ -237,6 +240,7 @@ BOOL CDacrsUIApp::InitInstance()
 
 	CDacrsUIDlg dlg;
 	m_pMainWnd = &dlg;
+	
 	INT_PTR nResponse = dlg.DoModal();
 	if (nResponse == IDOK)
 	{
