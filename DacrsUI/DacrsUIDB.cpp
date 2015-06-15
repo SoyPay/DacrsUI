@@ -152,6 +152,8 @@ void CDacrsUIApp::UpdateAddressData(){
 				if ( !m_SqliteDeal.UpdateTableItem(_T("t_wallet_address") , strSourceData , strWhere ) ){
 					TRACE(_T("Update t_wallet_address failed!") );
 				}
+		
+				memcpy(listaddr.Label,addrsql.Label,sizeof(listaddr.Label));
 				string Temp = listaddr.ToJson();
 				SendUIMsg((int)WM_UP_ADDRESS,Temp.c_str());
 				if (listaddr.bSign != addrsql.bSign)
