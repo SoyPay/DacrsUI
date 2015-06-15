@@ -113,9 +113,54 @@ BOOL CSqliteDeal::InitializationDB(){
 			return FALSE;
 		}
 	}
+
+	if (!CreatRedPacketTable())
+	{
+		LogPrint("INFO", "Create table redpacket failed\n");
+		return FALSE;
+	}
 	return TRUE ;
 }
 
+BOOL   CSqliteDeal::CreatRedPacketTable()
+{
+	sqlite3 **pDBConn = GetDBConnect(); //获取数据库连接
+	CString strCondition;
+	CString strTableName(_T("sqlite_master"));
+	strCondition = _T("type='table' and name='t_red_packets_send'");
+	if(!GetTableCountItem(strTableName, strCondition))
+	{
+		CString createSQL(_T("CREATE TABLE t_red_packets_send(send_hash TEXT PRIMARY KEY,send_time INT ,total_amount double,packets_num  INT,send_acct_id TEXT, confirm_height INT,packet_type INT)"));
+		if(!ExcuteSQL(pDBConn, NULL, createSQL, NULL))
+		{
+			LogPrint("INFO", "Create table t_p2p_quiz failed\n");
+			return FALSE;
+		}
+	}
+
+	strCondition = _T("type='table' and name='t_red_packets_grab'");
+	if(!GetTableCountItem(strTableName, strCondition))
+	{
+		CString createSQL(_T("CREATE TABLE t_red_packets_grab(send_hash TEXT,grab_hash TEXT PRIMARY KEY,grab_time INT,lucky_amount double,send_acct_id TEXT,grab_acct_id TEXT,confirm_height INT,packet_type INT,lucky_fortune INT,total_amount double,packets_num  INT)"));
+		if(!ExcuteSQL(pDBConn, NULL, createSQL, NULL))
+		{
+			LogPrint("INFO", "Create table t_p2p_quiz failed\n");
+			return FALSE;
+		}
+	}
+
+	strCondition = _T("type='table' and name='t_red_packets_pool'");
+	if(!GetTableCountItem(strTableName, strCondition))
+	{
+		CString createSQL(_T("CREATE TABLE t_red_packets_pool(send_hash TEXT PRIMARY KEY,send_acct_id TEXT,total_amount INT,packets_num INT,packet_type INT, message TEXT )"));
+		if(!ExcuteSQL(pDBConn, NULL, createSQL, NULL))
+		{
+			LogPrint("INFO", "Create table t_p2p_quiz failed\n");
+			return FALSE;
+		}
+	}
+	return TRUE ;
+}
 //获取数据库连接
 sqlite3** CSqliteDeal::GetDBConnect() 
 {
@@ -1035,4 +1080,195 @@ void  CSqliteDeal::UpdataAllTableData(){
 			DeleteTableItem(_T("t_p2p_quiz"),strCondition);
 		}
 	}
+}
+//获取record
+int CallGetRedPackeSendRecordItem(void *para, int n_column, char ** column_value, char ** column_name)
+{
+	uistruct::REDPACKETSEND_t * RedPacketRecord =  (uistruct::REDPACKETSEND_t *)para;
+	if(NULL == column_value[0])
+		return -1;
+	if(n_column != 7)
+		return -1;
+
+
+	CString strValue ;
+	strValue.Format(_T("%s") , column_value[0] ) ;
+	RedPacketRecord->send_hash = strValue;
+
+	strValue.Format(_T("%s") , column_value[1] ) ;
+	RedPacketRecord->send_time = atoi(strValue);
+
+	strValue.Format(_T("%s") , column_value[2] ) ;
+	RedPacketRecord->amount = strtod(strValue,NULL);
+
+	strValue.Format(_T("%s") , column_value[3] ) ;
+	RedPacketRecord->packet_num = atoi(strValue);
+
+	strValue.Format(_T("%s") , column_value[4] ) ;
+	RedPacketRecord->send_acc_id = strValue;
+
+	strValue.Format(_T("%s") , column_value[5] ) ;
+	RedPacketRecord->confirm_height = atoi(strValue);
+
+	strValue.Format(_T("%s") , column_value[6] ) ;
+	RedPacketRecord->packet_type = atoi(strValue);
+	return 0;
+}
+//获取交易列表
+int CallGetRedPackeSendRecordList(void *para, int n_column, char ** column_value, char ** column_name)
+{
+	uistruct::REDPACKETSENDLIST* pListInfo = (uistruct::REDPACKETSENDLIST*) para;
+	uistruct::REDPACKETSEND_t sTxInfo;
+	if(CallGetRedPackeSendRecordItem((void *)(&sTxInfo), n_column, column_value, column_name) < 0)
+	{
+		return -1;
+	}
+	pListInfo->push_back(sTxInfo);
+	return 0;
+}
+
+//获取record
+int CallGetRedPackeGrabRecordItem(void *para, int n_column, char ** column_value, char ** column_name)
+{
+	uistruct::REDPACKETGRAB_t * RedPacketRecord =  (uistruct::REDPACKETGRAB_t *)para;
+	if(NULL == column_value[0])
+		return -1;
+	if(n_column != 11)
+		return -1;
+
+
+	CString strValue ;
+	strValue.Format(_T("%s") , column_value[0] ) ;
+	RedPacketRecord->send_hash = strValue;
+
+	strValue.Format(_T("%s") , column_value[1] ) ;
+	RedPacketRecord->grab_hash = strValue;
+
+	strValue.Format(_T("%s") , column_value[2] ) ;
+	RedPacketRecord->grab_time= atoi(strValue);
+
+	strValue.Format(_T("%s") , column_value[3] ) ;
+	RedPacketRecord->lucky_amount = strtod(strValue,NULL);
+
+	strValue.Format(_T("%s") , column_value[4] ) ;
+	RedPacketRecord->send_acc_id = strValue;
+
+	strValue.Format(_T("%s") , column_value[5] ) ;
+	RedPacketRecord->grab_acct_id = strValue;
+
+	strValue.Format(_T("%s") , column_value[6] ) ;
+	RedPacketRecord->confirm_height = atoi(strValue);
+
+	strValue.Format(_T("%s") , column_value[7] ) ;
+	RedPacketRecord->packet_type = atoi(strValue);
+
+	strValue.Format(_T("%s") , column_value[8] ) ;
+	RedPacketRecord->lucky_fortune = atoi(strValue);
+
+	strValue.Format(_T("%s") , column_value[9] ) ;
+	RedPacketRecord->total_amount = strtod(strValue,NULL);
+
+	strValue.Format(_T("%s") , column_value[10] ) ;
+	RedPacketRecord->total_num = strtod(strValue,NULL);
+
+	return 0;
+}
+//获取交易列表
+int CallGetRedPackeGrabRecordList(void *para, int n_column, char ** column_value, char ** column_name)
+{
+	uistruct::REDPACKETGRABLIST* pListInfo = (uistruct::REDPACKETGRABLIST*) para;
+	uistruct::REDPACKETGRAB_t sTxInfo;
+	if(CallGetRedPackeGrabRecordItem((void *)(&sTxInfo), n_column, column_value, column_name) < 0)
+	{
+		return -1;
+	}
+	pListInfo->push_back(sTxInfo);
+	return 0;
+}
+
+//获取record
+int CallGetRedPackePoolRecordItem(void *para, int n_column, char ** column_value, char ** column_name)
+{
+	uistruct::REDPACKETPOOL_t * RedPacketRecord =  (uistruct::REDPACKETPOOL_t *)para;
+	if(NULL == column_value[0])
+		return -1;
+	if(n_column != 6)
+		return -1;
+
+
+	CString strValue ;
+	strValue.Format(_T("%s") , column_value[0] ) ;
+	RedPacketRecord->send_hash = strValue;
+
+	strValue.Format(_T("%s") , column_value[1] ) ;
+	RedPacketRecord->send_acc_id= strValue;
+
+	strValue.Format(_T("%s") , column_value[2] ) ;
+	RedPacketRecord->total_amount = strtod(strValue,NULL);
+
+	strValue.Format(_T("%s") , column_value[3] ) ;
+	RedPacketRecord->packets_num = atoi(strValue);
+
+	strValue.Format(_T("%s") , column_value[4] ) ;
+	RedPacketRecord->packet_type = atoi(strValue);
+
+	strValue.Format(_T("%s") , column_value[5] ) ;
+	RedPacketRecord->message = strValue;
+	return 0;
+}
+//获取交易列表
+int CallGetRedPackePoolRecordList(void *para, int n_column, char ** column_value, char ** column_name)
+{
+	uistruct::REDPACKETPOOLLIST* pListInfo = (uistruct::REDPACKETPOOLLIST*) para;
+	uistruct::REDPACKETPOOL_t sTxInfo;
+	if(CallGetRedPackePoolRecordItem((void *)(&sTxInfo), n_column, column_value, column_name) < 0)
+	{
+		return -1;
+	}
+	pListInfo->push_back(sTxInfo);
+	return 0;
+}
+int CSqliteDeal::GetRedPacketSendItem(const CString &strCondition, uistruct::REDPACKETSEND_t * RedPackeSendRecord){
+
+	sqlite3 ** pDBConn = GetDBConnect(); //获取数据库连接
+	CString strSQL(_T(""));
+	strSQL.Format(_T("SELECT * FROM t_red_packets_send WHERE %s"),(LPSTR)(LPCTSTR)strCondition);
+	return ExcuteSQL(pDBConn , &CallGetRedPackeSendRecordItem, strSQL, (void*)(RedPackeSendRecord));
+}
+
+int CSqliteDeal::GetRedPacketSendRecordList(const CString &strCondition, uistruct::REDPACKETSENDLIST * RedPackeSendRecordList){
+
+	sqlite3 ** pDBConn = GetDBConnect(); //获取数据库连接
+	CString strSQL(_T(""));
+	strSQL.Format(_T("SELECT * FROM t_red_packets_send WHERE %s"),(LPSTR)(LPCTSTR)strCondition);
+	return ExcuteSQL(pDBConn , &CallGetRedPackeSendRecordList, strSQL, (void*)(RedPackeSendRecordList));
+}
+
+int CSqliteDeal::GetRedPacketGrabItem(const CString &strCondition, uistruct::REDPACKETGRAB_t * RedPackeGrabRecord){
+	sqlite3 ** pDBConn = GetDBConnect(); //获取数据库连接
+	CString strSQL(_T(""));
+	strSQL.Format(_T("SELECT * FROM t_red_packets_grab WHERE %s"),(LPSTR)(LPCTSTR)strCondition);
+	return ExcuteSQL(pDBConn , &CallGetRedPackeGrabRecordItem, strSQL, (void*)(RedPackeGrabRecord));
+}
+
+int CSqliteDeal::GetRedPacketGrabRecordList(const CString &strCondition, uistruct::REDPACKETGRABLIST * RedPackeGrabRecordList){
+	sqlite3 ** pDBConn = GetDBConnect(); //获取数据库连接
+	CString strSQL(_T(""));
+	strSQL.Format(_T("SELECT * FROM t_red_packets_grab WHERE %s"),(LPSTR)(LPCTSTR)strCondition);
+	return ExcuteSQL(pDBConn , &CallGetRedPackeGrabRecordList, strSQL, (void*)(RedPackeGrabRecordList));
+}
+
+int CSqliteDeal::GetRedPacketPoolItem(const CString &strCondition, uistruct::REDPACKETPOOL_t * RedPackePoolRecord){
+	sqlite3 ** pDBConn = GetDBConnect(); //获取数据库连接
+	CString strSQL(_T(""));
+	strSQL.Format(_T("SELECT * FROM t_red_packets_pool WHERE %s"),(LPSTR)(LPCTSTR)strCondition);
+	return ExcuteSQL(pDBConn , &CallGetRedPackePoolRecordItem, strSQL, (void*)(RedPackePoolRecord));
+}
+int CSqliteDeal::GetRedPacketPoolRecordList(const CString &strCondition, uistruct::REDPACKETPOOLLIST * RedPackePoolRecordList){
+
+	sqlite3 ** pDBConn = GetDBConnect(); //获取数据库连接
+	CString strSQL(_T(""));
+	strSQL.Format(_T("SELECT * FROM t_red_packets_pool WHERE %s"),(LPSTR)(LPCTSTR)strCondition);
+	return ExcuteSQL(pDBConn , &CallGetRedPackePoolRecordList, strSQL, (void*)(RedPackePoolRecordList));
+
 }

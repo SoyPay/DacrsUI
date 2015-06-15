@@ -102,8 +102,10 @@ public:
 	CString      m_betScritptid;
 	CString      m_ipoScritptid;
 	CString      m_darkScritptid;
+	CString      m_redPacketScriptid;
 	CDarkTxCfg		m_DarkCfg;
 	CP2PBetCfg		m_P2PBetCfg;
+	CRedPacketCfg   m_RedPacketCfg;
 public:
 	void         OnInitList();   //≥ı ºªØlist
 	int          SendPostThread(DWORD msgtype);
@@ -133,6 +135,8 @@ public:
 	CMyQueue m_UiSendDlgQueue;
 	CMyQueue m_UiTxDetailQueue;
 	CMyQueue m_UiP2pDlgQueue;
+	CMyQueue m_UiRedPacketDlgQueue;
+	void UpdateRedPacketPoolData();
 	void UpdateQuizPoolData();
 	void UpdateAddressData();
 	void InsertTransaction(string hash);
@@ -152,6 +156,15 @@ public:
 	void SendUIMsg(int message,CString jsonaddr);
 	void SendP2pMsg(int message,CString jsonaddr);
 	void CheckPathValid(const CStringA& strDir);
+
+	void AcceptRePacketCommtRecord(vector<unsigned char> acceptRedPacket,uistruct::REVTRANSACTION_t transcion);
+	void SendRePacketCommtRecord(vector<unsigned char> sendRedPacket,uistruct::REVTRANSACTION_t transcion);
+
+	void AcceptRePacketSpecailRecord(vector<unsigned char> acceptRedPacket,uistruct::REVTRANSACTION_t transcion);
+	void SendRePacketSpecailRecord(vector<unsigned char> sendRedPacket,uistruct::REVTRANSACTION_t transcion);
+
+	bool IsLuckyRedPacket(CString acceptregid,uistruct::RED_DATA redPacket);
+	INT64 GetRedPacketAmount(CString acceptregid,uistruct::RED_DATA redPacket);
 public:
 	bool isStartMainDlg;
 	CNoUiMsgBuffer m_noUiMsgBuffer;
