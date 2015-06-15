@@ -190,6 +190,9 @@
     <ClCompile Include="GrabCommRedPacket.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="RedPacketList.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BmpBtn.h">
@@ -415,6 +418,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="GrabCommRedPacket.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RedPacketList.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
