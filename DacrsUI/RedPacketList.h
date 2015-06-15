@@ -21,4 +21,5 @@ protected:
 public:
 	virtual BOOL OnInitDialog();
 	void ShowTxDetail(CString txhash);
+	CListCtrl   m_listCtrl;
 };
