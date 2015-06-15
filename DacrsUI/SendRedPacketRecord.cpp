@@ -357,7 +357,7 @@ void CSendRedPacketRecord::OnLbnDblclkListBox()
 	if (redPacket.dbdata.type == 1)
 	{
 		::MessageBox( this->GetSafeHwnd() ,showdata, _T("ÇÀºì°üÁÐ±í") , MB_ICONINFORMATION ) ;
-	}else if (redPacket.dbdata.type == 2)
+	}else if (redPacket.dbdata.type == 3)
 	{
 		if (redPacket.dbdata.fover)
 		{
