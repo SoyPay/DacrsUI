@@ -164,6 +164,7 @@ public:
 	void SendRePacketSpecailRecord(vector<unsigned char> sendRedPacket,uistruct::REVTRANSACTION_t transcion);
 
 	bool IsLuckyRedPacket(CString acceptregid,uistruct::RED_DATA redPacket);
+	INT64 GetRedPacketAmount(CString acceptregid,uistruct::RED_DATA redPacket);
 public:
 	bool isStartMainDlg;
 	CNoUiMsgBuffer m_noUiMsgBuffer;
