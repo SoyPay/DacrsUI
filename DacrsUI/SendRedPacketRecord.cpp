@@ -5,7 +5,7 @@
 #include "DacrsUI.h"
 #include "SendRedPacketRecord.h"
 #include "afxdialogex.h"
-
+#include "RedPacketList.h"
 
 // CSendRedPacketRecord 对话框
 
@@ -291,82 +291,92 @@ void CSendRedPacketRecord::OnLbnDblclkListBox()
 	int count = ((m_curpage -1)*m_pagesize) + nSel;
 	uistruct::REDPACKETSEND_t const_it = m_SendRedPacketList.at(count);
 
-	CString strCommand,strShowData;
-	int confirHeight = 1440 + const_it.confirm_height;
+	if (const_it.send_hash != _T(""))
+	{
+		theApp.m_strAddress.Format(_T("%s") ,const_it.send_hash ) ;
+	}else
+	{		
+		theApp.m_strAddress =_T("");
+	}
+	CRedPacketList dlg;
+	dlg.DoModal();
 
-	Json::Reader reader; 
-	Json::Value root;
-	vector<unsigned char>vHash;
-	CSoyPayHelp::getInstance()->revert((char*)&confirHeight);
+	//CString strCommand,strShowData;
+	//int confirHeight = 1440 + const_it.confirm_height;
 
-	char key[4];
-	memset(key,0,4);
+	//Json::Reader reader; 
+	//Json::Value root;
+	//vector<unsigned char>vHash;
+	//CSoyPayHelp::getInstance()->revert((char*)&confirHeight);
 
-	memcpy(key,&confirHeight,sizeof(confirHeight));
-	vHash.assign(key,key+sizeof(key));
-	string strKeyHex = CSoyPayHelp::getInstance()->HexStr(vHash);
+	//char key[4];
+	//memset(key,0,4);
 
-	vHash =CSoyPayHelp::getInstance()->ParseHex(const_it.send_hash.GetString());
-	reverse(vHash.begin(),vHash.end());
-	string SendHash = CSoyPayHelp::getInstance()->HexStr(vHash);
+	//memcpy(key,&confirHeight,sizeof(confirHeight));
+	//vHash.assign(key,key+sizeof(key));
+	//string strKeyHex = CSoyPayHelp::getInstance()->HexStr(vHash);
 
-	CString keyValue;
-	keyValue.Format(_T("%s%s"),strKeyHex.c_str(),SendHash.c_str());
-	strCommand.Format(_T("%s %s %s"),_T("getscriptdata") ,theApp.m_redPacketScriptid,keyValue );
-	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
+	//vHash =CSoyPayHelp::getInstance()->ParseHex(const_it.send_hash.GetString());
+	//reverse(vHash.begin(),vHash.end());
+	//string SendHash = CSoyPayHelp::getInstance()->HexStr(vHash);
 
-	if (strShowData == _T("") || strShowData.Find("value") < 0)
-		return ;
+	//CString keyValue;
+	//keyValue.Format(_T("%s%s"),strKeyHex.c_str(),SendHash.c_str());
+	//strCommand.Format(_T("%s %s %s"),_T("getscriptdata") ,theApp.m_redPacketScriptid,keyValue );
+	//CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 
-	if (!reader.parse(strShowData.GetString(), root)) 
-		return ;;
+	//if (strShowData == _T("") || strShowData.Find("value") < 0)
+	//	return ;
 
-	CString nValue = root["value"].asCString();
-	uistruct::RED_DATA redPacket;
-	memset(&redPacket , 0 , sizeof(uistruct::RED_DATA));
-	std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue.GetString());
-	memcpy(&redPacket, &vTemp[0], sizeof(uistruct::RED_DATA));
+	//if (!reader.parse(strShowData.GetString(), root)) 
+	//	return ;;
 
-	CString showdata = _T(" 地址                            金额 \r\n\r\n");
-	//if (redPacket.dbdata.fover)
+	//CString nValue = root["value"].asCString();
+	//uistruct::RED_DATA redPacket;
+	//memset(&redPacket , 0 , sizeof(uistruct::RED_DATA));
+	//std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue.GetString());
+	//memcpy(&redPacket, &vTemp[0], sizeof(uistruct::RED_DATA));
+
+	//CString showdata = _T(" 地址                            金额 \r\n\r\n");
+	////if (redPacket.dbdata.fover)
+	////{
+	////	for (int i =0;i <redPacket.dbdata.number;i++)
+	////	{
+	////		uistruct::USER_INFO userinfo = redPacket.userinfo[i];
+	////		std::vector<unsigned char> vSendid;
+	////		vSendid.assign(userinfo.regid,userinfo.regid+sizeof(userinfo.regid));
+	////		string regid  =CSoyPayHelp::getInstance()->GetNotFullRegID(vSendid);
+	////		double money = (userinfo.amount*1.0)/COIN;
+	////		showdata.AppendFormat(_T(" %s                       %.8f\r\n\r\n"),regid.c_str(),money);
+
+	////	}
+	////	::MessageBox( this->GetSafeHwnd() ,showdata, _T("抢红包列表") , MB_ICONINFORMATION ) ;
+	////}
+
+	//for (int i =0;i <redPacket.dbdata.takennum;i++)
 	//{
-	//	for (int i =0;i <redPacket.dbdata.number;i++)
-	//	{
-	//		uistruct::USER_INFO userinfo = redPacket.userinfo[i];
-	//		std::vector<unsigned char> vSendid;
-	//		vSendid.assign(userinfo.regid,userinfo.regid+sizeof(userinfo.regid));
-	//		string regid  =CSoyPayHelp::getInstance()->GetNotFullRegID(vSendid);
-	//		double money = (userinfo.amount*1.0)/COIN;
-	//		showdata.AppendFormat(_T(" %s                       %.8f\r\n\r\n"),regid.c_str(),money);
+	//	uistruct::USER_INFO userinfo = redPacket.userinfo[i];
+	//	std::vector<unsigned char> vSendid;
+	//	vSendid.assign(userinfo.regid,userinfo.regid+sizeof(userinfo.regid));
+	//	string regid  =CSoyPayHelp::getInstance()->GetNotFullRegID(vSendid);
+	//	double money = (userinfo.amount*1.0)/COIN;
+	//	showdata.AppendFormat(_T(" %s                       %.8f\r\n\r\n"),regid.c_str(),money);
 
-	//	}
-	//	::MessageBox( this->GetSafeHwnd() ,showdata, _T("抢红包列表") , MB_ICONINFORMATION ) ;
 	//}
 
-	for (int i =0;i <redPacket.dbdata.takennum;i++)
-	{
-		uistruct::USER_INFO userinfo = redPacket.userinfo[i];
-		std::vector<unsigned char> vSendid;
-		vSendid.assign(userinfo.regid,userinfo.regid+sizeof(userinfo.regid));
-		string regid  =CSoyPayHelp::getInstance()->GetNotFullRegID(vSendid);
-		double money = (userinfo.amount*1.0)/COIN;
-		showdata.AppendFormat(_T(" %s                       %.8f\r\n\r\n"),regid.c_str(),money);
+	//if (redPacket.dbdata.type == 1)
+	//{
+	//	::MessageBox( this->GetSafeHwnd() ,showdata, _T("抢红包列表") , MB_ICONINFORMATION ) ;
+	//}else if (redPacket.dbdata.type == 3)
+	//{
+	//	if (redPacket.dbdata.fover)
+	//	{
 
-	}
-
-	if (redPacket.dbdata.type == 1)
-	{
-		::MessageBox( this->GetSafeHwnd() ,showdata, _T("抢红包列表") , MB_ICONINFORMATION ) ;
-	}else if (redPacket.dbdata.type == 3)
-	{
-		if (redPacket.dbdata.fover)
-		{
-
-			::MessageBox( this->GetSafeHwnd() ,showdata, _T("抢红包列表") , MB_ICONINFORMATION ) ;
-		}else {
-			::MessageBox( this->GetSafeHwnd() ,_T("红包还未抢完"), _T("提示") , MB_ICONINFORMATION ) ;
-		}
-	}
+	//		::MessageBox( this->GetSafeHwnd() ,showdata, _T("抢红包列表") , MB_ICONINFORMATION ) ;
+	//	}else {
+	//		::MessageBox( this->GetSafeHwnd() ,_T("红包还未抢完"), _T("提示") , MB_ICONINFORMATION ) ;
+	//	}
+	//}
 }
 
 
