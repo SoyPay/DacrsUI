@@ -162,6 +162,7 @@ void CUseListBox::DeleteIndex(int iIndex)
 	if ( NULL != pData ) {
 		delete pData->pSta0;
 		pData->pSta0 = NULL ;
+
 		delete pData->pBut2;
 		pData->pBut2 = NULL ;
 
@@ -246,6 +247,7 @@ void CUseListBox::OnDestroy()
 		if ( NULL != pData ) {
 			delete pData->pSta0;
 			pData->pSta0 = NULL ;
+
 			delete pData->pBut2;
 			pData->pBut2 = NULL ;
 
@@ -297,6 +299,22 @@ void CUseListBox::SetIndexInage(int iIndex , UINT nButImage  )
 		pData->pBut2->SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 		pData->pBut2->SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(255, 255, 255));
 		pData->pBut2->SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(255, 255, 255));
+	}
+}
+void    CUseListBox::SetotherIndexInage(int iIndex , UINT nButImage  )
+{
+	{
+		List_AppendData *pData = GetAppendDataInfo(iIndex) ;
+		if ( NULL != pData ) {
+			//pData->pBut2->SetBitmaps( nButImage , RGB(255, 255, 0) , nButImage , RGB(255, 255, 255) );
+			pData->pBut2->SetBitmaps( nButImage , RGB(255, 255, 0), nButImage , RGB(255, 255, 255) );
+			pData->pBut2->SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+			pData->pBut2->SetFontEx(20 , _T("Î¢ÈíÑÅºÚ"));
+			pData->pBut2->SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(200, 75, 60));
+			pData->pBut2->SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(255, 255, 255));
+			pData->pBut2->SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(200, 75, 60));
+			pData->pBut2->SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(200, 75, 60));
+		}
 	}
 }
 void CUseListBox::SetIndexBackCol(int iIndex ,  int nline ,COLORREF   col)

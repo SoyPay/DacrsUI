@@ -146,6 +146,9 @@ void CCTabCtrl::OnPaint()
 		GetItem(nTab,&tcItem);
 		strItem.Format(_T("%s"),tcItem.pszText);
 		MemDC.DrawText(strItem,strItem.GetLength(),&rectTemp,DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+		//CBrush      cbr;
+		//cbr.CreateSolidBrush(RGB(255,76,0));
+		//MemDC.FillRect(&rectTemp, &cbr);
 	}
 
 	dc.BitBlt(0,0,rect.Width(),rect.Height(),&MemDC,0,0,SRCCOPY);
