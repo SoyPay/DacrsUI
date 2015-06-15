@@ -124,6 +124,7 @@ BOOL CDacrsUIDlg::OnInitDialog()
 	//  执行此操作
 	SetIcon(m_hIcon, TRUE);			// 设置大图标
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
+	SetWindowText("智能坊");
 
 	// TODO: 在此添加额外的初始化代码
 	if ( ((CDacrsUIApp*)AfxGetApp())->pSplashThread != NULL)
