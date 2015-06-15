@@ -158,6 +158,9 @@
     <None Include="res\exit_bj.bmp" />
     <None Include="res\grab_bt.bmp" />
     <None Include="res\grab_red_packet.bmp" />
+    <None Include="res\grab_rp_log.bmp" />
+    <None Include="res\grab_rp_log_2.bmp" />
+    <None Include="res\grab_rp_log_3.bmp" />
     <None Include="res\green_long_button.bmp" />
     <None Include="res\import_wallet.bmp" />
     <None Include="res\IPO.bmp" />
