@@ -36,6 +36,7 @@ CDacrsUIApp::CDacrsUIApp()
 	m_betScritptid = _T("");
 	m_darkScritptid =_T("");
 	m_ipoScritptid = _T("");
+	m_redPacketScriptid = _T("");
 	m_blockSock  = INVALID_SOCKET ;
 	m_strServerCfgFileName = "dacrs.conf";
 	isStartMainDlg = false;
@@ -502,6 +503,15 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 						}
 					}
 					break;
+				case WM_REDPACKETPOOL:
+					{
+						/// 红包池
+						bool flag =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.ClearTableData(_T("t_red_packets_pool"));
+						if (flag ) 
+						{
+							((CDacrsUIApp*)pParam)->UpdateRedPacketPoolData();
+						}
+					}
 				case WM_UP_BlLOCKTIP:
 					{
 						//更新最新blocktip数据库
@@ -820,8 +830,14 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 				CPostMsg postpoolmsg(MSG_USER_GET_UPDATABASE,WM_UP_BETPOOL);
 				pApp->m_MsgQueue.push(postpoolmsg);
 
+				CPostMsg postredpoolmsg(MSG_USER_GET_UPDATABASE,WM_REDPACKETPOOL);
+					pApp->m_MsgQueue.push(postredpoolmsg);
+
 				CPostMsg postp2pmsg(MSG_USER_P2P_UI,WM_UP_ADDRESS);
 				pApp->m_MsgQueue.push(postp2pmsg);
+
+				CPostMsg postredmsg(MSG_USER_REDPACKET_UI,WM_UP_ADDRESS);
+				pApp->m_MsgQueue.push(postredmsg);
 
 				RecivetxMsgTimeLast = tempTimemsg;
 			}
@@ -1132,8 +1148,10 @@ void  CDacrsUIApp::ParseUIConfigFile(const CStringA& strExeDir){
 		m_betScritptid = scriptCfg.strScriptBetid;
 		m_darkScritptid= scriptCfg.strSrcriptDarkid;
 		m_ipoScritptid = scriptCfg.m_ipoScritptid;
+		m_redPacketScriptid = scriptCfg.m_redpacketScriptid;
 		CJsonConfigHelp::getInstance()->GetDarkCfgData(m_DarkCfg);
 		CJsonConfigHelp::getInstance()->GetP2PBetCfgData(m_P2PBetCfg);
+		CJsonConfigHelp::getInstance()->GetRedPacketCfgData(m_RedPacketCfg);
 		CNetParamCfg netParm;
 		CJsonConfigHelp::getInstance()->GetNetParamCfgData(netParm);
 		m_severip = netParm.server_ip;
@@ -1446,6 +1464,9 @@ void CDacrsUIApp::SendP2pMsg(int message,CString jsonaddr)
 	Postmsg.SetData(jsonaddr);
 	m_UiP2pDlgQueue.push(Postmsg);
 	DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_P2P_UI ,message,0);
+
+	m_UiRedPacketDlgQueue.push(Postmsg);
+	DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_REDPACKET_UI ,message,0);
 }
 void CDacrsUIApp::CheckPathValid(const CStringA& strDir)
 {
