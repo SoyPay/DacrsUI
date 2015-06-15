@@ -328,19 +328,44 @@ void CSendRedPacketRecord::OnLbnDblclkListBox()
 	memcpy(&redPacket, &vTemp[0], sizeof(uistruct::RED_DATA));
 
 	CString showdata = _T(" 地址                            金额 \r\n\r\n");
-	if (redPacket.dbdata.fover)
-	{
-		for (int i =0;i <redPacket.dbdata.number;i++)
-		{
-			uistruct::USER_INFO userinfo = redPacket.userinfo[i];
-			std::vector<unsigned char> vSendid;
-			vSendid.assign(userinfo.regid,userinfo.regid+sizeof(userinfo.regid));
-			string regid  =CSoyPayHelp::getInstance()->GetNotFullRegID(vSendid);
-			double money = (userinfo.amount*1.0)/COIN;
-			showdata.AppendFormat(_T(" %s                       %.8f\r\n\r\n"),regid.c_str(),money);
+	//if (redPacket.dbdata.fover)
+	//{
+	//	for (int i =0;i <redPacket.dbdata.number;i++)
+	//	{
+	//		uistruct::USER_INFO userinfo = redPacket.userinfo[i];
+	//		std::vector<unsigned char> vSendid;
+	//		vSendid.assign(userinfo.regid,userinfo.regid+sizeof(userinfo.regid));
+	//		string regid  =CSoyPayHelp::getInstance()->GetNotFullRegID(vSendid);
+	//		double money = (userinfo.amount*1.0)/COIN;
+	//		showdata.AppendFormat(_T(" %s                       %.8f\r\n\r\n"),regid.c_str(),money);
 
-		}
+	//	}
+	//	::MessageBox( this->GetSafeHwnd() ,showdata, _T("抢红包列表") , MB_ICONINFORMATION ) ;
+	//}
+
+	for (int i =0;i <redPacket.dbdata.takennum;i++)
+	{
+		uistruct::USER_INFO userinfo = redPacket.userinfo[i];
+		std::vector<unsigned char> vSendid;
+		vSendid.assign(userinfo.regid,userinfo.regid+sizeof(userinfo.regid));
+		string regid  =CSoyPayHelp::getInstance()->GetNotFullRegID(vSendid);
+		double money = (userinfo.amount*1.0)/COIN;
+		showdata.AppendFormat(_T(" %s                       %.8f\r\n\r\n"),regid.c_str(),money);
+
+	}
+
+	if (redPacket.dbdata.type == 1)
+	{
 		::MessageBox( this->GetSafeHwnd() ,showdata, _T("抢红包列表") , MB_ICONINFORMATION ) ;
+	}else if (redPacket.dbdata.type == 2)
+	{
+		if (redPacket.dbdata.fover)
+		{
+
+			::MessageBox( this->GetSafeHwnd() ,showdata, _T("抢红包列表") , MB_ICONINFORMATION ) ;
+		}else {
+			::MessageBox( this->GetSafeHwnd() ,_T("红包还未抢完"), _T("提示") , MB_ICONINFORMATION ) ;
+		}
 	}
 }
 
