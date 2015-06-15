@@ -843,6 +843,15 @@
     <None Include="res\red_recharge.bmp">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="res\grab_rp_log.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\grab_rp_log_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\grab_rp_log_3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="资源文件">
