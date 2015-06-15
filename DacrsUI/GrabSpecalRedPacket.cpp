@@ -379,7 +379,7 @@ void   CGrabSpecalRedPacket::AcceptRedPackeSpecail(CString sendhash,uistruct::RE
 		//插入到数据库
 		CString strSourceData;
 		strSourceData.Format(_T("'%s','%s','%d','%lf' , '%s' ,'%s' , '%d' , '%d','%d','%lf','%d'") , \
-			pPoolList.send_hash ,txhash , 0 ,0.0 ,pPoolList.send_acc_id , addr ,0,1,0,pPoolList.total_amount,pPoolList.packets_num);
+			pPoolList.send_hash ,txhash , 0 ,0.0 ,pPoolList.send_acc_id , addr ,0,2,0,pPoolList.total_amount,pPoolList.packets_num);
 
 		uistruct::DATABASEINFO_t   pDatabase;
 		pDatabase.strSource = strSourceData.GetString();
