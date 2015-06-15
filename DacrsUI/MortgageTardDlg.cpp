@@ -672,6 +672,8 @@ void CMortgageTardDlg::OnCbnSelchangeComboAddres()
 				strShowData.Format(_T("%.4f"),vFreeAmount);
 				//// 应用冻结账户余额
 				((CStatic*)GetDlgItem(IDC_STATIC_NOT_DRAW))->SetWindowText(strShowData);
+			}else{
+				((CStatic*)GetDlgItem(IDC_STATIC_NOT_DRAW))->SetWindowText(_T("0.0"));
 			}
 		}
 		uistruct::LISTADDR_t pAddr;
