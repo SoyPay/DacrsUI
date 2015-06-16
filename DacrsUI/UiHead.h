@@ -211,6 +211,8 @@ namespace uistruct {
 		int      confirmedtime ; //确认时间
 		string     blockhash      ;  //1:为确认状态   0:为未为确认状态
 		int       state;
+		CString   regid;
+		CString   desregid;
 		string ToJson(){
 			Json::Value root;
 			root["hash"] = txhash.GetString();
@@ -228,6 +230,8 @@ namespace uistruct {
 			root["confirmedtime"] = confirmedtime;
 			root["blockhash"] = blockhash;
 			root["state"] = state;
+			root["regid"] = regid.GetString();
+			root["desregid"] = desregid.GetString();
 			return root.toStyledString();
 		}
 		REVTRANSACTION(){
@@ -258,33 +262,59 @@ namespace uistruct {
 			this->addr = root["addr"].asString()  ;
 			this->height  =root["height"].asInt()   ;
 
-			if(json.find("money") >=0)
+			int pos = -1;
+			pos = json.find("money"); 
+			if( pos>=0)
 			{
 				this->money = (root["money"].asDouble()*1.0)/100000000 ;
 			}
 			
-
-			if(json.find("pubkey") >=0)
+			pos = json.find("pubkey"); 
+			if(pos>=0)
 			this->pubkey = root["pubkey"].asString();
-			if(json.find("miner_pubkey") >=0)
+
+			pos = json.find("miner_pubkey") ;
+			if(pos >=0)
 			this->miner_pubkey = root["miner_pubkey"].asString();
-			if(json.find("fees") >=0)
+
+			pos = json.find("fees") ;
+			if(pos >=0)
 			{
 				this->fees = (root["fees"].asDouble()*1.0)/100000000 ;
 			}
 			
-			if(json.find("desaddr") >=0)
+			pos = json.find("desaddr") ;
+			if(pos >=0)
 			this->desaddr =root["desaddr"].asString()  ;
-			if(json.find("Contract") >=0)
+
+			pos = json.find("Contract") ;
+			if(pos >=0)
 			this->Contract = root["Contract"] .asString() ;
-			if(json.find("confirmHeight") >=0)
+
+			pos = json.find("confirmHeight") ;
+			if(pos >=0)
 			this->confirmedHeight = root["confirmHeight"].asInt() ; 
-			if(json.find("confirmedtime") >=0)
+
+			pos = json.find("confirmedtime") ;
+			if(pos >=0)
 			this->confirmedtime = root["confirmedtime"].asInt();  
-			if(json.find("blockhash") >=0)
+
+			pos = json.find("blockhash") ;
+			if(pos >=0)
 			this->blockhash = root["blockhash"].asString()     ;
-			if(json.find("state") >=0)
+
+			pos = json.find("state") ;
+			if(pos >=0)
 			this->state = root["state"].asInt();
+
+			pos = json.find("regid");
+			if(pos >=0)
+				this->regid = root["regid"].asCString();
+
+			 pos = json.find("desregid");
+			if(pos >=0)
+				this->desregid = root["desregid"].asCString();
+
 			return true;
 		}
 	}REVTRANSACTION_t;
@@ -360,7 +390,8 @@ namespace uistruct {
 			Json::Value root; 
 			if (!reader.parse(json, root)) 
 				return false ;
-			if (json.find("strSource") >= 0)
+			int pos = json.find("strSource");
+			if (pos >= 0)
 			this->strSource = root["strSource"].asString();
 
 			this->strWhere = root["strWhere"].asString();
