@@ -608,23 +608,65 @@ void CDacrsUIDlg::CloseApp()
 	//DestroyWindow();
 	Sleep(200);
 }
+
+bool  CDacrsUIDlg::IsP2pBetFinsh()
+{
+
+	/// 处于发赌约状态
+	CString strCond;
+	strCond.Format(_T(" (（state == 0 or state == 4) && height < %d "),(theApp.blocktipheight+500));
+	uistruct::P2PBETRECORDLIST pPoolList;
+	theApp.m_SqliteDeal.GetP2PQuizRecordList(strCond,&pPoolList);
+	// 处于接赌状态
+	uistruct::P2PBETRECORDLIST pPoolList1;
+	strCond.Format(_T(" (（state == 1 or state == 5) && height < %d "),(theApp.blocktipheight+10));
+	theApp.m_SqliteDeal.GetP2PQuizRecordList(strCond,&pPoolList1);
+	if (pPoolList.size() != 0 && pPoolList1.size() != 0)
+	{
+		return false;
+	}
+	return true;
+}
 void CDacrsUIDlg::OnBnClickedButtonClose()
 {
-	COut outdlg;
-	if ( IDOK == outdlg.DoModal()){
-		BeginWaitCursor();
-		if ( NULL != m_pOutGifDlg ) {
-			CRect rc;
-			GetWindowRect(&rc);	
-			m_pOutGifDlg->LoadGifing(TRUE);
-			m_pOutGifDlg->SetWindowPos(NULL , (rc.left + rc.right)/2 - 300/2 , (rc.top + rc.bottom)/2 - 100/2  , 300 ,100 , SWP_SHOWWINDOW);
-			m_pOutGifDlg->ShowWindow(SW_SHOW) ;
+	if (!IsP2pBetFinsh())
+	{
+		CString strDisplay;
+		strDisplay.Format(_T("猜你妹有些单还未接赌或者开奖,关闭系统接赌了未在指定时间内开奖,自动判输"));
+		COut outdlg(NULL, strDisplay,100,_T("继续"),_T("退出"));
+		if ( IDOK == outdlg.DoModal()){
+			COut outdlg;
+			if ( IDOK == outdlg.DoModal()){
+				BeginWaitCursor();
+				if ( NULL != m_pOutGifDlg ) {
+					CRect rc;
+					GetWindowRect(&rc);	
+					m_pOutGifDlg->LoadGifing(TRUE);
+					m_pOutGifDlg->SetWindowPos(NULL , (rc.left + rc.right)/2 - 300/2 , (rc.top + rc.bottom)/2 - 100/2  , 300 ,100 , SWP_SHOWWINDOW);
+					m_pOutGifDlg->ShowWindow(SW_SHOW) ;
+				}
+				::PostThreadMessage( theApp.GetMtHthrdId() , MSG_USER_OUT , 0 , 0 ) ;
+				SetTimer( 0x10 , 2000 , NULL ) ; 
+			}else{
+				;
+			}
 		}
-		::PostThreadMessage( theApp.GetMtHthrdId() , MSG_USER_OUT , 0 , 0 ) ;
-		SetTimer( 0x10 , 2000 , NULL ) ; 
-	}else{
-		;
 	}
+	//COut outdlg;
+	//if ( IDOK == outdlg.DoModal()){
+	//	BeginWaitCursor();
+	//	if ( NULL != m_pOutGifDlg ) {
+	//		CRect rc;
+	//		GetWindowRect(&rc);	
+	//		m_pOutGifDlg->LoadGifing(TRUE);
+	//		m_pOutGifDlg->SetWindowPos(NULL , (rc.left + rc.right)/2 - 300/2 , (rc.top + rc.bottom)/2 - 100/2  , 300 ,100 , SWP_SHOWWINDOW);
+	//		m_pOutGifDlg->ShowWindow(SW_SHOW) ;
+	//	}
+	//	::PostThreadMessage( theApp.GetMtHthrdId() , MSG_USER_OUT , 0 , 0 ) ;
+	//	SetTimer( 0x10 , 2000 , NULL ) ; 
+	//}else{
+	//	;
+	//}
 }
 
 void CDacrsUIDlg::Close() 
