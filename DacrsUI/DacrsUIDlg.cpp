@@ -627,6 +627,24 @@ bool  CDacrsUIDlg::IsP2pBetFinsh()
 	}
 	return true;
 }
+void  CDacrsUIDlg::ClosWallet()
+{
+	COut outdlg;
+	if ( IDOK == outdlg.DoModal()){
+		BeginWaitCursor();
+		if ( NULL != m_pOutGifDlg ) {
+			CRect rc;
+			GetWindowRect(&rc);	
+			m_pOutGifDlg->LoadGifing(TRUE);
+			m_pOutGifDlg->SetWindowPos(NULL , (rc.left + rc.right)/2 - 300/2 , (rc.top + rc.bottom)/2 - 100/2  , 300 ,100 , SWP_SHOWWINDOW);
+			m_pOutGifDlg->ShowWindow(SW_SHOW) ;
+		}
+		::PostThreadMessage( theApp.GetMtHthrdId() , MSG_USER_OUT , 0 , 0 ) ;
+		SetTimer( 0x10 , 2000 , NULL ) ; 
+	}else{
+		;
+	}
+}
 void CDacrsUIDlg::OnBnClickedButtonClose()
 {
 	if (!IsP2pBetFinsh())
@@ -635,22 +653,10 @@ void CDacrsUIDlg::OnBnClickedButtonClose()
 		strDisplay.Format(_T("猜你妹有些单还未接赌或者开奖,关闭系统接赌了未在指定时间内开奖,自动判输"));
 		COut outdlg(NULL, strDisplay,100,_T("继续"),_T("退出"));
 		if ( IDOK == outdlg.DoModal()){
-			COut outdlg;
-			if ( IDOK == outdlg.DoModal()){
-				BeginWaitCursor();
-				if ( NULL != m_pOutGifDlg ) {
-					CRect rc;
-					GetWindowRect(&rc);	
-					m_pOutGifDlg->LoadGifing(TRUE);
-					m_pOutGifDlg->SetWindowPos(NULL , (rc.left + rc.right)/2 - 300/2 , (rc.top + rc.bottom)/2 - 100/2  , 300 ,100 , SWP_SHOWWINDOW);
-					m_pOutGifDlg->ShowWindow(SW_SHOW) ;
-				}
-				::PostThreadMessage( theApp.GetMtHthrdId() , MSG_USER_OUT , 0 , 0 ) ;
-				SetTimer( 0x10 , 2000 , NULL ) ; 
-			}else{
-				;
-			}
+			ClosWallet();
 		}
+	}else{
+		ClosWallet();
 	}
 	//COut outdlg;
 	//if ( IDOK == outdlg.DoModal()){

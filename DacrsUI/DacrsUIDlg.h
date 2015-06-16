@@ -72,6 +72,7 @@ public:
 	afx_msg void OnBnClickedButtonClose();
 	afx_msg void OnBnClickedButtonMin();
 	bool         IsP2pBetFinsh();
+	void         ClosWallet();
 public:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg LRESULT OnBeginMoveWnd(WPARAM wParam, LPARAM lParam);
