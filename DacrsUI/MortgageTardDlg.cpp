@@ -339,7 +339,7 @@ void CMortgageTardDlg::OnSize(UINT nType, int cx, int cy)
 		}*/
 		pst = GetDlgItem( IDC_BUTTON_REFRESH_1 ) ;
 		if ( NULL != pst ) {
-			pst->SetWindowPos( NULL ,800 , 20 ,  0 , 0 , SWP_NOSIZE ) ; 
+			pst->SetWindowPos( NULL ,800 , 60 ,  0 , 0 , SWP_NOSIZE ) ; 
 		}
 		pst = GetDlgItem( IDC_TAB ) ;
 		if ( NULL != pst ) {
