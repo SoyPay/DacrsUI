@@ -101,7 +101,7 @@ void CRedPacketList::ShowTxDetail(CString txhash)
 			string regid  =CSoyPayHelp::getInstance()->GetNotFullRegID(vSendid);
 			double money = (userinfo.amount*1.0)/COIN;
 			//showdata.AppendFormat(_T(" %s                       %.8f\r\n\r\n"),regid.c_str(),money);
-			showdata.Format(_T("%d"),i);
+			showdata.Format(_T("%d"),(i+1));
 			m_listCtrl.InsertItem(i, showdata);					//ÐòºÅ
 
 			showdata.Format(_T("%s"),regid.c_str());
