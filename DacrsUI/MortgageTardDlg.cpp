@@ -1472,8 +1472,8 @@ LRESULT CMortgageTardDlg::onBnCLick( WPARAM wParam, LPARAM lParam )
 }
 bool  CMortgageTardDlg::IsAcceptRedPacket(CString account,uistruct::REDPACKETPOOL_t pPoolList)
 {
-	for (int i =0;i < pPoolList.packets_num;i++)
-	{
+	//for (int i =0;i < pPoolList.packets_num;i++)
+	//{
 		CString strCommand,strShowData;
 		strCommand.Format(_T("%s %s"),_T("gettxdetail") ,pPoolList.send_hash );
 		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
@@ -1523,7 +1523,7 @@ bool  CMortgageTardDlg::IsAcceptRedPacket(CString account,uistruct::REDPACKETPOO
 		std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue.GetString());
 		memcpy(&redPacket, &vTemp[0], sizeof(uistruct::RED_DATA));
 
-		for (int i =0;i <redPacket.dbdata.number;i++)
+		for (int i =0;i <redPacket.dbdata.takennum;i++)
 		{
 			uistruct::USER_INFO userinfo = redPacket.userinfo[0];
 			std::vector<unsigned char> vSendid;
@@ -1535,7 +1535,7 @@ bool  CMortgageTardDlg::IsAcceptRedPacket(CString account,uistruct::REDPACKETPOO
 			}
 		}
 
-	}
+	//}
 
 	return false;
 }
