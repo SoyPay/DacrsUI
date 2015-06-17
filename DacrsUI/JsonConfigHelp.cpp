@@ -20,12 +20,60 @@ void CJsonConfigHelp::ReadJsonConfig(const CString& strFilePath)
 	Json::Value root;  
 	if (reader.parse(ifs, root,false))
 	{
-		ReadScriptCfgData(root);
-		ReadDarkCoinCfgData(root);
-		ReadP2PCfgData(root);
-		ReadNetParmCfgData(root);
-		ReadLogParamCfg(root);
-		ReadRedPacketCfgData(root);
+		string strTemp = root.toStyledString();
+		int pos = strTemp.find("script");
+		if (pos > 0)
+		{
+			ReadScriptCfgData(root);
+		}else{
+			::MessageBox( NULL , _T("script Œ¥≈‰÷√") , "Error" , MB_ICONERROR) ;
+			exit(0);
+		}
+
+		pos = strTemp.find("darkcoin");
+		if (pos >0)
+		{
+			ReadDarkCoinCfgData(root);
+		}else{
+			::MessageBox( NULL , _T("darkcoin Œ¥≈‰÷√") , "Error" , MB_ICONERROR) ;
+			exit(0);
+		}
+		pos = strTemp.find("p2pbet");
+		if (pos > 0)
+		{
+			ReadP2PCfgData(root);
+		}else{
+			::MessageBox( NULL , _T("p2pbet Œ¥≈‰÷√") , "Error" , MB_ICONERROR) ;
+			exit(0);
+		}
+		
+		pos = strTemp.find("netparam");
+		if (pos > 0)
+		{
+			ReadNetParmCfgData(root);
+		}else{
+			::MessageBox( NULL , _T("netparam Œ¥≈‰÷√") , "Error" , MB_ICONERROR) ;
+			exit(0);
+		}
+
+		pos = strTemp.find("logcfg");
+		if (pos >0)
+		{
+			ReadLogParamCfg(root);
+		}else{
+			::MessageBox( NULL , _T("logcfg Œ¥≈‰÷√") , "Error" , MB_ICONERROR) ;
+			exit(0);
+		}
+
+		pos = strTemp.find("redpacket");
+		if (pos >0)
+		{
+			ReadRedPacketCfgData(root);
+		}else{
+			::MessageBox( NULL , _T("redpacket Œ¥≈‰÷√") , "Error" , MB_ICONERROR) ;
+			exit(0);
+		}
+		
 	}
 	ifs.close();
 }
