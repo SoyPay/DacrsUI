@@ -164,7 +164,7 @@ BOOL CSendRedPacketRecord::Create(LPCTSTR lpszTemplateName, CWnd* pParentWnd)
 	}
 
 	/// listbox ±³¾°ÑÕÉ«
-	m_hbrush = CreateSolidBrush(RGB(255,252,247));
+	m_hbrush = CreateSolidBrush(RGB(255,236,229));
 
 	return bRes ;
 }
