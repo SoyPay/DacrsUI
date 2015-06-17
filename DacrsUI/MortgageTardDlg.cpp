@@ -260,7 +260,7 @@ BOOL CMortgageTardDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, U
 		m_tab.GetClientRect(rc);
 		rc.bottom -= 1;
 		rc.left += 1;
-		rc.top += 33;
+		rc.top += 30;
 		rc.right -= 2;
 		m_BetRecord.MoveWindow(&rc);
 		m_SendRecord.MoveWindow(&rc);

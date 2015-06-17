@@ -133,7 +133,8 @@ BOOL CAcceptRedPacketRecord::Create(LPCTSTR lpszTemplateName, CWnd* pParentWnd)
 		GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(_T("¹²:0"));
 	}
 	/// listbox ±³¾°ÑÕÉ«
-	m_hbrush = CreateSolidBrush(RGB(255,252,247));
+	//m_hbrush = CreateSolidBrush(RGB(255,252,247));RGB(255,236,229)
+	m_hbrush = CreateSolidBrush(RGB(255,236,229));
 	return bRes;
 }
 
