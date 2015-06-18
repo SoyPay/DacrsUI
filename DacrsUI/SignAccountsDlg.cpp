@@ -66,16 +66,16 @@ void CSignAccountsDlg::OnBnClickedButtonSend()
 	if ( _T("") != address ) {
 		CString strCommand , strShowData,strFee ;
 
-		strCommand.Format(_T("%s %s %lld"),_T("getaccountinfo") ,address);
+	/*	strCommand.Format(_T("%s %s"),_T("getaccountinfo") ,address);
 		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 		if (strShowData == _T(""))
 		{
 			::MessageBox( this->GetSafeHwnd() ,_T("服务器没有反应") , _T("提示") , MB_ICONINFORMATION ) ;
-		}
+		}*/
 		Json::Reader reader;  
 		Json::Value root; 
-		if (!reader.parse(strShowData.GetString(), root)) 
-			return  ;
+		//if (!reader.parse(strShowData.GetString(), root)) 
+		//	return  ;
 
 
 		GetDlgItem(IDC_EDIT_FEE)->GetWindowText(strFee);
