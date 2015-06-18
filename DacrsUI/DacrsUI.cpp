@@ -818,7 +818,8 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 			pApp->m_MsgQueue.push(postmsg);
 			
 			
-			if ((tempTimemsg - RecivetxMsgTimeLast)>10 || RecivetxMsgTimeLast == 0)
+		//	if ((tempTimemsg - RecivetxMsgTimeLast)>10 || RecivetxMsgTimeLast == 0)
+			if(m_Blockchanged.high == m_Blockchanged.tips)
 			{	
 				/// 更新tipblock hash
 				CPostMsg postblockmsg(MSG_USER_GET_UPDATABASE,WM_UP_BlLOCKTIP);
@@ -827,19 +828,22 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 				pApp->m_MsgQueue.push(postblockmsg);  
 
 			
-				/// 更新钱包
+				/// 更新钱包地址
 				CPostMsg postuimsg(MSG_USER_GET_UPDATABASE,WM_UP_ADDRESS);
 				pApp->m_MsgQueue.push(postuimsg);
 
+				// 更新赌约池
 				CPostMsg postpoolmsg(MSG_USER_GET_UPDATABASE,WM_UP_BETPOOL);
 				pApp->m_MsgQueue.push(postpoolmsg);
 
+				// 更新红包池
 				CPostMsg postredpoolmsg(MSG_USER_GET_UPDATABASE,WM_REDPACKETPOOL);
 					pApp->m_MsgQueue.push(postredpoolmsg);
-
+				/// 赌约界面地址列表
 				CPostMsg postp2pmsg(MSG_USER_P2P_UI,WM_UP_ADDRESS);
 				pApp->m_MsgQueue.push(postp2pmsg);
 
+				/// 红包界面地址列表
 				CPostMsg postredmsg(MSG_USER_REDPACKET_UI,WM_UP_ADDRESS);
 				pApp->m_MsgQueue.push(postredmsg);
 

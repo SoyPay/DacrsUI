@@ -432,7 +432,7 @@ void CDacrsUIApp::UpdateAppRecord(string txdetail){
 	uistruct::REVTRANSACTION_t transcion;
 	if (transcion.JsonToStruct(txdetail))
 	{
-		CString strCommand,strShowData,strShow;
+		/*CString strCommand,strShowData,strShow;
 		strCommand.Format(_T("%s %s"),_T("getaccountinfo") ,theApp.m_betScritptid );
 		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 
@@ -462,9 +462,9 @@ void CDacrsUIApp::UpdateAppRecord(string txdetail){
 			{
 				DesAddrRedPacket = root["Address"].asCString();
 			}
-		}
+		}*/
 		
-		if (!strcmp(transcion.desaddr.c_str(),DesAddrBet))
+		if (!strcmp(transcion.desregid,theApp.m_betScritptid))
 		{
 			string nValue = transcion.Contract;
 			std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue);
@@ -478,7 +478,7 @@ void CDacrsUIApp::UpdateAppRecord(string txdetail){
 			{
 				SendBetRecord(vTemp,transcion);
 			}
-		}else  if (!strcmp(transcion.desaddr.c_str(),DesAddrRedPacket)){ //// 接龙红包	
+		}else  if (!strcmp(transcion.desregid,theApp.m_redPacketScriptid)){ //// 接龙红包	
 			string nValue = transcion.Contract;
 			std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue);
 			if (vTemp[0] == TX_COMM_SENDREDPACKET)
@@ -612,151 +612,151 @@ void CDacrsUIApp::ClearTransaction()
 {
 	m_SqliteDeal.ClearTableData(_T("t_transaction"));
 }
-BOOL  CDacrsUIApp::UpdateP2pBetRecord()
-{
-	uistruct::P2PBETRECORDLIST pTransaction;
-	m_SqliteDeal.GetP2PQuizRecordList(_T(" 1=1 "), &pTransaction);
-
-	if (0 == pTransaction.size() ) return FALSE ;
-
-	vector<string> vSignHash;
-	std::vector<uistruct::P2P_QUIZ_RECORD_t>::const_iterator const_it;
-	for (const_it = pTransaction.begin() ; const_it != pTransaction.end() ; const_it++ ) {
-		vSignHash.push_back(const_it->tx_hash);
-	}
-	if (vSignHash.size() == 0)
-	{
-		return true;
-	}
-	Json::Reader reader; 
-	Json::Value root;
-	root["method"] = "getappkeyvalue";
-
-	Json::Value item;
-	for ( size_t i = 0;i< vSignHash.size(); i++ )
-	{
-		item.append(vSignHash.at(i));
-	}
-	root["params"].append(theApp.m_betScritptid.GetBuffer());
-	root["params"].append(item);
-
-	CString strData ,strShowData ;
-
-	strData.Format(_T("%s") , root.toStyledString().c_str() ) ;
-
-	CSoyPayHelp::getInstance()->SendContacrRpc(strData , strShowData);
-	if (strShowData.Find("key") <0)
-	{
-		return false;
-	}
-	if (!reader.parse(strShowData.GetString(), root)) 
-		return FALSE;
-	int size = root.size();
-	for ( int index =0; index < size; ++index )
-	{
-		CString txhash = root[index]["key"].asCString();
-		CString nValue = root[index]["value"].asCString();
-		INT64   nTime  = root[index]["confirmedtime"].asInt64() ;
-		int     nConfirmHeight = root[index]["confirmHeight"].asInt() ;
-		uistruct::DBBET_DATA DBbet;
-		memset(&DBbet , 0 , sizeof(uistruct::DBBET_DATA));
-		std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue.GetString());
-		uistruct::P2P_QUIZ_RECORD_t  betrecord;
-		//theApp.cs_SqlData.Lock();
-		//int nItem =  theApp.m_SqliteDeal.FindDB(_T("t_p2p_quiz") , txhash ,_T("tx_hash"),&betrecord ) ;
-		//theApp.cs_SqlData.Unlock();
-		CString strCond;
-		strCond.Format(_T(" tx_hash='%s' "), txhash);
-		int nItem =m_SqliteDeal.GetP2PQuizRecordItem(strCond, &betrecord ) ;
-		if (vTemp.size() == 0)  /// 此条数据在应用数据库中被删除了,如果被接赌了,说明已经揭赌了
-		{
-			if (strlen(betrecord.left_addr) != 0 && (betrecord.state == 1 || betrecord.state == 4 || betrecord.state == 5))
-			{
-				CString strField,strWhere;
-				strField.Format(_T("state = %d ") , 2) ;
-				strWhere.Format(_T("tx_hash = '%s'") , txhash );
-
-				//更新数据
-				if ( !m_SqliteDeal.UpdateTableItem(_T("t_p2p_quiz") , strField , strWhere )) {
-					TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , txhash );
-				}
-			}
-			continue;
-		}
-		memcpy(&DBbet, &vTemp[0], sizeof(DBbet));
-
-		if (DBbet.betstate == 0x00 && betrecord.state ==4)   //正在接赌
-		{
-			continue;
-		}
-
-		if (DBbet.betstate == 0x01 && betrecord.state ==5)   //正在揭赌
-		{
-			continue;
-		}
-		int nComfirmed = 0 ;
-		if ( 0 != nTime ) {
-			nComfirmed = 1 ;
-		}
-
-		int state = DBbet.betstate;
-		string txaccepthash;
-		if ( state == 1)
-		{
-			std::vector<unsigned char> vTemp;// = CSoyPayHelp::getInstance()->ParseHex(string(DBbet.accepthash,DBbet.accepthash+sizeof(DBbet.accepthash)));
-			vTemp.assign(DBbet.accepthash,DBbet.accepthash+sizeof(DBbet.accepthash));
-			reverse(vTemp.begin(),vTemp.end());
-			txaccepthash = CSoyPayHelp::getInstance()->HexStr(vTemp);
-			CString strCommand;
-			strCommand.Format(_T("%s %s"),_T("gettxdetail") ,txaccepthash.c_str() );
-			CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-			Json::Value root1;
-			if (!reader.parse(strShowData.GetString(), root1)) 
-				continue;
-			int npos = strShowData.Find("confirmHeight");
-			int confirh = 0;
-			if ( npos >= 0 ) { //
-				confirh = root1["confirmHeight"].asInt() ;    //交易被确认的高度
-			}
-			strCommand.Format(_T("%s"),_T("getinfo"));
-			CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-			if (!reader.parse(strShowData.GetString(), root1)) 
-				continue;
-			int curheight =root1["blocks"].asInt();
-			if (curheight >=(confirh +DBbet.hight ))
-			{
-				state = 3;                              ///说明超时了
-			}
-		}
-		//更新数据库  update t_p2p_quiz set timeout=15 where actor=0; 
-		CString strSql , strField  , strWhere;
-		vTemp.clear();
-		vTemp.assign(DBbet.acceptbetid,DBbet.acceptbetid+sizeof(DBbet.acceptbetid));
-		string acceptaddr = CSoyPayHelp::getInstance()->HexStr(vTemp);
-		CString strCommand;
-		strCommand.Format(_T("%s %s"),_T("getaccountinfo") ,acceptaddr.c_str() );
-		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-		Json::Value rootinfo;
-		if (!reader.parse(strShowData.GetString(), rootinfo)) 
-			continue;
-		CString acceptbase;
-		if (strShowData.Find("Address") >= 0)
-		{
-			acceptbase =  rootinfo["Address"].asCString();
-		}
-		strField.Format(_T("send_time = %ld , ") , nTime) ;
-		strField.AppendFormat(" right_addr = '%s' ,",acceptbase );
-		strField.AppendFormat(_T("comfirmed = %d ,height = %d ,state = %d ,relate_hash = '%s' ,guess_num = %d ") ,nComfirmed ,nConfirmHeight ,state ,txaccepthash.c_str() ,(int)DBbet.acceptebetdata ) ;
-		strWhere.Format(_T("tx_hash = '%s'") , txhash );
-
-		//更新数据
-		if ( !m_SqliteDeal.UpdateTableItem(_T("t_p2p_quiz") , strField , strWhere )) {
-			TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , txhash );
-		}
-	}
-	return true;
-}
+//BOOL  CDacrsUIApp::UpdateP2pBetRecord()
+//{
+//	uistruct::P2PBETRECORDLIST pTransaction;
+//	m_SqliteDeal.GetP2PQuizRecordList(_T(" 1=1 "), &pTransaction);
+//
+//	if (0 == pTransaction.size() ) return FALSE ;
+//
+//	vector<string> vSignHash;
+//	std::vector<uistruct::P2P_QUIZ_RECORD_t>::const_iterator const_it;
+//	for (const_it = pTransaction.begin() ; const_it != pTransaction.end() ; const_it++ ) {
+//		vSignHash.push_back(const_it->tx_hash);
+//	}
+//	if (vSignHash.size() == 0)
+//	{
+//		return true;
+//	}
+//	Json::Reader reader; 
+//	Json::Value root;
+//	root["method"] = "getappkeyvalue";
+//
+//	Json::Value item;
+//	for ( size_t i = 0;i< vSignHash.size(); i++ )
+//	{
+//		item.append(vSignHash.at(i));
+//	}
+//	root["params"].append(theApp.m_betScritptid.GetBuffer());
+//	root["params"].append(item);
+//
+//	CString strData ,strShowData ;
+//
+//	strData.Format(_T("%s") , root.toStyledString().c_str() ) ;
+//
+//	CSoyPayHelp::getInstance()->SendContacrRpc(strData , strShowData);
+//	if (strShowData.Find("key") <0)
+//	{
+//		return false;
+//	}
+//	if (!reader.parse(strShowData.GetString(), root)) 
+//		return FALSE;
+//	int size = root.size();
+//	for ( int index =0; index < size; ++index )
+//	{
+//		CString txhash = root[index]["key"].asCString();
+//		CString nValue = root[index]["value"].asCString();
+//		INT64   nTime  = root[index]["confirmedtime"].asInt64() ;
+//		int     nConfirmHeight = root[index]["confirmHeight"].asInt() ;
+//		uistruct::DBBET_DATA DBbet;
+//		memset(&DBbet , 0 , sizeof(uistruct::DBBET_DATA));
+//		std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue.GetString());
+//		uistruct::P2P_QUIZ_RECORD_t  betrecord;
+//		//theApp.cs_SqlData.Lock();
+//		//int nItem =  theApp.m_SqliteDeal.FindDB(_T("t_p2p_quiz") , txhash ,_T("tx_hash"),&betrecord ) ;
+//		//theApp.cs_SqlData.Unlock();
+//		CString strCond;
+//		strCond.Format(_T(" tx_hash='%s' "), txhash);
+//		int nItem =m_SqliteDeal.GetP2PQuizRecordItem(strCond, &betrecord ) ;
+//		if (vTemp.size() == 0)  /// 此条数据在应用数据库中被删除了,如果被接赌了,说明已经揭赌了
+//		{
+//			if (strlen(betrecord.left_addr) != 0 && (betrecord.state == 1 || betrecord.state == 4 || betrecord.state == 5))
+//			{
+//				CString strField,strWhere;
+//				strField.Format(_T("state = %d ") , 2) ;
+//				strWhere.Format(_T("tx_hash = '%s'") , txhash );
+//
+//				//更新数据
+//				if ( !m_SqliteDeal.UpdateTableItem(_T("t_p2p_quiz") , strField , strWhere )) {
+//					TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , txhash );
+//				}
+//			}
+//			continue;
+//		}
+//		memcpy(&DBbet, &vTemp[0], sizeof(DBbet));
+//
+//		if (DBbet.betstate == 0x00 && betrecord.state ==4)   //正在接赌
+//		{
+//			continue;
+//		}
+//
+//		if (DBbet.betstate == 0x01 && betrecord.state ==5)   //正在揭赌
+//		{
+//			continue;
+//		}
+//		int nComfirmed = 0 ;
+//		if ( 0 != nTime ) {
+//			nComfirmed = 1 ;
+//		}
+//
+//		int state = DBbet.betstate;
+//		string txaccepthash;
+//		if ( state == 1)
+//		{
+//			std::vector<unsigned char> vTemp;// = CSoyPayHelp::getInstance()->ParseHex(string(DBbet.accepthash,DBbet.accepthash+sizeof(DBbet.accepthash)));
+//			vTemp.assign(DBbet.accepthash,DBbet.accepthash+sizeof(DBbet.accepthash));
+//			reverse(vTemp.begin(),vTemp.end());
+//			txaccepthash = CSoyPayHelp::getInstance()->HexStr(vTemp);
+//			CString strCommand;
+//			strCommand.Format(_T("%s %s"),_T("gettxdetail") ,txaccepthash.c_str() );
+//			CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
+//
+//			Json::Value root1;
+//			if (!reader.parse(strShowData.GetString(), root1)) 
+//				continue;
+//			int npos = strShowData.Find("confirmHeight");
+//			int confirh = 0;
+//			if ( npos >= 0 ) { //
+//				confirh = root1["confirmHeight"].asInt() ;    //交易被确认的高度
+//			}
+//			strCommand.Format(_T("%s"),_T("getinfo"));
+//			CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
+//			if (!reader.parse(strShowData.GetString(), root1)) 
+//				continue;
+//			int curheight =root1["blocks"].asInt();
+//			if (curheight >=(confirh +DBbet.hight ))
+//			{
+//				state = 3;                              ///说明超时了
+//			}
+//		}
+//		//更新数据库  update t_p2p_quiz set timeout=15 where actor=0; 
+//		CString strSql , strField  , strWhere;
+//		vTemp.clear();
+//		vTemp.assign(DBbet.acceptbetid,DBbet.acceptbetid+sizeof(DBbet.acceptbetid));
+//		string acceptaddr = CSoyPayHelp::getInstance()->HexStr(vTemp);
+//		CString strCommand;
+//		strCommand.Format(_T("%s %s"),_T("getaccountinfo") ,acceptaddr.c_str() );
+//		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
+//		Json::Value rootinfo;
+//		if (!reader.parse(strShowData.GetString(), rootinfo)) 
+//			continue;
+//		CString acceptbase;
+//		if (strShowData.Find("Address") >= 0)
+//		{
+//			acceptbase =  rootinfo["Address"].asCString();
+//		}
+//		strField.Format(_T("send_time = %ld , ") , nTime) ;
+//		strField.AppendFormat(" right_addr = '%s' ,",acceptbase );
+//		strField.AppendFormat(_T("comfirmed = %d ,height = %d ,state = %d ,relate_hash = '%s' ,guess_num = %d ") ,nComfirmed ,nConfirmHeight ,state ,txaccepthash.c_str() ,(int)DBbet.acceptebetdata ) ;
+//		strWhere.Format(_T("tx_hash = '%s'") , txhash );
+//
+//		//更新数据
+//		if ( !m_SqliteDeal.UpdateTableItem(_T("t_p2p_quiz") , strField , strWhere )) {
+//			TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , txhash );
+//		}
+//	}
+//	return true;
+//}
 
 void CDacrsUIApp::UpdateRedPacketPoolData()
 {

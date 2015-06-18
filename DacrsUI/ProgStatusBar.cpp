@@ -196,6 +196,7 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 	{
 		return 1;
 	}
+
 	//// blocktip¸ß¶È
 	theApp.blocktipheight = pBlockchanged.tips ;
 	if (!m_bProgressType)
