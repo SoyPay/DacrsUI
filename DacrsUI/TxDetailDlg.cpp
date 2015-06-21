@@ -73,7 +73,8 @@ void CTxDetailDlg::ShowTxDetail(CString jsontx)
 	}
 	if (tx.height != 0)
 	{
-		txdetail.AppendFormat(_T("交易超时高度:   %d\r\n\r\n"),tx.height);
+		int height = tx.height +250; 
+		txdetail.AppendFormat(_T("交易超时高度:   %d\r\n\r\n"),height);
 	}
 	if (tx.desaddr != "")
 	{
