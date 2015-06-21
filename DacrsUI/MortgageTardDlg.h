@@ -107,4 +107,6 @@ public:
 	void SetGrabParam();
 	afx_msg void OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
+	void       onShowLink();
+	CMFCLinkCtrl v_linkCtrl;
 };

@@ -533,7 +533,7 @@ bool CSoyPayHelp::IsOSVersionBelowXp()
 		strcpy( szOSName,"win_xp");    //win_xp 
 		CString strDisplay;
 		strDisplay.Format(_T("本程序在xp系统不稳定,是否继续"));
-		COut outdlg(NULL, strDisplay,100,_T("继续"),_T("退出"));
+		COut outdlg(NULL, strDisplay,100,_T("继续"),_T("退出"),true);
 		if ( IDCANCEL == outdlg.DoModal()){
 			exit(0);
 		}

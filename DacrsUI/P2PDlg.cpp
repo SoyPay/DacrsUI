@@ -32,6 +32,11 @@ CP2PDlg::~CP2PDlg()
 		DeleteObject(m_pBmp) ;
 		m_pBmp = NULL ;
 	}
+
+	v_linkCtrl.InternalRelease();
+	v_linkCtrl.ExternalRelease();
+	v_linkCtrl.OnFinalRelease();
+	v_linkCtrl.DestroyWindow();
 }
 
 void CP2PDlg::DoDataExchange(CDataExchange* pDX)
@@ -56,7 +61,7 @@ void CP2PDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BUTTON_NEXT, m_rBtnNext);
 	DDX_Control(pDX ,IDC_STATIC_COUNT_PAGE ,m_sCountpage ) ;
 	DDX_Control(pDX ,IDC_STATIC_MONEY ,m_money ) ;
-	
+	DDX_Control(pDX, IDC_MFCLINK1, v_linkCtrl);
 }
 
 
@@ -251,6 +256,9 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 
 		AddListaddrDataBox();
 		OnListPool();
+
+		onShowLink();
+
 		theApp.SubscribeMsg( theApp.GetMtHthrdId() , GetSafeHwnd() , MSG_USER_P2P_UI ) ;
 
 		/// 设置定时器刷新界面
@@ -389,7 +397,12 @@ void CP2PDlg::OnSize(UINT nType, int cx, int cy)
 			pst->SetWindowPos( NULL ,(rc.Width()/100)*33 ,  (rc.Height()/100)*52+2,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
 		}
 
-
+		pst = GetDlgItem( IDC_MFCLINK1 ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*51 ,  (rc.Height()/100)*59,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
+		}
 
 		
 
@@ -1353,4 +1366,9 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 
 	 }
 	 CDialogBar::OnTimer(nIDEvent);
+ }
+ void  CP2PDlg::onShowLink()
+ {
+	 v_linkCtrl.SetWindowText(_T("帮助"));
+	 v_linkCtrl.SetURL("http://www.dacrs.com/forum.php?mod=viewthread&tid=3487&extra=page%3D1");
  }

@@ -29,6 +29,11 @@ CMortgageTardDlg::~CMortgageTardDlg()
 		DeleteObject(m_pBmp) ;
 		m_pBmp = NULL ;
 	}	
+
+	v_linkCtrl.InternalRelease();
+	v_linkCtrl.ExternalRelease();
+	v_linkCtrl.OnFinalRelease();
+	v_linkCtrl.DestroyWindow();
 }
 
 void CMortgageTardDlg::DoDataExchange(CDataExchange* pDX)
@@ -53,6 +58,7 @@ void CMortgageTardDlg::DoDataExchange(CDataExchange* pDX)
 	//DDX_Control(pDX, IDC_BUTTON_NEXT, m_rBtnNext);
 	//DDX_Control(pDX ,IDC_STATIC_COUNT_PAGE ,m_sCountpage ) ;
 	DDX_Control(pDX ,IDC_STATIC_MONEY4 ,m_money ) ;
+	DDX_Control(pDX, IDC_MFCLINK1, v_linkCtrl);
 	
 
 }
@@ -298,6 +304,7 @@ BOOL CMortgageTardDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, U
 
 		AddListaddrDataBox();
 
+		onShowLink();
 		//OnListPool();
 		theApp.SubscribeMsg( theApp.GetMtHthrdId() , GetSafeHwnd() , MSG_USER_REDPACKET_UI ) ;
 	}
@@ -425,6 +432,13 @@ void CMortgageTardDlg::OnSize(UINT nType, int cx, int cy)
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
 			pst->SetWindowPos( NULL ,(rc.Width()/100)*33 ,  (rc.Height()/100)*54+2,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
+		}
+
+		pst = GetDlgItem( IDC_MFCLINK1 ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*51 ,  (rc.Height()/100)*59,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
 		}
 	}
 }
@@ -1573,4 +1587,9 @@ HBRUSH CMortgageTardDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 
 	// TODO:  如果默认的不是所需画笔，则返回另一个画笔
 	return hbr;
+}
+void  CMortgageTardDlg::onShowLink()
+{
+	v_linkCtrl.SetWindowText(_T("帮助"));
+	v_linkCtrl.SetURL("http://www.dacrs.com/forum.php?mod=viewthread&tid=3487&extra=page%3D1");
 }
