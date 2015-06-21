@@ -11,17 +11,22 @@
 
 IMPLEMENT_DYNAMIC(COut, CDialogEx)
 
-COut::COut(CWnd* pParent /*=NULL*/, CString strDisplay, int nFontSize,CString strok,CString strNo )
+COut::COut(CWnd* pParent /*=NULL*/, CString strDisplay, int nFontSize,CString strok,CString strNo ,bool showlink)
 	: CDialogEx(COut::IDD, pParent)
 {
 	m_strDisplay = strDisplay;
 	m_nFontSize = nFontSize;
 	m_strok = strok;
 	m_strno = strNo;
+	m_showLink = showlink;
 }
 
 COut::~COut()
 {
+	v_linkCtrl.InternalRelease();
+	v_linkCtrl.ExternalRelease();
+	v_linkCtrl.OnFinalRelease();
+	v_linkCtrl.DestroyWindow();
 }
 
 void COut::DoDataExchange(CDataExchange* pDX)
@@ -30,6 +35,7 @@ void COut::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_STATIC_TEXT, m_Text);
 	DDX_Control(pDX, IDC_BUTTON_OK, m_rBtnOK);
 	DDX_Control(pDX, IDC_BUTTON_NO, m_rBtnNO);
+	DDX_Control(pDX, IDC_MFCLINK1, v_linkCtrl);
 }
 
 
@@ -99,6 +105,11 @@ BOOL COut::OnInitDialog()
 	SetBkBmpNid( IDB_BITMAP_DLG_BALCK ) ;
 	m_fontGrid.CreatePointFont(100,_T("新宋体"));
 
+	v_linkCtrl.SetWindowText(_T(""));
+	if (m_showLink)
+	{
+		onShowLink();
+	}
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE
 }
@@ -191,4 +202,9 @@ void COut::OnBnClickedButtonOk()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	EndDialog(IDOK);
+}
+void  COut::onShowLink()
+{
+	v_linkCtrl.SetWindowText("关于xp不稳定的问题");
+	v_linkCtrl.SetURL("www.baidu.com");
 }

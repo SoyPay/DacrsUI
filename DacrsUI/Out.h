@@ -3,6 +3,7 @@
 #include "StaticTrans.h"
 #include "BmpBtn.h"
 #include "ShadeButtonST.h"
+#include "afxlinkctrl.h"
 
 // COut 对话框
 
@@ -11,7 +12,7 @@ class COut : public CDialogEx
 	DECLARE_DYNAMIC(COut)
 
 public:
-	COut(CWnd* pParent = NULL, CString strDisplay=_T(""), int nFontSize=120,CString strok=_T(""),CString strNo = _T(""));   // 标准构造函数
+	COut(CWnd* pParent = NULL, CString strDisplay=_T(""), int nFontSize=120,CString strok=_T(""),CString strNo = _T(""),bool showlink = false);   // 标准构造函数
 	virtual ~COut();
 
 // 对话框数据
@@ -32,6 +33,7 @@ public:
 	CStaticTrans     m_Text;
 	CShadeButtonST   m_rBtnOK;
 	CShadeButtonST   m_rBtnNO;
+	bool             m_showLink;
 	virtual BOOL OnInitDialog();
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
@@ -40,4 +42,6 @@ public:
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnBnClickedButtonNo();
 	afx_msg void OnBnClickedButtonOk();
+	void       onShowLink();
+	CMFCLinkCtrl v_linkCtrl;
 };
