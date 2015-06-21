@@ -128,6 +128,8 @@ BOOL CDacrsUIApp::InitInstance()
 		if(!EnableDebugPrivilege())
 			TRACE(_T("Call EnableDebugPrivilege failed!"));
 		//				AfxMessageBox(_T("Call EnableDebugPrivilege failed!"));
+		//// 不更新直接退出
+		exit(0); 
 	}
 
 	CheckUpdate();

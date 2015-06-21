@@ -628,6 +628,17 @@ void CMainDlg::OnBnClickedButtonImportwallet()
 	if (IDOK == dlg.DoModal())
 	{
 		CString strPath = dlg.GetPathName();
+		int pos = strPath.ReverseFind('.');
+		if (pos < 0)
+		{
+			return;
+		}
+		CString exeStr = strPath.Right(pos);
+		if (exeStr.CompareNoCase(_T(".smc")) != 0)
+		{
+			MessageBox(_T("导入钱包文件格式不正确"));
+			return;
+		}
 		CString strCommand;
 		strCommand.Format(_T("%s %s"),_T("importwallet"),strPath);
 		CStringA strSendData;
@@ -654,6 +665,7 @@ void CMainDlg::OnBnClickedButtonDumpwallet()
 	if (IDOK == dlg.DoModal())
 	{
 		CString strPath = dlg.GetPathName();
+		strPath.AppendFormat(_T(".smc"));
 		CString strCommand;
 		strCommand.Format(_T("%s %s"),_T("dumpwallet"),strPath);
 		CStringA strSendData;
