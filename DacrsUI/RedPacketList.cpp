@@ -77,7 +77,7 @@ void CRedPacketList::ShowTxDetail(CString txhash)
 		return ;
 
 	if (!reader.parse(strShowData.GetString(), root)) 
-		return ;;
+		return ;
 
 	CString nValue = root["value"].asCString();
 	uistruct::RED_DATA redPacket;

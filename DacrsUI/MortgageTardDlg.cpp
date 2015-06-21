@@ -1165,7 +1165,7 @@ void   CMortgageTardDlg::SendRedPackeSpecail(){
 	nTemp.Format(_T("%.8f"),money);
 	strContractData = m_RedPacketHelp.PacketSendSecpailContract((INT64)REAL_MONEY(atof(nTemp)),redNum,_T(""));
 
-	INT64 strTxFee = theApp.m_RedPacketCfg.SendRedPacketCommFee;
+	INT64 strTxFee = theApp.m_RedPacketCfg.SendRedPacketSpecailFee;
 	if (  strTxFee < 10000  ) {
 		::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
 		return ;
@@ -1591,5 +1591,5 @@ HBRUSH CMortgageTardDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 void  CMortgageTardDlg::onShowLink()
 {
 	v_linkCtrl.SetWindowText(_T("帮助"));
-	v_linkCtrl.SetURL("http://www.dacrs.com/forum.php?mod=viewthread&tid=3487&extra=page%3D1");
+	v_linkCtrl.SetURL("http://www.dacrs.com/forum.php?mod=viewthread&tid=3503&extra=page%3D1");
 }
