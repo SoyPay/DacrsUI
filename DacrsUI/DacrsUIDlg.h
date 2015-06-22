@@ -86,4 +86,6 @@ public:
 	void       Close(); 
 	void       CloseApp();
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
+	BOOL PreTranslateMessage(MSG* pMsg);
+	void OnOk();
 };

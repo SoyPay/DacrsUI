@@ -700,3 +700,28 @@ void CDacrsUIDlg::OnTimer(UINT_PTR nIDEvent)
 	}
 	CDialogEx::OnTimer(nIDEvent);
 }
+
+BOOL CDacrsUIDlg::PreTranslateMessage(MSG* pMsg)  
+{  
+  
+	if(pMsg->message == WM_KEYDOWN) 
+	{  
+  
+		switch(pMsg->wParam) 
+		{  
+  
+		case VK_RETURN: //»Ø³µ   
+			return TRUE;  
+  
+		case VK_ESCAPE: //ESC  
+			return TRUE;  
+  
+		}  
+  
+	}  
+	return CDialog::PreTranslateMessage(pMsg);  
+}  
+
+void CDacrsUIDlg::OnOk()
+{
+}
