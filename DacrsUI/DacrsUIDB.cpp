@@ -763,7 +763,7 @@ void CDacrsUIApp::UpdateRedPacketPoolData()
 	Json::Reader reader;  
 	Json::Value root; 
 	Json::Value root1;
-	m_SqliteDeal.ClearTableData(_T("t_quiz_pool"));
+	m_SqliteDeal.ClearTableData(_T("t_red_packets_pool"));
 	if(theApp.m_redPacketScriptid != _T(""))
 	{
 		CString strCommand;
