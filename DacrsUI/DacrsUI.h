@@ -165,6 +165,7 @@ public:
 
 	bool IsLuckyRedPacket(CString acceptregid,uistruct::RED_DATA redPacket);
 	INT64 GetRedPacketAmount(CString acceptregid,uistruct::RED_DATA redPacket);
+	bool  isMine(CString addr);
 public:
 	bool isStartMainDlg;
 	CNoUiMsgBuffer m_noUiMsgBuffer;
