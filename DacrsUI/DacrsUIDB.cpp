@@ -810,13 +810,14 @@ void CDacrsUIApp::UpdateRedPacketPoolData()
 
 				double money = (redPacket.dbdata.amount*1.0)/COIN;
 
+				double ava_money = money/redPacket.dbdata.number;
 				int packetype = redPacket.dbdata.type;
 				if (packetype == 3)
 				{
 					packetype = 2;
 				}
 				CString strSourceData;
-				strSourceData.Format(_T("'%s' , '%s','%lf','%d','%d','%s'") , newTxhash.c_str(),regid, money,redPacket.dbdata.number,packetype,redPacket.dbdata.message);
+				strSourceData.Format(_T("'%s' , '%s','%lf','%d','%d','%s','%lf'") , newTxhash.c_str(),regid, money,redPacket.dbdata.number,packetype,redPacket.dbdata.message,ava_money);
 				m_SqliteDeal.InsertTableItem(_T("t_red_packets_pool") ,strSourceData);
 			}
 		}
