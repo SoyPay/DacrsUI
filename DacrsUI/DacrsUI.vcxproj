@@ -123,6 +123,7 @@
     <None Include="res\bet_record.bmp" />
     <None Include="res\bitmap1.bmp" />
     <None Include="res\bitmap11.bmp" />
+    <None Include="res\bitmap13.bmp" />
     <None Include="res\bitmap4.bmp" />
     <None Include="res\Bitmap_begin.bmp" />
     <None Include="res\Bitmap_end.bmp" />
@@ -184,6 +185,9 @@
     <None Include="res\min1.bmp" />
     <None Include="res\min2.bmp" />
     <None Include="res\min3.bmp" />
+    <None Include="res\more1.bmp" />
+    <None Include="res\more2.bmp" />
+    <None Include="res\more3.bmp" />
     <None Include="res\Mortgage.bmp" />
     <None Include="res\mort_dlg.bmp" />
     <None Include="res\newaddr-1.bmp" />

@@ -879,6 +879,18 @@
     <None Include="res\profit_bakgrd.bmp">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="res\more1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\more2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\bitmap13.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\more3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="资源文件">
