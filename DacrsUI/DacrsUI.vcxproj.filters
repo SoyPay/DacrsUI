@@ -193,6 +193,18 @@
     <ClCompile Include="RedPacketList.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="NewMenu.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RPCDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="AutoComplete.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Subclass.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BmpBtn.h">
@@ -421,6 +433,18 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="RedPacketList.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="NewMenu.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RPCDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoComplete.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Subclass.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -850,6 +874,9 @@
       <Filter>资源文件</Filter>
     </None>
     <None Include="res\grab_rp_log_3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\profit_bakgrd.bmp">
       <Filter>资源文件</Filter>
     </None>
   </ItemGroup>

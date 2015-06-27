@@ -152,7 +152,16 @@ BOOL   CSqliteDeal::CreatRedPacketTable()
 	strCondition = _T("type='table' and name='t_red_packets_pool'");
 	if(!GetTableCountItem(strTableName, strCondition))
 	{
-		CString createSQL(_T("CREATE TABLE t_red_packets_pool(send_hash TEXT PRIMARY KEY,send_acct_id TEXT,total_amount INT,packets_num INT,packet_type INT, message TEXT )"));
+		CString createSQL(_T("CREATE TABLE t_red_packets_pool(send_hash TEXT PRIMARY KEY,send_acct_id TEXT,total_amount double,packets_num INT,packet_type INT, message TEXT,average_amount double )"));
+		if(!ExcuteSQL(pDBConn, NULL, createSQL, NULL))
+		{
+			LogPrint("INFO", "Create table t_p2p_quiz failed\n");
+			return FALSE;
+		}
+	}else if (!IsExistField(_T("t_red_packets_pool"),_T("average_amount"),_T("1=1")))
+	{
+		DeleteTable(_T("t_red_packets_pool"));
+		CString createSQL(_T("CREATE TABLE t_red_packets_pool(send_hash TEXT PRIMARY KEY,send_acct_id TEXT,total_amount double,packets_num INT,packet_type INT, message TEXT,average_amount double )"));
 		if(!ExcuteSQL(pDBConn, NULL, createSQL, NULL))
 		{
 			LogPrint("INFO", "Create table t_p2p_quiz failed\n");
@@ -1080,6 +1089,34 @@ void  CSqliteDeal::UpdataAllTableData(){
 			DeleteTableItem(_T("t_p2p_quiz"),strCondition);
 		}
 	}
+	uistruct::REDPACKETSENDLIST RedPackeSendRecordList;
+	GetRedPacketSendRecordList(_T(" 1=1 "), &RedPackeSendRecordList);
+	std::vector<uistruct::REDPACKETSEND_t>::const_iterator const_it1;
+	for (const_it1 = RedPackeSendRecordList.begin() ; const_it1 != RedPackeSendRecordList.end() ; const_it1++ ) {
+		CString strCondition(_T(""));
+		strCondition.Format(" hash = '%s'", const_it1->send_hash);
+		int nItem =GetTableCountItem(_T("t_transaction") ,strCondition);
+		if (nItem == 0)
+		{
+			strCondition.Format(" send_hash = '%s' ", const_it1->send_hash);
+			DeleteTableItem(_T("t_red_packets_send"),strCondition);
+		}
+	}
+
+	uistruct::REDPACKETGRABLIST RedPackeGrabRecordList;
+	GetRedPacketGrabRecordList(_T(" 1=1 "), &RedPackeGrabRecordList);
+	std::vector<uistruct::REDPACKETGRAB_t>::const_iterator const_it2;
+	for (const_it2 = RedPackeGrabRecordList.begin() ; const_it2 != RedPackeGrabRecordList.end() ; const_it2++ ) {
+		CString strCondition(_T(""));
+		strCondition.Format(" hash = '%s'", const_it2->grab_hash);
+		int nItem =GetTableCountItem(_T("t_transaction") ,strCondition);
+		if (nItem == 0)
+		{
+			strCondition.Format(" grab_hash = '%s' ", const_it2->grab_hash);
+			DeleteTableItem(_T("t_red_packets_grab"),strCondition);
+		}
+	}
+
 }
 //获取record
 int CallGetRedPackeSendRecordItem(void *para, int n_column, char ** column_value, char ** column_name)
@@ -1192,7 +1229,7 @@ int CallGetRedPackePoolRecordItem(void *para, int n_column, char ** column_value
 	uistruct::REDPACKETPOOL_t * RedPacketRecord =  (uistruct::REDPACKETPOOL_t *)para;
 	if(NULL == column_value[0])
 		return -1;
-	if(n_column != 6)
+	if(n_column != 7)
 		return -1;
 
 
@@ -1271,4 +1308,58 @@ int CSqliteDeal::GetRedPacketPoolRecordList(const CString &strCondition, uistruc
 	strSQL.Format(_T("SELECT * FROM t_red_packets_pool WHERE %s"),(LPSTR)(LPCTSTR)strCondition);
 	return ExcuteSQL(pDBConn , &CallGetRedPackePoolRecordList, strSQL, (void*)(RedPackePoolRecordList));
 
+}
+
+int CallTableItem(void *para, int n_column, char ** column_value, char ** column_name)
+{
+	CString filedname;
+	filedname.Format(_T("%s") , (char*)para ) ;
+	if(NULL == column_value[0])
+		return 0;
+
+	for (int i = 0;i<n_column;i++)
+	{
+		CString strValue ;
+		strValue.Format(_T("%s") , column_name[0] ) ;
+		if (strcmp(filedname,strValue) == 0)
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
+
+BOOL CSqliteDeal::IsExistField(const CString tablename,const CString filed , const CString &strCond)
+{
+	sqlite3 ** pDBConn = GetDBConnect(); //获取数据库连接
+	CString strSQL(_T(""));
+	strSQL.Format(_T("SELECT * FROM t_red_packets_pool"));
+	BOOL isExist = false;
+	char **pazResult;
+	char *zErrMsg = NULL;
+	int nRow, nCol;
+	int rc = sqlite3_get_table(*pDBConn, strSQL, &pazResult, &nRow, &nCol, &zErrMsg);
+	if( rc!=SQLITE_OK )
+	{
+		fprintf(stderr, "SQL error: %s\n", zErrMsg);
+		return FALSE;
+	}
+	for(int i=0; i<nCol;++i) {
+		CString strValue ;
+		strValue.Format(_T("%s") , pazResult[i] ) ;
+		if (strcmp(filed,strValue) == 0)
+		{
+			isExist = TRUE;
+			break;
+		}
+	}
+	sqlite3_free_table(pazResult);
+	return isExist;
+}
+
+BOOL CSqliteDeal::DeleteTable(const CString tablename){
+	sqlite3 ** pDBConn = GetDBConnect(); //获取数据库连接
+	CString strSQL(_T(""));
+	strSQL.Format(_T("drop %s"),(LPSTR)(LPCTSTR)tablename);
+	return ExcuteSQL(pDBConn , &CallTableItem, strSQL, NULL);
 }

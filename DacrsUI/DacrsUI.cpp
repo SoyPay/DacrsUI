@@ -392,9 +392,30 @@ void CDacrsUIApp::StartblockThrd()
 	m_hblockThread = (HANDLE)_beginthreadex(NULL,	0,	blockProc, this, 0, &ublockThreadId);	
 	m_msgThread = (HANDLE)_beginthreadex(NULL,	0,	ProcessMsg, this, 0, &umsgThreadId);
 	m_hProcessNoUiMsgThread = (HANDLE)_beginthreadex(NULL,	0,	ProcessNoUiMsg, this, 0, &m_uProNoUiMsgThreadId);
+	m_hProcessAppTxThread = (HANDLE)_beginthreadex(NULL,	0,	ProcessAppTx, this, 0, &m_uProAppTxThreadId);	
 	return ;
 }
 
+UINT __stdcall CDacrsUIApp::ProcessAppTx(LPVOID pParam)
+{
+	CDacrsUIApp * pUiDemeDlg  = (CDacrsUIApp*)pParam ;
+	CPostMsg Postmsg ;
+	while ( true)
+	{
+
+		if (theApp.m_msgAutoDelete)
+		{
+			return 1;
+		}
+		/// 同步以后更新数据库表
+		if (theApp.IsSyncBlock )
+		{
+			theApp.m_SqliteDeal.UpdataAllTableData();
+			return 1;
+		}
+	}
+	return 1 ;
+}
 UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 	CDacrsUIApp * pUiDemeDlg  = (CDacrsUIApp*)pParam ;
 	CPostMsg Postmsg ;
