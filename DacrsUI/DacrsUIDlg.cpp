@@ -67,6 +67,7 @@ CDacrsUIDlg::CDacrsUIDlg(CWnd* pParent /*=NULL*/)
 	m_pAddApp  = NULL  ;
 	dlgType = 0;
 	m_pOutGifDlg =  NULL ;
+	m_pRPCDlg = NULL;
 }
 
 void CDacrsUIDlg::DoDataExchange(CDataExchange* pDX)
@@ -91,6 +92,7 @@ BEGIN_MESSAGE_MAP(CDacrsUIDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_CLOSE, &CDacrsUIDlg::OnBnClickedButtonClose)
 	ON_BN_CLICKED(IDC_BUTTON_MIN, &CDacrsUIDlg::OnBnClickedButtonMin)
 	ON_WM_TIMER()
+	ON_COMMAND(ID__BAKWALLET, &CDacrsUIDlg::BakWallet)
 END_MESSAGE_MAP()
 
 
@@ -215,6 +217,11 @@ int CDacrsUIDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	LoadListDataInfo();//加载数据库信息
 
+	if ( NULL == m_pRPCDlg ) {
+		m_pRPCDlg = new CRPCDlg;
+		m_pRPCDlg->Create(CRPCDlg::IDD,this);
+		m_pRPCDlg->ShowWindow(SW_HIDE);
+	}
 	//TOP
 	if( NULL == m_pTitleBar ){
 		m_pTitleBar = new CIndTitleBar ;
@@ -364,6 +371,10 @@ void CDacrsUIDlg::DestroyDlg()
 	if ( NULL != m_pAddApp ) {
 		delete m_pAddApp ;
 		m_pAddApp = NULL ;
+	}
+	if ( NULL != m_pRPCDlg ) {
+		delete m_pRPCDlg ;
+		m_pRPCDlg = NULL ;
 	}
 }
 //主界面
@@ -516,7 +527,7 @@ void  CDacrsUIDlg::LoadListDataInfo()
 	//加载连表数据,没有的表创建
 
 	SyncAddrInfo();
-	theApp.m_SqliteDeal.UpdataAllTableData();
+	//theApp.m_SqliteDeal.UpdataAllTableData();
 	
 }
 void CDacrsUIDlg::CloseThread()
@@ -724,4 +735,43 @@ BOOL CDacrsUIDlg::PreTranslateMessage(MSG* pMsg)
 
 void CDacrsUIDlg::OnOk()
 {
+}
+
+LRESULT CDacrsUIDlg::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
+{
+	// TODO: 在此添加专用代码和/或调用基类
+	switch(message) 
+	{
+	case WM_COMMAND:
+		{
+			if ( ID_RPC_CMD == LOWORD(wParam) ) {
+				CRect rcWindow;
+				GetWindowRect(&rcWindow);
+				if ( NULL != m_pRPCDlg ){
+					m_pRPCDlg->MoveWindow(rcWindow.right,rcWindow.top,300,rcWindow.Height()-8);
+					m_pRPCDlg->ShowWindow(SW_SHOW);
+				}
+			}
+		}
+		break;
+	default:
+		break ;
+	}
+	return CDialog::WindowProc(message, wParam, lParam);
+}
+
+void CDacrsUIDlg::BakWallet()
+{
+	// TODO: 在此添加命令处理程序代码
+	
+	CFileDialog dlg(FALSE,NULL,NULL,OFN_HIDEREADONLY|OFN_FILEMUSTEXIST ,_T("*.dat||"));
+	if (IDOK == dlg.DoModal())
+	{
+		CString strPath = dlg.GetPathName();
+		strPath.AppendFormat(_T(".dat"));
+		CString strCommand;
+		strCommand.Format(_T("%s %s"),_T("backupwallet"),strPath);
+		CStringA strSendData;
+		CSoyPayHelp::getInstance()->SendRpc(strCommand,strSendData);
+	}
 }

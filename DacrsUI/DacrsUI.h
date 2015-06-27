@@ -59,12 +59,15 @@ public:
 	UINT            umsgThreadId;
 	HANDLE          m_hProcessNoUiMsgThread;
 	UINT            m_uProNoUiMsgThreadId;
+	HANDLE          m_hProcessAppTxThread;
+	UINT            m_uProAppTxThreadId;
 	bool            m_blockAutoDelete;
 	bool            m_msgAutoDelete;
 	void            StartblockThrd();  
 	static UINT __stdcall blockProc(LPVOID pParam);
 	static UINT __stdcall ProcessMsg(LPVOID pParam);
 	static UINT __stdcall ProcessNoUiMsg(LPVOID pParam);
+	static UINT __stdcall ProcessAppTx(LPVOID pParam);
 public:
 	CMyMutex		cs_MsgDisptch ;    //消息订阅临界
 	CMyMutex        cs_SqlData ;       //数据列表临界
