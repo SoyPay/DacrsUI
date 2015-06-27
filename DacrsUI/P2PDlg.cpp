@@ -62,6 +62,9 @@ void CP2PDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX ,IDC_STATIC_COUNT_PAGE ,m_sCountpage ) ;
 	DDX_Control(pDX ,IDC_STATIC_MONEY ,m_money ) ;
 	DDX_Control(pDX, IDC_MFCLINK1, v_linkCtrl);
+
+	DDX_Control(pDX, IDC_WINERLOSER, m_rBtnWinerloser);
+
 }
 
 
@@ -223,6 +226,15 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_rBtnNext.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(255, 255, 255));
 		m_rBtnNext.SizeToContent();
 
+		m_rBtnWinerloser.SetBitmaps( IDB_BITMAP_WINERLOUSER , RGB(255, 255, 0) , IDB_BITMAP_WINERLOUSER , RGB(255, 255, 255) );
+		m_rBtnWinerloser.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+		m_rBtnWinerloser.SetWindowText("") ;
+		m_rBtnWinerloser.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(41, 57, 85));
+		m_rBtnWinerloser.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(41, 57, 85));
+		m_rBtnWinerloser.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(41, 57, 85));
+		m_rBtnWinerloser.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(41, 57, 85));
+		m_rBtnWinerloser.SizeToContent();
+
 		m_money.SetFont(120, _T("黑体"));				//设置显示字体和大小
 		m_money.SetTextColor(RGB(0,0,0));			    //字体颜色	
 		m_money.SetWindowText(_T(""));
@@ -258,6 +270,7 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		OnListPool();
 
 		onShowLink();
+
 
 		theApp.SubscribeMsg( theApp.GetMtHthrdId() , GetSafeHwnd() , MSG_USER_P2P_UI ) ;
 
@@ -325,6 +338,11 @@ void CP2PDlg::OnSize(UINT nType, int cx, int cy)
 		pst = GetDlgItem( IDC_BUTTON_REFRESH_2 ) ;
 		if ( NULL != pst ) {
 			pst->SetWindowPos( NULL ,800 , 270 ,  0 , 0 , SWP_NOSIZE ) ; 
+		}
+
+		pst = GetDlgItem( IDC_WINERLOSER ) ;
+		if ( NULL != pst ) {
+			pst->SetWindowPos( NULL ,600 , 270 , 0 ,0, SWP_NOSIZE ) ; 
 		}
 
 		pst = GetDlgItem( IDC_STATIC_BALANCE ) ;
@@ -1242,8 +1260,63 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 	 {
 		 m_SendRecord.Showlistbox(addr);
 	 }
- }
 
+	 ComPuteBetWinAandLoser();
+ }
+ void CP2PDlg::ComPuteBetWinAandLoser()
+ {
+	 if (!theApp.IsSyncBlock)
+	 {
+		 return;
+	 }
+	 double winer = 0.0;
+	 double loser = 0.0;
+
+	 uistruct::P2PBETRECORDLIST       m_P2pBetTxList;
+	 theApp.m_SqliteDeal.GetP2PQuizRecordList(_T("1=1") ,&m_P2pBetTxList ) ;
+
+	 std::vector<uistruct::P2P_QUIZ_RECORD_t>::const_iterator const_it;
+	 for (const_it = m_P2pBetTxList.begin() ; const_it != m_P2pBetTxList.end() ; const_it++ ) {
+		if (const_it->actor == 0){         //// 发赌约身份者
+			if (const_it->state == 2){       
+				if (const_it->guess_num == const_it->content[32])
+				{
+					loser += const_it->amount;
+				}else
+				{
+					winer += const_it->amount;
+				}
+			}else if (const_it->state == 1){
+				if(const_it->height != 0 &&(const_it->time_out + const_it->height)< theApp.blocktipheight){
+					loser += const_it->amount;
+				}
+			}
+		}else if (const_it->actor == 1){ /// 接赌身份者
+			if (const_it->state == 2)
+			{
+				int rewardnum = (int)const_it->content[32];
+				if (const_it->guess_num == const_it->content[32])
+				{
+					winer += const_it->amount;
+				}else
+				{
+					loser += const_it->amount;
+				}
+
+			}else{
+				if (const_it->height>0 &&(const_it->time_out + const_it->height)< theApp.blocktipheight)
+				{
+					winer += const_it->amount;
+				}
+			}
+		}	 
+	 }
+	 CString show;
+	 double result = winer-loser;
+	 show.Format(_T("盈亏:%.4f"),result);
+	 m_rBtnWinerloser.SetWindowText(show);
+	 m_rBtnWinerloser.Invalidate();
+ }
  void CP2PDlg::OnBnClickedButtonRefresh2()
  {
 	 // TODO: 在此添加控件通知处理程序代码

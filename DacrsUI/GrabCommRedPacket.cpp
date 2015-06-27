@@ -173,7 +173,7 @@ void CGrabCommRedPacket::Showlistbox()
 	//// 查找数据库中是否存在此记录
 	m_PoolList.clear();
 	m_curpage = 0;
-	theApp.m_SqliteDeal.GetRedPacketPoolRecordList(_T(" packet_type = 1 "), &m_PoolList);
+	theApp.m_SqliteDeal.GetRedPacketPoolRecordList(_T(" packet_type = 1 order by average_amout desc"), &m_PoolList);
 	m_pagecount = (m_PoolList.size()%m_pagesize)==0?(m_PoolList.size()/m_pagesize):(m_PoolList.size()/m_pagesize)+1;
 
 	CString temp;

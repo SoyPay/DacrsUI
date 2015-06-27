@@ -608,11 +608,13 @@ namespace uistruct {
 		int        packets_num;
 		int        packet_type;       //1:普通红包  2:接龙红包
 		CString    message;
+		double     average_amout;
 		REDPACKETPOOL(){
 			send_hash =_T("");   //address
 			total_amount = 0.0  ;				//金额
 			send_acc_id = _T("");
 			packet_type = 0;  
+			average_amout =0.0;
 		}
 		string ToJson(){
 			Json::Value root;
@@ -622,6 +624,7 @@ namespace uistruct {
 			root["packets_num"] = packets_num;
 			root["packet_type"] = packet_type;
 			root["message"] = message.GetString();
+			root["average_amout"] = average_amout;
 			return root.toStyledString();
 		}
 		bool JsonToStruct(string json){
@@ -635,6 +638,7 @@ namespace uistruct {
 			this->packets_num = root["packets_num"].asInt();
 			this->packet_type = root["packet_type"].asInt();
 			this->message = root["message"].asCString();
+			this->average_amout = root["average_amout"].asDouble();
 			return true;
 		}
 	}REDPACKETPOOL_t;

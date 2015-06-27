@@ -48,7 +48,8 @@ public:
 	CUseListBox            m_BonusListBox;
 	//CRecordListBox         m_RecordListBox;
 	CComboBox			   m_addrbook;
-	CP2PBetHelp		                    m_P2PBetHelp;
+	CP2PBetHelp		       m_P2PBetHelp;
+	CShadeButtonST         m_rBtnWinerloser;
 public:
 	CBetRecord            m_BetRecord     ;
 	CSendRecord           m_SendRecord    ;
@@ -82,6 +83,7 @@ public:
 	afx_msg void OnBnClickedButtonRefresh2();
 	afx_msg void OnBnClickedButtonRefresh1();
 	afx_msg void OnNMThemeChangedListBonus(NMHDR *pNMHDR, LRESULT *pResult);
+	void ComPuteBetWinAandLoser();
 private:
 	int                   m_pagecount;
 	int                   m_curpage;

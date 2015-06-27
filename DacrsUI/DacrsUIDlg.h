@@ -14,7 +14,7 @@
 #include "IpoDlg.h"
 #include "AddApp.h"
 #include "OutGifDlg.h"
-
+#include "RPCDlg.h"
 // CDacrsUIDlg 对话框
 class CDacrsUIDlg : public CDialogEx
 {
@@ -52,6 +52,7 @@ public:
 	CAddApp             *m_pAddApp;    //添加应用
 	//
 	COutGifDlg          *m_pOutGifDlg;
+	CRPCDlg*				m_pRPCDlg;
 public:
 	std::map< UINT , CDialogBar * >  m_dlgMap ; 
 	void       ShowDialog(UINT dlgid)  ;
@@ -76,6 +77,7 @@ public:
 public:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg LRESULT OnBeginMoveWnd(WPARAM wParam, LPARAM lParam);
+	virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
 private:
 	void       InitialRpcCmd();
 	void       LoadListDataInfo();         //从数据库中加载列表数据
@@ -88,4 +90,6 @@ public:
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	BOOL PreTranslateMessage(MSG* pMsg);
 	void OnOk();
+
+	afx_msg void BakWallet();
 };

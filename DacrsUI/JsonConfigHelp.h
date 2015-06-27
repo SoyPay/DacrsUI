@@ -1,6 +1,6 @@
 #pragma once
 #include "CommonStruct.h"
-//#include "AutoComplete.h"
+#include "AutoComplete.h"
 
 class CScriptCfg
 {
@@ -119,7 +119,7 @@ public:
 	void GetNetParamCfgData(CNetParamCfg& netparm);
 	void GetLogParamCfg(CLogParamCfg &logCfg);
 	void GetRedPacketCfgData(CRedPacketCfg &redpacketcfg);
-	//void AddItemString(const CString& strFilePath,CAutoComplete &m_comboxinput);
+	void AddItemString(const CString& strFilePath,CAutoComplete &m_comboxinput);
 private:
 	void ReadMainCfgData(const Json::Value& root);
 	void ReadSesureTradeCfgData(const Json::Value& root);
@@ -130,7 +130,7 @@ private:
 	void ReadNetParmCfgData(const Json::Value& root);
 	void ReadLogParamCfg(const Json::Value &root);
 	void ReadRedPacketCfgData(const Json::Value &root);
-	//void AddString(const Json::Value& root,CAutoComplete &m_comboxinput);
+	void AddString(const Json::Value& root,CAutoComplete &m_comboxinput);
 
 
 private:
