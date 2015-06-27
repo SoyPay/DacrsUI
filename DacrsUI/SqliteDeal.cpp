@@ -1360,6 +1360,6 @@ BOOL CSqliteDeal::IsExistField(const CString tablename,const CString filed , con
 BOOL CSqliteDeal::DeleteTable(const CString tablename){
 	sqlite3 ** pDBConn = GetDBConnect(); //获取数据库连接
 	CString strSQL(_T(""));
-	strSQL.Format(_T("drop %s"),(LPSTR)(LPCTSTR)tablename);
+	strSQL.Format(_T("drop table %s"),(LPSTR)(LPCTSTR)tablename);
 	return ExcuteSQL(pDBConn , &CallTableItem, strSQL, NULL);
 }
