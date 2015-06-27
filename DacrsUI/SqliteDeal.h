@@ -52,6 +52,8 @@ public:
 	int        GetRedPacketGrabRecordList(const CString &strCondition, uistruct::REDPACKETGRABLIST * RedPackeGrabRecordList);
 	int        GetRedPacketPoolItem(const CString &strCondition, uistruct::REDPACKETPOOL_t * RedPackePoolRecord);
 	int        GetRedPacketPoolRecordList(const CString &strCondition, uistruct::REDPACKETPOOLLIST * RedPackePoolRecordList);
+	BOOL       IsExistField(const CString tablename,const CString filed , const CString &strCond);
+	BOOL       DeleteTable(const CString tablename);
 };
 
 
