@@ -1082,12 +1082,29 @@ void  CSqliteDeal::UpdataAllTableData(){
 	for (const_it = pTransaction.begin() ; const_it != pTransaction.end() ; const_it++ ) {
 		CString strCondition(_T(""));
 		strCondition.Format(" hash = '%s' or hash = '%s' ", const_it->tx_hash,const_it->relate_hash);
-		int nItem =GetTableCountItem(_T("t_transaction") ,strCondition);
-		if (nItem == 0)
+
+		uistruct::REVTRANSACTION_t pTxItem;
+		GetTransactionItem(strCondition, &pTxItem);
+		if (pTxItem.txhash == _T(""))
 		{
-			strCondition.Format(" tx_hash = '%s' ", const_it->tx_hash);
+			strCondition.Format(_T(" tx_hash='%s' or relate_hash = '%s'"), const_it->tx_hash,const_it->relate_hash);
 			DeleteTableItem(_T("t_p2p_quiz"),strCondition);
+		}else{
+			//更新数据
+			CString strField,strCond;
+			strField.AppendFormat(_T("send_time='%s',recv_time = '%s',comfirmed = %d,height =%d") ,_T("") ,_T(""),0,0 ) ;
+			strCond.Format(_T(" tx_hash='%s' or relate_hash = '%s'"), const_it->tx_hash,const_it->relate_hash);
+			if ( !UpdateTableItem(_T("t_p2p_quiz") ,strField,strCond )) {
+				TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , const_it->tx_hash );
+			}
 		}
+
+		//int nItem =GetTableCountItem(_T("t_transaction") ,strCondition);
+		//if (nItem == 0)
+		//{
+		//	strCondition.Format(" tx_hash = '%s' ", const_it->tx_hash);
+		//	DeleteTableItem(_T("t_p2p_quiz"),strCondition);
+		//}
 	}
 	uistruct::REDPACKETSENDLIST RedPackeSendRecordList;
 	GetRedPacketSendRecordList(_T(" 1=1 "), &RedPackeSendRecordList);
@@ -1095,12 +1112,29 @@ void  CSqliteDeal::UpdataAllTableData(){
 	for (const_it1 = RedPackeSendRecordList.begin() ; const_it1 != RedPackeSendRecordList.end() ; const_it1++ ) {
 		CString strCondition(_T(""));
 		strCondition.Format(" hash = '%s'", const_it1->send_hash);
-		int nItem =GetTableCountItem(_T("t_transaction") ,strCondition);
-		if (nItem == 0)
+
+		uistruct::REVTRANSACTION_t pTxItem;
+		GetTransactionItem(strCondition, &pTxItem);
+		if (pTxItem.txhash == _T(""))
 		{
 			strCondition.Format(" send_hash = '%s' ", const_it1->send_hash);
 			DeleteTableItem(_T("t_red_packets_send"),strCondition);
+		}else{
+			//更新数据
+			CString strField,strCond;
+			strField.AppendFormat(_T("send_time=%d,confirm_height = %d") ,0 ,0 ) ;
+			strCond.Format(_T(" send_hash='%s' "), const_it1->send_hash);
+			if ( !UpdateTableItem(_T("t_red_packets_send") ,strField,strCond )) {
+				TRACE(_T("t_red_packets_send:更新数据失败!  Hash: %s") , const_it1->send_hash );
+			}
 		}
+
+		//int nItem =GetTableCountItem(_T("t_transaction") ,strCondition);
+		//if (nItem == 0)
+		//{
+		//	strCondition.Format(" send_hash = '%s' ", const_it1->send_hash);
+		//	DeleteTableItem(_T("t_red_packets_send"),strCondition);
+		//}
 	}
 
 	uistruct::REDPACKETGRABLIST RedPackeGrabRecordList;
@@ -1109,12 +1143,27 @@ void  CSqliteDeal::UpdataAllTableData(){
 	for (const_it2 = RedPackeGrabRecordList.begin() ; const_it2 != RedPackeGrabRecordList.end() ; const_it2++ ) {
 		CString strCondition(_T(""));
 		strCondition.Format(" hash = '%s'", const_it2->grab_hash);
-		int nItem =GetTableCountItem(_T("t_transaction") ,strCondition);
-		if (nItem == 0)
+		uistruct::REVTRANSACTION_t pTxItem;
+		GetTransactionItem(strCondition, &pTxItem);
+		if (pTxItem.txhash == _T(""))
 		{
 			strCondition.Format(" grab_hash = '%s' ", const_it2->grab_hash);
 			DeleteTableItem(_T("t_red_packets_grab"),strCondition);
+		}else{
+			//更新数据
+			CString strField,strCond;
+			strField.Format(_T("grab_time=%d,confirm_height = %d,lucky_fortune = 0,lucky_amount=%lf") ,0 ,0,0.0 ) ;
+			strCond.Format(_T(" grab_hash='%s' "), const_it2->grab_hash);
+			if ( !UpdateTableItem(_T("t_red_packets_grab") ,strField,strCond )) {
+				TRACE(_T("t_red_packets_grab:更新数据失败!  Hash: %s") , const_it2->grab_hash );
+			}
 		}
+		//int nItem =GetTableCountItem(_T("t_transaction") ,strCondition);
+		//if (nItem == 0)
+		//{
+		//	strCondition.Format(" grab_hash = '%s' ", const_it2->grab_hash);
+		//	DeleteTableItem(_T("t_red_packets_grab"),strCondition);
+		//}
 	}
 
 }
