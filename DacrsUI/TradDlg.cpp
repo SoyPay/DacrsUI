@@ -194,7 +194,7 @@ void CTradDlg::OnBnClickedButtonTxdetail()
 void  CTradDlg::OninitializeList()
 {
 	uistruct::TRANSRECORDLIST pListInfo;
-	theApp.m_SqliteDeal.GetTransactionList(_T(" 1=1 order by confirmed_time desc"), &pListInfo); 
+	theApp.m_SqliteDeal.GetTransactionList(_T(" 1=1 order by confirmed_time"), &pListInfo); 
 
 	if (pListInfo.size() == 0)
 	{
