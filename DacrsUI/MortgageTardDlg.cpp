@@ -719,7 +719,7 @@ void CMortgageTardDlg::OnCbnSelchangeComboAddres()
 		ShowListItem(1);
 		ShowListPoolItem(0);
 		ShowListPoolItem(1);
-		
+		ComputeSpecailRedPacket();
 	}
 }
 
@@ -955,7 +955,6 @@ void   CMortgageTardDlg::ShowListItem(int seltab)
 		m_SendRecord.Showlistbox(addr);
 	}
 
-	ComputeSpecailRedPacket();
 }
 void  CMortgageTardDlg::ShowListPoolItem(int seltab)
 {
@@ -1063,6 +1062,7 @@ void CMortgageTardDlg::OnBnClickedButtonRefresh2()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	 ShowListItem(m_seltab);
+	 ComputeSpecailRedPacket();
 }
 void CMortgageTardDlg::OnListPool()
 {

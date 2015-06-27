@@ -477,6 +477,7 @@ void CP2PDlg::OnCbnSelchangeComboAddres()
 	QueryNotDrawBalance(text);          /// blockchanged 刷新为开奖的数据
 	ShowListItem(0);
 	ShowListItem(1);
+	ComPuteBetWinAandLoser();
 }
 
 void CP2PDlg::InsertComboxIitem()
@@ -1261,7 +1262,6 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 		 m_SendRecord.Showlistbox(addr);
 	 }
 
-	 ComPuteBetWinAandLoser();
  }
  void CP2PDlg::ComPuteBetWinAandLoser()
  {
@@ -1321,6 +1321,7 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
  {
 	 // TODO: 在此添加控件通知处理程序代码
 	 ShowListItem(m_seltab);
+	  ComPuteBetWinAandLoser();
  }
 
 
