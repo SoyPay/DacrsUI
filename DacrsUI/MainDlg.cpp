@@ -74,8 +74,8 @@ void CMainDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_MFCLINK4, v_linkCtrl2);
 	DDX_Control(pDX, IDC_MFCLINK5, v_linkCtrl3);
 
-	DDX_Control(pDX, IDC_BUTTON_IMPORTWALLET, m_rBtnImportWallet);
-	DDX_Control(pDX, IDC_BUTTON_DUMPWALLET, m_rBtnDumpWallet);
+	//DDX_Control(pDX, IDC_BUTTON_IMPORTWALLET, m_rBtnImportWallet);
+	//DDX_Control(pDX, IDC_BUTTON_DUMPWALLET, m_rBtnDumpWallet);
 
 	DDX_Control(pDX, IDC_STATIC_DES1 , m_strDesTx1);
 	DDX_Control(pDX, IDC_STATIC_DES2 , m_strDesTx2);
@@ -92,8 +92,8 @@ BEGIN_MESSAGE_MAP(CMainDlg, CDialogBar)
 	ON_WM_CREATE()
 	ON_WM_PAINT()
 	ON_WM_ERASEBKGND()
-	ON_BN_CLICKED(IDC_BUTTON_IMPORTWALLET, &CMainDlg::OnBnClickedButtonImportwallet)
-	ON_BN_CLICKED(IDC_BUTTON_DUMPWALLET, &CMainDlg::OnBnClickedButtonDumpwallet)
+	//ON_BN_CLICKED(IDC_BUTTON_IMPORTWALLET, &CMainDlg::OnBnClickedButtonImportwallet)
+	//ON_BN_CLICKED(IDC_BUTTON_DUMPWALLET, &CMainDlg::OnBnClickedButtonDumpwallet)
 	ON_WM_SIZE()
 END_MESSAGE_MAP()
 
@@ -382,8 +382,9 @@ BOOL CMainDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 	BOOL bRes =  CDialogBar::Create(pParentWnd, nIDTemplate, nStyle, nID);
 	if ( bRes ) {
 		m_rBtnAllTxdetail.LoadBitmaps(IDB_BITMAP_ALLTRADE1,IDB_BITMAP_ALLTRADE1,IDB_BITMAP_ALLTRADE1,IDB_BITMAP_ALLTRADE1);
-		m_rBtnImportWallet.LoadBitmaps(IDB_BITMAP_IMPORTWALLET,IDB_BITMAP_IMPORTWALLET,IDB_BITMAP_IMPORTWALLET,IDB_BITMAP_IMPORTWALLET);
-		m_rBtnDumpWallet.LoadBitmaps(IDB_BITMAP_DUMPWALLET,IDB_BITMAP_DUMPWALLET,IDB_BITMAP_DUMPWALLET,IDB_BITMAP_DUMPWALLET);
+		//m_rBtnImportWallet.LoadBitmaps(IDB_BITMAP_IMPORTWALLET,IDB_BITMAP_IMPORTWALLET,IDB_BITMAP_IMPORTWALLET,IDB_BITMAP_IMPORTWALLET);
+		//m_rBtnDumpWallet.LoadBitmaps(IDB_BITMAP_DUMPWALLET,IDB_BITMAP_DUMPWALLET,IDB_BITMAP_DUMPWALLET,IDB_BITMAP_DUMPWALLET);
+
 		UpdateData(0);
 		//SetShowCtrol();
 		OnnitCtrlText();
@@ -415,6 +416,8 @@ BOOL CMainDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		//m_strTx1.SetWindowText(_T("方斌")) ;
 		//v_linkCtrl.SetURL(_T("www.hao123.com"));
 		//v_linkCtrl.SetURLPrefix(_T("http://"));
+
+
 		theApp.SubscribeMsg( theApp.GetMtHthrdId() , GetSafeHwnd() , MSG_USER_MAIN_UI ) ;
 	}
 	return bRes ;
@@ -620,93 +623,93 @@ void CMainDlg::onnitLinkText()
 
 
 
-void CMainDlg::OnBnClickedButtonImportwallet()
-{
-	// TODO: 在此添加控件通知处理程序代码
-	// TODO: 在此添加命令处理程序代码
-	OPENFILENAME ofn;
-	char szFile[MAX_PATH];
-	ZeroMemory(&ofn,sizeof(ofn));
-	ofn.lStructSize = sizeof(ofn);
-	ofn.lpstrFile = szFile;
-	ofn.lpstrFile[0] = TEXT('\0'); 
-	ofn.nMaxFile = sizeof(szFile); 
-	//ofn.lpstrFilter = TEXT("all\0*.*\0mp3\0*.mp3\0mp4\0*.mp4\0");//文件过滤，这里可以设置要显示的文件类型; 
-	ofn.lpstrFilter =  "文本文件(*.smc)\0*.smc\0所有文件(*.*)\0*.*\0\0";  
-	ofn.nFilterIndex = 1; 
-	ofn.lpstrFileTitle = NULL; 
-	ofn.nMaxFileTitle = 0; 
-	ofn.lpstrInitialDir = NULL;	ofn.hwndOwner = m_hWnd; 
-	ofn.Flags = OFN_EXPLORER |OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
-	if (::GetOpenFileName(&ofn))
-	{
-			CString strPath = ofn.lpstrFile;
-			CString strCommand;
-			strCommand.Format(_T("%s %s"),_T("importwallet"),strPath);
-			CStringA strSendData;
+//void CMainDlg::OnBnClickedButtonImportwallet()
+//{
+//	// TODO: 在此添加控件通知处理程序代码
+//	// TODO: 在此添加命令处理程序代码
+//	OPENFILENAME ofn;
+//	char szFile[MAX_PATH];
+//	ZeroMemory(&ofn,sizeof(ofn));
+//	ofn.lStructSize = sizeof(ofn);
+//	ofn.lpstrFile = szFile;
+//	ofn.lpstrFile[0] = TEXT('\0'); 
+//	ofn.nMaxFile = sizeof(szFile); 
+//	//ofn.lpstrFilter = TEXT("all\0*.*\0mp3\0*.mp3\0mp4\0*.mp4\0");//文件过滤，这里可以设置要显示的文件类型; 
+//	ofn.lpstrFilter =  "文本文件(*.smc)\0*.smc\0所有文件(*.*)\0*.*\0\0";  
+//	ofn.nFilterIndex = 1; 
+//	ofn.lpstrFileTitle = NULL; 
+//	ofn.nMaxFileTitle = 0; 
+//	ofn.lpstrInitialDir = NULL;	ofn.hwndOwner = m_hWnd; 
+//	ofn.Flags = OFN_EXPLORER |OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+//	if (::GetOpenFileName(&ofn))
+//	{
+//			CString strPath = ofn.lpstrFile;
+//			CString strCommand;
+//			strCommand.Format(_T("%s %s"),_T("importwallet"),strPath);
+//			CStringA strSendData;
+//
+//			CSoyPayHelp::getInstance()->SendRpc(strCommand,strSendData);	
+//			if (strSendData.Find(_T("imorpt key size")) >=0)
+//			{
+//				MessageBox(_T("导入钱包成功请重新启动钱包"));
+//				//PostMessage(WM_CLOSE);
+//				//::PostThreadMessage( theApp.GetMtHthrdId() , MSG_USER_OUT , 0 , 0 );
+//				((CDacrsUIDlg*)(this->GetParent()))->Close();
+//			}else
+//			{
+//				MessageBox(_T("导入钱包失败"));
+//			}
+//	}
+//	
+//
+//	//CFileDialog dlg(TRUE,"smc",NULL,OFN_HIDEREADONLY|OFN_FILEMUSTEXIST ,_T("*.smc||"));
+//	//if (IDOK == dlg.DoModal())
+//	//{
+//	//	CString strPath = dlg.GetPathName();
+//	//	int pos = strPath.ReverseFind('.');
+//	//	if (pos < 0)
+//	//	{
+//	//		return;
+//	//	}
+//	//	CString exeStr = strPath.Right(strPath.GetLength()-pos);
+//	//	if (exeStr.CompareNoCase(_T(".smc")) != 0)
+//	//	{
+//	//		MessageBox(_T("导入钱包文件格式不正确"));
+//	//		return;
+//	//	}
+//	//	CString strCommand;
+//	//	strCommand.Format(_T("%s %s"),_T("importwallet"),strPath);
+//	//	CStringA strSendData;
+//
+//	//	CSoyPayHelp::getInstance()->SendRpc(strCommand,strSendData);	
+//	//	if (strSendData.Find(_T("imorpt key size")) >=0)
+//	//	{
+//	//		MessageBox(_T("导入钱包成功请重新启动钱包"));
+//	//		//PostMessage(WM_CLOSE);
+//	//		//::PostThreadMessage( theApp.GetMtHthrdId() , MSG_USER_OUT , 0 , 0 );
+//	//		((CDacrsUIDlg*)(this->GetParent()))->Close();
+//	//	}else
+//	//	{
+//	//		MessageBox(_T("导入钱包失败"));
+//	//	}
+//	//}
+//}
 
-			CSoyPayHelp::getInstance()->SendRpc(strCommand,strSendData);	
-			if (strSendData.Find(_T("imorpt key size")) >=0)
-			{
-				MessageBox(_T("导入钱包成功请重新启动钱包"));
-				//PostMessage(WM_CLOSE);
-				//::PostThreadMessage( theApp.GetMtHthrdId() , MSG_USER_OUT , 0 , 0 );
-				((CDacrsUIDlg*)(this->GetParent()))->Close();
-			}else
-			{
-				MessageBox(_T("导入钱包失败"));
-			}
-	}
-	
 
-	//CFileDialog dlg(TRUE,"smc",NULL,OFN_HIDEREADONLY|OFN_FILEMUSTEXIST ,_T("*.smc||"));
-	//if (IDOK == dlg.DoModal())
-	//{
-	//	CString strPath = dlg.GetPathName();
-	//	int pos = strPath.ReverseFind('.');
-	//	if (pos < 0)
-	//	{
-	//		return;
-	//	}
-	//	CString exeStr = strPath.Right(strPath.GetLength()-pos);
-	//	if (exeStr.CompareNoCase(_T(".smc")) != 0)
-	//	{
-	//		MessageBox(_T("导入钱包文件格式不正确"));
-	//		return;
-	//	}
-	//	CString strCommand;
-	//	strCommand.Format(_T("%s %s"),_T("importwallet"),strPath);
-	//	CStringA strSendData;
-
-	//	CSoyPayHelp::getInstance()->SendRpc(strCommand,strSendData);	
-	//	if (strSendData.Find(_T("imorpt key size")) >=0)
-	//	{
-	//		MessageBox(_T("导入钱包成功请重新启动钱包"));
-	//		//PostMessage(WM_CLOSE);
-	//		//::PostThreadMessage( theApp.GetMtHthrdId() , MSG_USER_OUT , 0 , 0 );
-	//		((CDacrsUIDlg*)(this->GetParent()))->Close();
-	//	}else
-	//	{
-	//		MessageBox(_T("导入钱包失败"));
-	//	}
-	//}
-}
-
-
-void CMainDlg::OnBnClickedButtonDumpwallet()
-{
-	// TODO: 在此添加控件通知处理程序代码
-	CFileDialog dlg(FALSE,NULL,NULL,OFN_HIDEREADONLY|OFN_FILEMUSTEXIST ,_T("*.smc||"));
-	if (IDOK == dlg.DoModal())
-	{
-		CString strPath = dlg.GetPathName();
-		strPath.AppendFormat(_T(".smc"));
-		CString strCommand;
-		strCommand.Format(_T("%s %s"),_T("dumpwallet"),strPath);
-		CStringA strSendData;
-		CSoyPayHelp::getInstance()->SendRpc(strCommand,strSendData);
-	}
-}
+//void CMainDlg::OnBnClickedButtonDumpwallet()
+//{
+//	// TODO: 在此添加控件通知处理程序代码
+//	CFileDialog dlg(FALSE,NULL,NULL,OFN_HIDEREADONLY|OFN_FILEMUSTEXIST ,_T("*.smc||"));
+//	if (IDOK == dlg.DoModal())
+//	{
+//		CString strPath = dlg.GetPathName();
+//		strPath.AppendFormat(_T(".smc"));
+//		CString strCommand;
+//		strCommand.Format(_T("%s %s"),_T("dumpwallet"),strPath);
+//		CStringA strSendData;
+//		CSoyPayHelp::getInstance()->SendRpc(strCommand,strSendData);
+//	}
+//}
 
 
 void CMainDlg::OnSize(UINT nType, int cx, int cy)
@@ -721,23 +724,23 @@ void CMainDlg::OnSize(UINT nType, int cx, int cy)
 		GetClientRect( rc ) ;
 
 
-		CWnd *pst = GetDlgItem( IDC_BUTTON_IMPORTWALLET ) ;
-		if ( NULL != pst ) {
-			CRect rect ;
-			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL , rc.Width()- 2*rect.Width()-10 , rc.Height()-rect.Height()-10 , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
-		}
-		pst = GetDlgItem( IDC_BUTTON_DUMPWALLET ) ;
-		if ( NULL != pst ) {
-			CRect rect ;
-			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,rc.Width()- rect.Width() ,rc.Height()-rect.Height()-10  , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
-		}
+		//CWnd *pst = GetDlgItem( IDC_BUTTON_IMPORTWALLET ) ;
+		//if ( NULL != pst ) {
+		//	CRect rect ;
+		//	pst->GetClientRect( rect ) ;
+		//	pst->SetWindowPos( NULL , rc.Width()- 2*rect.Width()-10 , rc.Height()-rect.Height()-10 , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		//}
+		//pst = GetDlgItem( IDC_BUTTON_DUMPWALLET ) ;
+		//if ( NULL != pst ) {
+		//	CRect rect ;
+		//	pst->GetClientRect( rect ) ;
+		//	pst->SetWindowPos( NULL ,rc.Width()- rect.Width() ,rc.Height()-rect.Height()-10  , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		//}
 
 		
 			//
 		//	
-		pst = GetDlgItem( IDC_STATIC_AMOUNT ) ;
+		CWnd *pst = GetDlgItem( IDC_STATIC_AMOUNT ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;

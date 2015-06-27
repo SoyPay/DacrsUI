@@ -47,8 +47,8 @@ public:
 	CStaticTrans     m_strTranNum   ;
 
 	CRoundButton     m_rBtnAllTxdetail;
-	CRoundButton     m_rBtnImportWallet;
-	CRoundButton     m_rBtnDumpWallet;
+	//CRoundButton     m_rBtnImportWallet;
+	//CRoundButton     m_rBtnDumpWallet;
 public:
 	afx_msg void OnBnClickedAlltxdetail();
 	afx_msg LRESULT OnShowListCtorl(  WPARAM wParam, LPARAM lParam ) ;
@@ -69,8 +69,8 @@ public:
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	void OnnitCtrlText();
 	void onnitLinkText();
-	afx_msg void OnBnClickedButtonImportwallet();
-	afx_msg void OnBnClickedButtonDumpwallet();
+	//afx_msg void OnBnClickedButtonImportwallet();
+	//afx_msg void OnBnClickedButtonDumpwallet();
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	void SetShowCtrol();
 };
