@@ -60,6 +60,7 @@ void CMortgageTardDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX ,IDC_STATIC_MONEY4 ,m_money ) ;
 	DDX_Control(pDX, IDC_MFCLINK1, v_linkCtrl);
 	
+	DDX_Control(pDX, IDC_WINERLOUSER, m_rBtnWinerloser);
 
 }
 
@@ -243,6 +244,15 @@ BOOL CMortgageTardDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, U
 		m_rBtnNext.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(255, 255, 255));
 		m_rBtnNext.SizeToContent();*/
 
+		m_rBtnWinerloser.SetBitmaps( IDB_BITMAP_WINERLOUSER , RGB(255, 255, 0) , IDB_BITMAP_WINERLOUSER , RGB(255, 255, 255) );
+		m_rBtnWinerloser.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+		m_rBtnWinerloser.SetWindowText("") ;
+		m_rBtnWinerloser.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(41, 57, 85));
+		m_rBtnWinerloser.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(41, 57, 85));
+		m_rBtnWinerloser.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(41, 57, 85));
+		m_rBtnWinerloser.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(41, 57, 85));
+		m_rBtnWinerloser.SizeToContent();
+
 		m_money.SetFont(120, _T("黑体"));				//设置显示字体和大小
 		m_money.SetTextColor(RGB(0,0,0));			    //字体颜色	
 		m_money.SetWindowText(_T(""));
@@ -355,6 +365,11 @@ void CMortgageTardDlg::OnSize(UINT nType, int cx, int cy)
 		pst = GetDlgItem( IDC_BUTTON_REFRESH_2 ) ;
 		if ( NULL != pst ) {
 			pst->SetWindowPos( NULL ,800 , 279 ,  0 , 0 , SWP_NOSIZE ) ; 
+		}
+
+		pst = GetDlgItem( IDC_WINERLOUSER ) ;
+		if ( NULL != pst ) {
+			pst->SetWindowPos( NULL ,600 , 279 , 0 ,0, SWP_NOSIZE ) ; 
 		}
 
 		pst = GetDlgItem( IDC_STATIC_BALANCE ) ;
@@ -939,6 +954,8 @@ void   CMortgageTardDlg::ShowListItem(int seltab)
 	{
 		m_SendRecord.Showlistbox(addr);
 	}
+
+	ComputeSpecailRedPacket();
 }
 void  CMortgageTardDlg::ShowListPoolItem(int seltab)
 {
@@ -1592,4 +1609,31 @@ void  CMortgageTardDlg::onShowLink()
 {
 	v_linkCtrl.SetWindowText(_T("帮助"));
 	v_linkCtrl.SetURL("http://www.dacrs.com/forum.php?mod=viewthread&tid=3503&extra=page%3D1");
+}
+
+void  CMortgageTardDlg::ComputeSpecailRedPacket()
+{
+	if (!theApp.IsSyncBlock)
+	{
+		return;
+	}
+	double result = 0.0;
+	uistruct::REDPACKETGRABLIST  RedPackeGrabRecordList;
+	theApp.m_SqliteDeal.GetRedPacketGrabRecordList(_T(" packet_type = 2 "), &RedPackeGrabRecordList);
+
+	std::vector<uistruct::REDPACKETGRAB_t>::const_iterator const_it;
+	for (const_it = RedPackeGrabRecordList.begin() ; const_it != RedPackeGrabRecordList.end() ; const_it++ ) {
+		if (const_it->lucky_fortune == 2)
+		{
+			result -= const_it->total_amount;
+			result += const_it->lucky_amount;
+		}else if (const_it->lucky_fortune == 1)
+		{
+			result += const_it->lucky_amount;
+		}
+	}
+	CString show;
+	show.Format(_T("接龙盈亏:%.4f"),result);
+	m_rBtnWinerloser.SetWindowText(show);
+	m_rBtnWinerloser.Invalidate();
 }

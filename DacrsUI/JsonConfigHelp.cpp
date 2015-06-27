@@ -177,86 +177,86 @@ void CJsonConfigHelp::GetP2PBetCfgData(CP2PBetCfg& p2pCfg)
 void CJsonConfigHelp::GetScriptCfgData(CScriptCfg& scriptCfg){
 	scriptCfg =m_Scriptid;
 }
-//void CJsonConfigHelp::AddString(const Json::Value& root,CAutoComplete &m_comboxinput){
-//	Json::Value rpccommand = root["rpccommand"];
-//	ASSERT(!rpccommand.isNull());
-//	m_comboxinput.GetStringList().Add(rpccommand["getinfo"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["help"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["stop"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["getnetworkinfo"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["addnode"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["getaddednodeinfo"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["getconnectioncount"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["getnettotals"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["getpeerinfo"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["ping"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["getblockchaininfo"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["getbestblockhash"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["getblockcount"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["getblock"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["getblockhash"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["getdifficulty"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["getrawmempool"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["verifychain"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["getmininginfo"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["getnetworkhashps"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["submitblock"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["verifymessage"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["backupwallet"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["dumpprivkey"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["dumpwallet"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["encryptwallet"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["getaccountinfo"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["getnewaddress"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["gettxdetail"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["listunconfirmedtx"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["getwalletinfo"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["importprivkey"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["prepareforcoolmining"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["importwallet"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["listaddr"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["listtx"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["registaccounttx"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["createcontracttx"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["registerapptx"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["settxfee"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["walletlock"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["walletpassphrasechange"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["walletpassphrase"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["setgenerate"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["listapp"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["generateblock"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["listtxcache"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["getscriptdata"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["signmessage"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["sendtoaddress"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["sendtoaddresswithfee"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["getbalance"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["sendtoaddressraw"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["submittx"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["createcontracttxraw"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["registerscripttxraw"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["sigstr"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["getappaccinfo"].asCString());
-//	m_comboxinput.GetStringList().Add(rpccommand["getappkeyvalue"].asCString());
-//}
-//void CJsonConfigHelp::AddItemString(const CString& strFilePath,CAutoComplete &m_comboxinput){
-//
-//	ifstream ifs;
-//	ifs.open(strFilePath,ios::in);
-//	if (!ifs.is_open())
-//	{
-//		return ;
-//	}
-//	//ifs.read()
-//	Json::Reader reader;  
-//	Json::Value root;  
-//	if (reader.parse(ifs, root,false))
-//	{
-//		AddString(root,m_comboxinput);
-//	}
-//	ifs.close();
-//}
+void CJsonConfigHelp::AddString(const Json::Value& root,CAutoComplete &m_comboxinput){
+	Json::Value rpccommand = root["rpccommand"];
+	ASSERT(!rpccommand.isNull());
+	m_comboxinput.GetStringList().Add(rpccommand["getinfo"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["help"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["stop"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["getnetworkinfo"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["addnode"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["getaddednodeinfo"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["getconnectioncount"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["getnettotals"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["getpeerinfo"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["ping"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["getblockchaininfo"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["getbestblockhash"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["getblockcount"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["getblock"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["getblockhash"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["getdifficulty"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["getrawmempool"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["verifychain"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["getmininginfo"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["getnetworkhashps"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["submitblock"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["verifymessage"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["backupwallet"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["dumpprivkey"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["dumpwallet"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["encryptwallet"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["getaccountinfo"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["getnewaddress"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["gettxdetail"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["listunconfirmedtx"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["getwalletinfo"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["importprivkey"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["prepareforcoolmining"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["importwallet"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["listaddr"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["listtx"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["registaccounttx"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["createcontracttx"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["registerapptx"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["settxfee"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["walletlock"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["walletpassphrasechange"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["walletpassphrase"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["setgenerate"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["listapp"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["generateblock"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["listtxcache"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["getscriptdata"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["signmessage"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["sendtoaddress"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["sendtoaddresswithfee"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["getbalance"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["sendtoaddressraw"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["submittx"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["createcontracttxraw"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["registerscripttxraw"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["sigstr"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["getappaccinfo"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["getappkeyvalue"].asCString());
+}
+void CJsonConfigHelp::AddItemString(const CString& strFilePath,CAutoComplete &m_comboxinput){
+
+	ifstream ifs;
+	ifs.open(strFilePath,ios::in);
+	if (!ifs.is_open())
+	{
+		return ;
+	}
+	//ifs.read()
+	Json::Reader reader;  
+	Json::Value root;  
+	if (reader.parse(ifs, root,false))
+	{
+		AddString(root,m_comboxinput);
+	}
+	ifs.close();
+}
 
 void CJsonConfigHelp::ReadNetParmCfgData(const Json::Value& root){
 	Json::Value netparam = root["netparam"];
