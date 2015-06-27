@@ -1,7 +1,7 @@
 #pragma once
 #include "RoundButton.h"
 #include "StaticTrans.h"
-
+#include "NewMenu.h"
 // CIndTitleBar 对话框
 
 class CIndTitleBar : public CDialogBar
@@ -31,6 +31,8 @@ public:
 
 	CRoundButton     m_rBtnClose;
 	CRoundButton     m_rBtnMin;
+	CRoundButton     m_rBtnMainMenu;
+	CNewMenu         newMenu;
 public:
 	CToolTipCtrl     m_tooltip;			// 提示信息
 	HBITMAP		     m_pBmp; 
@@ -48,4 +50,7 @@ public:
 public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+	afx_msg void OnBnClickedMenubar();
+	afx_msg void OnMeasureItem(int nIDCtl, LPMEASUREITEMSTRUCT lpMeasureItemStruct);
+	afx_msg void OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct);
 };
