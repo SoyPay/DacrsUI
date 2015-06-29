@@ -31,6 +31,7 @@ using namespace std;
 #define MSG_USER_P2P_UI			            WM_USER+116	    //更新到P2P界面
 #define MSG_USER_REDPACKET_UI			    WM_USER+117	    //更新到P2P界面
 
+#define WM_SHOWTASK                        (WM_USER +118) 
 
 #define MSG_USER_QUITTHREAD			        WM_USER+200	    //退出线程
 #define MSG_USER_OUT                        WM_USER+201     //退出软件

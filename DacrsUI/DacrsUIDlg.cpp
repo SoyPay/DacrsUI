@@ -93,6 +93,7 @@ BEGIN_MESSAGE_MAP(CDacrsUIDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_MIN, &CDacrsUIDlg::OnBnClickedButtonMin)
 	ON_WM_TIMER()
 	ON_COMMAND(ID__BAKWALLET, &CDacrsUIDlg::BakWallet)
+	ON_MESSAGE(WM_SHOWTASK,OnShowTask)
 END_MESSAGE_MAP()
 
 
@@ -138,6 +139,7 @@ BOOL CDacrsUIDlg::OnInitDialog()
 	SetDPI(dpiX, dpiY);
 	ReleaseDC(dc);
 
+	ToTray() ;
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
@@ -147,6 +149,9 @@ void CDacrsUIDlg::OnSysCommand(UINT nID, LPARAM lParam)
 	{
 		CAboutDlg dlgAbout;
 		dlgAbout.DoModal();
+	}else if (nID==SC_MINIMIZE) 
+	{	
+		ToTray(); //最小化到托盘的函数 )
 	}
 	else
 	{
@@ -428,7 +433,8 @@ void CDacrsUIDlg::OnBnClickedButtonAddApp()
 
 void CDacrsUIDlg::OnBnClickedButtonMin()
 {
-	ShowWindow(SW_SHOWMINIMIZED);
+	//ShowWindow(SW_SHOWMINIMIZED);
+	ToTray();
 }
 
 void CDacrsUIDlg::InitialRpcCmd()
@@ -775,3 +781,68 @@ void CDacrsUIDlg::BakWallet()
 		CSoyPayHelp::getInstance()->SendRpc(strCommand,strSendData);
 	}
 }
+
+void CDacrsUIDlg::ToTray() 
+{ 
+	NOTIFYICONDATA nid; 
+	nid.cbSize=(DWORD)sizeof(NOTIFYICONDATA); 
+	nid.hWnd=this->m_hWnd; 
+	nid.uID=IDR_MAINFRAME; 
+	nid.uFlags=NIF_ICON|NIF_MESSAGE|NIF_TIP ; 
+	nid.uCallbackMessage=WM_SHOWTASK;//自定义的消息名称 
+	nid.hIcon=LoadIcon(AfxGetInstanceHandle(),MAKEINTRESOURCE(IDR_MAINFRAME)); 
+	strcpy(nid.szTip,"dacrs"); //信息提示条 
+	Shell_NotifyIcon(NIM_ADD,&nid); //在托盘区添加图标 
+	ShowWindow(SW_HIDE); //隐藏主窗口 
+} 
+//wParam接收的是图标的ID，而lParam接收的是鼠标的行为 
+LRESULT CDacrsUIDlg::OnShowTask(WPARAM wParam,LPARAM lParam) 
+{ 
+	if(wParam!=IDR_MAINFRAME) 
+		return 1; 
+	switch(lParam) 
+	{ 
+	case WM_RBUTTONUP://右键起来时弹出快捷菜单，这里只有一个“关闭” 
+		{ 
+			LPPOINT lpoint=new tagPOINT; 
+			::GetCursorPos(lpoint);//得到鼠标位置 
+			CMenu menu; 
+			menu.CreatePopupMenu();//声明一个弹出式菜单 
+
+			menu.AppendMenu(MF_STRING,WM_DESTROY,"关闭"); //增加菜单项“关闭”，点击则发送消息WM_DESTROY给主窗口（已隐藏），将程序结束。 
+			menu.TrackPopupMenu(TPM_LEFTALIGN,lpoint->x,lpoint->y,this); //确定弹出式菜单的位置 
+			HMENU hmenu=menu.Detach(); 
+			menu.DestroyMenu(); //资源回收 
+			delete lpoint; 
+		} break; 
+	case WM_LBUTTONDBLCLK: //双击左键的处理 
+		{ 
+			this->ShowWindow(SW_SHOW);//简单的显示主窗口完事儿 
+			//DeleteTray(); 
+		} break; 
+	case  WM_LBUTTONDOWN:
+		{
+			if (IsWindowVisible())
+			{
+				this->ShowWindow(SW_HIDE);//简单的显示主窗口完事儿
+			}else{
+				this->ShowWindow(SW_SHOW);//简单的显示主窗口完事儿 
+			}
+			 
+		}
+	default: break; 
+	} 
+	return 0; 
+} 
+void CDacrsUIDlg::DeleteTray() 
+{ 
+	NOTIFYICONDATA nid; 
+	nid.cbSize=(DWORD)sizeof(NOTIFYICONDATA); 
+	nid.hWnd=this->m_hWnd; 
+	nid.uID=IDR_MAINFRAME; 
+	nid.uFlags=NIF_ICON|NIF_MESSAGE|NIF_TIP ; 
+	nid.uCallbackMessage=WM_SHOWTASK; //自定义的消息名称 
+	nid.hIcon=LoadIcon(AfxGetInstanceHandle(),MAKEINTRESOURCE(IDR_MAINFRAME)); 
+	strcpy(nid.szTip,"dacrs"); //信息提示条为“计划任务提醒” 
+	//Shell_NotifyIcon(NIM_DELETE,&nid); //在托盘区删除图标 
+} 

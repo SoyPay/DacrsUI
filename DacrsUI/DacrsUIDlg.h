@@ -92,4 +92,7 @@ public:
 	void OnOk();
 
 	afx_msg void BakWallet();
+	afx_msg LRESULT OnShowTask(WPARAM wParam,LPARAM lParam) ; 
+	void ToTray();
+	void DeleteTray();
 };
