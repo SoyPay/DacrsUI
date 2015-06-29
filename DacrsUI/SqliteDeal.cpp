@@ -1081,23 +1081,103 @@ void  CSqliteDeal::UpdataAllTableData(){
 	std::vector<uistruct::P2P_QUIZ_RECORD_t>::const_iterator const_it;
 	for (const_it = pTransaction.begin() ; const_it != pTransaction.end() ; const_it++ ) {
 		CString strCondition(_T(""));
-		strCondition.Format(" hash = '%s' or hash = '%s' ", const_it->tx_hash,const_it->relate_hash);
-
-		uistruct::REVTRANSACTION_t pTxItem;
-		GetTransactionItem(strCondition, &pTxItem);
-		if (pTxItem.txhash == _T(""))
+		if (const_it->actor == 0)  // 发赌者
 		{
-			strCondition.Format(_T(" tx_hash='%s' or relate_hash = '%s'"), const_it->tx_hash,const_it->relate_hash);
-			DeleteTableItem(_T("t_p2p_quiz"),strCondition);
-		}else if(pTxItem.confirmedHeight == 0){
-			//更新数据
-			CString strField,strCond;
-			strField.AppendFormat(_T("send_time='%s',recv_time = '%s',comfirmed = %d,height =%d") ,_T("") ,_T(""),0,0 ) ;
-			strCond.Format(_T(" tx_hash='%s' or relate_hash = '%s'"), const_it->tx_hash,const_it->relate_hash);
-			if ( !UpdateTableItem(_T("t_p2p_quiz") ,strField,strCond )) {
-				TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , const_it->tx_hash );
+			strCondition.Format(" hash = '%s'", const_it->tx_hash);
+			uistruct::REVTRANSACTION_t pTxItem;
+			GetTransactionItem(strCondition, &pTxItem);
+			if (pTxItem.txhash == _T(""))
+			{
+				strCondition.Format(_T(" tx_hash='%s'"), const_it->tx_hash);
+				DeleteTableItem(_T("t_p2p_quiz"),strCondition);
+			}else if(pTxItem.confirmedHeight == 0){
+				//更新数据
+				CString strField,strCond;
+				strField.AppendFormat(_T("send_time='%s',recv_time = '%s',comfirmed = %d,height =%d,state = %d ,relate_hash = '%s' ,guess_num = %d,right_addr ='%s'") ,_T("") ,_T(""),0,0,0,_T(""),0,_T("") ) ;
+				strCond.Format(_T(" tx_hash='%s'"), const_it->tx_hash,const_it->relate_hash);
+				if ( !UpdateTableItem(_T("t_p2p_quiz") ,strField,strCond )) {
+					TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , const_it->tx_hash );
+				}
+			}
+		}else if (const_it->actor == 1)  /// 接赌约者
+		{
+			strCondition.Format(" hash = '%s'", const_it->relate_hash);
+			uistruct::REVTRANSACTION_t pTxItem;
+			GetTransactionItem(strCondition, &pTxItem);
+			if (pTxItem.txhash == _T(""))
+			{
+				strCondition.Format(_T("relate_hash = '%s'"),const_it->relate_hash);
+				DeleteTableItem(_T("t_p2p_quiz"),strCondition);
+			}else if(pTxItem.confirmedHeight == 0){
+				//更新数据
+				CString strField,strCond;
+				strField.AppendFormat(_T("recv_time = '%s',comfirmed = %d,height =%d,state = %d") ,_T(""),0,0,4) ;
+				strCond.Format(_T("relate_hash = '%s'"),const_it->relate_hash);
+				if ( !UpdateTableItem(_T("t_p2p_quiz") ,strField,strCond )) {
+					TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , const_it->tx_hash );
+				}
+			}
+		}else if (const_it->actor == 2)  /// 即是接赌者又是发赌约者
+		{
+			strCondition.Format(" hash = '%s'", const_it->tx_hash,const_it->relate_hash);
+			uistruct::REVTRANSACTION_t pTxItem;
+			GetTransactionItem(strCondition, &pTxItem);
+			uistruct::REVTRANSACTION_t pTxItem1;
+			strCondition.Format(" hash = '%s'",const_it->relate_hash);
+			GetTransactionItem(strCondition, &pTxItem1);
+			if (pTxItem.txhash == _T(""))
+			{
+				strCondition.Format(_T(" tx_hash='%s'"), const_it->tx_hash);
+				DeleteTableItem(_T("t_p2p_quiz"),strCondition);
+			}else if(pTxItem.confirmedHeight == 0){
+				//更新数据
+				CString strField,strCond;
+				strField.AppendFormat(_T("send_time='%s',recv_time = '%s',comfirmed = %d,height =%d,state = %d ,relate_hash = '%s' ,guess_num = %d,right_addr ='%s'") ,_T("") ,_T(""),0,0,0,_T(""),0,_T("") ) ;
+				strCond.Format(_T(" tx_hash='%s'"), const_it->tx_hash,const_it->relate_hash);
+				if ( !UpdateTableItem(_T("t_p2p_quiz") ,strField,strCond )) {
+					TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , const_it->tx_hash );
+				}
+			}else{
+			 
+				if (pTxItem1.txhash == _T(""))
+				{
+					CString strField,strCond;
+					strField.AppendFormat(_T("recv_time = '%s',comfirmed = %d,state = %d ,relate_hash = '%s' ,guess_num = %d,right_addr ='%s',actor=%d") ,_T(""),0,0,_T(""),0,_T(""),0 ) ;
+					strCond.Format(_T(" tx_hash='%s'"), const_it->tx_hash,const_it->relate_hash);
+					if ( !UpdateTableItem(_T("t_p2p_quiz") ,strField,strCond )) {
+						TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , const_it->tx_hash );
+					}
+				}else if(pTxItem1.confirmedHeight == 0){
+					//更新数据
+					CString strField,strCond;
+					strField.AppendFormat(_T("recv_time = '%s',state = %d,height =%d ") ,_T("") ,4,pTxItem.confirmedHeight) ;
+					strCond.Format(_T(" tx_hash='%s'"), const_it->tx_hash,const_it->relate_hash);
+					if ( !UpdateTableItem(_T("t_p2p_quiz") ,strField,strCond )) {
+						TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , const_it->tx_hash );
+					}
+
+				}
 			}
 		}
+	}
+
+		//strCondition.Format(" hash = '%s' or hash = '%s' ", const_it->tx_hash,const_it->relate_hash);
+
+		//uistruct::REVTRANSACTION_t pTxItem;
+		//GetTransactionItem(strCondition, &pTxItem);
+		//if (pTxItem.txhash == _T(""))
+		//{
+		//	strCondition.Format(_T(" tx_hash='%s' or relate_hash = '%s'"), const_it->tx_hash,const_it->relate_hash);
+		//	DeleteTableItem(_T("t_p2p_quiz"),strCondition);
+		//}else if(pTxItem.confirmedHeight == 0){
+		//	//更新数据
+		//	CString strField,strCond;
+		//	strField.AppendFormat(_T("send_time='%s',recv_time = '%s',comfirmed = %d,height =%d") ,_T("") ,_T(""),0,0 ) ;
+		//	strCond.Format(_T(" tx_hash='%s' or relate_hash = '%s'"), const_it->tx_hash,const_it->relate_hash);
+		//	if ( !UpdateTableItem(_T("t_p2p_quiz") ,strField,strCond )) {
+		//		TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , const_it->tx_hash );
+		//	}
+		//}
 
 		//int nItem =GetTableCountItem(_T("t_transaction") ,strCondition);
 		//if (nItem == 0)
@@ -1105,7 +1185,7 @@ void  CSqliteDeal::UpdataAllTableData(){
 		//	strCondition.Format(" tx_hash = '%s' ", const_it->tx_hash);
 		//	DeleteTableItem(_T("t_p2p_quiz"),strCondition);
 		//}
-	}
+	
 	uistruct::REDPACKETSENDLIST RedPackeSendRecordList;
 	GetRedPacketSendRecordList(_T(" 1=1 "), &RedPackeSendRecordList);
 	std::vector<uistruct::REDPACKETSEND_t>::const_iterator const_it1;
