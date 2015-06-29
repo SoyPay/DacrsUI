@@ -35,9 +35,18 @@ public:
 private:
 	CListCtrlCl        m_listCtrl;
 	CShadeButtonST     m_rBtnTxdetail;
+	CShadeButtonST     m_rBtnExportTx;
+	CComboBox		   m_condition;
+	CComboBox		   m_time;
 public:
 	afx_msg void OnNMDblclkListListtx(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	void InsertItemData();
 	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
+	afx_msg void OnBnClickedExportExel();
+	void  GetCellName(int nRow, int nCol, CString &strName);
+	afx_msg void OnCbnSelchangeCombo1();
+	void OnShowListCtrl(uistruct::TRANSRECORDLIST pListInfo,int flag =0);
+	bool  isMine(CString addr);
+	afx_msg void OnCbnSelchangeComboTime();
 };
