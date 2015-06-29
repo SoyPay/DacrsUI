@@ -261,9 +261,16 @@
     <ClInclude Include="BmpBtn.h" />
     <ClInclude Include="BtnST.h" />
     <ClInclude Include="ButtonEx.h" />
+    <ClInclude Include="CApplication.h" />
     <ClInclude Include="CeXDib.h" />
+    <ClInclude Include="CFont0.h" />
     <ClInclude Include="ChangeDPI.h" />
     <ClInclude Include="CommonStruct.h" />
+    <ClInclude Include="CRange.h" />
+    <ClInclude Include="CWorkbook.h" />
+    <ClInclude Include="CWorkbooks.h" />
+    <ClInclude Include="CWorksheet.h" />
+    <ClInclude Include="CWorksheets.h" />
     <ClInclude Include="GrabCommRedPacket.h" />
     <ClInclude Include="GrabSpecalRedPacket.h" />
     <ClInclude Include="GuessNum.h" />
