@@ -108,6 +108,7 @@ BOOL COut::OnInitDialog()
 	v_linkCtrl.SetWindowText(_T(""));
 	if (m_showLink)
 	{
+		m_rBtnOK.ShowWindow(SW_HIDE);
 		onShowLink();
 	}
 	return TRUE;  // return TRUE unless you set the focus to a control

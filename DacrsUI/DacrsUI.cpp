@@ -97,6 +97,7 @@ BOOL CDacrsUIApp::InitInstance()
 		return FALSE ;
 	}
 
+
 	m_blockAutoDelete = false;
 	m_msgAutoDelete= false;
 	GetMoFilename( str_InsPath , str_ModuleFilename ); //获取文件路径和文件名称
@@ -112,17 +113,17 @@ BOOL CDacrsUIApp::InitInstance()
 	//初始化日志配置参数
 	InitLogCfg();
 	//检测自动升级
-	//int nResult = Update();
-	//if(-1 == nResult) {
-	//	nResult = Update();
-	//}
-	//if (nResult == 1)
-	//{
-	//	return TRUE;
-	//}else if(nResult == 0){
-	//	//// 不更新直接退出
-	//	exit(0); 
-	//}
+	int nResult = Update();
+	if(-1 == nResult) {
+		nResult = Update();
+	}
+	if (nResult == 1)
+	{
+		return TRUE;
+	}else if(nResult == 0){
+		//// 不更新直接退出
+		exit(0); 
+	}
 
 	if(CSoyPayHelp::getInstance()->IsOSVersionBelowXp()) {
 		if(!EnableDebugPrivilege())
