@@ -446,7 +446,7 @@ int CallGetTransactionItem(void *para, int n_column, char ** column_value, char 
 	root["Contract"] =  strValue.GetString();
 
 	strValue.Format(_T("%s") , column_value[11] ) ;
-	root["confirmedHeight"] = atoi(strValue);
+	root["confirmHeight"] = atoi(strValue);
 
 	strValue.Format(_T("%s") , column_value[12] ) ;
 	root["confirmedtime"] = atoi(strValue);
@@ -1075,7 +1075,7 @@ void  CSqliteDeal::UpdataAllTableData(){
 	uistruct::P2PBETRECORDLIST pTransaction;
 	GetP2PQuizRecordList(_T(" 1=1 "), &pTransaction);
 
-	if (0 == pTransaction.size() ) return  ;
+	//if (0 == pTransaction.size() ) return  ;
 
 	vector<string> vSignHash;
 	std::vector<uistruct::P2P_QUIZ_RECORD_t>::const_iterator const_it;
@@ -1089,7 +1089,7 @@ void  CSqliteDeal::UpdataAllTableData(){
 		{
 			strCondition.Format(_T(" tx_hash='%s' or relate_hash = '%s'"), const_it->tx_hash,const_it->relate_hash);
 			DeleteTableItem(_T("t_p2p_quiz"),strCondition);
-		}else{
+		}else if(pTxItem.confirmedHeight == 0){
 			//更新数据
 			CString strField,strCond;
 			strField.AppendFormat(_T("send_time='%s',recv_time = '%s',comfirmed = %d,height =%d") ,_T("") ,_T(""),0,0 ) ;
@@ -1119,7 +1119,7 @@ void  CSqliteDeal::UpdataAllTableData(){
 		{
 			strCondition.Format(" send_hash = '%s' ", const_it1->send_hash);
 			DeleteTableItem(_T("t_red_packets_send"),strCondition);
-		}else{
+		}else if(pTxItem.confirmedHeight == 0){
 			//更新数据
 			CString strField,strCond;
 			strField.AppendFormat(_T("send_time=%d,confirm_height = %d") ,0 ,0 ) ;
@@ -1149,7 +1149,7 @@ void  CSqliteDeal::UpdataAllTableData(){
 		{
 			strCondition.Format(" grab_hash = '%s' ", const_it2->grab_hash);
 			DeleteTableItem(_T("t_red_packets_grab"),strCondition);
-		}else{
+		}else if(pTxItem.confirmedHeight == 0){
 			//更新数据
 			CString strField,strCond;
 			strField.Format(_T("grab_time=%d,confirm_height = %d,lucky_fortune = 0,lucky_amount=%lf") ,0 ,0,0.0 ) ;
