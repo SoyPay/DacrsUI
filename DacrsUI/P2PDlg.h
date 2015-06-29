@@ -50,6 +50,7 @@ public:
 	CComboBox			   m_addrbook;
 	CP2PBetHelp		       m_P2PBetHelp;
 	CShadeButtonST         m_rBtnWinerloser;
+	CShadeButtonST         m_rBtnAddrWinerloser;
 public:
 	CBetRecord            m_BetRecord     ;
 	CSendRecord           m_SendRecord    ;
@@ -83,7 +84,10 @@ public:
 	afx_msg void OnBnClickedButtonRefresh2();
 	afx_msg void OnBnClickedButtonRefresh1();
 	afx_msg void OnNMThemeChangedListBonus(NMHDR *pNMHDR, LRESULT *pResult);
-	void ComPuteBetWinAandLoser();
+	double ComPuteBetWinAandLoser(uistruct::P2PBETRECORDLIST  m_P2pBetTxList);
+	double ComPuteAddrBetWinAandLoser(uistruct::P2PBETRECORDLIST  m_P2pBetTxList,CString addr);
+	void   ShowAllBetWinAndLoss();
+	void   ShowAddressBetWinAndLoss(CString addr);
 private:
 	int                   m_pagecount;
 	int                   m_curpage;

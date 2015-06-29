@@ -64,6 +64,7 @@ void CP2PDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_MFCLINK1, v_linkCtrl);
 
 	DDX_Control(pDX, IDC_WINERLOSER, m_rBtnWinerloser);
+	DDX_Control(pDX, IDC_ONEWINER, m_rBtnAddrWinerloser);
 
 }
 
@@ -235,6 +236,15 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_rBtnWinerloser.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(41, 57, 85));
 		m_rBtnWinerloser.SizeToContent();
 
+		m_rBtnAddrWinerloser.SetBitmaps( IDB_BITMAP_WINERLOUSER , RGB(255, 255, 0) , IDB_BITMAP_WINERLOUSER , RGB(255, 255, 255) );
+		m_rBtnAddrWinerloser.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+		m_rBtnAddrWinerloser.SetWindowText("") ;
+		m_rBtnAddrWinerloser.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(41, 57, 85));
+		m_rBtnAddrWinerloser.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(41, 57, 85));
+		m_rBtnAddrWinerloser.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(41, 57, 85));
+		m_rBtnAddrWinerloser.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(41, 57, 85));
+		m_rBtnAddrWinerloser.SizeToContent();
+
 		m_money.SetFont(120, _T("黑体"));				//设置显示字体和大小
 		m_money.SetTextColor(RGB(0,0,0));			    //字体颜色	
 		m_money.SetWindowText(_T(""));
@@ -342,7 +352,12 @@ void CP2PDlg::OnSize(UINT nType, int cx, int cy)
 
 		pst = GetDlgItem( IDC_WINERLOSER ) ;
 		if ( NULL != pst ) {
-			pst->SetWindowPos( NULL ,600 , 270 , 0 ,0, SWP_NOSIZE ) ; 
+			pst->SetWindowPos( NULL ,550 , 270 , 0 ,0, SWP_NOSIZE ) ; 
+		}
+
+		pst = GetDlgItem( IDC_ONEWINER ) ;
+		if ( NULL != pst ) {
+			pst->SetWindowPos( NULL ,670 , 270 , 0 ,0, SWP_NOSIZE ) ; 
 		}
 
 		pst = GetDlgItem( IDC_STATIC_BALANCE ) ;
@@ -477,7 +492,8 @@ void CP2PDlg::OnCbnSelchangeComboAddres()
 	QueryNotDrawBalance(text);          /// blockchanged 刷新为开奖的数据
 	ShowListItem(0);
 	ShowListItem(1);
-	ComPuteBetWinAandLoser();
+	ShowAllBetWinAndLoss();
+	ShowAddressBetWinAndLoss(text);
 }
 
 void CP2PDlg::InsertComboxIitem()
@@ -1263,17 +1279,35 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 	 }
 
  }
- void CP2PDlg::ComPuteBetWinAandLoser()
- {
-	 if (!theApp.IsSyncBlock)
-	 {
-		 return;
-	 }
-	 double winer = 0.0;
-	 double loser = 0.0;
 
+ void  CP2PDlg::ShowAllBetWinAndLoss(){
 	 uistruct::P2PBETRECORDLIST       m_P2pBetTxList;
 	 theApp.m_SqliteDeal.GetP2PQuizRecordList(_T("1=1") ,&m_P2pBetTxList ) ;
+
+	 double result = ComPuteBetWinAandLoser(m_P2pBetTxList);
+	 CString show;
+	 show.Format(_T("总盈亏:%.4f"),result);
+	 m_rBtnWinerloser.SetWindowText(show);
+	 m_rBtnWinerloser.Invalidate();
+ }
+ void   CP2PDlg::ShowAddressBetWinAndLoss(CString addr)
+ {
+	 uistruct::P2PBETRECORDLIST       m_P2pBetTxList;
+	 CString condtion;
+	 condtion.Format(_T("left_addr = '%s' or right_addr = '%s'"),addr,addr);
+	 theApp.m_SqliteDeal.GetP2PQuizRecordList(condtion ,&m_P2pBetTxList ) ;
+
+	 double result = ComPuteAddrBetWinAandLoser(m_P2pBetTxList,addr);
+	 CString show;
+	 show.Format(_T("盈亏:%.4f"),result);
+	 m_rBtnAddrWinerloser.SetWindowText(show);
+	 m_rBtnAddrWinerloser.Invalidate();
+ }
+ double CP2PDlg::ComPuteBetWinAandLoser(uistruct::P2PBETRECORDLIST  m_P2pBetTxList)
+ {
+
+	 double winer = 0.0;
+	 double loser = 0.0;
 
 	 std::vector<uistruct::P2P_QUIZ_RECORD_t>::const_iterator const_it;
 	 for (const_it = m_P2pBetTxList.begin() ; const_it != m_P2pBetTxList.end() ; const_it++ ) {
@@ -1311,17 +1345,95 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 			}
 		}	 
 	 }
-	 CString show;
+	double result = winer-loser;
+	return result;
+ }
+ double CP2PDlg::ComPuteAddrBetWinAandLoser(uistruct::P2PBETRECORDLIST  m_P2pBetTxList,CString addr)
+ {
+	 double winer = 0.0;
+	 double loser = 0.0;
+
+	 std::vector<uistruct::P2P_QUIZ_RECORD_t>::const_iterator const_it;
+	 for (const_it = m_P2pBetTxList.begin() ; const_it != m_P2pBetTxList.end() ; const_it++ ) {
+		 if (const_it->actor == 0){         //// 发赌约身份者
+			 if (const_it->state == 2){       
+				 if (const_it->guess_num == const_it->content[32])
+				 {
+					 loser += const_it->amount;
+				 }else
+				 {
+					 winer += const_it->amount;
+				 }
+			 }else if (const_it->state == 1){
+				 if(const_it->height != 0 &&(const_it->time_out + const_it->height)< theApp.blocktipheight){
+					 loser += const_it->amount;
+				 }
+			 }
+		 }else if (const_it->actor == 1){ /// 接赌身份者
+			 if (const_it->state == 2)
+			 {
+				 int rewardnum = (int)const_it->content[32];
+				 if (const_it->guess_num == const_it->content[32])
+				 {
+					 winer += const_it->amount;
+				 }else
+				 {
+					 loser += const_it->amount;
+				 }
+
+			 }else{
+				 if (const_it->height>0 &&(const_it->time_out + const_it->height)< theApp.blocktipheight)
+				 {
+					 winer += const_it->amount;
+				 }
+			 }
+		 }else{
+			 if (strcmp(const_it->left_addr,const_it->right_addr) != 0)
+			 {
+				 if (strcmp(const_it->left_addr,addr) == 0)
+				 {
+					 if (const_it->guess_num == const_it->content[32])
+					 {
+						 loser += const_it->amount;
+					 }else
+					 {
+						 winer += const_it->amount;
+					 }
+				 }else if (const_it->state == 1){
+					 if(const_it->height != 0 &&(const_it->time_out + const_it->height)< theApp.blocktipheight){
+						 loser += const_it->amount;
+					 }
+				 }else if (strcmp(const_it->right_addr,addr) == 0)
+				 {
+					 if (const_it->state == 2)
+					 {
+						 int rewardnum = (int)const_it->content[32];
+						 if (const_it->guess_num == const_it->content[32])
+						 {
+							 winer += const_it->amount;
+						 }else
+						 {
+							 loser += const_it->amount;
+						 }
+
+					 }else{
+						 if (const_it->height>0 &&(const_it->time_out + const_it->height)< theApp.blocktipheight)
+						 {
+							 winer += const_it->amount;
+						 }
+					 }
+				 }
+			 }
+		 }
+	 }
 	 double result = winer-loser;
-	 show.Format(_T("盈亏:%.4f"),result);
-	 m_rBtnWinerloser.SetWindowText(show);
-	 m_rBtnWinerloser.Invalidate();
+	 return result;
  }
  void CP2PDlg::OnBnClickedButtonRefresh2()
  {
 	 // TODO: 在此添加控件通知处理程序代码
 	 ShowListItem(m_seltab);
-	  ComPuteBetWinAandLoser();
+	  ShowAllBetWinAndLoss();
  }
 
 
