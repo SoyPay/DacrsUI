@@ -61,6 +61,7 @@ void CMortgageTardDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_MFCLINK1, v_linkCtrl);
 	
 	DDX_Control(pDX, IDC_WINERLOUSER, m_rBtnWinerloser);
+	DDX_Control(pDX, IDC_ONEWINER, m_rBtnAddrWinerloser);
 
 }
 
@@ -253,6 +254,15 @@ BOOL CMortgageTardDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, U
 		m_rBtnWinerloser.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(41, 57, 85));
 		m_rBtnWinerloser.SizeToContent();
 
+		m_rBtnAddrWinerloser.SetBitmaps( IDB_BITMAP_WINERLOUSER , RGB(255, 255, 0) , IDB_BITMAP_WINERLOUSER , RGB(255, 255, 255) );
+		m_rBtnAddrWinerloser.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+		m_rBtnAddrWinerloser.SetWindowText("") ;
+		m_rBtnAddrWinerloser.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(41, 57, 85));
+		m_rBtnAddrWinerloser.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(41, 57, 85));
+		m_rBtnAddrWinerloser.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(41, 57, 85));
+		m_rBtnAddrWinerloser.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(41, 57, 85));
+		m_rBtnAddrWinerloser.SizeToContent();
+
 		m_money.SetFont(120, _T("黑体"));				//设置显示字体和大小
 		m_money.SetTextColor(RGB(0,0,0));			    //字体颜色	
 		m_money.SetWindowText(_T(""));
@@ -369,7 +379,12 @@ void CMortgageTardDlg::OnSize(UINT nType, int cx, int cy)
 
 		pst = GetDlgItem( IDC_WINERLOUSER ) ;
 		if ( NULL != pst ) {
-			pst->SetWindowPos( NULL ,600 , 279 , 0 ,0, SWP_NOSIZE ) ; 
+			pst->SetWindowPos( NULL ,550 , 279 , 0 ,0, SWP_NOSIZE ) ; 
+		}
+
+		pst = GetDlgItem( IDC_ONEWINER ) ;
+		if ( NULL != pst ) {
+			pst->SetWindowPos( NULL ,670 , 279 , 0 ,0, SWP_NOSIZE ) ; 
 		}
 
 		pst = GetDlgItem( IDC_STATIC_BALANCE ) ;
@@ -719,7 +734,8 @@ void CMortgageTardDlg::OnCbnSelchangeComboAddres()
 		ShowListItem(1);
 		ShowListPoolItem(0);
 		ShowListPoolItem(1);
-		ComputeSpecailRedPacket();
+		ShowAllSpecailWinAndLoss();
+		ShowAddressSpecailWinAndLoss(text);
 	}
 }
 
@@ -1062,7 +1078,7 @@ void CMortgageTardDlg::OnBnClickedButtonRefresh2()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	 ShowListItem(m_seltab);
-	 ComputeSpecailRedPacket();
+	 ShowAllSpecailWinAndLoss();
 }
 void CMortgageTardDlg::OnListPool()
 {
@@ -1611,15 +1627,13 @@ void  CMortgageTardDlg::onShowLink()
 	v_linkCtrl.SetURL("http://www.dacrs.com/forum.php?mod=viewthread&tid=3503&extra=page%3D1");
 }
 
-void  CMortgageTardDlg::ComputeSpecailRedPacket()
+double  CMortgageTardDlg::ComputeSpecailRedPacket(uistruct::REDPACKETGRABLIST  RedPackeGrabRecordList)
 {
-	if (!theApp.IsSyncBlock)
-	{
-		return;
-	}
+	//if (!theApp.IsSyncBlock)
+	//{
+	//	return;
+	//}
 	double result = 0.0;
-	uistruct::REDPACKETGRABLIST  RedPackeGrabRecordList;
-	theApp.m_SqliteDeal.GetRedPacketGrabRecordList(_T(" packet_type = 2 "), &RedPackeGrabRecordList);
 
 	std::vector<uistruct::REDPACKETGRAB_t>::const_iterator const_it;
 	for (const_it = RedPackeGrabRecordList.begin() ; const_it != RedPackeGrabRecordList.end() ; const_it++ ) {
@@ -1632,8 +1646,28 @@ void  CMortgageTardDlg::ComputeSpecailRedPacket()
 			result += const_it->lucky_amount;
 		}
 	}
+	return result;
+}
+
+void    CMortgageTardDlg::ShowAllSpecailWinAndLoss(){
+	uistruct::REDPACKETGRABLIST  RedPackeGrabRecordList;
+	theApp.m_SqliteDeal.GetRedPacketGrabRecordList(_T(" packet_type = 2 "), &RedPackeGrabRecordList);
+	double result = ComputeSpecailRedPacket(RedPackeGrabRecordList);
 	CString show;
-	show.Format(_T("接龙盈亏:%.4f"),result);
+	show.Format(_T("接龙总盈亏:%.4f"),result);
 	m_rBtnWinerloser.SetWindowText(show);
 	m_rBtnWinerloser.Invalidate();
+}
+void   CMortgageTardDlg::ShowAddressSpecailWinAndLoss(CString addr)
+{
+	CString condtion;
+	condtion.Format(_T("grab_acct_id = '%s'and packet_type = 2 "),addr);
+
+	uistruct::REDPACKETGRABLIST  RedPackeGrabRecordList;
+	theApp.m_SqliteDeal.GetRedPacketGrabRecordList(condtion, &RedPackeGrabRecordList);
+	double result = ComputeSpecailRedPacket(RedPackeGrabRecordList);
+	CString show;
+	show.Format(_T("盈亏:%.4f"),result);
+	m_rBtnAddrWinerloser.SetWindowText(show);
+	m_rBtnAddrWinerloser.Invalidate();
 }

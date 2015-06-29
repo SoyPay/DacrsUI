@@ -59,6 +59,7 @@ public:
 	CRedPacketHelp		   m_RedPacketHelp;
 	CP2PBetHelp		                    m_P2PBetHelp;
 	CShadeButtonST         m_rBtnWinerloser;
+	CShadeButtonST         m_rBtnAddrWinerloser;
 public:
 	BOOL AddListaddrDataBox();
 	bool CheckBalance();
@@ -69,7 +70,9 @@ public:
 	afx_msg LRESULT onBnCLick( WPARAM wParam, LPARAM lParam );
 	afx_msg LRESULT OnShowListCtrol(  WPARAM wParam, LPARAM lParam ) ;
 	afx_msg void OnTcnSelchangeTab(NMHDR *pNMHDR, LRESULT *pResult);
-	void    ComputeSpecailRedPacket();
+	double    ComputeSpecailRedPacket(uistruct::REDPACKETGRABLIST  RedPackeGrabRecordList);
+	void   ShowAllSpecailWinAndLoss();
+	void   ShowAddressSpecailWinAndLoss(CString addr);
 public:
 	CAcceptRedPacketRecord            m_BetRecord     ;
 	CSendRedPacketRecord              m_SendRecord    ;
