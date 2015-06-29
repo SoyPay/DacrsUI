@@ -1387,11 +1387,10 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 					 winer += const_it->amount;
 				 }
 			 }
-		 }else{
-			 if (strcmp(const_it->left_addr,const_it->right_addr) != 0)
+		 }else if(strcmp(const_it->left_addr,const_it->right_addr) != 0){
+			 if (strcmp(const_it->left_addr,addr) == 0)
 			 {
-				 if (strcmp(const_it->left_addr,addr) == 0)
-				 {
+				 if (const_it->state == 2){       
 					 if (const_it->guess_num == const_it->content[32])
 					 {
 						 loser += const_it->amount;
@@ -1403,29 +1402,30 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 					 if(const_it->height != 0 &&(const_it->time_out + const_it->height)< theApp.blocktipheight){
 						 loser += const_it->amount;
 					 }
-				 }else if (strcmp(const_it->right_addr,addr) == 0)
+				 }
+			 }else if (strcmp(const_it->right_addr,addr) == 0)
+			 {
+				 if (const_it->state == 2)
 				 {
-					 if (const_it->state == 2)
+					 int rewardnum = (int)const_it->content[32];
+					 if (const_it->guess_num == const_it->content[32])
 					 {
-						 int rewardnum = (int)const_it->content[32];
-						 if (const_it->guess_num == const_it->content[32])
-						 {
-							 winer += const_it->amount;
-						 }else
-						 {
-							 loser += const_it->amount;
-						 }
+						 winer += const_it->amount;
+					 }else
+					 {
+						 loser += const_it->amount;
+					 }
 
-					 }else{
-						 if (const_it->height>0 &&(const_it->time_out + const_it->height)< theApp.blocktipheight)
-						 {
-							 winer += const_it->amount;
-						 }
+				 }else{
+					 if (const_it->height>0 &&(const_it->time_out + const_it->height)< theApp.blocktipheight)
+					 {
+						 winer += const_it->amount;
 					 }
 				 }
 			 }
 		 }
 	 }
+		 
 	 double result = winer-loser;
 	 return result;
  }
