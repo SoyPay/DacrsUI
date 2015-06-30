@@ -42,7 +42,7 @@ void CIpoDlg::DoDataExchange(CDataExchange* pDX)
 //	DDX_Control(pDX, IDC_COMBO_ADDR , m_addrbook);
 	DDX_Control(pDX, IDC_LIST_SHOW , m_listCtrl);
 	DDX_Control(pDX, IDC_STATIC_AMOUNT , m_strTx2);
-	DDX_Control(pDX, IDC_STATIC_FEE , m_strTx3);
+	//DDX_Control(pDX, IDC_STATIC_FEE , m_strTx3);
 	DDX_Control(pDX, IDC_BUTTON_DRAWAL , m_rBtnSend);
 	DDX_Control(pDX, IDC_BUTTON_QUERY , m_rQueryAmout);
 	
@@ -138,8 +138,8 @@ BOOL CIpoDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_strTx1.SetFont(120, _T("黑体"));				//设置显示字体和大小
 		m_strTx1.SetTextColor(RGB(0,0,0));	
 
-		m_strTx3.SetFont(120, _T("黑体"));				//设置显示字体和大小
-		m_strTx3.SetTextColor(RGB(0,0,0));	
+		//m_strTx3.SetFont(120, _T("黑体"));				//设置显示字体和大小
+		//m_strTx3.SetTextColor(RGB(0,0,0));	
 
 		struct LISTCol {
 			CString		name ;
@@ -166,7 +166,7 @@ BOOL CIpoDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		INT64 minFee = 45266;
 		double dnum = (minFee*1.0/COIN);
 		strTxFee.Format(_T("%.8f"),dnum);
-		GetDlgItem(IDC_EDIT_GETFEE)->SetWindowText(strTxFee) ;
+		//GetDlgItem(IDC_EDIT_GETFEE)->SetWindowText(strTxFee) ;
 
 		((CStatic*)GetDlgItem(IDC_STATIC_AMOUNT))->SetWindowText(_T(""));
 		//v_linkCtrl1.SetWindowText(_T(""));
@@ -207,7 +207,10 @@ void CIpoDlg::OnBnClickedButtonDrawal()
 	string strContractData = m_P2PBetHelp.GetAppAccountMoneyContract(addr.GetString(),1,2);
 
 	CString strTxFee;
-	GetDlgItem(IDC_EDIT_GETFEE)->GetWindowText(strTxFee) ;
+	INT64 minFee = 45266;
+	double dnum = (minFee*1.0/COIN);
+	strTxFee.Format(_T("%.8f"),dnum);
+	//GetDlgItem(IDC_EDIT_GETFEE)->GetWindowText(strTxFee) ;
 	if (  (INT64)REAL_MONEY(atof(strTxFee)) < 10000  ) {
 		::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
 		return ;
@@ -267,39 +270,25 @@ void CIpoDlg::OnSize(UINT nType, int cx, int cy)
 			pst->SetWindowPos( NULL ,(rc.Width()/100)*8 ,(rc.Height()/100)*5  , (rc.Width()/100)*40, (rc.Height()/100)*7 ,SWP_SHOWWINDOW ) ; 
 		}
 		
-
-		pst = GetDlgItem( IDC_BUTTON_QUERY ) ;
-		if ( NULL != pst ) {
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*55 ,(rc.Height()/100)*5  , (rc.Width()/100)*13-2, (rc.Height()/100)*9  ,SWP_SHOWWINDOW ) ; 
-		}
-
-		pst = GetDlgItem( IDC_STATIC_FEE ) ;
-		if ( NULL != pst ) {
-			CRect rect ;
-			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL , (rc.Width()/100)*3, (rc.Height()/100)*20+4 , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
-		}
-
-		pst = GetDlgItem( IDC_EDIT_GETFEE ) ;
-		if ( NULL != pst ) {
-			CRect rect ;
-			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL , (rc.Width()/100)*8, (rc.Height()/100)*20 , (rc.Width()/100)*15, (rc.Height()/100)*7   ,SWP_SHOWWINDOW ) ; 
-		}
-
 		pst = GetDlgItem( IDC_STATIC_AMOUNT ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*24 ,(rc.Height()/100)*20+4  , rect.Width(), (rc.Height()/100)*5  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*48 ,(rc.Height()/100)*6  , (rc.Width()/100)*20, (rc.Height()/100)*5  ,SWP_SHOWWINDOW ) ; 
 		}
+
+		pst = GetDlgItem( IDC_BUTTON_QUERY ) ;
+		if ( NULL != pst ) {
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*70 ,(rc.Height()/100)*5  , (rc.Width()/100)*13-2, (rc.Height()/100)*9  ,SWP_SHOWWINDOW ) ; 
+		}
+
 		//
 		//	
 		pst = GetDlgItem( IDC_BUTTON_DRAWAL ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*55 ,(rc.Height()/100)*20  ,(rc.Width()/100)*13-2, (rc.Height()/100)*9   ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*85 ,(rc.Height()/100)*5  ,(rc.Width()/100)*13-2, (rc.Height()/100)*9   ,SWP_SHOWWINDOW ) ; 
 		}
 
 		pst = GetDlgItem( IDC_LIST_SHOW ) ;
