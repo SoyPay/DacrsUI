@@ -780,6 +780,20 @@ void CDacrsUIDlg::BakWallet()
 		CStringA strSendData;
 		CSoyPayHelp::getInstance()->SendRpc(strCommand,strSendData);
 	}
+
+	//BROWSEINFO stInfo = {NULL};
+	//LPCITEMIDLIST pIdlst;
+	//TCHAR szPath[MAX_PATH];
+	//stInfo.ulFlags = BIF_DONTGOBELOWDOMAIN | BIF_RETURNONLYFSDIRS | BIF_USENEWUI;
+	//stInfo.lpszTitle= "ÇëÑ¡ÔñÂ·¾¶:";
+	//pIdlst = SHBrowseForFolder(&stInfo);
+	//if(!pIdlst) return ;
+	//if(!SHGetPathFromIDList(pIdlst, szPath)) return ;
+	//CString strCommand;
+	//strCommand.Format(_T("%s %s"),_T("backupwallet"),szPath);
+	//CStringA strSendData;
+	//CSoyPayHelp::getInstance()->SendRpc(strCommand,strSendData);
+	//printf(szPath);
 }
 
 void CDacrsUIDlg::ToTray() 

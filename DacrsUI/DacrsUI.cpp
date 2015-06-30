@@ -133,7 +133,7 @@ BOOL CDacrsUIApp::InitInstance()
 		exit(0); 
 	}
 
-	CheckUpdate();
+	//CheckUpdate();
 
 	gsLanguage = language();
 
