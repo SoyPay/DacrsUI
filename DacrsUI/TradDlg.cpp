@@ -436,20 +436,20 @@ void CTradDlg::OnSize(UINT nType, int cx, int cy)
 
 		CButton *pList = (CButton*)GetDlgItem(IDC_LIST_LISTTX);
 		if( NULL != pList ) {	
-			pList->SetWindowPos(NULL ,32, 50 , 837 , 403 , SWP_SHOWWINDOW);
+			pList->SetWindowPos(NULL ,32, 50 , 837 , 380 , SWP_SHOWWINDOW);
 		}
 		CButton *pButton = (CButton*)GetDlgItem(IDC_BUTTON_TXDETAIL);
 		if( NULL != pButton ) {	
 			CRect m_BtnRc ;
 			pButton->GetClientRect(&m_BtnRc);
-			pButton->SetWindowPos(NULL ,900 - 1*(103 + 5)- 23 , 600 - 72 - 32 - 46+5 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
+			pButton->SetWindowPos(NULL ,900 - 1*(103 + 5)- 23 , 600 - 72 - 32 - 46 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
 		}
 
 		pButton = (CButton*)GetDlgItem(IDC_EXPORT_EXEL);
 		if( NULL != pButton ) {	
 			CRect m_BtnRc ;
 			pButton->GetClientRect(&m_BtnRc);
-			pButton->SetWindowPos(NULL ,900 - 1*(103 + 5)- 23-m_BtnRc.Width()-10 , 600 - 72 - 32 - 46+5 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
+			pButton->SetWindowPos(NULL ,900 - 1*(103 + 5)- 23-m_BtnRc.Width()-10 , 600 - 72 - 32 - 46 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
 		}
 	}
 }
