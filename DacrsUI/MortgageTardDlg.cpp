@@ -535,7 +535,7 @@ void CMortgageTardDlg::SendRedPacketComm(){
 		return;
 	}
 	double minamout = atof(strTxMoney)/redNum;
-	if (minamout < 0.0001)
+	if (minamout < 0.01)
 	{
 		::MessageBox( this->GetSafeHwnd() ,_T("平均每个红包的金额不能小于0.001") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
