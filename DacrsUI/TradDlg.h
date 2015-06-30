@@ -49,4 +49,10 @@ public:
 	void OnShowListCtrl(uistruct::TRANSRECORDLIST pListInfo,int flag =0);
 	bool  isMine(CString addr);
 	afx_msg void OnCbnSelchangeComboTime();
+	CString GetConditonTime();
+	CString GetConditonTxType(int &operate);
+	CString Getaddr();
+	void ShowAddrConditon();
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	CString GetConditonStr(int &operate);
 };
