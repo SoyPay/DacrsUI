@@ -248,7 +248,7 @@ void  CAcceptRedPacketRecord::OnShowPagePool(int page)
 
 		strnum.Format(_T("%d"),const_it.total_num);
 		m_ListBox.InsertStr(i,this->GetSafeHwnd());
-		m_ListBox.SetIndexString(i , Sendaddr,type,sendTime,amount, strnum,luckeMoney,luckeValue);
+		m_ListBox.SetIndexString(i , Sendaddr,type,sendTime,amount, strnum,luckeValue,luckeMoney);
 	
 		i++;
 	}
