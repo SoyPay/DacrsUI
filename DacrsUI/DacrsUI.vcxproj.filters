@@ -205,6 +205,9 @@
     <ClCompile Include="Subclass.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="SetAppFee.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BmpBtn.h">
@@ -466,6 +469,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="CWorksheets.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SetAppFee.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

@@ -207,7 +207,7 @@ void CIpoDlg::OnBnClickedButtonDrawal()
 	string strContractData = m_P2PBetHelp.GetAppAccountMoneyContract(addr.GetString(),1,2);
 
 	CString strTxFee;
-	INT64 minFee = 45266;
+	INT64 minFee = theApp.m_P2PBetCfg.GetAppAmountnFee; //45266;theApp.m_P2PBetCfg.GetAppAmountnFee
 	double dnum = (minFee*1.0/COIN);
 	strTxFee.Format(_T("%.8f"),dnum);
 	//GetDlgItem(IDC_EDIT_GETFEE)->GetWindowText(strTxFee) ;
