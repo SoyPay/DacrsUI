@@ -295,7 +295,7 @@ void CIpoDlg::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*3 ,(rc.Height()/100)*30  , rc.Width()-(rc.Width()/100)*5+2, (rc.Height()/100)*83+2  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*3 ,(rc.Height()/100)*16  , rc.Width()-(rc.Width()/100)*5+2, (rc.Height()/100)*97+2  ,SWP_SHOWWINDOW ) ; 
 		}
 	}
 }
