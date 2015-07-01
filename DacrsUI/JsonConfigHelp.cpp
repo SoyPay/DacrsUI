@@ -302,3 +302,36 @@ void CJsonConfigHelp::ReadRedPacketCfgData(const Json::Value &root){
 void CJsonConfigHelp::GetRedPacketCfgData(CRedPacketCfg &redpacketcfg){
 	redpacketcfg = m_RedPacketCfg;
 }
+
+CString  CJsonConfigHelp::GetConfigRootStr(const CString& strFilePath){
+	ifstream ifs;
+	ifs.open(strFilePath,ios::in);
+	Json::Value root; 
+	Json::Reader reader; 
+	if (!ifs.is_open())
+	{
+		return _T("");
+	}
+	//ifs.read()  
+	if (reader.parse(ifs, root,false))
+	{
+		return root.toStyledString().c_str();
+	}
+	ifs.close();
+	return _T("");
+}
+void CJsonConfigHelp::ModifyAppFeeCfgData( Json::Value& root,const CString &LeaderKey,const CString &Key,const CString &KeyValue){
+	string strTemp = root.toStyledString();
+	int pos = strTemp.find(LeaderKey);
+	if (pos > 0)
+	{
+		Json::Value p2pbet = root[LeaderKey];
+		ASSERT(!p2pbet.isNull());
+		p2pbet[Key]= (INT64)(atof(KeyValue)*COIN);
+		root[LeaderKey]=p2pbet;
+	}else{
+		CString strTemp =_T("");
+		strTemp.Format(_T("%s %s  Œ¥≈‰÷√"),LeaderKey,Key);
+		::MessageBox( NULL , strTemp , "Error" , MB_ICONERROR) ;
+	}
+}

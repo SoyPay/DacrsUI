@@ -8,7 +8,7 @@
 #include "Out.h"
 #include "afxdialogex.h"
 #include "ChangeDPI.h"
-
+#include "SetAppFee.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -93,6 +93,7 @@ BEGIN_MESSAGE_MAP(CDacrsUIDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_MIN, &CDacrsUIDlg::OnBnClickedButtonMin)
 	ON_WM_TIMER()
 	ON_COMMAND(ID__BAKWALLET, &CDacrsUIDlg::BakWallet)
+	ON_COMMAND(ID__SET, &CDacrsUIDlg::SetAppFee)
 	ON_MESSAGE(WM_SHOWTASK,OnShowTask)
 END_MESSAGE_MAP()
 
@@ -631,12 +632,12 @@ bool  CDacrsUIDlg::IsP2pBetFinsh()
 
 	/// 处于发赌约状态
 	CString strCond;
-	strCond.Format(_T(" (（state == 0 or state == 4) && height > %d "),(theApp.blocktipheight-500));
+	strCond.Format(_T(" (（state = 0 or state = 4) and height > %d "),(theApp.blocktipheight-500));
 	uistruct::P2PBETRECORDLIST pPoolList;
 	theApp.m_SqliteDeal.GetP2PQuizRecordList(strCond,&pPoolList);
 	// 处于接赌状态
 	uistruct::P2PBETRECORDLIST pPoolList1;
-	strCond.Format(_T(" (（state == 1 or state == 5) && height > %d "),(theApp.blocktipheight-10));
+	strCond.Format(_T(" (（state = 1 or state = 5) and height > %d "),(theApp.blocktipheight-10));
 	theApp.m_SqliteDeal.GetP2PQuizRecordList(strCond,&pPoolList1);
 	if (pPoolList.size() != 0 && pPoolList1.size() != 0)
 	{
@@ -860,3 +861,12 @@ void CDacrsUIDlg::DeleteTray()
 	strcpy(nid.szTip,"dacrs"); //信息提示条为“计划任务提醒” 
 	//Shell_NotifyIcon(NIM_DELETE,&nid); //在托盘区删除图标 
 } 
+void CDacrsUIDlg::SetAppFee()
+{
+	CSetAppFee setappdlg;
+	if (setappdlg.DoModal() ==IDOK)
+	{
+		return;
+	}
+	return;
+}
