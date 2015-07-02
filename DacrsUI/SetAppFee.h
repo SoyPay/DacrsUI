@@ -35,7 +35,8 @@ public:
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 public:
-	CShadeButtonST   m_rBtnClose;
+	CShadeButtonST   m_rBtnOk;
+	CShadeButtonST   m_rBtnCancel;
 	afx_msg void OnBnClickedButtonClose();
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg LRESULT OnNcHitTest(CPoint point);
