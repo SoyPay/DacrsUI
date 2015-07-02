@@ -1017,10 +1017,14 @@ CString CTradDlg::GetConditonStr(int &operate)
 		condtion = GetConditonTxType(operate);
 	}
 
-	if (temp !=_T(""))
+	if (condtion !=_T(""))
 	{
 		temp = GetConditonTime();
-		condtion.AppendFormat(_T( " and %s"),temp);
+		if (temp !=_T(""))
+		{
+			condtion.AppendFormat(_T( " and %s"),temp);
+		}
+		
 
 	}else{
 		temp = GetConditonTime();
@@ -1030,17 +1034,17 @@ CString CTradDlg::GetConditonStr(int &operate)
 		}
 	}
 
-	if (temp !=_T(""))
+	if (condtion !=_T(""))
 	{
 		temp = Getaddr();
 		if (temp != _T(""))
 		{
-			if (operate == 1)
-			{
-				condtion.AppendFormat(_T( " and src_addr = '%s'"),temp);
-			}else if (operate == 2)
+			if (operate == 1)   ///  接收钱的地址
 			{
 				condtion.AppendFormat(_T( " and des_addr = '%s'"),temp);
+			}else if (operate == 2)
+			{
+				condtion.AppendFormat(_T( " and src_addr = '%s'"),temp);
 			}else{
 				condtion.AppendFormat(_T( " and (src_addr = '%s' or des_addr = '%s')"),temp,temp);
 			}
@@ -1053,10 +1057,10 @@ CString CTradDlg::GetConditonStr(int &operate)
 		{
 			if (operate == 1)
 			{
-				condtion.AppendFormat(_T( "src_addr = '%s'"),temp);
+				condtion.AppendFormat(_T( "des_addr = '%s'"),temp);
 			}else if (operate == 2)
 			{
-				condtion.AppendFormat(_T( "des_addr = '%s'"),temp);
+				condtion.AppendFormat(_T( "src_addr = '%s'"),temp);
 			}else{
 				condtion.AppendFormat(_T( " src_addr = '%s' or des_addr = '%s'"),temp,temp);
 			}

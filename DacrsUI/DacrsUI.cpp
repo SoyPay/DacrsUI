@@ -98,7 +98,6 @@ BOOL CDacrsUIApp::InitInstance()
 		return FALSE ;
 	}
 
-
 	m_blockAutoDelete = false;
 	m_msgAutoDelete= false;
 	GetMoFilename( str_InsPath , str_ModuleFilename ); //获取文件路径和文件名称
