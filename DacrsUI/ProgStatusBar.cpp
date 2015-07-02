@@ -216,6 +216,11 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 			m_bProgressType = TRUE;
 			m_nSigIndex =pBlockchanged.connections>3?3:pBlockchanged.connections;
 
+			if (pBlockchanged.tips==pBlockchanged.high)
+			{
+				theApp.IsSyncAppTx = TRUE;             /// 同步app交易
+			}
+
 			if ((pBlockchanged.tips-pBlockchanged.high)<10 && !m_walletui)
 			{
 				TRACE("ok:%s\r\n","OnShowProgressCtrl");
@@ -241,6 +246,10 @@ LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam )
 	m_progress.SetDefinedStr(strText);
 	m_progress.Invalidate();
 
+	if (pBlockchanged.tips==pBlockchanged.high)
+	{
+		theApp.IsSyncAppTx = TRUE;             /// 同步app交易
+	}
 	if ((pBlockchanged.tips-pBlockchanged.high)<10&& !m_walletui)
 	{
 		TRACE("ok:%s\r\n","OnShowProgressCtrl");

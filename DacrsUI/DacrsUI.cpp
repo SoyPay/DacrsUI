@@ -50,6 +50,7 @@ CDacrsUIApp::CDacrsUIApp()
 	blocktipheight = 0;
 	IsSyncBlock = FALSE;
 	IsSyncTx = FALSE;
+	IsSyncAppTx = FALSE;
 }
 
 
@@ -409,7 +410,7 @@ UINT __stdcall CDacrsUIApp::ProcessAppTx(LPVOID pParam)
 			return 1;
 		}
 		/// 同步以后更新数据库表
-		if (theApp.IsSyncBlock )
+		if (theApp.IsSyncAppTx )
 		{
 			theApp.m_SqliteDeal.UpdataAllTableData();
 			return 1;
@@ -801,6 +802,7 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 				RecivetxtxTimeLast = tempTimemsg;
 			}
 
+		//	LogPrint("INFO", "REV_TRANSATION %s\n",msgValue.toStyledString().c_str());
 			const Json::Value& txArray = msgValue["transation"]; 
 			//插入到数据库
 			CString strHash ;

@@ -179,6 +179,7 @@ public:
 	int blocktipheight;
 	bool IsSyncBlock;
 	bool IsSyncTx;
+	bool IsSyncAppTx;
 };
 
 
