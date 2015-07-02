@@ -38,6 +38,9 @@ void CSetAppFee::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_STATIC_BETID , m_strDesTx2);
 	DDX_Control(pDX, IDC_STATIC_GRBID , m_strDesTx3);
 	DDX_Control(pDX, IDC_STATIC_IPOID , m_strDesTx4);
+	//DDX_Control(pDX, IDOK , m_rBtnOk);
+	//DDX_Control(pDX, IDCANCEL , m_rBtnCancel);
+
 
 }
 
@@ -271,6 +274,23 @@ BOOL CSetAppFee::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
+	//m_rBtnOk.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
+	//m_rBtnOk.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+	//m_rBtnOk.SetFontEx(20 , _T("微软雅黑"));
+	//m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
+	//m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+	//m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
+	//m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
+	//m_rBtnOk.SizeToContent();
+
+	//m_rBtnCancel.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
+	//m_rBtnCancel.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+	//m_rBtnCancel.SetFontEx(20 , _T("微软雅黑"));
+	//m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
+	//m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+	//m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
+	//m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
+	//m_rBtnCancel.SizeToContent();
 	// TODO:  在此添加额外的初始化
 	//SetBkBmpNid( IDB_BITMAP_DLG_BALCK ) ;
 	m_fontGrid.CreatePointFont(100,_T("新宋体"));
@@ -330,9 +350,10 @@ HBRUSH CSetAppFee::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 	//}
 	//return hbr;
 
-	if (nCtlColor== CTLCOLOR_LISTBOX)
+	if (nCtlColor== CTLCOLOR_LISTBOX || nCtlColor==CTLCOLOR_BTN)
 	{
 		return m_hbrush; 
+		
 	} 
 	else
 	{
