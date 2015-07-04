@@ -208,6 +208,15 @@
     <ClCompile Include="SetAppFee.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="EncryptWallet.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ChangPassWord.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="WalletPassPhrase.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BmpBtn.h">
@@ -472,6 +481,15 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="SetAppFee.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EncryptWallet.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ChangPassWord.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="WalletPassPhrase.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
