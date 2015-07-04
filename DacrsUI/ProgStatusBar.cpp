@@ -18,8 +18,10 @@ IMPLEMENT_DYNAMIC(CProgStatusBar, CDialogBar)
 	m_prosshiden = false;
 	m_ProgressWnd = NULL ;
 	m_nSigIndex = 0 ;
+	m_nLockIndex = 0;
 	m_walletui = false;
 	memset(m_bmpsig , 0 , sizeof(CRect));
+	memset(m_bmplock , 0 , sizeof(CRect));
 	m_progress.ShowPercent(FALSE);
 	m_progress.ShowDefineText(TRUE);
 }
@@ -168,6 +170,9 @@ BOOL CProgStatusBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UIN
 		m_Sigbmp[2].LoadBitmap(IDB_BITMAP_SIG2);  
 		m_Sigbmp[3].LoadBitmap(IDB_BITMAP_SIG3);  
 
+		m_Lockbmp[0].LoadBitmap(IDB_BITMAP_LOCK); 
+		m_Lockbmp[1].LoadBitmap(IDB_BITMAP_UNLOCK); 
+
 		theApp.SubscribeMsg( theApp.GetMtHthrdId() , GetSafeHwnd() , MSG_USER_UP_PROGRESS ) ;
 
 		m_progress.SendMessage(PBM_SETBKCOLOR, 0, RGB(66, 65, 63));//±³¾°É«
@@ -299,5 +304,12 @@ void CProgStatusBar::OnPaint()
 	CRect rc1(900-60, 0, rc.Width(), rc.Height());
 	m_bmpsig = rc1;
 	memDC.SelectObject(hOldbmp);  
+//	memDC.DeleteDC();  
+
+	HBITMAP hlockbmp = (HBITMAP)memDC.SelectObject(m_Lockbmp[m_nLockIndex]); 
+	dc.BitBlt(900-60-30, 3, rc.Width(), rc.Height(), &memDC, 0, 0, SRCCOPY);  
+	CRect rc2(900-60-30, 3, rc.Width(), rc.Height());
+	m_bmplock = rc2;
+	memDC.SelectObject(hlockbmp);  
 	memDC.DeleteDC();  
 }
