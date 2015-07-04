@@ -61,6 +61,11 @@ void CSignAccountsDlg::SetBkBmpNid( UINT nBitmapIn )
 void CSignAccountsDlg::OnBnClickedButtonSend()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	if (theApp.IsLockWallet())
+	{
+		return ;
+	}
+
 	CString address;
 	GetDlgItem(IDC_EDIT_ADDRESS)->GetWindowText(address);
 	if ( _T("") != address ) {

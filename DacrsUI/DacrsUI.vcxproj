@@ -265,12 +265,14 @@
     <ClInclude Include="CeXDib.h" />
     <ClInclude Include="CFont0.h" />
     <ClInclude Include="ChangeDPI.h" />
+    <ClInclude Include="ChangPassWord.h" />
     <ClInclude Include="CommonStruct.h" />
     <ClInclude Include="CRange.h" />
     <ClInclude Include="CWorkbook.h" />
     <ClInclude Include="CWorkbooks.h" />
     <ClInclude Include="CWorksheet.h" />
     <ClInclude Include="CWorksheets.h" />
+    <ClInclude Include="EncryptWallet.h" />
     <ClInclude Include="GrabCommRedPacket.h" />
     <ClInclude Include="GrabSpecalRedPacket.h" />
     <ClInclude Include="GuessNum.h" />
@@ -292,6 +294,7 @@
     <ClInclude Include="TabCtrl.h" />
     <ClInclude Include="TxDetailDlg.h" />
     <ClInclude Include="UseListBox.h" />
+    <ClInclude Include="WalletPassPhrase.h" />
     <ClInclude Include="XProgressCtrl.h" />
     <ClInclude Include="DacrsUI.h" />
     <ClInclude Include="DacrsUIDlg.h" />
@@ -353,10 +356,12 @@
     <ClCompile Include="ButtonEx.cpp" />
     <ClCompile Include="CeXDib.cpp" />
     <ClCompile Include="ChangeDPI.cpp" />
+    <ClCompile Include="ChangPassWord.cpp" />
     <ClCompile Include="CommonStruct.cpp" />
     <ClCompile Include="DacrsUI.cpp" />
     <ClCompile Include="DacrsUIDB.cpp" />
     <ClCompile Include="DacrsUIDlg.cpp" />
+    <ClCompile Include="EncryptWallet.cpp" />
     <ClCompile Include="GIFControl.cpp" />
     <ClCompile Include="GrabCommRedPacket.cpp" />
     <ClCompile Include="GrabSpecalRedPacket.cpp" />
@@ -414,6 +419,7 @@
     <ClCompile Include="TxDetailDlg.cpp" />
     <ClCompile Include="UiHead.cpp" />
     <ClCompile Include="UseListBox.cpp" />
+    <ClCompile Include="WalletPassPhrase.cpp" />
     <ClCompile Include="XProgressCtrl.cpp" />
   </ItemGroup>
   <ItemGroup>
