@@ -9,6 +9,9 @@
 #include "afxdialogex.h"
 #include "ChangeDPI.h"
 #include "SetAppFee.h"
+#include "EncryptWallet.h"
+#include "ChangPassWord.h"
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -95,6 +98,8 @@ BEGIN_MESSAGE_MAP(CDacrsUIDlg, CDialogEx)
 	ON_COMMAND(ID__BAKWALLET, &CDacrsUIDlg::BakWallet)
 	ON_COMMAND(ID__SET, &CDacrsUIDlg::SetAppFee)
 	ON_MESSAGE(WM_SHOWTASK,OnShowTask)
+	ON_COMMAND(ID__ENCRYPTWALLET, &CDacrsUIDlg::encryptwallet)
+	ON_COMMAND(ID_CHANGEPASSWORD, &CDacrsUIDlg::walletpassphrasechange)
 END_MESSAGE_MAP()
 
 
@@ -865,6 +870,24 @@ void CDacrsUIDlg::SetAppFee()
 {
 	CSetAppFee setappdlg;
 	if (setappdlg.DoModal() ==IDOK)
+	{
+		return;
+	}
+	return;
+}
+void CDacrsUIDlg::encryptwallet()
+{
+	CEncryptWallet enwalletdlg;
+	if (enwalletdlg.DoModal() ==IDOK)
+	{
+		return;
+	}
+	return;
+}
+void CDacrsUIDlg::walletpassphrasechange(){
+
+	CChangPassWord changwalletdlg;
+	if (changwalletdlg.DoModal() ==IDOK)
 	{
 		return;
 	}

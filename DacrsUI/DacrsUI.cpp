@@ -9,6 +9,7 @@
 #include <afxinet.h>
 #include "Language.h"
 #include "StartProgress.h"
+#include "WalletPassPhrase.h"
 
 #include <afxsock.h>
 #ifdef _DEBUG
@@ -1519,4 +1520,38 @@ void CDacrsUIApp::CheckPathValid(const CStringA& strDir)
 		::MessageBox( NULL , _T("程序不可以放在含有空格的目录下\r\n") , "Error" , MB_ICONERROR) ;
 		exit(0);
 	}
+}
+bool CDacrsUIApp::IsLockWallet(){
+
+	CString strCommand;
+	strCommand.Format(_T("%s"),_T("islocked"));
+	CStringA strShowData ;
+
+	while(TRUE)
+	{
+		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
+
+		Json::Reader reader;  
+		Json::Value root; 
+		if (!reader.parse(strShowData.GetString(), root)) 
+			return  FALSE;
+
+		if (strShowData.Find("islock") > 0)
+		{
+			bool isEntryp = root["islock"].asBool();
+			if (isEntryp)
+			{
+				CWalletPassPhrase walletpassdlg;
+				if (walletpassdlg.DoModal() == IDOK)
+				{
+				}
+
+			}else
+			{
+				return FALSE;
+			}
+		}
+	}
+
+	return TRUE;
 }

@@ -38,6 +38,7 @@ private:
 	CShadeButtonST     m_rBtnExportTx;
 	CComboBox		   m_condition;
 	CComboBox		   m_time;
+	CEdit		       m_edit;
 public:
 	afx_msg void OnNMDblclkListListtx(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
@@ -55,4 +56,6 @@ public:
 	void ShowAddrConditon();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	CString GetConditonStr(int &operate);
+	//afx_msg void OnEnChangeEditAddr();
+	afx_msg void OnEnErrspaceEditAddr();
 };
