@@ -28,7 +28,9 @@ public:
 public:
 	HBITMAP		     m_pBmp; 
 	CBitmap          m_Sigbmp[4];  //ÐÅºÅÍ¼Æ¬
+	CBitmap          m_Lockbmp[2];  //ËøµÄÍ¼Æ¬
 	int              m_nSigIndex;
+	int              m_nLockIndex;
 	void		     SetBkBmpNid( UINT nBitmapIn ) ;
 	void             LoadGifing( BOOL bState );
 public:
@@ -47,4 +49,5 @@ public:
 	CRect  m_bmpsig;
 	bool   m_walletui;
 	bool   m_prosshiden;
+	CRect  m_bmplock;
 };

@@ -1545,7 +1545,6 @@ bool CDacrsUIApp::IsLockWallet(){
 				if (walletpassdlg.DoModal() == IDOK)
 				{
 				}
-
 			}else
 			{
 				return FALSE;

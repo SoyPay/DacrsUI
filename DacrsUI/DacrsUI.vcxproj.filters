@@ -936,6 +936,15 @@
     <None Include="res\more3.bmp">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="res\bitmap14.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\lock.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\unlock.bmp">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="资源文件">
