@@ -40,7 +40,10 @@ public:
 	virtual BOOL Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID);
 public:
 	afx_msg LRESULT OnShowProgressCtrl(  WPARAM wParam, LPARAM lParam ) ;
-public:
+	int  ShowProgressCtrl();
+	void ShowLockCtrl();
+	void OnIniLockParam();
+;public:
 	BOOL        m_bProgressType;
 	int         m_ProgressMax  ;
 //	CProgressCtrl m_progress;

@@ -47,7 +47,8 @@ static const ULONGLONG COIN = 100000000;
 #define WM_UP_DELETERBOOK       WM_USER+27
 #define WM_SYNC_TRANSACTION     WM_USER+28
 #define WM_INSERT               WM_USER+29
-#define WM_REDPACKETPOOL              WM_USER+30
+#define WM_REDPACKETPOOL        WM_USER+30
+#define WM_LOCKSTATE            WM_USER+31
 #define WINDOW_TAG				_T("Dacrs-UIDemo")
 
 typedef enum
