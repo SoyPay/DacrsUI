@@ -63,7 +63,7 @@ bool CSetAppFee::IsAllDigtal(const char* pData)
 {
 	for(int i = 0;pData[i] != '\0';i++)
 	{
-		if (!isdigit(pData[i]))
+		if (!isdigit(pData[i])&&pData[i] !='.')
 			return false;
 	}
 

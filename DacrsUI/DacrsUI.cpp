@@ -52,6 +52,7 @@ CDacrsUIApp::CDacrsUIApp()
 	IsSyncBlock = FALSE;
 	IsSyncTx = FALSE;
 	IsSyncAppTx = FALSE;
+	IsWalletLocked = TRUE;
 }
 
 
@@ -597,8 +598,20 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 				//string strTemp = Postmsg.GetData();
 				//uistruct::BLOCKCHANGED_t      m_Blockchanged;
 				//m_Blockchanged.JsonToStruct(strTemp.c_str());
-				TRACE("change:%s\r\n","MSG_USER_UP_PROGRESS");
-				pUiDemeDlg->m_UimsgQueue.push(Postmsg);
+				switch(Postmsg.GetDatatype())
+				{
+				case WM_LOCKSTATE:
+					{
+						pUiDemeDlg->m_LockmsgQueue.push(Postmsg);
+					}
+					break;
+				default:
+					{
+						TRACE("change:%s\r\n","MSG_USER_UP_PROGRESS");
+						pUiDemeDlg->m_UimsgQueue.push(Postmsg);
+					}
+					break;
+				}
 				//theApp.DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_UP_PROGRESS , 0,0);					
 			}
 			break;
@@ -685,6 +698,8 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 #define  APP_TRANSATION_TYPE   4
 #define  SERVER_NOTIYF_TYPE    5
 #define  SERVER_SYNC_TX        6
+#define  WALLET_LOCK           7
+#define  WALLET_UNLOCK         8
 
 int GetMsgType(CString const strData,Json::Value &root)
 {
@@ -879,17 +894,25 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 		}
 	case SERVER_NOTIYF_TYPE:
 		{
-			CPostMsg postmsg(MSG_USER_SHOW_INIT,0);
-			postmsg.SetStrType(msgValue["type"].asCString());
 			CString msg = msgValue["msg"].asCString();
 			TRACE("MEST:%s\r\n",msg);
 			if (!strcmp(msg,"server closed"))
 			{
 				theApp.m_bServerState = false;
+			}else if (!strcmp(msg,"Lock"))
+			{
+				CPostMsg postmsg(MSG_USER_UP_PROGRESS,WM_LOCKSTATE);
+				postmsg.SetStrType(msg);
+				pApp->m_MsgQueue.push(postmsg);
+				pApp->IsWalletLocked = TRUE;
+			}else if (!strcmp(msg,"UnLock"))
+			{
+				CPostMsg postmsg(MSG_USER_UP_PROGRESS,WM_LOCKSTATE);
+				postmsg.SetStrType(msg);
+				pApp->m_MsgQueue.push(postmsg);
+				pApp->IsWalletLocked = FALSE;
 			}
-			postmsg.SetData(msg);
-			pApp->m_MsgQueue.push(postmsg);
-			TRACE("type: %s   mag: %s\r\n" , postmsg.GetStrType() ,msg);
+			//TRACE("type: %s   mag: %s\r\n" , postmsg.GetStrType() ,msg);
 			break;
 		}
 	default:
@@ -1523,34 +1546,12 @@ void CDacrsUIApp::CheckPathValid(const CStringA& strDir)
 }
 bool CDacrsUIApp::IsLockWallet(){
 
-	CString strCommand;
-	strCommand.Format(_T("%s"),_T("islocked"));
-	CStringA strShowData ;
-
-	while(TRUE)
+	while(IsWalletLocked)
 	{
-		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-		Json::Reader reader;  
-		Json::Value root; 
-		if (!reader.parse(strShowData.GetString(), root)) 
-			return  FALSE;
-
-		if (strShowData.Find("islock") > 0)
-		{
-			bool isEntryp = root["islock"].asBool();
-			if (isEntryp)
-			{
-				CWalletPassPhrase walletpassdlg;
-				if (walletpassdlg.DoModal() == IDOK)
-				{
-				}
-			}else
-			{
-				return FALSE;
-			}
-		}
+		CWalletPassPhrase walletpassdlg;
+		walletpassdlg.DoModal();
+		Sleep(100);
 	}
 
-	return TRUE;
+	return IsWalletLocked;
 }

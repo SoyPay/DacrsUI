@@ -98,4 +98,7 @@ public:
 	void DeleteTray();
 	afx_msg void encryptwallet();
 	afx_msg void walletpassphrasechange();
+	afx_msg void LockWallet();
+	afx_msg void ExportPriveKey();
+	afx_msg void ImportPrvieKey();
 };
