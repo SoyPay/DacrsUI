@@ -133,6 +133,7 @@ public:
 public:
 	CMyQueue m_MsgQueue;
 	CMyQueue m_UimsgQueue;
+	CMyQueue m_LockmsgQueue;
 	CMyQueue m_UiManDlgQueue;
 	CMyQueue m_UiReciveDlgQueue;
 	CMyQueue m_UiSendDlgQueue;
@@ -181,6 +182,7 @@ public:
 	bool IsSyncBlock;
 	bool IsSyncTx;
 	bool IsSyncAppTx;
+	bool IsWalletLocked; //钱包锁定状态 TRUE : 不锁定状态 FALSE
 };
 
 
