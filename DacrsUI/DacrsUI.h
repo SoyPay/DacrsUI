@@ -183,6 +183,7 @@ public:
 	bool IsSyncTx;
 	bool IsSyncAppTx;
 	bool IsWalletLocked; //钱包锁定状态 TRUE : 不锁定状态 FALSE
+	bool HaveLocked; // 有锁TRUE : 无锁 FALSE
 };
 
 
