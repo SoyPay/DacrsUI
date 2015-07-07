@@ -170,6 +170,10 @@ LRESULT CNewAddressDlg::OnNcHitTest(CPoint point)
 void CNewAddressDlg::OnBnClickedButtonScdz()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	if (theApp.IsLockWallet())
+	{
+		return;
+	}
 	CString strCommand;
 	int nCold = 0;
 	if( ((CButton*)GetDlgItem(IDC_RADIO_YES))->GetCheck() ) {
