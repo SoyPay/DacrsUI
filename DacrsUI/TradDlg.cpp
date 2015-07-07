@@ -22,6 +22,7 @@ IMPLEMENT_DYNAMIC(CTradDlg, CDialogBar)
 CTradDlg::CTradDlg()
 {
 	m_pBmp = NULL ;
+	m_seteditcolor = TRUE;
 }
 
 CTradDlg::~CTradDlg()
@@ -68,6 +69,7 @@ BEGIN_MESSAGE_MAP(CTradDlg, CDialogBar)
 	ON_CBN_SELCHANGE(IDC_COMBO1, &CTradDlg::OnCbnSelchangeCombo1)
 	ON_CBN_SELCHANGE(IDC_COMBO_TIME, &CTradDlg::OnCbnSelchangeComboTime)
 	//ON_EN_CHANGE(IDC_EDIT_ADDR, &CTradDlg::OnEnChangeEditAddr)
+	ON_WM_CTLCOLOR()
 END_MESSAGE_MAP()
 
 
@@ -201,6 +203,9 @@ BOOL CTradDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 
 		m_condition.SetCurSel(0);
 		m_time.SetCurSel(0);
+
+		m_colorEditText = RGB(159,161,164);
+
 		OninitializeList();
 
 		theApp.SubscribeMsg( theApp.GetMtHthrdId() , GetSafeHwnd() , MSG_USER_TRANSRECORD_UI ) ;
@@ -1035,6 +1040,7 @@ BOOL CTradDlg::PreTranslateMessage(MSG* pMsg)
 			|| (pMsg->wParam >=0x60 && pMsg->wParam <=0x69)) && strcmp(strTemp,"请输入地址进行搜索") == 0)
 		{
 			m_edit.SetWindowText(_T(""));
+			m_seteditcolor = FALSE;
 		}
 	}
 	
@@ -1045,6 +1051,7 @@ BOOL CTradDlg::PreTranslateMessage(MSG* pMsg)
 		if (strTemp.GetLength() ==  1)
 		{
 			m_edit.SetWindowText(_T("请输入地址进行搜索"));
+			m_seteditcolor = TRUE;
 		}
 	}
 	return CDialogBar::PreTranslateMessage(pMsg);
@@ -1129,3 +1136,18 @@ CString CTradDlg::GetConditonStr(int &operate)
 //	//GetDlgItem(IDC_EDIT_ADDR)->SetWindowText(_T(""));
 //}
 
+
+
+HBRUSH CTradDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
+{
+	HBRUSH hbr = CDialogBar::OnCtlColor(pDC, pWnd, nCtlColor);
+
+	// TODO:  在此更改 DC 的任何特性
+
+	// TODO:  如果默认的不是所需画笔，则返回另一个画笔
+	if (CTLCOLOR_EDIT == nCtlColor && m_seteditcolor && pWnd->GetDlgCtrlID() == IDC_EDIT_ADDR)
+	{
+		pDC->SetTextColor(m_colorEditText);
+	}
+	return hbr;
+}
