@@ -57,5 +57,5 @@ public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	CString GetConditonStr(int &operate);
 	//afx_msg void OnEnChangeEditAddr();
-	afx_msg void OnEnErrspaceEditAddr();
+	
 };
