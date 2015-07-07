@@ -53,6 +53,7 @@ CDacrsUIApp::CDacrsUIApp()
 	IsSyncTx = FALSE;
 	IsSyncAppTx = FALSE;
 	IsWalletLocked = TRUE;
+	HaveLocked = FALSE;
 }
 
 

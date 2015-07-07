@@ -24,7 +24,6 @@ IMPLEMENT_DYNAMIC(CProgStatusBar, CDialogBar)
 	memset(m_bmplock , 0 , sizeof(CRect));
 	m_progress.ShowPercent(FALSE);
 	m_progress.ShowDefineText(TRUE);
-	HaveLocked = FALSE;
 }
 
 CProgStatusBar::~CProgStatusBar()
@@ -329,7 +328,7 @@ void CProgStatusBar::OnPaint()
 	m_bmpsig = rc1;
 	memDC.SelectObject(hOldbmp);  
 //	memDC.DeleteDC();  
-	if (HaveLocked)
+	if (theApp.HaveLocked)
 	{
 		HBITMAP hlockbmp = (HBITMAP)memDC.SelectObject(m_Lockbmp[m_nLockIndex]); 
 		dc.BitBlt(900-60-30, 3, rc.Width(), rc.Height(), &memDC, 0, 0, SRCCOPY);  
@@ -357,19 +356,19 @@ void CProgStatusBar::OnIniLockParam()
 		int state = root["islock"].asInt();
 		if (state == 0)     /// 没有锁
 		{
-			HaveLocked = FALSE;
+			theApp.HaveLocked = FALSE;
 		}else if (state == 1)  /// 有锁
 		{
-			HaveLocked = TRUE;
+			theApp.HaveLocked = TRUE;
 		}else if(state == 1){   /// 解锁
 			theApp.IsWalletLocked =TRUE;
 			m_nLockIndex = 1;
-			HaveLocked = TRUE;
+			theApp.HaveLocked = TRUE;
 		}else if (state == 2)    /// 锁定状态
 		{
 			theApp.IsWalletLocked =FALSE;
 			m_nLockIndex = 0;
-			HaveLocked = TRUE;
+			theApp.HaveLocked = TRUE;
 		}
 		//theApp.IsWalletLocked = root["islock"].asBool();
 		//if (!theApp.IsWalletLocked)

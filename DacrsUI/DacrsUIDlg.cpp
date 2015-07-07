@@ -881,6 +881,11 @@ void CDacrsUIDlg::SetAppFee()
 }
 void CDacrsUIDlg::encryptwallet()
 {
+	if (theApp.HaveLocked)
+	{
+		::MessageBox( this->GetSafeHwnd() ,_T("已经加过密") , _T("提示") , MB_ICONINFORMATION ) ;
+		return;
+	}
 	CEncryptWallet enwalletdlg;
 	if (enwalletdlg.DoModal() ==IDOK)
 	{
