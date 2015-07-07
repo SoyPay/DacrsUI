@@ -68,7 +68,6 @@ BEGIN_MESSAGE_MAP(CTradDlg, CDialogBar)
 	ON_CBN_SELCHANGE(IDC_COMBO1, &CTradDlg::OnCbnSelchangeCombo1)
 	ON_CBN_SELCHANGE(IDC_COMBO_TIME, &CTradDlg::OnCbnSelchangeComboTime)
 	//ON_EN_CHANGE(IDC_EDIT_ADDR, &CTradDlg::OnEnChangeEditAddr)
-	ON_EN_ERRSPACE(IDC_EDIT_ADDR, &CTradDlg::OnEnErrspaceEditAddr)
 END_MESSAGE_MAP()
 
 
@@ -1029,11 +1028,23 @@ BOOL CTradDlg::PreTranslateMessage(MSG* pMsg)
 	}
 	if (pMsg->message == WM_KEYDOWN &&pEdit->GetSafeHwnd() == pMsg->hwnd &&(pMsg->wParam != VK_RETURN))
 	{
-		if ((pMsg->wParam >=48 && pMsg->wParam <=57) 
+		CString strTemp = _T("");
+		m_edit.GetWindowText(strTemp);
+		if (((pMsg->wParam >=48 && pMsg->wParam <=57) 
 			|| (pMsg->wParam >=65 && pMsg->wParam <=90)
-			|| (pMsg->wParam >=0x60 && pMsg->wParam <=0x69))
+			|| (pMsg->wParam >=0x60 && pMsg->wParam <=0x69)) && strcmp(strTemp,"请输入地址进行搜索") == 0)
 		{
 			m_edit.SetWindowText(_T(""));
+		}
+	}
+	
+	if ( pMsg->message == WM_KEYDOWN &&pEdit->GetSafeHwnd() == pMsg->hwnd &&(pMsg->wParam == VK_BACK) )
+	{
+		CString strTemp = _T("");
+		m_edit.GetWindowText(strTemp);
+		if (strTemp.GetLength() ==  1)
+		{
+			m_edit.SetWindowText(_T("请输入地址进行搜索"));
 		}
 	}
 	return CDialogBar::PreTranslateMessage(pMsg);
@@ -1118,14 +1129,3 @@ CString CTradDlg::GetConditonStr(int &operate)
 //	//GetDlgItem(IDC_EDIT_ADDR)->SetWindowText(_T(""));
 //}
 
-
-void CTradDlg::OnEnErrspaceEditAddr()
-{
-	// TODO: 在此添加控件通知处理程序代码
-	CString strTemp =_T("");
-	m_edit.GetWindowText(strTemp);
-	if (strTemp == _T(""))
-	{
-		m_edit.SetWindowText(_T("请输入地址进行搜索"));
-	}
-}
