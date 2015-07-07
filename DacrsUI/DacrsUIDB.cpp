@@ -166,10 +166,10 @@ void CDacrsUIApp::UpdateAddressData(){
 	}
 }
 
-void CDacrsUIApp::UpdateTransaction(string hash){
+void CDacrsUIApp::UpdateTransaction(CString hash){
 
 	CString strCommand,strShowData;
-	strCommand.Format(_T("%s %s"),_T("gettxdetail") ,hash.c_str() );
+	strCommand.Format(_T("%s %s"),_T("gettxdetail") ,hash);
 	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 
 	if (strShowData.Find("hash") < 0){		
@@ -190,7 +190,7 @@ void CDacrsUIApp::UpdateTransaction(string hash){
 		{
 			CString strSourceData,strWhere;
 			strSourceData.Format(_T("confirm_height = %d , confirmed_time = %d ,block_hash ='%s'") ,transcion.confirmedHeight,transcion.confirmedtime,transcion.blockhash.c_str() ) ;
-			strWhere.Format(_T("hash = '%s'") , hash.c_str() ) ;
+			strWhere.Format(_T("hash = '%s'") , hash) ;
 			if ( !m_SqliteDeal.UpdateTableItem(_T("t_transaction") , strSourceData , strWhere ) ){
 				TRACE(_T("update t_transaction failed\n"));
 			}
@@ -498,9 +498,9 @@ void CDacrsUIApp::UpdateAppRecord(string txdetail){
 		}
 	}
 }
-void CDacrsUIApp::InsertTransaction(string hash){
+void CDacrsUIApp::InsertTransaction(CString hash){
 	CString strCommand,strShowData;
-	strCommand.Format(_T("%s %s"),_T("gettxdetail") ,hash.c_str() );
+	strCommand.Format(_T("%s %s"),_T("gettxdetail") ,hash );
 	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 
 	if (strShowData.Find("hash") < 0){		

@@ -17,7 +17,6 @@ static char THIS_FILE[]=__FILE__;
 //////////////////////////////////////////////////////////////////////
 
 CAutoComplete::CAutoComplete()
-
 {
 	
 	m_bIgnoreChangeMsg=0;
