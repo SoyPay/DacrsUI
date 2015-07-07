@@ -133,6 +133,7 @@ public:
 public:
 	CMyQueue m_MsgQueue;
 	CMyQueue m_UimsgQueue;
+	CMyQueue m_LockmsgQueue;
 	CMyQueue m_UiManDlgQueue;
 	CMyQueue m_UiReciveDlgQueue;
 	CMyQueue m_UiSendDlgQueue;
@@ -142,8 +143,8 @@ public:
 	void UpdateRedPacketPoolData();
 	void UpdateQuizPoolData();
 	void UpdateAddressData();
-	void InsertTransaction(string hash);
-	void UpdateTransaction(string hash);
+	void InsertTransaction(CString hash);
+	void UpdateTransaction(CString hash);
 	void SyncTransaction(string obj);
 	void UpdateAppRecord(string txdetail);
 	void InsertAddbook(uistruct::ADDRBOOK_t );
@@ -169,6 +170,7 @@ public:
 	bool IsLuckyRedPacket(CString acceptregid,uistruct::RED_DATA redPacket);
 	INT64 GetRedPacketAmount(CString acceptregid,uistruct::RED_DATA redPacket);
 	bool  isMine(CString addr);
+	bool IsLockWallet();
 public:
 	bool isStartMainDlg;
 	CNoUiMsgBuffer m_noUiMsgBuffer;
@@ -179,6 +181,8 @@ public:
 	int blocktipheight;
 	bool IsSyncBlock;
 	bool IsSyncTx;
+	bool IsSyncAppTx;
+	bool IsWalletLocked; //Ç®°üËø¶¨×´Ì¬ TRUE : ²»Ëø¶¨×´Ì¬ FALSE
 };
 
 

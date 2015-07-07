@@ -387,6 +387,10 @@ CString GetCompressRegID(const CString& strRegID)
 	return str;
 }
 int CSoyPayHelp::SendContacrRpc(CString cmd,CStringA &rev){
+	if (theApp.IsLockWallet())
+	{
+		return 0;
+	}
 		string revtemp;
 	mRpcCmd.SendContactRpc(cmd,revtemp);
 	CStringA strShowData = ParseRecvData(revtemp.c_str());

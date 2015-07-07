@@ -16,20 +16,29 @@ CRpcCmd::~CRpcCmd(void)
 {
 }
 int CRpcCmd::SendContactRpc(CString cmd,string &rev){
-	CStringA strSendData;
+	CStringA strSendData = _T("");
 
 	RpcJosnStr = cmd;
-	string tepsend = cmd.GetString();
-	string nSendStr = "";
-	nSendStr += m_sendPreHeadstr;
+	//string tepsend = cmd.GetString();
+	//string nSendStr = "";
+	//nSendStr += m_sendPreHeadstr;
+	//CStringA nMidStr = "Content-Length: ";
+	//nMidStr.AppendFormat("%d\r\n",tepsend.length());
+	//nSendStr += nMidStr.GetString();
+	//nSendStr += m_sendendHeadstr.GetString();
+	//nSendStr += cmd;
+	//strSendData = nSendStr.c_str();
+
+	strSendData.AppendFormat(_T("%s"),m_sendPreHeadstr);
 	CStringA nMidStr = "Content-Length: ";
-	nMidStr.AppendFormat("%d\r\n",tepsend.length());
-	nSendStr += nMidStr.GetString();
-	nSendStr += m_sendendHeadstr.GetString();
-	nSendStr += cmd;
-	strSendData = nSendStr.c_str();
+	nMidStr.AppendFormat("%d\r\n",cmd.GetLength());
+	strSendData.AppendFormat(_T("%s"),nMidStr);
+	strSendData.AppendFormat(_T("%s"),m_sendendHeadstr);
+	strSendData.AppendFormat(_T("%s"),cmd);
+
 	string teprev;
-	if(CSynchronousSocket::GetRpcRes(mIp.GetString(),mPort,strSendData.GetString(),teprev,7000)>0)
+	//if(CSynchronousSocket::GetRpcRes(mIp.GetString(),mPort,strSendData.GetString(),teprev,7000)>0)
+	if(CSynchronousSocket::GetRpcRes(mIp,mPort,strSendData,teprev,7000)>0)
 	{
 		CStringA  message = teprev.c_str();
 		int pos = message.Find("Server:");
@@ -53,7 +62,8 @@ int CRpcCmd::SendRpc(CString strCommand,string &rev)
 	BuildSendString(strCommand,strSendData);
 	
 	string teprev;
-	if(CSynchronousSocket::GetRpcRes(mIp.GetString(),mPort,strSendData.GetString(),teprev,7000)>0)
+	//if(CSynchronousSocket::GetRpcRes(mIp.GetString(),mPort,strSendData.GetString(),teprev,7000)>0)
+	if(CSynchronousSocket::GetRpcRes(mIp,mPort,strSendData,teprev,7000)>0)
 	{
 		CStringA  message = teprev.c_str();
 		int pos = message.Find("Server:");
@@ -85,15 +95,24 @@ void CRpcCmd:: BuildSendString(const CString &cmd,CStringA &sendStr)
    CStringA sendStrte;
    RPCCommandToJson(cmd,sendStrte);
    RpcJosnStr = sendStrte;
-   string tepsend = sendStrte.GetString();
-   string nSendStr = "";
-   nSendStr += m_sendPreHeadstr;
+   //string tepsend = sendStrte.GetString();
+   //string nSendStr = "";
+   //nSendStr += m_sendPreHeadstr;
+   //CStringA nMidStr = "Content-Length: ";
+   //nMidStr.AppendFormat("%d\r\n",tepsend.length());
+   //nSendStr += nMidStr.GetString();
+   //nSendStr += m_sendendHeadstr.GetString();
+   //nSendStr += sendStrte;
+   //sendStr = nSendStr.c_str();
+
+   CStringA nSendStr = _T("");
+   nSendStr.AppendFormat(_T("%s"),m_sendPreHeadstr);
    CStringA nMidStr = "Content-Length: ";
-   nMidStr.AppendFormat("%d\r\n",tepsend.length());
-   nSendStr += nMidStr.GetString();
-   nSendStr += m_sendendHeadstr.GetString();
-   nSendStr += sendStrte;
-   sendStr = nSendStr.c_str();
+   nMidStr.AppendFormat("%d\r\n",sendStrte.GetLength());
+   nSendStr.AppendFormat(_T("%s"),nMidStr);
+   nSendStr.AppendFormat(_T("%s"),m_sendendHeadstr);
+   nSendStr.AppendFormat(_T("%s"),sendStrte);
+   sendStr=nSendStr;
 }
 
 void CRpcCmd::RPCCommandToJson(const CString& strRPCCommand,CStringA& strSendData)
@@ -145,7 +164,7 @@ void CRpcCmd::RPCCommandToJson(const CString& strRPCCommand,CStringA& strSendDat
 			pos = rpcCommand.Find(" ");
 		}
 
-		if (IsAllDigtal(rpcCommand) && method != _T("gethash")) //&& rpcCommand.GetLength() != 12)
+		if (IsAllDigtal(rpcCommand) && (method != _T("gethash"))) //&& rpcCommand.GetLength() != 12)
 		{
 			INT64 param;
 			sscanf(rpcCommand,"%lld",&param);

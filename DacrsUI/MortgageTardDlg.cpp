@@ -457,19 +457,19 @@ void CMortgageTardDlg::OnSize(UINT nType, int cx, int cy)
 			pst->SetWindowPos( NULL ,(rc.Width()/100)*17 , (rc.Height()/100)*54+2,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
 		}
 
-		pst = GetDlgItem( IDC_BUTTON_SPECAILRED ) ;
-		if ( NULL != pst ) {
-			CRect rect ;
-			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*33 ,  (rc.Height()/100)*54+2,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
-		}
-
 		pst = GetDlgItem( IDC_MFCLINK1 ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
 			pst->SetWindowPos( NULL ,(rc.Width()/100)*51 ,  (rc.Height()/100)*59,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
 		}
+
+		pst = GetDlgItem( IDC_BUTTON_SPECAILRED ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*33 ,  (rc.Height()/100)*54+2,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
+		}	
 	}
 }
 
