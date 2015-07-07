@@ -156,7 +156,7 @@ BOOL CProgStatusBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UIN
 
 		m_strVersion.SetFont(90, _T("宋体"));				//设置显示字体和大小
 		m_strVersion.SetTextColor(RGB(255,255,255));	    //字体颜色
-		m_strVersion.SetWindowText(_T("版本:V1.0.0.14beta")) ;
+		m_strVersion.SetWindowText(_T("版本:V1.0.0.16beta")) ;
 
 
 		if ( NULL == m_ProgressWnd ) {
@@ -357,16 +357,14 @@ void CProgStatusBar::OnIniLockParam()
 		if (state == 0)     /// 没有锁
 		{
 			theApp.HaveLocked = FALSE;
-		}else if (state == 1)  /// 有锁
-		{
-			theApp.HaveLocked = TRUE;
+			theApp.IsWalletLocked =FALSE;
 		}else if(state == 1){   /// 解锁
-			theApp.IsWalletLocked =TRUE;
+			theApp.IsWalletLocked =FALSE;
 			m_nLockIndex = 1;
 			theApp.HaveLocked = TRUE;
 		}else if (state == 2)    /// 锁定状态
 		{
-			theApp.IsWalletLocked =FALSE;
+			theApp.IsWalletLocked =TRUE;
 			m_nLockIndex = 0;
 			theApp.HaveLocked = TRUE;
 		}
