@@ -328,7 +328,7 @@ void CIndTitleBar::OnBnClickedMenubar()
 	//menu.EnableMenuItem(1,MF_BYPOSITION | MF_GRAYED);
 	menu.ChangeMenuItem(menu.GetSubMenu(0));
 	CMenu *pPopup=menu.GetSubMenu(0);
-	int b =pPopup->EnableMenuItem(ID__EXPORTPRIVEKEY,MF_GRAYED);
+	//int b =pPopup->EnableMenuItem(ID__EXPORTPRIVEKEY,MF_GRAYED);
 	
 	//pPopup->SetMenuItemBitmaps(0,MF_BYPOSITION, &pMenuBitmap, &pMenuBitmap);
 	//显示右键菜单，由视类窗口拥有。

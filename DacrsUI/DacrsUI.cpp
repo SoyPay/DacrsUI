@@ -1612,7 +1612,10 @@ bool CDacrsUIApp::IsLockWallet(){
 	while(IsWalletLocked)
 	{
 		CWalletPassPhrase walletpassdlg;
-		walletpassdlg.DoModal();
+		if (walletpassdlg.DoModal() == IDCANCEL)
+		{
+			break;
+		}
 		Sleep(100);
 	}
 
