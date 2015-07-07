@@ -357,16 +357,14 @@ void CProgStatusBar::OnIniLockParam()
 		if (state == 0)     /// 没有锁
 		{
 			theApp.HaveLocked = FALSE;
-		}else if (state == 1)  /// 有锁
-		{
-			theApp.HaveLocked = TRUE;
+			theApp.IsWalletLocked =FALSE;
 		}else if(state == 1){   /// 解锁
-			theApp.IsWalletLocked =TRUE;
+			theApp.IsWalletLocked =FALSE;
 			m_nLockIndex = 1;
 			theApp.HaveLocked = TRUE;
 		}else if (state == 2)    /// 锁定状态
 		{
-			theApp.IsWalletLocked =FALSE;
+			theApp.IsWalletLocked =TRUE;
 			m_nLockIndex = 0;
 			theApp.HaveLocked = TRUE;
 		}
