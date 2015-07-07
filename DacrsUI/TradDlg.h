@@ -58,7 +58,8 @@ public:
 	void ShowAddrConditon();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	CString GetConditonStr(int &operate);
-	//afx_msg void OnEnChangeEditAddr();
+	BOOL IsInsertTx(uistruct::REVTRANSACTION_t txdetail);
+	BOOL FindDesTx(uistruct::TRANSRECORDLIST pListInfo,int flag,uistruct::REVTRANSACTION_t txdetail);
 	
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 };

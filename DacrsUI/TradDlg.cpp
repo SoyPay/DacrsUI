@@ -345,6 +345,10 @@ void CTradDlg::InsertItemData()
 	string strTemp = postmsg.GetData();
 	txdetail.JsonToStruct(strTemp.c_str());
 
+	if (!IsInsertTx(txdetail))
+	{
+		return;
+	}
 	int count = m_listCtrl.GetItemCount();
 
 	CString strShowData;
@@ -1150,4 +1154,36 @@ HBRUSH CTradDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 		pDC->SetTextColor(m_colorEditText);
 	}
 	return hbr;
+}
+BOOL CTradDlg::FindDesTx(uistruct::TRANSRECORDLIST pListInfo,int flag,uistruct::REVTRANSACTION_t txdetail)
+{
+	if (pListInfo.size() == 0)
+	{
+		return FALSE;
+	}
+	CString strShowData = _T("");
+	std::vector<uistruct::REVTRANSACTION_t>::const_iterator const_it;
+	for ( const_it = pListInfo.begin() ; const_it != pListInfo.end() ; const_it++ ) {
+		if (flag == 1 && !isMine(const_it->desaddr.c_str()))
+		{
+			continue;
+		}
+		if (flag == 2 && !isMine(const_it->addr.c_str()))
+		{
+			continue;
+		}
+		if(strcmp(const_it->txhash,txdetail.txhash) == 0)
+			return TRUE;
+	}
+	return FALSE;
+}
+BOOL CTradDlg::IsInsertTx(uistruct::REVTRANSACTION_t txdetail)
+{
+	int operate = 0;
+	CString condtion = GetConditonStr(operate);
+
+	uistruct::TRANSRECORDLIST pListInfo;
+	theApp.m_SqliteDeal.GetTransactionList(condtion, &pListInfo); 
+
+	return FindDesTx(pListInfo,operate,txdetail);
 }
