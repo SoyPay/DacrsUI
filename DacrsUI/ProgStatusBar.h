@@ -53,4 +53,5 @@ public:
 	bool   m_walletui;
 	bool   m_prosshiden;
 	CRect  m_bmplock;
+	bool   HaveLocked; // ÓĞËøTRUE : ÎŞËø FALSE
 };
