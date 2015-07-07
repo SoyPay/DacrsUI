@@ -49,6 +49,7 @@ void CTradDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EXPORT_EXEL, m_rBtnExportTx);
 	DDX_Control(pDX, IDC_COMBO1, m_condition);
 	DDX_Control(pDX, IDC_COMBO_TIME, m_time);
+	DDX_Control(pDX, IDC_EDIT_ADDR, m_edit);
 	//DDX_Control(pDX, IDC_PROGRESS, v_linkCtrl1);
 	//DDX_Control(pDX, IDC_MFCLINK2, v_linkCtrl2);
 }
@@ -66,6 +67,7 @@ BEGIN_MESSAGE_MAP(CTradDlg, CDialogBar)
 	ON_BN_CLICKED(IDC_EXPORT_EXEL, &CTradDlg::OnBnClickedExportExel)
 	ON_CBN_SELCHANGE(IDC_COMBO1, &CTradDlg::OnCbnSelchangeCombo1)
 	ON_CBN_SELCHANGE(IDC_COMBO_TIME, &CTradDlg::OnCbnSelchangeComboTime)
+	//ON_EN_CHANGE(IDC_EDIT_ADDR, &CTradDlg::OnEnChangeEditAddr)
 END_MESSAGE_MAP()
 
 
@@ -194,6 +196,8 @@ BOOL CTradDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_time.InsertString(3,_T("本月"));
 		m_time.InsertString(4,_T("上月"));
 		m_time.InsertString(5,_T("今年"));
+
+		m_edit.SetWindowText(_T("请输入地址进行搜索"));
 
 		m_condition.SetCurSel(0);
 		m_time.SetCurSel(0);
@@ -981,6 +985,10 @@ CString CTradDlg::Getaddr(){
 
 	CString ret = _T("");
 	GetDlgItem(IDC_EDIT_ADDR)->GetWindowText(ret);
+	if (strcmp(ret,"请输入地址进行搜索") == 0)
+	{
+		 ret = _T("");
+	}
 	return ret;
 }
 void CTradDlg::ShowAddrConditon()
@@ -1004,6 +1012,41 @@ BOOL CTradDlg::PreTranslateMessage(MSG* pMsg)
 			return TRUE;
 		}  
 	}  
+	CEdit* pEdit = (CEdit*)GetDlgItem(IDC_EDIT_ADDR);
+	ASSERT(pEdit && pEdit->GetSafeHwnd());
+	if(WM_LBUTTONDOWN == pMsg->message && pEdit->GetSafeHwnd() == pMsg->hwnd)
+	{
+		CString strTemp = _T("");
+		m_edit.GetWindowText(strTemp);
+		if (strcmp(strTemp,"请输入地址进行搜索") == 0)
+		{
+			pEdit->SetFocus();
+			pEdit->SetSel(1,1,FALSE);
+			return TRUE;
+		}
+
+	}
+	if (pMsg->message == WM_KEYDOWN &&pEdit->GetSafeHwnd() == pMsg->hwnd &&(pMsg->wParam != VK_RETURN))
+	{
+		CString strTemp = _T("");
+		m_edit.GetWindowText(strTemp);
+		if (((pMsg->wParam >=48 && pMsg->wParam <=57) 
+			|| (pMsg->wParam >=65 && pMsg->wParam <=90)
+			|| (pMsg->wParam >=0x60 && pMsg->wParam <=0x69)) && strcmp(strTemp,"请输入地址进行搜索") == 0)
+		{
+			m_edit.SetWindowText(_T(""));
+		}
+	}
+	
+	if ( pMsg->message == WM_KEYDOWN &&pEdit->GetSafeHwnd() == pMsg->hwnd &&(pMsg->wParam == VK_BACK) )
+	{
+		CString strTemp = _T("");
+		m_edit.GetWindowText(strTemp);
+		if (strTemp.GetLength() ==  1)
+		{
+			m_edit.SetWindowText(_T("请输入地址进行搜索"));
+		}
+	}
 	return CDialogBar::PreTranslateMessage(pMsg);
 }
 CString CTradDlg::GetConditonStr(int &operate)
@@ -1017,10 +1060,14 @@ CString CTradDlg::GetConditonStr(int &operate)
 		condtion = GetConditonTxType(operate);
 	}
 
-	if (temp !=_T(""))
+	if (condtion !=_T(""))
 	{
 		temp = GetConditonTime();
-		condtion.AppendFormat(_T( " and %s"),temp);
+		if (temp !=_T(""))
+		{
+			condtion.AppendFormat(_T( " and %s"),temp);
+		}
+		
 
 	}else{
 		temp = GetConditonTime();
@@ -1030,17 +1077,17 @@ CString CTradDlg::GetConditonStr(int &operate)
 		}
 	}
 
-	if (temp !=_T(""))
+	if (condtion !=_T(""))
 	{
 		temp = Getaddr();
 		if (temp != _T(""))
 		{
-			if (operate == 1)
-			{
-				condtion.AppendFormat(_T( " and src_addr = '%s'"),temp);
-			}else if (operate == 2)
+			if (operate == 1)   ///  接收钱的地址
 			{
 				condtion.AppendFormat(_T( " and des_addr = '%s'"),temp);
+			}else if (operate == 2)
+			{
+				condtion.AppendFormat(_T( " and src_addr = '%s'"),temp);
 			}else{
 				condtion.AppendFormat(_T( " and (src_addr = '%s' or des_addr = '%s')"),temp,temp);
 			}
@@ -1053,10 +1100,10 @@ CString CTradDlg::GetConditonStr(int &operate)
 		{
 			if (operate == 1)
 			{
-				condtion.AppendFormat(_T( "src_addr = '%s'"),temp);
+				condtion.AppendFormat(_T( "des_addr = '%s'"),temp);
 			}else if (operate == 2)
 			{
-				condtion.AppendFormat(_T( "des_addr = '%s'"),temp);
+				condtion.AppendFormat(_T( "src_addr = '%s'"),temp);
 			}else{
 				condtion.AppendFormat(_T( " src_addr = '%s' or des_addr = '%s'"),temp,temp);
 			}
@@ -1070,3 +1117,15 @@ CString CTradDlg::GetConditonStr(int &operate)
 	condtion.AppendFormat(_T( " order by confirmed_time"));
 	return condtion;
 }
+
+//void CTradDlg::OnEnChangeEditAddr()
+//{
+//	 //TODO:  如果该控件是 RICHEDIT 控件，它将不
+//	 //发送此通知，除非重写 CDialogBar::OnInitDialog()
+//	 //函数并调用 CRichEditCtrl().SetEventMask()，
+//	 //同时将 ENM_CHANGE 标志“或”运算到掩码中。
+//
+//	 //TODO:  在此添加控件通知处理程序代码
+//	//GetDlgItem(IDC_EDIT_ADDR)->SetWindowText(_T(""));
+//}
+

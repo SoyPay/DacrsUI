@@ -120,6 +120,7 @@ public:
 	void GetLogParamCfg(CLogParamCfg &logCfg);
 	void GetRedPacketCfgData(CRedPacketCfg &redpacketcfg);
 	void AddItemString(const CString& strFilePath,CAutoComplete &m_comboxinput);
+	CString  GetConfigRootStr(const CString& strFilePath);
 private:
 	void ReadMainCfgData(const Json::Value& root);
 	void ReadSesureTradeCfgData(const Json::Value& root);
@@ -131,7 +132,8 @@ private:
 	void ReadLogParamCfg(const Json::Value &root);
 	void ReadRedPacketCfgData(const Json::Value &root);
 	void AddString(const Json::Value& root,CAutoComplete &m_comboxinput);
-
+public:
+	void ModifyAppFeeCfgData( Json::Value& root,const CString &LeaderKey,const CString &Key,const CString &KeyValue);
 
 private:
 	BOOL			m_bInvalid;

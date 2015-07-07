@@ -503,7 +503,7 @@ void  CSendRecord::OnShowPagePool(int page)
 							::MessageBox(NULL ,_T("有些赌约未开奖,请先充值") , _T("提示") , MB_ICONINFORMATION ) ;
 						}
 						CString txhash;
-						txhash.Format(_T("%s"),txhash);
+						txhash.Format(_T("%s"),const_it.tx_hash);
 						theApp.OpenBet(txhash);
 						flag = true;
 					}

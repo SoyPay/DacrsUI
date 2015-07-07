@@ -92,7 +92,14 @@ public:
 	void OnOk();
 
 	afx_msg void BakWallet();
+	afx_msg void SetAppFee();
 	afx_msg LRESULT OnShowTask(WPARAM wParam,LPARAM lParam) ; 
 	void ToTray();
 	void DeleteTray();
+	afx_msg void encryptwallet();
+	afx_msg void walletpassphrasechange();
+	afx_msg void LockWallet();
+	afx_msg void ExportPriveKey();
+	afx_msg void ImportPrvieKey();
+	afx_msg void OnUpdataState(CCmdUI *pCmdUI);
 };

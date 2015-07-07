@@ -22,5 +22,6 @@ private:
 public:
 	SOCKET  OnblockConnnect(const char *pIpAddr, WORD nPort);   //Á¬½Ó ·µ»ØSOCKET
 public:
-	static int GetRpcRes(const string ip,int port,string cmd,string & rev,int timerout);
+	//static int GetRpcRes(const string ip,int port,string cmd,string & rev,int timerout);
+	static int GetRpcRes(const CString ip,int port,const CString cmd,string & rev,int timerout);
 };

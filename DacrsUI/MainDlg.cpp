@@ -662,38 +662,38 @@ void CMainDlg::onnitLinkText()
 //	}
 //	
 //
-//	//CFileDialog dlg(TRUE,"smc",NULL,OFN_HIDEREADONLY|OFN_FILEMUSTEXIST ,_T("*.smc||"));
-//	//if (IDOK == dlg.DoModal())
-//	//{
-//	//	CString strPath = dlg.GetPathName();
-//	//	int pos = strPath.ReverseFind('.');
-//	//	if (pos < 0)
-//	//	{
-//	//		return;
-//	//	}
-//	//	CString exeStr = strPath.Right(strPath.GetLength()-pos);
-//	//	if (exeStr.CompareNoCase(_T(".smc")) != 0)
-//	//	{
-//	//		MessageBox(_T("导入钱包文件格式不正确"));
-//	//		return;
-//	//	}
-//	//	CString strCommand;
-//	//	strCommand.Format(_T("%s %s"),_T("importwallet"),strPath);
-//	//	CStringA strSendData;
-//
-//	//	CSoyPayHelp::getInstance()->SendRpc(strCommand,strSendData);	
-//	//	if (strSendData.Find(_T("imorpt key size")) >=0)
-//	//	{
-//	//		MessageBox(_T("导入钱包成功请重新启动钱包"));
-//	//		//PostMessage(WM_CLOSE);
-//	//		//::PostThreadMessage( theApp.GetMtHthrdId() , MSG_USER_OUT , 0 , 0 );
-//	//		((CDacrsUIDlg*)(this->GetParent()))->Close();
-//	//	}else
-//	//	{
-//	//		MessageBox(_T("导入钱包失败"));
-//	//	}
-//	//}
-//}
+////	CFileDialog dlg(TRUE,"smc",NULL,OFN_HIDEREADONLY|OFN_FILEMUSTEXIST ,_T("*.smc||"));
+////	if (IDOK == dlg.DoModal())
+////	{
+////		CString strPath = dlg.GetPathName();
+////		int pos = strPath.ReverseFind('.');
+////		if (pos < 0)
+////		{
+////			return;
+////		}
+////		CString exeStr = strPath.Right(strPath.GetLength()-pos);
+////		if (exeStr.CompareNoCase(_T(".smc")) != 0)
+////		{
+////			MessageBox(_T("导入钱包文件格式不正确"));
+////			return;
+////		}
+////		CString strCommand;
+////		strCommand.Format(_T("%s %s"),_T("importwallet"),strPath);
+////		CStringA strSendData;
+////
+////		CSoyPayHelp::getInstance()->SendRpc(strCommand,strSendData);	
+////		if (strSendData.Find(_T("imorpt key size")) >=0)
+////		{
+////			MessageBox(_T("导入钱包成功请重新启动钱包"));
+////			PostMessage(WM_CLOSE);
+////			::PostThreadMessage( theApp.GetMtHthrdId() , MSG_USER_OUT , 0 , 0 );
+////			((CDacrsUIDlg*)(this->GetParent()))->Close();
+////		}else
+////		{
+////			MessageBox(_T("导入钱包失败"));
+////		}
+////	}
+////}
 
 
 //void CMainDlg::OnBnClickedButtonDumpwallet()

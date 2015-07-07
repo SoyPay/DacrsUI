@@ -9,6 +9,7 @@
 #include <afxinet.h>
 #include "Language.h"
 #include "StartProgress.h"
+#include "WalletPassPhrase.h"
 
 #include <afxsock.h>
 #ifdef _DEBUG
@@ -50,6 +51,8 @@ CDacrsUIApp::CDacrsUIApp()
 	blocktipheight = 0;
 	IsSyncBlock = FALSE;
 	IsSyncTx = FALSE;
+	IsSyncAppTx = FALSE;
+	IsWalletLocked = TRUE;
 }
 
 
@@ -96,7 +99,6 @@ BOOL CDacrsUIApp::InitInstance()
 	if (!AfxSocketInit()){   //初始化SOCKET
 		return FALSE ;
 	}
-
 
 	m_blockAutoDelete = false;
 	m_msgAutoDelete= false;
@@ -409,7 +411,7 @@ UINT __stdcall CDacrsUIApp::ProcessAppTx(LPVOID pParam)
 			return 1;
 		}
 		/// 同步以后更新数据库表
-		if (theApp.IsSyncBlock )
+		if (theApp.IsSyncAppTx )
 		{
 			theApp.m_SqliteDeal.UpdataAllTableData();
 			return 1;
@@ -494,9 +496,9 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 							int nItem =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.GetTableCountItem(_T("t_transaction") ,strCondition);
 							if (nItem == 0)
 							{
-								((CDacrsUIApp*)pParam)->InsertTransaction(strHash.GetString() ) ;
+								((CDacrsUIApp*)pParam)->InsertTransaction(strHash) ;
 							}else{
-								((CDacrsUIApp*)pParam)->UpdateTransaction(strHash.GetString() );
+								((CDacrsUIApp*)pParam)->UpdateTransaction(strHash);
 							}
 						}
 					}
@@ -585,6 +587,39 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 						}
 					}
 					break;
+				case WM_RELEASETX:
+					{
+						//更新历史交易记录数据库
+						CString pHash = Postmsg.GetData();
+						if ( _T("") != pHash ) {
+		
+							CString strCondition(_T(""));
+							strCondition.Format(" hash = '%s' ", pHash);
+							int nItem =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.GetTableCountItem(_T("t_transaction") ,strCondition);
+							if (nItem != 0)
+							{
+								((CDacrsUIApp*)pParam)->InsertTransaction(pHash ) ;
+								theApp.m_SqliteDeal.UpdataAllTableData();   /// 更新应用表格
+							}
+						}
+					}
+					break;
+				case WM_REMOVETX:
+					{
+						CString pHash = Postmsg.GetData();
+						if ( _T("") != pHash ) {
+
+							CString strCondition(_T(""));
+							strCondition.Format(" hash = '%s' ", pHash);
+							int nItem =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.GetTableCountItem(_T("t_transaction") ,strCondition);
+							if (nItem != 0)
+							{
+								((CDacrsUIApp*)pParam)->m_SqliteDeal.DeleteTableItem(_T("t_transaction"),strCondition);
+								theApp.m_SqliteDeal.UpdataAllTableData();   /// 更新应用表格
+							}
+						}
+					}
+					break;
 				default:
 					break;
 				}
@@ -596,8 +631,20 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 				//string strTemp = Postmsg.GetData();
 				//uistruct::BLOCKCHANGED_t      m_Blockchanged;
 				//m_Blockchanged.JsonToStruct(strTemp.c_str());
-				TRACE("change:%s\r\n","MSG_USER_UP_PROGRESS");
-				pUiDemeDlg->m_UimsgQueue.push(Postmsg);
+				switch(Postmsg.GetDatatype())
+				{
+				case WM_LOCKSTATE:
+					{
+						pUiDemeDlg->m_LockmsgQueue.push(Postmsg);
+					}
+					break;
+				default:
+					{
+						TRACE("change:%s\r\n","MSG_USER_UP_PROGRESS");
+						pUiDemeDlg->m_UimsgQueue.push(Postmsg);
+					}
+					break;
+				}
 				//theApp.DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_UP_PROGRESS , 0,0);					
 			}
 			break;
@@ -684,7 +731,10 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 #define  APP_TRANSATION_TYPE   4
 #define  SERVER_NOTIYF_TYPE    5
 #define  SERVER_SYNC_TX        6
-
+#define  WALLET_LOCK           7
+#define  WALLET_UNLOCK         8
+#define  RELEASE_TX            9
+#define  REMOVE_TX            10
 int GetMsgType(CString const strData,Json::Value &root)
 {
 	CString strType;
@@ -714,6 +764,14 @@ int GetMsgType(CString const strData,Json::Value &root)
 		if(!strcmp(strType, _T("SyncTx"))) 
 		{
 			return SERVER_SYNC_TX;
+		}
+		if(!strcmp(strType, _T("releasetx"))) 
+		{
+			return RELEASE_TX;
+		}
+		if(!strcmp(strType, _T("rmtx"))) 
+		{
+			return REMOVE_TX;
 		}
 	}
 	return  -1;
@@ -801,6 +859,7 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 				RecivetxtxTimeLast = tempTimemsg;
 			}
 
+		//	LogPrint("INFO", "REV_TRANSATION %s\n",msgValue.toStyledString().c_str());
 			const Json::Value& txArray = msgValue["transation"]; 
 			//插入到数据库
 			CString strHash ;
@@ -819,6 +878,26 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 			 pApp->m_MsgQueue.push(postmsg);
 		 }
 		  break;
+	case RELEASE_TX:
+		{
+			//插入到数据库
+			CString strHash ;
+			strHash.Format(_T("%s") , msgValue["hash"].asCString());
+			CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_RELEASETX);
+			postmsg.SetData(strHash);
+			pApp->m_MsgQueue.push(postmsg);
+		}
+		break;
+	case REMOVE_TX:
+		{
+			//插入到数据库
+			CString strHash ;
+			strHash.Format(_T("%s") , msgValue["hash"].asCString());
+			CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_REMOVETX);
+			postmsg.SetData(strHash);
+			pApp->m_MsgQueue.push(postmsg);
+		}
+		break;
 	case BLOCK_CHANGE_TYPE:
 		{
 			SYSTEMTIME curTime ;
@@ -877,17 +956,25 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 		}
 	case SERVER_NOTIYF_TYPE:
 		{
-			CPostMsg postmsg(MSG_USER_SHOW_INIT,0);
-			postmsg.SetStrType(msgValue["type"].asCString());
 			CString msg = msgValue["msg"].asCString();
 			TRACE("MEST:%s\r\n",msg);
 			if (!strcmp(msg,"server closed"))
 			{
 				theApp.m_bServerState = false;
+			}else if (!strcmp(msg,"Lock"))
+			{
+				CPostMsg postmsg(MSG_USER_UP_PROGRESS,WM_LOCKSTATE);
+				postmsg.SetStrType(msg);
+				pApp->m_MsgQueue.push(postmsg);
+				pApp->IsWalletLocked = TRUE;
+			}else if (!strcmp(msg,"UnLock"))
+			{
+				CPostMsg postmsg(MSG_USER_UP_PROGRESS,WM_LOCKSTATE);
+				postmsg.SetStrType(msg);
+				pApp->m_MsgQueue.push(postmsg);
+				pApp->IsWalletLocked = FALSE;
 			}
-			postmsg.SetData(msg);
-			pApp->m_MsgQueue.push(postmsg);
-			TRACE("type: %s   mag: %s\r\n" , postmsg.GetStrType() ,msg);
+			//TRACE("type: %s   mag: %s\r\n" , postmsg.GetStrType() ,msg);
 			break;
 		}
 	default:
@@ -1518,4 +1605,15 @@ void CDacrsUIApp::CheckPathValid(const CStringA& strDir)
 		::MessageBox( NULL , _T("程序不可以放在含有空格的目录下\r\n") , "Error" , MB_ICONERROR) ;
 		exit(0);
 	}
+}
+bool CDacrsUIApp::IsLockWallet(){
+
+	while(IsWalletLocked)
+	{
+		CWalletPassPhrase walletpassdlg;
+		walletpassdlg.DoModal();
+		Sleep(100);
+	}
+
+	return IsWalletLocked;
 }

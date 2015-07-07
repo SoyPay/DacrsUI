@@ -207,7 +207,7 @@ void CIpoDlg::OnBnClickedButtonDrawal()
 	string strContractData = m_P2PBetHelp.GetAppAccountMoneyContract(addr.GetString(),1,2);
 
 	CString strTxFee;
-	INT64 minFee = 45266;
+	INT64 minFee = theApp.m_P2PBetCfg.GetAppAmountnFee; //45266;theApp.m_P2PBetCfg.GetAppAmountnFee
 	double dnum = (minFee*1.0/COIN);
 	strTxFee.Format(_T("%.8f"),dnum);
 	//GetDlgItem(IDC_EDIT_GETFEE)->GetWindowText(strTxFee) ;
@@ -295,7 +295,7 @@ void CIpoDlg::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*3 ,(rc.Height()/100)*30  , rc.Width()-(rc.Width()/100)*5+2, (rc.Height()/100)*83+2  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*3 ,(rc.Height()/100)*16  , rc.Width()-(rc.Width()/100)*5+2, (rc.Height()/100)*97+2  ,SWP_SHOWWINDOW ) ; 
 		}
 	}
 }
