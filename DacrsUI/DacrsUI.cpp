@@ -496,9 +496,9 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 							int nItem =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.GetTableCountItem(_T("t_transaction") ,strCondition);
 							if (nItem == 0)
 							{
-								((CDacrsUIApp*)pParam)->InsertTransaction(strHash.GetString() ) ;
+								((CDacrsUIApp*)pParam)->InsertTransaction(strHash) ;
 							}else{
-								((CDacrsUIApp*)pParam)->UpdateTransaction(strHash.GetString() );
+								((CDacrsUIApp*)pParam)->UpdateTransaction(strHash);
 							}
 						}
 					}
@@ -584,6 +584,39 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 							CString strCond;
 							strCond.Format(_T(" address='%s' "), addr.address);
 							((CDacrsUIApp*)pParam)->m_SqliteDeal.DeleteTableItem(_T("t_address_book"),strCond);
+						}
+					}
+					break;
+				case WM_RELEASETX:
+					{
+						//更新历史交易记录数据库
+						CString pHash = Postmsg.GetData();
+						if ( _T("") != pHash ) {
+		
+							CString strCondition(_T(""));
+							strCondition.Format(" hash = '%s' ", pHash);
+							int nItem =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.GetTableCountItem(_T("t_transaction") ,strCondition);
+							if (nItem != 0)
+							{
+								((CDacrsUIApp*)pParam)->InsertTransaction(pHash ) ;
+								theApp.m_SqliteDeal.UpdataAllTableData();   /// 更新应用表格
+							}
+						}
+					}
+					break;
+				case WM_REMOVETX:
+					{
+						CString pHash = Postmsg.GetData();
+						if ( _T("") != pHash ) {
+
+							CString strCondition(_T(""));
+							strCondition.Format(" hash = '%s' ", pHash);
+							int nItem =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.GetTableCountItem(_T("t_transaction") ,strCondition);
+							if (nItem != 0)
+							{
+								((CDacrsUIApp*)pParam)->m_SqliteDeal.DeleteTableItem(_T("t_transaction"),strCondition);
+								theApp.m_SqliteDeal.UpdataAllTableData();   /// 更新应用表格
+							}
 						}
 					}
 					break;
@@ -700,7 +733,8 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 #define  SERVER_SYNC_TX        6
 #define  WALLET_LOCK           7
 #define  WALLET_UNLOCK         8
-
+#define  RELEASE_TX            9
+#define  REMOVE_TX            10
 int GetMsgType(CString const strData,Json::Value &root)
 {
 	CString strType;
@@ -730,6 +764,14 @@ int GetMsgType(CString const strData,Json::Value &root)
 		if(!strcmp(strType, _T("SyncTx"))) 
 		{
 			return SERVER_SYNC_TX;
+		}
+		if(!strcmp(strType, _T("releasetx"))) 
+		{
+			return RELEASE_TX;
+		}
+		if(!strcmp(strType, _T("rmtx"))) 
+		{
+			return REMOVE_TX;
 		}
 	}
 	return  -1;
@@ -836,6 +878,26 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 			 pApp->m_MsgQueue.push(postmsg);
 		 }
 		  break;
+	case RELEASE_TX:
+		{
+			//插入到数据库
+			CString strHash ;
+			strHash.Format(_T("%s") , msgValue["hash"].asCString());
+			CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_RELEASETX);
+			postmsg.SetData(strHash);
+			pApp->m_MsgQueue.push(postmsg);
+		}
+		break;
+	case REMOVE_TX:
+		{
+			//插入到数据库
+			CString strHash ;
+			strHash.Format(_T("%s") , msgValue["hash"].asCString());
+			CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_REMOVETX);
+			postmsg.SetData(strHash);
+			pApp->m_MsgQueue.push(postmsg);
+		}
+		break;
 	case BLOCK_CHANGE_TYPE:
 		{
 			SYSTEMTIME curTime ;
