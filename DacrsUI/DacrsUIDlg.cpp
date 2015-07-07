@@ -8,6 +8,9 @@
 #include "Out.h"
 #include "afxdialogex.h"
 #include "ChangeDPI.h"
+#include "SetAppFee.h"
+#include "EncryptWallet.h"
+#include "ChangPassWord.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -93,7 +96,14 @@ BEGIN_MESSAGE_MAP(CDacrsUIDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_MIN, &CDacrsUIDlg::OnBnClickedButtonMin)
 	ON_WM_TIMER()
 	ON_COMMAND(ID__BAKWALLET, &CDacrsUIDlg::BakWallet)
+	ON_COMMAND(ID__SET, &CDacrsUIDlg::SetAppFee)
 	ON_MESSAGE(WM_SHOWTASK,OnShowTask)
+	ON_COMMAND(ID__ENCRYPTWALLET, &CDacrsUIDlg::encryptwallet)
+	ON_COMMAND(ID_CHANGEPASSWORD, &CDacrsUIDlg::walletpassphrasechange)
+	ON_COMMAND(ID__LOCK, &CDacrsUIDlg::LockWallet)
+	ON_COMMAND(ID__EXPORTPRIVEKEY, &CDacrsUIDlg::ExportPriveKey)
+	ON_COMMAND(ID__IMPORTPRIVEKEY, &CDacrsUIDlg::ImportPrvieKey)
+	ON_UPDATE_COMMAND_UI(ID__SET, &CDacrsUIDlg::OnUpdataState)
 END_MESSAGE_MAP()
 
 
@@ -631,12 +641,12 @@ bool  CDacrsUIDlg::IsP2pBetFinsh()
 
 	/// 处于发赌约状态
 	CString strCond;
-	strCond.Format(_T(" ((state == 0 or state == 4) and height > %d "),(theApp.blocktipheight-500));
+	strCond.Format(_T("height > %d and (state = 0 or state = 4)"),(theApp.blocktipheight-500));
 	uistruct::P2PBETRECORDLIST pPoolList;
 	theApp.m_SqliteDeal.GetP2PQuizRecordList(strCond,&pPoolList);
 	// 处于接赌状态
 	uistruct::P2PBETRECORDLIST pPoolList1;
-	strCond.Format(_T(" ((state == 1 or state == 5) and height > %d "),(theApp.blocktipheight-10));
+	strCond.Format(_T("height > %d and (state = 1 or state = 5)"),(theApp.blocktipheight-10));
 	theApp.m_SqliteDeal.GetP2PQuizRecordList(strCond,&pPoolList1);
 	if (pPoolList.size() != 0 && pPoolList1.size() != 0)
 	{
@@ -860,3 +870,121 @@ void CDacrsUIDlg::DeleteTray()
 	strcpy(nid.szTip,"dacrs"); //信息提示条为“计划任务提醒” 
 	//Shell_NotifyIcon(NIM_DELETE,&nid); //在托盘区删除图标 
 } 
+void CDacrsUIDlg::SetAppFee()
+{
+	CSetAppFee setappdlg;
+	if (setappdlg.DoModal() ==IDOK)
+	{
+		return;
+	}
+	return;
+}
+void CDacrsUIDlg::encryptwallet()
+{
+	CEncryptWallet enwalletdlg;
+	if (enwalletdlg.DoModal() ==IDOK)
+	{
+		return;
+	}
+	return;
+}
+void CDacrsUIDlg::walletpassphrasechange(){
+
+	CChangPassWord changwalletdlg;
+	if (changwalletdlg.DoModal() ==IDOK)
+	{
+		return;
+	}
+	return;
+}
+void CDacrsUIDlg:: LockWallet()
+{
+	CString strCommand;
+	strCommand.Format(_T("%s"),_T("walletlock"));
+	CStringA strShowData ;
+
+	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
+
+	Json::Reader reader;  
+	Json::Value root; 
+	if (!reader.parse(strShowData.GetString(), root)) 
+		return  ;
+
+	if (strShowData.Find("walletlock") > 0)
+	{
+		bool isEntryp = root["walletlock"].asBool();
+		if (!isEntryp)
+		{
+			MessageBox(_T("钱包锁定失败"));
+			return;
+		}
+	}else
+	{
+		MessageBox(_T("钱包锁定失败"));
+	}
+
+}
+
+void CDacrsUIDlg:: ExportPriveKey()
+{
+	if (theApp.IsLockWallet())
+	{
+		return ;
+	}
+	// TODO: 在此添加控件通知处理程序代码
+	CFileDialog dlg(FALSE,NULL,NULL,OFN_HIDEREADONLY|OFN_FILEMUSTEXIST ,_T("*.smc||"));
+	if (IDOK == dlg.DoModal())
+	{
+		CString strPath = dlg.GetPathName();
+		strPath.AppendFormat(_T(".smc"));
+		CString strCommand;
+		strCommand.Format(_T("%s %s"),_T("dumpwallet"),strPath);
+		CStringA strSendData;
+		CSoyPayHelp::getInstance()->SendRpc(strCommand,strSendData);
+	}
+}
+void CDacrsUIDlg:: ImportPrvieKey()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	// TODO: 在此添加命令处理程序代码
+	if (theApp.IsLockWallet())
+	{
+		return ;
+	}
+	OPENFILENAME ofn;
+	char szFile[MAX_PATH];
+	ZeroMemory(&ofn,sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.lpstrFile = szFile;
+	ofn.lpstrFile[0] = TEXT('\0'); 
+	ofn.nMaxFile = sizeof(szFile); 
+	ofn.lpstrFilter =  "文本文件(*.smc)\0*.smc\0所有文件(*.*)\0*.*\0\0";  
+	ofn.nFilterIndex = 1; 
+	ofn.lpstrFileTitle = NULL; 
+	ofn.nMaxFileTitle = 0; 
+	ofn.lpstrInitialDir = NULL;	ofn.hwndOwner = m_hWnd; 
+	ofn.Flags = OFN_EXPLORER |OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+	if (::GetOpenFileName(&ofn))
+	{
+			CString strPath = ofn.lpstrFile;
+			CString strCommand;
+			strCommand.Format(_T("%s %s"),_T("importwallet"),strPath);
+			CStringA strSendData;
+	
+			CSoyPayHelp::getInstance()->SendRpc(strCommand,strSendData);	
+			if (strSendData.Find(_T("imorpt key size")) >=0)
+			{
+				MessageBox(_T("导入钱包成功请重新启动钱包"));
+				((CDacrsUIDlg*)(this->GetParent()))->Close();
+			}else
+			{
+				MessageBox(_T("导入钱包失败"));
+			}
+	}
+}
+
+void CDacrsUIDlg::OnUpdataState(CCmdUI *pCmdUI)
+{
+	// TODO: 在此添加命令更新用户界面处理程序代码
+//	pCmdUI->Enable(FALSE); 
+}

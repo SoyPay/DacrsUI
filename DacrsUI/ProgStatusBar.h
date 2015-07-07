@@ -28,7 +28,9 @@ public:
 public:
 	HBITMAP		     m_pBmp; 
 	CBitmap          m_Sigbmp[4];  //ÐÅºÅÍ¼Æ¬
+	CBitmap          m_Lockbmp[2];  //ËøµÄÍ¼Æ¬
 	int              m_nSigIndex;
+	int              m_nLockIndex;
 	void		     SetBkBmpNid( UINT nBitmapIn ) ;
 	void             LoadGifing( BOOL bState );
 public:
@@ -38,7 +40,10 @@ public:
 	virtual BOOL Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID);
 public:
 	afx_msg LRESULT OnShowProgressCtrl(  WPARAM wParam, LPARAM lParam ) ;
-public:
+	int  ShowProgressCtrl();
+	void ShowLockCtrl();
+	void OnIniLockParam();
+;public:
 	BOOL        m_bProgressType;
 	int         m_ProgressMax  ;
 //	CProgressCtrl m_progress;
@@ -47,4 +52,5 @@ public:
 	CRect  m_bmpsig;
 	bool   m_walletui;
 	bool   m_prosshiden;
+	CRect  m_bmplock;
 };
