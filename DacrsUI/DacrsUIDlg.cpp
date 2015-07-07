@@ -986,5 +986,5 @@ void CDacrsUIDlg:: ImportPrvieKey()
 void CDacrsUIDlg::OnUpdataState(CCmdUI *pCmdUI)
 {
 	// TODO: 在此添加命令更新用户界面处理程序代码
-	pCmdUI->Enable(FALSE); 
+//	pCmdUI->Enable(FALSE); 
 }
