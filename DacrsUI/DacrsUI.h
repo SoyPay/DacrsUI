@@ -143,8 +143,8 @@ public:
 	void UpdateRedPacketPoolData();
 	void UpdateQuizPoolData();
 	void UpdateAddressData();
-	void InsertTransaction(string hash);
-	void UpdateTransaction(string hash);
+	void InsertTransaction(CString hash);
+	void UpdateTransaction(CString hash);
 	void SyncTransaction(string obj);
 	void UpdateAppRecord(string txdetail);
 	void InsertAddbook(uistruct::ADDRBOOK_t );
