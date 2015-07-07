@@ -39,6 +39,8 @@ private:
 	CComboBox		   m_condition;
 	CComboBox		   m_time;
 	CEdit		       m_edit;
+	COLORREF          m_colorEditText;
+	bool              m_seteditcolor;
 public:
 	afx_msg void OnNMDblclkListListtx(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
@@ -56,6 +58,8 @@ public:
 	void ShowAddrConditon();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	CString GetConditonStr(int &operate);
-	//afx_msg void OnEnChangeEditAddr();
+	BOOL IsInsertTx(uistruct::REVTRANSACTION_t txdetail);
+	BOOL FindDesTx(uistruct::TRANSRECORDLIST pListInfo,int flag,uistruct::REVTRANSACTION_t txdetail);
 	
+	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 };
