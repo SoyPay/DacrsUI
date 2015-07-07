@@ -52,6 +52,7 @@ void CNewMenu::ChangeMenuItem(CMenu *pMenu)
 
 		//ModifyMenu函数最后一个参数对应DRAWITEMSTRUCT结构里的itemData变量
 		pMenu->ModifyMenu(i,MF_OWNERDRAW|MF_BYPOSITION|MF_STRING,itemID,(LPSTR)pText);
+		//pMenu->ModifyMenu(i,MF_OWNERDRAW|MF_STRING,itemID,(LPSTR)pText);
 		if(itemID==-1)//如果是一个弹出式菜单
 		{
 			ChangeMenuItem(pMenu->GetSubMenu(i));

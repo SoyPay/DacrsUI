@@ -322,14 +322,15 @@ void CIndTitleBar::OnBnClickedMenubar()
 	RECT rect;
 	GetDlgItem(IDC_MENUBAR)->GetWindowRect(&rect);//获取控件基于全频的位置
 	CNewMenu menu;
+	//CMenu menu;
 	menu.LoadMenu(IDR_MENU1);//加载菜单资源
 	//GetMenu()->GetSubMenu(8)->EnableMenuItem(8,MF_BYPOSITION | MF_ENABLED);
 	//menu.EnableMenuItem(1,MF_BYPOSITION | MF_GRAYED);
 	menu.ChangeMenuItem(menu.GetSubMenu(0));
 	CMenu *pPopup=menu.GetSubMenu(0);
-	//int b =pPopup->EnableMenuItem(2,MF_GRAYED);
+	int b =pPopup->EnableMenuItem(ID__EXPORTPRIVEKEY,MF_GRAYED);
 	
-	pPopup->SetMenuItemBitmaps(0,MF_BYPOSITION, &pMenuBitmap, &pMenuBitmap);
+	//pPopup->SetMenuItemBitmaps(0,MF_BYPOSITION, &pMenuBitmap, &pMenuBitmap);
 	//显示右键菜单，由视类窗口拥有。
 	pPopup->TrackPopupMenu(TPM_LEFTALIGN|TPM_RIGHTBUTTON,rect.left,rect.bottom,this);
 
