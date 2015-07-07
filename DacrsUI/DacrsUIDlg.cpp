@@ -103,6 +103,7 @@ BEGIN_MESSAGE_MAP(CDacrsUIDlg, CDialogEx)
 	ON_COMMAND(ID__LOCK, &CDacrsUIDlg::LockWallet)
 	ON_COMMAND(ID__EXPORTPRIVEKEY, &CDacrsUIDlg::ExportPriveKey)
 	ON_COMMAND(ID__IMPORTPRIVEKEY, &CDacrsUIDlg::ImportPrvieKey)
+	ON_UPDATE_COMMAND_UI(ID__SET, &CDacrsUIDlg::OnUpdataState)
 END_MESSAGE_MAP()
 
 
@@ -980,4 +981,10 @@ void CDacrsUIDlg:: ImportPrvieKey()
 				MessageBox(_T("导入钱包失败"));
 			}
 	}
+}
+
+void CDacrsUIDlg::OnUpdataState(CCmdUI *pCmdUI)
+{
+	// TODO: 在此添加命令更新用户界面处理程序代码
+	pCmdUI->Enable(FALSE); 
 }
