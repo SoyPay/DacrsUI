@@ -33,6 +33,7 @@ public:
 	CRoundButton     m_rBtnMin;
 	CRoundButton     m_rBtnMainMenu;
 	CNewMenu         newMenu;
+
 public:
 	CToolTipCtrl     m_tooltip;			// 提示信息
 	HBITMAP		     m_pBmp; 
