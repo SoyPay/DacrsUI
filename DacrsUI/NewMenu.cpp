@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "NewMenu.h"
-
+#include "resource.h"
 
 CNewMenu::CNewMenu(void)
 {
@@ -25,10 +25,41 @@ CRect rect=lpDrawItemStruct->rcItem;
  Font.CreatePointFont(90,"宋体");//创建字体
  dc.SelectObject(&Font);
  CString *pText=(CString *)lpDrawItemStruct->itemData;
- if(lpDrawItemStruct->itemState&ODS_SELECTED)
+ if(lpDrawItemStruct->itemState&ODS_SELECTED&&!(lpDrawItemStruct->itemState&ODS_GRAYED))
    dc.FillSolidRect(rect,RGB(80,89,202));//菜单被选中
-// dc.SetTextColor(RGB(10,0,181));//设置文本颜色
- dc.SetTextColor(RGB(41,57,85));
+ if (lpDrawItemStruct->itemState&ODS_GRAYED)
+ {
+	 //   dc.FillSolidRect(rect,RGB(159,161,164));//菜单被禁用
+		dc.SetTextColor(RGB(128,128,128));
+ }else{
+	 dc.SetTextColor(RGB(41,57,85));
+ }
+
+ //if (lpDrawItemStruct->itemID == ID_RPC_CMD)
+ //{
+
+	// CBitmap m_bitmap;
+
+	// m_bitmap.LoadBitmap(IDB_BITMAP_ADDAPP_3);
+
+	// BITMAP m_size;
+
+	// m_bitmap.GetBitmap(&m_size);
+
+	// CDC m_memdc;
+
+	// m_memdc.CreateCompatibleDC(&dc);
+
+	// CGdiObject* m_oldobject;
+
+	// m_oldobject = m_memdc.SelectObject(&m_bitmap);
+
+	// dc.StretchBlt(0,0,28,rect.bottom,&m_memdc,0,0,m_size.bmWidth,m_size.bmHeight,SRCCOPY);
+
+	// m_bitmap.DeleteObject();
+	// rect.left +=m_size.bmWidth ; 
+ //}
+  
  dc.DrawText(*pText,rect,DT_VCENTER|DT_LEFT|DT_SINGLELINE);
  dc.Detach();
 }
@@ -40,6 +71,7 @@ void CNewMenu::MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct)
 	// TODO:  添加您的代码以确定指定项的大小
 	lpMeasureItemStruct->itemHeight=25;//项高
 	lpMeasureItemStruct->itemWidth=60;//项宽
+	//lpMeasureItemStruct->itemWidth=120;//项宽
 }
 void CNewMenu::ChangeMenuItem(CMenu *pMenu)
 {
@@ -52,7 +84,7 @@ void CNewMenu::ChangeMenuItem(CMenu *pMenu)
 
 		//ModifyMenu函数最后一个参数对应DRAWITEMSTRUCT结构里的itemData变量
 		pMenu->ModifyMenu(i,MF_OWNERDRAW|MF_BYPOSITION|MF_STRING,itemID,(LPSTR)pText);
-		//pMenu->ModifyMenu(i,MF_OWNERDRAW|MF_STRING,itemID,(LPSTR)pText);
+		//pMenu->ModifyMenu(i,MF_BYPOSITION|MF_STRING,itemID,(LPSTR)pText);
 		if(itemID==-1)//如果是一个弹出式菜单
 		{
 			ChangeMenuItem(pMenu->GetSubMenu(i));
