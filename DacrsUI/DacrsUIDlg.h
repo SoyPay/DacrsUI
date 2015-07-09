@@ -84,6 +84,7 @@ private:
 	void       SyncAddrInfo();
 	void       CloseThread();
 	void       StopSever();
+	bool GetFileName(CString &fileName,CString strexe );
 public:
 	void       Close(); 
 	void       CloseApp();
