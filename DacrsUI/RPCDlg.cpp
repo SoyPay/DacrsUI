@@ -96,7 +96,7 @@ BOOL CRPCDlg::PreTranslateMessage(MSG* pMsg)
 
 			CStringA strSendData,strretshow;
 			RPCCommandToJson(strCommand,strSendData);
-			CSoyPayHelp::getInstance()->SendContacrRpc(strSendData,strretshow);
+			CSoyPayHelp::getInstance()->SendRpcDlg(strSendData,strretshow);
 			ShowJson(strCommand,strretshow);
 			return TRUE;
 		}

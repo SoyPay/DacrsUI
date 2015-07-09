@@ -1283,7 +1283,7 @@ void  CDacrsUIApp::ParseUIConfigFile(const CStringA& strExeDir){
 }
 void CDacrsUIApp::StartSeverProcess(const CStringA& strdir){
 	///// 启动前先关闭系统中dacrs-d.exe进程
-	CloseProcess("dacrs-d.exe");
+//	CloseProcess("dacrs-d.exe");
 	LogPrint("INFO", "关闭服务端成功\n");
 	
 	STARTUPINFOA si; 
@@ -1569,13 +1569,20 @@ BOOL CDacrsUIApp::RunOnlyOneApp()
 void CDacrsUIApp::SendUIMsg(int message,CString jsonaddr){
 
 	//m_UiReciveDlgQueue.clear();
+	//m_MsgQueue
 	CPostMsg Postmsg(MSG_USER_MAIN_UI,message);
 	Postmsg.SetData(jsonaddr);	
 	m_UiReciveDlgQueue.push(Postmsg);
-	DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_RECIVE_UI ,message,0);
+	//while(!m_UiReciveDlgQueue.isEmpty())
+	CPostMsg msg(MSG_USER_RECIVE_UI,message);
+	m_MsgQueue.push(msg);
+	//DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_RECIVE_UI ,message,0);
 
 	m_UiSendDlgQueue.push(Postmsg);
-	DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_SEND_UI ,message,0);
+	//while(!m_UiSendDlgQueue.isEmpty())
+	CPostMsg msg1(MSG_USER_SEND_UI,message);
+	m_MsgQueue.push(msg1);
+	//DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_SEND_UI ,message,0);
 
 }
 void CDacrsUIApp::SendP2pMsg(int message,CString jsonaddr)
@@ -1583,10 +1590,15 @@ void CDacrsUIApp::SendP2pMsg(int message,CString jsonaddr)
 	CPostMsg Postmsg(MSG_USER_MAIN_UI,message);
 	Postmsg.SetData(jsonaddr);
 	m_UiP2pDlgQueue.push(Postmsg);
-	DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_P2P_UI ,message,0);
+
+	CPostMsg msg(MSG_USER_P2P_UI,message);
+	m_MsgQueue.push(msg);
+	//DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_P2P_UI ,message,0);
 
 	m_UiRedPacketDlgQueue.push(Postmsg);
-	DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_REDPACKET_UI ,message,0);
+	CPostMsg msg1(MSG_USER_REDPACKET_UI,message);
+	m_MsgQueue.push(msg1);
+	//DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_REDPACKET_UI ,message,0);
 }
 void CDacrsUIApp::CheckPathValid(const CStringA& strDir)
 {

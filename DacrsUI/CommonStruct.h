@@ -335,6 +335,7 @@ public:
 
 	int SendRpc(CString cmd,CStringA &rev);
 	int SendContacrRpc(CString cmd,CStringA &rev);
+	int SendRpcDlg(CString cmd,CStringA &rev);
 	void Jiexi(Json::Value &obj, HTREEITEM hItemRoot,CTreeCtrl&m_rpccommand);
 	void Onexpandtree(CTreeCtrl& m_tree) ;  //展开所有节点
 	double GetAccountBalance(CString addr);
