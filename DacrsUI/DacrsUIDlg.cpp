@@ -775,7 +775,22 @@ LRESULT CDacrsUIDlg::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 	}
 	return CDialog::WindowProc(message, wParam, lParam);
 }
-
+bool CDacrsUIDlg::GetFileName(CString &fileName,CString strexe )
+{
+	int pos = fileName.Find(".",0);
+	fileName = fileName.Left(pos);
+	fileName.AppendFormat(strexe);
+	if(PathFileExistsA(fileName)){
+		CString strDisplay;
+		strDisplay.Format(_T("此文件已经存在是否要覆盖"));
+		COut outdlg(NULL, strDisplay,100);
+		if ( IDOK != outdlg.DoModal()){
+			return false;
+		}
+	}
+	
+	return TRUE;
+}
 void CDacrsUIDlg::BakWallet()
 {
 	// TODO: 在此添加命令处理程序代码
@@ -784,26 +799,22 @@ void CDacrsUIDlg::BakWallet()
 	if (IDOK == dlg.DoModal())
 	{
 		CString strPath = dlg.GetPathName();
-		strPath.AppendFormat(_T(".dat"));
+		if (!GetFileName(strPath,_T(".dat")))
+		{
+			return;
+		}
+
+		//strPath.AppendFormat(_T(".dat"));
 		CString strCommand;
 		strCommand.Format(_T("%s %s"),_T("backupwallet"),strPath);
 		CStringA strSendData;
 		CSoyPayHelp::getInstance()->SendRpc(strCommand,strSendData);
+
+		CString strShowData;
+		strShowData.Format(_T("钱包备份成功:%s"),strPath);
+		::MessageBox( this->GetSafeHwnd() ,strShowData , _T("提示") , MB_ICONINFORMATION ) ;
 	}
 
-	//BROWSEINFO stInfo = {NULL};
-	//LPCITEMIDLIST pIdlst;
-	//TCHAR szPath[MAX_PATH];
-	//stInfo.ulFlags = BIF_DONTGOBELOWDOMAIN | BIF_RETURNONLYFSDIRS | BIF_USENEWUI;
-	//stInfo.lpszTitle= "请选择路径:";
-	//pIdlst = SHBrowseForFolder(&stInfo);
-	//if(!pIdlst) return ;
-	//if(!SHGetPathFromIDList(pIdlst, szPath)) return ;
-	//CString strCommand;
-	//strCommand.Format(_T("%s %s"),_T("backupwallet"),szPath);
-	//CStringA strSendData;
-	//CSoyPayHelp::getInstance()->SendRpc(strCommand,strSendData);
-	//printf(szPath);
 }
 
 void CDacrsUIDlg::ToTray() 
@@ -941,11 +952,18 @@ void CDacrsUIDlg:: ExportPriveKey()
 	if (IDOK == dlg.DoModal())
 	{
 		CString strPath = dlg.GetPathName();
-		strPath.AppendFormat(_T(".smc"));
+		if (!GetFileName(strPath,_T(".smc")))
+		{
+			return;
+		}
+		//strPath.AppendFormat(_T(".smc"));
 		CString strCommand;
 		strCommand.Format(_T("%s %s"),_T("dumpwallet"),strPath);
 		CStringA strSendData;
 		CSoyPayHelp::getInstance()->SendRpc(strCommand,strSendData);
+		CString strShowData;
+		strShowData.Format(_T("导出私钥成功:%s"),strPath);
+		::MessageBox( this->GetSafeHwnd() ,strShowData , _T("提示") , MB_ICONINFORMATION ) ;
 	}
 }
 void CDacrsUIDlg:: ImportPrvieKey()

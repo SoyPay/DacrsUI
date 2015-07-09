@@ -171,6 +171,7 @@ public:
 	INT64 GetRedPacketAmount(CString acceptregid,uistruct::RED_DATA redPacket);
 	bool  isMine(CString addr);
 	bool IsLockWallet();
+	
 public:
 	bool isStartMainDlg;
 	CNoUiMsgBuffer m_noUiMsgBuffer;
