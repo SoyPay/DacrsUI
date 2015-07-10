@@ -76,6 +76,8 @@ void CWalletPassPhrase::OnBnClickedOk()
 		{
 			MessageBox(_T("输入就密码不正确,请重新输入"));
 			return;
+		}else{
+			MessageBox(_T("恭喜钱包解锁成功"));
 		}
 	}else{
 		MessageBox(_T("输入就密码不正确,请重新输入"));
