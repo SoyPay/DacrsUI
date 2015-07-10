@@ -274,6 +274,10 @@ bool Int64Inital(Int64 * p64, char const *pdata, unsigned char len)
 
 void ParseJsonAddrToMap(const CStringA& strValue,map<CString,CString>& mapAccount)
 {
+	if (strValue ==_T(""))
+	{
+		return;
+	}
 	CStringA strData = strValue;
 	Json::Reader reader; 
 	Json::Value value;
@@ -301,6 +305,10 @@ void ParseJsonAddrToMap(const CStringA& strValue,map<CString,CString>& mapAccoun
 
 CStringA ParseJsonToList(const CStringA& strValue)
 {
+	if (strValue == _T(""))
+	{
+		return _T("");
+	}
 	CStringA strData = strValue;
 	Json::Reader reader; 
 	Json::Value value;
@@ -663,6 +671,10 @@ string CSoyPayHelp::CreateNomalTx(const char* pFrom,const char* pTo,int64_t nMon
 
 string CSoyPayHelp::ParseTxHashFromJson(const string& strJsonData)
 {
+	if (strJsonData == "")
+	{
+		return "";
+	}
 	Json::Reader reader; 
 	Json::Value value;
 	if(reader.parse(strJsonData.c_str(),value))
@@ -680,6 +692,10 @@ string CSoyPayHelp::ParseTxHashFromJson(const string& strJsonData)
 
 string CSoyPayHelp::ParseScriptIDFromJson(const string& strJsonData)
 {
+	if (strJsonData == "")
+	{
+		return "";
+	}
 	Json::Reader reader; 
 	Json::Value value;
 	if(reader.parse(strJsonData.c_str(),value))
@@ -697,6 +713,10 @@ string CSoyPayHelp::ParseScriptIDFromJson(const string& strJsonData)
 
 bool CSoyPayHelp::GetErrorMsg(const string& strRecvData,string& strErrorMsg)
 {
+	if (strRecvData == _T(""))
+	{
+		return false;
+	}
 	Json::Reader reader; 
 	Json::Value value;
 	if(reader.parse(strRecvData,value))
@@ -1100,10 +1120,14 @@ void CSoyPayHelp::Onexpandtree(CTreeCtrl& m_tree) //展开所有节点
 }
 double CSoyPayHelp::GetAccountBalance(CString addr){
 
-	CString strCommand,strShowData;
+	CString strCommand,strShowData = _T("");
 	strCommand.Format(_T("%s %s"),_T("getaccountinfo") ,addr );
 	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 
+	if (strShowData == _T(""))
+	{
+		return 0.0;
+	}
 	Json::Reader reader; 
 	Json::Value root;
 	if (!reader.parse(strShowData.GetString(), root)) 

@@ -342,10 +342,14 @@ void CProgStatusBar::OnIniLockParam()
 {
 	CString strCommand;
 	strCommand.Format(_T("%s"),_T("islocked"));
-	CStringA strShowData ;
+	CStringA strShowData =_T("");
 
 	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 
+	if (strShowData == _T(""))
+	{
+		return;
+	}
 	Json::Reader reader;  
 	Json::Value root; 
 	if (!reader.parse(strShowData.GetString(), root)) 

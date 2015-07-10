@@ -984,7 +984,12 @@ BOOL CSqliteDeal::UpdateDarkRecord(){
 		string acceptaddr = CSoyPayHelp::getInstance()->HexStr(vTemp);
 		CString strCommand;
 		strCommand.Format(_T("%s %s"),_T("getaccountinfo") ,acceptaddr.c_str() );
+		strShowData = _T("");
 		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
+		if (strShowData == _T(""))
+		{
+			continue;
+		}
 		Json::Value rootinfo;
 		if (!reader.parse(strShowData.GetString(), rootinfo)) 
 			continue;
@@ -998,8 +1003,12 @@ BOOL CSqliteDeal::UpdateDarkRecord(){
 		acceptaddr = CSoyPayHelp::getInstance()->HexStr(vTemp);
 	
 		strCommand.Format(_T("%s %s"),_T("getaccountinfo") ,acceptaddr.c_str() );
+		strShowData =_T("");
 		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-	
+	    if (strShowData == _T(""))
+	    {
+			continue;
+	    }
 		if (!reader.parse(strShowData.GetString(), rootinfo)) 
 			continue;
 		CString buyeraddr;

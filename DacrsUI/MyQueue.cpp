@@ -62,3 +62,18 @@ bool CMyQueue::clear()
 	m_mutex.Unlock();
 	return true;
 }
+void CMyQueue::ClearMessageType(int type)
+{
+	m_mutex.Lock();
+	std::deque<CPostMsg>::iterator iter;
+	for(iter=m_TaskQueue.begin();iter!=m_TaskQueue.end();)
+	{
+		if (iter->GetUItype() == type)
+		{
+			iter = m_TaskQueue.erase(iter);
+		}else{
+			++iter;
+		}
+	}
+	m_mutex.Unlock();
+}

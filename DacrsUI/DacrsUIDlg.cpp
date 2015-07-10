@@ -456,10 +456,14 @@ void    CDacrsUIDlg::SyncAddrInfo()
 {
 	CString strCommand;
 	strCommand.Format(_T("%s"),"listaddr");
-	CStringA strShowData ;
+	CStringA strShowData =_T("");
 
 	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 
+	if (strShowData == _T(""))
+	{
+		return;
+	}
 	Json::Reader reader;  
 	Json::Value root; 
 	if (!reader.parse(strShowData.GetString(), root)) 
@@ -917,10 +921,14 @@ void CDacrsUIDlg:: LockWallet()
 {
 	CString strCommand;
 	strCommand.Format(_T("%s"),_T("walletlock"));
-	CStringA strShowData ;
+	CStringA strShowData =_T("");
 
 	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 
+	if (strShowData ==_T(""))
+	{
+		return;
+	}
 	Json::Reader reader;  
 	Json::Value root; 
 	if (!reader.parse(strShowData.GetString(), root)) 

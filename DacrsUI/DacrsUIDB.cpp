@@ -61,14 +61,23 @@ void CDacrsUIApp::UpdateQuizPoolData()
 			}
 
 			strCommand.Format(_T("%s %s"),_T("gettxdetail"),strTemp.c_str());
-			CStringA strShowData;
+			CStringA strShowData =_T("");
 			CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
+			if (strShowData == _T(""))
+			{
+				return;
+			}
 			if (!reader.parse(strShowData.GetString(), root1)) 
 				return;
 			int confirheight =root1["confirmHeight"].asInt();
 
 			strCommand.Format(_T("%s"),_T("getinfo"));
+			strShowData =_T("");
 			CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
+			if (strShowData == _T(""))
+			{
+				return;
+			}
 			if (!reader.parse(strShowData.GetString(), root1)) 
 				return;
 			int curheight =root1["blocks"].asInt();
@@ -90,10 +99,13 @@ void CDacrsUIApp::UpdateQuizPoolData()
 void CDacrsUIApp::UpdateAddressData(){
 	CString strCommand;
 	strCommand.Format(_T("%s"),_T("listaddr"));
-	CStringA strShowData ;
+	CStringA strShowData =_T("");
 
 	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
+	if (strShowData == _T(""))
+	{
+		return;
+	}
 	Json::Reader reader;  
 	Json::Value root; 
 	if (!reader.parse(strShowData.GetString(), root)) 
@@ -259,7 +271,7 @@ void CDacrsUIApp::OpenBet(CString txhash)
 	}
 
 
-	CString strShowData,txaccepthash;
+	CString strShowData = _T(""),txaccepthash;
 	txaccepthash.Format(_T("%s"),pPoolItem.relate_hash);
 	string sendhash = CSoyPayHelp::getInstance()->GetReverseHash(txhash.GetBuffer());
 	string accepthash = CSoyPayHelp::getInstance()->GetReverseHash(txaccepthash.GetBuffer());
@@ -272,6 +284,10 @@ void CDacrsUIApp::OpenBet(CString txhash)
 	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_betScritptid.GetBuffer(),m_addr.GetString(),strContractData,0,theApp.m_P2PBetCfg.OpenBetnFee,0);
 	CSoyPayHelp::getInstance()->SendContacrRpc(strData.c_str(),strShowData);
 
+	if (strShowData == _T(""))
+	{
+		return;
+	}
 	Json::Reader reader;  
 	Json::Value root;
 	if (!reader.parse(strShowData.GetString(), root)) 
@@ -793,8 +809,12 @@ void CDacrsUIApp::UpdateRedPacketPoolData()
 			string newTxhash =  CSoyPayHelp::getInstance()->HexStr(txTemp);
 
 			strCommand.Format(_T("%s %s"),_T("gettxdetail"),newTxhash.c_str());
-			CStringA strShowData;
+			CStringA strShowData = _T("");
 			CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
+			if (strShowData == _T(""))
+			{
+				return;
+			}
 			if (!reader.parse(strShowData.GetString(), root1)) 
 				return;
 			int confirheight =root1["confirmHeight"].asInt();

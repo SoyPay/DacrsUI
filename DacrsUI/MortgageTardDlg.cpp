@@ -552,10 +552,14 @@ void CMortgageTardDlg::SendRedPacketComm(){
 		::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
 		return ;
 	}
-	CString strShowData;
+	CString strShowData = _T("");
 	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_redPacketScriptid.GetString(),addr.GetString(),strContractData,0,strTxFee,0);
 	CSoyPayHelp::getInstance()->SendContacrRpc(strData.c_str(),strShowData);
 
+	if (strShowData ==_T(""))
+	{
+		return;
+	}
 
 	Json::Reader reader;  
 	Json::Value root; 
@@ -675,12 +679,16 @@ void CMortgageTardDlg::OnCbnSelchangeComboAddres()
 	//m_addrbook.GetWindowText(text) ;
 	if(text!=_T(""))
 	{
-		CString strCommand,strShowData;
+		CString strCommand,strShowData =_T("");
 
 		CString strCond;
 		strCommand.Format(_T("%s %s %s"),_T("getappaccinfo") , theApp.m_redPacketScriptid ,text);
 		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 
+		if (strShowData == _T(""))
+		{
+			return;
+		}
 		Json::Reader reader;  
 		Json::Value root; 
 		if (!reader.parse(strShowData.GetString(), root)) 
@@ -768,7 +776,7 @@ void CMortgageTardDlg::OnBnClickedButtonWithd()
 
 	if (!CheckRegIDValid( theApp.m_redPacketScriptid)) return ;
 
-	CString strShowData ;
+	CString strShowData = _T("");
 
 
 	CString addr;
@@ -799,6 +807,10 @@ void CMortgageTardDlg::OnBnClickedButtonWithd()
 	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_redPacketScriptid.GetBuffer(),addr.GetString(),strContractData,0,strTxFee,0);
 	CSoyPayHelp::getInstance()->SendContacrRpc(strData.c_str(),strShowData);
 
+	if (strShowData ==_T(""))
+	{
+		return;
+	}
 	Json::Reader reader;  
 	Json::Value root;
 	if (!reader.parse(strShowData.GetString(), root)) 
@@ -849,7 +861,7 @@ void CMortgageTardDlg::OnBnClickedButtonRech()
 		return ;
 	}
 
-	CString strShowData ;
+	CString strShowData = _T("");
 	CString addr;
 	int sel = m_addrbook.GetCurSel();
 	if (sel < 0)
@@ -888,6 +900,10 @@ void CMortgageTardDlg::OnBnClickedButtonRech()
 	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_redPacketScriptid.GetBuffer(),addr.GetString(),strContractData,0,strTxFee,REAL_MONEY(atof(theApp.m_strAddress) ));
 	CSoyPayHelp::getInstance()->SendContacrRpc(strData.c_str(),strShowData);
 
+	if (strShowData == _T(""))
+	{
+		return;
+	}
 	Json::Reader reader;  
 	Json::Value root;
 	if (!reader.parse(strShowData.GetString(), root)) 
@@ -1203,10 +1219,14 @@ void   CMortgageTardDlg::SendRedPackeSpecail(){
 		::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
 		return ;
 	}
-	CString strShowData;
+	CString strShowData =_T("");
 	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_redPacketScriptid.GetString(),addr.GetString(),strContractData,0,strTxFee,0);
 	CSoyPayHelp::getInstance()->SendContacrRpc(strData.c_str(),strShowData);
 
+	if (strShowData == _T(""))
+	{
+		return;
+	}
 
 	Json::Reader reader;  
 	Json::Value root; 
@@ -1333,10 +1353,14 @@ void   CMortgageTardDlg::AcceptRedPacketComm(CString sendhash,uistruct::REDPACKE
 		::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
 		return ;
 	}
-	CString strShowData;
+	CString strShowData =_T("");
 	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_redPacketScriptid.GetString(),addr.GetString(),strContractData,0,strTxFee,0);
 	CSoyPayHelp::getInstance()->SendContacrRpc(strData.c_str(),strShowData);
 
+	if (strShowData == _T(""))
+	{
+		return;
+	}
 
 	Json::Reader reader;  
 	Json::Value root; 
@@ -1442,10 +1466,14 @@ void   CMortgageTardDlg::AcceptRedPackeSpecail(CString sendhash,uistruct::REDPAC
 		::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
 		return ;
 	}
-	CString strShowData;
+	CString strShowData =_T("");
 	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_redPacketScriptid.GetString(),addr.GetString(),strContractData,0,strTxFee,0);
 	CSoyPayHelp::getInstance()->SendContacrRpc(strData.c_str(),strShowData);
 
+	if (strShowData == _T(""))
+	{
+		return;
+	}
 
 	Json::Reader reader;  
 	Json::Value root; 

@@ -88,6 +88,10 @@ void CSetAppFee::OnBnClickedOk()
 		configpath.AppendFormat("%s",theApp.str_InsPath);
 		configpath.AppendFormat("\\%s","dacrsclient.conf");
 		CString strFile = CJsonConfigHelp::getInstance()->GetConfigRootStr(configpath);
+		if (strFile == _T(""))
+		{
+			return;
+		}
 		Json::Reader reader;  
 		Json::Value root; 
 
