@@ -175,7 +175,7 @@ sqlite3** CSqliteDeal::GetDBConnect()
 {
 	LOCK(m_pCs);
 	CString strPath;
-	strPath.Format(_T("%s\\db\\data.db") , theApp.str_InsPath); 
+	strPath.Format(_T("%s\\data.db") , theApp.dbpath); 
 	if(NULL == m_pSqliteWrite)
 	{
 		int ret = sqlite3_open_v2( UiFun::MbcsToUtf8(strPath), &m_pSqliteWrite, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_NOMUTEX, NULL);
@@ -1069,7 +1069,8 @@ void CSqliteDeal::CheckFailedCode(int retCode)
 			m_pCs = NULL;
 		}
 		CString strFullPath(_T(""));
-		strFullPath.Format(_T("%s\\db\\data.db") , theApp.str_InsPath );
+		//strFullPath.Format(_T("%s\\db\\data.db") , theApp.str_InsPath );
+		strFullPath.Format(_T("%s\\data.db") , theApp.dbpath); 
 		if(!DeleteFile((LPCTSTR)strFullPath))
 			LogPrint("INFO", "删除数据库文件失败：%s\n", strFullPath.GetBuffer());
 		exit(-1);
