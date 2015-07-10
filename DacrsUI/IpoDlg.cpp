@@ -187,7 +187,7 @@ void CIpoDlg::OnBnClickedButtonDrawal()
 	// TODO: 在此添加控件通知处理程序代码
 	if (!CheckRegIDValid( theApp.m_ipoScritptid )) return ;
 
-	CString strShowData ;
+	CString strShowData = _T("");
 
 	//if (m_mapAddrInfo.size() == 0)
 	//{
@@ -219,6 +219,10 @@ void CIpoDlg::OnBnClickedButtonDrawal()
 	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_ipoScritptid.GetBuffer(),addr.GetString(),strContractData,0,(INT64)REAL_MONEY((atof(strTxFee))),0);
 	CSoyPayHelp::getInstance()->SendContacrRpc(strData.c_str(),strShowData);
 
+	if (strShowData == _T(""))
+	{
+		return;
+	}
 	Json::Reader reader;  
 	Json::Value root;
 	if (!reader.parse(strShowData.GetString(), root)) 
@@ -322,10 +326,14 @@ BOOL CIpoDlg::AddListaddrDataBox(){
 }
 void CIpoDlg::OnShowListCtrol(CString addr)
 {
-	CString strCommand,strShowData;
+	CString strCommand,strShowData =_T("");
 	strCommand.Format(_T("%s %s %s"),_T("getappaccinfo") , theApp.m_ipoScritptid ,addr);
 	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 
+	if (strShowData == _T(""))
+	{
+		return;
+	}
 	Json::Reader reader;  
 	Json::Value root; 
 	if (!reader.parse(strShowData.GetString(), root)) 

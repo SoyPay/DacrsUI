@@ -176,6 +176,10 @@ void CRPCDlg::OnSize(UINT nType, int cx, int cy)
 }
 
 void CRPCDlg::ShowJson(CString rpcname,CString jsomstr){
+	if (jsomstr == _T(""))
+	{
+		return;
+	}
 	Json::Reader reader;  
 	Json::Value root; 
 	if (!reader.parse(jsomstr.GetString(), root)) 

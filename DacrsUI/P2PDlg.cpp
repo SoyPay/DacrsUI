@@ -457,12 +457,16 @@ void CP2PDlg::OnCbnSelchangeComboAddres()
 	//m_addrbook.GetWindowText(text) ;
 	if(text!=_T(""))
 	{
-		CString strCommand,strShowData;
+		CString strCommand,strShowData =_T("");
 
 		CString strCond;
 		strCommand.Format(_T("%s %s %s"),_T("getappaccinfo") , theApp.m_betScritptid ,text);
 		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 
+		if (strShowData == _T(""))
+		{
+			return;
+		}
 		Json::Reader reader;  
 		Json::Value root; 
 		if (!reader.parse(strShowData.GetString(), root)) 
@@ -628,7 +632,7 @@ void CP2PDlg::OnBnClickedButtonWithd()
 
 	if (!CheckRegIDValid( theApp.m_betScritptid )) return ;
 
-	CString strShowData ;
+	CString strShowData =_T("");
 
 	
 	CString addr;
@@ -659,6 +663,10 @@ void CP2PDlg::OnBnClickedButtonWithd()
 	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_betScritptid.GetBuffer(),addr.GetString(),strContractData,0,strTxFee,0);
 	CSoyPayHelp::getInstance()->SendContacrRpc(strData.c_str(),strShowData);
 
+	if (strShowData == _T(""))
+	{
+		return;
+	}
 	Json::Reader reader;  
 	Json::Value root;
 	if (!reader.parse(strShowData.GetString(), root)) 
@@ -710,7 +718,7 @@ void CP2PDlg::OnBnClickedButtonRech()
 		return ;
 	}
 
-	CString strShowData ;
+	CString strShowData =_T("") ;
 	CString addr;
 	int sel = m_addrbook.GetCurSel();
 	if (sel < 0)
@@ -749,6 +757,10 @@ void CP2PDlg::OnBnClickedButtonRech()
 	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_betScritptid.GetBuffer(),addr.GetString(),strContractData,0,strTxFee,REAL_MONEY(atof(theApp.m_strAddress) ));
 	CSoyPayHelp::getInstance()->SendContacrRpc(strData.c_str(),strShowData);
 
+	if (strShowData == _T(""))
+	{
+		return;
+	}
 	Json::Reader reader;  
 	Json::Value root;
 	if (!reader.parse(strShowData.GetString(), root)) 
@@ -875,8 +887,13 @@ void CP2PDlg::SendBet(int rewardnum)
 	}
 	
 	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_betScritptid.GetBuffer(),addr.GetString(),strContractData,0,strTxFee,0);
+	strShowData = _T("");
 	CSoyPayHelp::getInstance()->SendContacrRpc(strData.c_str(),strShowData);
 
+	if (strShowData == _T(""))
+	{
+		return;
+	}
 	if (!reader.parse(strShowData.GetString(), root)) 
 		return  ;
 	BOOL bRes = FALSE ;
@@ -1135,10 +1152,14 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 		 return ;
 	 }
 
-	 CString strShowData;
+	 CString strShowData =_T("");
 	 string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_betScritptid.GetBuffer(),addr.GetString(),strContractData,0,theApp.m_P2PBetCfg.AcceptBetnFee,0);
 	 CSoyPayHelp::getInstance()->SendContacrRpc(strData.c_str(),strShowData);
 
+	 if (strShowData == _T(""))
+	 {
+		 return;
+	 }
 	 Json::Reader reader;  
 	 Json::Value root; 
 	 if (!reader.parse(strShowData.GetString(), root)) 

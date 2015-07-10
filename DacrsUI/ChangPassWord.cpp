@@ -79,10 +79,13 @@ void CChangPassWord::OnBnClickedOk()
 
 	CString strCommand;
 	strCommand.Format(_T("%s %s %s"),_T("walletpassphrasechange"),inputOld,confiedNew);
-	CStringA strShowData ;
+	CStringA strShowData  = _T("");
 
 	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
+	if (strShowData == _T(""))
+	{
+		return;
+	}
 	Json::Reader reader;  
 	Json::Value root; 
 	if (!reader.parse(strShowData.GetString(), root)) 

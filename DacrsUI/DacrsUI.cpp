@@ -642,6 +642,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 				default:
 					{
 						TRACE("change:%s\r\n","MSG_USER_UP_PROGRESS");
+						//pUiDemeDlg->m_MsgQueue.ClearMessageType(MSG_USER_UP_PROGRESS);
 						pUiDemeDlg->m_UimsgQueue.push(Postmsg);
 					}
 					break;
@@ -1004,6 +1005,10 @@ UINT __stdcall CDacrsUIApp::ProcessNoUiMsg(LPVOID pParam)
 				if (!JsonCheck(strMsg))
 				{
 					TRACE("JsonCheck noui msg error,msg content:%s\n", strMsg.GetString());
+					continue;
+				}
+				if (strMsg == _T(""))
+				{
 					continue;
 				}
 				if (!reader.parse(strMsg.GetString(), jsonValue)) 
