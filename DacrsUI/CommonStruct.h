@@ -462,7 +462,7 @@ private:
 
 
 
-extern void ProductHttpHead(const CStringA& configdir,const string& strCfgFileName,CStringA &strPort,CStringA& strPreHeadstr,CStringA& strendHeadstr,CStringA& struiport);
+extern void ProductHttpHead(const CStringA& configdir,const string& strCfgFileName,CStringA &strPort,CStringA& strPreHeadstr,CStringA& strendHeadstr,CStringA& struiport,int &netWork);
 extern void RPCCommandToJson(const CString& strRPCCommand,CStringA& strSendData);
 
 

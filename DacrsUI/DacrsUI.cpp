@@ -54,6 +54,7 @@ CDacrsUIApp::CDacrsUIApp()
 	IsSyncAppTx = FALSE;
 	IsWalletLocked = TRUE;
 	HaveLocked = FALSE;
+	netWork = 0;
 }
 
 
@@ -149,7 +150,7 @@ BOOL CDacrsUIApp::InitInstance()
 
 	CString temprpc = m_rpcport;
 	CString tempuiport = m_uirpcport;
-	ProductHttpHead(str_InsPath ,m_strServerCfgFileName,m_rpcport,m_sendPreHeadstr,m_sendendHeadstr,m_uirpcport);
+	ProductHttpHead(str_InsPath ,m_strServerCfgFileName,m_rpcport,m_sendPreHeadstr,m_sendendHeadstr,m_uirpcport,netWork);
 
 	if (strcmp(m_severip,_T("127.0.0.1")))
 	{
