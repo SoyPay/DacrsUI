@@ -180,7 +180,7 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 
 		CString strData;
 		if ( pos >=0 ) {
-			strData.Format( _T("转账交易发送成功，金额：%.4lf\n%s") , dSendMoney, root["hash"].asCString() ) ;
+			strData.Format( _T("转账交易发送成功\n 源地址:%s\n 目的地址:%s\n 金额：%.4lf\n %s") , data.address,strMaddress, dSendMoney,root["hash"].asCString() ) ;
 		}else{
 			strData.Format( _T("转账失败!") ) ;
 		}
