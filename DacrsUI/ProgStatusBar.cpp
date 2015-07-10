@@ -20,6 +20,7 @@ IMPLEMENT_DYNAMIC(CProgStatusBar, CDialogBar)
 	m_nSigIndex = 0 ;
 	m_nLockIndex = 0;
 	m_walletui = false;
+	netStr = _T("");
 	memset(m_bmpsig , 0 , sizeof(CRect));
 	memset(m_bmplock , 0 , sizeof(CRect));
 	m_progress.ShowPercent(FALSE);
@@ -144,10 +145,23 @@ BOOL CProgStatusBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UIN
 	if ( bRes ) {
 		UpdateData(0);
 
+		if (theApp.netWork == 0)
+		{
+			netStr = _T("正式");
+		}else if (theApp.netWork == 1)
+		{
+			netStr = _T("局域");
+		}else if (theApp.netWork == 2)
+		{
+			netStr = _T("测试");
+		}
+
 		m_strNeting.SetFont(90, _T("宋体"));				//设置显示字体和大小
 		m_strNeting.SetTextColor(RGB(255,255,255));			    //字体颜色
 //		m_strNeting.SetWindowText(_T("网络同步中..."));
-		m_strNeting.SetWindowText(_T("获取网络连接")) ;
+		CString strTemp =_T("");
+		strTemp.Format(_T("获取%s网络连接"),netStr);
+		m_strNeting.SetWindowText(strTemp) ;
 
 		m_strHeight.SetFont(90, _T("宋体"));				//设置显示字体和大小
 		m_strHeight.SetTextColor(RGB(255,255,255));			    //字体颜色
@@ -179,6 +193,7 @@ BOOL CProgStatusBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UIN
 		m_progress.SendMessage(PBM_SETBARCOLOR, 0, RGB(254, 153, 0));//前景色
 
 		LoadGifing(TRUE);
+
 		//CPostMsg postmsg(MSG_USER_UP_PROGRESS,0);
 		//theApp.m_MsgQueue.pushFront(postmsg);
 	}
@@ -203,7 +218,9 @@ int CProgStatusBar::ShowProgressCtrl(){
 	theApp.blocktipheight = pBlockchanged.tips ;
 	if (!m_bProgressType)
 	{
-		m_strNeting.SetWindowText(_T("网络同步中..."));
+		CString strTemp = _T("");
+		strTemp.Format(_T("%s网络同步中..."),netStr);
+		m_strNeting.SetWindowText(strTemp);
 		m_strNeting.ShowWindow(SW_HIDE);
 		m_strNeting.ShowWindow(SW_SHOW);
 
@@ -263,7 +280,9 @@ int CProgStatusBar::ShowProgressCtrl(){
 		theApp.IsSyncBlock = true;
 	}
 	if ( m_walletui && !m_prosshiden) {
-		m_strNeting.SetWindowText(_T("网络已同步")) ;
+		CString strTemp = _T("");
+		strTemp.Format(_T("%s网络已同步"),netStr);
+		m_strNeting.SetWindowText(strTemp) ;
 		m_strNeting.ShowWindow(SW_HIDE);
 		m_strNeting.ShowWindow(SW_SHOW);
 
