@@ -18,7 +18,8 @@ CRpcCmd::~CRpcCmd(void)
 int CRpcCmd::SendContactRpc(CString cmd,string &rev){
 	CStringA strSendData = _T("");
 
-	RpcJosnStr = cmd;
+	//RpcJosnStr = cmd;
+	RpcJosnStr.Format(_T("%s"),cmd);
 	//string tepsend = cmd.GetString();
 	//string nSendStr = "";
 	//nSendStr += m_sendPreHeadstr;
