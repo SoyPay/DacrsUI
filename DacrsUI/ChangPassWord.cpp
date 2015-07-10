@@ -95,6 +95,8 @@ void CChangPassWord::OnBnClickedOk()
 		{
 			MessageBox(_T("输入旧密码不正确,请重新输入"));
 			return;
+		}else{
+			MessageBox(_T("恭喜修改密码成功"));
 		}
 	}else{
 		MessageBox(_T("输入旧密码不正确,请重新输入"));

@@ -78,8 +78,11 @@ void CEncryptWallet::OnBnClickedOk()
 	Json::Value root; 
 	if (!reader.parse(strShowData.GetString(), root)) 
 		return  ;
+		
+	bool isClose = FALSE; 
 	if (strShowData.Find("encrypt")>0)	{
 		bool isEntryp = root["encrypt"].asBool();
+		isClose = isEntryp;
 		if (isEntryp)
 		{
 			MessageBox(_T("钱包加密成功请重新启动钱包"));
@@ -91,5 +94,8 @@ void CEncryptWallet::OnBnClickedOk()
 	}
 
 	CDialogEx::OnOK();
-	((CDacrsUIDlg*)(theApp.m_pMainWnd))->Close();
+	if (isClose)
+	{
+		((CDacrsUIDlg*)(theApp.m_pMainWnd))->Close();
+	}
 }
