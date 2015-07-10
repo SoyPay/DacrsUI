@@ -797,7 +797,7 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 {
 	string objstr = msgValue.toStyledString();
 	int type = GetMsgType(objstr.c_str(),msgValue);
-
+//	LogPrint("INFO", "MESG:%s\n",objstr.c_str());
 	switch(type)
 	{
 	case ININTAL_TYPE:
