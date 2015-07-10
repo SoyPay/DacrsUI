@@ -40,7 +40,10 @@ int CRpcCmd::SendContactRpc(CString cmd,string &rev){
 	//if(CSynchronousSocket::GetRpcRes(mIp.GetString(),mPort,strSendData.GetString(),teprev,7000)>0)
 	if(CSynchronousSocket::GetRpcRes(mIp,mPort,strSendData,teprev,7000)>0)
 	{
-		CStringA  message = teprev.c_str();
+		//CStringA  message = teprev.c_str();
+		CString  message = _T("");
+		message.Format(_T("%s"),teprev.c_str());//= teprev.c_str();
+
 		int pos = message.Find("Server:");
 		if (pos >=0)
 		{
@@ -65,7 +68,10 @@ int CRpcCmd::SendRpc(CString strCommand,string &rev)
 	//if(CSynchronousSocket::GetRpcRes(mIp.GetString(),mPort,strSendData.GetString(),teprev,7000)>0)
 	if(CSynchronousSocket::GetRpcRes(mIp,mPort,strSendData,teprev,7000)>0)
 	{
-		CStringA  message = teprev.c_str();
+		//CStringA  message = teprev.c_str();
+		CString  message = _T("");
+		message.Format(_T("%s"),teprev.c_str());//= teprev.c_str();
+
 		int pos = message.Find("Server:");
 		if (pos >=0)
 		{

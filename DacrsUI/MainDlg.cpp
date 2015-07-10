@@ -259,10 +259,12 @@ void CMainDlg::SetCtrlText()
 
 	CString strCommand,strShowData;
 
-	CString strMoney = _T(maindlg.money.c_str());
+	CString strMoney = _T("");
+	strMoney.Format(_T("%s"),maindlg.money.c_str());//)= _T(maindlg.money.c_str());
 	strMoney = CSoyPayHelp::getInstance()->DisPlayMoney(strMoney);
 	GetDlgItem(IDC_STATIC_AMOUNT)->SetWindowText(strMoney);
-	strMoney = _T(maindlg.unconfirmmoney.c_str());
+	//strMoney = _T(maindlg.unconfirmmoney.c_str());
+	strMoney.Format(_T("%s"),maindlg.unconfirmmoney.c_str());
 	strMoney = CSoyPayHelp::getInstance()->DisPlayMoney(strMoney);
 	GetDlgItem(IDC_STATIC_NOTCOF)->SetWindowText(strMoney);
 
