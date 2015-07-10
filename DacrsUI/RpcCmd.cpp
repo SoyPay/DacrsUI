@@ -19,7 +19,7 @@ int CRpcCmd::SendContactRpc(CString cmd,string &rev){
 	CStringA strSendData = _T("");
 
 	//RpcJosnStr = cmd;
-	RpcJosnStr.Format(_T("%s"),cmd);
+//	RpcJosnStr.Format(_T("%s"),cmd);
 	//string tepsend = cmd.GetString();
 	//string nSendStr = "";
 	//nSendStr += m_sendPreHeadstr;
@@ -106,7 +106,7 @@ void CRpcCmd:: BuildSendString(const CString &cmd,CStringA &sendStr)
    CStringA sendStrte;
    RPCCommandToJson(cmd,sendStrte);
   // RpcJosnStr = sendStrte;
-   RpcJosnStr.Format(_T("%s"),sendStrte);
+ //  RpcJosnStr.Format(_T("%s"),sendStrte);
    //string tepsend = sendStrte.GetString();
    //string nSendStr = "";
    //nSendStr += m_sendPreHeadstr;
