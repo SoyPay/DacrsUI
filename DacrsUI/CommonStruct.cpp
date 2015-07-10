@@ -17,7 +17,7 @@ CStringA rand_str(int len)
 	return str;
 }
 
-void ProductHttpHead(const CStringA& configdir,const string& strCfgFileName,CStringA &strPort,CStringA& strPreHeadstr,CStringA& strendHeadstr,CStringA& struiport)
+void ProductHttpHead(const CStringA& configdir,const string& strCfgFileName,CStringA &strPort,CStringA& strPreHeadstr,CStringA& strendHeadstr,CStringA& struiport,int &netWork)
 {
 	CStringA configpath = "";
 	configpath.AppendFormat("%s",configdir);
@@ -65,6 +65,10 @@ void ProductHttpHead(const CStringA& configdir,const string& strCfgFileName,CStr
 				regtest= strTemp.Mid(regpos+1);
 				regtest.TrimLeft();
 				regtest.TrimRight();
+				if (strTemp.GetAt(0) == '#')
+				{
+					regtest = _T("");
+				}
 			}
 			if (netpos>=0)
 			{
@@ -72,6 +76,10 @@ void ProductHttpHead(const CStringA& configdir,const string& strCfgFileName,CStr
 				testnet= strTemp.Mid(netpos+1);
 				testnet.TrimLeft();
 				testnet.TrimRight();
+				if (strTemp.GetAt(0) == '#')
+				{
+					testnet = _T("");
+				}
 			}
 			if (rpcpos>=0)
 			{
@@ -94,15 +102,31 @@ void ProductHttpHead(const CStringA& configdir,const string& strCfgFileName,CStr
 		if (testnet == "1")
 		{
 			strPort = "18668";
+			netWork = 2;
 		}else if ( regtest == "1")
 		{
 			strPort = "18666";
+			netWork = 1;
 		}
 		else
 		{
 			strPort = "8668";
+			netWork = 0;
 		}
 	}
+
+	if (testnet == "1")
+	{
+		netWork = 2;
+	}else if ( regtest == "1")
+	{
+		netWork = 1;
+	}
+	else
+	{
+		netWork = 0;
+	}
+
 	if (struiport == "")
 	{
 		struiport = "12345";

@@ -185,6 +185,7 @@ public:
 	bool IsSyncAppTx;
 	bool IsWalletLocked; //钱包锁定状态 TRUE : 不锁定状态 FALSE
 	bool HaveLocked; // 有锁TRUE : 无锁 FALSE
+	int  netWork;  /// 0 是main网络(正式网络)  1 regtest网络(局域网络) 2testnet(测试网络) 
 };
 
 
