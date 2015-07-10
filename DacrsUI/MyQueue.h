@@ -14,6 +14,7 @@ public:
 	bool pop(CPostMsg&msg);
 	bool push(CPostMsg& msg);
 	bool pushFront(CPostMsg& msg);
+	void ClearMessageType(int type);
 	bool isEmpty();
 	bool clear();
 private:

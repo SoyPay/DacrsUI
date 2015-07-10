@@ -335,10 +335,14 @@ void   CGrabCommRedPacket::AcceptRedPacketComm(CString sendhash,uistruct::REDPAC
 		::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
 		return ;
 	}
-	CString strShowData;
+	CString strShowData = _T("");
 	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_redPacketScriptid.GetString(),addr.GetString(),strContractData,0,strTxFee,0);
 	CSoyPayHelp::getInstance()->SendContacrRpc(strData.c_str(),strShowData);
 
+	if (strShowData ==_T(""))
+	{
+		return;
+	}
 
 	Json::Reader reader;  
 	Json::Value root; 

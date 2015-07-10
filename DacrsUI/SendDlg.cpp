@@ -143,8 +143,13 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 		if ( IDOK != outdlg.DoModal()){
 			return;
 		}
+		strShowData = _T("");
 		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 
+		if (strShowData == _T(""))
+		{
+			return;
+		}
 		Json::Reader reader;  
 		Json::Value root; 
 

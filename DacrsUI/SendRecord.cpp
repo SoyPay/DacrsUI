@@ -344,8 +344,13 @@ void CSendRecord::OpenBet(CString txhash)
 	string strContractData = m_P2PBetHelp.PacketP2PExposeContract(sendhash,number,accepthash,pPoolItem.time_out);
 
 	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_betScritptid.GetBuffer(),m_addr.GetString(),strContractData,0,theApp.m_P2PBetCfg.OpenBetnFee,0);
+	strShowData = _T("");
 	CSoyPayHelp::getInstance()->SendContacrRpc(strData.c_str(),strShowData);
 
+	if (strShowData == _T(""))
+	{
+		return;
+	}
 	Json::Reader reader;  
 	Json::Value root;
 	if (!reader.parse(strShowData.GetString(), root)) 

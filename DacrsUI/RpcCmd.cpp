@@ -78,7 +78,9 @@ int CRpcCmd::SendRpc(CString strCommand,string &rev)
 			pos = message.Find('\n',pos);
 			if (pos >=0)
 			{
-				rev = message.Mid(pos);
+				 message = message.Mid(pos);
+				 rev = message.GetBuffer(message.GetLength());
+				 message.ReleaseBuffer();
 
 			}
 		}
