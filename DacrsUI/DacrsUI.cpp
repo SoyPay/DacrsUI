@@ -18,6 +18,9 @@
 
 #include "GdiPlusInit.h"
 #include "StartProgress.h"
+
+#include "shlwapi.h"
+#pragma comment(lib,"shlwapi.lib")
 // CDacrsUIApp
 
 BEGIN_MESSAGE_MAP(CDacrsUIApp, CWinApp)
@@ -55,6 +58,7 @@ CDacrsUIApp::CDacrsUIApp()
 	IsWalletLocked = TRUE;
 	HaveLocked = FALSE;
 	netWork = 0;
+	dbpath =_T("");
 }
 
 
@@ -64,6 +68,7 @@ CDacrsUIApp theApp;
 
 BOOL  EnableDebugPrivilege();
 // CDacrsUIApp 初始化
+
 
 BOOL CDacrsUIApp::InitInstance()
 {
@@ -142,15 +147,38 @@ BOOL CDacrsUIApp::InitInstance()
 	gsLanguage = language();
 
 
-	//打开sqlite3数据库
-	m_SqliteDeal.InitializationDB();
-	
-	/// 清空交易记录
-	ClearTransaction();
-
 	CString temprpc = m_rpcport;
 	CString tempuiport = m_uirpcport;
 	ProductHttpHead(str_InsPath ,m_strServerCfgFileName,m_rpcport,m_sendPreHeadstr,m_sendendHeadstr,m_uirpcport,netWork);
+
+	/// 0 是main网络(正式网络)  1 regtest网络(局域网络) 2testnet(测试网络) 
+	if (netWork == 1)
+	{
+		dbpath.Format(_T("%s\\regtest"),str_InsPath);
+		if (!PathIsDirectory(dbpath))
+		{
+			::CreateDirectory(dbpath, NULL);
+		}
+	}else if (netWork == 2)
+	{
+		dbpath.Format(_T("%s\\testnet"),str_InsPath);
+		if (!PathIsDirectory(dbpath))
+		{
+			::CreateDirectory(dbpath, NULL);
+		}
+	}else
+	{
+		dbpath.Format(_T("%s"),str_InsPath);
+	}
+
+
+
+	//打开sqlite3数据库
+	m_SqliteDeal.InitializationDB();
+
+	/// 清空交易记录
+	ClearTransaction();
+
 
 	if (strcmp(m_severip,_T("127.0.0.1")))
 	{
@@ -161,6 +189,7 @@ BOOL CDacrsUIApp::InitInstance()
 	//启动服务程序
 	StartSeverProcess(str_InsPath);
 	m_bServerState = true;
+
 //	Sleep(1000);
 
 	//连接block
@@ -799,7 +828,7 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 {
 	string objstr = msgValue.toStyledString();
 	int type = GetMsgType(objstr.c_str(),msgValue);
-	LogPrint("INFO", "MESG:%s\n",objstr.c_str());
+//	LogPrint("INFO", "MESG:%s\n",objstr.c_str());
 	switch(type)
 	{
 	case ININTAL_TYPE:
