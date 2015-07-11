@@ -168,7 +168,11 @@ BOOL CDacrsUIApp::InitInstance()
 		}
 	}else
 	{
-		dbpath.Format(_T("%s"),str_InsPath);
+		dbpath.Format(_T("%s\\main"),str_InsPath);
+		if (!PathIsDirectory(dbpath))
+		{
+			::CreateDirectory(dbpath, NULL);
+		}
 	}
 
 
