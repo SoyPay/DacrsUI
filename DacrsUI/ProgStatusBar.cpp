@@ -167,11 +167,11 @@ BOOL CProgStatusBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UIN
 		m_strHeight.SetTextColor(RGB(255,255,255));			    //字体颜色
 		m_strHeight.SetWindowText(_T("高度:")) ;
 		m_strHeight.ShowWindow(SW_HIDE) ;
-
+		
 		m_strVersion.SetFont(90, _T("宋体"));				//设置显示字体和大小
 		m_strVersion.SetTextColor(RGB(255,255,255));	    //字体颜色
-		m_strVersion.SetWindowText(_T("版本:V1.0.0.16beta")) ;
-
+		//m_strVersion.SetWindowText(_T("版本:V1.0.0.16beta")) ;
+		m_strVersion.SetWindowText(_T("版本:v1.0.1.0 RC")) ;
 
 		if ( NULL == m_ProgressWnd ) {
 			m_ProgressWnd = new CGIFControl ;
