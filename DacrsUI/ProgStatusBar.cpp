@@ -147,7 +147,7 @@ BOOL CProgStatusBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UIN
 
 		if (theApp.netWork == 0)
 		{
-			netStr = _T("正式");
+			netStr = _T("主");
 		}else if (theApp.netWork == 1)
 		{
 			netStr = _T("局域");
