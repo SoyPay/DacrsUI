@@ -1286,9 +1286,9 @@ void CMortgageTardDlg::OnBnClickedButtonSpecailred()
 		return ;
 	}
 
-	if (atof(strTxMoney)<0.0001)
+	if (atof(strTxMoney)<10.0)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("投注金额必须大于0.0001") , _T("提示") , MB_ICONINFORMATION ) ;
+		::MessageBox( this->GetSafeHwnd() ,_T("投注金额必须大于10") , _T("提示") , MB_ICONINFORMATION ) ;
 		return ;
 	}
 
