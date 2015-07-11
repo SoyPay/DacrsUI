@@ -782,6 +782,11 @@ LRESULT CDacrsUIDlg::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 bool CDacrsUIDlg::GetFileName(CString &fileName,CString strexe )
 {
 	int pos = fileName.Find(".",0);
+	if (pos <0)
+	{
+		fileName.AppendFormat(strexe);
+	}
+	pos = fileName.Find(".",0);
 	fileName = fileName.Left(pos);
 	fileName.AppendFormat(strexe);
 	if(PathFileExistsA(fileName)){
