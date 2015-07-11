@@ -1011,7 +1011,9 @@ void CDacrsUIDlg:: ImportPrvieKey()
 			if (strSendData.Find(_T("imorpt key size")) >=0)
 			{
 				MessageBox(_T("导入钱包成功请重新启动钱包"));
-				((CDacrsUIDlg*)(this->GetParent()))->Close();
+				//ClosWallet();
+				//((CDacrsUIDlg*)(this->GetParent()))->Close();
+				ClosWalletWind();
 			}else
 			{
 				MessageBox(_T("导入钱包失败"));
@@ -1023,4 +1025,18 @@ void CDacrsUIDlg::OnUpdataState(CCmdUI *pCmdUI)
 {
 	// TODO: 在此添加命令更新用户界面处理程序代码
 //	pCmdUI->Enable(FALSE); 
+}
+
+void  CDacrsUIDlg::ClosWalletWind()
+{
+		BeginWaitCursor();
+		if ( NULL != m_pOutGifDlg ) {
+			CRect rc;
+			GetWindowRect(&rc);	
+			m_pOutGifDlg->LoadGifing(TRUE);
+			m_pOutGifDlg->SetWindowPos(NULL , (rc.left + rc.right)/2 - 300/2 , (rc.top + rc.bottom)/2 - 100/2  , 300 ,100 , SWP_SHOWWINDOW);
+			m_pOutGifDlg->ShowWindow(SW_SHOW) ;
+		}
+		::PostThreadMessage( theApp.GetMtHthrdId() , MSG_USER_OUT , 0 , 0 ) ;
+		SetTimer( 0x10 , 2000 , NULL ) ; 
 }

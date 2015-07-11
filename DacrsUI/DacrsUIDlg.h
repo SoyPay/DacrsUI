@@ -103,4 +103,5 @@ public:
 	afx_msg void ExportPriveKey();
 	afx_msg void ImportPrvieKey();
 	afx_msg void OnUpdataState(CCmdUI *pCmdUI);
+	void ClosWalletWind();
 };
