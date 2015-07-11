@@ -100,6 +100,6 @@ void CEncryptWallet::OnBnClickedOk()
 	CDialogEx::OnOK();
 	if (isClose)
 	{
-		((CDacrsUIDlg*)(theApp.m_pMainWnd))->Close();
+		((CDacrsUIDlg*)(theApp.m_pMainWnd))->ClosWalletWind();
 	}
 }
