@@ -57,7 +57,7 @@ BOOL CRPCDlg::OnInitDialog()
 
 	CStatic* pStaticInput = (CStatic*)GetDlgItem(IDC_STATIC_INPUT);
 	ASSERT(pStaticInput);
-	//pStaticInput->MoveWindow(0,rcClient.Height()-110,40,20);
+	pStaticInput->MoveWindow(5,rcClient.Height()-110,40,20);
 
 	CComboBox* pInputEdit = (CComboBox*)GetDlgItem(IDC_COMBO_INPUT);
 	ASSERT(pInputEdit);
@@ -158,19 +158,19 @@ void CRPCDlg::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL , 2 , 92*rc.Height()/div , 20*rc.Width()/div, rect.Height() ,SWP_SHOWWINDOW ) ;
+			pst->SetWindowPos( NULL , 2 , 92*rc.Height()/div , rect.Width(), rect.Height() ,SWP_SHOWWINDOW ) ;
 		}
 		pst = GetDlgItem( IDC_COMBO_INPUT ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL , (20*rc.Width()/div)+5  , 92*rc.Height()/div - 2 , 65*rc.Width()/div, 65*rc.Width()/div ,SWP_SHOWWINDOW ) ;
+			pst->SetWindowPos( NULL , (14*rc.Width()/div)+5  , 92*rc.Height()/div - 2 , 71*rc.Width()/div, 65*rc.Width()/div ,SWP_SHOWWINDOW ) ;
 		}
 		pst = GetDlgItem( IDC_BTN_CLEAR ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL , 89*rc.Width()/div  , 92*rc.Height()/div - 5 , rect.Width(), rect.Height() ,SWP_SHOWWINDOW ) ;
+			pst->SetWindowPos( NULL , 88*rc.Width()/div  , 92*rc.Height()/div - 5 , rect.Width(), rect.Height() ,SWP_SHOWWINDOW ) ;
 		}
 	}
 }
