@@ -152,28 +152,28 @@ BOOL CDacrsUIApp::InitInstance()
 	ProductHttpHead(str_InsPath ,m_strServerCfgFileName,m_rpcport,m_sendPreHeadstr,m_sendendHeadstr,m_uirpcport,netWork);
 
 	/// 0 ÊÇmainÍøÂç(ÕıÊ½ÍøÂç)  1 regtestÍøÂç(¾ÖÓòÍøÂç) 2testnet(²âÊÔÍøÂç) 
-	if (netWork == 1)
-	{
-		dbpath.Format(_T("%s\\regtest"),str_InsPath);
-		if (!PathIsDirectory(dbpath))
-		{
-			::CreateDirectory(dbpath, NULL);
-		}
-	}else if (netWork == 2)
-	{
-		dbpath.Format(_T("%s\\testnet"),str_InsPath);
-		if (!PathIsDirectory(dbpath))
-		{
-			::CreateDirectory(dbpath, NULL);
-		}
-	}else
-	{
-		dbpath.Format(_T("%s\\main"),str_InsPath);
-		if (!PathIsDirectory(dbpath))
-		{
-			::CreateDirectory(dbpath, NULL);
-		}
-	}
+	//if (netWork == 1)
+	//{
+	//	dbpath.Format(_T("%s\\regtest"),str_InsPath);
+	//	if (!PathIsDirectory(dbpath))
+	//	{
+	//		::CreateDirectory(dbpath, NULL);
+	//	}
+	//}else if (netWork == 2)
+	//{
+	//	dbpath.Format(_T("%s\\testnet"),str_InsPath);
+	//	if (!PathIsDirectory(dbpath))
+	//	{
+	//		::CreateDirectory(dbpath, NULL);
+	//	}
+	//}else
+	//{
+	//	dbpath.Format(_T("%s\\main"),str_InsPath);
+	//	if (!PathIsDirectory(dbpath))
+	//	{
+	//		::CreateDirectory(dbpath, NULL);
+	//	}
+	//}
 
 
 
