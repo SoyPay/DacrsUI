@@ -68,8 +68,9 @@ static void DebugPrintInit() {
 		CString strWorkDir(_T(""));
 		CString pathDebug = GetCurrentWorkDir();
 		CString fileName = *iterLogFile + ".log";
-		pathDebug +=  "\\" + fileName;
-		fileout = fopen(pathDebug.GetBuffer(), "a");
+		pathDebug.AppendFormat(_T("\\%s"),fileName);
+		//pathDebug +=  "\\" + fileName;
+		fileout = fopen(pathDebug.GetBuffer(pathDebug.GetLength()), "a");
 		if (fileout) {
 			DebugLogFile& log = g_DebugLogs[*iterLogFile];
 			setbuf(fileout, NULL); // unbuffered

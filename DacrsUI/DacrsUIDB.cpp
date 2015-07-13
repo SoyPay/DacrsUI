@@ -117,15 +117,15 @@ void CDacrsUIApp::UpdateAddressData(){
 		return  ;
 
 	uistruct::LISTADDR_t listaddr;
-	for(int i = 0; i < root.size(); ++i){
+	for(unsigned int i = 0; i < root.size(); ++i){
 		memset(&listaddr , 0 , sizeof(uistruct::LISTADDR_t));
 		//address
 		CString strData;
 		strData.Format( _T("%s") , root[i]["addr"].asCString() ) ;
-		strncpy(listaddr.address  , strData , strlen(strData) > sizeof(listaddr.address) ? sizeof(listaddr.address):strlen(strData));
+		strncpy_s(listaddr.address  , strData , strlen(strData) > sizeof(listaddr.address) ? sizeof(listaddr.address):strlen(strData));
 		//RegID
 		strData.Format( _T("%s") , root[i]["regid"].asCString() ) ;
-		strncpy(listaddr.RegID  , strData , strlen(strData) > sizeof(listaddr.RegID) ? sizeof(listaddr.RegID):strlen(strData));
+		strncpy_s(listaddr.RegID  , strData , strlen(strData) > sizeof(listaddr.RegID) ? sizeof(listaddr.RegID):strlen(strData));
 		//½ð¶î
 		double fmoney = 0.0 ;  
 		fmoney = root[i]["balance"].asDouble(); 
@@ -546,7 +546,7 @@ void CDacrsUIApp::InsertTransaction(CString hash){
 			int nItem =  theApp.m_SqliteDeal.GetTableCountItem(_T("t_wallet_address"),conditon) ;
 			conditon.Format(_T("address = '%s'"),transcion.desaddr.c_str());
 			int nItem1 =  theApp.m_SqliteDeal.GetTableCountItem(_T("t_wallet_address"),conditon) ;
-			if (nItem1 !=0&nItem != 0)
+			if (nItem1 !=0&&nItem != 0)
 			{
 				transcion.state = 3; 
 			}else if (nItem != 0)
@@ -610,7 +610,7 @@ void CDacrsUIApp:: SyncTransaction(string obj)
 			int nItem =  theApp.m_SqliteDeal.GetTableCountItem(_T("t_wallet_address"),conditon) ;
 			conditon.Format(_T("address = '%s'"),transcion.desaddr.c_str());
 			int nItem1 =  theApp.m_SqliteDeal.GetTableCountItem(_T("t_wallet_address"),conditon) ;
-			if (nItem1 !=0&nItem != 0)
+			if (nItem1 !=0&&nItem != 0)
 			{
 				transcion.state = 3; 
 			}else if (nItem != 0)

@@ -166,7 +166,7 @@ void CRpcCmd::RPCCommandToJson(const CString& strRPCCommand,CStringA& strSendDat
 			if (IsAllDigtal(param))
 			{
 				INT64 nparam;
-				sscanf(param,"%lld",&nparam);
+				sscanf_s(param,"%lld",&nparam);
 				root["params"].append(nparam);
 			}
 			else
@@ -179,7 +179,7 @@ void CRpcCmd::RPCCommandToJson(const CString& strRPCCommand,CStringA& strSendDat
 		if (IsAllDigtal(rpcCommand) && (method != _T("gethash"))) //&& rpcCommand.GetLength() != 12)
 		{
 			INT64 param;
-			sscanf(rpcCommand,"%lld",&param);
+			sscanf_s(rpcCommand,"%lld",&param);
 			root["params"].append(param);
 		}
 		else

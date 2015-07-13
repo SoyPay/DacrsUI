@@ -225,7 +225,7 @@ int CProgStatusBar::ShowProgressCtrl(){
 		m_strNeting.ShowWindow(SW_SHOW);
 
 		m_progress.SetRange32( 0 , 100); 
-		int  setpos = (pBlockchanged.high*1.0/pBlockchanged.tips)*100;
+		int  setpos =(int)((pBlockchanged.high*1.0/pBlockchanged.tips)*100) ;
 		setpos = setpos>100?100:setpos;
 		//设置进度条的值
 		m_progress.SetPos(setpos);
@@ -256,7 +256,7 @@ int CProgStatusBar::ShowProgressCtrl(){
 	}
 
 	m_nSigIndex = pBlockchanged.connections>3?3:pBlockchanged.connections;
-	int  setpos = (pBlockchanged.high*1.0/pBlockchanged.tips)*100 ;
+	int  setpos =(int) ((pBlockchanged.high*1.0/pBlockchanged.tips)*100) ;
 	setpos = setpos>100?100:setpos;
 	//设置进度条的值
 	m_progress.SetPos(setpos);
@@ -302,6 +302,7 @@ int CProgStatusBar::ShowProgressCtrl(){
 		m_strHeight.ShowWindow(SW_SHOW);
 	}
 	InvalidateRect(m_bmpsig);
+	return 1;
 }
 void CProgStatusBar::ShowLockCtrl()
 {
