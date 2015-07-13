@@ -151,6 +151,11 @@ BOOL CDacrsUIApp::InitInstance()
 	CString tempuiport = m_uirpcport;
 	ProductHttpHead(str_InsPath ,m_strServerCfgFileName,m_rpcport,m_sendPreHeadstr,m_sendendHeadstr,m_uirpcport,netWork);
 
+	dbpath.Format(_T("%s\\db"),str_InsPath);
+	if (!PathIsDirectory(dbpath))
+	{
+		::CreateDirectory(dbpath, NULL);
+	}
 	/// 0 ÊÇmainÍøÂç(ÕıÊ½ÍøÂç)  1 regtestÍøÂç(¾ÖÓòÍøÂç) 2testnet(²âÊÔÍøÂç) 
 	//if (netWork == 1)
 	//{
