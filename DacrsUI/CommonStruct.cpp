@@ -412,8 +412,11 @@ CString GetCompressRegID(const CString& strRegID)
 
 	int nHeight = 0;
 	short nIndex = 0;
-	memcpy(&nHeight,&vRegID[0],sizeof(nHeight));
-	memcpy(&nIndex,&vRegID[sizeof(nHeight)],sizeof(nIndex));
+	if (vRegID .size() == 6)
+	{
+		memcpy(&nHeight,&vRegID[0],sizeof(nHeight));
+		memcpy(&nIndex,&vRegID[sizeof(nHeight)],sizeof(nIndex));
+	}
 	CString str;
 	str.Format(_T("%d-%d"),nHeight,nIndex);
 	return str;
@@ -883,14 +886,22 @@ string CSesureTradeHelp::PacketFirstContract(const string& strBuyID,const string
 
 	unsigned char nSize = sizeof(int64_t);
 	vector<unsigned char> v = CSoyPayHelp::getInstance()->ParseHex(strBuyID);
-	memcpy(m_FirstContract.buyer.accounid,&v[0],ACCOUNT_ID_SIZE);
+	if (v.size() > 0)
+	{
+		memcpy(m_FirstContract.buyer.accounid,&v[0],ACCOUNT_ID_SIZE);
+	}
+
 
 	v = CSoyPayHelp::getInstance()->ParseHex(strSellID);
-	memcpy(m_FirstContract.seller.accounid,&v[0],ACCOUNT_ID_SIZE);
+	if (v.size() > 0)
+	{
+		memcpy(m_FirstContract.seller.accounid,&v[0],ACCOUNT_ID_SIZE);
+	}
 
 	for(size_t i = 0;i<vArRegID.size();++i)
 	{
 		v = CSoyPayHelp::getInstance()->ParseHex(vArRegID.at(i));
+		if(v.size() >0)
 		memcpy(m_FirstContract.arbitrator[i].accounid,&v[0],ACCOUNT_ID_SIZE);
 	}
 
@@ -938,6 +949,7 @@ string CDarkTxHelp::PacketBuyerContract(const string& strSellID,int64_t nMoney)
 	m_FirstContract.dnType = TX_BUYTRADE;
 
 	vector<unsigned char>v = CSoyPayHelp::getInstance()->ParseHex(strSellID);
+	if(v.size() >0)
 	memcpy(m_FirstContract.seller,&v[0],ACCOUNT_ID_SIZE);
 	m_FirstContract.nPayMoney = nMoney;
 
@@ -959,7 +971,10 @@ string CAnonymTxHelp::PackAnonymContract(const string& strSender,int nSendMoney,
 	int nRecvNum = vRecv.size();
 	ASSERT(0 != nRecvNum);
 	vector<unsigned char> v = CSoyPayHelp::getInstance()->ParseHex(strSender);
-	memcpy(m_anonymContract.szSender,&v[0],ACCOUNT_ID_SIZE);
+	if(v.size() > 0){
+		memcpy(m_anonymContract.szSender,&v[0],ACCOUNT_ID_SIZE);
+	}
+	
 	m_anonymContract.nHeight = nHeight;
 	m_anonymContract.nPayMoney = nSendMoney;
 	m_anonymContract.len = sizeof(ACCOUNT_INFO)*nRecvNum;
