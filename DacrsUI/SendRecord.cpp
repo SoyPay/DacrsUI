@@ -425,11 +425,11 @@ void  CSendRecord::OnShowPagePool(int page)
 	bool flag = false;
 	m_curpage = page;
 	int index = (page-1)*m_pagesize;
-	int count = (m_PoolList.size() -index)>=m_pagesize?m_pagesize:(m_PoolList.size() -index);
+	unsigned int count = (m_PoolList.size() -index)>=m_pagesize?m_pagesize:(m_PoolList.size() -index);
 
 	int i = 0;
 	std::vector<uistruct::P2P_QUIZ_RECORD_t>::const_iterator const_it;
-	for (int k = index;k< (index+count) && k<m_PoolList.size();k++)
+	for (unsigned int k = index;k< (index+count) && k<m_PoolList.size();k++)
 	{
 		uistruct::P2P_QUIZ_RECORD_t const_it = m_PoolList.at(k);
 		CString sendaddr,acceptaddr;

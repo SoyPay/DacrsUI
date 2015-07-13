@@ -265,7 +265,7 @@ int CallGetP2PQuizRecordItem(void *para, int n_column, char ** column_value, cha
 		p2pQuizRecord->send_time = 0;
 	}else{
 		SYSTEMTIME curTime ;
-		sscanf(strValue,"%04d-%02d-%02d %02d:%02d:%02d",&curTime.wYear, &curTime.wMonth, &curTime.wDay, &curTime.wHour, &curTime.wMinute, &curTime.wSecond);
+		sscanf_s(strValue,"%04d-%02d-%02d %02d:%02d:%02d",&curTime.wYear, &curTime.wMonth, &curTime.wDay, &curTime.wHour, &curTime.wMinute, &curTime.wSecond);
 		p2pQuizRecord->send_time = UiFun::SystemTimeToTimet(curTime);
 	}
 	
@@ -276,7 +276,7 @@ int CallGetP2PQuizRecordItem(void *para, int n_column, char ** column_value, cha
 	{
 		p2pQuizRecord->recv_time = 0;
 	}else{
-		sscanf(strValue,"%04d-%02d-%02d %02d:%02d:%02d",&recTime.wYear, &recTime.wMonth, &recTime.wDay, &recTime.wHour, &recTime.wMinute, &recTime.wSecond);
+		sscanf_s(strValue,"%04d-%02d-%02d %02d:%02d:%02d",&recTime.wYear, &recTime.wMonth, &recTime.wDay, &recTime.wHour, &recTime.wMinute, &recTime.wSecond);
 		p2pQuizRecord->recv_time = UiFun::SystemTimeToTimet(recTime);
 	}
 			
@@ -890,145 +890,145 @@ BOOL CSqliteDeal::GetTransactionList(const CString &strCond, uistruct::TRANSRECO
 
 //todo 重构
 BOOL CSqliteDeal::UpdateDarkRecord(){
-	LOCK(m_pCs);
-	uistruct::DARKRECORDLIST pTransaction;
-	//GetRecorDarkData(&pTransaction);
-	if (0 == pTransaction.size() ) return FALSE ;
+	//LOCK(m_pCs);
+	//uistruct::DARKRECORDLIST pTransaction;
+	////GetRecorDarkData(&pTransaction);
+	//if (0 == pTransaction.size() ) return FALSE ;
 
-	vector<string> vSignHash;
-	std::vector<uistruct::DARK_RECORD>::const_iterator const_it;
-	for (const_it = pTransaction.begin() ; const_it != pTransaction.end() ; const_it++ ) {
-		vSignHash.push_back(const_it->tx_hash);
-	}
-	if (vSignHash.size() == 0)
-	{
-		return true;
-	}
-	Json::Reader reader; 
-	Json::Value root;
-	root["method"] = "getappkeyvalue";
+	//vector<string> vSignHash;
+	//std::vector<uistruct::DARK_RECORD>::const_iterator const_it;
+	//for (const_it = pTransaction.begin() ; const_it != pTransaction.end() ; const_it++ ) {
+	//	vSignHash.push_back(const_it->tx_hash);
+	//}
+	//if (vSignHash.size() == 0)
+	//{
+	//	return true;
+	//}
+	//Json::Reader reader; 
+	//Json::Value root;
+	//root["method"] = "getappkeyvalue";
 
-	Json::Value item;
-	for ( size_t i = 0;i< vSignHash.size(); i++ )
-	{
-		item.append(vSignHash.at(i));
-	}
-	root["params"].append(theApp.m_darkScritptid.GetBuffer());
-	root["params"].append(item);
+	//Json::Value item;
+	//for ( size_t i = 0;i< vSignHash.size(); i++ )
+	//{
+	//	item.append(vSignHash.at(i));
+	//}
+	//root["params"].append(theApp.m_darkScritptid.GetBuffer());
+	//root["params"].append(item);
 
-	CString strData ,strShowData ;
+	//CString strData ,strShowData ;
 
-	strData.Format(_T("%s") , root.toStyledString().c_str() ) ;
+	//strData.Format(_T("%s") , root.toStyledString().c_str() ) ;
 
-	CSoyPayHelp::getInstance()->SendContacrRpc(strData , strShowData);
-	if (strShowData.Find("key") <0)
-	{
-		return false;
-	}
-	if (!reader.parse(strShowData.GetString(), root)) 
-		return FALSE;
-	int size = root.size();
-	for ( int index =0; index < size; ++index )
-	{
-		CString txhash = root[index]["key"].asCString();
-		CString nValue = root[index]["value"].asCString();
-		INT64   nTime  = root[index]["confirmedtime"].asInt64() ;
+	//CSoyPayHelp::getInstance()->SendContacrRpc(strData , strShowData);
+	//if (strShowData.Find("key") <0)
+	//{
+	//	return false;
+	//}
+	//if (!reader.parse(strShowData.GetString(), root)) 
+	//	return FALSE;
+	//int size = root.size();
+	//for ( int index =0; index < size; ++index )
+	//{
+	//	CString txhash = root[index]["key"].asCString();
+	//	CString nValue = root[index]["value"].asCString();
+	//	INT64   nTime  = root[index]["confirmedtime"].asInt64() ;
 
-		uistruct::DARK_DATA_DB DBbet;
-		memset(&DBbet , 0 , sizeof(uistruct::DARK_DATA_DB));
-		std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue.GetString());
-		uistruct::DARK_RECORD  betrecord;
-		//theApp.cs_SqlData.Lock();
-		//int nItem =  theApp.m_SqliteDeal.FindDB(_T("t_dark_record") , txhash ,_T("tx_hash"),&betrecord ) ;
-		//theApp.cs_SqlData.Unlock();
+	//	uistruct::DARK_DATA_DB DBbet;
+	//	memset(&DBbet , 0 , sizeof(uistruct::DARK_DATA_DB));
+	//	std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue.GetString());
+	//	uistruct::DARK_RECORD  betrecord;
+	//	//theApp.cs_SqlData.Lock();
+	//	//int nItem =  theApp.m_SqliteDeal.FindDB(_T("t_dark_record") , txhash ,_T("tx_hash"),&betrecord ) ;
+	//	//theApp.cs_SqlData.Unlock();
 
-	//	int nItem =  Get(_T("t_dark_record") , txhash ,_T("tx_hash"),&betrecord ) ;
-		int nItem(0);
-		if (vTemp.size() == 0)  /// 此条数据在应用数据库中被删除了,确认收货了
-		{
-			if (nItem != 0 && (betrecord.state == 1 || betrecord.state == 5))
-			{
-				CString strField,strWhere;
-				strField.Format(_T("state = %d ") , 2) ;
-				strWhere.Format(_T("tx_hash = '%s'") , txhash );
+	////	int nItem =  Get(_T("t_dark_record") , txhash ,_T("tx_hash"),&betrecord ) ;
+	//	int nItem(0);
+	//	if (vTemp.size() == 0)  /// 此条数据在应用数据库中被删除了,确认收货了
+	//	{
+	//		if (nItem != 0 && (betrecord.state == 1 || betrecord.state == 5))
+	//		{
+	//			CString strField,strWhere;
+	//			strField.Format(_T("state = %d ") , 2) ;
+	//			strWhere.Format(_T("tx_hash = '%s'") , txhash );
 
-				//更新数据
-				if ( !UpdateTableItem(_T("t_dark_record") , strField , strWhere )) {
-					TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , txhash );
-				}
-			}else if (nItem != 0 && betrecord.state == 6)
-			{
-				CString strField,strWhere;
-				strField.Format(_T("state = %d ") , 3) ;
-				strWhere.Format(_T("tx_hash = '%s'") , txhash );
+	//			//更新数据
+	//			if ( !UpdateTableItem(_T("t_dark_record") , strField , strWhere )) {
+	//				TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , txhash );
+	//			}
+	//		}else if (nItem != 0 && betrecord.state == 6)
+	//		{
+	//			CString strField,strWhere;
+	//			strField.Format(_T("state = %d ") , 3) ;
+	//			strWhere.Format(_T("tx_hash = '%s'") , txhash );
 
-				//更新数据
-				if ( !UpdateTableItem(_T("t_dark_record") , strField , strWhere )) {
-					TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , txhash );
-				}
-			}
-			continue;
-		}
-		memcpy(&DBbet, &vTemp[0], sizeof(DBbet));
+	//			//更新数据
+	//			if ( !UpdateTableItem(_T("t_dark_record") , strField , strWhere )) {
+	//				TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , txhash );
+	//			}
+	//		}
+	//		continue;
+	//	}
+	//	memcpy(&DBbet, &vTemp[0], sizeof(DBbet));
 
-		if (DBbet.flag && betrecord.state == 5)   //正在确认定单中
-		{
-			continue;
-		}
-		int nComfirmed = 0 ;
-		if ( 0 != nTime ) {
-			nComfirmed = 1 ;
-		}
+	//	if (DBbet.flag && betrecord.state == 5)   //正在确认定单中
+	//	{
+	//		continue;
+	//	}
+	//	int nComfirmed = 0 ;
+	//	if ( 0 != nTime ) {
+	//		nComfirmed = 1 ;
+	//	}
 
-		vTemp.clear();
-		vTemp.assign(DBbet.seller,DBbet.seller+sizeof(DBbet.seller));
-		string acceptaddr = CSoyPayHelp::getInstance()->HexStr(vTemp);
-		CString strCommand;
-		strCommand.Format(_T("%s %s"),_T("getaccountinfo") ,acceptaddr.c_str() );
-		strShowData = _T("");
-		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-		if (strShowData == _T(""))
-		{
-			continue;
-		}
-		Json::Value rootinfo;
-		if (!reader.parse(strShowData.GetString(), rootinfo)) 
-			continue;
-		CString selleraddr;
-		if (strShowData.Find("Address") >= 0)
-		{
-			selleraddr =  rootinfo["Address"].asCString();
-		}
-		vTemp.clear();
-		vTemp.assign(DBbet.buyer,DBbet.buyer+sizeof(DBbet.buyer));
-		acceptaddr = CSoyPayHelp::getInstance()->HexStr(vTemp);
-	
-		strCommand.Format(_T("%s %s"),_T("getaccountinfo") ,acceptaddr.c_str() );
-		strShowData =_T("");
-		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-	    if (strShowData == _T(""))
-	    {
-			continue;
-	    }
-		if (!reader.parse(strShowData.GetString(), rootinfo)) 
-			continue;
-		CString buyeraddr;
-		if (strShowData.Find("Address") >= 0)
-		{
-			buyeraddr =  rootinfo["Address"].asCString();
-		}
+	//	vTemp.clear();
+	//	vTemp.assign(DBbet.seller,DBbet.seller+sizeof(DBbet.seller));
+	//	string acceptaddr = CSoyPayHelp::getInstance()->HexStr(vTemp);
+	//	CString strCommand;
+	//	strCommand.Format(_T("%s %s"),_T("getaccountinfo") ,acceptaddr.c_str() );
+	//	strShowData = _T("");
+	//	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
+	//	if (strShowData == _T(""))
+	//	{
+	//		continue;
+	//	}
+	//	Json::Value rootinfo;
+	//	if (!reader.parse(strShowData.GetString(), rootinfo)) 
+	//		continue;
+	//	CString selleraddr;
+	//	if (strShowData.Find("Address") >= 0)
+	//	{
+	//		selleraddr =  rootinfo["Address"].asCString();
+	//	}
+	//	vTemp.clear();
+	//	vTemp.assign(DBbet.buyer,DBbet.buyer+sizeof(DBbet.buyer));
+	//	acceptaddr = CSoyPayHelp::getInstance()->HexStr(vTemp);
+	//
+	//	strCommand.Format(_T("%s %s"),_T("getaccountinfo") ,acceptaddr.c_str() );
+	//	strShowData =_T("");
+	//	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
+	//    if (strShowData == _T(""))
+	//    {
+	//		continue;
+	//    }
+	//	if (!reader.parse(strShowData.GetString(), rootinfo)) 
+	//		continue;
+	//	CString buyeraddr;
+	//	if (strShowData.Find("Address") >= 0)
+	//	{
+	//		buyeraddr =  rootinfo["Address"].asCString();
+	//	}
 
-		CString strField,strWhere;
-		strField.Format(_T("recvtime = %ld ") , nTime) ;
-		strField.AppendFormat(",comfirmed = %d, state = %d ",nComfirmed,(int)DBbet.flag) ;
-		strField.AppendFormat(" ,left_addr ='%s',right_addr = '%s'",buyeraddr,selleraddr);
-		strWhere.Format(_T("tx_hash = '%s'") , txhash );
+	//	CString strField,strWhere;
+	//	strField.Format(_T("recvtime = %ld ") , nTime) ;
+	//	strField.AppendFormat(",comfirmed = %d, state = %d ",nComfirmed,(int)DBbet.flag) ;
+	//	strField.AppendFormat(" ,left_addr ='%s',right_addr = '%s'",buyeraddr,selleraddr);
+	//	strWhere.Format(_T("tx_hash = '%s'") , txhash );
 
-		//更新数据
-		if ( !UpdateTableItem(_T("t_dark_record") , strField , strWhere )) {
-			TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , txhash );
-		}
-	}
+	//	//更新数据
+	//	if ( !UpdateTableItem(_T("t_dark_record") , strField , strWhere )) {
+	//		TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , txhash );
+	//	}
+	//}
 	return true;
 }
 
@@ -1346,7 +1346,7 @@ int CallGetRedPackeGrabRecordItem(void *para, int n_column, char ** column_value
 	RedPacketRecord->total_amount = strtod(strValue,NULL);
 
 	strValue.Format(_T("%s") , column_value[10] ) ;
-	RedPacketRecord->total_num = strtod(strValue,NULL);
+	RedPacketRecord->total_num = atoi(strValue);
 
 	return 0;
 }

@@ -566,7 +566,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 				case WM_UP_BETPOOL:
 					{
 						/// 赌约池数据库列表
-						bool flag =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.ClearTableData(_T("t_quiz_pool"));
+						BOOL flag =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.ClearTableData(_T("t_quiz_pool"));
 						if (flag ) 
 						{
 							((CDacrsUIApp*)pParam)->UpdateQuizPoolData();
@@ -576,7 +576,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 				case WM_REDPACKETPOOL:
 					{
 						/// 红包池
-						bool flag =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.ClearTableData(_T("t_red_packets_pool"));
+						BOOL flag =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.ClearTableData(_T("t_red_packets_pool"));
 						if (flag ) 
 						{
 							((CDacrsUIApp*)pParam)->UpdateRedPacketPoolData();
@@ -891,7 +891,7 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 			memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
 			GetLocalTime( &curTime ) ;
 			static int RecivetxtxTimeLast =0;
-			int tempTimemsg= UiFun::SystemTimeToTimet(curTime);
+			int tempTimemsg= (int)UiFun::SystemTimeToTimet(curTime);
 			/// 更新钱包
 			CPostMsg postuimsg(MSG_USER_GET_UPDATABASE,WM_UP_ADDRESS);
 			if ((tempTimemsg - RecivetxtxTimeLast)>10 || RecivetxtxTimeLast == 0)
@@ -945,7 +945,7 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 			memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
 			GetLocalTime( &curTime ) ;
 			static int RecivetxMsgTimeLast =0;
-			int tempTimemsg= UiFun::SystemTimeToTimet(curTime);
+			int tempTimemsg=(unsigned int) UiFun::SystemTimeToTimet(curTime);
 		
 			TRACE("change:%s\r\n","blockchanged");
 			uistruct::BLOCKCHANGED_t      m_Blockchanged ;
