@@ -42,6 +42,11 @@ void CDacrsUIApp::UpdateQuizPoolData()
 			memset(&DBbet , 0 , sizeof(uistruct::DBBET_DATA));
 			std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue.GetString());
 
+			if (vTemp.size() <=0)
+			{
+				continue;
+			}
+			
 			memcpy(&DBbet, &vTemp[0], sizeof(DBbet));
 
 			std::vector<unsigned char> vnTemp = CSoyPayHelp::getInstance()->ParseHex(txhash);
@@ -802,6 +807,10 @@ void CDacrsUIApp::UpdateRedPacketPoolData()
 			memset(&redPacket , 0 , sizeof(uistruct::RED_DATA));
 			std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue.GetString());
 
+			if (vTemp.size() <0)
+			{
+				continue;
+			}
 			memcpy(&redPacket, &vTemp[0], sizeof(uistruct::RED_DATA));
 
 			std::vector<unsigned char> txTemp = CSoyPayHelp::getInstance()->ParseHex(txhash.GetString());
@@ -916,6 +925,10 @@ void CDacrsUIApp::AcceptRePacketCommtRecord(vector<unsigned char> acceptRedPacke
 		uistruct::RED_DATA redPacket;
 		memset(&redPacket , 0 , sizeof(uistruct::RED_DATA));
 		std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue.GetString());
+		if (vTemp.size() <=0)
+		{
+			return;
+		}
 		memcpy(&redPacket, &vTemp[0], sizeof(uistruct::RED_DATA));
 
 		CString strCond;
@@ -1054,6 +1067,10 @@ void CDacrsUIApp::AcceptRePacketSpecailRecord(vector<unsigned char> acceptRedPac
 		uistruct::RED_DATA redPacket;
 		memset(&redPacket , 0 , sizeof(uistruct::RED_DATA));
 		std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue.GetString());
+		if (vTemp.size() <=0)
+		{
+			return;
+		}
 		memcpy(&redPacket, &vTemp[0], sizeof(uistruct::RED_DATA));
 
 		CString strCond;

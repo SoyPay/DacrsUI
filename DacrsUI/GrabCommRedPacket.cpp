@@ -442,6 +442,10 @@ bool  CGrabCommRedPacket::IsAcceptRedPacket(CString account,uistruct::REDPACKETP
 		uistruct::RED_DATA redPacket;
 		memset(&redPacket , 0 , sizeof(uistruct::RED_DATA));
 		std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue.GetString());
+		if (vTemp.size() <=0)
+		{
+			return false;
+		}
 		memcpy(&redPacket, &vTemp[0], sizeof(uistruct::RED_DATA));
 
 		for (int i =0;i <redPacket.dbdata.takennum;i++)
