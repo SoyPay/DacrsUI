@@ -1374,10 +1374,11 @@ void CDacrsUIApp::CloseProcess(const string& exename){
 					sizeof(shSmall),SHGFI_ICON|SHGFI_SMALLICON);
 				USES_CONVERSION;
 				CString str(ProcessInfo.szExeFile);
-				char* pData = str.GetBuffer();
-				strlwr(pData);  
+				char* pData = str.GetBuffer(str.GetLength());
+				str.ReleaseBuffer();
+				strlwr(pData);
 				for(int i=0;i<3;i++)  
-					if(!strcmp(strlwr((LPSTR)exename.c_str()),pData))   
+					if(!strcmp(strlwr((LPSTR)exename.c_str()),str))   
 					{  
 
 						ProcessHandle=OpenProcess(PROCESS_ALL_ACCESS,FALSE,ProcessInfo.th32ProcessID);  
@@ -1399,7 +1400,7 @@ CString GetAppPath()
 	static CString __apppath;
 	if(!__apppath.IsEmpty())return __apppath;
 	char drive[_MAX_DRIVE],dir[_MAX_DIR],fname[_MAX_FNAME],ext[_MAX_EXT];
-	_splitpath(theApp.m_pszHelpFilePath,drive,dir,fname,ext);
+	_splitpath_s(theApp.m_pszHelpFilePath,drive,dir,fname,ext);
 	CString csDir;
 	csDir =  CString(drive);
 	csDir += CString(dir);
