@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "DacrsUI.h"
 #include "TradDlg.h"
+#include "DacrsUIDlg.h"
 #include "afxdialogex.h"
 #include "TxDetailDlg.h"
 #include "CApplication.h"
@@ -506,7 +507,11 @@ void CTradDlg::OnBnClickedExportExel()
 		}
 
 	CString strFile = dlg.GetPathName();
-	strFile.AppendFormat(_T(".xls"));
+	if (!((CDacrsUIDlg*)(theApp.m_pMainWnd))->GetFileName(strFile,_T(".xls")))
+	{
+		return;
+	}
+	//strFile.AppendFormat(_T(".xls"));
 //	CString strFile = _T("d:\\Test.xls");
 
 	COleVariant
