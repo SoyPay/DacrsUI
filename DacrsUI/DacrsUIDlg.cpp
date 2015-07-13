@@ -1010,12 +1010,24 @@ void CDacrsUIDlg:: ImportPrvieKey()
 			CStringA strSendData;
 	
 			CSoyPayHelp::getInstance()->SendRpc(strCommand,strSendData);	
+
+			Json::Reader reader;  
+			Json::Value root; 
+			if (!reader.parse(strSendData.GetString(), root)) 
+				return  ;
 			if (strSendData.Find(_T("imorpt key size")) >=0)
 			{
-				MessageBox(_T("导入钱包成功请重新启动钱包"));
-				//ClosWallet();
-				//((CDacrsUIDlg*)(this->GetParent()))->Close();
-				ClosWalletWind();
+				int size = root["imorpt key size"].asInt();
+				if (size > 0)
+				{
+					MessageBox(_T("导入钱包成功请重新启动钱包"));
+					//ClosWallet();
+					//((CDacrsUIDlg*)(this->GetParent()))->Close();
+					ClosWalletWind();
+				}else{
+					MessageBox(_T("导入钱包失败"));
+				}
+				
 			}else
 			{
 				MessageBox(_T("导入钱包失败"));
