@@ -34,7 +34,7 @@ CString UiFun::Rnd32()
 {
 	CString r = _T("");
 	int i;
-	srand(time(NULL));
+	srand((int)time(NULL));
 	for(i=0;i<32;i++)
 	{
 		r = r + char(rand()%10+'0');
@@ -110,7 +110,7 @@ CString UiFun::UI_LoadString( CString secID , CString szID , UINT language )
 }
 int UiFun::RandNumber()
 {
-	srand(time(NULL));
+	srand((unsigned int)time(NULL));
     return rand()%6+1;
 }
 HBITMAP UiFun::GlobalBkgndBMP(UINT nIDBitmap)

@@ -714,7 +714,7 @@ void CMortgageTardDlg::OnCbnSelchangeComboAddres()
 			Json::Value valuearray = root["vFreezedFund"]; 
 
 			double vFreeAmount = 0.0;
-			for(int i =0;i<valuearray.size();i++)
+			for(unsigned int i =0;i<valuearray.size();i++)
 			{
 				nMoney = valuearray[i]["value"].asInt64() ;
 				vFreeAmount += (nMoney*1.0/COIN);

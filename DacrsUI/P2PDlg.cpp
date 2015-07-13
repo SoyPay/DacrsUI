@@ -1490,9 +1490,9 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 	GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(strpage);
 	 m_curpage = page;
 	 int index = (page-1)*m_pagesize;
-	 int count = (m_PoolList.size() -index)>=m_pagesize?m_pagesize:(m_PoolList.size() -index);
+	 unsigned int count = (m_PoolList.size() -index)>=m_pagesize?m_pagesize:(m_PoolList.size() -index);
 	 int i =0;
-	 for (int k = index;k< (index+count)&& k<m_PoolList.size();k++)
+	 for (unsigned int k = index;k< (index+count)&& k<m_PoolList.size();k++)
 	 {
 		 uistruct::LISTP2POOL_T const_it = m_PoolList.at(k);
 		 string nValue = const_it.data;

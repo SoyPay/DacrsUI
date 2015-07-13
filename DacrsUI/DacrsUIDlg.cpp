@@ -474,7 +474,7 @@ void    CDacrsUIDlg::SyncAddrInfo()
 	/// 数据库中没有的地址要插入
 	map<CString,int> SListInfo;
 	uistruct::LISTADDR_t listaddr;
-	for(int i = 0; i < root.size(); ++i){
+	for(unsigned int i = 0; i < root.size(); ++i){
 		//address
 		CString address;
 		address.Format( _T("%s") , root[i]["addr"].asCString() ) ;		
@@ -484,10 +484,12 @@ void    CDacrsUIDlg::SyncAddrInfo()
 		//address
 		CString strData;
 		strData.Format( _T("%s") , root[i]["addr"].asCString() ) ;
-		strncpy(listaddr.address  , strData , strlen(strData) > sizeof(listaddr.address) ? sizeof(listaddr.address):strlen(strData));
+	//	strncpy(listaddr.address  , strData , strlen(strData) > sizeof(listaddr.address) ? sizeof(listaddr.address):strlen(strData));
+		//strncpy_s((char*)listaddr.address  , strData.GetBuffer(strData.GetLength()) , strlen(strData) > sizeof(listaddr.address) ? sizeof(listaddr.address):strlen(strData));
+		strncpy_s(listaddr.address  , strData , strlen(strData) > sizeof(listaddr.address) ? sizeof(listaddr.address):strlen(strData));
 		//RegID
 		strData.Format( _T("%s") , root[i]["regid"].asCString() ) ;
-		strncpy(listaddr.RegID  , strData , strlen(strData) > sizeof(listaddr.RegID) ? sizeof(listaddr.RegID):strlen(strData));
+		strncpy_s(listaddr.RegID  , strData , strlen(strData) > sizeof(listaddr.RegID) ? sizeof(listaddr.RegID):strlen(strData));
 		//金额
 		double fmoney = 0.0 ;  
 		fmoney = root[i]["balance"].asDouble(); 
@@ -605,7 +607,7 @@ void  CDacrsUIDlg::StopSever()
 	memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
 	GetLocalTime( &curTime ) ;
 	int RecivetxTimestart =0;
-	RecivetxTimestart= UiFun::SystemTimeToTimet(curTime);
+	RecivetxTimestart=(int) UiFun::SystemTimeToTimet(curTime);
 	bool nRecStopCmd = false;
 	while(TRUE){
 		if(!nRecStopCmd) 
@@ -618,7 +620,7 @@ void  CDacrsUIDlg::StopSever()
 		}
 		GetLocalTime( &curTime ) ;
 		int RecivetxTimeLast =0;
-		RecivetxTimeLast= UiFun::SystemTimeToTimet(curTime);
+		RecivetxTimeLast= (int)UiFun::SystemTimeToTimet(curTime);
 		if(!theApp.m_bServerState)
 		{
 			return;
@@ -835,7 +837,7 @@ void CDacrsUIDlg::ToTray()
 	nid.uFlags=NIF_ICON|NIF_MESSAGE|NIF_TIP ; 
 	nid.uCallbackMessage=WM_SHOWTASK;//自定义的消息名称 
 	nid.hIcon=LoadIcon(AfxGetInstanceHandle(),MAKEINTRESOURCE(IDR_MAINFRAME)); 
-	strcpy(nid.szTip,"dacrs"); //信息提示条 
+	strcpy_s(nid.szTip,"dacrs"); //信息提示条 
 	Shell_NotifyIcon(NIM_ADD,&nid); //在托盘区添加图标 
 	ShowWindow(SW_HIDE); //隐藏主窗口 
 } 
@@ -887,7 +889,7 @@ void CDacrsUIDlg::DeleteTray()
 	nid.uFlags=NIF_ICON|NIF_MESSAGE|NIF_TIP ; 
 	nid.uCallbackMessage=WM_SHOWTASK; //自定义的消息名称 
 	nid.hIcon=LoadIcon(AfxGetInstanceHandle(),MAKEINTRESOURCE(IDR_MAINFRAME)); 
-	strcpy(nid.szTip,"dacrs"); //信息提示条为“计划任务提醒” 
+	strcpy_s(nid.szTip,"dacrs"); //信息提示条为“计划任务提醒” 
 	//Shell_NotifyIcon(NIM_DELETE,&nid); //在托盘区删除图标 
 } 
 void CDacrsUIDlg::SetAppFee()
