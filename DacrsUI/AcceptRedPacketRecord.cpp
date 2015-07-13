@@ -210,7 +210,7 @@ void  CAcceptRedPacketRecord::OnShowPagePool(int page)
 
 	int i = 0;
 	std::vector<uistruct::REDPACKETGRAB_t>::const_iterator const_it;
-	for (int k = index;k< (index+count);k++)
+	for (int k = index;k< (index+count) && k < m_AcceptRedPacketList.size();k++)
 	{
 		uistruct::REDPACKETGRAB_t const_it = m_AcceptRedPacketList.at(k);
 		CString amount,Sendaddr,address,luckeMoney,strnum,type;

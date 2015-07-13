@@ -213,7 +213,7 @@ void  CSendRedPacketRecord::OnShowPagePool(int page)
 
 	int i = 0;
 	std::vector<uistruct::REDPACKETSEND_t>::const_iterator const_it;
-	for (int k = index;k< (index+count);k++)
+	for (int k = index;k< (index+count) && k<m_SendRedPacketList.size();k++)
 	{
 		uistruct::REDPACKETSEND_t const_it = m_SendRedPacketList.at(k);
 		CString sendaddr;

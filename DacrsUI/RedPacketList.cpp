@@ -83,6 +83,10 @@ void CRedPacketList::ShowTxDetail(CString txhash)
 	uistruct::RED_DATA redPacket;
 	memset(&redPacket , 0 , sizeof(uistruct::RED_DATA));
 	std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue.GetString());
+	if (vTemp.size() <=0)
+	{
+		return;
+	}
 	memcpy(&redPacket, &vTemp[0], sizeof(uistruct::RED_DATA));
 
 	CString showdata = _T(""); //= _T(" µØÖ·                            ½ð¶î \r\n\r\n");
