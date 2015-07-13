@@ -84,7 +84,6 @@ private:
 	void       SyncAddrInfo();
 	void       CloseThread();
 	void       StopSever();
-	bool GetFileName(CString &fileName,CString strexe );
 public:
 	void       Close(); 
 	void       CloseApp();
@@ -104,4 +103,5 @@ public:
 	afx_msg void ImportPrvieKey();
 	afx_msg void OnUpdataState(CCmdUI *pCmdUI);
 	void ClosWalletWind();
+	bool GetFileName(CString &fileName,CString strexe );
 };
