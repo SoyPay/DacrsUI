@@ -138,6 +138,8 @@ BOOL CRedPacketList::OnInitDialog()
 	}
 	m_listCtrl.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_HEADERDRAGDROP );// |LVS_SINGLESEL  );
 	// TODO:  在此添加额外的初始化
+
+	GetDlgItem(IDC_TXHASH)->SetWindowText(theApp.m_strAddress);
 	ShowTxDetail(theApp.m_strAddress);
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE
