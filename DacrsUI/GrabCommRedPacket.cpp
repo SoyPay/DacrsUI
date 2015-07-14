@@ -300,6 +300,7 @@ void   CGrabCommRedPacket::AcceptRedPacketComm(CString sendhash,uistruct::REDPAC
 
 	if (!CheckRegIDValid( theApp.m_redPacketScriptid)) return ;
 
+	if(pPoolList.message != _T(""))
 	::MessageBox( this->GetSafeHwnd() ,pPoolList.message , _T("ÌבÊ¾") , MB_ICONINFORMATION ) ;
 
 	CString walletaddr = m_walletmoney;
