@@ -926,6 +926,11 @@ void CDacrsUIDlg::walletpassphrasechange(){
 }
 void CDacrsUIDlg:: LockWallet()
 {
+	if (!theApp.HaveLocked)
+	{
+		MessageBox(_T("钱包没有加锁"));
+		return;
+	}
 	CString strCommand;
 	strCommand.Format(_T("%s"),_T("walletlock"));
 	CStringA strShowData =_T("");
