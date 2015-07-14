@@ -507,7 +507,10 @@ void CMortgageTardDlg::SendRedPacketComm(){
 
 
 	CReCharge outdlg(NULL,_T("广告语句"),_T("广告词:"),_T("  "));
-	outdlg.DoModal();
+	if (outdlg.DoModal() == IDCANCEL)
+	{
+		return;
+	}
   
    CString message = theApp.m_strAddress;
 
