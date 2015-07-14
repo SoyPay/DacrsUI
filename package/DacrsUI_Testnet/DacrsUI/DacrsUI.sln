@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "DacrsUI", "DacrsUI\DacrsUI.vdproj", "{956E21CC-D145-4A8E-A9CB-773729648E0A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Default = Debug|Default
+		Release|Default = Release|Default
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{956E21CC-D145-4A8E-A9CB-773729648E0A}.Debug|Default.ActiveCfg = Debug
+		{956E21CC-D145-4A8E-A9CB-773729648E0A}.Debug|Default.Build.0 = Debug
+		{956E21CC-D145-4A8E-A9CB-773729648E0A}.Release|Default.ActiveCfg = Release
+		{956E21CC-D145-4A8E-A9CB-773729648E0A}.Release|Default.Build.0 = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
