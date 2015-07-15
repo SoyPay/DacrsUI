@@ -580,7 +580,7 @@ bool CSoyPayHelp::IsOSVersionBelowXp()
 	if (!strcmp(swVersion,"5.1")){
 		strcpy_s( szOSName,"win_xp");    //win_xp 
 		CString strDisplay;
-		strDisplay.Format(_T("本程序在xp系统不稳定,是否继续"));
+		strDisplay.Format(_T("智能坊 不支持 xp 系统，请使用win7或者更高版本"));
 		COut outdlg(NULL, strDisplay,100,_T("继续"),_T("退出"),true);
 		if ( IDCANCEL == outdlg.DoModal()){
 			exit(0);
