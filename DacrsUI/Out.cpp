@@ -110,6 +110,14 @@ BOOL COut::OnInitDialog()
 	{
 		m_rBtnOK.ShowWindow(SW_HIDE);
 		onShowLink();
+		CRect rc ;
+		GetClientRect( rc ) ;
+		CWnd *pst = GetDlgItem( IDC_BUTTON_NO ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*45 , (rc.Height()/100)*100+15, rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
 	}
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE
@@ -206,6 +214,6 @@ void COut::OnBnClickedButtonOk()
 }
 void  COut::onShowLink()
 {
-	v_linkCtrl.SetWindowText("关于xp不稳定的问题");
+	v_linkCtrl.SetWindowText(_T("为什么智能坊不支持xp"));
 	v_linkCtrl.SetURL("www.baidu.com");
 }
