@@ -1182,13 +1182,193 @@ BOOL CTradDlg::FindDesTx(uistruct::TRANSRECORDLIST pListInfo,int flag,uistruct::
 	}
 	return FALSE;
 }
+CString CTradDlg::GetConditonTime(INT64 &maxtime,INT64 &mintime)
+{
+	SYSTEMTIME curTime ;
+	memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
+	GetLocalTime( &curTime ) ;
+	CString strSendTime;
+	strSendTime.Format("%04d-%02d-%02d %02d:%02d:%02d",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+	INT64 maxcurtime = UiFun::SystemTimeToTimet(curTime);
+
+	CString text;
+	int sel = m_time.GetCurSel();
+	if (sel < 0)
+	{
+		return _T("");
+	}
+	m_time.GetLBText(sel,text);
+	uistruct::TRANSRECORDLIST pListInfo;
+
+	if (strcmp(text,_T("全部")) == 0)
+	{
+		return _T("");
+	}else if (strcmp(text,_T("今天")) == 0)
+	{
+		curTime.wHour = 0;
+		curTime.wMinute = 0;
+		curTime.wSecond = 0;
+		curTime.wMilliseconds = 0;
+		INT64 mincurtime = UiFun::SystemTimeToTimet(curTime);
+		CString conditon;
+		conditon.Format(_T(" confirmed_time>=%d and confirmed_time<="),mincurtime);
+		conditon.AppendFormat(_T("%d"),maxcurtime);
+		maxtime = maxcurtime;
+		mintime=mincurtime;
+		return conditon;
+		//theApp.m_SqliteDeal.GetTransactionList(conditon, &pListInfo); 
+		//OnShowListCtrl(pListInfo);
+	}else if (strcmp(text,_T("本周")) == 0)
+	{
+		curTime.wHour = 0;
+		curTime.wMinute = 0;
+		curTime.wSecond = 0;
+		curTime.wMilliseconds = 0;
+		INT64 mincurtime = 0;
+		if (curTime.wDayOfWeek == 0)
+		{
+			mincurtime = UiFun::SystemTimeToTimet(curTime);
+		}else{
+			INT64 differ = 86400*curTime.wDayOfWeek;
+			mincurtime = UiFun::SystemTimeToTimet(curTime);
+			mincurtime = maxcurtime -mincurtime;
+			mincurtime = maxcurtime - (differ+mincurtime);
+		}
+		//	SYSTEMTIME tttt = UiFun::Time_tToSystemTime(mincurtime);
+
+		CString conditon;
+		conditon.Format(_T(" confirmed_time>=%d and confirmed_time<="),mincurtime);
+		conditon.AppendFormat(_T("%d"),maxcurtime);
+		maxtime = maxcurtime;
+		mintime=mincurtime;
+		return conditon;
+		//theApp.m_SqliteDeal.GetTransactionList(conditon, &pListInfo); 
+		//OnShowListCtrl(pListInfo);
+	}else if (strcmp(text,_T("本月")) == 0)
+	{
+		curTime.wDay =1;
+		curTime.wHour = 0;
+		curTime.wMinute = 0;
+		curTime.wSecond = 0;
+		curTime.wMilliseconds = 0;
+		INT64 mincurtime = UiFun::SystemTimeToTimet(curTime);
+		CString conditon;
+		conditon.Format(_T(" confirmed_time>=%d and confirmed_time<="),mincurtime);
+		conditon.AppendFormat(_T("%d"),maxcurtime);
+		maxtime = maxcurtime;
+		mintime=mincurtime;
+		return conditon;
+	}else if (strcmp(text,_T("上月")) == 0)
+	{
+		INT64 maxcurtime = 0;
+		INT64 mincurtime = 0;
+		curTime.wDay =1;
+		curTime.wHour=0;
+		curTime.wMinute = 0;
+		curTime.wSecond = 0;
+		curTime.wMilliseconds = 0;
+		maxcurtime = UiFun::SystemTimeToTimet(curTime);
+		if (curTime.wMonth == 1)
+		{
+			curTime.wMonth = 12;
+			curTime.wYear -=1;
+
+		}else{
+			curTime.wMonth -= 1;
+		}
+		mincurtime = UiFun::SystemTimeToTimet(curTime);
+		CString conditon;
+		conditon.Format(_T(" confirmed_time>=%d and confirmed_time<="),mincurtime);
+		conditon.AppendFormat(_T("%d"),maxcurtime);
+		maxtime = maxcurtime;
+		mintime=mincurtime;
+		return conditon;
+	}else if (strcmp(text,_T("今年")) == 0)
+	{
+		curTime.wMonth =1;
+		curTime.wDay=1;
+		curTime.wHour=0;
+		curTime.wMinute = 0;
+		curTime.wSecond = 0;
+		curTime.wMilliseconds = 0;
+		INT64 mincurtime = UiFun::SystemTimeToTimet(curTime);
+		CString conditon;
+		conditon.Format(_T(" confirmed_time>=%d and confirmed_time<="),mincurtime);
+		conditon.AppendFormat(_T("%d"),maxcurtime);
+		maxtime = maxcurtime;
+		mintime=mincurtime;
+		return conditon;
+	}
+	return _T("");
+}
 BOOL CTradDlg::IsInsertTx(uistruct::REVTRANSACTION_t txdetail)
 {
 	int operate = 0;
-	CString condtion = GetConditonStr(operate);
+	INT64 maxtime = 0,mintime = 0;
+	CString txtype = GetConditonTxType(operate);
+	CString time = GetConditonTime(maxtime,mintime);
+	CString addr = Getaddr();
+	if (txtype ==_T("") && time == _T("") && addr)
+	{
+		return TRUE;
+	}
+	if (time != _T(""))
+	{
+		if (!(txdetail.confirmedtime >= mintime && txdetail.confirmedtime <=maxtime))
+		{
+			return FALSE;
+		}
+	}
 
-	uistruct::TRANSRECORDLIST pListInfo;
-	theApp.m_SqliteDeal.GetTransactionList(condtion, &pListInfo); 
+	if (txtype != _T(""))
+	{
+		if (txtype.Find(txdetail.txtype.c_str())<0)
+		{
+			return FALSE;
+		}
+		if (operate == 1)
+		{
+			if ( !isMine(txdetail.desaddr.c_str()))
+			{
+				return FALSE;
+			}
+		}
+		if (operate == 2)
+		{
+			if ( !isMine(txdetail.addr.c_str()))
+			{
+				return FALSE;
+			}
+		}
+	}
 
-	return FindDesTx(pListInfo,operate,txdetail);
+	if (addr != _T(""))
+	{
+		if (operate == 1)
+		{
+			if ( strcmp(txdetail.desaddr.c_str(),addr) != 0)
+			{
+				return FALSE;
+			}
+		}else if (operate == 2)
+		{
+			if ( strcmp(txdetail.addr.c_str(),addr) != 0)
+			{
+				return FALSE;
+			}
+		}else{
+			if ( strcmp(txdetail.addr.c_str(),addr) != 0 &&  strcmp(txdetail.desaddr.c_str(),addr) != 0)
+			{
+				return FALSE;
+			}
+		}
+	}
+
+	return TRUE;
+	//CString condtion = GetConditonStr(operate);
+
+	//uistruct::TRANSRECORDLIST pListInfo;
+	//theApp.m_SqliteDeal.GetTransactionList(condtion, &pListInfo); 
+
+	//return FindDesTx(pListInfo,operate,txdetail);
 }

@@ -75,14 +75,18 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 		::MessageBox( this->GetSafeHwnd() ,_T("发送地址不存在") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
-	CString text;
-	int sel = m_addrbook.GetCurSel();
-	if (sel < 0)
+	CString text =_T("");
+	//int sel = m_addrbook.GetCurSel();
+	//if (sel < 0)
+	//{
+	//	return ;
+	//}
+	//m_addrbook.GetLBText(sel,text);
+	m_addrbook.GetWindowText(text);
+	if (text == _T(""))
 	{
-		return ;
+		return;
 	}
-	m_addrbook.GetLBText(sel,text);
-
 	uistruct::LISTADDR_t data;
 	CString strCommand , strMaddress , strMoney;
 	if(text!=_T(""))
@@ -464,6 +468,31 @@ BOOL CSendDlg::PreTranslateMessage(MSG* pMsg)
 						
 					}
 					
+				}else if (GetDlgItem(IDC_COMBO_ADDR_OUT)->SetFocus() == this->GetFocus())
+				{
+					HWND hWnd = GetSafeHwnd(); // 获取安全窗口句柄
+					::OpenClipboard(hWnd); // 打开剪贴板
+					HANDLE hClipMemory = ::GetClipboardData(CF_TEXT);// 获取剪贴板数据句柄
+					DWORD dwLength = GlobalSize(hClipMemory); // 返回指定内存区域的当前大小
+					LPBYTE lpClipMemory = (LPBYTE)GlobalLock(hClipMemory); // 锁定内存
+					CString message = CString(lpClipMemory); // 保存得到的文本数据
+					GlobalUnlock(hClipMemory); // 内存解锁
+					::CloseClipboard(); // 关闭剪贴板
+					if (bCtrl)
+					{
+						if(m_mapAddrInfo.count(message)<=0)
+						{
+							//TRACE("map OnCbnSelchangeCombo1 error");
+							::MessageBox( this->GetSafeHwnd() ,_T("复制的地址有误") , _T("提示") , MB_ICONINFORMATION ) ;
+						}else{
+							//uistruct::LISTADDR_t te = m_pListaddrInfo[text];
+							CString strshow;
+							strshow.Format(_T("%.8f"),m_mapAddrInfo[message].fMoney);
+							((CStatic*)GetDlgItem(IDC_STATIC_XM))->SetWindowText(strshow);
+							Invalidate();
+						}
+
+					}
 				}
 
 			}
