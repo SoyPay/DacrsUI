@@ -53,6 +53,7 @@ public:
 	bool  isMine(CString addr);
 	afx_msg void OnCbnSelchangeComboTime();
 	CString GetConditonTime();
+	CString GetConditonTime(INT64 &maxtime,INT64 &mintime);
 	CString GetConditonTxType(int &operate);
 	CString Getaddr();
 	void ShowAddrConditon();
