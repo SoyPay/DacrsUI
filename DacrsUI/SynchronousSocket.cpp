@@ -104,7 +104,9 @@ int CSynchronousSocket::GetRpcRes(const CString ip,int port,const CString cmd,st
 					Sleep(100);
 				} while (te.IsEnd==false);
 			}		
-			string tep(te.buffer.begin(),te.buffer.end());
+			//string tep(te.buffer.begin(),te.buffer.end());
+			string tep = "";
+			tep.assign(te.buffer.begin(),te.buffer.end());
 			rev =tep;
 			return rev.length();
 }
