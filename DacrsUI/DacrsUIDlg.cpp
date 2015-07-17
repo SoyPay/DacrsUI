@@ -1010,7 +1010,7 @@ void CDacrsUIDlg::WriteExportWalletAndBookAddr(CString fileName)
 		}
 	}
 
-	if (strFile.Find("bookaddr") >=0)
+	if (strFile.Find("wbookaddr") >=0)
 	{
 		Json::Value addrValue = root["bookaddr"]; 
 		for(int i =0;i<(int)addrValue.size();i++){
@@ -1096,7 +1096,7 @@ void CDacrsUIDlg::AddImportWalletAndBookAddr(CString fileName)
 				Array.append(itemValue);
 			}
 		}
-		root["bookaddr"] = Array;
+		root["wbookaddr"] = Array;
 	}
 
 	/// 保存到文件

@@ -33,6 +33,12 @@ END_MESSAGE_MAP()
 // CTxDetailDlg 消息处理程序
 void CTxDetailDlg::ShowTxDetail(CString jsontx)
 {
+	if (jsontx == _T(""))
+	{
+		CString strShowData;
+		strShowData.AppendFormat(_T("%s") ,_T("此交易不存在")) ;
+		GetDlgItem(IDC_EDIT_TXDETAIL)->SetWindowText(strShowData);
+	}
 	//string txdetail = tx.ToJson();
 	uistruct::REVTRANSACTION_t tx;
 	tx.JsonToStruct(jsontx.GetString());
