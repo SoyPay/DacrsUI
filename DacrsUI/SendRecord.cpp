@@ -486,9 +486,11 @@ void  CSendRecord::OnShowPagePool(int page)
 			CString recaddr;
 			recaddr.Format(_T("%s"),const_it.right_addr);
 			CString time = 0;
-			curTime.wMinute = (curTime.wMinute+const_it.time_out)>60?(curTime.wMinute+const_it.time_out)-60:(curTime.wMinute+const_it.time_out);
-			curTime.wHour = (curTime.wMinute+const_it.time_out)>60?curTime.wHour+1:curTime.wHour;
-			time.Format("%02d:%02d:%02d",curTime.wHour, curTime.wMinute, curTime.wSecond);
+			time_t timeout =const_it.recv_time+const_it.time_out*60; 
+			SYSTEMTIME curTimeOut =UiFun::Time_tToSystemTime(timeout);
+			//curTime.wMinute = (curTime.wMinute+const_it.time_out)>60?(curTime.wMinute+const_it.time_out)-60:(curTime.wMinute+const_it.time_out);
+			//curTime.wHour = (curTime.wMinute+const_it.time_out)>60?curTime.wHour+1:curTime.wHour;
+			time.Format("%02d:%02d:%02d",curTimeOut.wHour, curTimeOut.wMinute, curTimeOut.wSecond);
 			if (const_it.state == 2)
 			{
 				m_listBox.SetIndexString(i ,sendaddr, acceptaddr,SendTime,strTime, result,guess, reward,time,_T("ÒÑ¿ª"),const_it.tx_hash);

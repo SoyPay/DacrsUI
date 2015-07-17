@@ -104,4 +104,6 @@ public:
 	afx_msg void OnUpdataState(CCmdUI *pCmdUI);
 	void ClosWalletWind();
 	bool GetFileName(CString &fileName,CString strexe );
+	void AddImportWalletAndBookAddr(CString fileName);
+	void WriteExportWalletAndBookAddr(CString fileName);
 };
