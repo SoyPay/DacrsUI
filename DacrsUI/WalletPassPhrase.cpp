@@ -59,7 +59,7 @@ void CWalletPassPhrase::OnBnClickedOk()
 	}
 	
 	CString strCommand;
-	strCommand.Format(_T("%s %s %d"),_T("walletpassphrase"),PassWord,atoi(passtime));
+	strCommand.Format(_T("%s %s %d"),_T("walletpassphrase"),PassWord,(atoi(passtime)*60));
 	CStringA strShowData =_T("");
 
 	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
@@ -98,7 +98,7 @@ BOOL CWalletPassPhrase::OnInitDialog()
 
 	// TODO:  在此添加额外的初始化
 	
-	GetDlgItem(IDC_EDIT_TIEM)->SetWindowText(_T("3600"));
+	GetDlgItem(IDC_EDIT_TIEM)->SetWindowText(_T("60"));
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE
 }
