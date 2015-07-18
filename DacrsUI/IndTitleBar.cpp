@@ -282,8 +282,8 @@ BOOL CIndTitleBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT 
 		m_tooltip.AddTool((CButton   *)GetDlgItem(IDC_BUTTON_SEND), _T("发送")); 
 		m_tooltip.AddTool((CButton   *)GetDlgItem(IDC_BUTTON_RECE), _T("接收")); 
 		m_tooltip.AddTool((CButton   *)GetDlgItem(IDC_BUTTON_TRAD_INFO), _T("交易详情")); 
-		m_tooltip.AddTool((CButton   *)GetDlgItem(IDC_BUTTON_P2P), _T("P2P掷色子")); 
-		m_tooltip.AddTool((CButton   *)GetDlgItem(IDC_BUTTON_MORTGAGE), _T("抵押交易")); 
+		m_tooltip.AddTool((CButton   *)GetDlgItem(IDC_BUTTON_P2P), _T("猜你妹")); 
+		m_tooltip.AddTool((CButton   *)GetDlgItem(IDC_BUTTON_MORTGAGE), _T("抢红包")); 
 		m_tooltip.AddTool((CButton   *)GetDlgItem(IDC_BUTTON_IPO), _T("IPO领币")); 
 
 		MobileTip(IDC_BUTTON_MAIN_UI , TRUE );

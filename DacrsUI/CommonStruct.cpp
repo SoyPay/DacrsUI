@@ -412,8 +412,11 @@ CString GetCompressRegID(const CString& strRegID)
 
 	int nHeight = 0;
 	short nIndex = 0;
-	memcpy(&nHeight,&vRegID[0],sizeof(nHeight));
-	memcpy(&nIndex,&vRegID[sizeof(nHeight)],sizeof(nIndex));
+	if (vRegID .size() == 6)
+	{
+		memcpy(&nHeight,&vRegID[0],sizeof(nHeight));
+		memcpy(&nIndex,&vRegID[sizeof(nHeight)],sizeof(nIndex));
+	}
 	CString str;
 	str.Format(_T("%d-%d"),nHeight,nIndex);
 	return str;
@@ -530,7 +533,7 @@ std::string CSoyPayHelp::HexStr(const T itbegin, const T itend, bool fSpaces) {
 CString CSoyPayHelp::DisPlayMoney(CString &strMoney)
 {
 	int iStart = strMoney.Find(".");
-	if(strMoney.GetLength() > iStart + 4);
+	if(strMoney.GetLength() > iStart + 4)
 		return strMoney.Left(iStart+4);
 	return strMoney;
 }
@@ -551,33 +554,33 @@ bool CSoyPayHelp::IsOSVersionBelowXp()
 	dwBuildNumber=osvi.dwBuildNumber;//创建号
 	dwPlatformId=osvi.dwPlatformId;//ID号
 	char swVersion[10]={0};    
-	sprintf(swVersion,"%d.%d",dwMajorVersion,dwMinorVersion);
+	sprintf_s(swVersion,"%d.%d",dwMajorVersion,dwMinorVersion);
 	// dwVesion=atoi(swVersion);  
 
 	if (!strcmp(swVersion,"4.0")){   
-		strcpy( szOSName,"win95");    //win95    
+		strcpy_s( szOSName,"win95");    //win95    
 		return TRUE;
 	}
 	if (!strcmp(swVersion,"4.1")){
-		strcpy( szOSName,"win98");     //win98 
+		strcpy_s( szOSName,"win98");     //win98 
 		return TRUE;
 	}
 	if (!strcmp(swVersion,"4.9")){
-		strcpy( szOSName,"win_me");     // win_me 
+		strcpy_s( szOSName,"win_me");     // win_me 
 		return TRUE;
 	}
 	if (!strcmp(swVersion,"3.51")){
-		strcpy( szOSName,"win_Nt_3_5");  //win_Nt_3_5    
+		strcpy_s( szOSName,"win_Nt_3_5");  //win_Nt_3_5    
 		return TRUE;
 	}
 	if (!strcmp(swVersion,"5.0")){
-		strcpy( szOSName,"win2000");    //win2000   
+		strcpy_s( szOSName,"win2000");    //win2000   
 		return TRUE;
 	}
 	if (!strcmp(swVersion,"5.1")){
-		strcpy( szOSName,"win_xp");    //win_xp 
+		strcpy_s( szOSName,"win_xp");    //win_xp 
 		CString strDisplay;
-		strDisplay.Format(_T("本程序在xp系统不稳定,是否继续"));
+		strDisplay.Format(_T("智能坊 不支持 xp 系统，请使用win7或者更高版本"));
 		COut outdlg(NULL, strDisplay,100,_T("继续"),_T("退出"),true);
 		if ( IDCANCEL == outdlg.DoModal()){
 			exit(0);
@@ -585,20 +588,20 @@ bool CSoyPayHelp::IsOSVersionBelowXp()
 		return TRUE;
 	}
 	if (!strcmp(swVersion,"5.2")){
-		strcpy( szOSName,"win2003");    // win2003 
+		strcpy_s( szOSName,"win2003");    // win2003 
 		return FALSE;
 	}
 	if (!strcmp(swVersion,"6.6")){
-		strcpy(szOSName,"vista");    //vista
+		strcpy_s(szOSName,"vista");    //vista
 		return FALSE;
 	}
 	if (!strcmp(swVersion,"6.1")){
-		strcpy( szOSName,"win7");     // win7 
+		strcpy_s( szOSName,"win7");     // win7 
 		return FALSE;
 	}
 	if((6 == osvi.dwMajorVersion && 2==osvi.dwMinorVersion) || (6<osvi.dwMajorVersion && 0 ==osvi.dwMinorVersion))
 	{
-		strcpy( szOSName,"win8");      // win8 
+		strcpy_s( szOSName,"win8");      // win8 
 		return FALSE;
 	}
 	TRACE("Operate System Version:%s\n", szOSName);
@@ -883,14 +886,22 @@ string CSesureTradeHelp::PacketFirstContract(const string& strBuyID,const string
 
 	unsigned char nSize = sizeof(int64_t);
 	vector<unsigned char> v = CSoyPayHelp::getInstance()->ParseHex(strBuyID);
-	memcpy(m_FirstContract.buyer.accounid,&v[0],ACCOUNT_ID_SIZE);
+	if (v.size() > 0)
+	{
+		memcpy(m_FirstContract.buyer.accounid,&v[0],ACCOUNT_ID_SIZE);
+	}
+
 
 	v = CSoyPayHelp::getInstance()->ParseHex(strSellID);
-	memcpy(m_FirstContract.seller.accounid,&v[0],ACCOUNT_ID_SIZE);
+	if (v.size() > 0)
+	{
+		memcpy(m_FirstContract.seller.accounid,&v[0],ACCOUNT_ID_SIZE);
+	}
 
 	for(size_t i = 0;i<vArRegID.size();++i)
 	{
 		v = CSoyPayHelp::getInstance()->ParseHex(vArRegID.at(i));
+		if(v.size() >0)
 		memcpy(m_FirstContract.arbitrator[i].accounid,&v[0],ACCOUNT_ID_SIZE);
 	}
 
@@ -938,6 +949,7 @@ string CDarkTxHelp::PacketBuyerContract(const string& strSellID,int64_t nMoney)
 	m_FirstContract.dnType = TX_BUYTRADE;
 
 	vector<unsigned char>v = CSoyPayHelp::getInstance()->ParseHex(strSellID);
+	if(v.size() >0)
 	memcpy(m_FirstContract.seller,&v[0],ACCOUNT_ID_SIZE);
 	m_FirstContract.nPayMoney = nMoney;
 
@@ -959,7 +971,10 @@ string CAnonymTxHelp::PackAnonymContract(const string& strSender,int nSendMoney,
 	int nRecvNum = vRecv.size();
 	ASSERT(0 != nRecvNum);
 	vector<unsigned char> v = CSoyPayHelp::getInstance()->ParseHex(strSender);
-	memcpy(m_anonymContract.szSender,&v[0],ACCOUNT_ID_SIZE);
+	if(v.size() > 0){
+		memcpy(m_anonymContract.szSender,&v[0],ACCOUNT_ID_SIZE);
+	}
+	
 	m_anonymContract.nHeight = nHeight;
 	m_anonymContract.nPayMoney = nSendMoney;
 	m_anonymContract.len = sizeof(ACCOUNT_INFO)*nRecvNum;
@@ -1111,7 +1126,7 @@ void CSoyPayHelp::Jiexi(Json::Value &obj, HTREEITEM hItemRoot,CTreeCtrl&m_rpccom
 			{
 
 				static char buffer[500];
-				sprintf( buffer, "[%d]", index );
+				sprintf_s( buffer, "[%d]", index );
 				string name(buffer);
 				HTREEITEM varRoot = m_rpccommand.InsertItem(CString(buffer),hItemRoot);
 				Jiexi(obj[index],varRoot,m_rpccommand);

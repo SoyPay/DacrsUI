@@ -201,9 +201,9 @@ void  CGrabCommRedPacket::OnShowPagePool(int page)
 	GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(strpage);
 	m_curpage = page;
 	int index = (page-1)*m_pagesize;
-	int count = (m_PoolList.size() -index)>=m_pagesize?m_pagesize:(m_PoolList.size() -index);
+	unsigned int count = (m_PoolList.size() -index)>=m_pagesize?m_pagesize:(m_PoolList.size() -index);
 	int i =0;
-	for (int k = index;k< (index+count);k++)
+	for (unsigned int k = index;k< (index+count);k++)
 	{
 		uistruct::REDPACKETPOOL_t const_it = m_PoolList.at(k);
 
@@ -300,6 +300,7 @@ void   CGrabCommRedPacket::AcceptRedPacketComm(CString sendhash,uistruct::REDPAC
 
 	if (!CheckRegIDValid( theApp.m_redPacketScriptid)) return ;
 
+	if(pPoolList.message != _T(""))
 	::MessageBox( this->GetSafeHwnd() ,pPoolList.message , _T("ÌבÊ¾") , MB_ICONINFORMATION ) ;
 
 	CString walletaddr = m_walletmoney;
@@ -442,6 +443,10 @@ bool  CGrabCommRedPacket::IsAcceptRedPacket(CString account,uistruct::REDPACKETP
 		uistruct::RED_DATA redPacket;
 		memset(&redPacket , 0 , sizeof(uistruct::RED_DATA));
 		std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue.GetString());
+		if (vTemp.size() <=0)
+		{
+			return false;
+		}
 		memcpy(&redPacket, &vTemp[0], sizeof(uistruct::RED_DATA));
 
 		for (int i =0;i <redPacket.dbdata.takennum;i++)

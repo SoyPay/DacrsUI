@@ -41,6 +41,7 @@ private:
 	CEdit		       m_edit;
 	COLORREF          m_colorEditText;
 	bool              m_seteditcolor;
+	CShadeButtonST    m_rBtnRefresh;
 public:
 	afx_msg void OnNMDblclkListListtx(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
@@ -53,6 +54,7 @@ public:
 	bool  isMine(CString addr);
 	afx_msg void OnCbnSelchangeComboTime();
 	CString GetConditonTime();
+	CString GetConditonTime(INT64 &maxtime,INT64 &mintime);
 	CString GetConditonTxType(int &operate);
 	CString Getaddr();
 	void ShowAddrConditon();
@@ -62,4 +64,5 @@ public:
 	BOOL FindDesTx(uistruct::TRANSRECORDLIST pListInfo,int flag,uistruct::REVTRANSACTION_t txdetail);
 	
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
+	afx_msg void OnBnClickedButtonRefresh();
 };
