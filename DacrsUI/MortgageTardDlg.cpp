@@ -139,6 +139,11 @@ BOOL CMortgageTardDlg::OnEraseBkgnd(CDC* pDC)
 BOOL CMortgageTardDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 {
 	// TODO: 在此添加专用代码和/或调用基类
+	LogPrint("INFO","CMortgageTardDlg Create enter\n");
+	LogPrint("INFO","CMortgageTardDlg Create enter:%0x\n",&pParentWnd);
+	LogPrint("INFO","CMortgageTardDlg Create nIDTemplate:%d\n",nIDTemplate);
+	LogPrint("INFO","CMortgageTardDlg Create nStyle:%d\n",nStyle);
+	LogPrint("INFO","CMortgageTardDlg Create nID:%d\n",nID);
 	BOOL bRes = CDialogBar::Create(pParentWnd, nIDTemplate, nStyle, nID);
 	if ( bRes ) {
 		//m_rBtnMale.LoadBitmaps(IDB_BITMAP_SISTER_1,IDB_BITMAP_SISTER_3,IDB_BITMAP_SISTER_2,IDB_BITMAP_SISTER_1);

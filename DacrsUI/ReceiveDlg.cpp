@@ -114,7 +114,11 @@ void CReceiveDlg::ShowListInfo()
 BOOL CReceiveDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 {
 	// TODO: 在此添加专用代码和/或调用基类
-
+	LogPrint("INFO","CReceiveDlg Create enter\n");
+	LogPrint("INFO","CReceiveDlg Create enter:%0x\n",&pParentWnd);
+	LogPrint("INFO","CReceiveDlg Create nIDTemplate:%d\n",nIDTemplate);
+	LogPrint("INFO","CReceiveDlg Create nStyle:%d\n",nStyle);
+	LogPrint("INFO","CReceiveDlg Create nID:%d\n",nID);
 	BOOL bRes =   CDialogBar::Create(pParentWnd, nIDTemplate, nStyle, nID);
 	if (bRes)
 	{
