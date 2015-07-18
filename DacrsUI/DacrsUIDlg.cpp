@@ -681,6 +681,7 @@ void  CDacrsUIDlg::ClosWallet()
 {
 	COut outdlg;
 	if ( IDOK == outdlg.DoModal()){
+		LogPrint("INFO","Close app start");
 		BeginWaitCursor();
 		if ( NULL != m_pOutGifDlg ) {
 			CRect rc;
@@ -736,10 +737,9 @@ void CDacrsUIDlg::OnTimer(UINT_PTR nIDEvent)
 	if( 0x10 == nIDEvent ) {
 		KillTimer(0x10);
 		StopSever();
-		CloseThread();
 
 		DestroyDlg();
-
+		LogPrint("INFO","OnTimer start");
 		if ( NULL != m_pOutGifDlg ) {
 			m_pOutGifDlg->ShowWindow(SW_HIDE) ;
 			m_pOutGifDlg->LoadGifing(FALSE);
@@ -747,6 +747,8 @@ void CDacrsUIDlg::OnTimer(UINT_PTR nIDEvent)
 			m_pOutGifDlg = NULL ;
 		}
 		theApp.m_bOutApp = TRUE ;
+		CloseThread();
+		CloseApp();
 	}
 	CDialogEx::OnTimer(nIDEvent);
 }
@@ -1221,6 +1223,6 @@ void  CDacrsUIDlg::ClosWalletWind()
 			m_pOutGifDlg->SetWindowPos(NULL , (rc.left + rc.right)/2 - 300/2 , (rc.top + rc.bottom)/2 - 100/2  , 300 ,100 , SWP_SHOWWINDOW);
 			m_pOutGifDlg->ShowWindow(SW_SHOW) ;
 		}
-		::PostThreadMessage( theApp.GetMtHthrdId() , MSG_USER_OUT , 0 , 0 ) ;
+		//::PostThreadMessage( theApp.GetMtHthrdId() , MSG_USER_OUT , 0 , 0 ) ;
 		SetTimer( 0x10 , 2000 , NULL ) ; 
 }
