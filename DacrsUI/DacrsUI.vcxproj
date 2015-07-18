@@ -279,6 +279,7 @@
     <ClInclude Include="GrabCommRedPacket.h" />
     <ClInclude Include="GrabSpecalRedPacket.h" />
     <ClInclude Include="GuessNum.h" />
+    <ClInclude Include="IpoCoin.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="NewMenu.h" />
     <ClInclude Include="NewSendAddr.h" />
@@ -371,6 +372,7 @@
     <ClCompile Include="GuessNum.cpp" />
     <ClCompile Include="HeaderCtrlCl.cpp" />
     <ClCompile Include="IndTitleBar.cpp" />
+    <ClCompile Include="IpoCoin.cpp" />
     <ClCompile Include="IpoDlg.cpp" />
     <ClCompile Include="JsonConfigHelp.cpp" />
     <ClCompile Include="json\json_reader.cpp" />

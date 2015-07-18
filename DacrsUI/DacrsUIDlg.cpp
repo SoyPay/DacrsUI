@@ -66,11 +66,11 @@ CDacrsUIDlg::CDacrsUIDlg(CWnd* pParent /*=NULL*/)
 	m_pTradDlg  = NULL  ;
 	m_pP2PDlg  = NULL  ;
 	m_pMortgageTardDlg  = NULL  ;
-	m_pIpoDlg  = NULL  ;
 	m_pAddApp  = NULL  ;
 	dlgType = 0;
 	m_pOutGifDlg =  NULL ;
 	m_pRPCDlg = NULL;
+	m_pIpoCoinDlg = NULL;
 }
 
 void CDacrsUIDlg::DoDataExchange(CDataExchange* pDX)
@@ -296,12 +296,19 @@ int CDacrsUIDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		m_pMortgageTardDlg->ShowWindow(SW_HIDE) ;
 	}
 	LogPrint("INFO","Create m_pMortgageTardDlg end\n");
-	if( NULL == m_pIpoDlg ){
-		m_pIpoDlg = new CIpoDlg ;
-		m_pIpoDlg->Create(this, CIpoDlg::IDD, CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_HIDE_INPLACE,9) ;
-		m_pIpoDlg->ShowWindow(SW_HIDE) ;
+	//if( NULL == m_pIpoDlg ){
+	//	m_pIpoDlg = new CIpoDlg ;
+	//	m_pIpoDlg->Create(this, CIpoDlg::IDD, CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_HIDE_INPLACE,9) ;
+	//	m_pIpoDlg->ShowWindow(SW_HIDE) ;
+	//}
+
+	if( NULL == m_pIpoCoinDlg ){
+		m_pIpoCoinDlg = new CIpoCoin ;
+		m_pIpoCoinDlg->Create(this, CIpoCoin::IDD, CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_HIDE_INPLACE,11) ;
+		m_pIpoCoinDlg->ShowWindow(SW_HIDE) ;
 	}
-	LogPrint("INFO","Create m_pIpoDlg end\n");
+
+	LogPrint("INFO","Create m_pIpoCoinDlg end\n");
 	if( NULL == m_pAddApp ){
 		m_pAddApp = new CAddApp ;
 		m_pAddApp->Create(this, CAddApp::IDD, CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_HIDE_INPLACE,10) ;
@@ -321,7 +328,7 @@ int CDacrsUIDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_dlgMap.insert( std::map<UINT , CDialogBar *>::value_type( CTradDlg::IDD , m_pTradDlg)) ;
 	m_dlgMap.insert( std::map<UINT , CDialogBar *>::value_type( CP2PDlg::IDD , m_pP2PDlg)) ;
 	m_dlgMap.insert( std::map<UINT , CDialogBar *>::value_type( CMortgageTardDlg::IDD , m_pMortgageTardDlg)) ;
-	m_dlgMap.insert( std::map<UINT , CDialogBar *>::value_type( CIpoDlg::IDD , m_pIpoDlg)) ;
+	m_dlgMap.insert( std::map<UINT , CDialogBar *>::value_type( CIpoCoin::IDD , m_pIpoCoinDlg)) ;
 	m_dlgMap.insert( std::map<UINT , CDialogBar *>::value_type( CAddApp::IDD , m_pAddApp)) ;
 
 	//显示主界面
@@ -389,9 +396,9 @@ void CDacrsUIDlg::DestroyDlg()
 		delete m_pMortgageTardDlg ;
 		m_pMortgageTardDlg = NULL ;
 	}
-	if ( NULL != m_pIpoDlg ) {
-		delete m_pIpoDlg ;
-		m_pIpoDlg = NULL ;
+	if ( NULL != m_pIpoCoinDlg ) {
+		delete m_pIpoCoinDlg ;
+		m_pIpoCoinDlg = NULL ;
 	}
 	if ( NULL != m_pAddApp ) {
 		delete m_pAddApp ;
@@ -441,7 +448,7 @@ void CDacrsUIDlg::OnBnClickedButtonMortgage()
 //IPO领币
 void CDacrsUIDlg::OnBnClickedButtonDeals()
 {
-	ShowDialog(CIpoDlg::IDD) ;
+	ShowDialog(CIpoCoin::IDD) ;
 	ShowStateTip(IDC_BUTTON_IPO);
 }
 //添加应用

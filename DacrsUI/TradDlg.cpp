@@ -129,11 +129,6 @@ BOOL CTradDlg::OnEraseBkgnd(CDC* pDC)
 BOOL CTradDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 {
 	// TODO: 在此添加专用代码和/或调用基类
-	LogPrint("INFO","CTradDlg Create enter\n");
-	LogPrint("INFO","CTradDlg Create enter:%0x\n",&pParentWnd);
-	LogPrint("INFO","CTradDlg Create nIDTemplate:%d\n",nIDTemplate);
-	LogPrint("INFO","CTradDlg Create nStyle:%d\n",nStyle);
-	LogPrint("INFO","CTradDlg Create nID:%d\n",nID);
 	BOOL bRes = CDialogBar::Create(pParentWnd, nIDTemplate, nStyle, nID);
 	if ( bRes ) {
 		UpdateData(0);
