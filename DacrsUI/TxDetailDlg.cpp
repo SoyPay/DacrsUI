@@ -73,22 +73,23 @@ CString CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
 				reward.Format(_T("%s"),"哥");
 			}
 
-			txdetail.AppendFormat(_T("交易应用为:   %s\r\n\r\n"),"开奖猜你妹" );
-			txdetail.AppendFormat(_T("猜你妹开奖底牌:%s\r\n\r\n"),reward );
+			txdetail.AppendFormat(_T("应用名称:   %s\r\n\r\n"),"猜你妹" );
+			txdetail.AppendFormat(_T("合约类型:   %s\r\n\r\n"),"开奖" );
+			txdetail.AppendFormat(_T("开奖底牌:%s\r\n\r\n"),reward );
 
 			std::vector<unsigned char> vTemp;
 			vTemp.assign(Openbet.txhash,Openbet.txhash+sizeof(Openbet.txhash));
 			reverse(vTemp.begin(),vTemp.end());
 			string txhash = CSoyPayHelp::getInstance()->HexStr(vTemp);
 
-			txdetail.AppendFormat(_T("赌约交易ID:   %s\r\n\r\n"),txhash.c_str() );
+			txdetail.AppendFormat(_T("发起竞猜交易ID:   %s\r\n\r\n"),txhash.c_str() );
 			// temp = CSoyPayHelp::getInstance()->HexStr(Openbet.accepthash );
 
 			 vTemp.assign(Openbet.accepthash,Openbet.accepthash+sizeof(Openbet.accepthash));
 			 reverse(vTemp.begin(),vTemp.end());
 			 txhash = CSoyPayHelp::getInstance()->HexStr(vTemp);
 
-			txdetail.AppendFormat(_T("接赌交易ID:   %s\r\n\r\n"),txhash.c_str() );
+			txdetail.AppendFormat(_T("接单交易ID:   %s\r\n\r\n"),txhash.c_str() );
 			//OpenBetRecord(vTemp,transcion);
 		}else if (vTemp[0] == TX_ACCEPTBET)
 		{
@@ -108,16 +109,17 @@ CString CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
 				guess.Format(_T("%s"),"哥");
 			}
 
-			txdetail.AppendFormat(_T("交易应用为:  %s\r\n\r\n"),"接赌猜你妹" );
-			txdetail.AppendFormat(_T("接猜你妹出牌: %s\r\n\r\n"),guess );
+			txdetail.AppendFormat(_T("应用名称:  %s\r\n\r\n"),"猜你妹" );
+			txdetail.AppendFormat(_T("合约类型:   %s\r\n\r\n"),"接单" );
+			txdetail.AppendFormat(_T("竞猜内容: %s\r\n\r\n"),guess );
 
 			std::vector<unsigned char> vTemp;
 			vTemp.assign(acceptcbet.txhash,acceptcbet.txhash+sizeof(acceptcbet.txhash));
 			reverse(vTemp.begin(),vTemp.end());
 			string txhash = CSoyPayHelp::getInstance()->HexStr(vTemp);
 
-			txdetail.AppendFormat(_T("赌约交易ID:   %s\r\n\r\n"),txhash.c_str() );
-			txdetail.AppendFormat(_T("赌约金额:     %.8f\r\n\r\n"),(acceptcbet.money*1.0)/COIN);
+			txdetail.AppendFormat(_T("发起竞猜交易ID:   %s\r\n\r\n"),txhash.c_str() );
+			txdetail.AppendFormat(_T("金额:     %.8f\r\n\r\n"),(acceptcbet.money*1.0)/COIN);
 		}else if (vTemp[0] == TX_SENDBET)
 		{
 			if(vTemp.size()==0)
@@ -127,18 +129,19 @@ CString CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
 			memset(&sendbetdata,0,sizeof(SEND_DATA));
 			memcpy(&sendbetdata, &vTemp[0],sizeof(SEND_DATA));
 	
-			txdetail.AppendFormat(_T("交易应用为:  %s\r\n\r\n"),"发送猜你妹赌约" );
-			txdetail.AppendFormat(_T("发起赌约金额:%.8f\r\n\r\n"),(sendbetdata.money*1.0)/COIN );
+			txdetail.AppendFormat(_T("应用名称:  %s\r\n\r\n"),"猜你妹" );
+			txdetail.AppendFormat(_T("合约类型:   %s\r\n\r\n"),"发起竞猜" );
+			txdetail.AppendFormat(_T("金额:%.8f\r\n\r\n"),(sendbetdata.money*1.0)/COIN );
 		}else if (vTemp[0] == 0xff)
 		{
 			if (vTemp[1] == 0x01)    /// 充值
 			{
-				
-				txdetail.AppendFormat(_T("交易应用为:  %s\r\n\r\n"),"充值猜你妹" );
+				txdetail.AppendFormat(_T("应用名称:  %s\r\n\r\n"),"猜你妹" );
+				txdetail.AppendFormat(_T("合约类型:  %s\r\n\r\n"),"充值" );
 			}else if (vTemp[1] == 0x02)   /// 提现
 			{
-
-				txdetail.AppendFormat(_T("交易应用为:   %s\r\n\r\n"),"提现猜你妹" );
+				txdetail.AppendFormat(_T("应用名称:  %s\r\n\r\n"),"猜你妹" );
+				txdetail.AppendFormat(_T("合约类型:  %s\r\n\r\n"),"提现" );
 			}
 		}
 	}else  if (!strcmp(tx.desregid,theApp.m_redPacketScriptid)){ //// 接龙红包	
@@ -153,7 +156,9 @@ CString CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
 			memcpy(&redpacket, &vTemp[0],sizeof(SEND_DATA));
 
 			
-			txdetail.AppendFormat(_T("交易应用为:   %s\r\n\r\n"),"发送普通红包" );
+			txdetail.AppendFormat(_T("应用名称:  %s\r\n\r\n"),"抢红包" );
+			txdetail.AppendFormat(_T("合约类型:  %s\r\n\r\n"),"发送普通红包" );
+
 			txdetail.AppendFormat(_T("发普通红包金额:%.8f\r\n\r\n"),(redpacket.money*1.0)/COIN);
 			txdetail.AppendFormat(_T("发普通红包个数:%d\r\n\r\n"),redpacket.number);
 			CString message = _T("");
@@ -174,8 +179,8 @@ CString CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
 			memcpy(&redpacket, &vTemp[0],sizeof(ACCEPT_RED_PACKET));
 
 
-			txdetail.AppendFormat(_T("交易应用为:   %s\r\n\r\n"),"接普通红包" );
-
+			txdetail.AppendFormat(_T("应用名称:  %s\r\n\r\n"),"抢红包" );
+			txdetail.AppendFormat(_T("合约类型:  %s\r\n\r\n"),"抢普通红包" );
 
 			std::vector<unsigned char> vTemp;
 			vTemp.assign(redpacket.redhash,redpacket.redhash+sizeof(redpacket.redhash));
@@ -192,7 +197,9 @@ CString CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
 			memset(&redpacket,0,sizeof(RED_PACKET));
 			memcpy(&redpacket, &vTemp[0],sizeof(SEND_DATA));
 
-			txdetail.AppendFormat(_T("交易应用为:   %s\r\n\r\n"),"发送接龙红包" );
+			txdetail.AppendFormat(_T("应用名称:  %s\r\n\r\n"),"抢红包" );
+			txdetail.AppendFormat(_T("合约类型:  %s\r\n\r\n"),"发送接龙红包" );
+
 			txdetail.AppendFormat(_T("发接龙红包金额:  %.8f\r\n\r\n"),(redpacket.money*1.0)/COIN);
 			txdetail.AppendFormat(_T("发接龙红包个数:  %d\r\n\r\n"),redpacket.number);
 			//SendRePacketSpecailRecord(vTemp,transcion);
@@ -205,7 +212,8 @@ CString CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
 			memcpy(&redpacket, &vTemp[0],sizeof(ACCEPT_RED_PACKET));
 
 	
-			txdetail.AppendFormat(_T("交易应用为:   %s\r\n\r\n"),"接龙红包" );
+			txdetail.AppendFormat(_T("应用名称:  %s\r\n\r\n"),"抢红包" );
+			txdetail.AppendFormat(_T("合约类型:  %s\r\n\r\n"),"抢接龙红包" );
 
 			std::vector<unsigned char> vTemp;
 			vTemp.assign(redpacket.redhash,redpacket.redhash+sizeof(redpacket.redhash));
@@ -217,17 +225,18 @@ CString CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
 		{
 			if (vTemp[1] == 0x01)    /// 充值
 			{
-				txdetail.AppendFormat(_T("交易应用为:   %s\r\n\r\n"),"充值抢红包" );
-				//txdetail.AppendFormat(_T("充值抢红包") );
+				txdetail.AppendFormat(_T("应用名称:  %s\r\n\r\n"),"抢红包" );
+				txdetail.AppendFormat(_T("合约类型:  %s\r\n\r\n"),"充值" );
 			}else if (vTemp[1] == 0x02)   /// 提现
 			{
-				txdetail.AppendFormat(_T("交易应用为:   %s\r\n\r\n"),"提现抢红包" );
-				//txdetail.AppendFormat(_T("提现抢红包") );
+				txdetail.AppendFormat(_T("应用名称:  %s\r\n\r\n"),"抢红包" );
+				txdetail.AppendFormat(_T("合约类型:  %s\r\n\r\n"),"提现" );
 			}
 		}
 	}else if (!strcmp(tx.desregid,theApp.m_ipoScritptid))
 	{
-		txdetail.AppendFormat(_T("交易应用为:   %s\r\n\r\n"),"ipo领币提现" );
+		txdetail.AppendFormat(_T("应用名称:  %s\r\n\r\n"),"ipo领币" );
+		txdetail.AppendFormat(_T("合约类型:  %s\r\n\r\n"),"提现" );
 	}
 	return txdetail;
 }

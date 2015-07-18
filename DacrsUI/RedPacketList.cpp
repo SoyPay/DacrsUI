@@ -14,7 +14,6 @@ IMPLEMENT_DYNAMIC(CRedPacketList, CDialogEx)
 CRedPacketList::CRedPacketList(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CRedPacketList::IDD, pParent)
 {
-
 }
 
 CRedPacketList::~CRedPacketList()
@@ -29,6 +28,7 @@ void CRedPacketList::DoDataExchange(CDataExchange* pDX)
 
 
 BEGIN_MESSAGE_MAP(CRedPacketList, CDialogEx)
+	ON_NOTIFY(LVN_COLUMNCLICK, IDC_LIST2, &CRedPacketList::OnLvnColumnclickList2)
 END_MESSAGE_MAP()
 
 
@@ -174,4 +174,69 @@ BOOL CRedPacketList::OnInitDialog()
 	ShowTxDetail(theApp.m_strAddress);
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE
+}
+static int sort_column; // 记录点击的列
+static BOOL method = TRUE; // 记录比较方法
+static int CALLBACK MyCompareProc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort)
+{
+
+ // 从参数中提取所需比较lc的两行数据
+
+	int row1 = (int) lParam1;
+	int row2 = (int) lParam2;
+
+	CListCtrl* lc = (CListCtrl*)lParamSort;
+
+	CString lp1 = lc->GetItemText(row1,sort_column);
+	CString lp2 = lc->GetItemText(row2,sort_column);
+
+
+	// 比较，对不同的列，不同比较，注意记录前一次排序方向，下一次要相反排序
+ 
+	if (sort_column==2)
+	{
+		INT64 p1 = (INT64)(atof(lp1)*COIN);
+		INT64 p2 = (INT64)(atof(lp2)*COIN);
+	// int型比较
+		if (!method)
+		return (int)(p1-p2);
+		else
+		return (int)(p2-p1);
+	}
+	else if (sort_column==0)
+	{
+		int p1 = atoi(lp1);
+		int p2 = atoi(lp2);
+		if (method)
+		return p1-p2;
+		else
+		return p2-p1;
+	}
+	else
+	{
+		 //文字型比较
+		if (method)
+		return lp1.CompareNoCase(lp2);
+		else
+		return lp2.CompareNoCase(lp1);
+	}
+
+	return 0;
+}
+
+
+void CRedPacketList::OnLvnColumnclickList2(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
+	// TODO: 在此添加控件通知处理程序代码
+	sort_column = pNMLV->iSubItem;//点击的列
+
+	int count = m_listCtrl.GetItemCount();
+
+	for (int i=0;i<count;i++)
+		m_listCtrl.SetItemData(i,i); // 每行的比较关键字，此处为列序号（点击的列号），可以设置为其他 比较函数的第一二个参数
+
+	m_listCtrl.SortItems(MyCompareProc,(DWORD_PTR)&m_listCtrl);//排序 第二个参数是比较函数的第三个参数
+	method =!method;
+	*pResult =0;
 }
