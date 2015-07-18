@@ -507,7 +507,10 @@ void CMortgageTardDlg::SendRedPacketComm(){
 
 
 	CReCharge outdlg(NULL,_T("广告语句"),_T("广告词:"),_T("  "));
-	outdlg.DoModal();
+	if (outdlg.DoModal() == IDCANCEL)
+	{
+		return;
+	}
   
    CString message = theApp.m_strAddress;
 
@@ -714,7 +717,7 @@ void CMortgageTardDlg::OnCbnSelchangeComboAddres()
 			Json::Value valuearray = root["vFreezedFund"]; 
 
 			double vFreeAmount = 0.0;
-			for(int i =0;i<valuearray.size();i++)
+			for(unsigned int i =0;i<valuearray.size();i++)
 			{
 				nMoney = valuearray[i]["value"].asInt64() ;
 				vFreeAmount += (nMoney*1.0/COIN);
@@ -1596,6 +1599,10 @@ bool  CMortgageTardDlg::IsAcceptRedPacket(CString account,uistruct::REDPACKETPOO
 		uistruct::RED_DATA redPacket;
 		memset(&redPacket , 0 , sizeof(uistruct::RED_DATA));
 		std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue.GetString());
+		if (vTemp.size() <=0)
+		{
+			return false;
+		}
 		memcpy(&redPacket, &vTemp[0], sizeof(uistruct::RED_DATA));
 
 		for (int i =0;i <redPacket.dbdata.takennum;i++)

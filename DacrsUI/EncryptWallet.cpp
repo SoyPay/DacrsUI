@@ -42,6 +42,13 @@ void CEncryptWallet::OnBnClickedOk()
 	CString confiedE = _T("");
 	GetDlgItem(IDC_INPUTMIMA)->GetWindowText(inputE);
 	GetDlgItem(IDC_CONFIREDMIMA)->GetWindowText(confiedE);
+
+	int pos = inputE.Find(_T(" "));
+	if (pos >=0)
+	{
+		::MessageBox( this->GetSafeHwnd() ,_T("输入密码中不能有空格") , _T("提示") , MB_ICONINFORMATION ) ;
+		return;
+	}
 	if (inputE == _T(""))
 	{
 		::MessageBox( this->GetSafeHwnd() ,_T("输入密码") , _T("提示") , MB_ICONINFORMATION ) ;

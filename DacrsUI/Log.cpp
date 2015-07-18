@@ -68,8 +68,14 @@ static void DebugPrintInit() {
 		CString strWorkDir(_T(""));
 		CString pathDebug = GetCurrentWorkDir();
 		CString fileName = *iterLogFile + ".log";
-		pathDebug +=  "\\" + fileName;
-		fileout = fopen(pathDebug.GetBuffer(), "a");
+		pathDebug.AppendFormat(_T("\\%s"),fileName);
+		//pathDebug +=  "\\" + fileName;
+		//fileout = fopen(pathDebug.GetBuffer(pathDebug.GetLength()), "a");
+		if( (fopen_s( &fileout, pathDebug.GetBuffer(pathDebug.GetLength()), "a" )) !=0 )
+			printf( "The file %s was not opened\n", pathDebug);
+		else
+			printf( "The file %s was opened\n", pathDebug);
+
 		if (fileout) {
 			DebugLogFile& log = g_DebugLogs[*iterLogFile];
 			setbuf(fileout, NULL); // unbuffered

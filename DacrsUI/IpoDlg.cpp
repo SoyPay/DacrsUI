@@ -353,7 +353,7 @@ void CIpoDlg::OnShowListCtrol(CString addr)
 	Json::Value valuearray = root["vFreezedFund"]; 
 
 	int coulum = 0;
-	for(int i =0;i<valuearray.size();i++)
+	for(unsigned int i =0;i<valuearray.size();i++)
 	{
 		int nSubIdx = 0;
 		CString strOrder("");

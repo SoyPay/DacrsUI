@@ -42,6 +42,11 @@ void CDacrsUIApp::UpdateQuizPoolData()
 			memset(&DBbet , 0 , sizeof(uistruct::DBBET_DATA));
 			std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue.GetString());
 
+			if (vTemp.size() <=0)
+			{
+				continue;
+			}
+			
 			memcpy(&DBbet, &vTemp[0], sizeof(DBbet));
 
 			std::vector<unsigned char> vnTemp = CSoyPayHelp::getInstance()->ParseHex(txhash);
@@ -112,15 +117,15 @@ void CDacrsUIApp::UpdateAddressData(){
 		return  ;
 
 	uistruct::LISTADDR_t listaddr;
-	for(int i = 0; i < root.size(); ++i){
+	for(unsigned int i = 0; i < root.size(); ++i){
 		memset(&listaddr , 0 , sizeof(uistruct::LISTADDR_t));
 		//address
 		CString strData;
 		strData.Format( _T("%s") , root[i]["addr"].asCString() ) ;
-		strncpy(listaddr.address  , strData , strlen(strData) > sizeof(listaddr.address) ? sizeof(listaddr.address):strlen(strData));
+		strncpy_s(listaddr.address  , strData , strlen(strData) > sizeof(listaddr.address) ? sizeof(listaddr.address):strlen(strData));
 		//RegID
 		strData.Format( _T("%s") , root[i]["regid"].asCString() ) ;
-		strncpy(listaddr.RegID  , strData , strlen(strData) > sizeof(listaddr.RegID) ? sizeof(listaddr.RegID):strlen(strData));
+		strncpy_s(listaddr.RegID  , strData , strlen(strData) > sizeof(listaddr.RegID) ? sizeof(listaddr.RegID):strlen(strData));
 		//金额
 		double fmoney = 0.0 ;  
 		fmoney = root[i]["balance"].asDouble(); 
@@ -379,7 +384,7 @@ void CDacrsUIApp::AcceptBetRecord(vector<unsigned char> acceptbet,uistruct::REVT
 	CString strCond,strField;
 	strCond.Format(_T(" tx_hash='%s' "), SendTxhash.c_str());
 	
-	//strField.AppendFormat(" right_addr = '%s' ,",desaddr );
+	strField.AppendFormat(" right_addr = '%s' ,",transcion.desregid );
 	strField.AppendFormat(_T("recv_time = '%s' ,height = %d ,state = %d ,relate_hash = '%s' ,guess_num = %d ") ,strTime ,transcion.confirmedHeight ,1 ,transcion.txhash ,(int)acceptcbet.data) ;
 
 	//更新数据
@@ -541,7 +546,7 @@ void CDacrsUIApp::InsertTransaction(CString hash){
 			int nItem =  theApp.m_SqliteDeal.GetTableCountItem(_T("t_wallet_address"),conditon) ;
 			conditon.Format(_T("address = '%s'"),transcion.desaddr.c_str());
 			int nItem1 =  theApp.m_SqliteDeal.GetTableCountItem(_T("t_wallet_address"),conditon) ;
-			if (nItem1 !=0&nItem != 0)
+			if (nItem1 !=0&&nItem != 0)
 			{
 				transcion.state = 3; 
 			}else if (nItem != 0)
@@ -605,7 +610,7 @@ void CDacrsUIApp:: SyncTransaction(string obj)
 			int nItem =  theApp.m_SqliteDeal.GetTableCountItem(_T("t_wallet_address"),conditon) ;
 			conditon.Format(_T("address = '%s'"),transcion.desaddr.c_str());
 			int nItem1 =  theApp.m_SqliteDeal.GetTableCountItem(_T("t_wallet_address"),conditon) ;
-			if (nItem1 !=0&nItem != 0)
+			if (nItem1 !=0&&nItem != 0)
 			{
 				transcion.state = 3; 
 			}else if (nItem != 0)
@@ -802,6 +807,10 @@ void CDacrsUIApp::UpdateRedPacketPoolData()
 			memset(&redPacket , 0 , sizeof(uistruct::RED_DATA));
 			std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue.GetString());
 
+			if (vTemp.size() <0)
+			{
+				continue;
+			}
 			memcpy(&redPacket, &vTemp[0], sizeof(uistruct::RED_DATA));
 
 			std::vector<unsigned char> txTemp = CSoyPayHelp::getInstance()->ParseHex(txhash.GetString());
@@ -916,6 +925,10 @@ void CDacrsUIApp::AcceptRePacketCommtRecord(vector<unsigned char> acceptRedPacke
 		uistruct::RED_DATA redPacket;
 		memset(&redPacket , 0 , sizeof(uistruct::RED_DATA));
 		std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue.GetString());
+		if (vTemp.size() <=0)
+		{
+			return;
+		}
 		memcpy(&redPacket, &vTemp[0], sizeof(uistruct::RED_DATA));
 
 		CString strCond;
@@ -1054,6 +1067,10 @@ void CDacrsUIApp::AcceptRePacketSpecailRecord(vector<unsigned char> acceptRedPac
 		uistruct::RED_DATA redPacket;
 		memset(&redPacket , 0 , sizeof(uistruct::RED_DATA));
 		std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue.GetString());
+		if (vTemp.size() <=0)
+		{
+			return;
+		}
 		memcpy(&redPacket, &vTemp[0], sizeof(uistruct::RED_DATA));
 
 		CString strCond;

@@ -186,7 +186,7 @@ void CRedPacketPoolListBox::updateListBoxButtonPos()
 	Redbutton_map::iterator iter;
 	Redbutton_map::iterator iterUp;
 	int iLine = 0;
-	for (int nItem = 0  ; nItem < m_mButton.size(); nItem++ ){
+	for (unsigned int nItem = 0  ; nItem < m_mButton.size(); nItem++ ){
 		iter = m_mButton.find(nItem);
 		if( iter!= m_mButton.end() ){
 			iterUp = m_mButton.find(iLine);

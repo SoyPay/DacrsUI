@@ -2443,8 +2443,8 @@ DWORD CButtonST::OnDrawBorder(CDC* pDC, CRect* pRect)
 	{
 		if (m_bIsFlat)
 		{
-			if (m_bDrawBorder)//边界不draw
-				;//pDC->Draw3dRect(pRect, ::GetSysColor(COLOR_BTNSHADOW), ::GetSysColor(COLOR_BTNHILIGHT));
+			//if (m_bDrawBorder)//边界不draw
+			//	;//pDC->Draw3dRect(pRect, ::GetSysColor(COLOR_BTNSHADOW), ::GetSysColor(COLOR_BTNHILIGHT));
 		}
 		else    
 		{

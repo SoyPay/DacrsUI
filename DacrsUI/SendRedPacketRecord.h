@@ -37,7 +37,7 @@ private:
 private:
 	int                              m_pagecount;
 	int                              m_curpage;
-	int                              m_pagesize;
+	unsigned int                              m_pagesize;
 	uistruct::REDPACKETSENDLIST       m_SendRedPacketList;
 	HBRUSH                          m_hbrush;
 public:

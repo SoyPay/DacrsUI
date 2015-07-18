@@ -107,6 +107,7 @@ BOOL CDacrsUIApp::InitInstance()
 		return FALSE ;
 	}
 
+
 	m_blockAutoDelete = false;
 	m_msgAutoDelete= false;
 	GetMoFilename( str_InsPath , str_ModuleFilename ); //获取文件路径和文件名称
@@ -151,6 +152,11 @@ BOOL CDacrsUIApp::InitInstance()
 	CString tempuiport = m_uirpcport;
 	ProductHttpHead(str_InsPath ,m_strServerCfgFileName,m_rpcport,m_sendPreHeadstr,m_sendendHeadstr,m_uirpcport,netWork);
 
+	dbpath.Format(_T("%s\\db"),str_InsPath);
+	if (!PathIsDirectory(dbpath))
+	{
+		::CreateDirectory(dbpath, NULL);
+	}
 	/// 0 是main网络(正式网络)  1 regtest网络(局域网络) 2testnet(测试网络) 
 	//if (netWork == 1)
 	//{
@@ -561,7 +567,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 				case WM_UP_BETPOOL:
 					{
 						/// 赌约池数据库列表
-						bool flag =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.ClearTableData(_T("t_quiz_pool"));
+						BOOL flag =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.ClearTableData(_T("t_quiz_pool"));
 						if (flag ) 
 						{
 							((CDacrsUIApp*)pParam)->UpdateQuizPoolData();
@@ -571,7 +577,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 				case WM_REDPACKETPOOL:
 					{
 						/// 红包池
-						bool flag =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.ClearTableData(_T("t_red_packets_pool"));
+						BOOL flag =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.ClearTableData(_T("t_red_packets_pool"));
 						if (flag ) 
 						{
 							((CDacrsUIApp*)pParam)->UpdateRedPacketPoolData();
@@ -886,7 +892,7 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 			memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
 			GetLocalTime( &curTime ) ;
 			static int RecivetxtxTimeLast =0;
-			int tempTimemsg= UiFun::SystemTimeToTimet(curTime);
+			int tempTimemsg= (int)UiFun::SystemTimeToTimet(curTime);
 			/// 更新钱包
 			CPostMsg postuimsg(MSG_USER_GET_UPDATABASE,WM_UP_ADDRESS);
 			if ((tempTimemsg - RecivetxtxTimeLast)>10 || RecivetxtxTimeLast == 0)
@@ -940,7 +946,7 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 			memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
 			GetLocalTime( &curTime ) ;
 			static int RecivetxMsgTimeLast =0;
-			int tempTimemsg= UiFun::SystemTimeToTimet(curTime);
+			int tempTimemsg=(unsigned int) UiFun::SystemTimeToTimet(curTime);
 		
 			TRACE("change:%s\r\n","blockchanged");
 			uistruct::BLOCKCHANGED_t      m_Blockchanged ;
@@ -1369,10 +1375,11 @@ void CDacrsUIApp::CloseProcess(const string& exename){
 					sizeof(shSmall),SHGFI_ICON|SHGFI_SMALLICON);
 				USES_CONVERSION;
 				CString str(ProcessInfo.szExeFile);
-				char* pData = str.GetBuffer();
-				strlwr(pData);  
+				char* pData = str.GetBuffer(str.GetLength());
+				str.ReleaseBuffer();
+				strlwr(pData);
 				for(int i=0;i<3;i++)  
-					if(!strcmp(strlwr((LPSTR)exename.c_str()),pData))   
+					if(!strcmp(strlwr((LPSTR)exename.c_str()),str))   
 					{  
 
 						ProcessHandle=OpenProcess(PROCESS_ALL_ACCESS,FALSE,ProcessInfo.th32ProcessID);  
@@ -1394,7 +1401,7 @@ CString GetAppPath()
 	static CString __apppath;
 	if(!__apppath.IsEmpty())return __apppath;
 	char drive[_MAX_DRIVE],dir[_MAX_DIR],fname[_MAX_FNAME],ext[_MAX_EXT];
-	_splitpath(theApp.m_pszHelpFilePath,drive,dir,fname,ext);
+	_splitpath_s(theApp.m_pszHelpFilePath,drive,dir,fname,ext);
 	CString csDir;
 	csDir =  CString(drive);
 	csDir += CString(dir);

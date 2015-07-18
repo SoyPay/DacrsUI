@@ -44,6 +44,13 @@ void CChangPassWord::OnBnClickedOk()
 	GetDlgItem(IDC_EDIT_OLDPASSWORD)->GetWindowText(inputOld);
 	GetDlgItem(IDC_EDIT_NEWPASSWORD)->GetWindowText(confiedNew);
 	GetDlgItem(IDC_EDIT_CONFIREDPASSWORD)->GetWindowText(confiedPassWord);
+	int pos = confiedNew.Find(_T(" "));
+	if (pos >=0)
+	{
+		::MessageBox( this->GetSafeHwnd() ,_T("输入新密码中不能有空格") , _T("提示") , MB_ICONINFORMATION ) ;
+		return;
+	}
+
 	if (inputOld == _T(""))
 	{
 		::MessageBox( this->GetSafeHwnd() ,_T("请输入旧密码") , _T("提示") , MB_ICONINFORMATION ) ;

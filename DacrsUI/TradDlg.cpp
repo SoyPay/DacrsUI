@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "DacrsUI.h"
 #include "TradDlg.h"
+#include "DacrsUIDlg.h"
 #include "afxdialogex.h"
 #include "TxDetailDlg.h"
 #include "CApplication.h"
@@ -51,6 +52,7 @@ void CTradDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_COMBO1, m_condition);
 	DDX_Control(pDX, IDC_COMBO_TIME, m_time);
 	DDX_Control(pDX, IDC_EDIT_ADDR, m_edit);
+	DDX_Control(pDX, IDC_BUTTON_REFRESH, m_rBtnRefresh);
 	//DDX_Control(pDX, IDC_PROGRESS, v_linkCtrl1);
 	//DDX_Control(pDX, IDC_MFCLINK2, v_linkCtrl2);
 }
@@ -70,6 +72,7 @@ BEGIN_MESSAGE_MAP(CTradDlg, CDialogBar)
 	ON_CBN_SELCHANGE(IDC_COMBO_TIME, &CTradDlg::OnCbnSelchangeComboTime)
 	//ON_EN_CHANGE(IDC_EDIT_ADDR, &CTradDlg::OnEnChangeEditAddr)
 	ON_WM_CTLCOLOR()
+	ON_BN_CLICKED(IDC_BUTTON_REFRESH, &CTradDlg::OnBnClickedButtonRefresh)
 END_MESSAGE_MAP()
 
 
@@ -182,6 +185,16 @@ BOOL CTradDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_rBtnExportTx.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
 		m_rBtnExportTx.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
 		m_rBtnExportTx.SizeToContent();
+
+		m_rBtnRefresh.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
+		m_rBtnRefresh.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+		m_rBtnRefresh.SetWindowText("刷新") ;
+		m_rBtnRefresh.SetFontEx(20 , _T("微软雅黑"));
+		m_rBtnRefresh.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
+		m_rBtnRefresh.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+		m_rBtnRefresh.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
+		m_rBtnRefresh.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
+		m_rBtnRefresh.SizeToContent();
 
 		m_condition.InsertString(0,_T("全部"));
 		m_condition.InsertString(1,_T("接收"));
@@ -446,7 +459,7 @@ void CTradDlg::OnSize(UINT nType, int cx, int cy)
 			pst->GetClientRect( rect ) ;
 			pst->SetWindowPos( NULL ,250 , 23 , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
-
+		
 		CButton *pList = (CButton*)GetDlgItem(IDC_LIST_LISTTX);
 		if( NULL != pList ) {	
 			pList->SetWindowPos(NULL ,32, 50 , 837 , 380 , SWP_SHOWWINDOW);
@@ -463,6 +476,13 @@ void CTradDlg::OnSize(UINT nType, int cx, int cy)
 			CRect m_BtnRc ;
 			pButton->GetClientRect(&m_BtnRc);
 			pButton->SetWindowPos(NULL ,900 - 1*(103 + 5)- 23-m_BtnRc.Width()-10 , 600 - 72 - 32 - 46 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
+		}
+
+		pButton = (CButton*)GetDlgItem( IDC_BUTTON_REFRESH ) ;
+		if ( NULL != pst ) {
+			CRect m_BtnRc ;
+			pButton->GetClientRect( m_BtnRc ) ;
+			pButton->SetWindowPos(NULL ,900 - 1*(103 + 5)- 23-m_BtnRc.Width()-120 , 600 - 72 - 32 - 46 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
 		}
 	}
 }
@@ -506,7 +526,11 @@ void CTradDlg::OnBnClickedExportExel()
 		}
 
 	CString strFile = dlg.GetPathName();
-	strFile.AppendFormat(_T(".xls"));
+	if (!((CDacrsUIDlg*)(theApp.m_pMainWnd))->GetFileName(strFile,_T(".xls")))
+	{
+		return;
+	}
+	//strFile.AppendFormat(_T(".xls"));
 //	CString strFile = _T("d:\\Test.xls");
 
 	COleVariant
@@ -1177,13 +1201,205 @@ BOOL CTradDlg::FindDesTx(uistruct::TRANSRECORDLIST pListInfo,int flag,uistruct::
 	}
 	return FALSE;
 }
+CString CTradDlg::GetConditonTime(INT64 &maxtime,INT64 &mintime)
+{
+	SYSTEMTIME curTime ;
+	memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
+	GetLocalTime( &curTime ) ;
+	CString strSendTime;
+	strSendTime.Format("%04d-%02d-%02d %02d:%02d:%02d",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+	INT64 maxcurtime = UiFun::SystemTimeToTimet(curTime);
+
+	CString text;
+	int sel = m_time.GetCurSel();
+	if (sel < 0)
+	{
+		return _T("");
+	}
+	m_time.GetLBText(sel,text);
+	uistruct::TRANSRECORDLIST pListInfo;
+
+	if (strcmp(text,_T("全部")) == 0)
+	{
+		return _T("");
+	}else if (strcmp(text,_T("今天")) == 0)
+	{
+		curTime.wHour = 0;
+		curTime.wMinute = 0;
+		curTime.wSecond = 0;
+		curTime.wMilliseconds = 0;
+		INT64 mincurtime = UiFun::SystemTimeToTimet(curTime);
+		CString conditon;
+		conditon.Format(_T(" confirmed_time>=%d and confirmed_time<="),mincurtime);
+		conditon.AppendFormat(_T("%d"),maxcurtime);
+		maxtime = maxcurtime;
+		mintime=mincurtime;
+		return conditon;
+		//theApp.m_SqliteDeal.GetTransactionList(conditon, &pListInfo); 
+		//OnShowListCtrl(pListInfo);
+	}else if (strcmp(text,_T("本周")) == 0)
+	{
+		curTime.wHour = 0;
+		curTime.wMinute = 0;
+		curTime.wSecond = 0;
+		curTime.wMilliseconds = 0;
+		INT64 mincurtime = 0;
+		if (curTime.wDayOfWeek == 0)
+		{
+			mincurtime = UiFun::SystemTimeToTimet(curTime);
+		}else{
+			INT64 differ = 86400*curTime.wDayOfWeek;
+			mincurtime = UiFun::SystemTimeToTimet(curTime);
+			mincurtime = maxcurtime -mincurtime;
+			mincurtime = maxcurtime - (differ+mincurtime);
+		}
+		//	SYSTEMTIME tttt = UiFun::Time_tToSystemTime(mincurtime);
+
+		CString conditon;
+		conditon.Format(_T(" confirmed_time>=%d and confirmed_time<="),mincurtime);
+		conditon.AppendFormat(_T("%d"),maxcurtime);
+		maxtime = maxcurtime;
+		mintime=mincurtime;
+		return conditon;
+		//theApp.m_SqliteDeal.GetTransactionList(conditon, &pListInfo); 
+		//OnShowListCtrl(pListInfo);
+	}else if (strcmp(text,_T("本月")) == 0)
+	{
+		curTime.wDay =1;
+		curTime.wHour = 0;
+		curTime.wMinute = 0;
+		curTime.wSecond = 0;
+		curTime.wMilliseconds = 0;
+		INT64 mincurtime = UiFun::SystemTimeToTimet(curTime);
+		CString conditon;
+		conditon.Format(_T(" confirmed_time>=%d and confirmed_time<="),mincurtime);
+		conditon.AppendFormat(_T("%d"),maxcurtime);
+		maxtime = maxcurtime;
+		mintime=mincurtime;
+		return conditon;
+	}else if (strcmp(text,_T("上月")) == 0)
+	{
+		INT64 maxcurtime = 0;
+		INT64 mincurtime = 0;
+		curTime.wDay =1;
+		curTime.wHour=0;
+		curTime.wMinute = 0;
+		curTime.wSecond = 0;
+		curTime.wMilliseconds = 0;
+		maxcurtime = UiFun::SystemTimeToTimet(curTime);
+		if (curTime.wMonth == 1)
+		{
+			curTime.wMonth = 12;
+			curTime.wYear -=1;
+
+		}else{
+			curTime.wMonth -= 1;
+		}
+		mincurtime = UiFun::SystemTimeToTimet(curTime);
+		CString conditon;
+		conditon.Format(_T(" confirmed_time>=%d and confirmed_time<="),mincurtime);
+		conditon.AppendFormat(_T("%d"),maxcurtime);
+		maxtime = maxcurtime;
+		mintime=mincurtime;
+		return conditon;
+	}else if (strcmp(text,_T("今年")) == 0)
+	{
+		curTime.wMonth =1;
+		curTime.wDay=1;
+		curTime.wHour=0;
+		curTime.wMinute = 0;
+		curTime.wSecond = 0;
+		curTime.wMilliseconds = 0;
+		INT64 mincurtime = UiFun::SystemTimeToTimet(curTime);
+		CString conditon;
+		conditon.Format(_T(" confirmed_time>=%d and confirmed_time<="),mincurtime);
+		conditon.AppendFormat(_T("%d"),maxcurtime);
+		maxtime = maxcurtime;
+		mintime=mincurtime;
+		return conditon;
+	}
+	return _T("");
+}
 BOOL CTradDlg::IsInsertTx(uistruct::REVTRANSACTION_t txdetail)
 {
+	int operate = 0;
+	INT64 maxtime = 0,mintime = 0;
+	CString txtype = GetConditonTxType(operate);
+	CString time = GetConditonTime(maxtime,mintime);
+	CString addr = Getaddr();
+	if (txtype ==_T("") && time == _T("") && addr)
+	{
+		return TRUE;
+	}
+	if (time != _T(""))
+	{
+		if (!(txdetail.confirmedtime >= mintime && txdetail.confirmedtime <=maxtime))
+		{
+			return FALSE;
+		}
+	}
+
+	if (txtype != _T(""))
+	{
+		if (txtype.Find(txdetail.txtype.c_str())<0)
+		{
+			return FALSE;
+		}
+		if (operate == 1)
+		{
+			if ( !isMine(txdetail.desaddr.c_str()))
+			{
+				return FALSE;
+			}
+		}
+		if (operate == 2)
+		{
+			if ( !isMine(txdetail.addr.c_str()))
+			{
+				return FALSE;
+			}
+		}
+	}
+
+	if (addr != _T(""))
+	{
+		if (operate == 1)
+		{
+			if ( strcmp(txdetail.desaddr.c_str(),addr) != 0)
+			{
+				return FALSE;
+			}
+		}else if (operate == 2)
+		{
+			if ( strcmp(txdetail.addr.c_str(),addr) != 0)
+			{
+				return FALSE;
+			}
+		}else{
+			if ( strcmp(txdetail.addr.c_str(),addr) != 0 &&  strcmp(txdetail.desaddr.c_str(),addr) != 0)
+			{
+				return FALSE;
+			}
+		}
+	}
+
+	return TRUE;
+	//CString condtion = GetConditonStr(operate);
+
+	//uistruct::TRANSRECORDLIST pListInfo;
+	//theApp.m_SqliteDeal.GetTransactionList(condtion, &pListInfo); 
+
+	//return FindDesTx(pListInfo,operate,txdetail);
+}
+
+void CTradDlg::OnBnClickedButtonRefresh()
+{
+	// TODO: 在此添加控件通知处理程序代码
 	int operate = 0;
 	CString condtion = GetConditonStr(operate);
 
 	uistruct::TRANSRECORDLIST pListInfo;
 	theApp.m_SqliteDeal.GetTransactionList(condtion, &pListInfo); 
 
-	return FindDesTx(pListInfo,operate,txdetail);
+	OnShowListCtrl(pListInfo,operate);
 }

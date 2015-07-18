@@ -206,11 +206,11 @@ void  CAcceptRedPacketRecord::OnShowPagePool(int page)
 
 	m_curpage = page;
 	int index = (page-1)*m_pagesize;
-	int count = (m_AcceptRedPacketList.size() -index)>=m_pagesize?m_pagesize:(m_AcceptRedPacketList.size() -index);
+	unsigned int count = (m_AcceptRedPacketList.size() -index)>=m_pagesize?m_pagesize:(m_AcceptRedPacketList.size() -index);
 
 	int i = 0;
 	std::vector<uistruct::REDPACKETGRAB_t>::const_iterator const_it;
-	for (int k = index;k< (index+count);k++)
+	for (unsigned int k = index;k< (index+count) && k < m_AcceptRedPacketList.size();k++)
 	{
 		uistruct::REDPACKETGRAB_t const_it = m_AcceptRedPacketList.at(k);
 		CString amount,Sendaddr,address,luckeMoney,strnum,type;

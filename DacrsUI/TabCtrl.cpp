@@ -59,7 +59,7 @@ void CCTabCtrl::OnPaint()
 		return;   
 	CRect rcItem;
 	CRect rectTemp;
-	CString strItem;
+	CString strItem = _T("");
 	TCITEM tcItem;
 	tcItem.pszText = strItem.GetBuffer(1024);
 	tcItem.cchTextMax = 1023;
