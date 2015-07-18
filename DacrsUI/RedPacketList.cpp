@@ -5,7 +5,7 @@
 #include "DacrsUI.h"
 #include "RedPacketList.h"
 #include "afxdialogex.h"
-
+#include <map>
 
 // CRedPacketList 对话框
 
@@ -97,25 +97,55 @@ void CRedPacketList::ShowTxDetail(CString txhash)
 		::MessageBox( this->GetSafeHwnd() ,_T("接龙红包还未抢完"), _T("提示") , MB_ICONINFORMATION );
 		CDialog::OnOK();
 	}else{
-		for (int i =0;i <redPacket.dbdata.takennum;i++)
-		{
-			int nSubIdx = 0;
-			uistruct::USER_INFO userinfo = redPacket.userinfo[i];
-			std::vector<unsigned char> vSendid;
-			vSendid.assign(userinfo.regid,userinfo.regid+sizeof(userinfo.regid));
-			string regid  =CSoyPayHelp::getInstance()->GetNotFullRegID(vSendid);
-			double money = (userinfo.amount*1.0)/COIN;
-			//showdata.AppendFormat(_T(" %s                       %.8f\r\n\r\n"),regid.c_str(),money);
-			showdata.Format(_T("%d"),(i+1));
-			m_listCtrl.InsertItem(i, showdata);					//序号
+		 map<INT64,CString > mapindex;
+		 for (int i =0;i <redPacket.dbdata.takennum;i++)
+		 {
+			 uistruct::USER_INFO userinfo = redPacket.userinfo[i];
+			 std::vector<unsigned char> vSendid;
+			 vSendid.assign(userinfo.regid,userinfo.regid+sizeof(userinfo.regid));
+			 string regid  =CSoyPayHelp::getInstance()->GetNotFullRegID(vSendid);
 
-			showdata.Format(_T("%s"),regid.c_str());
-			m_listCtrl.SetItemText(i , ++nSubIdx , showdata );  //
+			 CString regId = _T("");
+			 regId.Format(_T("%s"),regid.c_str());
+			 mapindex[userinfo.amount] = regId;
 
-			strShowData.Format(_T("%.8f"), money); 
-			m_listCtrl.SetItemText(i , ++nSubIdx , strShowData );  //交易hash
+		 }
+		 map<INT64,CString >::reverse_iterator item ;
+		 int i = 0;
+		 for (item = mapindex.rbegin();item != mapindex.rend();item++,i++)
+		 {
+			 int nSubIdx = 0;
 
-		}
+			 double money = (item->first*1.0)/COIN;
+			 //showdata.AppendFormat(_T(" %s                       %.8f\r\n\r\n"),regid.c_str(),money);
+			 showdata.Format(_T("%d"),(i+1));
+			 m_listCtrl.InsertItem(i, showdata);					//序号
+
+			 showdata.Format(_T("%s"),item->second);
+			 m_listCtrl.SetItemText(i , ++nSubIdx , showdata );  //
+
+			 strShowData.Format(_T("%.8f"), money); 
+			 m_listCtrl.SetItemText(i , ++nSubIdx , strShowData );  //交易hash
+		 }
+		//for (int i =0;i <redPacket.dbdata.takennum;i++)
+		//{
+		//	int nSubIdx = 0;
+		//	uistruct::USER_INFO userinfo = redPacket.userinfo[i];
+		//	std::vector<unsigned char> vSendid;
+		//	vSendid.assign(userinfo.regid,userinfo.regid+sizeof(userinfo.regid));
+		//	string regid  =CSoyPayHelp::getInstance()->GetNotFullRegID(vSendid);
+		//	double money = (userinfo.amount*1.0)/COIN;
+		//	//showdata.AppendFormat(_T(" %s                       %.8f\r\n\r\n"),regid.c_str(),money);
+		//	showdata.Format(_T("%d"),(i+1));
+		//	m_listCtrl.InsertItem(i, showdata);					//序号
+
+		//	showdata.Format(_T("%s"),regid.c_str());
+		//	m_listCtrl.SetItemText(i , ++nSubIdx , showdata );  //
+
+		//	strShowData.Format(_T("%.8f"), money); 
+		//	m_listCtrl.SetItemText(i , ++nSubIdx , strShowData );  //交易hash
+
+		//}
 	 }
 
 	//GetDlgItem(IDC_EDIT_TXDETAIL)->SetWindowText(showdata);
@@ -139,7 +169,8 @@ BOOL CRedPacketList::OnInitDialog()
 	m_listCtrl.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_HEADERDRAGDROP );// |LVS_SINGLESEL  );
 	// TODO:  在此添加额外的初始化
 
-	GetDlgItem(IDC_TXHASH)->SetWindowText(theApp.m_strAddress);
+	CString strShow = theApp.m_strAddress.Left(30);
+	GetDlgItem(IDC_TXHASH)->SetWindowText(strShow);
 	ShowTxDetail(theApp.m_strAddress);
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE
