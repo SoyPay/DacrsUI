@@ -253,11 +253,13 @@ BOOL CDacrsUIApp::InitInstance()
 		HANDLE processHandle = OpenProcess(PROCESS_ALL_ACCESS,FALSE,sever_pi.dwProcessId);  
 		if(NULL == processHandle)
 		{
+			/*
 			if(m_bReIndexServer) {
 				StartSeverProcess(str_InsPath);
 				m_bReIndexServer = FALSE;
 				continue;
 			}
+			*/
 			int errorCode = GetLastError();
 			TRACE("Error OpenProcess:%d " , errorCode );
 			::MessageBox( NULL , _T("º”‘ÿ«Æ∞¸ ß∞‹\r\n") , "Error" , MB_ICONERROR) ;
