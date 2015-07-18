@@ -15,6 +15,7 @@
 #include "AddApp.h"
 #include "OutGifDlg.h"
 #include "RPCDlg.h"
+#include "IpoCoin.h"
 // CDacrsUIDlg 对话框
 class CDacrsUIDlg : public CDialogEx
 {
@@ -48,7 +49,7 @@ public:
 	CTradDlg            *m_pTradDlg  ; //交易
 	CP2PDlg             *m_pP2PDlg    ;//P2P
 	CMortgageTardDlg    *m_pMortgageTardDlg;// 抵押
-	CIpoDlg             *m_pIpoDlg;    //IPO
+	CIpoCoin             *m_pIpoCoinDlg;    //IPO
 	CAddApp             *m_pAddApp;    //添加应用
 	//
 	COutGifDlg          *m_pOutGifDlg;

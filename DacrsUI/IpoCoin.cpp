@@ -1,39 +1,30 @@
-// IpoDlg.cpp : 实现文件
+// IpoCoin.cpp : 实现文件
 //
 
 #include "stdafx.h"
 #include "DacrsUI.h"
-#include "IpoDlg.h"
+#include "IpoCoin.h"
 #include "afxdialogex.h"
 
 
-// CIpoDlg 对话框
+// CIpoCoin 对话框
 
-IMPLEMENT_DYNAMIC(CIpoDlg, CDialogEx)
+IMPLEMENT_DYNAMIC(CIpoCoin, CDialogBar)
 
-CIpoDlg::CIpoDlg()
+CIpoCoin::CIpoCoin()
 {
 	m_pBmp = NULL ;
 }
 
-CIpoDlg::~CIpoDlg()
+CIpoCoin::~CIpoCoin()
 {
 	if( NULL != m_pBmp ) {
 		DeleteObject(m_pBmp) ;
 		m_pBmp = NULL ;
 	}
-	//v_linkCtrl1.InternalRelease();
-	//v_linkCtrl1.ExternalRelease();
-	//v_linkCtrl1.OnFinalRelease();
-	//v_linkCtrl1.DestroyWindow();
-
-	//v_linkCtrl2.InternalRelease();
-	//v_linkCtrl2.ExternalRelease();
-	//v_linkCtrl2.OnFinalRelease();
-	//v_linkCtrl2.DestroyWindow();
 }
 
-void CIpoDlg::DoDataExchange(CDataExchange* pDX)
+void CIpoCoin::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogBar::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_STATIC_ADDR , m_strTx1);
@@ -41,21 +32,20 @@ void CIpoDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_STATIC_AMOUNT , m_strTx2);
 	DDX_Control(pDX, IDC_BUTTON_DRAWAL , m_rBtnSend);
 	DDX_Control(pDX, IDC_BUTTON_QUERY , m_rQueryAmout);
-	
 }
 
 
-BEGIN_MESSAGE_MAP(CIpoDlg, CDialogBar)
+BEGIN_MESSAGE_MAP(CIpoCoin, CDialogBar)
 	ON_WM_CREATE()
 	ON_WM_ERASEBKGND()
-	ON_BN_CLICKED(IDC_BUTTON_DRAWAL, &CIpoDlg::OnBnClickedButtonDrawal)
+	ON_BN_CLICKED(IDC_BUTTON_DRAWAL, &CIpoCoin::OnBnClickedButtonDrawal)
 	ON_WM_SIZE()
-	ON_BN_CLICKED(IDC_BUTTON_QUERY, &CIpoDlg::OnBnClickedButtonQuery)
+	ON_BN_CLICKED(IDC_BUTTON_QUERY, &CIpoCoin::OnBnClickedButtonQuery)
 END_MESSAGE_MAP()
 
 
-// CIpoDlg 消息处理程序
-void CIpoDlg::SetBkBmpNid( UINT nBitmapIn ) 
+// CIpoCoin 消息处理程序
+void CIpoCoin::SetBkBmpNid( UINT nBitmapIn ) 
 {
 	if( NULL != m_pBmp ) {
 		::DeleteObject( m_pBmp ) ;
@@ -69,86 +59,86 @@ void CIpoDlg::SetBkBmpNid( UINT nBitmapIn )
 	}
 }
 
-int CIpoDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
+int CIpoCoin::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CDialogBar::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
 	// TODO:  在此添加您专用的创建代码
-	//SetBkBmpNid(IDB_BITMAP_IPO_BJ);
+	SetBkBmpNid(IDB_BITMAP_IPO_BJ);
 	return 0;
 }
 
 
-BOOL CIpoDlg::OnEraseBkgnd(CDC* pDC)
+BOOL CIpoCoin::OnEraseBkgnd(CDC* pDC)
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
 	CRect   rect; 
 	GetClientRect(&rect); 
 
-	//if(m_pBmp   !=   NULL) { 
-	//	BITMAP   bm; 
-	//	CDC   dcMem; 
-	//	::GetObject(m_pBmp,sizeof(BITMAP),   (LPVOID)&bm); 
-	//	dcMem.CreateCompatibleDC(NULL); 
-	//	HBITMAP     pOldBitmap   =(HBITMAP   )   dcMem.SelectObject(m_pBmp); 
-	//	pDC-> StretchBlt(rect.left,rect.top-1,rect.Width(),rect.Height(),   &dcMem,   0,   0,bm.bmWidth-1,bm.bmHeight-1,   SRCCOPY); 
+	if(m_pBmp   !=   NULL) { 
+		BITMAP   bm; 
+		CDC   dcMem; 
+		::GetObject(m_pBmp,sizeof(BITMAP),   (LPVOID)&bm); 
+		dcMem.CreateCompatibleDC(NULL); 
+		HBITMAP     pOldBitmap   =(HBITMAP   )   dcMem.SelectObject(m_pBmp); 
+		pDC-> StretchBlt(rect.left,rect.top-1,rect.Width(),rect.Height(),   &dcMem,   0,   0,bm.bmWidth-1,bm.bmHeight-1,   SRCCOPY); 
 
-	//	dcMem.SelectObject(pOldBitmap);
-	//	dcMem.DeleteDC();
-	//} else  
-	//	CWnd::OnEraseBkgnd(pDC); 
+		dcMem.SelectObject(pOldBitmap);
+		dcMem.DeleteDC();
+	} else  
+		CWnd::OnEraseBkgnd(pDC); 
 
 	return TRUE;
 }
 
 
-BOOL CIpoDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
+BOOL CIpoCoin::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 {
 	// TODO: 在此添加专用代码和/或调用基类
-	LogPrint("INFO","ipo Create enter\n");
-	LogPrint("INFO","ipo Create enter:%0x\n",&pParentWnd);
-	LogPrint("INFO","ipo Create nIDTemplate:%d\n",nIDTemplate);
-	LogPrint("INFO","ipo Create nStyle:%d\n",nStyle);
-	LogPrint("INFO","ipo Create nID:%d\n",nID);
+
+	LogPrint("INFO","CIpoCoin Create enter\n");
+	LogPrint("INFO","CIpoCoin Create enter:%0x\n",&pParentWnd);
+	LogPrint("INFO","CIpoCoin Create nIDTemplate:%d\n",nIDTemplate);
+	LogPrint("INFO","CIpoCoin Create nStyle:%d\n",nStyle);
+	LogPrint("INFO","CIpoCoin Create nID:%d\n",nID);
 	BOOL bRes = CDialogBar::Create(pParentWnd, nIDTemplate, nStyle, nID);
-	LogPrint("INFO", "IPO create ret:%d\n", bRes);
+	LogPrint("INFO", "CIpoCoin create ret:%d\n", bRes);
 	if ( bRes ) {
 		LogPrint("INFO","ipo Create start\n");
 		UpdateData(0);
 		m_rBtnSend.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
 		m_rBtnSend.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		//m_rBtnAdd.SetWindowText("添加地址") ;
 		m_rBtnSend.SetFontEx(20 , _T("微软雅黑"));
 		m_rBtnSend.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		m_rBtnSend.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 		m_rBtnSend.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
 		m_rBtnSend.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
 		m_rBtnSend.SizeToContent();
-		
+
 		m_rQueryAmout.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
 		m_rQueryAmout.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		//m_rBtnAdd.SetWindowText("添加地址") ;
 		m_rQueryAmout.SetFontEx(20 , _T("微软雅黑"));
 		m_rQueryAmout.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		m_rQueryAmout.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 		m_rQueryAmout.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
 		m_rQueryAmout.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
 		m_rQueryAmout.SizeToContent();
-		
+
 		m_strTx1.SetFont(120, _T("黑体"));				//设置显示字体和大小
 		m_strTx1.SetTextColor(RGB(0,0,0));	
 
-		//m_strTx3.SetFont(120, _T("黑体"));				//设置显示字体和大小
-		//m_strTx3.SetTextColor(RGB(0,0,0));	
+		m_strTx2.SetFont(120, _T("黑体"));				//设置显示字体和大小
+		m_strTx2.SetTextColor(RGB(0,0,0));	
+		m_strTx2.SetWindowText(_T(""));
 
 		struct LISTCol {
 			CString		name ;
 			UINT		size ;
 		} listcol[3]  = {
-			{"序号" ,      150},
-			{"金额" ,      300},
-			{"解冻高度" ,      405}
+			{_T("序号") ,      150},
+			{_T("金额") ,      300},
+			{_T("解冻高度") ,      405}
 		};
 		m_listCtrl.SetBkColor(RGB(240,240,240));       
 		m_listCtrl.SetRowHeigt(23);               
@@ -162,24 +152,20 @@ BOOL CIpoDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		}
 		m_listCtrl.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_HEADERDRAGDROP );// |LVS_SINGLESEL  );
 		LogPrint("INFO","ipo AddListaddrDataBox before\n");
-		AddListaddrDataBox();
+
 		CString strTxFee;
 		INT64 minFee = 45266;
 		double dnum = (minFee*1.0/COIN);
 		strTxFee.Format(_T("%.8f"),dnum);
-		//GetDlgItem(IDC_EDIT_GETFEE)->SetWindowText(strTxFee) ;
 
-		((CStatic*)GetDlgItem(IDC_STATIC_AMOUNT))->SetWindowText(_T(""));
-	     LogPrint("INFO","ipo Create end\n");
+		LogPrint("INFO","ipo Create end\n");
 	}
 	LogPrint("INFO","ipo Create toenter\n");
 	return bRes ;
 }
 
-
-void CIpoDlg::OnBnClickedButtonDrawal()
+void CIpoCoin::OnBnClickedButtonDrawal()
 {
-	return;
 	// TODO: 在此添加控件通知处理程序代码
 	if (!CheckRegIDValid( theApp.m_ipoScritptid )) return ;
 
@@ -199,7 +185,7 @@ void CIpoDlg::OnBnClickedButtonDrawal()
 	}
 
 	CString strCommand , strMaddress , strMoney;
-	
+
 	string strContractData = m_P2PBetHelp.GetAppAccountMoneyContract(addr.GetString(),1,2);
 
 	CString strTxFee;
@@ -246,7 +232,7 @@ void CIpoDlg::OnBnClickedButtonDrawal()
 }
 
 
-void CIpoDlg::OnSize(UINT nType, int cx, int cy)
+void CIpoCoin::OnSize(UINT nType, int cx, int cy)
 {
 	CDialogBar::OnSize(nType, cx, cy);
 
@@ -269,7 +255,7 @@ void CIpoDlg::OnSize(UINT nType, int cx, int cy)
 			pst->GetClientRect( rect ) ;
 			pst->SetWindowPos( NULL ,(rc.Width()/100)*8 ,(rc.Height()/100)*5  , (rc.Width()/100)*40, (rc.Height()/100)*7 ,SWP_SHOWWINDOW ) ; 
 		}
-		
+
 		pst = GetDlgItem( IDC_STATIC_AMOUNT ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
@@ -299,30 +285,9 @@ void CIpoDlg::OnSize(UINT nType, int cx, int cy)
 		}
 	}
 }
-BOOL CIpoDlg::AddListaddrDataBox(){
 
-	//theApp.m_SqliteDeal.GetWalletAddressList(_T(" 1=1 "), &m_mapAddrInfo);
-
-	//if ( 0 == m_mapAddrInfo.size() ) return FALSE ;
-
-	////清除ComBox控件
-	//((CComboBox*)GetDlgItem(IDC_COMBO_ADDR))->ResetContent();
-	////加载到ComBox控件
-	//int nItem = 0;
-	//std::map<CString,uistruct::LISTADDR_t>::const_iterator const_it;
-	//for ( const_it = m_mapAddrInfo.begin() ; const_it != m_mapAddrInfo.end() ; const_it++ ) {
-
-	//	((CComboBox*)GetDlgItem(IDC_COMBO_ADDR))->InsertString(nItem , const_it->first );
-	//	//((CComboBox*)GetDlgItem(IDC_COMBO_ADDR_OUT))->SetItemData(nItem, (DWORD_PTR)&(*const_it));
-	//	nItem++;
-	//}
-	//((CComboBox*)GetDlgItem(IDC_COMBO_ADDR))->SetCurSel(0);
-	//OnCbnSelchangeComboAddr();
-	return TRUE ;
-}
-void CIpoDlg::OnShowListCtrol(CString addr)
+void CIpoCoin::OnShowListCtrol(CString addr)
 {
-	return;
 	CString strCommand,strShowData =_T("");
 	strCommand.Format(_T("%s %s %s"),_T("getappaccinfo") , theApp.m_ipoScritptid ,addr);
 	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
@@ -356,7 +321,7 @@ void CIpoDlg::OnShowListCtrol(CString addr)
 		CString strOrder("");
 		strOrder.Format(_T("%d"), i+1);
 		m_listCtrl.InsertItem(coulum,strOrder);
-		
+
 		nMoney = valuearray[i]["value"].asInt64() ;
 		money = (nMoney*1.0/COIN);
 		strShowData.Format(_T("%.8f"),money);
@@ -367,37 +332,17 @@ void CIpoDlg::OnShowListCtrol(CString addr)
 		coulum++;
 	}
 }
-//void CIpoDlg::OnCbnSelchangeComboAddr()
-//{
-//	// TODO: 在此添加控件通知处理程序代码
-//	CString text;
-//	int sel = m_addrbook.GetCurSel();
-//	m_addrbook.GetLBText(sel,text);
-//
-//	//m_addrbook.GetWindowText(text) ;
-//	if(text!=_T(""))
-//	{
-//		if(m_mapAddrInfo.count(text)<=0)
-//		{
-//			TRACE("map OnCbnSelchangeComboAddr error");
-//			return;
-//		}
-//		OnShowListCtrol(text);
-//		//Invalidate();
-//	}
-//}
 
 
-void CIpoDlg::OnBnClickedButtonQuery()
+void CIpoCoin::OnBnClickedButtonQuery()
 {
-	return;
 	// TODO: 在此添加控件通知处理程序代码
-   CString addr;
-   GetDlgItem(IDC_EDIT_ADDR)->GetWindowText(addr);
-   if (addr == _T(""))
-   {
-	   ::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
-	   return;
-   }
-   OnShowListCtrol(addr);
+	CString addr;
+	GetDlgItem(IDC_EDIT_ADDR)->GetWindowText(addr);
+	if (addr == _T(""))
+	{
+		::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		return;
+	}
+	OnShowListCtrol(addr);
 }
