@@ -134,11 +134,11 @@ CString CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
 			txdetail.AppendFormat(_T("金额:%.8f\r\n\r\n"),(sendbetdata.money*1.0)/COIN );
 		}else if (vTemp[0] == 0xff)
 		{
-			if (vTemp[1] == 0x01)    /// 充值
+			if (vTemp[1] == 0x02)    /// 充值
 			{
 				txdetail.AppendFormat(_T("应用名称:  %s\r\n\r\n"),"猜你妹" );
 				txdetail.AppendFormat(_T("合约类型:  %s\r\n\r\n"),"充值" );
-			}else if (vTemp[1] == 0x02)   /// 提现
+			}else if (vTemp[1] == 0x01)   /// 提现
 			{
 				txdetail.AppendFormat(_T("应用名称:  %s\r\n\r\n"),"猜你妹" );
 				txdetail.AppendFormat(_T("合约类型:  %s\r\n\r\n"),"提现" );
@@ -147,6 +147,9 @@ CString CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
 	}else  if (!strcmp(tx.desregid,theApp.m_redPacketScriptid)){ //// 接龙红包	
 		string nValue = tx.Contract;
 		std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue);
+
+		string strContract = CSoyPayHelp::getInstance()->HexStr(vTemp);
+		txdetail.AppendFormat(_T("合约内容:   %d\r\n\r\n"),strContract.c_str() );
 		if (vTemp[0] == TX_COMM_SENDREDPACKET)
 		{
 			if(vTemp.size()==0)
@@ -223,11 +226,11 @@ CString CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
 			txdetail.AppendFormat(_T("接接龙红包ID:   %s\r\n\r\n"),txhash.c_str());
 		}else if (vTemp[0] == 0xff)
 		{
-			if (vTemp[1] == 0x01)    /// 充值
+			if (vTemp[1] == 0x02)    /// 充值
 			{
 				txdetail.AppendFormat(_T("应用名称:  %s\r\n\r\n"),"抢红包" );
 				txdetail.AppendFormat(_T("合约类型:  %s\r\n\r\n"),"充值" );
-			}else if (vTemp[1] == 0x02)   /// 提现
+			}else if (vTemp[1] == 0x01)   /// 提现
 			{
 				txdetail.AppendFormat(_T("应用名称:  %s\r\n\r\n"),"抢红包" );
 				txdetail.AppendFormat(_T("合约类型:  %s\r\n\r\n"),"提现" );
@@ -319,6 +322,11 @@ void CTxDetailDlg::ShowTxDetail(CString jsontx)
 	if (tx.blockhash != "")
 	{
 		txdetail.AppendFormat(_T("确认blockHash:   %s\r\n\r\n"),tx.blockhash.c_str());
+	}
+	if ( theApp.blocktipheight != 0)
+	{
+		unsigned int quredCount = theApp.blocktipheight - tx.confirmedHeight;
+		txdetail.AppendFormat(_T("确认数:  %d\r\n\r\n"),quredCount );
 	}
 
 	GetDlgItem(IDC_EDIT_TXDETAIL)->SetWindowText(txdetail);
