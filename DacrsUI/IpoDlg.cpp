@@ -75,7 +75,7 @@ int CIpoDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 
 	// TODO:  在此添加您专用的创建代码
-	SetBkBmpNid(IDB_BITMAP_IPO_BJ);
+	//SetBkBmpNid(IDB_BITMAP_IPO_BJ);
 	return 0;
 }
 
@@ -86,18 +86,18 @@ BOOL CIpoDlg::OnEraseBkgnd(CDC* pDC)
 	CRect   rect; 
 	GetClientRect(&rect); 
 
-	if(m_pBmp   !=   NULL) { 
-		BITMAP   bm; 
-		CDC   dcMem; 
-		::GetObject(m_pBmp,sizeof(BITMAP),   (LPVOID)&bm); 
-		dcMem.CreateCompatibleDC(NULL); 
-		HBITMAP     pOldBitmap   =(HBITMAP   )   dcMem.SelectObject(m_pBmp); 
-		pDC-> StretchBlt(rect.left,rect.top-1,rect.Width(),rect.Height(),   &dcMem,   0,   0,bm.bmWidth-1,bm.bmHeight-1,   SRCCOPY); 
+	//if(m_pBmp   !=   NULL) { 
+	//	BITMAP   bm; 
+	//	CDC   dcMem; 
+	//	::GetObject(m_pBmp,sizeof(BITMAP),   (LPVOID)&bm); 
+	//	dcMem.CreateCompatibleDC(NULL); 
+	//	HBITMAP     pOldBitmap   =(HBITMAP   )   dcMem.SelectObject(m_pBmp); 
+	//	pDC-> StretchBlt(rect.left,rect.top-1,rect.Width(),rect.Height(),   &dcMem,   0,   0,bm.bmWidth-1,bm.bmHeight-1,   SRCCOPY); 
 
-		dcMem.SelectObject(pOldBitmap);
-		dcMem.DeleteDC();
-	} else  
-		CWnd::OnEraseBkgnd(pDC); 
+	//	dcMem.SelectObject(pOldBitmap);
+	//	dcMem.DeleteDC();
+	//} else  
+	//	CWnd::OnEraseBkgnd(pDC); 
 
 	return TRUE;
 }
@@ -109,9 +109,10 @@ BOOL CIpoDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 	LogPrint("INFO","ipo Create enter\n");
 	LogPrint("INFO","ipo Create enter:%0x\n",&pParentWnd);
 	LogPrint("INFO","ipo Create nIDTemplate:%d\n",nIDTemplate);
-	LogPrint("INFO","ipo Create nStyle:%d\n",&nStyle);
-	LogPrint("INFO","ipo Create nID:%d\n",&nID);
+	LogPrint("INFO","ipo Create nStyle:%d\n",nStyle);
+	LogPrint("INFO","ipo Create nID:%d\n",nID);
 	BOOL bRes = CDialogBar::Create(pParentWnd, nIDTemplate, nStyle, nID);
+	LogPrint("INFO", "IPO create ret:%d\n", bRes);
 	if ( bRes ) {
 		LogPrint("INFO","ipo Create start\n");
 		UpdateData(0);
@@ -178,6 +179,7 @@ BOOL CIpoDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 
 void CIpoDlg::OnBnClickedButtonDrawal()
 {
+	return;
 	// TODO: 在此添加控件通知处理程序代码
 	if (!CheckRegIDValid( theApp.m_ipoScritptid )) return ;
 
@@ -320,6 +322,7 @@ BOOL CIpoDlg::AddListaddrDataBox(){
 }
 void CIpoDlg::OnShowListCtrol(CString addr)
 {
+	return;
 	CString strCommand,strShowData =_T("");
 	strCommand.Format(_T("%s %s %s"),_T("getappaccinfo") , theApp.m_ipoScritptid ,addr);
 	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
@@ -387,6 +390,7 @@ void CIpoDlg::OnShowListCtrol(CString addr)
 
 void CIpoDlg::OnBnClickedButtonQuery()
 {
+	return;
 	// TODO: 在此添加控件通知处理程序代码
    CString addr;
    GetDlgItem(IDC_EDIT_ADDR)->GetWindowText(addr);

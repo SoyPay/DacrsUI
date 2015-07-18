@@ -50,8 +50,14 @@ CString CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
 			}
 		}
 		
+			CString txdetail =_T("");
+		string nValue = tx.Contract;
+		std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue);
 
-	CString txdetail =_T("");
+		string strContract = CSoyPayHelp::getInstance()->HexStr(vTemp);
+		txdetail.AppendFormat(_T("合约内容:   %d\r\n\r\n"),strContract.c_str() );
+
+
 	if (!strcmp(tx.desregid,theApp.m_betScritptid))
 	{
 		string nValue = tx.Contract;
@@ -146,10 +152,7 @@ CString CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
 		}
 	}else  if (!strcmp(tx.desregid,theApp.m_redPacketScriptid)){ //// 接龙红包	
 		string nValue = tx.Contract;
-		std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue);
 
-		string strContract = CSoyPayHelp::getInstance()->HexStr(vTemp);
-		txdetail.AppendFormat(_T("合约内容:   %d\r\n\r\n"),strContract.c_str() );
 		if (vTemp[0] == TX_COMM_SENDREDPACKET)
 		{
 			if(vTemp.size()==0)
@@ -190,7 +193,7 @@ CString CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
 			reverse(vTemp.begin(),vTemp.end());
 			string txhash = CSoyPayHelp::getInstance()->HexStr(vTemp);
 
-			txdetail.AppendFormat(_T("接普通红包ID: %s\r\n\r\n"),txhash.c_str());
+			txdetail.AppendFormat(_T("普通红包ID: %s\r\n\r\n"),txhash.c_str());
 			//AcceptRePacketCommtRecord(vTemp,transcion);
 		}else if (vTemp[0] == TX_SPECIAL_SENDREDPACKET)
 		{
@@ -223,7 +226,7 @@ CString CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
 			reverse(vTemp.begin(),vTemp.end());
 			string txhash = CSoyPayHelp::getInstance()->HexStr(vTemp);
 
-			txdetail.AppendFormat(_T("接接龙红包ID:   %s\r\n\r\n"),txhash.c_str());
+			txdetail.AppendFormat(_T("接龙红包ID:   %s\r\n\r\n"),txhash.c_str());
 		}else if (vTemp[0] == 0xff)
 		{
 			if (vTemp[1] == 0x02)    /// 充值
@@ -305,7 +308,7 @@ void CTxDetailDlg::ShowTxDetail(CString jsontx)
 	}
 	if (tx.Contract != "")
 	{
-		txdetail.AppendFormat(_T("合约内容:   %d\r\n\r\n"),tx.Contract.c_str() );
+		//txdetail.AppendFormat(_T("合约内容:   %d\r\n\r\n"),tx.Contract.c_str() );
 		txdetail.AppendFormat(_T("%s"),GetContacrDetail(tx));
 		
 	}
