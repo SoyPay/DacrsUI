@@ -1077,6 +1077,10 @@ void CP2PDlg::OnListPool()
 			uistruct::DBBET_DATA DBbet;
 			memset(&DBbet , 0 , sizeof(uistruct::DBBET_DATA));
 			std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(pPoolList.data);
+			if (vTemp.size() <=0)
+			{
+				return 0;
+			}
 			memcpy(&DBbet, &vTemp[0], sizeof(DBbet));
 			CString money,adddr;
 			money = pinf->pstr1;
@@ -1486,15 +1490,19 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 	GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(strpage);
 	 m_curpage = page;
 	 int index = (page-1)*m_pagesize;
-	 int count = (m_PoolList.size() -index)>=m_pagesize?m_pagesize:(m_PoolList.size() -index);
+	 unsigned int count = (m_PoolList.size() -index)>=m_pagesize?m_pagesize:(m_PoolList.size() -index);
 	 int i =0;
-	 for (int k = index;k< (index+count);k++)
+	 for (unsigned int k = index;k< (index+count)&& k<m_PoolList.size();k++)
 	 {
 		 uistruct::LISTP2POOL_T const_it = m_PoolList.at(k);
 		 string nValue = const_it.data;
 		 uistruct::DBBET_DATA DBbet;
 		 memset(&DBbet , 0 , sizeof(uistruct::DBBET_DATA));
 		 std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue);
+		 if (vTemp.size() <=0)
+		 {
+			 continue;
+		 }
 		 memcpy(&DBbet, &vTemp[0], sizeof(DBbet));
 
 		 CString addr,money;

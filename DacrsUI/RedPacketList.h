@@ -22,4 +22,6 @@ public:
 	virtual BOOL OnInitDialog();
 	void ShowTxDetail(CString txhash);
 	CListCtrl   m_listCtrl;
+	afx_msg void OnLvnColumnclickList2(NMHDR *pNMHDR, LRESULT *pResult);
+
 };

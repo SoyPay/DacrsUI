@@ -209,11 +209,11 @@ void  CSendRedPacketRecord::OnShowPagePool(int page)
 	bool flag = false;
 	m_curpage = page;
 	int index = (page-1)*m_pagesize;
-	int count = (m_SendRedPacketList.size() -index)>=m_pagesize?m_pagesize:(m_SendRedPacketList.size() -index);
+	unsigned int count = (m_SendRedPacketList.size() -index)>=m_pagesize?m_pagesize:(m_SendRedPacketList.size() -index);
 
 	int i = 0;
 	std::vector<uistruct::REDPACKETSEND_t>::const_iterator const_it;
-	for (int k = index;k< (index+count);k++)
+	for (unsigned int k = index;k< (index+count) && k<m_SendRedPacketList.size();k++)
 	{
 		uistruct::REDPACKETSEND_t const_it = m_SendRedPacketList.at(k);
 		CString sendaddr;

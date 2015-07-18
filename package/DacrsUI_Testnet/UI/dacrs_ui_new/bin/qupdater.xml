@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<update>
+  <descriptions>
+    <description>支持依据版本号升级。\n</description>
+    <description>支持多地址下载。\n</description>
+    <description>与64位操作系统完美结合。\n</description>
+    <description>增加Net Framework检查、下载、安装过程。\n</description>
+    <description>再次提升多线程下载算法，能适应更恶劣的网络带宽环境下。\n</description>
+    <description>再次优化版本检查算法，版本检查速递再度提升。\n</description>
+    <description>少数web服务器不支持断点续传，QUpdater增加对他们的支持。\n</description>
+    <description>推出极速版本检查机制，版本检查时与缓存中的远程qupdater.xml文件对比，同时启动新进程下载远程qupdater.xml文件到缓存，将最耗时的工作分派给新进程.\n</description>
+    <description>修正在win2000操作系统上工作的一些bug.\n</description>
+    <description>优化/加速版本检查过程，缩短软件版本检查时间.\n</description>
+    <description>新增一个升级文件制作工具，可以自动生成qupdater.xml文件、压缩软件文件.\n</description>
+    <description>新增一个简易的web服务器.\n</description>
+    <description>大幅提高文件下载的稳点性,更能适应各类恶劣的网络环境.\n</description>
+    <description>与Win7更完美地结合,一般不需要管理员权限,确实有更新,再提示用户提升权限.\n</description>
+    <description>容许检查更新时,显示一个进度指示,避免检查更新时间过长,造成的系统无响应假象.\n</description>
+    <description>加入事件.\n</description>
+    <description>引入执行文件,方便地解决了ini文件的增删改/创建任意快捷方式/删除目录/删除文件.\n</description>
+    <description>支持托盘图标工作模式.\n</description>
+    <description>支持超级简易工作界面.\n</description>
+    <description>集成4种下载模式,供用户选择,万一下载异常,用户可以启动补救措施.\n</description>
+    <description>优化智能下载模型,如果下载失败,则尝试用其他方式下载.\n</description>
+    <description>允许直接用户切换界面模型.\n</description>
+    <description>新增二套升级界面方案,可以在qupdater.ini中设置,选择哪套界面.\n</description>
+    <description>增加软件卸载功能,软件卸载时调用qupdater.exe,可以自动删除通过qupdater.exe下载的文件/创建的临时文件/创建的快捷方式.\n</description>
+    <description>在xml文件中增加run节点.\n</description>
+    <description>在ini文件中加AutoFinish参数.\n</description>
+    <description>增加qupdater.exe与其他程序的实时通信功能,qupdater.exe运行中,可以将更新内容/运行状态/下载过程等信息实时传递给其他应用程序,您甚至可以自己做一个升级过程的显示/观察界面.\n</description>
+    <description>修正VB6实例代码不能正常工作的BUG.\n</description>
+    <description>允许qupdater.xml文件包含一个子文件,允许创建快捷方式时指定图标.\n</description>
+    <description>允许qupdater.exe改变文件名工作,注意qupdater.exe改名后,相关的.ini,.xml文件名也得修改并保持一致,这样,在同一目录下可以有多份升级程序工作,互不干扰.\n</description>
+    <description>修改高速体验模式,新软件不用做任何操作,即可享受高速下载体验45天.\n</description>
+    <description>把中文语言包/繁体中文语言包集成到qupdater.exe中,中文用户/繁体语言用户可以不用更新语言包.\n</description>
+    <description>增加"软件入口"工作模式,可以不用修改软件任何代码集成QUpdater.\n</description>
+    <description>增加单个文件的多线程下载,至此,可以同时下载多个文件,每个文件又是多线程.\n</description>
+    <description>增加更新说明,说明文本放置在服务端qupdater.xml文件中.\n</description>
+    <description>更新语言包文件.\n</description>
+  </descriptions>
+  <files>
+    <file ver="v1.0.0.1" path="qupdater.exe"/>
+    <file ver="v1.0.0.11" path="dacrs-d.exe"/>
+    <file ver="v1.0.0.3" path="dacrs.conf"/>
+    <file ver="v1.0.0.2" path="qupdater.ini"/>
+    <file ver="v1.0.0.1" path="sqlite3.dll"/>
+	<file ver="v1.0.0.1" path="db\sqlite3.exe"/>
+    <file ver="v1.0.1.1" path="DacrsUI.exe"/>
+    <file ver="v1.0.0.6" path="dacrsclient.conf"/>
+    <file ver="v1.0.0.1" path="gif\init.gif"/>
+    <file ver="v1.0.0.1" path="gif\progress.gif"/>
+	<file ver="v1.0.0.2" path="gif\exit.gif"/>
+	<file ver="v1.0.0.7" path="updatelog.txt"/>	
+	<file ver="v1.0.0.1" path="clear.bat" />
+	<file ver="v1.0.0.1" path="DacrsUi.exe" shortcut="{commonprograms}\QUpdater\QUpdater DacrsUI.ilk"/>  
+  </files>
+</update>

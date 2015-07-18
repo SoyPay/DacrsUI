@@ -277,7 +277,7 @@ void CJsonConfigHelp::ReadLogParamCfg(const Json::Value &root)
 	ASSERT(!logParam.isNull());
 	m_LogParamCfg.bLogFlag = (logParam["log_flag"].asInt()>0);
 	Json::Value  arrayTags = logParam["tags"];
-	for(int i=0; i<arrayTags.size();++i)
+	for(unsigned int i=0; i<arrayTags.size();++i)
 	{
 		m_LogParamCfg.vTag.push_back(arrayTags[i]["debug"].asCString());
 	}

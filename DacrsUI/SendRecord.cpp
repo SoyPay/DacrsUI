@@ -425,11 +425,11 @@ void  CSendRecord::OnShowPagePool(int page)
 	bool flag = false;
 	m_curpage = page;
 	int index = (page-1)*m_pagesize;
-	int count = (m_PoolList.size() -index)>=m_pagesize?m_pagesize:(m_PoolList.size() -index);
+	unsigned int count = (m_PoolList.size() -index)>=m_pagesize?m_pagesize:(m_PoolList.size() -index);
 
 	int i = 0;
 	std::vector<uistruct::P2P_QUIZ_RECORD_t>::const_iterator const_it;
-	for (int k = index;k< (index+count);k++)
+	for (unsigned int k = index;k< (index+count) && k<m_PoolList.size();k++)
 	{
 		uistruct::P2P_QUIZ_RECORD_t const_it = m_PoolList.at(k);
 		CString sendaddr,acceptaddr;
@@ -486,9 +486,11 @@ void  CSendRecord::OnShowPagePool(int page)
 			CString recaddr;
 			recaddr.Format(_T("%s"),const_it.right_addr);
 			CString time = 0;
-			curTime.wMinute = (curTime.wMinute+const_it.time_out)>60?(curTime.wMinute+const_it.time_out)-60:(curTime.wMinute+const_it.time_out);
-			curTime.wHour = (curTime.wMinute+const_it.time_out)>60?curTime.wHour+1:curTime.wHour;
-			time.Format("%02d:%02d:%02d",curTime.wHour, curTime.wMinute, curTime.wSecond);
+			time_t timeout =const_it.recv_time+const_it.time_out*60; 
+			SYSTEMTIME curTimeOut =UiFun::Time_tToSystemTime(timeout);
+			//curTime.wMinute = (curTime.wMinute+const_it.time_out)>60?(curTime.wMinute+const_it.time_out)-60:(curTime.wMinute+const_it.time_out);
+			//curTime.wHour = (curTime.wMinute+const_it.time_out)>60?curTime.wHour+1:curTime.wHour;
+			time.Format("%02d:%02d:%02d",curTimeOut.wHour, curTimeOut.wMinute, curTimeOut.wSecond);
 			if (const_it.state == 2)
 			{
 				m_listBox.SetIndexString(i ,sendaddr, acceptaddr,SendTime,strTime, result,guess, reward,time,_T("ÒÑ¿ª"),const_it.tx_hash);
