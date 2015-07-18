@@ -20,5 +20,6 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	void ShowTxDetail(CString jsontx);
+	CString GetContacrDetail(uistruct::REVTRANSACTION_t tx);
 	virtual BOOL OnInitDialog();
 };
