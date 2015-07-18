@@ -36,13 +36,9 @@ CIpoDlg::~CIpoDlg()
 void CIpoDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogBar::DoDataExchange(pDX);
-	//DDX_Control(pDX, IDC_PROGRESS, v_linkCtrl1);
-	//DDX_Control(pDX, IDC_MFCLINK2, v_linkCtrl2);
 	DDX_Control(pDX, IDC_STATIC_ADDR , m_strTx1);
-//	DDX_Control(pDX, IDC_COMBO_ADDR , m_addrbook);
 	DDX_Control(pDX, IDC_LIST_SHOW , m_listCtrl);
 	DDX_Control(pDX, IDC_STATIC_AMOUNT , m_strTx2);
-	//DDX_Control(pDX, IDC_STATIC_FEE , m_strTx3);
 	DDX_Control(pDX, IDC_BUTTON_DRAWAL , m_rBtnSend);
 	DDX_Control(pDX, IDC_BUTTON_QUERY , m_rQueryAmout);
 	
@@ -54,7 +50,6 @@ BEGIN_MESSAGE_MAP(CIpoDlg, CDialogBar)
 	ON_WM_ERASEBKGND()
 	ON_BN_CLICKED(IDC_BUTTON_DRAWAL, &CIpoDlg::OnBnClickedButtonDrawal)
 	ON_WM_SIZE()
-	//ON_CBN_SELCHANGE(IDC_COMBO_ADDR, &CIpoDlg::OnCbnSelchangeComboAddr)
 	ON_BN_CLICKED(IDC_BUTTON_QUERY, &CIpoDlg::OnBnClickedButtonQuery)
 END_MESSAGE_MAP()
 
@@ -111,9 +106,14 @@ BOOL CIpoDlg::OnEraseBkgnd(CDC* pDC)
 BOOL CIpoDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 {
 	// TODO: 在此添加专用代码和/或调用基类
+	LogPrint("INFO","ipo Create enter\n");
+	LogPrint("INFO","ipo Create enter:%0x\n",&pParentWnd);
+	LogPrint("INFO","ipo Create nIDTemplate:%d\n",nIDTemplate);
+	LogPrint("INFO","ipo Create nStyle:%d\n",&nStyle);
+	LogPrint("INFO","ipo Create nID:%d\n",&nID);
 	BOOL bRes = CDialogBar::Create(pParentWnd, nIDTemplate, nStyle, nID);
 	if ( bRes ) {
-
+		LogPrint("INFO","ipo Create start\n");
 		UpdateData(0);
 		m_rBtnSend.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
 		m_rBtnSend.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
@@ -160,7 +160,7 @@ BOOL CIpoDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 			m_listCtrl.InsertColumn(i,listcol[i].name,LVCFMT_CENTER,listcol[i].size);
 		}
 		m_listCtrl.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_HEADERDRAGDROP );// |LVS_SINGLESEL  );
-
+		LogPrint("INFO","ipo AddListaddrDataBox before\n");
 		AddListaddrDataBox();
 		CString strTxFee;
 		INT64 minFee = 45266;
@@ -169,15 +169,9 @@ BOOL CIpoDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		//GetDlgItem(IDC_EDIT_GETFEE)->SetWindowText(strTxFee) ;
 
 		((CStatic*)GetDlgItem(IDC_STATIC_AMOUNT))->SetWindowText(_T(""));
-		//v_linkCtrl1.SetWindowText(_T(""));
-		//v_linkCtrl2.SetWindowText(_T(""));
-
-		//v_linkCtrl1.SetWindowText(_T("关注开发进度"));
-		//v_linkCtrl2.SetWindowText(_T("QQ群"));
-
-		//v_linkCtrl1.SetURL(_T("http://www.dacrs.com/forum.php?mod=viewthread&tid=2598"));
-		//v_linkCtrl2.SetURL(_T("http://jq.qq.com/?_wv=1027&k=T5mlmd"));
+	     LogPrint("INFO","ipo Create end\n");
 	}
+	LogPrint("INFO","ipo Create toenter\n");
 	return bRes ;
 }
 
