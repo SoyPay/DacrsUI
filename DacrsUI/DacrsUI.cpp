@@ -562,12 +562,6 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 						//((CDacrsUIApp*)pParam)->UpdateP2pBetRecord(); 
 					}
 					break;
-				case WM_DARK_RECORD:
-					{
-						//更新数据库抵押数据库列表
-						((CDacrsUIApp*)pParam)->m_SqliteDeal.UpdateDarkRecord(); 
-					}
-					break;
 				case WM_UP_BETPOOL:
 					{
 						/// 赌约池数据库列表
