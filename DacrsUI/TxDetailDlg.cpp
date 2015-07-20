@@ -329,7 +329,10 @@ void CTxDetailDlg::ShowTxDetail(CString jsontx)
 	if ( theApp.blocktipheight != 0)
 	{
 		unsigned int quredCount = theApp.blocktipheight - tx.confirmedHeight;
-		txdetail.AppendFormat(_T("确认数:  %d\r\n\r\n"),quredCount );
+		if (quredCount >=0)
+		{
+			txdetail.AppendFormat(_T("确认数:  %d\r\n\r\n"),quredCount );
+		}	
 	}
 
 	GetDlgItem(IDC_EDIT_TXDETAIL)->SetWindowText(txdetail);
