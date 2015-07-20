@@ -85,12 +85,12 @@ void CSynchronousSocket::RecvDataThread()
 	}
 }
 //int CSynchronousSocket::GetRpcRes(const string ip,int port,string cmd,string & rev,int timerout)
-int CSynchronousSocket::GetRpcRes(const CString ip,int port,const CString cmd,string & rev,int timerout)
+int CSynchronousSocket::GetRpcRes(const string ip,int port,const string cmd,string & rev,int timerout)
 {
 	CSynchronousSocket te;
 	if(te.OnInitSocket())
-		if (te.OnConnnect(ip,port))
-			if(te.OnSend(cmd,cmd.GetLength()))
+		if (te.OnConnnect(ip.c_str(),port))
+			if(te.OnSend(cmd.c_str(),cmd.length()))
 			{
 				do 
 				{

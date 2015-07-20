@@ -449,7 +449,7 @@ int CSoyPayHelp::SendContacrRpc(CString cmd,CStringA &rev){
 int CSoyPayHelp::SendRpc(CString cmd,CStringA &rev)
 {
 	string revtemp;
-	mRpcCmd.SendRpc(cmd,revtemp);
+	mRpcCmd.SendRpc(cmd.GetString(),revtemp);
 	CStringA strShowData = ParseRecvData(revtemp.c_str());
 	/*if(m_pRPCDlg != NULL)
 	{
