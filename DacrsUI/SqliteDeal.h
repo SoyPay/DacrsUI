@@ -18,7 +18,6 @@ private:
 
 public:
 	void   UpdataAllTableData();
-	BOOL   UpdateDarkRecord();
 
 public:
 	sqlite3**   GetDBConnect();
