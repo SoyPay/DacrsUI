@@ -384,7 +384,7 @@ void CDacrsUIApp::AcceptBetRecord(vector<unsigned char> acceptbet,uistruct::REVT
 	CString strCond,strField;
 	strCond.Format(_T(" tx_hash='%s' "), SendTxhash.c_str());
 	
-	strField.AppendFormat(" right_addr = '%s' ,",transcion.desregid );
+	strField.AppendFormat(" right_addr = '%s' ,",transcion.regid );
 	strField.AppendFormat(_T("recv_time = '%s' ,height = %d ,state = %d ,relate_hash = '%s' ,guess_num = %d ") ,strTime ,transcion.confirmedHeight ,1 ,transcion.txhash ,(int)acceptcbet.data) ;
 
 	//更新数据
