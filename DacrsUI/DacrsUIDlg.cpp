@@ -681,7 +681,7 @@ void  CDacrsUIDlg::ClosWallet()
 {
 	COut outdlg;
 	if ( IDOK == outdlg.DoModal()){
-		LogPrint("INFO","Close app start");
+		LogPrint("INFO","Close app start \n");
 		BeginWaitCursor();
 		if ( NULL != m_pOutGifDlg ) {
 			CRect rc;
@@ -739,7 +739,7 @@ void CDacrsUIDlg::OnTimer(UINT_PTR nIDEvent)
 		StopSever();
 
 		DestroyDlg();
-		LogPrint("INFO","OnTimer start");
+		LogPrint("INFO","OnTimer start \n");
 		if ( NULL != m_pOutGifDlg ) {
 			m_pOutGifDlg->ShowWindow(SW_HIDE) ;
 			m_pOutGifDlg->LoadGifing(FALSE);
