@@ -250,7 +250,7 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_money.SetWindowText(_T(""));
 		
 
-		m_tab.InsertItem(0,_T("投注记录"));  //添加参数一选项卡 
+		m_tab.InsertItem(0,_T("接单记录"));  //添加参数一选项卡 
 		m_tab.InsertItem(1,_T("发起记录"));  //添加参数二选项卡 
 
 		CSize sz(80,30);
