@@ -9,7 +9,6 @@ CSynchronousSocket::CSynchronousSocket(void)
 
 CSynchronousSocket::~CSynchronousSocket(void)
 {
-	m_Socket = INVALID_SOCKET ;
 	IsEnd = true;
 	OnClose();
 }
@@ -97,7 +96,7 @@ int CSynchronousSocket::GetRpcRes(const CString ip,int port,const CString cmd,st
 				{
 					if(timerout < 0)
 					{
-						closesocket(te.m_Socket);
+						//closesocket(te.m_Socket);
 						return -1;
 					}
 					timerout -= 100;
@@ -108,6 +107,7 @@ int CSynchronousSocket::GetRpcRes(const CString ip,int port,const CString cmd,st
 			string tep = "";
 			tep.assign(te.buffer.begin(),te.buffer.end());
 			rev =tep;
+			//closesocket(te.m_Socket);
 			return rev.length();
 }
 UINT WINAPI CSynchronousSocket::RecvDataProc(LPVOID pParam)

@@ -396,11 +396,11 @@ UINT __stdcall CDacrsUIApp::MtProc(LPVOID pParam)
 					while(1)
 					{
 						if(((CDacrsUIApp*)pParam)->m_bOutApp){
-							LogPrint("INFO","Close DacrsUIDlg enter");
+							LogPrint("INFO","Close DacrsUIDlg enter \n");
 							CDacrsUIDlg* pMainWnd = (CDacrsUIDlg*)AfxGetApp()->m_pMainWnd ;
 							if ( NULL != pMainWnd ) {
 								pMainWnd->CloseApp(); //¹Ø±Õ¶Ô»°¿ò
-								LogPrint("INFO","Close DacrsUIDlg end");
+								LogPrint("INFO","Close DacrsUIDlg end \n");
 							}
 							break;
 						}

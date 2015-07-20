@@ -249,6 +249,7 @@ void CMainDlg::SetCtrlText()
 	CPostMsg postmsg;
 	if (!theApp.m_UiManDlgQueue.pop(postmsg))
 	{
+		LogPrint("INFO","m_UiManDlgQueue Emptry\r\n");
 		return ;
 	}
 
