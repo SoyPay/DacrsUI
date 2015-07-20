@@ -107,7 +107,7 @@ void CDacrsUIApp::UpdateAddressData(){
 	CStringA strShowData =_T("");
 
 	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-	if (strShowData == _T(""))
+	if (strShowData.Find("addr") <0)
 	{
 		return;
 	}
