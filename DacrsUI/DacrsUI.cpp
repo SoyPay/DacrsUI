@@ -458,6 +458,7 @@ UINT __stdcall CDacrsUIApp::ProcessAppTx(LPVOID pParam)
 		/// 同步以后更新数据库表
 		if (theApp.IsSyncAppTx )
 		{
+			LogPrint("INFO","ProcessAppTx");
 			theApp.m_SqliteDeal.UpdataAllTableData();
 			return 1;
 		}
@@ -637,6 +638,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 							int nItem =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.GetTableCountItem(_T("t_transaction") ,strCondition);
 							if (nItem != 0)
 							{
+								LogPrint("INFO","WM_RELEASETX:%s",pHash);
 								((CDacrsUIApp*)pParam)->InsertTransaction(pHash ) ;
 								theApp.m_SqliteDeal.UpdataAllTableData();   /// 更新应用表格
 							}
@@ -653,6 +655,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 							int nItem =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.GetTableCountItem(_T("t_transaction") ,strCondition);
 							if (nItem != 0)
 							{
+								LogPrint("INFO","WM_REMOVETX:%s",pHash);
 								((CDacrsUIApp*)pParam)->m_SqliteDeal.DeleteTableItem(_T("t_transaction"),strCondition);
 								theApp.m_SqliteDeal.UpdataAllTableData();   /// 更新应用表格
 							}

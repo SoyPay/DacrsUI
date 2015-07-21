@@ -436,9 +436,15 @@ void  CSendRecord::OnShowPagePool(int page)
 		sendaddr.Format(_T("%s"),const_it.left_addr);
 		acceptaddr.Format(_T("%s"),const_it.right_addr);
 
-		SYSTEMTIME curTime =UiFun::Time_tToSystemTime(const_it.send_time);
 		CString SendTime;
-		SendTime.Format("%02d-%02d %02d:%02d:%02d",curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+		if (const_it.send_time != 0)
+		{
+			SYSTEMTIME curTime =UiFun::Time_tToSystemTime(const_it.send_time);
+			SendTime.Format("%02d-%02d %02d:%02d:%02d",curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+		}else{
+			SendTime = _T("--");
+		}
+
 
 		CString dmoney,reward,result,guess;
 		if (const_it.content[32] == 1)
