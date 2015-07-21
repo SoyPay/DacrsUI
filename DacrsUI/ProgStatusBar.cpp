@@ -339,6 +339,13 @@ void CProgStatusBar::ShowNetCount()
 			int netCount = atoi(strTemp);
 			m_nSigIndex = netCount>3?3:netCount;
 			InvalidateRect(m_bmpsig);
+			if (netCount == 0 )
+			{
+				CString strTemp =_T("");
+				strTemp.Format(_T("获取%s网络连接"),netStr);
+				m_strNeting.SetWindowText(strTemp) ;
+				Invalidate(); 
+			}
 		}	
 	}
 }
