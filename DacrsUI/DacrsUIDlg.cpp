@@ -652,6 +652,7 @@ void  CDacrsUIDlg::StopSever()
 }
 void CDacrsUIDlg::CloseApp()
 {
+	DeleteTray() ;
 	EndWaitCursor();
 	PostMessage( WM_QUIT ) ; 
 	PostMessage( WM_CLOSE ); 	
@@ -802,6 +803,12 @@ LRESULT CDacrsUIDlg::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 }
 bool CDacrsUIDlg::GetFileName(CString &fileName,CString strexe )
 {
+	int spcace = fileName.Find(" ");
+	if (spcace >=0)
+	{
+		::MessageBox( this->GetSafeHwnd() ,_T("路径不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		return false;
+	}
 	int pos = fileName.Find(".",0);
 	if (pos <0)
 	{
@@ -909,7 +916,7 @@ void CDacrsUIDlg::DeleteTray()
 	nid.uCallbackMessage=WM_SHOWTASK; //自定义的消息名称 
 	nid.hIcon=LoadIcon(AfxGetInstanceHandle(),MAKEINTRESOURCE(IDR_MAINFRAME)); 
 	strcpy_s(nid.szTip,"dacrs"); //信息提示条为“计划任务提醒” 
-	//Shell_NotifyIcon(NIM_DELETE,&nid); //在托盘区删除图标 
+	Shell_NotifyIcon(NIM_DELETE,&nid); //在托盘区删除图标 
 } 
 void CDacrsUIDlg::SetAppFee()
 {

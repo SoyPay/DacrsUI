@@ -216,7 +216,7 @@ void CNewAddressDlg::OnBnClickedButtonScdz()
 
 	
 
-	strCommand.Format(_T("恭喜生成新地址:\n%s"),addr);
+	strCommand.Format(_T("恭喜生成新地址:\n%s\n重新备份钱包或者重新导出私钥"),addr);
 
 	if(IDOK == ::MessageBox( this->GetSafeHwnd() ,strCommand , _T("提示") , MB_ICONINFORMATION ))
 	{
