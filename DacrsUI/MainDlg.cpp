@@ -245,7 +245,7 @@ void CMainDlg::OnnitCtrlText()
 void CMainDlg::SetCtrlText()
 {
 
-	ClearCtrlText();
+//	ClearCtrlText();
 	CPostMsg postmsg;
 	if (!theApp.m_UiManDlgQueue.pop(postmsg))
 	{

@@ -319,12 +319,37 @@ void CProgStatusBar::ShowLockCtrl()
 	}
 	InvalidateRect(m_bmplock);
 }
+void CProgStatusBar::ShowNetCount()
+{
+	CPostMsg postmsg;
+	if (!theApp.m_NetConnetCountQueue.pop(postmsg))
+	{
+		return ;
+	}
+	CString strTemp = postmsg.GetStrType();
+	int pos = strTemp.Find("connections") ;
+	if (pos >=0)
+	{
+		pos = strTemp.Find("=") ;
+		if (pos >=0)
+		{
+			strTemp = strTemp.Mid(pos+1);
+			strTemp.TrimLeft();
+			strTemp.TrimRight();
+			int netCount = atoi(strTemp);
+			m_nSigIndex = netCount>3?3:netCount;
+			InvalidateRect(m_bmpsig);
+		}	
+	}
+}
 LRESULT CProgStatusBar::OnShowProgressCtrl( WPARAM wParam, LPARAM lParam ) 
 {
 //	TRACE("OnShowProgressCtrl:%s\r\n","OnShowProgressCtrl");
 	if (wParam == WM_LOCKSTATE)
 	{
 		ShowLockCtrl();
+	}else if (wParam == WM_CONNECTNET){
+		ShowNetCount();
 	}else{
 		ShowProgressCtrl();
 	}

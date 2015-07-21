@@ -129,7 +129,6 @@ public:
 	CString                 m_severip;
 	CStringA                m_rpcUser;
 	CStringA                m_rpcPassWord;
-	void UpdataUIData();
 public:
 	CMyQueue m_MsgQueue;
 	CMyQueue m_UimsgQueue;
@@ -140,6 +139,7 @@ public:
 	CMyQueue m_UiTxDetailQueue;
 	CMyQueue m_UiP2pDlgQueue;
 	CMyQueue m_UiRedPacketDlgQueue;
+	CMyQueue m_NetConnetCountQueue;
 	void UpdateRedPacketPoolData();
 	void UpdateQuizPoolData();
 	void UpdateAddressData();
