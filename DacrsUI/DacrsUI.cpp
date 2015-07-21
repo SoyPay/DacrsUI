@@ -262,7 +262,7 @@ BOOL CDacrsUIApp::InitInstance()
 			*/
 			int errorCode = GetLastError();
 			TRACE("Error OpenProcess:%d " , errorCode );
-			::MessageBox( NULL , _T("加载钱包失败\r\n") , "Error" , MB_ICONERROR) ;
+			::MessageBox( NULL , _T("区块链数据库损坏，请双击运行钱包下clear.bat文件，在重新打开钱包\r\n") , "Error" , MB_ICONERROR) ;
 			//AfxMessageBox(_T(errorCode));
 			exit(1);
 		}
