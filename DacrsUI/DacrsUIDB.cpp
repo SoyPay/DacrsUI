@@ -374,10 +374,50 @@ void CDacrsUIApp::AcceptBetRecord(vector<unsigned char> acceptbet,uistruct::REVT
 	strField.AppendFormat(" right_addr = '%s' ,",transcion.regid );
 	strField.AppendFormat(_T("recv_time = '%s' ,height = %d ,state = %d ,relate_hash = '%s' ,guess_num = %d ") ,strTime ,transcion.confirmedHeight ,1 ,transcion.txhash ,(int)acceptcbet.data) ;
 
-	//更新数据
-	if ( !m_SqliteDeal.UpdateTableItem(_T("t_p2p_quiz") ,strField,strCond )) {
-		TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , SendTxhash );
+	int item = m_SqliteDeal.GetTableCountItem(_T("t_p2p_quiz"),strCond);
+	if (item != 0)
+	{
+		//更新数据
+		if ( !m_SqliteDeal.UpdateTableItem(_T("t_p2p_quiz") ,strField,strCond )) {
+			TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , SendTxhash );
+		}
+	}else
+	{
+		CString addr;
+		addr.Format(_T("address='%s'"),transcion.addr);
+		 item = m_SqliteDeal.GetTableCountItem(_T("t_wallet_address"),addr);
+		 if (item != 0)
+		 {
+			 CString strCommand = _T("");
+			 strCommand.Format(_T("%s %s"),_T("gettxdetail"),SendTxhash.c_str());
+			 CStringA strShowData =_T("");
+			 CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
+			 if (strShowData == _T(""))
+			 {
+				 return;
+			 }
+			 uistruct::REVTRANSACTION_t sendtx;
+			 sendtx.JsonToStruct(strShowData.GetString());
+
+			 curTime =UiFun::Time_tToSystemTime(sendtx.confirmedtime);
+			 CString sendtrTime;
+			 sendtrTime.Format("%04d-%02d-%02d %02d:%02d:%02d",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+
+			 double money = (acceptcbet.money*1.0)/COIN;
+			 //插入新数据
+			 CString strSourceData ;
+			 strSourceData.Format(_T("'%s','%s','%d','%s' , '%s' , '%s' , '%lf'") , \
+				 sendtrTime, strTime , 10 , \
+				 SendTxhash.c_str() ,  sendtx.regid , transcion.regid ,money);
+
+			 strSourceData.AppendFormat(",'%s' ,'%d','%d','%d','%d','%s','%d'",_T("") ,1 ,0 ,transcion.confirmedHeight ,1 ,\
+				 transcion.txhash ,(int)acceptcbet.data ) ;
+			 if ( !m_SqliteDeal.InsertTableItem(_T("t_p2p_quiz") ,strSourceData)) {
+				 TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , SendTxhash );
+			 }
+		 }
 	}
+
 
 	OpenBet(SendTxhash.c_str());
 }

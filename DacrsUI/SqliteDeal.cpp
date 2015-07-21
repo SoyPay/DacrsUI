@@ -618,6 +618,7 @@ int CSqliteDeal::DeleteTableItem(const CString &strTabName, const CString &strCo
 	sqlite3 **pDBConn = GetDBConnect(); //获取数据库连接
 	CString strSQL(_T(""));
 	strSQL =_T("DELETE FROM ") + strTabName + _T(" WHERE ") + strCondition;
+	LogPrint("INFO","DeleteTableItem:%s",strSQL);
 	ExcuteSQL(pDBConn, NULL, strSQL, NULL);
 	return 0;
 }
