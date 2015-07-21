@@ -43,6 +43,7 @@ public:
 	int  ShowProgressCtrl();
 	void ShowLockCtrl();
 	void OnIniLockParam();
+	void ShowNetCount();
 ;public:
 	BOOL        m_bProgressType;
 	int         m_ProgressMax  ;

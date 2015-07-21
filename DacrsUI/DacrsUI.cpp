@@ -677,6 +677,11 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 						pUiDemeDlg->m_LockmsgQueue.push(Postmsg);
 					}
 					break;
+				case WM_CONNECTNET:
+					{
+						pUiDemeDlg->m_NetConnetCountQueue.push(Postmsg);
+					}
+					break;
 				default:
 					{
 						TRACE("change:%s\r\n","MSG_USER_UP_PROGRESS");
@@ -729,11 +734,6 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 
 			}
 			break;
-		case MSG_USER_UPDATA_UI:
-			{
-				theApp.UpdataUIData();
-			}
-			break;
 		case MSG_USER_QUITTHREAD:
 			{
 				std::vector< sThrd >::iterator it ;
@@ -775,6 +775,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 #define  WALLET_UNLOCK         8
 #define  RELEASE_TX            9
 #define  REMOVE_TX            10
+#define  CONNECTON_NET        11
 int GetMsgType(CString const strData,Json::Value &root)
 {
 	CString strType;
@@ -1013,6 +1014,11 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 				postmsg.SetStrType(msg);
 				pApp->m_MsgQueue.push(postmsg);
 				pApp->IsWalletLocked = FALSE;
+			}else if (!msg.Find("connections")>=0)
+			{
+				CPostMsg postmsg(MSG_USER_UP_PROGRESS,WM_CONNECTNET);
+				postmsg.SetStrType(msg);
+				pApp->m_MsgQueue.push(postmsg);
 			}
 			//TRACE("type: %s   mag: %s\r\n" , postmsg.GetStrType() ,msg);
 			break;
@@ -1239,32 +1245,10 @@ int CDacrsUIApp::SendPostThread(DWORD msgtype)
 
 	switch (msgtype)
 	{
-	//case WM_UP_ADDRESS:
-	//	{
-			/*if(pDlg->dlgType == CSendDlg::IDD)
-				DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_SEND_UI , WM_UP_ADDRESS,0);*/
-			/*if(pDlg->dlgType == CReceiveDlg::IDD)
-				DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_RECIVE_UI , 0,0);*/
-
-	//}
-	//	break;
 	case WM_REVTRANSACTION:
 		{
-			//SYSTEMTIME curTime ;
-			//memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
-			//GetLocalTime( &curTime ) ;
-			//static int UpdatManUiTimeLast =0;
-			//int tempTimemsg= UiFun::SystemTimeToTimet(curTime);
-
-			//if ((tempTimemsg - UpdatManUiTimeLast)>10|| UpdatManUiTimeLast == 0)
-			//{	
-			//	if(pDlg->dlgType == CMainDlg::IDD)
-			//	{
-					GetMainDlgStruct();
-					DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_MAIN_UI , 0,0);
-				//}
-				//UpdatManUiTimeLast = tempTimemsg;
-			//}
+			GetMainDlgStruct();
+			//DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_MAIN_UI , 0,0);
 
 		}
 		break;
@@ -1273,26 +1257,6 @@ int CDacrsUIApp::SendPostThread(DWORD msgtype)
 			DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_MAIN_UI ,WM_UPWALLET,0);
 		}
 		break;
-	//case WM_P2P_BET_RECORD:
-	//	{
-	//		if(pDlg->dlgType == DIALOG_ACCEPTBET_RECORD)
-	//			DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_ACCEPTRECOD_UI,0,0);
-	//		if(pDlg->dlgType == DIALOG_SEND_RECORD)
-	//			DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_SENDRECOD_UI,0,0);
-	//	}
-	//	break;
-	//case WM_DARK_RECORD:
-	//	{
-	//		if(pDlg->dlgType == DIALOG_PRESS)
-	//			DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_DARK_UI,0,0);
-	//	}
-	//	break;
-	//case WM_UP_BETPOOL:
-	//	{
-	//		if(pDlg->dlgType == DIALOG_P2P_BET)
-	//			DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_BETPOOL_UI,0,0);
-	//	}
-	//	break;
 	default:
 		return 0;
 	}
@@ -1470,42 +1434,6 @@ void  CDacrsUIApp::CheckUpdate(){
 	CloseHandle(::CreateThread(NULL,0,Update1,this,0,NULL));
 
 }
-void CDacrsUIApp::UpdataUIData(){
-	CDacrsUIDlg *pDlg = (CDacrsUIDlg*)(((CDacrsUIApp*)this)->m_pMainWnd) ;
-	if (NULL != pDlg ) {
-		int DType = pDlg->dlgType;
-		switch(DType){
-		//case DIALOG_P2P_BET:
-		//	DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_BETPOOL_UI,0,0);
-		//	break;
-		//case DIALOG_TRANSFER_RECORD:
-		//	DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_TRANSRECORD_UI,0,0);
-		//	break;
-		//case DIALOG_PRESS:
-		//	DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_DARK_UI,0,0);
-		//	break;
-		//case DIALOG_SEND_RECORD:
-		//	DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_SENDRECOD_UI,0,0);
-		//	break;
-		//case DIALOG_ACCEPTBET_RECORD:
-		//	DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_ACCEPTRECOD_UI,0,0);
-		//	break;
-		case CMainDlg::IDD:
-			GetMainDlgStruct();
-			DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_MAIN_UI , 0,0);
-			break;
-		//case DIALOG_SIGN_ACCOUNTS:
-		//	DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_MYWALLET_UI , WM_UP_ADDRESS,0);
-		//	break;
-		//case CReceiveDlg::IDD:
-		//	DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_RECIVE_UI , 0,0);
-		//	break;
-		//case CSendDlg::IDD:
-		//	DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_SEND_UI , WM_UP_ADDRESS,0);
-		//	break;
-		}
-	}
-}
 
 void CDacrsUIApp::GetMainDlgStruct()
 {
@@ -1573,6 +1501,9 @@ void CDacrsUIApp::GetMainDlgStruct()
 	string msg =maindlg.ToJson();
 	Postmsg.SetData(msg.c_str());	
 	m_UiManDlgQueue.push(Postmsg);
+
+	CPostMsg msg1(MSG_USER_MAIN_UI,0);
+	m_MsgQueue.push(msg1);
 }
 
 BOOL CDacrsUIApp::RunOnlyOneApp()
