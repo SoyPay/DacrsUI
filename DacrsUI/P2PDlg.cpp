@@ -284,8 +284,9 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 
 		theApp.SubscribeMsg( theApp.GetMtHthrdId() , GetSafeHwnd() , MSG_USER_P2P_UI ) ;
 
-		/// 设置定时器刷新界面
-		SetTimer(1,30000,NULL);
+		/// 设置定时器刷新界面 一分钟
+		//SetTimer(1,30000,NULL);
+		SetTimer(1,60000,NULL);
 	}
 	return bRes ;
 }
