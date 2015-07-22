@@ -405,11 +405,18 @@ void CDacrsUIApp::AcceptBetRecord(vector<unsigned char> acceptbet,uistruct::REVT
 			 CString sendtrTime;
 			 sendtrTime.Format("%04d-%02d-%02d %02d:%02d:%02d",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
 
+			 string nValue = sendtx.Contract;
+			 std::vector<unsigned char> vSendTemp = CSoyPayHelp::getInstance()->ParseHex(nValue);
+
+			 SEND_DATA sendbetdata;
+			 memset(&sendbetdata,0,sizeof(SEND_DATA));
+			 memcpy(&sendbetdata, &vSendTemp[0],sizeof(SEND_DATA));
+
 			 double money = (acceptcbet.money*1.0)/COIN;
 			 //插入新数据
 			 CString strSourceData ;
 			 strSourceData.Format(_T("'%s','%s','%d','%s' , '%s' , '%s' , '%lf'") , \
-				 sendtrTime, strTime , 10 , \
+				 sendtrTime, strTime , sendbetdata.hight , \
 				 SendTxhash.c_str() ,  sendtx.regid , transcion.regid ,money);
 
 			 strSourceData.AppendFormat(",'%s' ,'%d','%d','%d','%d','%s','%d'",_T("") ,1 ,0 ,transcion.confirmedHeight ,1 ,\
