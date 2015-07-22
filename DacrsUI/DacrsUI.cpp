@@ -1499,7 +1499,7 @@ void CDacrsUIApp::GetMainDlgStruct()
 		}
 	}
 
-	m_UiManDlgQueue.clear();
+	//m_UiManDlgQueue.clear();
 	CPostMsg Postmsg(MSG_USER_MAIN_UI,0);
 	string msg =maindlg.ToJson();
 	Postmsg.SetData(msg.c_str());	

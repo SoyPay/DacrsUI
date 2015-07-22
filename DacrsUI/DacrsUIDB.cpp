@@ -236,6 +236,7 @@ void CDacrsUIApp::OpenBetRecord(vector<unsigned char> openbet,uistruct::REVTRANS
 		strWhere.Format(_T("tx_hash = '%s'") , hexHash.c_str() ) ;
 		if ( !m_SqliteDeal.UpdateTableItem(_T("t_p2p_quiz") , strSourceData , strWhere)){
 			TRACE(_T("t_p2p_quiz数据更新失败!") );
+			LogPrint("INFO","OpenBetRecord 更新失败:%s",hexHash.c_str() );
 		}
 
 	}
@@ -380,6 +381,7 @@ void CDacrsUIApp::AcceptBetRecord(vector<unsigned char> acceptbet,uistruct::REVT
 		//更新数据
 		if ( !m_SqliteDeal.UpdateTableItem(_T("t_p2p_quiz") ,strField,strCond )) {
 			TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , SendTxhash );
+			LogPrint("INFO","AcceptBetRecord 更新失败:%s",SendTxhash);
 		}
 	}else
 	{
@@ -414,6 +416,7 @@ void CDacrsUIApp::AcceptBetRecord(vector<unsigned char> acceptbet,uistruct::REVT
 				 transcion.txhash ,(int)acceptcbet.data ) ;
 			 if ( !m_SqliteDeal.InsertTableItem(_T("t_p2p_quiz") ,strSourceData)) {
 				 TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , SendTxhash );
+				 LogPrint("INFO","AcceptBetRecord 插入失败:%s",SendTxhash);
 			 }
 		 }
 	}
@@ -445,6 +448,7 @@ void CDacrsUIApp::SendBetRecord(vector<unsigned char> sendbet,uistruct::REVTRANS
 		//更新数据
 		if ( !m_SqliteDeal.UpdateTableItem(_T("t_p2p_quiz") ,strField,strCond )) {
 			TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , transcion.txhash );
+			LogPrint("INFO","SendBetRecord 更新失败:%s",transcion.txhash );
 		}
 	}
 	//else{
@@ -801,6 +805,7 @@ void CDacrsUIApp::AcceptRePacketCommtRecord(vector<unsigned char> acceptRedPacke
 		strCond.Format(_T(" grab_hash='%s' "), transcion.txhash);
 		if ( !m_SqliteDeal.UpdateTableItem(_T("t_red_packets_grab") ,strField,strCond )) {
 			TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , transcion.txhash );
+			LogPrint("INFO","AcceptRePacketCommtRecord 更新失败:%s",transcion.txhash);
 		}
 	}
 }
@@ -819,6 +824,7 @@ void CDacrsUIApp::SendRePacketCommtRecord(vector<unsigned char> sendRedPacket,ui
 		//更新数据
 		if ( !m_SqliteDeal.UpdateTableItem(_T("t_red_packets_send") ,strField,strCond )) {
 			TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , transcion.txhash );
+			LogPrint("INFO","SendRePacketCommtRecord 更新失败:%s",transcion.txhash);
 		}
 	}
 }
@@ -943,6 +949,7 @@ void CDacrsUIApp::AcceptRePacketSpecailRecord(vector<unsigned char> acceptRedPac
 			strField.Format(_T("grab_time=%d,confirm_height = %d,lucky_fortune = 2,lucky_amount=%lf") ,transcion.confirmedtime ,transcion.confirmedHeight, money) ;
 			if ( !m_SqliteDeal.UpdateTableItem(_T("t_red_packets_grab") ,strField,strCond )) {
 				TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , transcion.txhash );
+				LogPrint("INFO","AcceptRePacketSpecailRecord 更新失败:%s",transcion.txhash);
 			}
 		}
 		else{
@@ -951,6 +958,7 @@ void CDacrsUIApp::AcceptRePacketSpecailRecord(vector<unsigned char> acceptRedPac
 			strCond.Format(_T(" grab_hash='%s' "), transcion.txhash);
 			if ( !m_SqliteDeal.UpdateTableItem(_T("t_red_packets_grab") ,strField,strCond )) {
 				TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , transcion.txhash );
+					LogPrint("INFO","AcceptRePacketSpecailRecord 更新失败:%s",transcion.txhash);
 			}
 		}
 	}
@@ -970,6 +978,7 @@ void CDacrsUIApp::SendRePacketSpecailRecord(vector<unsigned char> sendRedPacket,
 		//更新数据
 		if ( !m_SqliteDeal.UpdateTableItem(_T("t_red_packets_send") ,strField,strCond )) {
 			TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , transcion.txhash );
+				LogPrint("INFO","SendRePacketSpecailRecord 更新失败:%s",transcion.txhash);
 		}
 	}
 }
