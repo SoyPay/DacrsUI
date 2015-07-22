@@ -10,7 +10,7 @@
 #include "GuessNum.h"
 #include "RpcCmd.h"
 
-#define OUT_HEIGHT  10
+#define OUT_HEIGHT  60
 
 // CP2PDlg ¶Ô»°¿ò
 
