@@ -478,15 +478,17 @@ void  CSendRecord::OnShowPagePool(int page)
 			{
 				guess.Format(_T("%s"),"¸ç");
 			}
-
-			if (const_it.guess_num == const_it.content[32])
+			if (const_it.state == 2)  /// ¿ª½±
 			{
-				m_listBox.SetIndexBackCol(i, 6, RGB(1,127,1));
-				reward.Format(_T("-%.4f"),const_it.amount);
-			}else
-			{
-				m_listBox.SetIndexBackCol(i, 6, RGB(242,32,32));
-				reward.Format(_T("+%.4f"),const_it.amount);
+				if (const_it.guess_num == const_it.content[32])
+				{
+					m_listBox.SetIndexBackCol(i, 6, RGB(1,127,1));
+					reward.Format(_T("-%.4f"),const_it.amount);
+				}else
+				{
+					m_listBox.SetIndexBackCol(i, 6, RGB(242,32,32));
+					reward.Format(_T("+%.4f"),const_it.amount);
+				}
 			}
 
 			CString recaddr;
@@ -520,6 +522,7 @@ void  CSendRecord::OnShowPagePool(int page)
 						theApp.OpenBet(txhash);
 						flag = true;
 					}
+					reward.Format(_T("%.4f"),const_it.amount);
 					m_listBox.SetIndexString(i , sendaddr, acceptaddr,SendTime,strTime, result,_T("--"),reward,time, _T("´ý¿ª"),const_it.tx_hash);
 				}else if(theApp.IsSyncBlock && const_it.height != 0 &&(const_it.time_out + const_it.height)< theApp.blocktipheight){
 					m_listBox.SetIndexBackCol(i, 6, RGB(1,127,1));
