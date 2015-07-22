@@ -236,6 +236,7 @@ void CDacrsUIApp::OpenBetRecord(vector<unsigned char> openbet,uistruct::REVTRANS
 		strWhere.Format(_T("tx_hash = '%s'") , hexHash.c_str() ) ;
 		if ( !m_SqliteDeal.UpdateTableItem(_T("t_p2p_quiz") , strSourceData , strWhere)){
 			TRACE(_T("t_p2p_quiz数据更新失败!") );
+			LogPrint("INFO","OpenBetRecord 更新失败:%s",hexHash.c_str() );
 		}
 
 	}
@@ -380,6 +381,7 @@ void CDacrsUIApp::AcceptBetRecord(vector<unsigned char> acceptbet,uistruct::REVT
 		//更新数据
 		if ( !m_SqliteDeal.UpdateTableItem(_T("t_p2p_quiz") ,strField,strCond )) {
 			TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , SendTxhash );
+			LogPrint("INFO","AcceptBetRecord 更新失败:%s",SendTxhash);
 		}
 	}else
 	{
@@ -414,6 +416,7 @@ void CDacrsUIApp::AcceptBetRecord(vector<unsigned char> acceptbet,uistruct::REVT
 				 transcion.txhash ,(int)acceptcbet.data ) ;
 			 if ( !m_SqliteDeal.InsertTableItem(_T("t_p2p_quiz") ,strSourceData)) {
 				 TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , SendTxhash );
+				 LogPrint("INFO","AcceptBetRecord 插入失败:%s",SendTxhash);
 			 }
 		 }
 	}
@@ -445,6 +448,7 @@ void CDacrsUIApp::SendBetRecord(vector<unsigned char> sendbet,uistruct::REVTRANS
 		//更新数据
 		if ( !m_SqliteDeal.UpdateTableItem(_T("t_p2p_quiz") ,strField,strCond )) {
 			TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , transcion.txhash );
+			LogPrint("INFO","SendBetRecord 更新失败:%s",transcion.txhash );
 		}
 	}
 	//else{
