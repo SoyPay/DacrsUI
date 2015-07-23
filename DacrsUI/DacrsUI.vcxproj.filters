@@ -220,6 +220,9 @@
     <ClCompile Include="IpoCoin.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Reminderdlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BmpBtn.h">
@@ -496,6 +499,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="IpoCoin.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Reminderdlg.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
