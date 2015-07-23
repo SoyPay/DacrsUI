@@ -60,6 +60,7 @@ CDacrsUIApp::CDacrsUIApp()
 	netWork = 0;
 	dbpath =_T("");
 	m_reminder =TRUE;
+	m_passlock = TRUE;
 }
 
 
@@ -1599,15 +1600,18 @@ void CDacrsUIApp::CheckPathValid(const CStringA& strDir)
 	}
 }
 bool CDacrsUIApp::IsLockWallet(){
-
-	while(IsWalletLocked)
+	
+	if (m_passlock)
 	{
-		CWalletPassPhrase walletpassdlg;
-		if (walletpassdlg.DoModal() == IDCANCEL)
+		while(IsWalletLocked)
 		{
-			break;
+			CWalletPassPhrase walletpassdlg;
+			if (walletpassdlg.DoModal() == IDCANCEL)
+			{
+				break;
+			}
+			Sleep(100);
 		}
-		Sleep(100);
 	}
 
 	return IsWalletLocked;
