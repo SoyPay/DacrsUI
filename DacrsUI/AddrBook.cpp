@@ -16,6 +16,10 @@ CAddrBook::CAddrBook(CWnd* pParent /*=NULL*/  , CString strTip /*=_T("")*/)
 {
 	m_strTip = strTip ;
 	m_pBmp = NULL ;
+
+	hitRow = -1;
+	hitCol = -1;
+	m_prehittex = _T("");
 }
 
 CAddrBook::~CAddrBook()
@@ -42,13 +46,15 @@ BEGIN_MESSAGE_MAP(CAddrBook, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_ADDADDRBOOK, &CAddrBook::OnBnClickedButtonAddaddrbook)
 	ON_BN_CLICKED(IDOK, &CAddrBook::OnBnClickedOk)
 	ON_BN_CLICKED(IDC_BUTTON_DELEITEM, &CAddrBook::OnBnClickedButtonDeleitem)
-	ON_NOTIFY(NM_DBLCLK, IDC_LIST1, &CAddrBook::OnNMDblclkList1)
+	//ON_NOTIFY(NM_DBLCLK, IDC_LIST1, &CAddrBook::OnNMDblclkList1)
 	ON_WM_ERASEBKGND()
 	ON_WM_CTLCOLOR()
 	ON_WM_SIZE()
 	ON_WM_NCHITTEST()
 	ON_WM_LBUTTONDOWN()
 	ON_BN_CLICKED(IDC_BUTTON_GB, &CAddrBook::OnBnClickedButtonGb)
+	ON_NOTIFY(NM_DBLCLK, IDC_LIST, &CAddrBook::OnNMDblclkList)
+	ON_NOTIFY(NM_CLICK, IDC_LIST, &CAddrBook::OnNMClickList)
 END_MESSAGE_MAP()
 
 
@@ -122,7 +128,7 @@ BOOL CAddrBook::OnInitDialog()
 		UINT		size ;
 	} listcol[3]  = {
 		{"标签" ,      200},
-		{"地址" ,      576}
+		{"地址" ,      558}
 	};
 	m_listCtrl.SetBkColor(RGB(240,240,240));       
 	m_listCtrl.SetRowHeigt(23);               
@@ -273,21 +279,21 @@ void CAddrBook::OnBnClickedButtonDeleitem()
 }
 
 
-void CAddrBook::OnNMDblclkList1(NMHDR *pNMHDR, LRESULT *pResult)
-{
-	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
-	// TODO: 在此添加控件通知处理程序代码
-	if(-1 != pNMItemActivate->iItem) 
-	{  
-		int nRow = pNMItemActivate->iItem;
-		CString Label =m_listCtrl.GetItemText(nRow, 0);
-		CString addr =m_listCtrl.GetItemText(nRow, 1);
-		m_selectAddr.label = Label;
-		m_selectAddr.address = addr;
-		CDialogEx::OnOK();
-	}  
-	*pResult = 0;
-}
+//void CAddrBook::OnNMDblclkList1(NMHDR *pNMHDR, LRESULT *pResult)
+//{
+//	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
+//	 TODO: 在此添加控件通知处理程序代码
+//	if(-1 != pNMItemActivate->iItem) 
+//	{  
+//		int nRow = pNMItemActivate->iItem;
+//		CString Label =m_listCtrl.GetItemText(nRow, 0);
+//		CString addr =m_listCtrl.GetItemText(nRow, 1);
+//		m_selectAddr.label = Label;
+//		m_selectAddr.address = addr;
+//		CDialogEx::OnOK();
+//	}  
+//	*pResult = 0;
+//}
 
 
 BOOL CAddrBook::OnEraseBkgnd(CDC* pDC)
@@ -359,4 +365,93 @@ void CAddrBook::OnBnClickedButtonGb()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	EndDialog(IDOK);
+}
+
+
+void CAddrBook::OnNMDblclkList(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
+	// TODO: 在此添加控件通知处理程序代码
+	LVHITTESTINFO info;
+	info.pt  =  pNMItemActivate -> ptAction;
+
+	if (m_listCtrl.SubItemHitTest( & info)  !=   - 1  )
+	{
+		hitRow  =  info.iItem;
+		hitCol  =  info.iSubItem;
+		if ( hitCol == 1)
+		{
+			int nRow = pNMItemActivate->iItem;
+			CString Label =m_listCtrl.GetItemText(nRow, 0);
+			CString addr =m_listCtrl.GetItemText(nRow, 1);
+			m_selectAddr.label = Label;
+			m_selectAddr.address = addr;
+			CDialogEx::OnOK();
+			*pResult = 0;
+			return;
+		}
+		if (editItem.m_hWnd  ==  NULL ) // editItem为一输入框控件， 
+		{
+			RECT rect;
+			rect.left  =   0 ;
+			rect.top  =   0 ;
+			rect.bottom  =   15 ;
+			rect.right  =   200 ;
+			editItem .Create(WS_CHILD  |  ES_LEFT  |  WS_BORDER  |  ES_AUTOHSCROLL  |  ES_WANTRETURN  |  ES_MULTILINE, rect,  this ,  101 );
+			editItem.SetFont( this -> GetFont(), FALSE);
+		}
+		/// 保存修改之前的字符串
+		editItem.GetWindowText(m_prehittex);
+		CRect rect;
+		m_listCtrl.GetSubItemRect(info.iItem, info.iSubItem, LVIR_BOUNDS, rect);
+		rect.top  +=   40 ;
+		rect.left  +=   2 ;
+		rect.right  -=   556 ;
+		rect.bottom  +=   40 ;
+
+		editItem.SetWindowText(m_listCtrl.GetItemText( info .iItem,  info .iSubItem));
+		editItem.MoveWindow( & rect, TRUE);
+		editItem.ShowWindow( 1 );
+		editItem.SetSel(-1);
+		editItem.SetFocus();
+	}
+	*pResult = 0;
+}
+
+
+void CAddrBook::OnNMClickList(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
+	// TODO: 在此添加控件通知处理程序代码
+	if (editItem.m_hWnd  !=  NULL)
+	{
+		editItem.ShowWindow( 0 );
+		if (hitRow  !=   - 1 )
+		{
+			CString text;
+			editItem.GetWindowText(text);
+			m_listCtrl.SetItemText(hitRow, hitCol, text);
+			if (text != m_prehittex)
+			{
+				CString addr = _T("");
+				addr = m_listCtrl.GetItemText(hitRow,1);
+				CString strSourceData  , strW ;
+				strSourceData.Format(_T("Label = '%s'") , text  ) ;
+				strW.Format(_T("address = '%s'") , addr ) ;
+
+				uistruct::DATABASEINFO_t DatabaseInfo;
+				DatabaseInfo.strSource = strSourceData.GetString();
+				DatabaseInfo.strWhere = strW.GetString() ;
+				DatabaseInfo.strTabName = _T("t_address_book");
+				CPostMsg postmsg(MSG_USER_UPDATA_DATA,0);
+				string strtemp = DatabaseInfo.ToJson();
+				CString pstr;
+				pstr.Format(_T("%s"),strtemp.c_str());
+				postmsg.SetData(pstr);
+				theApp.m_MsgQueue.push(postmsg);
+			}
+		}
+	}
+	hitCol  =  hitRow  =   - 1 ;
+	*pResult = 0;
 }

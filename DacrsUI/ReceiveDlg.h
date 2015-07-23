@@ -30,6 +30,10 @@ private:
 	CShadeButtonST     m_rBtnAcitve;
 	CShadeButtonST     m_rBtnNewaddr;
 	CShadeButtonST     m_rBtnCopyaddr;
+	int                hitRow;
+	int                hitCol;
+	CEdit              editItem;
+	CString            m_prehittex;
 public:
 	afx_msg void OnBnClickedButtonSignAccount();
 	afx_msg void OnBnClickedButtonNewaddress();
@@ -42,4 +46,6 @@ public:
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	void    ModifyListCtrlItem();
 	void    InsertListCtrlItem();
+	afx_msg void OnNMDblclkListShow(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnNMClickListShow(NMHDR *pNMHDR, LRESULT *pResult);
 };
