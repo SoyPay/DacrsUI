@@ -104,6 +104,7 @@ BEGIN_MESSAGE_MAP(CDacrsUIDlg, CDialogEx)
 	ON_COMMAND(ID__EXPORTPRIVEKEY, &CDacrsUIDlg::ExportPriveKey)
 	ON_COMMAND(ID__IMPORTPRIVEKEY, &CDacrsUIDlg::ImportPrvieKey)
 	ON_UPDATE_COMMAND_UI(ID__SET, &CDacrsUIDlg::OnUpdataState)
+	ON_COMMAND(WM_CLOSEAPP,&CDacrsUIDlg::OnCloseApp)
 END_MESSAGE_MAP()
 
 
@@ -878,13 +879,25 @@ LRESULT CDacrsUIDlg::OnShowTask(WPARAM wParam,LPARAM lParam)
 		{ 
 			LPPOINT lpoint=new tagPOINT; 
 			::GetCursorPos(lpoint);//得到鼠标位置 
-			CMenu menu; 
-			menu.CreatePopupMenu();//声明一个弹出式菜单 
+			//CMenu menu; 
+			//menu.CreatePopupMenu();//声明一个弹出式菜单 
 
-			menu.AppendMenu(MF_STRING,WM_DESTROY,"关闭"); //增加菜单项“关闭”，点击则发送消息WM_DESTROY给主窗口（已隐藏），将程序结束。 
-			menu.TrackPopupMenu(TPM_LEFTALIGN,lpoint->x,lpoint->y,this); //确定弹出式菜单的位置 
-			HMENU hmenu=menu.Detach(); 
-			menu.DestroyMenu(); //资源回收 
+			//menu.AppendMenu(MF_STRING,WM_DESTROY,"关闭"); //增加菜单项“关闭”，点击则发送消息WM_DESTROY给主窗口（已隐藏），将程序结束。 
+			//menu.TrackPopupMenu(TPM_LEFTALIGN,lpoint->x,lpoint->y,this); //确定弹出式菜单的位置 
+			//HMENU hmenu=menu.Detach(); 
+			//menu.DestroyMenu(); //资源回收 
+
+			CMenu newMenu;
+			newMenu.LoadMenu(IDR_MENU1);
+			CMenu *pPopup=newMenu.GetSubMenu(0);
+			if (theApp.HaveLocked)
+			{
+				pPopup->EnableMenuItem(ID__ENCRYPTWALLET,MF_GRAYED);
+			}
+			pPopup->EnableMenuItem(ID__SET,MF_GRAYED);
+			pPopup->AppendMenu(MF_STRING,WM_CLOSEAPP,"关闭");
+			//显示右键菜单，由视类窗口拥有。
+			pPopup->TrackPopupMenu(TPM_LEFTALIGN,lpoint->x,lpoint->y,this);
 			delete lpoint; 
 		} break; 
 	case WM_LBUTTONDBLCLK: //双击左键的处理 
@@ -906,6 +919,10 @@ LRESULT CDacrsUIDlg::OnShowTask(WPARAM wParam,LPARAM lParam)
 	} 
 	return 0; 
 } 
+void CDacrsUIDlg::OnCloseApp() 
+{
+	ClosWalletWind();
+}
 void CDacrsUIDlg::DeleteTray() 
 { 
 	NOTIFYICONDATA nid; 
