@@ -329,7 +329,7 @@ void CDacrsUIApp::OpenBet(CString txhash,BOOL Flag)
 		conditon.Format(_T("tx_hash ='%s'") , txhash );
 		uistruct::P2P_QUIZ_RECORD_t pPoolItem;
 		int nItem =  theApp.m_SqliteDeal.GetP2PQuizRecordItem(conditon ,&pPoolItem ) ;
-		if (strlen(pPoolItem.tx_hash) == 0) ///此记录不存在,插入记录
+		if (strlen(pPoolItem.tx_hash) != 0) ///此记录不存在,插入记录
 		{
 			CString strSourceData  , strW ;
 			strSourceData.Format(_T("state = %d") , 5  ) ;
