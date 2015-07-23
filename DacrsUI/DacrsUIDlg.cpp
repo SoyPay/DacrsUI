@@ -654,6 +654,10 @@ void  CDacrsUIDlg::StopSever()
 }
 void CDacrsUIDlg::CloseApp()
 {
+	if (!theApp.m_passlock)
+	{
+		EndDialog(IDD_DIALOG_SETWALLETENTRP);
+	}
 	DeleteTray() ;
 	EndWaitCursor();
 	PostMessage( WM_QUIT ) ; 
