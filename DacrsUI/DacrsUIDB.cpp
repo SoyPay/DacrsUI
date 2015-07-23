@@ -242,7 +242,7 @@ void CDacrsUIApp::OpenBetRecord(vector<unsigned char> openbet,uistruct::REVTRANS
 	}
 }
 
-void CDacrsUIApp::OpenBet(CString txhash)
+void CDacrsUIApp::OpenBet(CString txhash,BOOL Flag)
 {
 
 	CString m_addr = _T("");
@@ -270,7 +270,7 @@ void CDacrsUIApp::OpenBet(CString txhash)
 		return;
 	}
 
-	if (!theApp.IsSyncBlock )
+	if (!theApp.IsSyncBlock && Flag)
 	{
 		//::MessageBox(NULL ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
@@ -429,7 +429,7 @@ void CDacrsUIApp::AcceptBetRecord(vector<unsigned char> acceptbet,uistruct::REVT
 	}
 
 
-	OpenBet(SendTxhash.c_str());
+	OpenBet(SendTxhash.c_str(),FALSE);
 }
 void CDacrsUIApp::SendBetRecord(vector<unsigned char> sendbet,uistruct::REVTRANSACTION_t transcion)
 {
