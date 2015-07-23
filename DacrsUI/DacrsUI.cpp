@@ -1306,6 +1306,7 @@ void CDacrsUIApp::StartSeverProcess(const CStringA& strdir){
 
 	CString str = _T("dacrs-d.exe -datadir=");
 	str.AppendFormat("%s",strdir);
+	str.AppendFormat(" %s",_T("-ui=1"));
 	if(m_bReIndexServer)
 		str.Append(_T(" -reindex=1"));
 	//if (!m_bStartServer)
