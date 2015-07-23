@@ -11,6 +11,7 @@
 #include "SetAppFee.h"
 #include "EncryptWallet.h"
 #include "ChangPassWord.h"
+#include "Reminderdlg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -681,9 +682,11 @@ bool  CDacrsUIDlg::IsP2pBetFinsh()
 }
 void  CDacrsUIDlg::ClosWallet()
 {
-	COut outdlg;
-	if ( IDOK == outdlg.DoModal()){
-		LogPrint("INFO","Close app start \n");
+	if (theApp.m_reminder)
+	{
+		CReminderdlg remindgl;
+		remindgl.DoModal();
+	}else{
 		BeginWaitCursor();
 		if ( NULL != m_pOutGifDlg ) {
 			CRect rc;
@@ -694,9 +697,23 @@ void  CDacrsUIDlg::ClosWallet()
 		}
 		::PostThreadMessage( theApp.GetMtHthrdId() , MSG_USER_OUT , 0 , 0 ) ;
 		SetTimer( 0x10 , 2000 , NULL ) ; 
-	}else{
-		;
 	}
+	//COut outdlg;
+	//if ( IDOK == outdlg.DoModal()){
+	//	LogPrint("INFO","Close app start \n");
+	//	BeginWaitCursor();
+	//	if ( NULL != m_pOutGifDlg ) {
+	//		CRect rc;
+	//		GetWindowRect(&rc);	
+	//		m_pOutGifDlg->LoadGifing(TRUE);
+	//		m_pOutGifDlg->SetWindowPos(NULL , (rc.left + rc.right)/2 - 300/2 , (rc.top + rc.bottom)/2 - 100/2  , 300 ,100 , SWP_SHOWWINDOW);
+	//		m_pOutGifDlg->ShowWindow(SW_SHOW) ;
+	//	}
+	//	::PostThreadMessage( theApp.GetMtHthrdId() , MSG_USER_OUT , 0 , 0 ) ;
+	//	SetTimer( 0x10 , 2000 , NULL ) ; 
+	//}else{
+	//	;
+	//}
 }
 void CDacrsUIDlg::OnBnClickedButtonClose()
 {

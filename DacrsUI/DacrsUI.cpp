@@ -59,6 +59,7 @@ CDacrsUIApp::CDacrsUIApp()
 	HaveLocked = FALSE;
 	netWork = 0;
 	dbpath =_T("");
+	m_reminder =TRUE;
 }
 
 
