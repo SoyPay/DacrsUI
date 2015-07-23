@@ -36,7 +36,7 @@ public:
 	void GetAddrbook(uistruct::ADDRBOOK_t &addr);
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnBnClickedButtonDeleitem();
-	afx_msg void OnNMDblclkList1(NMHDR *pNMHDR, LRESULT *pResult);
+	//afx_msg void OnNMDblclkList1(NMHDR *pNMHDR, LRESULT *pResult);
 public:
 	CStaticTrans     m_Text;
 
@@ -44,6 +44,11 @@ public:
 	CShadeButtonST   m_rBtnAdd;
 	CShadeButtonST   m_rBtnDelete;
 	CShadeButtonST   m_rBtnOk;
+
+	int                hitRow;
+	int                hitCol;
+	CEdit              editItem;
+	CString            m_prehittex;
 public:
 	CFont            m_fontGrid;//×ÖÌå±äÁ¿
 	HBITMAP		     m_pBmp; 
@@ -55,4 +60,6 @@ public:
 	afx_msg LRESULT OnNcHitTest(CPoint point);
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnBnClickedButtonGb();
+	afx_msg void OnNMDblclkList(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnNMClickList(NMHDR *pNMHDR, LRESULT *pResult);
 };

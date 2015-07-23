@@ -16,6 +16,9 @@ IMPLEMENT_DYNAMIC(CReceiveDlg, CDialogBar)
 CReceiveDlg::CReceiveDlg()
 {
 	m_pBmp = NULL ;
+	m_prehittex = _T("");
+	hitRow = -1;
+	hitCol = -1;
 }
 
 CReceiveDlg::~CReceiveDlg()
@@ -44,6 +47,8 @@ BEGIN_MESSAGE_MAP(CReceiveDlg, CDialogBar)
 	ON_WM_SIZE()
 	ON_WM_CREATE()
 	ON_WM_ERASEBKGND()
+	ON_NOTIFY(NM_DBLCLK, IDC_LIST_SHOW, &CReceiveDlg::OnNMDblclkListShow)
+	ON_NOTIFY(NM_CLICK, IDC_LIST_SHOW, &CReceiveDlg::OnNMClickListShow)
 END_MESSAGE_MAP()
 
 
@@ -539,4 +544,86 @@ void   CReceiveDlg::InsertListCtrlItem()
 	strShowData.Format(_T("%.8f") , addr.fMoney ) ;
 	m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
 
+}
+
+void CReceiveDlg::OnNMDblclkListShow(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
+	// TODO: 在此添加控件通知处理程序代码
+	LVHITTESTINFO info;
+     info.pt  =  pNMItemActivate -> ptAction;
+ 
+       if (m_listCtrl.SubItemHitTest( & info)  !=   - 1  )
+      {
+          hitRow  =  info.iItem;
+          hitCol  =  info.iSubItem;
+		  if ( hitCol!= 2)
+		  {
+			  *pResult = 0;
+			  return;
+		  }
+           if (editItem.m_hWnd  ==  NULL ) // editItem为一输入框控件， 
+          {
+              RECT rect;
+              rect.left  =   0 ;
+              rect.top  =   0 ;
+              rect.bottom  =   15 ;
+              rect.right  =   200 ;
+              editItem .Create(WS_CHILD  |  ES_LEFT  |  WS_BORDER  |  ES_AUTOHSCROLL  |  ES_WANTRETURN  |  ES_MULTILINE, rect,  this ,  101 );
+              editItem.SetFont( this -> GetFont(), FALSE);
+          }
+		   /// 保存修改之前的字符串
+		 editItem.GetWindowText(m_prehittex);
+          CRect rect;
+          m_listCtrl.GetSubItemRect(info.iItem, info.iSubItem, LVIR_BOUNDS, rect);
+          rect.top  +=   22 ;
+          rect.left  +=   35 ;
+          rect.right  +=   35 ;
+         rect.bottom  +=   22 ;
+  
+          editItem.SetWindowText(m_listCtrl.GetItemText( info .iItem,  info .iSubItem));
+          editItem.MoveWindow( & rect, TRUE);
+          editItem.ShowWindow( 1 );
+		  editItem.SetSel(-1);
+          editItem.SetFocus();
+      }
+	*pResult = 0;
+}
+
+
+void CReceiveDlg::OnNMClickListShow(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
+	// TODO: 在此添加控件通知处理程序代码
+		   if (editItem.m_hWnd  !=  NULL)
+		 {
+			 editItem.ShowWindow( 0 );
+			  if (hitRow  !=   - 1 )
+			{
+				CString text;
+				editItem.GetWindowText(text);
+				m_listCtrl.SetItemText(hitRow, hitCol, text);
+				if (text != m_prehittex)
+				{
+					CString addr = _T("");
+					addr = m_listCtrl.GetItemText(hitRow,3);
+					CString strSourceData  , strW ;
+					strSourceData.Format(_T("label = '%s'") , text  ) ;
+					strW.Format(_T("address = '%s'") , addr ) ;
+
+					uistruct::DATABASEINFO_t DatabaseInfo;
+					DatabaseInfo.strSource = strSourceData.GetString();
+					DatabaseInfo.strWhere = strW.GetString() ;
+					DatabaseInfo.strTabName = _T("t_wallet_address");
+					CPostMsg postmsg(MSG_USER_UPDATA_DATA,0);
+					string strtemp = DatabaseInfo.ToJson();
+					CString pstr;
+					pstr.Format(_T("%s"),strtemp.c_str());
+					postmsg.SetData(pstr);
+					theApp.m_MsgQueue.push(postmsg);
+				}
+			}
+	}
+	hitCol  =  hitRow  =   - 1 ;
+	*pResult = 0;
 }
