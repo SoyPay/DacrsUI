@@ -289,6 +289,7 @@
     <ClInclude Include="RecordListBox.h" />
     <ClInclude Include="RedPacketList.h" />
     <ClInclude Include="RedPacketPoolListBox.h" />
+    <ClInclude Include="Reminderdlg.h" />
     <ClInclude Include="RPCDlg.h" />
     <ClInclude Include="SendListBox.h" />
     <ClInclude Include="SendRecord.h" />
@@ -399,6 +400,7 @@
     <ClCompile Include="RecordListBox.cpp" />
     <ClCompile Include="RedPacketList.cpp" />
     <ClCompile Include="RedPacketPoolListBox.cpp" />
+    <ClCompile Include="Reminderdlg.cpp" />
     <ClCompile Include="RoundButton.cpp" />
     <ClCompile Include="RpcCmd.cpp" />
     <ClCompile Include="RPCDlg.cpp" />
