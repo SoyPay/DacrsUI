@@ -107,4 +107,6 @@ public:
 	bool GetFileName(CString &fileName,CString strexe );
 	void AddImportWalletAndBookAddr(CString fileName);
 	void WriteExportWalletAndBookAddr(CString fileName);
+    /// 自定义关闭程序消息
+	afx_msg void OnCloseApp() ; 
 };
