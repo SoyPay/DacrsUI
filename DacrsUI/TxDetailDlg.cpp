@@ -254,6 +254,7 @@ void CTxDetailDlg::ShowTxDetail(CString jsontx)
 		CString strShowData;
 		strShowData.AppendFormat(_T("%s") ,_T("此交易不存在")) ;
 		GetDlgItem(IDC_EDIT_TXDETAIL)->SetWindowText(strShowData);
+		return;
 	}
 	//string txdetail = tx.ToJson();
 	uistruct::REVTRANSACTION_t tx;
