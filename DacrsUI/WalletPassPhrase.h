@@ -21,4 +21,5 @@ protected:
 public:
 	afx_msg void OnBnClickedOk();
 	virtual BOOL OnInitDialog();
+	afx_msg void OnBnClickedCancel();
 };

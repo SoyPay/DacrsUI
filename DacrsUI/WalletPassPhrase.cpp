@@ -29,6 +29,7 @@ void CWalletPassPhrase::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CWalletPassPhrase, CDialogEx)
 	ON_BN_CLICKED(IDOK, &CWalletPassPhrase::OnBnClickedOk)
+	ON_BN_CLICKED(IDCANCEL, &CWalletPassPhrase::OnBnClickedCancel)
 END_MESSAGE_MAP()
 
 
@@ -87,7 +88,7 @@ void CWalletPassPhrase::OnBnClickedOk()
 		MessageBox(_T("输入就密码不正确,请重新输入"));
 		return;
 	}
-
+	theApp.m_passlock = TRUE;
 	CDialogEx::OnOK();
 }
 
@@ -97,8 +98,16 @@ BOOL CWalletPassPhrase::OnInitDialog()
 	CDialogEx::OnInitDialog();
 
 	// TODO:  在此添加额外的初始化
-	
+	theApp.m_passlock = FALSE;
 	GetDlgItem(IDC_EDIT_TIEM)->SetWindowText(_T("60"));
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE
+}
+
+
+void CWalletPassPhrase::OnBnClickedCancel()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	theApp.m_passlock = TRUE;
+	CDialogEx::OnCancel();
 }
