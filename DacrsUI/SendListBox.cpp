@@ -230,7 +230,7 @@ void CSendListBox::updateListBoxButtonPos()
 				pData->pSta7->SetWindowPos(NULL ,710 , pData->nItem*28 +10 , 70 , 29 , SWP_SHOWWINDOW );
 
 				pData->pSta8->ShowWindow( SW_SHOW );
-				pData->pSta8->SetWindowPos(NULL , 810 , pData->nItem*28 +10 , 45 , 21 , SWP_SHOWWINDOW );
+				pData->pSta8->SetWindowPos(NULL , 810 , pData->nItem*28 +10+8 , 45 , 21 , SWP_SHOWWINDOW );
 
 			}
 			iLine++;

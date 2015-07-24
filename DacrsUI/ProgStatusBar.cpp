@@ -204,10 +204,11 @@ int CProgStatusBar::ShowProgressCtrl(){
 	{
 		return 1;
 	}
-
+	
 	uistruct::BLOCKCHANGED_t pBlockchanged; 
 	string strTemp = postmsg.GetData();
 	pBlockchanged.JsonToStruct(strTemp.c_str());
+	LogPrint("CProgStatusBar", "MSG_USER_UP_PROGRESS WM_CONNECTNET 更新进度条消息:%s\n",strTemp.c_str());
 	if (pBlockchanged.tips <= 0)
 	{
 		return 1;
