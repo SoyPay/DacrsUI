@@ -58,7 +58,7 @@ void CReceiveDlg::ShowListInfo()
 {
 
 
-	theApp.m_SqliteDeal.GetWalletAddressList(_T(" 1=1 "), &m_MapAddrInfo);
+	theApp.m_SqliteDeal.GetWalletAddressList(_T(" 1=1 order by reg_id"), &m_MapAddrInfo);
 
 	if ( 0 == m_MapAddrInfo.size() ) return  ;
 
