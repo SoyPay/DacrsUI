@@ -323,6 +323,7 @@ int CDacrsUIDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		m_pOutGifDlg->ShowWindow(SW_HIDE) ;
 	}
 	LogPrint("INFO","Create m_pOutGifDlg end\n");
+
 	//加入到m_dlgMap
 	m_dlgMap.insert( std::map<UINT , CDialogBar *>::value_type( CMainDlg::IDD , m_pMainDlg)) ; 
 	m_dlgMap.insert( std::map<UINT , CDialogBar *>::value_type( CSendDlg::IDD , m_pSendDlg)) ; 
@@ -335,7 +336,7 @@ int CDacrsUIDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	//显示主界面
 	ShowDialog(CMainDlg::IDD) ;
-
+	theApp.m_dlgCreatfinsh = TRUE;
 	return 0;
 }
 void CDacrsUIDlg::ShowDialog(UINT dlgid) 

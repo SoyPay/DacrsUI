@@ -61,6 +61,7 @@ CDacrsUIApp::CDacrsUIApp()
 	dbpath =_T("");
 	m_reminder =TRUE;
 	m_passlock = TRUE;
+	m_dlgCreatfinsh = FALSE;
 }
 
 
@@ -483,7 +484,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 			continue;
 		}
 		CDacrsUIDlg *pDlg = (CDacrsUIDlg*)(((CDacrsUIApp*)pParam)->m_pMainWnd) ;
-		if (pDlg == NULL && Postmsg.GetUItype() != MSG_USER_STARTPROCESS_UI&&Postmsg.GetDatatype() !=WM_SYNC_TRANSACTION){
+		if ((pDlg == NULL || !theApp.m_dlgCreatfinsh) && Postmsg.GetUItype() != MSG_USER_STARTPROCESS_UI&&Postmsg.GetDatatype() !=WM_SYNC_TRANSACTION){
 			pUiDemeDlg->m_MsgQueue.push(Postmsg);
 			Sleep(100); 
 			//TRACE("push message:MSG_USER_STARTPROCESS_UI\n");
@@ -494,6 +495,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 		{
 		case MSG_USER_STARTPROCESS_UI:
 			{
+				LogPrint("PROCESSMSG", "MSG_USER_STARTPROCESS_UI 第:%d\n",Postmsg.GetDatatype());
 				theApp.DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_STARTPROCESS_UI ,Postmsg.GetDatatype(),0);
 				if (Postmsg.GetDatatype() == 4)
 				{
@@ -514,12 +516,14 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 				{
 				case WM_UP_ADDRESS:
 					{
+						LogPrint("PROCESSMSG", "WM_UP_ADDRESS\n");
 						//更新钱包地址数据库
 						((CDacrsUIApp*)pParam)->UpdateAddressData();
 					}
 					break;
 				case WM_SYNC_TRANSACTION:
 					{
+						
 						if(!theApp.IsSyncTx) {
 							theApp.IsSyncTx = TRUE;
 							theApp.m_SqliteDeal.BeginDBTransaction();
@@ -528,10 +532,12 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 						if ( _T("") != txData ) {
 							((CDacrsUIApp*)pParam)->SyncTransaction(txData.GetString()) ;
 						}
+						LogPrint("PROCESSMSG", "WM_SYNC_TRANSACTION 启动同步交易:%s\n",txData);
 					}
 					break;
 				case WM_REVTRANSACTION:
 					{
+
 						//更新历史交易记录数据库
 						CString pHash = Postmsg.GetData();
 						if ( _T("") != pHash ) {
@@ -549,6 +555,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 								((CDacrsUIApp*)pParam)->UpdateTransaction(strHash);
 							}
 						}
+						LogPrint("PROCESSMSG", "WM_REVTRANSACTION 收取跟钱包有关的交易:%s\n",pHash);
 					}
 					break;
 				case WM_APP_TRANSATION:
@@ -557,6 +564,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 						if ( _T("") != txDetail ) {
 							((CDacrsUIApp*)pParam)->UpdateAppRecord(txDetail.GetString());
 						}
+						LogPrint("PROCESSMSG", "WM_APP_TRANSATION 收取跟钱包有关的应用交易:%s\n",txDetail);
 					}
 					break;
 				case WM_P2P_BET_RECORD:
@@ -567,6 +575,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 					break;
 				case WM_UP_BETPOOL:
 					{
+						LogPrint("PROCESSMSG", "WM_UP_BETPOOL 更新赌约池\n");
 						/// 赌约池数据库列表
 						BOOL flag =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.ClearTableData(_T("t_quiz_pool"));
 						if (flag ) 
@@ -577,6 +586,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 					break;
 				case WM_REDPACKETPOOL:
 					{
+						LogPrint("PROCESSMSG", "WM_REDPACKETPOOL 更新红包池\n");
 						/// 红包池
 						BOOL flag =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.ClearTableData(_T("t_red_packets_pool"));
 						if (flag ) 
@@ -586,6 +596,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 					}
 				case WM_UP_BlLOCKTIP:
 					{
+						LogPrint("PROCESSMSG", "WM_UP_BlLOCKTIP 更新block最新高度\n");
 						//更新最新blocktip数据库
 						if ( ((CDacrsUIApp*)pParam)->m_SqliteDeal.ClearTableData(_T("t_chain_tip") ) ) {
 
@@ -600,6 +611,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 					break;
 				case WM_UP_ADDRBOOK:
 					{
+						LogPrint("PROCESSMSG", "WM_UP_ADDRBOOK 更新地址簿数据库\n");
 						CString josnaddr = Postmsg.GetData();
 						uistruct::ADDRBOOK_t addr;
 						if (addr.JsonToStruct(josnaddr.GetString()))
@@ -619,6 +631,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 					break;
 				case WM_UP_DELETERBOOK:
 					{
+						LogPrint("PROCESSMSG", "WM_UP_DELETERBOOK 删除地址簿数据库\n");
 						CString josnaddr = Postmsg.GetData();
 						uistruct::ADDRBOOK_t addr;
 						if (addr.JsonToStruct(josnaddr.GetString()))
@@ -631,6 +644,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 					break;
 				case WM_RELEASETX:
 					{
+						LogPrint("PROCESSMSG", "WM_RELEASETX 收到交易重新放到mempool\n");
 						//更新历史交易记录数据库
 						CString pHash = Postmsg.GetData();
 						if ( _T("") != pHash ) {
@@ -662,6 +676,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 								theApp.m_SqliteDeal.UpdataAllTableData();   /// 更新应用表格
 							}
 						}
+							LogPrint("PROCESSMSG", "WM_REMOVETX 删除交易:%s\n",pHash);
 					}
 					break;
 				default:
@@ -679,11 +694,13 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 				{
 				case WM_LOCKSTATE:
 					{
+						LogPrint("PROCESSMSG", "MSG_USER_UP_PROGRESS WM_LOCKSTATE 锁的消息\n");
 						pUiDemeDlg->m_LockmsgQueue.push(Postmsg);
 					}
 					break;
 				case WM_CONNECTNET:
 					{
+						LogPrint("PROCESSMSG", "MSG_USER_UP_PROGRESS WM_CONNECTNET 网络连接消息\n");
 						pUiDemeDlg->m_NetConnetCountQueue.push(Postmsg);
 					}
 					break;
@@ -692,6 +709,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 						TRACE("change:%s\r\n","MSG_USER_UP_PROGRESS");
 						//pUiDemeDlg->m_MsgQueue.ClearMessageType(MSG_USER_UP_PROGRESS);
 						pUiDemeDlg->m_UimsgQueue.push(Postmsg);
+						LogPrint("PROCESSMSG", "MSG_USER_UP_PROGRESS  更新进度条消息:%s\n",Postmsg.GetData());
 					}
 					break;
 				}
@@ -700,6 +718,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 			break;
 		case MSG_USER_INSERT_DATA:   //// 插入数据
 			{
+				LogPrint("PROCESSMSG", "MSG_USER_INSERT_DATA 插入数据消息\n");
 				uistruct::DATABASEINFO_t   pDatabase; // = (uistruct::DATABASEINFO_t *)Postmsg.GetStrPoint();
 				string strTemp = Postmsg.GetData();
 				pDatabase.JsonToStruct(strTemp.c_str());
@@ -722,6 +741,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 			break;
 		case MSG_USER_UPDATA_DATA:   /// 更新数据库
 			{
+					LogPrint("PROCESSMSG", "MSG_USER_UPDATA_DATA 更新数据消息\n");
 				uistruct::DATABASEINFO_t pDatabase;// = (uistruct::DATABASEINFO_t *)Postmsg.GetStrPoint();
 				string strTemp = Postmsg.GetData();
 				pDatabase.JsonToStruct(strTemp.c_str());
@@ -842,7 +862,7 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 {
 	string objstr = msgValue.toStyledString();
 	int type = GetMsgType(objstr.c_str(),msgValue);
-//	LogPrint("INFO", "MESG:%s\n",objstr.c_str());
+	LogPrint("RECIVEUI", "MESG:%s\n",objstr.c_str());
 	switch(type)
 	{
 	case ININTAL_TYPE:
