@@ -917,7 +917,7 @@ LRESULT CDacrsUIDlg::OnShowTask(WPARAM wParam,LPARAM lParam)
 				pPopup->EnableMenuItem(ID__ENCRYPTWALLET,MF_GRAYED);
 			}
 			pPopup->EnableMenuItem(ID__SET,MF_GRAYED);
-			pPopup->AppendMenu(MF_STRING,WM_CLOSEAPP,"关闭");
+			pPopup->AppendMenu(MF_STRING,WM_CLOSEAPP,"  关闭");
 			//显示右键菜单，由视类窗口拥有。
 			pPopup->TrackPopupMenu(TPM_LEFTALIGN,lpoint->x,lpoint->y,this);
 			delete lpoint; 
