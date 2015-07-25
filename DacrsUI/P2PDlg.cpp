@@ -87,6 +87,7 @@ BEGIN_MESSAGE_MAP(CP2PDlg, CDialogBar)
 	ON_BN_CLICKED(IDC_BUTTON_UP, &CP2PDlg::OnBnClickedButtonUp)
 	ON_BN_CLICKED(IDC_BUTTON_NEXT, &CP2PDlg::OnBnClickedButtonNext)
 	ON_WM_TIMER()
+	ON_LBN_DBLCLK(IDC_LIST_BONUS, &CP2PDlg::OnLbnDblclkListBonus)
 END_MESSAGE_MAP()
 
 
@@ -620,6 +621,8 @@ void CP2PDlg::OnBnClickedButtonWithd()
 {
 	// TODO: 在此添加控件通知处理程序代码
 
+	if ( IDNO == ::MessageBox( this->GetSafeHwnd() ,_T("是否确定要体现") , _T("提示") , MB_YESNO|MB_ICONINFORMATION ) )
+		return;
 	if (!theApp.IsSyncBlock )
 	{
 		::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
@@ -1564,4 +1567,18 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
  {
 	 v_linkCtrl.SetWindowText(_T("帮助"));
 	 v_linkCtrl.SetURL("http://www.dacrs.com/forum.php?mod=viewthread&tid=3487&extra=page%3D1");
+ }
+
+ void CP2PDlg::OnLbnDblclkListBonus()
+ {
+	 // TODO: 在此添加控件通知处理程序代码
+	 int nSel=m_BonusListBox.GetCurSel(); 
+	 int count = ((m_curpage -1)*m_pagesize) + nSel;
+	 if (count <=m_PoolList.size())
+	 {
+		 uistruct::LISTP2POOL_T const_it = m_PoolList.at(count);
+		 CString temp = _T("竞猜交易ID: ");
+	    temp.Format(_T("%s") ,const_it.hash.c_str()) ;
+		 ::MessageBox( this->GetSafeHwnd() ,temp , _T("提示") , MB_ICONINFORMATION ) ;
+	 }
  }
