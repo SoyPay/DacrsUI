@@ -5,7 +5,7 @@
 #include "DacrsUI.h"
 #include "SendRecord.h"
 #include "afxdialogex.h"
-
+#include "BetInformation.h"
 
 // CSendRecord 对话框
 
@@ -47,6 +47,7 @@ BEGIN_MESSAGE_MAP(CSendRecord, CDialogEx)
 	ON_WM_SIZE()
 	ON_BN_CLICKED(IDC_BUTTON_UP, &CSendRecord::OnBnClickedButtonUp)
 	ON_BN_CLICKED(IDC_BUTTON_NEXT, &CSendRecord::OnBnClickedButtonNext)
+	ON_LBN_DBLCLK(IDC_LIST_BOX, &CSendRecord::OnLbnDblclkListBox)
 END_MESSAGE_MAP()
 
 
@@ -535,4 +536,20 @@ void CSendRecord::OnBnClickedButtonNext()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	OnShowPagePool((m_curpage+1));
+}
+
+
+void CSendRecord::OnLbnDblclkListBox()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	int nSel=m_listBox.GetCurSel(); 
+	int count = ((m_curpage -1)*m_pagesize) + nSel;
+	if (count <=m_PoolList.size())
+	{
+		uistruct::P2P_QUIZ_RECORD_t const_it = m_PoolList.at(count);
+		string temp = const_it.ToJson();
+		theApp.m_strAddress.Format(_T("%s") ,temp.c_str() ) ;
+		CBetInformation dlg;
+		dlg.DoModal();	
+	}
 }
