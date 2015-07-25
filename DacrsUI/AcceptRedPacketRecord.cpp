@@ -208,47 +208,69 @@ void  CAcceptRedPacketRecord::OnShowPagePool(int page)
 	int index = (page-1)*m_pagesize;
 	unsigned int count = (m_AcceptRedPacketList.size() -index)>=m_pagesize?m_pagesize:(m_AcceptRedPacketList.size() -index);
 
+	char sendTime[1024] = {0};
+	string amount,Sendaddr,address,luckeMoney,strnum,type,luckeValue,operate;;
+	char buffer[100] = {0};
+	//CString sendTime;
 	int i = 0;
 	std::vector<uistruct::REDPACKETGRAB_t>::const_iterator const_it;
 	for (unsigned int k = index;k< (index+count) && k < m_AcceptRedPacketList.size();k++)
 	{
 		uistruct::REDPACKETGRAB_t const_it = m_AcceptRedPacketList.at(k);
-		CString amount,Sendaddr,address,luckeMoney,strnum,type;
-		Sendaddr.Format(_T("%s"),const_it.send_acc_id);
-		amount.Format(_T("%.4f"),const_it.total_amount);
+		sprintf_s(buffer,"%s",const_it.send_acc_id);
+		Sendaddr =buffer;
+		memset(buffer,0,100);
+		sprintf_s(buffer,"%.4f",const_it.total_amount);
+		amount =buffer;
+		memset(buffer,0,100);
+		//Sendaddr.Format(_T("%s"),const_it.send_acc_id);
+		//amount.Format(_T("%.4f"),const_it.total_amount);
 
 		if (const_it.packet_type == 1)
 		{
-			type.Format(_T("普通"));
+			type="普通";
 		}else if (const_it.packet_type == 2)
 		{
-			type.Format(_T("接龙"));
-		}
-		CString sendTime;
-		if (const_it.grab_time == 0)
-		{
-			sendTime = _T("--");
-			luckeMoney = _T("--");
-		}else{
-			SYSTEMTIME curTime =UiFun::Time_tToSystemTime(const_it.grab_time);
-			sendTime.Format("%02d-%02d %02d:%02d:%02d", curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
-			luckeMoney.Format(_T("%.4f"),const_it.lucky_amount);
-		}
-		CString luckeValue,operate;
-		if (const_it.lucky_fortune == 1)
-		{
-			luckeValue.Format(_T("普通"));
-		}else if (const_it.lucky_fortune == 2)
-		{
-			luckeValue.Format(_T("运气王"));
-		}else
-		{
-			luckeValue.Format(_T("--"));
+			type="接龙";
+			//type.Format(_T("接龙"));
 		}
 
-		strnum.Format(_T("%d"),const_it.total_num);
+		if (const_it.grab_time == 0)
+		{
+			//luckeMoney = _T("--");
+			luckeMoney="--";
+			sprintf_s(sendTime,"%s","--");
+
+		}else{
+			SYSTEMTIME curTime =UiFun::Time_tToSystemTime(const_it.grab_time);
+			//sendTime.Format("%02d-%02d %02d:%02d:%02d", curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+			//luckeMoney.Format(_T("%.4f"),const_it.lucky_amount);
+			sprintf_s(buffer,"%.4f",const_it.lucky_amount);
+			luckeMoney=buffer;
+			memset(buffer,0,100);
+			sprintf_s(sendTime,"%02d-%02d %02d:%02d:%02d",curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+			memset(buffer,0,100);
+		}
+		//CString luckeValue,operate;
+		if (const_it.lucky_fortune == 1)
+		{
+			//luckeValue.Format(_T("普通"));
+			luckeValue="普通";
+		}else if (const_it.lucky_fortune == 2)
+		{
+			//luckeValue.Format(_T("运气王"));
+			luckeValue="运气王";
+		}else
+		{
+			//luckeValue.Format(_T("--"));
+			luckeValue="--";
+		}
+		memset(buffer,0,100);
+		sprintf_s(buffer,"%d",const_it.total_num);
+		strnum=buffer;
+		memset(buffer,0,100);
 		m_ListBox.InsertStr(i,this->GetSafeHwnd());
-		m_ListBox.SetIndexString(i , Sendaddr,type,sendTime,amount, strnum,luckeValue,luckeMoney);
+		m_ListBox.SetIndexString(i , Sendaddr.c_str(),type.c_str(),sendTime,amount.c_str(), strnum.c_str(),luckeValue.c_str(),luckeMoney.c_str());
 	
 		i++;
 	}

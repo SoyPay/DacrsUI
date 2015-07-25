@@ -204,18 +204,19 @@ void  CGrabSpecalRedPacket::OnShowPagePool(int page)
 	int index = (page-1)*m_pagesize;
 	unsigned int count = (m_PoolList.size() -index)>=m_pagesize?m_pagesize:(m_PoolList.size() -index);
 	int i =0;
+	CString strmoney;
+	CString money;
+	CString txhash, line;
+	CString strShow;
 	for (unsigned int k = index;k< (index+count);k++)
 	{
 		uistruct::REDPACKETPOOL_t const_it = m_PoolList.at(k);
 
-		CString strmoney;
+
 		strmoney.Format(_T("%.8f"),const_it.total_amount);
-		CString money;
 		money.Format(_T("%.4f"),const_it.total_amount);
 
-		CString txhash, line;
 		line.Format(_T("%d"),(i+1));
-		CString strShow;
 		if (const_it.packet_type == 1)
 		{
 			strShow.Format(_T(("ÆÕÍ¨ºì°ü")));
@@ -226,8 +227,6 @@ void  CGrabSpecalRedPacket::OnShowPagePool(int page)
 		m_BonusListBox.InsertStr(i,this->GetSafeHwnd());
 		m_BonusListBox.SetotherIndexInage(i , IDB_BITMAP_GRAB_RED);
 		m_BonusListBox.SetIndexString(i , line,const_it.send_acc_id, _T("ÇÀ"), money, const_it.send_hash,strmoney);
-		//m_BonusListBox.SetIndexInage(i , IDB_BITMAP_P2P_LISTBOX_BUT);
-		//m_BonusListBox.SetIndexString(i , line,const_it.send_acc_id, money,strShow,_T("ÇÀ"),const_it.send_hash,strmoney);
 		i++;
 	}
 }
