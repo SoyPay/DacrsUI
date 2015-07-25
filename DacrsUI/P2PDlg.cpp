@@ -1578,7 +1578,7 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 	 {
 		 uistruct::LISTP2POOL_T const_it = m_PoolList.at(count);
 		 CString temp = _T("竞猜交易ID: ");
-	    temp.Format(_T("%s") ,const_it.hash.c_str()) ;
+	    temp.AppendFormat(_T("%s") ,const_it.hash.c_str()) ;
 		 ::MessageBox( this->GetSafeHwnd() ,temp , _T("提示") , MB_ICONINFORMATION ) ;
 	 }
  }
