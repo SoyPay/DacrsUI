@@ -211,35 +211,52 @@ void  CSendRedPacketRecord::OnShowPagePool(int page)
 	int index = (page-1)*m_pagesize;
 	unsigned int count = (m_SendRedPacketList.size() -index)>=m_pagesize?m_pagesize:(m_SendRedPacketList.size() -index);
 
+	string SendTime,amount,state,numred,operate,type;
+	string sendaddr;
+
+	char buffer[1024] = {0};
 	int i = 0;
 	std::vector<uistruct::REDPACKETSEND_t>::const_iterator const_it;
 	for (unsigned int k = index;k< (index+count) && k<m_SendRedPacketList.size();k++)
 	{
 		uistruct::REDPACKETSEND_t const_it = m_SendRedPacketList.at(k);
-		CString sendaddr;
-		sendaddr.Format(_T("%s"),const_it.send_acc_id);
 
-		CString SendTime,amount,state,numred,operate,type;
+		sprintf_s(buffer,"%s",const_it.send_acc_id);
+		sendaddr = buffer;
+		memset(buffer,0,1024);
+		//sendaddr.Format(_T("%s"),const_it.send_acc_id);
+
+
 		if (const_it.send_time == 0)
 		{
-			SendTime.Format(_T("---"));
-			state.Format(_T("未开启"));
+			SendTime = "---";
+			state = "未开启";
+			//SendTime.Format(_T("---"));
+			//state.Format(_T("未开启"));
 		}else{
 			SYSTEMTIME curTime =UiFun::Time_tToSystemTime(const_it.send_time);
-			SendTime.Format("%02d-%02d %02d:%02d:%02d",curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
-			state.Format(_T("已开启"));
+			//SendTime.Format("%02d-%02d %02d:%02d:%02d",curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+			sprintf_s(buffer,"%02d-%02d %02d:%02d:%02d",curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+			SendTime = buffer;
+			memset(buffer,0,1024);
+			state = "已开启";
 		}
 		if (const_it.packet_type == 1)
 		{
-			type.Format(_T("普通"));
+			type ="普通";
 		}else{
-			type.Format(_T("接龙"));
+			type="接龙";
 		}
-		amount.Format(_T("%.4f"),const_it.amount);
-		numred.Format(_T("%d"),const_it.packet_num);
-		operate.Format(_T("发"));
+		sprintf_s(buffer,"%.4f",const_it.amount);
+		amount = buffer;
+		memset(buffer,0,1024);
+		sprintf_s(buffer,"%d",const_it.packet_num);
+		numred = buffer;
+		//amount.Format(_T("%.4f"),const_it.amount);
+		//numred.Format(_T("%d"),const_it.packet_num);
+		operate ="发";
 		m_listBox.InsertStr(i,this->GetSafeHwnd());
-		m_listBox.SetIndexString(i , sendaddr, type,SendTime,amount, numred,state);
+		m_listBox.SetIndexString(i , sendaddr.c_str(), type.c_str(),SendTime.c_str(),amount.c_str(), numred.c_str(),state.c_str());
 			
 		i++;
 	}
