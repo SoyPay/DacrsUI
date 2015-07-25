@@ -182,70 +182,6 @@ void CBetRecord::Showlistbox(CString address)
 	Invalidate();
 	m_ListBox.DeleteAllIndex();
 	OnShowPagePool(1);
-	//if (pPoolItem.size() != 0) ///´Ë¼ÇÂ¼²»´æÔÚ,²åÈë¼ÇÂ¼
-	//{
-	//	int i = 0;
-	//	std::vector<uistruct::P2P_QUIZ_RECORD_t>::const_iterator const_it;
-	//	for (const_it = pPoolItem.begin();const_it!=pPoolItem.end();const_it++)
-	//	{
-	//		CString dmoney,reward,result,guess,Sendaddr;
-	//		Sendaddr.Format(_T("%s"),const_it->left_addr);
-	//		dmoney.Format(_T("%.4f"),const_it->amount);
-	//		if (const_it->guess_num == 1)
-	//		{
-	//			guess.Format(_T("%s"),"ÃÃ");
-	//		}else
-	//		{
-	//			guess.Format(_T("%s"),"¸ç");
-	//		}
-	//		m_ListBox.InsertStr(i,this->GetSafeHwnd());
-	//		m_ListBox.SetIndexBackCol(0 , 0 , RGB(242,32,32));
-	//		m_ListBox.SetIndexBackCol(0 , 1 , RGB(181,185,212));
-	//		m_ListBox.SetIndexBackCol(0 , 2 , RGB(181,185,212));
-	//		m_ListBox.SetIndexBackCol(0 , 3 , RGB(181,185,212));
-	//		m_ListBox.SetIndexBackCol(0 , 4 , RGB(181,185,212));
-
-	//		SYSTEMTIME curTime =UiFun::Time_tToSystemTime(const_it->send_time);
-	//		CString sendTime,reciveTime;
-	//		sendTime.Format("%04d-%02d-%02d %02d:%02d:%02d",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
-	//		SYSTEMTIME rTime =UiFun::Time_tToSystemTime(const_it->recv_time);
-	//		reciveTime.Format("%04d-%02d-%02d %02d:%02d:%02d",rTime.wYear, rTime.wMonth, rTime.wDay, rTime.wHour, rTime.wMinute, rTime.wSecond);
-
-	//		reward.Format(_T("%.4f"),const_it->amount);
-	//		///ËµÃ÷¿ª½±ÁË
-	//		if (const_it->state == 2)
-	//		{
-	//			int rewardnum = (int)const_it->content[32];
-	//			if (const_it->guess_num == const_it->content[32])
-	//			{
-	//				reward.Format(_T("+%.4f"),const_it->amount);
-	//			}else
-	//			{
-	//				reward.Format(_T("-%.4f"),const_it->amount);
-	//			}
-	//			if (const_it->content[32] == 1)
-	//			{
-	//				result.Format(_T("%s"),"ÃÃ");
-	//			}else
-	//			{
-	//				result.Format(_T("%s"),"¸ç");
-	//			}
-	//			m_ListBox.SetIndexString(i , Sendaddr,address,sendTime,reciveTime, result,guess, reward);
-
-	//		}else{
-	//			if ((const_it->time_out + const_it->height)> theApp.blocktipheight&& theApp.IsSyncBlock)
-	//			{
-	//				m_ListBox.SetIndexString(i , Sendaddr,address,sendTime,reciveTime, _T("Î´¿ª½±"),guess,reward);
-	//			}else if(theApp.IsSyncBlock){
-	//				reward.Format(_T("+%.4f"),const_it->amount);
-	//				m_ListBox.SetIndexString(i , Sendaddr,address,sendTime,reciveTime, _T("³¬Ê±"),guess,reward);
-	//			}else{
-	//				m_ListBox.SetIndexString(i , Sendaddr,address,sendTime,reciveTime, _T("Î´¿ª½±"),guess,reward);
-	//			}
-	//		}
-	//		i++;
-	//	}
-	//}
 }
 
 
@@ -266,49 +202,71 @@ void  CBetRecord::OnShowPagePool(int page)
 	int index = (page-1)*m_pagesize;
 	unsigned int count = (m_PoolList.size() -index)>=m_pagesize?m_pagesize:(m_PoolList.size() -index);
 
+	string dmoney,reward,result,guess,Sendaddr,address;
+	string sendTime,reciveTime;
+	
+	char buffer[1024] ={0};
 	int i = 0;
 	std::vector<uistruct::P2P_QUIZ_RECORD_t>::const_iterator const_it;
 	for (unsigned int k = index;k< (index+count) && k < m_PoolList.size();k++)
 	{
 		uistruct::P2P_QUIZ_RECORD_t const_it = m_PoolList.at(k);
-		CString dmoney,reward,result,guess,Sendaddr,address;
-		Sendaddr.Format(_T("%s"),const_it.left_addr);
-		address.Format(_T("%s"),const_it.right_addr);
-		dmoney.Format(_T("%.4f"),const_it.amount);
+		
+		sprintf_s(buffer,"%s",const_it.left_addr);
+		Sendaddr=buffer;
+		memset(buffer,0,1024);
+		sprintf_s(buffer,"%s",const_it.right_addr);
+		address =buffer;
+		memset(buffer,0,1024);
+		sprintf_s(buffer,"%.4f",const_it.amount);
+		dmoney=buffer;
+		memset(buffer,0,1024);
+		//Sendaddr.Format(_T("%s"),const_it.left_addr);
+		//address.Format(_T("%s"),const_it.right_addr);
+		//dmoney.Format(_T("%.4f"),const_it.amount);
 
 		if (const_it.guess_num == 1)
 		{
-			guess.Format(_T("%s"),"ÃÃ");
+			//guess.Format(_T("%s"),"ÃÃ");
+			guess = "ÃÃ";
 		}else
 		{
-			guess.Format(_T("%s"),"¸ç");
+			//guess.Format(_T("%s"),"¸ç");
+			guess = "¸ç";
 		}
 		m_ListBox.InsertStr(i,this->GetSafeHwnd());
 		m_ListBox.SetIndexBackCol(i , 0 , RGB(242,32,32));
-		//m_ListBox.SetIndexBackCol(i , 1 , RGB(181,185,212));
-		//m_ListBox.SetIndexBackCol(i , 2 , RGB(181,185,212));
-		//m_ListBox.SetIndexBackCol(i , 3 , RGB(181,185,212));
 		m_ListBox.SetIndexBackCol(i , 4 , RGB(242,32,32));
 
 		
-		CString sendTime,reciveTime;
+
 		if (const_it.send_time == 0)
 		{
-			sendTime = _T("--");
+			//sendTime = _T("--");
+			sendTime = "--";
 		}else{
 			SYSTEMTIME curTime =UiFun::Time_tToSystemTime(const_it.send_time);
-			sendTime.Format("%02d-%02d %02d:%02d:%02d", curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+			sprintf_s(buffer,"%02d-%02d %02d:%02d:%02d", curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+			sendTime = buffer;
+			memset(buffer,0,1024);
+			//sendTime.Format("%02d-%02d %02d:%02d:%02d", curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
 		}
 		if (const_it.recv_time == 0)
 		{
-			reciveTime =_T("--");
+			//reciveTime =_T("--");
+			reciveTime = "--";
 		}else{
 			SYSTEMTIME rTime =UiFun::Time_tToSystemTime(const_it.recv_time);
-			reciveTime.Format("%02d-%02d %02d:%02d:%02d",rTime.wMonth, rTime.wDay, rTime.wHour, rTime.wMinute, rTime.wSecond);
+			sprintf_s(buffer,"%02d-%02d %02d:%02d:%02d", rTime.wMonth, rTime.wDay, rTime.wHour, rTime.wMinute, rTime.wSecond);
+			reciveTime = buffer;
+			memset(buffer,0,1024);
+			//reciveTime.Format("%02d-%02d %02d:%02d:%02d",rTime.wMonth, rTime.wDay, rTime.wHour, rTime.wMinute, rTime.wSecond);
 		}
 
-
-		reward.Format(_T("%.4f"),const_it.amount);
+		sprintf_s(buffer,"%.4f", const_it.amount);
+		reward = buffer;
+		memset(buffer,0,1024);
+		//reward.Format(_T("%.4f"),const_it.amount);
 		///ËµÃ÷¿ª½±ÁË
 		if (const_it.state == 2)
 		{
@@ -316,32 +274,43 @@ void  CBetRecord::OnShowPagePool(int page)
 			if (const_it.guess_num == const_it.content[32])
 			{
 				m_ListBox.SetIndexBackCol(i , 6 , RGB(242,32,32));
-				reward.Format(_T("+%.4f"),const_it.amount);
+
+				sprintf_s(buffer,"+%.4f", const_it.amount);
+				reward = buffer;
+				//reward.Format(_T("+%.4f"),const_it.amount);
 			}else
 			{
 				m_ListBox.SetIndexBackCol(i , 6 , RGB(1,127,1));
-				reward.Format(_T("-%.4f"),const_it.amount);
+				sprintf_s(buffer,"-%.4f", const_it.amount);
+				reward = buffer;
+				//reward.Format(_T("-%.4f"),const_it.amount);
 			}
+
+			memset(buffer,0,1024);
+
 			if (const_it.content[32] == 1)
 			{
-				result.Format(_T("%s"),"ÃÃ");
+				//result.Format(_T("%s"),"ÃÃ");
+				result = "ÃÃ";
 			}else
 			{
-				result.Format(_T("%s"),"¸ç");
+				//result.Format(_T("%s"),"¸ç");
+				result = "¸ç";
 			}
-			//m_ListBox.SetIndexString(i , Sendaddr,address,sendTime,reciveTime, result,guess, dmoney);
-			m_ListBox.SetIndexString(i , Sendaddr,address,sendTime,reciveTime, result,guess, reward);
+			m_ListBox.SetIndexString(i , Sendaddr.c_str(),address.c_str(),sendTime.c_str(),reciveTime.c_str(), result.c_str(),guess.c_str(), reward.c_str());
 
 		}else{
 			if (const_it.height>0 &&(const_it.time_out + const_it.height)> theApp.blocktipheight&& theApp.IsSyncBlock)
 			{
-				m_ListBox.SetIndexString(i , Sendaddr,address,sendTime,reciveTime, _T("Î´¿ª½±"),guess,reward);
+				m_ListBox.SetIndexString(i , Sendaddr.c_str(),address.c_str(),sendTime.c_str(),reciveTime.c_str(), _T("Î´¿ª½±"),guess.c_str(),reward.c_str());
 			}else if(theApp.IsSyncBlock && const_it.height != 0){
 				m_ListBox.SetIndexBackCol(i , 6 , RGB(242,32,32));
-				reward.Format(_T("+%.4f"),const_it.amount);
-				m_ListBox.SetIndexString(i , Sendaddr,address,sendTime,reciveTime, _T("³¬Ê±"),guess,reward);
+				//reward.Format(_T("+%.4f"),const_it.amount);
+				sprintf_s(buffer,"+%.4f", const_it.amount);
+				reward = buffer;
+				m_ListBox.SetIndexString(i , Sendaddr.c_str(),address.c_str(),sendTime.c_str(),reciveTime.c_str(), _T("³¬Ê±"),guess.c_str(),reward.c_str());
 			}else{
-				m_ListBox.SetIndexString(i , Sendaddr,address,sendTime,reciveTime, _T("Î´¿ª½±"),guess,reward);
+				m_ListBox.SetIndexString(i , Sendaddr.c_str(),address.c_str(),sendTime.c_str(),reciveTime.c_str(), _T("Î´¿ª½±"),guess.c_str(),reward.c_str());
 			}
 		}
 		i++;

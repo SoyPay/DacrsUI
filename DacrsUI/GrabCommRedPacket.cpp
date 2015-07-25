@@ -203,18 +203,18 @@ void  CGrabCommRedPacket::OnShowPagePool(int page)
 	int index = (page-1)*m_pagesize;
 	unsigned int count = (m_PoolList.size() -index)>=m_pagesize?m_pagesize:(m_PoolList.size() -index);
 	int i =0;
+	CString strmoney;
+	CString money;
+	CString strShow;
+	CString txhash, line;
 	for (unsigned int k = index;k< (index+count);k++)
 	{
 		uistruct::REDPACKETPOOL_t const_it = m_PoolList.at(k);
 
-		CString strmoney;
-		strmoney.Format(_T("%.8f"),const_it.total_amount);
-		CString money;
-		money.Format(_T("%.4f"),const_it.total_amount);
 
-		CString txhash, line;
+		strmoney.Format(_T("%.8f"),const_it.total_amount);
+		money.Format(_T("%.4f"),const_it.total_amount);
 		line.Format(_T("%d"),(i+1));
-		CString strShow;
 		if (const_it.packet_type == 1)
 		{
 			strShow.Format(_T(("ÆÕÍ¨ºì°ü")));

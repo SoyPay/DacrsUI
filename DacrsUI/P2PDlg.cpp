@@ -1025,44 +1025,6 @@ void CP2PDlg::OnListPool()
 	Invalidate();
 	m_BonusListBox.DeleteAllIndex();
 	OnShowPagePool(1);
-	//if (pPoolList.size() == 0)
-	//{
-	//	return ;
-	//}
-
-	//int nSubIdx = 0 , i = 0 ;
-	//CString strShowData = _T("");
-	//std::vector<uistruct::LISTP2POOL_T>::const_iterator const_it;
-	//for ( const_it = pPoolList.begin() ; const_it != pPoolList.end() ; const_it++ ) {
-
-	//	string nValue = const_it->data;
-	//	uistruct::DBBET_DATA DBbet;
-	//	memset(&DBbet , 0 , sizeof(uistruct::DBBET_DATA));
-	//	std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue);
-	//	memcpy(&DBbet, &vTemp[0], sizeof(DBbet));
-
-	//	CString addr,money;
-	//	std::vector<unsigned char> vSendid;
-	//	vSendid.assign(DBbet.sendbetid,DBbet.sendbetid+sizeof(DBbet.sendbetid));
-
-	//	CString regid = CSoyPayHelp::getInstance()->GetNotFullRegID(vSendid);
-	//	//CString strCond;
-	//	//strCond.Format(_T(" reg_id = '%s' "), regid);
-	//	//uistruct::LISTADDR_t addrsql;
-	//	//int item = theApp.m_SqliteDeal.GetWalletAddressItem(strCond, &addrsql) ;
-
-	//	//addr.Format(_T("%s"),addrsql.address);
-
-	//	double dmoney = (DBbet.money*1.0)/COIN;
-	//	money.Format(_T("%.4f"),dmoney);
-	//	CString txhash, line;
-	//	line.Format(_T("%d"),i);
-	//	txhash.Format(_T("%s"),const_it->hash.c_str());
-	//	m_BonusListBox.InsertStr(i,this->GetSafeHwnd());
-	//	m_BonusListBox.SetIndexInage(i , IDB_BITMAP_P2P_LISTBOX_BUT);
-	//	m_BonusListBox.SetIndexString(i , line,regid, _T("½Ó"), money, txhash);
-	//	i++;
-	//}
 }
  LRESULT CP2PDlg::onBnCLick( WPARAM wParam, LPARAM lParam )
  {
@@ -1493,6 +1455,12 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 	 int index = (page-1)*m_pagesize;
 	 unsigned int count = (m_PoolList.size() -index)>=m_pagesize?m_pagesize:(m_PoolList.size() -index);
 	 int i =0;
+
+	 string strmoney;
+	 string addr,money;
+	 string txhash, line;
+
+	 char buffer[1024] = {0};
 	 for (unsigned int k = index;k< (index+count)&& k<m_PoolList.size();k++)
 	 {
 		 uistruct::LISTP2POOL_T const_it = m_PoolList.at(k);
@@ -1506,23 +1474,32 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 		 }
 		 memcpy(&DBbet, &vTemp[0], sizeof(DBbet));
 
-		 CString addr,money;
+
 		 std::vector<unsigned char> vSendid;
 		 vSendid.assign(DBbet.sendbetid,DBbet.sendbetid+sizeof(DBbet.sendbetid));
 
 		 CString regid = CSoyPayHelp::getInstance()->GetNotFullRegID(vSendid);
 
 		 double dmoney = (DBbet.money*1.0)/COIN;
-		 money.Format(_T("%.4f"),dmoney);
+		 sprintf_s(buffer,"%.4f",dmoney);
+		 money = buffer;
+		 memset(buffer,0,1024);
+		 //money.Format(_T("%.4f"),dmoney);
 
-		 CString strmoney;
-		 strmoney.Format(_T("%.8f"),dmoney);
-		 CString txhash, line;
-		 line.Format(_T("%d"),(i+1));
-		 txhash.Format(_T("%s"),const_it.hash.c_str());
+		 sprintf_s(buffer,"%.8f",dmoney);
+		 strmoney = buffer;
+		 memset(buffer,0,1024);
+		// strmoney.Format(_T("%.8f"),dmoney);
+
+		 sprintf_s(buffer,"%d",(i+1));
+		 line = buffer;
+		 memset(buffer,0,1024);
+
+		// line.Format(_T("%d"),(i+1));
+		// txhash.Format(_T("%s"),const_it.hash.c_str());
 		 m_BonusListBox.InsertStr(i,this->GetSafeHwnd());
 		 m_BonusListBox.SetIndexInage(i , IDB_BITMAP_P2P_LISTBOX_BUT);
-		 m_BonusListBox.SetIndexString(i , line,regid, _T("½Ó"), money, txhash,strmoney);
+		 m_BonusListBox.SetIndexString(i , line.c_str(),regid, _T("½Ó"), money.c_str(), const_it.hash.c_str(),strmoney.c_str());
 		 i++;
 	 }
  }
