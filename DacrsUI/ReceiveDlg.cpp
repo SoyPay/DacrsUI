@@ -597,6 +597,12 @@ void CReceiveDlg::OnNMClickListShow(NMHDR *pNMHDR, LRESULT *pResult)
 	// TODO: 在此添加控件通知处理程序代码
 		   if (editItem.m_hWnd  !=  NULL)
 		 {
+			 
+			 if( hitCol!= 2)
+			 {
+				 hitCol  =  hitRow  =   - 1 ;
+				*pResult = 0;
+			 }
 			 editItem.ShowWindow( 0 );
 			  if (hitRow  !=   - 1 )
 			{
