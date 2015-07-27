@@ -50,6 +50,7 @@ BEGIN_MESSAGE_MAP(CGrabCommRedPacket, CDialogEx)
 	ON_MESSAGE( WM_BN_CLICK, &CGrabCommRedPacket::onBnCLick)
 	ON_WM_CTLCOLOR()
 	ON_WM_CTLCOLOR()
+	ON_LBN_DBLCLK(IDC_LIST_BOX, &CGrabCommRedPacket::OnLbnDblclkListBox)
 END_MESSAGE_MAP()
 
 
@@ -203,18 +204,18 @@ void  CGrabCommRedPacket::OnShowPagePool(int page)
 	int index = (page-1)*m_pagesize;
 	unsigned int count = (m_PoolList.size() -index)>=m_pagesize?m_pagesize:(m_PoolList.size() -index);
 	int i =0;
+	CString strmoney;
+	CString money;
+	CString strShow;
+	CString txhash, line;
 	for (unsigned int k = index;k< (index+count);k++)
 	{
 		uistruct::REDPACKETPOOL_t const_it = m_PoolList.at(k);
 
-		CString strmoney;
-		strmoney.Format(_T("%.8f"),const_it.total_amount);
-		CString money;
-		money.Format(_T("%.4f"),const_it.total_amount);
 
-		CString txhash, line;
+		strmoney.Format(_T("%.8f"),const_it.total_amount);
+		money.Format(_T("%.4f"),const_it.total_amount);
 		line.Format(_T("%d"),(i+1));
-		CString strShow;
 		if (const_it.packet_type == 1)
 		{
 			strShow.Format(_T(("普通红包")));
@@ -487,4 +488,20 @@ HBRUSH CGrabCommRedPacket::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 		return  CDialogEx::OnCtlColor(pDC, pWnd, nCtlColor);
 	}
 
+}
+
+
+void CGrabCommRedPacket::OnLbnDblclkListBox()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	int nSel=m_BonusListBox.GetCurSel(); 
+	int count = ((m_curpage -1)*m_pagesize) + nSel;
+	if (count <=(int)m_PoolList.size())
+	{
+		uistruct::REDPACKETPOOL_t const_it = m_PoolList.at(count);
+		CString temp = _T("普通红包ID: ");
+		CString strShowid = const_it.send_hash.Left(30); 
+		temp.AppendFormat(_T("%s") ,strShowid) ;
+		::MessageBox( this->GetSafeHwnd() ,temp , _T("提示") , MB_ICONINFORMATION ) ;
+	}
 }

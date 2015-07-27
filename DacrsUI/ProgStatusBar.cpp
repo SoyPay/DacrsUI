@@ -314,8 +314,10 @@ void CProgStatusBar::ShowLockCtrl()
 	CString strTemp = postmsg.GetStrType();
 	if (!strcmp(strTemp,"Lock"))
 	{
+		theApp.HaveLocked = TRUE;
 		m_nLockIndex = 0;
 	}else if(!strcmp(strTemp,"UnLock")){
+		theApp.HaveLocked = TRUE;
 		m_nLockIndex = 1;
 	}
 	InvalidateRect(m_bmplock);

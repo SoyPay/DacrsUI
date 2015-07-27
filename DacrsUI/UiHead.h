@@ -179,6 +179,60 @@ namespace uistruct {
 			memset(relate_hash, 0, 65);
 			guess_num = 0;
 		}
+		string ToJson(){
+			Json::Value root;
+			root["send_time"] = send_time;
+			root["recv_time"] = recv_time;
+			root["time_out"] = time_out;
+			root["tx_hash"] = tx_hash;
+			root["left_addr"] = left_addr;
+			root["right_addr"] = right_addr;
+			root["amount"] = amount;
+			root["content"] = content;
+			root["actor"] = actor;
+			root["confirmed"] = confirmed;
+			root["height"] = height;
+			root["relate_hash"] = relate_hash;
+			root["state"] = state;
+			root["guess_num"] = guess_num;
+			return root.toStyledString();
+		}
+		bool JsonToStruct(string json){
+			Json::Reader reader;  
+			Json::Value root; 
+			if (!reader.parse(json, root)) 
+				return false ;
+
+			this->send_time = root["send_time"].asInt() ;
+			this->recv_time = root["recv_time"].asInt();
+			this->time_out = root["time_out"].asInt();
+
+			CString temp = root["tx_hash"].asCString();
+			memcpy(tx_hash,temp,sizeof(tx_hash));
+		
+			temp = root["left_addr"].asCString();
+			memcpy(left_addr,temp,sizeof(left_addr));
+	
+			temp = root["right_addr"].asCString();
+			memcpy(right_addr,temp,sizeof(right_addr));
+	
+			this->amount = root["amount"].asDouble();
+
+			temp = root["content"].asCString();
+			memcpy(content,temp,sizeof(content));
+	
+			this->actor = root["actor"].asInt();
+			this->confirmed = root["confirmed"].asInt();
+			this->height = root["height"].asInt();
+
+			temp = root["relate_hash"].asCString();
+			memcpy(relate_hash,temp,sizeof(relate_hash));
+		
+			this->state = root["state"].asInt();
+			this->guess_num = root["guess_num"].asInt() ;
+
+			return true;
+		}
 	}P2P_QUIZ_RECORD_t;
 
 	typedef std::vector<P2P_QUIZ_RECORD_t> P2PBETRECORDLIST ;
@@ -235,6 +289,7 @@ namespace uistruct {
 			root["desregid"] = desregid.GetString();
 			return root.toStyledString();
 		}
+
 		REVTRANSACTION(){
 			txhash = _T("")  ;   
 			txtype = "";  //¿‡–Õ

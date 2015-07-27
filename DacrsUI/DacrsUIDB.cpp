@@ -238,7 +238,7 @@ void CDacrsUIApp::OpenBetRecord(vector<unsigned char> openbet,uistruct::REVTRANS
 			TRACE(_T("t_p2p_quiz数据更新失败!") );
 			LogPrint("INFO","OpenBetRecord 更新失败:%s",hexHash.c_str() );
 		}
-
+		LogPrint("OPENBET","发赌约hash:%s  开奖hash:%s",hexHash.c_str(),transcion.txhash);
 	}
 }
 
