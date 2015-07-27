@@ -687,11 +687,14 @@ bool  CDacrsUIDlg::IsP2pBetFinsh()
 }
 void  CDacrsUIDlg::ClosWallet()
 {
-	if (theApp.m_reminder)
+	if (theApp.m_reminder == 0)
 	{
 		CReminderdlg remindgl;
 		remindgl.DoModal();
-	}else{
+	}else if (theApp.m_reminder == 1)
+	{
+		ToTray();                              /// 最小化
+	}else if (theApp.m_reminder == 2){
 		BeginWaitCursor();
 		if ( NULL != m_pOutGifDlg ) {
 			CRect rc;
@@ -933,6 +936,7 @@ LRESULT CDacrsUIDlg::OnShowTask(WPARAM wParam,LPARAM lParam)
 			{
 				this->ShowWindow(SW_HIDE);//简单的显示主窗口完事儿
 			}else{
+				SetWindowPos(&this->wndTopMost, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);  
 				this->ShowWindow(SW_SHOW);//简单的显示主窗口完事儿 
 			}
 			 

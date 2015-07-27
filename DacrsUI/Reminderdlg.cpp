@@ -135,21 +135,61 @@ void CReminderdlg::OnBnClickedCancel()
 	CDialogEx::OnCancel();
 }
 
+void  CReminderdlg::WriteClosConfig(int &close)
+{
+	if (PathFileExistsA(theApp.str_InsPath))
+	{
+		CStringA configpath = "";
+		configpath.AppendFormat("%s",theApp.str_InsPath);
+		configpath.AppendFormat("\\%s","dacrsclient.conf");
+		CString strFile = CJsonConfigHelp::getInstance()->GetConfigRootStr(configpath);
+		if (strFile == _T(""))
+		{
+			return;
+		}
+		Json::Reader reader;  
+		Json::Value root; 
 
+		if (!reader.parse(strFile.GetString(), root)) 
+			return;
+
+		Json::Value p2pbet = root["closeconf"];
+		ASSERT(!p2pbet.isNull());
+		p2pbet["colse"]= close;
+		root["closeconf"]=p2pbet;
+		CStdioFile  File;
+		File.Open(theApp.str_InsPath+_T("\\dacrsclient.conf"),CFile::modeWrite | CFile::modeCreate); 
+		string strfile = root.toStyledString();
+		File.WriteString(strfile.c_str());
+		File.Close();
+	}
+}
 void CReminderdlg::OnBnClickedOk()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	int close = 0;
 	if (((CButton *)GetDlgItem(IDC_CHECK_NO))->GetCheck())
 	{
 		theApp.m_reminder = FALSE;
 	}
 	if (((CButton *)GetDlgItem(IDC_RADIO_NOEXIT))->GetCheck())
 	{
+		if (!theApp.m_reminder)
+		{
+			close = 1;
+		}
+		WriteClosConfig(close);
 	   ((CDacrsUIDlg*)(theApp.m_pMainWnd))->ToTray();
 	}else if (((CButton *)GetDlgItem(IDC_RADIO_EXIT))->GetCheck())
 	{
+		if (!theApp.m_reminder)
+		{
+			close = 2;
+		}
+		WriteClosConfig(close);
 		((CDacrsUIDlg*)(theApp.m_pMainWnd))->ClosWalletWind();
 	}
+
 	CDialogEx::OnOK();
 }
 void CReminderdlg::OnBnClickedButtonClose()

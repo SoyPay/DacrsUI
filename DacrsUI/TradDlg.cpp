@@ -199,6 +199,8 @@ BOOL CTradDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_condition.InsertString(1,_T("接收"));
 		m_condition.InsertString(2,_T("发送"));
 		m_condition.InsertString(3,_T("挖矿所得"));
+		m_condition.InsertString(4,_T("合约"));
+		m_condition.InsertString(5,_T("激活"));
 		//m_condition.AddString(_T("全部"));
 		//m_condition.AddString(_T("接收"));
 		//m_condition.AddString(_T("发送"));
@@ -210,6 +212,7 @@ BOOL CTradDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_time.InsertString(3,_T("本月"));
 		m_time.InsertString(4,_T("上月"));
 		m_time.InsertString(5,_T("今年"));
+		m_time.InsertString(6,_T("昨天"));
 
 		m_edit.SetWindowText(_T("请输入地址进行搜索"));
 
@@ -970,6 +973,18 @@ CString CTradDlg::GetConditonTime(){
 		conditon.Format(_T(" confirmed_time>=%d and confirmed_time<="),mincurtime);
 		conditon.AppendFormat(_T("%d"),maxcurtime);
 		return conditon;
+	}else if (strcmp(text,_T("昨天")) == 0)
+	{
+		curTime.wHour=0;
+		curTime.wMinute = 0;
+		curTime.wSecond = 0;
+		curTime.wMilliseconds = 0;
+		INT64 maxcurtime = UiFun::SystemTimeToTimet(curTime);
+		INT64 mincurtime = maxcurtime - 24*60*60;
+		CString conditon;
+		conditon.Format(_T(" confirmed_time>=%d and confirmed_time<="),mincurtime);
+		conditon.AppendFormat(_T("%d"),maxcurtime);
+		return conditon;
 	}
 	return _T("");
 }
@@ -1009,6 +1024,16 @@ CString CTradDlg::GetConditonTxType(int &operate){
 		return conditon;
 		//theApp.m_SqliteDeal.GetTransactionList(_T(" tx_type='REWARD_TX' order by confirmed_time"), &pListInfo); 
 		//OnShowListCtrl(pListInfo,2);
+	}else if (strcmp(text,_T("合约")) == 0)
+	{
+		CString conditon;
+		conditon.Format(_T(" tx_type='CONTRACT_TX'"));
+		return conditon;
+	}else if (strcmp(text,_T("激活")) == 0)
+	{
+		CString conditon;
+		conditon.Format(_T(" tx_type='REG_APP_TX'"));
+		return conditon;
 	}
 	return _T("");
 }
@@ -1310,6 +1335,20 @@ CString CTradDlg::GetConditonTime(INT64 &maxtime,INT64 &mintime)
 		curTime.wSecond = 0;
 		curTime.wMilliseconds = 0;
 		INT64 mincurtime = UiFun::SystemTimeToTimet(curTime);
+		CString conditon;
+		conditon.Format(_T(" confirmed_time>=%d and confirmed_time<="),mincurtime);
+		conditon.AppendFormat(_T("%d"),maxcurtime);
+		maxtime = maxcurtime;
+		mintime=mincurtime;
+		return conditon;
+	}else if (strcmp(text,_T("昨天")) == 0)
+	{
+		curTime.wHour=0;
+		curTime.wMinute = 0;
+		curTime.wSecond = 0;
+		curTime.wMilliseconds = 0;
+		INT64 maxcurtime = UiFun::SystemTimeToTimet(curTime);
+		INT64 mincurtime = maxcurtime - 24*60*60;
 		CString conditon;
 		conditon.Format(_T(" confirmed_time>=%d and confirmed_time<="),mincurtime);
 		conditon.AppendFormat(_T("%d"),maxcurtime);
