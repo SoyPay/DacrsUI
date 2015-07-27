@@ -35,4 +35,5 @@ public:
 	afx_msg void OnBnClickedCancel();
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnSize(UINT nType, int cx, int cy);
+	void  WriteClosConfig(int &close);
 };

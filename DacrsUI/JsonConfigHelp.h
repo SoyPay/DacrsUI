@@ -119,6 +119,7 @@ public:
 	void GetNetParamCfgData(CNetParamCfg& netparm);
 	void GetLogParamCfg(CLogParamCfg &logCfg);
 	void GetRedPacketCfgData(CRedPacketCfg &redpacketcfg);
+	void GetClosConfig(int &closeconf);
 	void AddItemString(const CString& strFilePath,CAutoComplete &m_comboxinput);
 	CString  GetConfigRootStr(const CString& strFilePath);
 private:
@@ -131,6 +132,7 @@ private:
 	void ReadNetParmCfgData(const Json::Value& root);
 	void ReadLogParamCfg(const Json::Value &root);
 	void ReadRedPacketCfgData(const Json::Value &root);
+	void ReadCloseCfgData(const Json::Value &root);
 	void AddString(const Json::Value& root,CAutoComplete &m_comboxinput);
 public:
 	void ModifyAppFeeCfgData( Json::Value& root,const CString &LeaderKey,const CString &Key,const CString &KeyValue);
@@ -146,5 +148,6 @@ private:
 	CNetParamCfg    m_NetParam;
 	CLogParamCfg     m_LogParamCfg;
 	CRedPacketCfg    m_RedPacketCfg;
+	int              m_close;                     /// 0 提示关闭对话框 1 不提示关闭对话框并且隐藏 2不提示关闭对话框并且关闭钱包
 };
 

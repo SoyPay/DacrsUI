@@ -73,7 +73,11 @@ void CJsonConfigHelp::ReadJsonConfig(const CString& strFilePath)
 			::MessageBox( NULL , _T("redpacket Î´ÅäÖÃ") , "Error" , MB_ICONERROR) ;
 			exit(0);
 		}
-		
+		pos = strTemp.find("closeconf");
+		if (pos >0)
+		{
+			ReadCloseCfgData(root);
+		}
 	}
 	ifs.close();
 }
@@ -299,10 +303,19 @@ void CJsonConfigHelp::ReadRedPacketCfgData(const Json::Value &root){
 	m_RedPacketCfg.SendRedPacketSpecailFee =redpacketparam["sendredspecalFee"].asInt64();
 	m_RedPacketCfg.AcceptRedPacketSpecailFee =  redpacketparam["acceptredspecalFee"].asInt64();
 }
+void CJsonConfigHelp::ReadCloseCfgData(const Json::Value &root)
+{
+	Json::Value closeconfig = root["closeconf"];
+	ASSERT(!closeconfig.isNull());
+	m_close = closeconfig["colse"].asInt();
+}
 void CJsonConfigHelp::GetRedPacketCfgData(CRedPacketCfg &redpacketcfg){
 	redpacketcfg = m_RedPacketCfg;
 }
-
+void CJsonConfigHelp::GetClosConfig(int &closeconf)
+{
+	closeconf = m_close;
+}
 CString  CJsonConfigHelp::GetConfigRootStr(const CString& strFilePath){
 	ifstream ifs;
 	ifs.open(strFilePath,ios::in);
