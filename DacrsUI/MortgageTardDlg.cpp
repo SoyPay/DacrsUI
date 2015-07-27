@@ -766,6 +766,9 @@ bool CMortgageTardDlg::CheckBalance()
 void CMortgageTardDlg::OnBnClickedButtonWithd()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	if ( IDNO == ::MessageBox( this->GetSafeHwnd() ,_T("是否确定要体现") , _T("提示") , MB_YESNO|MB_ICONINFORMATION ) )
+		return;
+
 	if (!theApp.IsSyncBlock )
 	{
 		::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;

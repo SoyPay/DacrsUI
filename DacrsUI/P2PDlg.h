@@ -101,4 +101,5 @@ public:
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	void       onShowLink();
 	CMFCLinkCtrl v_linkCtrl;
+	afx_msg void OnLbnDblclkListBonus();
 };

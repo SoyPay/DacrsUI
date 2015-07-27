@@ -260,6 +260,7 @@
     <ClInclude Include="AddApp.h" />
     <ClInclude Include="AddrBook.h" />
     <ClInclude Include="AutoComplete.h" />
+    <ClInclude Include="BetInformation.h" />
     <ClInclude Include="BetRecord.h" />
     <ClInclude Include="BmpBtn.h" />
     <ClInclude Include="BtnST.h" />
@@ -355,6 +356,7 @@
     <ClCompile Include="AddApp.cpp" />
     <ClCompile Include="AddrBook.cpp" />
     <ClCompile Include="AutoComplete.cpp" />
+    <ClCompile Include="BetInformation.cpp" />
     <ClCompile Include="BetRecord.cpp" />
     <ClCompile Include="BmpBtn.cpp" />
     <ClCompile Include="BtnST.cpp" />

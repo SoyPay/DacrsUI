@@ -97,7 +97,8 @@ void CRedPacketList::ShowTxDetail(CString txhash)
 		::MessageBox( this->GetSafeHwnd() ,_T("接龙红包还未抢完"), _T("提示") , MB_ICONINFORMATION );
 		CDialog::OnOK();
 	}else{
-		 map<INT64,CString > mapindex;
+		 //map<INT64,CString > mapindex;
+		  map<CString,INT64 > mapindex;
 		 for (int i =0;i <redPacket.dbdata.takennum;i++)
 		 {
 			 uistruct::USER_INFO userinfo = redPacket.userinfo[i];
@@ -107,21 +108,22 @@ void CRedPacketList::ShowTxDetail(CString txhash)
 
 			 CString regId = _T("");
 			 regId.Format(_T("%s"),regid.c_str());
-			 mapindex[userinfo.amount] = regId;
+			// mapindex[userinfo.amount] = regId;
+			 mapindex[regId] = userinfo.amount;
 
 		 }
-		 map<INT64,CString >::reverse_iterator item ;
+		 map<CString,INT64 >::reverse_iterator item ;
 		 int i = 0;
 		 for (item = mapindex.rbegin();item != mapindex.rend();item++,i++)
 		 {
 			 int nSubIdx = 0;
 
-			 double money = (item->first*1.0)/COIN;
+			 double money = (item->second*1.0)/COIN;
 			 //showdata.AppendFormat(_T(" %s                       %.8f\r\n\r\n"),regid.c_str(),money);
 			 showdata.Format(_T("%d"),(i+1));
 			 m_listCtrl.InsertItem(i, showdata);					//序号
 
-			 showdata.Format(_T("%s"),item->second);
+			 showdata.Format(_T("%s"),item->first);
 			 m_listCtrl.SetItemText(i , ++nSubIdx , showdata );  //
 
 			 strShowData.Format(_T("%.8f"), money); 

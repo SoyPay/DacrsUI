@@ -195,8 +195,12 @@ bool IsAllDigtal(const char* pData)
 {
 	for(int i = 0;pData[i] != '\0';i++)
 	{
-		if (!isdigit(pData[i]))
+		//if (!isdigit(pData[i]))
+		//	return false;
+		if (!(pData[i] >= '0' && pData[i] <='9'))
+		{
 			return false;
+		}
 	}
 
 	return true;

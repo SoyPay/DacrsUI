@@ -46,4 +46,5 @@ public:
 	void      OnShowPagePool(int page);
 	afx_msg void OnBnClickedButtonUp();
 	afx_msg void OnBnClickedButtonNext();
+	afx_msg void OnLbnDblclkListBox();
 };
