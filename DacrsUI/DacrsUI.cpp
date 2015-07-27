@@ -473,8 +473,8 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 	CPostMsg Postmsg ;
 	while ( true)
 	{
-		
-		if (theApp.m_msgAutoDelete)
+		/// 消息处理完 才能够退出
+		if (theApp.m_msgAutoDelete && !pUiDemeDlg->m_MsgQueue.pop(Postmsg))
 		{
 			return 1;
 		}
