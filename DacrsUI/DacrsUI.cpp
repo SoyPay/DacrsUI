@@ -59,7 +59,7 @@ CDacrsUIApp::CDacrsUIApp()
 	HaveLocked = FALSE;
 	netWork = 0;
 	dbpath =_T("");
-	m_reminder =TRUE;
+	m_reminder = 0;
 	m_passlock = TRUE;
 	m_dlgCreatfinsh = FALSE;
 }
@@ -1304,6 +1304,7 @@ void  CDacrsUIApp::ParseUIConfigFile(const CStringA& strExeDir){
 		CJsonConfigHelp::getInstance()->GetDarkCfgData(m_DarkCfg);
 		CJsonConfigHelp::getInstance()->GetP2PBetCfgData(m_P2PBetCfg);
 		CJsonConfigHelp::getInstance()->GetRedPacketCfgData(m_RedPacketCfg);
+		CJsonConfigHelp::getInstance()->GetClosConfig(m_reminder);
 		CNetParamCfg netParm;
 		CJsonConfigHelp::getInstance()->GetNetParamCfgData(netParm);
 		m_severip = netParm.server_ip;

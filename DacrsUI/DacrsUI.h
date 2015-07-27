@@ -187,7 +187,7 @@ public:
 	bool HaveLocked; // 有锁TRUE : 无锁 FALSE
 	int  netWork;  /// 0 是main网络(正式网络)  1 regtest网络(局域网络) 2testnet(测试网络) 
 	CString dbpath;
-	BOOL m_reminder;    //是否要弹出提示框，关闭的时候 false不弹出 true弹出
+	int m_reminder;    //是否要弹出提示框，关闭的时候 false不弹出 true弹出
 	BOOL m_passlock;    //是否要弹出提示框，关闭的时候 false不弹出，存在解锁框 true弹出,不存在解锁框
 	BOOL m_dlgCreatfinsh;   // 主对话框框的所有dlg是否创建完
 };

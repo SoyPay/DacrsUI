@@ -1463,6 +1463,8 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 	 string addr,money;
 	 string txhash, line;
 
+	 string temp = "";
+
 	 char buffer[1024] = {0};
 	 for (unsigned int k = index;k< (index+count)&& k<m_PoolList.size();k++)
 	 {
@@ -1494,9 +1496,8 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 		 memset(buffer,0,1024);
 		// strmoney.Format(_T("%.8f"),dmoney);
 
-		 sprintf_s(buffer,"%d",(i+1));
-		 line = buffer;
-		 memset(buffer,0,1024);
+		 temp = const_it.hash.substr(0,6);
+		 line = temp;
 
 		// line.Format(_T("%d"),(i+1));
 		// txhash.Format(_T("%s"),const_it.hash.c_str());

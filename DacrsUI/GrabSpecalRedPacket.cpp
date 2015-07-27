@@ -209,6 +209,7 @@ void  CGrabSpecalRedPacket::OnShowPagePool(int page)
 	CString money;
 	CString txhash, line;
 	CString strShow;
+	CString temp;
 	for (unsigned int k = index;k< (index+count);k++)
 	{
 		uistruct::REDPACKETPOOL_t const_it = m_PoolList.at(k);
@@ -217,7 +218,9 @@ void  CGrabSpecalRedPacket::OnShowPagePool(int page)
 		strmoney.Format(_T("%.8f"),const_it.total_amount);
 		money.Format(_T("%.4f"),const_it.total_amount);
 
-		line.Format(_T("%d"),(i+1));
+		temp = const_it.send_hash.Left(6);
+		line.Format(_T("%s"),temp);
+		//line.Format(_T("%d"),(i+1));
 		if (const_it.packet_type == 1)
 		{
 			strShow.Format(_T(("ÆÕÍ¨ºì°ü")));

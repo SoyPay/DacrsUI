@@ -113,6 +113,7 @@ void CUseListBox::InsertStr(int iIndex,HWND hMain)
 	DWORD dwStyle =  WS_CHILD | WS_VISIBLE;
 	pData->pSta0 = new CStaticTrans;
 	pData->pSta0->Create(_T(""),dwStyle, rcClient, this, ++m_uID);
+	pData->pSta0->ModifyStyle(SS_LEFT|SS_LEFT,SS_RIGHT,TRUE);
 
 	pData->pBut2 = new CButtonEx(iIndex,1,rcClient,hMain);
 	pData->pBut2->Create(_T(""),dwStyle, rcClient, this, ++m_uID);
@@ -218,7 +219,7 @@ void CUseListBox::updateListBoxButtonPos()
 			  pData->pSta0->SetFont(110, _T("宋体"));				//设置显示字体和大小
 			 // pData->pSta0->SetTextColor(RGB(0,0,0));			    //字体颜色
               pData->pSta0->ShowWindow( SW_SHOW );
-			  pData->pSta0->SetWindowPos(NULL , 40 , pData->nItem*28 +10 , 60 , 35 , SWP_SHOWWINDOW );
+			  pData->pSta0->SetWindowPos(NULL , 10 , pData->nItem*28 +10 , 60 , 35 , SWP_SHOWWINDOW );
 
 			  pData->pSta1->SetFont(110, _T("宋体"));				//设置显示字体和大小
 			  pData->pSta1->ShowWindow( SW_SHOW );
