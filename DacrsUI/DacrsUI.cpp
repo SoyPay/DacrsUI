@@ -1061,7 +1061,7 @@ UINT __stdcall CDacrsUIApp::ProcessNoUiMsg(LPVOID pParam)
 		while (true)
 		{
 		    Sleep(100); 
-			if (theApp.m_blockAutoDelete)
+			if (theApp.m_blockAutoDelete && !pUiDemeDlg->m_noUiMsgBuffer.HaveNoUiMsg())
 			{
 				return 1;
 			}
