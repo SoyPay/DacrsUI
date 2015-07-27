@@ -50,6 +50,7 @@ BEGIN_MESSAGE_MAP(CGrabCommRedPacket, CDialogEx)
 	ON_MESSAGE( WM_BN_CLICK, &CGrabCommRedPacket::onBnCLick)
 	ON_WM_CTLCOLOR()
 	ON_WM_CTLCOLOR()
+	ON_LBN_DBLCLK(IDC_LIST_BOX, &CGrabCommRedPacket::OnLbnDblclkListBox)
 END_MESSAGE_MAP()
 
 
@@ -487,4 +488,20 @@ HBRUSH CGrabCommRedPacket::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 		return  CDialogEx::OnCtlColor(pDC, pWnd, nCtlColor);
 	}
 
+}
+
+
+void CGrabCommRedPacket::OnLbnDblclkListBox()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	int nSel=m_BonusListBox.GetCurSel(); 
+	int count = ((m_curpage -1)*m_pagesize) + nSel;
+	if (count <=(int)m_PoolList.size())
+	{
+		uistruct::REDPACKETPOOL_t const_it = m_PoolList.at(count);
+		CString temp = _T("普通红包ID: ");
+		CString strShowid = const_it.send_hash.Left(30); 
+		temp.AppendFormat(_T("%s") ,strShowid) ;
+		::MessageBox( this->GetSafeHwnd() ,temp , _T("提示") , MB_ICONINFORMATION ) ;
+	}
 }
