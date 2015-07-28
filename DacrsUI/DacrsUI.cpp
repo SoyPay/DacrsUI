@@ -1294,6 +1294,7 @@ void  CDacrsUIApp::ParseUIConfigFile(const CStringA& strExeDir){
 
 	if (PathFileExistsA(configpath))
 	{
+		CJsonConfigHelp::getInstance()->Init();
 		CJsonConfigHelp::getInstance()->ReadJsonConfig(configpath);
 		CScriptCfg scriptCfg;
 		CJsonConfigHelp::getInstance()->GetScriptCfgData(scriptCfg);

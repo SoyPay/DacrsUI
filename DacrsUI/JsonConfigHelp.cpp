@@ -4,7 +4,16 @@
 IMPLEMENT_SINGLETON(CJsonConfigHelp)
 void CJsonConfigHelp::Init()
 {
-
+		m_close = 0;
+		//memset(&m_MainCfg,0,sizeof(CMainCfg));
+		//memset(&m_DarkCfg,0,sizeof(CDarkTxCfg));
+		//memset(&m_AnonymCfg,0,sizeof(CAnonmyCfg));
+		//memset(&m_P2PBetCfg,0,sizeof(CP2PBetCfg));
+		//memset(&m_SesureTradeCfg,0,sizeof(CSesureTradeCfg));
+		//memset(&m_Scriptid,0,sizeof(CScriptCfg));
+		//memset(&m_NetParam,0,sizeof(CNetParamCfg));
+		//memset(&m_LogParamCfg,0,sizeof(CLogParamCfg));
+		//memset(&m_RedPacketCfg,0,sizeof(CRedPacketCfg));
 }
 
 void CJsonConfigHelp::ReadJsonConfig(const CString& strFilePath)

@@ -170,7 +170,7 @@ void CReminderdlg::OnBnClickedOk()
 	int close = 0;
 	if (((CButton *)GetDlgItem(IDC_CHECK_NO))->GetCheck())
 	{
-		theApp.m_reminder = FALSE;
+		theApp.m_reminder = 0;
 	}
 	if (((CButton *)GetDlgItem(IDC_RADIO_NOEXIT))->GetCheck())
 	{

@@ -196,6 +196,8 @@ void CSendRecord::Showlistbox(CString address)
 	Invalidate();
 	m_listBox.DeleteAllIndex();
 	OnShowPagePool(1);
+
+	OpenAcceptbet();
 }
 void CSendRecord::OpenBet(CString txhash)
 {
@@ -315,7 +317,41 @@ void CSendRecord::OpenBet(CString txhash)
 	}
 	::MessageBox( this->GetSafeHwnd() ,strTip , _T("提示") , MB_ICONINFORMATION ) ;
 }
+///开接赌了没有开奖的
+void  CSendRecord::OpenAcceptbet()
+{
 
+	CString conditon;
+	conditon.Format(_T("comfirmed=0 and state =1 and (actor = 0 or actor =2)"));
+	uistruct::P2PBETRECORDLIST       lList;;
+	int nItem =  theApp.m_SqliteDeal.GetP2PQuizRecordList(conditon ,&lList ) ;
+
+	for (unsigned int k = 0;k<lList.size();k++)
+	{
+		uistruct::P2P_QUIZ_RECORD_t const_it = lList.at(k);
+
+		///说明开奖了
+		if (const_it.state == 1)
+		{
+	
+			if ((const_it.time_out + const_it.height)> theApp.blocktipheight && theApp.IsSyncBlock)
+			{
+				CString strCond;
+				uistruct::LISTADDR_t pAddr;
+				strCond.Format(_T("reg_id ='%s'"),const_it.left_addr);
+				theApp.m_SqliteDeal.GetWalletAddressItem(strCond, &pAddr);
+				double minfee = (theApp.m_P2PBetCfg.OpenBetnFee*1.0)/COIN;
+				if (minfee > pAddr.fMoney)
+				{
+					::MessageBox(NULL ,_T("有些赌约未开奖,请先充值") , _T("提示") , MB_ICONINFORMATION ) ;
+				}
+				CString txhash;
+				txhash.Format(_T("%s"),const_it.tx_hash);
+				theApp.OpenBet(txhash);
+			}
+		}
+	}
+}
 void  CSendRecord::OnShowPagePool(int page)
 {
 	if (page >m_pagecount || page == m_curpage || page <= 0)
@@ -442,9 +478,9 @@ void  CSendRecord::OnShowPagePool(int page)
 				if ((const_it.time_out + const_it.height)> theApp.blocktipheight && theApp.IsSyncBlock)
 				{
 					//pinf->pBut0->EnableWindow(true);
-					if (!flag)
-					{
-						CString strCond;
+					//if (!flag)
+				//	{
+				/*		CString strCond;
 						uistruct::LISTADDR_t pAddr;
 						strCond.Format(_T("reg_id ='%s'"),const_it.left_addr);
 						theApp.m_SqliteDeal.GetWalletAddressItem(strCond, &pAddr);
@@ -455,9 +491,9 @@ void  CSendRecord::OnShowPagePool(int page)
 						}
 						CString txhash;
 						txhash.Format(_T("%s"),const_it.tx_hash);
-						theApp.OpenBet(txhash);
-						flag = true;
-					}
+						theApp.OpenBet(txhash);*/
+						//flag = true;
+					//}
 					sprintf_s(buffer,"%.4f",const_it.amount);
 					reward = buffer;
 					//reward.Format(_T("%.4f"),const_it.amount);
