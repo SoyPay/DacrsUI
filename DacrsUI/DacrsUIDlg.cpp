@@ -672,12 +672,12 @@ bool  CDacrsUIDlg::IsP2pBetFinsh()
 
 	/// 处于发赌约状态
 	CString strCond;
-	strCond.Format(_T("height > %d and (state = 0 or state = 4)"),(theApp.blocktipheight-500));
+	strCond.Format(_T("(height+500) > %d and (state = 0 or state = 4) and (actor = 0 or actor =2)"),theApp.blocktipheight);
 	uistruct::P2PBETRECORDLIST pPoolList;
 	theApp.m_SqliteDeal.GetP2PQuizRecordList(strCond,&pPoolList);
 	// 处于接赌状态
 	uistruct::P2PBETRECORDLIST pPoolList1;
-	strCond.Format(_T("height > %d and (state = 1 or state = 5)"),(theApp.blocktipheight-10));
+	strCond.Format(_T("(height +time_out)> %d and (state = 1 or state = 5)  and (actor = 0 or actor =2)"),theApp.blocktipheight);
 	theApp.m_SqliteDeal.GetP2PQuizRecordList(strCond,&pPoolList1);
 	if (pPoolList.size() != 0 && pPoolList1.size() != 0)
 	{

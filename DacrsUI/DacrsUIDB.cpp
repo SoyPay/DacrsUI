@@ -309,6 +309,8 @@ void CDacrsUIApp::OpenBet(CString txhash,BOOL Flag)
 		CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_REVTRANSACTION);
 		postmsg.SetData(strHash);
 		theApp.m_MsgQueue.push(postmsg);
+	}else{
+		LogPrint("INFO","·¢¶ÄÔ¼hash:%s  ¿ª½±Ê§°Ü:%s",txhash,strShowData);
 	}
 
 	if ( pos >=0 ) {
