@@ -40,11 +40,12 @@ private:
 	int                              m_pagecount;
 	int                              m_curpage;
 	unsigned int                              m_pagesize;
-	uistruct::P2PBETRECORDLIST       m_PoolList;;
+	uistruct::P2PBETRECORDLIST       m_PoolList;
 public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	void      OnShowPagePool(int page);
 	afx_msg void OnBnClickedButtonUp();
 	afx_msg void OnBnClickedButtonNext();
 	afx_msg void OnLbnDblclkListBox();
+	void    OpenAcceptbet();
 };
