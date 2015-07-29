@@ -177,15 +177,15 @@ void CSendRedPacketRecord::Showlistbox(CString address)
 	m_curpage = 0;
 	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(_T(""));
 	m_SendRedPacketList.clear();
-	CString conditon;
-	conditon.Format(_T("send_acct_id ='%s' order by send_time desc") , address);
+	string conditon;
+	conditon= strprintf("send_acct_id ='%s' order by send_time desc" , address);
 	//uistruct::P2PBETRECORDLIST  pPoolItem;
 	int nItem =  theApp.m_SqliteDeal.GetRedPacketSendRecordList(conditon ,&m_SendRedPacketList ) ;
 	m_pagecount = (m_SendRedPacketList.size()%m_pagesize)==0?(m_SendRedPacketList.size()/m_pagesize):(m_SendRedPacketList.size()/m_pagesize)+1;
 
-	CString temp;
-	temp.Format(_T("¹²:%d"),m_pagecount);
-	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(temp);
+	string temp;
+	temp = strprintf("¹²:%d",m_pagecount);
+	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(temp.c_str());
 	GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T(""));
 	Invalidate();
 	m_listBox.DeleteAllIndex();
@@ -202,9 +202,9 @@ void  CSendRedPacketRecord::OnShowPagePool(int page)
 
 
 	m_listBox.DeleteAllIndex();
-	CString strpage;
-	strpage.Format(_T("%d"),page);
-	GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(strpage);
+	string strpage;
+	strpage = strprintf("%d",page);
+	GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(strpage.c_str());
 
 	bool flag = false;
 	m_curpage = page;

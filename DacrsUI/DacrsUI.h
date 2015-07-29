@@ -26,6 +26,8 @@ using namespace std;
 //
 #define		MSG_TITLE_LBUTTON_DOWN		(WM_USER + 0x0001)
 
+#define strprintf tfm::format
+
 class CDacrsUIApp : public CWinApp
 {
 public:
@@ -36,11 +38,11 @@ public:
 	virtual BOOL InitInstance();
 public:
 	UINT          gsLanguage            ;   //语言类型
-	CString		  str_InsPath	        ;   
-	CString		  str_ModuleFilename	;    
-	CString		  m_ProgressGifFile	;		//进度GIF文件
-	CString		  m_ProgressOutGifFile	;	//进度GIF文件
-	void          GetMoFilename( CString & path , CString & filename ) ;// 获取文件名和路径
+	string		  str_InsPath	        ;   
+	string		  str_ModuleFilename	;    
+	string		  m_ProgressGifFile	;		//进度GIF文件
+	string		  m_ProgressOutGifFile	;	//进度GIF文件
+	void          GetMoFilename( string & path , string & filename ) ;// 获取文件名和路径
 	int           language()    ;           //读取设置语言
 	CString       m_strAddress  ;
 	BOOL          m_bReIndexServer;         //重启打开服务程序进程
@@ -102,33 +104,33 @@ public:
 	void		 UnSubscribeMsg( DWORD , HWND , UINT )	;	
 	void		 DispatchMsg( unsigned int threadID , UINT msg , WPARAM wParam , LPARAM lParam ) ;
 public:
-	CString      m_betScritptid;
-	CString      m_ipoScritptid;
-	CString      m_darkScritptid;
-	CString      m_redPacketScriptid;
+	string      m_betScritptid;
+	string      m_ipoScritptid;
+	string      m_darkScritptid;
+	string      m_redPacketScriptid;
 	CDarkTxCfg		m_DarkCfg;
 	CP2PBetCfg		m_P2PBetCfg;
 	CRedPacketCfg   m_RedPacketCfg;
 public:
 	void         OnInitList();   //初始化list
 	int          SendPostThread(DWORD msgtype);
-	void         ParseUIConfigFile(const CStringA& strExeDir);
+	void         ParseUIConfigFile(const string& strExeDir);
 public:
-	void StartSeverProcess(const CStringA& strdir);
+	void StartSeverProcess(const string& strdir);
 	void CloseProcess(const string& exename);
 	void CheckUpdate();
 	int Update();
 	bool GetVersionFromServer(string& strVersion);
 	BOOL					m_bStartServer;
 	PROCESS_INFORMATION		sever_pi; 
-	CStringA				m_rpcport;
+	string				m_rpcport;
 	string					m_strServerCfgFileName;
-	CStringA				m_sendPreHeadstr;
-	CStringA				m_sendendHeadstr;
-	CStringA                m_uirpcport;
-	CString                 m_severip;
-	CStringA                m_rpcUser;
-	CStringA                m_rpcPassWord;
+	string				m_sendPreHeadstr;
+	string				m_sendendHeadstr;
+	string                m_uirpcport;
+	string                 m_severip;
+	string                m_rpcUser;
+	string                m_rpcPassWord;
 public:
 	CMyQueue m_MsgQueue;
 	CMyQueue m_UimsgQueue;
@@ -143,8 +145,8 @@ public:
 	void UpdateRedPacketPoolData();
 	void UpdateQuizPoolData();
 	void UpdateAddressData();
-	void InsertTransaction(CString hash);
-	void UpdateTransaction(CString hash);
+	void InsertTransaction(string hash);
+	void UpdateTransaction(string hash);
 	void SyncTransaction(string obj);
 	void UpdateAppRecord(string txdetail);
 	void InsertAddbook(uistruct::ADDRBOOK_t );
@@ -157,9 +159,9 @@ public:
 	void ClearTransaction();
 	void GetMainDlgStruct();
 	BOOL RunOnlyOneApp();
-	void SendUIMsg(int message,CString jsonaddr);
-	void SendP2pMsg(int message,CString jsonaddr);
-	void CheckPathValid(const CStringA& strDir);
+	void SendUIMsg(int message,string jsonaddr);
+	void SendP2pMsg(int message,string jsonaddr);
+	void CheckPathValid(const string& strDir);
 
 	void AcceptRePacketCommtRecord(vector<unsigned char> acceptRedPacket,uistruct::REVTRANSACTION_t transcion);
 	void SendRePacketCommtRecord(vector<unsigned char> sendRedPacket,uistruct::REVTRANSACTION_t transcion);
@@ -186,7 +188,6 @@ public:
 	bool IsWalletLocked; //钱包锁定状态 TRUE : 不锁定状态 FALSE
 	bool HaveLocked; // 有锁TRUE : 无锁 FALSE
 	int  netWork;  /// 0 是main网络(正式网络)  1 regtest网络(局域网络) 2testnet(测试网络) 
-	CString dbpath;
 	int m_reminder;    //是否要弹出提示框，关闭的时候 false不弹出 true弹出
 	BOOL m_passlock;    //是否要弹出提示框，关闭的时候 false不弹出，存在解锁框 true弹出,不存在解锁框
 	BOOL m_dlgCreatfinsh;   // 主对话框框的所有dlg是否创建完

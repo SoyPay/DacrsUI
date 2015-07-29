@@ -87,16 +87,16 @@ CString txTypeArray[] = { "NULL_TXTYPE", "REWARD_TX", "REG_ACCT_TX", "COMMON_TX"
 namespace uistruct {
 	//listaddr结构
 	typedef struct LISTADDR{   
-		char    address[34+1] ;   //address
-		char    RegID[34]   ;   //RegID
+		string    address ;   //address
+		string    RegID   ;   //RegID
 		double  fMoney      ;   //金额
 		int     nColdDig    ;   //是否支持冷挖矿 1:代表支持  ， 0:代表不支持
 		int     bSign       ;   //是否注册       1:已注册    ,  0:没注册
-		char    Label[34]       ;
+		string    Label       ;
 		LISTADDR(){
-			memset(address,0,sizeof(address));
-			memset(RegID,0,sizeof(RegID));
-			memset(Label,0,sizeof(Label));
+			address="";
+			RegID="";
+			Label="";
 			fMoney = 0.0;
 			nColdDig =0;
 			bSign = 0;
@@ -116,16 +116,14 @@ namespace uistruct {
 			Json::Value root; 
 			if (!reader.parse(json, root)) 
 				return false ;
-			CString temp = root["address"].asCString();
-			memcpy(address,temp,sizeof(address));
-			temp = root["RegID"].asCString();
-			memcpy(RegID,temp,sizeof(RegID));
+			address = root["address"].asString();
+			
+			RegID =  root["RegID"].asString();
 			this->fMoney = root["fMoney"].asDouble();
 			this->nColdDig = root["nColdDig"].asInt();
 			this->bSign = root["bSign"].asInt();
-			temp = root["Label"].asCString();
-			memcpy(Label,temp,sizeof(Label));
-	
+
+			Label=root["Label"].asString();
 			return true;
 		}
 	}LISTADDR_t;
@@ -152,31 +150,31 @@ namespace uistruct {
 		time_t send_time       ;     //发送时间
 		time_t recv_time       ;     //接收时间
 		int    time_out        ;     //超时
-		char   tx_hash[64+1]    ;      //发赌约hash
-		char   left_addr[34+1]  ;		//发赌约地址
-		char   right_addr[34+1] ;		//接受赌约地址
+		string   tx_hash    ;      //发赌约hash
+		string   left_addr  ;		//发赌约地址
+		string   right_addr ;		//接受赌约地址
 		double  amount  ;				//金额
 		char   content[33]    ;       //明文 
 		int    actor  ;               // 0 发起赌约 1 接受赌约 2 即使发起赌约又是接受赌约
 		int    confirmed      ;        // 是否已确认
 		int    height         ;           //确定高度
 		int    state          ;         //0 发起状态 1 接赌状态 2 揭赌状态 3 已经超过揭赌时间 4 正在接赌 5正在揭赌
-		char   relate_hash[64+1];          //接赌hash
+		string   relate_hash;          //接赌hash
 		int    guess_num;      //接猜的数字
 		P2P_QUIZ_RECORD(){
 			send_time = 0;
 			recv_time = 0;
 			time_out = 0;
-			memset(tx_hash, 0, 65);
-			memset(left_addr, 0, 35);
-			memset(right_addr, 0, 35);
+			tx_hash = "";
+			left_addr ="";
+			right_addr = "";
 			amount = 0;
 			memset(content, 0, 33);
 			actor = 0;
 			confirmed =0;
 			height = 0;
 			state = 0;
-			memset(relate_hash, 0, 65);
+			relate_hash = "";
 			guess_num = 0;
 		}
 		string ToJson(){
@@ -207,26 +205,23 @@ namespace uistruct {
 			this->recv_time = root["recv_time"].asInt();
 			this->time_out = root["time_out"].asInt();
 
-			CString temp = root["tx_hash"].asCString();
-			memcpy(tx_hash,temp,sizeof(tx_hash));
+			tx_hash = root["tx_hash"].asString();
 		
-			temp = root["left_addr"].asCString();
-			memcpy(left_addr,temp,sizeof(left_addr));
+			left_addr = root["left_addr"].asString();
 	
-			temp = root["right_addr"].asCString();
-			memcpy(right_addr,temp,sizeof(right_addr));
+			right_addr = root["right_addr"].asString();
 	
 			this->amount = root["amount"].asDouble();
 
-			temp = root["content"].asCString();
+			CString temp = root["content"].asCString();
 			memcpy(content,temp,sizeof(content));
 	
 			this->actor = root["actor"].asInt();
 			this->confirmed = root["confirmed"].asInt();
 			this->height = root["height"].asInt();
 
-			temp = root["relate_hash"].asCString();
-			memcpy(relate_hash,temp,sizeof(relate_hash));
+			relate_hash = root["relate_hash"].asString();
+			
 		
 			this->state = root["state"].asInt();
 			this->guess_num = root["guess_num"].asInt() ;
@@ -251,7 +246,7 @@ namespace uistruct {
 	typedef std::vector<DBBET_DATA> DBBETDATALIST ;
 	//交易记录
 	typedef struct REVTRANSACTION{
-		CString    txhash  ;   //hash
+		string    txhash  ;   //hash
 		string    txtype ;  //类型
 		int       ver;
 		string    addr   ;  //
@@ -266,11 +261,11 @@ namespace uistruct {
 		int      confirmedtime ; //确认时间
 		string     blockhash      ;  //1:为确认状态   0:为未为确认状态
 		int       state;
-		CString   regid;
-		CString   desregid;
+		string   regid;
+		string   desregid;
 		string ToJson(){
 			Json::Value root;
-			root["hash"] = txhash.GetString();
+			root["hash"] = txhash;
 			root["txtype"] = txtype;
 			root["ver"] = ver;
 			root["addr"] = addr;
@@ -285,8 +280,8 @@ namespace uistruct {
 			root["confirmedtime"] = confirmedtime;
 			root["blockhash"] = blockhash;
 			root["state"] = state;
-			root["regid"] = regid.GetString();
-			root["desregid"] = desregid.GetString();
+			root["regid"] = regid;
+			root["desregid"] = desregid;
 			return root.toStyledString();
 		}
 
@@ -312,7 +307,7 @@ namespace uistruct {
 			if (!reader.parse(json, root)) 
 				return false ;
 
-			this->txhash = root["hash"].asCString() ;  
+			this->txhash = root["hash"].asString() ;  
 			this->txtype = root["txtype"].asString(); 
 			this->ver = root["ver"].asInt();
 			this->addr = root["addr"].asString()  ;
@@ -365,11 +360,11 @@ namespace uistruct {
 
 			pos = json.find("regid");
 			if(pos >=0)
-				this->regid = root["regid"].asCString();
+				this->regid = root["regid"].asString();
 
 			 pos = json.find("desregid");
 			if(pos >=0)
-				this->desregid = root["desregid"].asCString();
+				this->desregid = root["desregid"].asString();
 
 			return true;
 		}
@@ -529,16 +524,16 @@ namespace uistruct {
 	}MINDLG_T;
 
 	typedef struct ADDRBOOK{   
-		CString    label;   //address
-		CString    address  ;   //RegID
+		string    label;   //address
+		string    address  ;   //RegID
 		ADDRBOOK(){
 			label = _T("");
 			address = _T("");
 		}
 		string ToJson(){
 			Json::Value root;
-			root["address"] = address.GetString();
-			root["label"] = label.GetString();
+			root["address"] = address;
+			root["label"] = label;
 			return root.toStyledString();
 		}
 		bool JsonToStruct(string json){
@@ -546,37 +541,37 @@ namespace uistruct {
 			Json::Value root; 
 			if (!reader.parse(json, root)) 
 				return false ;
-			this->label = root["label"].asCString();
-			this->address = root["address"].asCString();
+			this->label = root["label"].asString();
+			this->address = root["address"].asString();
 			return true;
 		}
 	}ADDRBOOK_t;
 	typedef std::vector<ADDRBOOK_t> ADDRBOOKLIST ;
 
 	typedef struct REDPACKETSEND{   
-		CString    send_hash;   //address
+		string    send_hash;   //address
 		int        send_time;   //RegID
 		double     amount  ;				//金额
 		int        packet_num;
-		CString    send_acc_id;
+		string    send_acc_id;
 		int        confirm_height;
 		int        packet_type;       //1:普通红包  2:接龙红包
 		REDPACKETSEND(){
-			send_hash =_T("");   //address
+			send_hash ="";   //address
 			send_time = 0;;   //RegID
 			amount = 0.0  ;				//金额
 			packet_num = 0;
-			send_acc_id = _T("");
+			send_acc_id = "";
 			confirm_height = 0;
 			packet_type = 0;  
 		}
 		string ToJson(){
 			Json::Value root;
-			root["send_hash"] = send_hash.GetString();
+			root["send_hash"] = send_hash;
 			root["send_time"] = send_time;
 			root["amount"] = amount;
 			root["packet_num"] = packet_num;
-			root["send_acc_id"] = send_acc_id.GetString();
+			root["send_acc_id"] = send_acc_id;
 			root["confirm_height"] = confirm_height;
 			root["packet_type"] = packet_type;
 			return root.toStyledString();
@@ -586,11 +581,11 @@ namespace uistruct {
 			Json::Value root; 
 			if (!reader.parse(json, root)) 
 				return false ;
-			this->send_hash = root["send_hash"].asCString();
+			this->send_hash = root["send_hash"].asString();
 			this->send_time = root["send_time"].asInt();
 			this->amount = root["amount"].asDouble();
 			this->packet_num = root["packet_num"].asInt();
-			this->send_acc_id = root["send_acc_id"].asCString();
+			this->send_acc_id = root["send_acc_id"].asString();
 			this->confirm_height = root["confirm_height"].asInt();
 			this->packet_type = root["packet_type"].asInt();
 			return true;
@@ -599,23 +594,23 @@ namespace uistruct {
 	typedef std::vector<REDPACKETSEND_t> REDPACKETSENDLIST ;
 
 	typedef struct REDPACKETGRAB{   
-		CString    send_hash;   //address
-		CString    grab_hash;
+		string    send_hash;   //address
+		string    grab_hash;
 		int        grab_time;   //RegID
 		double     lucky_amount  ;				//金额
-		CString    send_acc_id;
-		CString    grab_acct_id;
+		string    send_acc_id;
+		string    grab_acct_id;
 		int        confirm_height;
 		int        packet_type;       //1:普通红包  2:接龙红包
 		int        lucky_fortune;     /// 1 普通 2 运气王
 		double     total_amount;
 		int         total_num;
 		REDPACKETGRAB(){
-			send_hash =_T("");   //address
-			grab_hash = _T("");
+			send_hash ="";   //address
+			grab_hash = "";
 			grab_time = 0;;   //RegID
 			lucky_amount = 0.0  ;				//金额
-			send_acc_id = _T("");
+			send_acc_id = "";
 			confirm_height = 0;
 			packet_type = 0;  
 			total_amount = 0.0;
@@ -623,12 +618,12 @@ namespace uistruct {
 		}
 		string ToJson(){
 			Json::Value root;
-			root["send_hash"] = send_hash.GetString();
-			root["grab_hash"] = grab_hash.GetString();
+			root["send_hash"] = send_hash;
+			root["grab_hash"] = grab_hash;
 			root["grab_time"] = grab_time;
 			root["lucky_amount"] = lucky_amount;
-			root["send_acc_id"] = send_acc_id.GetString();
-			root["grab_acct_id"] = grab_acct_id.GetString();
+			root["send_acc_id"] = send_acc_id;
+			root["grab_acct_id"] = grab_acct_id;
 			root["confirm_height"] = confirm_height;
 			root["packet_type"] = packet_type;
 			root["lucky_fortune"] = lucky_fortune;
@@ -641,12 +636,12 @@ namespace uistruct {
 			Json::Value root; 
 			if (!reader.parse(json, root)) 
 				return false ;
-			this->send_hash = root["label"].asCString();
-			this->grab_hash = root["grab_hash"].asCString();
+			this->send_hash = root["label"].asString();
+			this->grab_hash = root["grab_hash"].asString();
 			this->grab_time = root["address"].asInt();
 			this->lucky_amount = root["lucky_amount"].asDouble();
-			this->send_acc_id = root["send_acc_id"].asCString();
-			this->grab_acct_id = root["grab_acct_id"].asCString();
+			this->send_acc_id = root["send_acc_id"].asString();
+			this->grab_acct_id = root["grab_acct_id"].asString();
 			this->confirm_height = root["confirm_height"].asInt();
 			this->packet_type = root["packet_type"].asInt();
 			this->lucky_fortune = root["lucky_fortune"].asInt();
@@ -658,28 +653,28 @@ namespace uistruct {
 	typedef std::vector<REDPACKETGRAB_t> REDPACKETGRABLIST ;
 
 	typedef struct REDPACKETPOOL{   
-		CString    send_hash;   //address
+		string    send_hash;   //address
 		double     total_amount  ;				//金额
-		CString    send_acc_id;
+		string    send_acc_id;
 		int        packets_num;
 		int        packet_type;       //1:普通红包  2:接龙红包
-		CString    message;
+		string    message;
 		double     average_amout;
 		REDPACKETPOOL(){
-			send_hash =_T("");   //address
+			send_hash ="";   //address
 			total_amount = 0.0  ;				//金额
-			send_acc_id = _T("");
+			send_acc_id = "";
 			packet_type = 0;  
 			average_amout =0.0;
 		}
 		string ToJson(){
 			Json::Value root;
-			root["send_hash"] = send_hash.GetString();
+			root["send_hash"] = send_hash;
 			root["total_amount"] = total_amount;
-			root["send_acc_id"] = send_acc_id.GetString();
+			root["send_acc_id"] = send_acc_id;
 			root["packets_num"] = packets_num;
 			root["packet_type"] = packet_type;
-			root["message"] = message.GetString();
+			root["message"] = message;
 			root["average_amout"] = average_amout;
 			return root.toStyledString();
 		}
@@ -688,12 +683,12 @@ namespace uistruct {
 			Json::Value root; 
 			if (!reader.parse(json, root)) 
 				return false ;
-			this->send_hash = root["label"].asCString();
+			this->send_hash = root["label"].asString();
 			this->total_amount = root["address"].asDouble();
-			this->send_acc_id = root["send_acc_id"].asCString();
+			this->send_acc_id = root["send_acc_id"].asString();
 			this->packets_num = root["packets_num"].asInt();
 			this->packet_type = root["packet_type"].asInt();
-			this->message = root["message"].asCString();
+			this->message = root["message"].asString();
 			this->average_amout = root["average_amout"].asDouble();
 			return true;
 		}
@@ -739,6 +734,7 @@ namespace UiFun
 	HBITMAP GlobalBkgndBMP(UINT nIDBitmap);
 
 	CString MbcsToUtf8(const char *file) ;
+
 
 }
 #endif

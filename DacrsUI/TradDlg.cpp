@@ -238,8 +238,8 @@ void CTradDlg::OnBnClickedButtonTxdetail()
 		int nRow = m_listCtrl.GetNextSelectedItem(pos) ;
 		CString strtxhash = m_listCtrl.GetItemText(nRow, 5);
 		uistruct::REVTRANSACTION_t  txdetail;
-	    CString strCond;
-		strCond.Format(_T(" hash='%s' "), strtxhash);
+	    string strCond;
+		strCond = strprintf(" hash='%s' ", strtxhash);
 		int nItem =  theApp.m_SqliteDeal.GetTransactionItem( strCond ,&txdetail ) ;
 		if (txdetail.txhash != _T(""))
 		{
@@ -268,57 +268,57 @@ void  CTradDlg::OninitializeList()
 	}
 
 	int nSubIdx = 0 , i = 0 ;
-	CString strShowData = _T("");
+	string strShowData = "";
 	std::vector<uistruct::REVTRANSACTION_t>::const_iterator const_it;
 	for ( const_it = pListInfo.begin() ; const_it != pListInfo.end() ; const_it++ ) {
 		nSubIdx = 0;
-		strShowData.Format(_T("%d"), i+1);
-		m_listCtrl.InsertItem(i, strShowData);					//序号
+		strShowData =strprintf("%d", i+1);
+		m_listCtrl.InsertItem(i, strShowData.c_str());					//序号
 
 		string txtype = const_it->txtype;
 		if (!strcmp(txtype.c_str(),"REWARD_TX"))
 		{
-			strShowData.Format(_T("%s") ,_T("挖矿")) ;
+			strShowData = strprintf("%s" ,_T("挖矿")) ;
 		}else if (!strcmp(txtype.c_str(),"REG_ACCT_TX"))
 		{
-			strShowData.Format(_T("%s") ,_T("激活")) ;
+			strShowData="激活" ;
 		}else if (!strcmp(txtype.c_str(),"COMMON_TX"))
 		{
 			if (const_it->state == 3)
 			{
-				strShowData.Format(_T("%s") ,_T("转账<平>")) ;
+				strShowData="转账<平>" ;
 			}else if (const_it->state == 2)
 			{
-				strShowData.Format(_T("%s") ,_T("转账<收>")) ;
+				strShowData="转账<收>" ;
 			}else if (const_it->state == 1)
 			{
-				strShowData.Format(_T("%s") ,_T("转账<发>")) ;
+				strShowData="转账<发>";
 			}else
 			{
-				strShowData.Format(_T("%s") ,_T("转账")) ;
+				strShowData="转账" ;
 			}
 		}else if (!strcmp(txtype.c_str(),"CONTRACT_TX"))
 		{
-			strShowData.Format(_T("%s") ,_T("合约")) ;
+			strShowData="合约" ;
 		}else if (!strcmp(txtype.c_str(),"REG_APP_TX"))
 		{
-			strShowData.Format(_T("%s") ,_T("注册")) ;
+			strShowData="注册" ;
 		}
-		m_listCtrl.SetItemText( i , ++nSubIdx, strShowData);   //交易类型
+		m_listCtrl.SetItemText( i , ++nSubIdx, strShowData.c_str());   //交易类型
 
-		strShowData.Format(_T("%s") ,const_it->addr.c_str());
-		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData );   //源地址
+		
+		m_listCtrl.SetItemText(i , ++nSubIdx , const_it->addr.c_str() );   //源地址
 
-		strShowData.Format(_T("%.8f") , const_it->money ) ;
-		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData );   //交易金额
+		strShowData =strprintf("%.8f" , const_it->money ) ;
+		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData.c_str() );   //交易金额
 
-		strShowData.Format(_T("%s") ,const_it->desaddr.c_str());
-		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData );   //目的地址
+		strShowData =strprintf("%s",const_it->desaddr.c_str());
+		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData.c_str() );   //目的地址
 
 		
 
-		strShowData.Format(_T("%s"), const_it->txhash); 
-		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData );  //交易hash
+		strShowData = strprintf("%s", const_it->txhash.c_str()); 
+		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData.c_str() );  //交易hash
 
 		i++;
 	}
@@ -333,8 +333,8 @@ void CTradDlg::OnNMDblclkListListtx(NMHDR *pNMHDR, LRESULT *pResult)
 		int nRow = pNMItemActivate->iItem;
 		CString strtxhash =m_listCtrl.GetItemText(nRow, 5);
 		uistruct::REVTRANSACTION_t  txdetail;
-		CString strCond;
-		strCond.Format(_T(" hash='%s' "), strtxhash);
+		string strCond;
+		strCond = strprintf(" hash='%s' ", strtxhash);
 		int nItem =  theApp.m_SqliteDeal.GetTransactionItem( strCond ,&txdetail ) ;
 		if (txdetail.txhash != _T(""))
 		{
@@ -366,52 +366,52 @@ void CTradDlg::InsertItemData()
 	}
 	int count = m_listCtrl.GetItemCount();
 
-	CString strShowData;
+	string strShowData;
 	int nSubIdx = 0;
-	strShowData.Format(_T("%d"), count+1);
-	m_listCtrl.InsertItem(count,strShowData);       //序号
+	strShowData =strprintf("%d", count+1);
+	m_listCtrl.InsertItem(count,strShowData.c_str());       //序号
 	
 	string txtype = txdetail.txtype;
 	if (!strcmp(txtype.c_str(),"REWARD_TX"))
 	{
-		strShowData.Format(_T("%s") ,_T("挖矿")) ;
+		strShowData =strprintf("%s" ,"挖矿") ;
 	}else if (!strcmp(txtype.c_str(),"REG_ACCT_TX"))
 	{
-		strShowData.Format(_T("%s") ,_T("激活")) ;
+		strShowData =strprintf("%s" ,"激活") ;
 	}else if (!strcmp(txtype.c_str(),"COMMON_TX"))
 	{
 		if (txdetail.state == 3)
 		{
-			strShowData.Format(_T("%s") ,_T("转账<平>")) ;
+			strShowData="转账<平>" ;
 		}else if (txdetail.state == 2)
 		{
-			strShowData.Format(_T("%s") ,_T("转账<收>")) ;
+			strShowData="转账<收>" ;
 		}else if (txdetail.state == 1)
 		{
-			strShowData.Format(_T("%s") ,_T("转账<发>")) ;
+			strShowData="转账<发>" ;
 		}else{
-			strShowData.Format(_T("%s") ,_T("转账")) ;
+			strShowData="转账" ;
 		}
 	}else if (!strcmp(txtype.c_str(),"CONTRACT_TX"))
 	{
-		strShowData.Format(_T("%s") ,_T("合约")) ;
+		strShowData="合约" ;
 	}else if (!strcmp(txtype.c_str(),"REG_APP_TX"))
 	{
-		strShowData.Format(_T("%s") ,_T("注册")) ;
+		strShowData="注册" ;
 	}
-	m_listCtrl.SetItemText( count , ++nSubIdx, strShowData); //交易类型
+	m_listCtrl.SetItemText( count , ++nSubIdx, strShowData.c_str()); //交易类型
 
-	strShowData.Format(_T("%s") ,txdetail.addr.c_str()) ;
-	m_listCtrl.SetItemText(count , ++nSubIdx , strShowData );//源地址
+	
+	m_listCtrl.SetItemText(count , ++nSubIdx , txdetail.addr.c_str() );//源地址
 
-	strShowData.Format(_T("%.8f") , (txdetail.money*100000000) ) ;
-	m_listCtrl.SetItemText(count , ++nSubIdx , strShowData );//金额
+	strShowData = strprintf("%.8f" , (txdetail.money*100000000) ) ;
+	m_listCtrl.SetItemText(count , ++nSubIdx , strShowData.c_str() );//金额
 
-	strShowData.Format(_T("%s") ,txdetail.desaddr.c_str());
-	m_listCtrl.SetItemText(count , ++nSubIdx , strShowData );//目的地址
+	
+	m_listCtrl.SetItemText(count , ++nSubIdx , txdetail.desaddr.c_str() );//目的地址
 
-	strShowData.Format(_T("%s"), txdetail.txhash);
-	m_listCtrl.SetItemText( count , ++nSubIdx, strShowData); //交易hash
+	strShowData = strprintf("%s", txdetail.txhash.c_str());
+	m_listCtrl.SetItemText( count , ++nSubIdx, strShowData.c_str()); //交易hash
 
     m_listCtrl.EnsureVisible(count, FALSE);
 }
@@ -773,7 +773,7 @@ void CTradDlg::OnShowListCtrl(uistruct::TRANSRECORDLIST pListInfo,int flag){
 	}
 
 	int nSubIdx = 0 , i = 0 ;
-	CString strShowData = _T("");
+	string strShowData = "";
 	std::vector<uistruct::REVTRANSACTION_t>::const_iterator const_it;
 	for ( const_it = pListInfo.begin() ; const_it != pListInfo.end() ; const_it++ ) {
 		if (flag == 1 && !isMine(const_it->desaddr.c_str()))
@@ -785,64 +785,63 @@ void CTradDlg::OnShowListCtrl(uistruct::TRANSRECORDLIST pListInfo,int flag){
 			continue;
 		}
 		nSubIdx = 0;
-		strShowData.Format(_T("%d"), i+1);
-		m_listCtrl.InsertItem(i, strShowData);					//序号
+		strShowData = strprintf("%d", i+1);
+		m_listCtrl.InsertItem(i, strShowData.c_str());					//序号
 
 		string txtype = const_it->txtype;
 		if (!strcmp(txtype.c_str(),"REWARD_TX"))
 		{
-			strShowData.Format(_T("%s") ,_T("挖矿")) ;
+			strShowData ="挖矿" ;
 		}else if (!strcmp(txtype.c_str(),"REG_ACCT_TX"))
 		{
-			strShowData.Format(_T("%s") ,_T("激活")) ;
+			strShowData="激活" ;
 		}else if (!strcmp(txtype.c_str(),"COMMON_TX"))
 		{
 			if (const_it->state == 3)
 			{
-				strShowData.Format(_T("%s") ,_T("转账<平>")) ;
+				strShowData="转账<平>";
 			}else if (const_it->state == 2)
 			{
-				strShowData.Format(_T("%s") ,_T("转账<收>")) ;
+				strShowData="转账<收>";
 			}else if (const_it->state == 1)
 			{
-				strShowData.Format(_T("%s") ,_T("转账<发>")) ;
+				strShowData="转账<发>" ;
 			}else
 			{
-				strShowData.Format(_T("%s") ,_T("转账")) ;
+				strShowData="转账" ;
 			}
 		}else if (!strcmp(txtype.c_str(),"CONTRACT_TX"))
 		{
-			strShowData.Format(_T("%s") ,_T("合约")) ;
+			strShowData="合约";
 		}else if (!strcmp(txtype.c_str(),"REG_APP_TX"))
 		{
-			strShowData.Format(_T("%s") ,_T("注册")) ;
+			strShowData="注册" ;
 		}
-		m_listCtrl.SetItemText( i , ++nSubIdx, strShowData);   //交易类型
+		m_listCtrl.SetItemText( i , ++nSubIdx, strShowData.c_str());   //交易类型
 
-		strShowData.Format(_T("%s") ,const_it->addr.c_str());
-		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData );   //源地址
+		
+		m_listCtrl.SetItemText(i , ++nSubIdx , const_it->addr.c_str() );   //源地址
 
-		strShowData.Format(_T("%.8f") , const_it->money ) ;
-		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData );   //交易金额
+		strShowData= strprintf("%.8f" , const_it->money ) ;
+		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData.c_str() );   //交易金额
 
-		strShowData.Format(_T("%s") ,const_it->desaddr.c_str());
-		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData );   //目的地址
-
+		m_listCtrl.SetItemText(i , ++nSubIdx , const_it->desaddr.c_str() );   //目的地址
 
 
-		strShowData.Format(_T("%s"), const_it->txhash); 
-		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData );  //交易hash
+
+		strShowData = strprintf("%s", const_it->txhash.c_str()); 
+		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData.c_str() );  //交易hash
 
 		i++;
 	}
 }
 bool  CTradDlg::isMine(CString addr)
 {
-	CString strCond;
-	strCond.Format(_T(" address = '%s' "), addr);
+	string strCond;
+	strCond = strprintf(" address = '%s' ", addr);
 	uistruct::LISTADDR_t addrsql;
 	int item = theApp.m_SqliteDeal.GetWalletAddressItem(strCond, &addrsql) ;
-	if (strlen(addrsql.address) == 0 )
+	if (addrsql.address == "" )
 	{
 		return false;
 	}
@@ -852,7 +851,7 @@ void CTradDlg::OnCbnSelchangeCombo1()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	int operate;
-	CString condtion = GetConditonStr(operate);
+	string condtion = GetConditonStr(operate);
 
 	uistruct::TRANSRECORDLIST pListInfo;
 	theApp.m_SqliteDeal.GetTransactionList(condtion, &pListInfo); 
@@ -863,17 +862,17 @@ void CTradDlg::OnCbnSelchangeComboTime()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	int operate = 0;
-	CString condtion = GetConditonStr(operate);
+	string condtion = GetConditonStr(operate);
 	uistruct::TRANSRECORDLIST pListInfo;
 	theApp.m_SqliteDeal.GetTransactionList(condtion, &pListInfo); 
 	OnShowListCtrl(pListInfo,operate);
 }
-CString CTradDlg::GetConditonTime(){
+string CTradDlg::GetConditonTime(){
 	SYSTEMTIME curTime ;
 	memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
 	GetLocalTime( &curTime ) ;
-	CString strSendTime;
-	strSendTime.Format("%04d-%02d-%02d %02d:%02d:%02d",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+	string strSendTime;
+	strSendTime = strprintf("%04d-%02d-%02d %02d:%02d:%02d",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
 	INT64 maxcurtime = UiFun::SystemTimeToTimet(curTime);
 
 	CString text;
@@ -885,6 +884,8 @@ CString CTradDlg::GetConditonTime(){
 	m_time.GetLBText(sel,text);
 	uistruct::TRANSRECORDLIST pListInfo;
 
+	string conditon;
+
 	if (strcmp(text,_T("全部")) == 0)
 	{
 		return _T("");
@@ -895,9 +896,9 @@ CString CTradDlg::GetConditonTime(){
 		curTime.wSecond = 0;
 		curTime.wMilliseconds = 0;
 		INT64 mincurtime = UiFun::SystemTimeToTimet(curTime);
-		CString conditon;
-		conditon.Format(_T(" confirmed_time>=%d and confirmed_time<="),mincurtime);
-		conditon.AppendFormat(_T("%d"),maxcurtime);
+		
+		conditon = strprintf(" confirmed_time>=%d and confirmed_time<=",mincurtime);
+		conditon += strprintf("%d",maxcurtime);
 		return conditon;
 		//theApp.m_SqliteDeal.GetTransactionList(conditon, &pListInfo); 
 		//OnShowListCtrl(pListInfo);
@@ -919,9 +920,8 @@ CString CTradDlg::GetConditonTime(){
 		}
 	//	SYSTEMTIME tttt = UiFun::Time_tToSystemTime(mincurtime);
 
-		CString conditon;
-		conditon.Format(_T(" confirmed_time>=%d and confirmed_time<="),mincurtime);
-		conditon.AppendFormat(_T("%d"),maxcurtime);
+		conditon =strprintf(" confirmed_time>=%d and confirmed_time<=",mincurtime);
+		conditon +=strprintf("%d",maxcurtime);
 		return conditon;
 		//theApp.m_SqliteDeal.GetTransactionList(conditon, &pListInfo); 
 		//OnShowListCtrl(pListInfo);
@@ -933,9 +933,9 @@ CString CTradDlg::GetConditonTime(){
 		curTime.wSecond = 0;
 		curTime.wMilliseconds = 0;
 		INT64 mincurtime = UiFun::SystemTimeToTimet(curTime);
-		CString conditon;
-		conditon.Format(_T(" confirmed_time>=%d and confirmed_time<="),mincurtime);
-		conditon.AppendFormat(_T("%d"),maxcurtime);
+		
+		conditon = strprintf(" confirmed_time>=%d and confirmed_time<=",mincurtime);
+		conditon +=strprintf("%d",maxcurtime);
 		return conditon;
 	}else if (strcmp(text,_T("上月")) == 0)
 	{
@@ -956,9 +956,9 @@ CString CTradDlg::GetConditonTime(){
 			curTime.wMonth -= 1;
 		}
 		mincurtime = UiFun::SystemTimeToTimet(curTime);
-		CString conditon;
-		conditon.Format(_T(" confirmed_time>=%d and confirmed_time<="),mincurtime);
-		conditon.AppendFormat(_T("%d"),maxcurtime);
+		
+		conditon= strprintf(" confirmed_time>=%d and confirmed_time<=",mincurtime);
+		conditon +=strprintf("%d",maxcurtime);
 		return conditon;
 	}else if (strcmp(text,_T("今年")) == 0)
 	{
@@ -969,9 +969,9 @@ CString CTradDlg::GetConditonTime(){
 		curTime.wSecond = 0;
 		curTime.wMilliseconds = 0;
 		INT64 mincurtime = UiFun::SystemTimeToTimet(curTime);
-		CString conditon;
-		conditon.Format(_T(" confirmed_time>=%d and confirmed_time<="),mincurtime);
-		conditon.AppendFormat(_T("%d"),maxcurtime);
+		
+		conditon =strprintf(" confirmed_time>=%d and confirmed_time<=",mincurtime);
+		conditon+=strprintf("%d",maxcurtime);
 		return conditon;
 	}else if (strcmp(text,_T("昨天")) == 0)
 	{
@@ -981,14 +981,14 @@ CString CTradDlg::GetConditonTime(){
 		curTime.wMilliseconds = 0;
 		INT64 maxcurtime = UiFun::SystemTimeToTimet(curTime);
 		INT64 mincurtime = maxcurtime - 24*60*60;
-		CString conditon;
-		conditon.Format(_T(" confirmed_time>=%d and confirmed_time<="),mincurtime);
-		conditon.AppendFormat(_T("%d"),maxcurtime);
+	
+		conditon=strprintf(" confirmed_time>=%d and confirmed_time<=",mincurtime);
+		conditon +=strprintf("%d",maxcurtime);
 		return conditon;
 	}
 	return _T("");
 }
-CString CTradDlg::GetConditonTxType(int &operate){
+string CTradDlg::GetConditonTxType(int &operate){
 	CString text;
 	int sel = m_condition.GetCurSel();
 	if (sel < 0)
@@ -998,60 +998,59 @@ CString CTradDlg::GetConditonTxType(int &operate){
 	m_condition.GetLBText(sel,text);
 	uistruct::TRANSRECORDLIST pListInfo;
 
+	string conditon;
+
 	if (strcmp(text,_T("全部")) == 0)
 	{
 		return _T("");
 	}else if (strcmp(text,_T("接收")) == 0)
 	{
 		operate = 1;
-		CString conditon;
-		conditon.Format(_T(" tx_type='COMMON_TX'"));
+		
+		conditon=" tx_type='COMMON_TX'";
 		return conditon;
 		//theApp.m_SqliteDeal.GetTransactionList(_T(" tx_type='COMMON_TX' order by confirmed_time"), &pListInfo); 
 		//OnShowListCtrl(pListInfo,1);
 	}else if (strcmp(text,_T("发送")) == 0)
 	{
 		operate = 2;
-		CString conditon;
-		conditon.Format(_T(" tx_type='COMMON_TX'"));
+		conditon=" tx_type='COMMON_TX'";
 		return conditon;
 		//theApp.m_SqliteDeal.GetTransactionList(_T(" tx_type='COMMON_TX' order by confirmed_time"), &pListInfo); 
 		//OnShowListCtrl(pListInfo,2);
 	}else if (strcmp(text,_T("挖矿所得")) == 0)
 	{
-		CString conditon;
-		conditon.Format(_T(" tx_type='REWARD_TX'"));
+		conditon=" tx_type='REWARD_TX'";
 		return conditon;
 		//theApp.m_SqliteDeal.GetTransactionList(_T(" tx_type='REWARD_TX' order by confirmed_time"), &pListInfo); 
 		//OnShowListCtrl(pListInfo,2);
 	}else if (strcmp(text,_T("合约")) == 0)
 	{
-		CString conditon;
-		conditon.Format(_T(" tx_type='CONTRACT_TX'"));
+		conditon=" tx_type='CONTRACT_TX'";
 		return conditon;
 	}else if (strcmp(text,_T("激活")) == 0)
 	{
-		CString conditon;
-		conditon.Format(_T(" tx_type='REG_APP_TX'"));
+		conditon=" tx_type='REG_APP_TX'";
 		return conditon;
 	}
-	return _T("");
+	return "";
 }
 
-CString CTradDlg::Getaddr(){
+string CTradDlg::Getaddr(){
 
 	CString ret = _T("");
 	GetDlgItem(IDC_EDIT_ADDR)->GetWindowText(ret);
 	if (strcmp(ret,"请输入地址进行搜索") == 0)
 	{
-		 ret = _T("");
+		 ret = "";
 	}
-	return ret;
+	string stret =strprintf("%s",ret);
+	return stret;
 }
 void CTradDlg::ShowAddrConditon()
 {
 	int operate;
-	CString condtion = GetConditonStr(operate);
+	string condtion = GetConditonStr(operate);
 
 	uistruct::TRANSRECORDLIST pListInfo;
 	theApp.m_SqliteDeal.GetTransactionList(condtion, &pListInfo); 
@@ -1108,23 +1107,23 @@ BOOL CTradDlg::PreTranslateMessage(MSG* pMsg)
 	}
 	return CDialogBar::PreTranslateMessage(pMsg);
 }
-CString CTradDlg::GetConditonStr(int &operate)
+string CTradDlg::GetConditonStr(int &operate)
 {
-	CString condtion =_T("");
-	CString temp =_T("");
+	string condtion ="";
+	string temp ="";
 
 	temp = GetConditonTxType(operate);
-	if (temp !=_T(""))
+	if (temp !="")
 	{
 		condtion = GetConditonTxType(operate);
 	}
 
-	if (condtion !=_T(""))
+	if (condtion !="")
 	{
 		temp = GetConditonTime();
 		if (temp !=_T(""))
 		{
-			condtion.AppendFormat(_T( " and %s"),temp);
+			condtion+=strprintf( " and %s",temp.c_str());
 		}
 		
 
@@ -1132,7 +1131,7 @@ CString CTradDlg::GetConditonStr(int &operate)
 		temp = GetConditonTime();
 		if (temp != _T(""))
 		{
-			condtion.AppendFormat(_T( " %s"),temp);
+			condtion += strprintf( " %s",temp.c_str());
 		}
 	}
 
@@ -1143,37 +1142,37 @@ CString CTradDlg::GetConditonStr(int &operate)
 		{
 			if (operate == 1)   ///  接收钱的地址
 			{
-				condtion.AppendFormat(_T( " and des_addr = '%s'"),temp);
+				condtion+=strprintf( " and des_addr = '%s'",temp.c_str());
 			}else if (operate == 2)
 			{
-				condtion.AppendFormat(_T( " and src_addr = '%s'"),temp);
+				condtion+=strprintf( " and src_addr = '%s'",temp.c_str());
 			}else{
-				condtion.AppendFormat(_T( " and (src_addr = '%s' or des_addr = '%s')"),temp,temp);
+				condtion+=strprintf( " and (src_addr = '%s' or des_addr = '%s')",temp.c_str(),temp.c_str());
 			}
 			
 		}
 
 	}else{
 		temp = Getaddr();
-		if (temp != _T(""))
+		if (temp != "")
 		{
 			if (operate == 1)
 			{
-				condtion.AppendFormat(_T( "des_addr = '%s'"),temp);
+				condtion+=strprintf( "des_addr = '%s'",temp.c_str());
 			}else if (operate == 2)
 			{
-				condtion.AppendFormat(_T( "src_addr = '%s'"),temp);
+				condtion+=strprintf( "src_addr = '%s'",temp.c_str());
 			}else{
-				condtion.AppendFormat(_T( " src_addr = '%s' or des_addr = '%s'"),temp,temp);
+				condtion+=strprintf( " src_addr = '%s' or des_addr = '%s'",temp.c_str(),temp.c_str());
 			}
 		}
 
 	}
-	if (condtion == _T(""))
+	if (condtion =="")
 	{
-		condtion = _T("1=1");
+		condtion ="1=1";
 	}
-	condtion.AppendFormat(_T( " order by confirmed_time"));
+	condtion+=" order by confirmed_time";
 	return condtion;
 }
 
@@ -1220,18 +1219,18 @@ BOOL CTradDlg::FindDesTx(uistruct::TRANSRECORDLIST pListInfo,int flag,uistruct::
 		{
 			continue;
 		}
-		if(strcmp(const_it->txhash,txdetail.txhash) == 0)
+		if(strcmp(const_it->txhash.c_str(),txdetail.txhash.c_str()) == 0)
 			return TRUE;
 	}
 	return FALSE;
 }
-CString CTradDlg::GetConditonTime(INT64 &maxtime,INT64 &mintime)
+string CTradDlg::GetConditonTime(INT64 &maxtime,INT64 &mintime)
 {
 	SYSTEMTIME curTime ;
 	memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
 	GetLocalTime( &curTime ) ;
-	CString strSendTime;
-	strSendTime.Format("%04d-%02d-%02d %02d:%02d:%02d",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+	string strSendTime;
+	strSendTime = strprintf("%04d-%02d-%02d %02d:%02d:%02d",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
 	INT64 maxcurtime = UiFun::SystemTimeToTimet(curTime);
 
 	CString text;
@@ -1243,6 +1242,7 @@ CString CTradDlg::GetConditonTime(INT64 &maxtime,INT64 &mintime)
 	m_time.GetLBText(sel,text);
 	uistruct::TRANSRECORDLIST pListInfo;
 
+	string conditon;
 	if (strcmp(text,_T("全部")) == 0)
 	{
 		return _T("");
@@ -1253,9 +1253,9 @@ CString CTradDlg::GetConditonTime(INT64 &maxtime,INT64 &mintime)
 		curTime.wSecond = 0;
 		curTime.wMilliseconds = 0;
 		INT64 mincurtime = UiFun::SystemTimeToTimet(curTime);
-		CString conditon;
-		conditon.Format(_T(" confirmed_time>=%d and confirmed_time<="),mincurtime);
-		conditon.AppendFormat(_T("%d"),maxcurtime);
+
+		conditon =strprintf(" confirmed_time>=%d and confirmed_time<=",mincurtime);
+		conditon +=strprintf("%d",maxcurtime);
 		maxtime = maxcurtime;
 		mintime=mincurtime;
 		return conditon;
@@ -1279,9 +1279,8 @@ CString CTradDlg::GetConditonTime(INT64 &maxtime,INT64 &mintime)
 		}
 		//	SYSTEMTIME tttt = UiFun::Time_tToSystemTime(mincurtime);
 
-		CString conditon;
-		conditon.Format(_T(" confirmed_time>=%d and confirmed_time<="),mincurtime);
-		conditon.AppendFormat(_T("%d"),maxcurtime);
+		conditon = strprintf(" confirmed_time>=%d and confirmed_time<=",mincurtime);
+		conditon +=strprintf("%d",maxcurtime);
 		maxtime = maxcurtime;
 		mintime=mincurtime;
 		return conditon;
@@ -1295,9 +1294,9 @@ CString CTradDlg::GetConditonTime(INT64 &maxtime,INT64 &mintime)
 		curTime.wSecond = 0;
 		curTime.wMilliseconds = 0;
 		INT64 mincurtime = UiFun::SystemTimeToTimet(curTime);
-		CString conditon;
-		conditon.Format(_T(" confirmed_time>=%d and confirmed_time<="),mincurtime);
-		conditon.AppendFormat(_T("%d"),maxcurtime);
+	
+		conditon = strprintf(" confirmed_time>=%d and confirmed_time<=",mincurtime);
+		conditon+=strprintf("%d",maxcurtime);
 		maxtime = maxcurtime;
 		mintime=mincurtime;
 		return conditon;
@@ -1320,9 +1319,9 @@ CString CTradDlg::GetConditonTime(INT64 &maxtime,INT64 &mintime)
 			curTime.wMonth -= 1;
 		}
 		mincurtime = UiFun::SystemTimeToTimet(curTime);
-		CString conditon;
-		conditon.Format(_T(" confirmed_time>=%d and confirmed_time<="),mincurtime);
-		conditon.AppendFormat(_T("%d"),maxcurtime);
+	
+		conditon=strprintf(" confirmed_time>=%d and confirmed_time<=",mincurtime);
+		conditon+strprintf("%d",maxcurtime);
 		maxtime = maxcurtime;
 		mintime=mincurtime;
 		return conditon;
@@ -1335,9 +1334,9 @@ CString CTradDlg::GetConditonTime(INT64 &maxtime,INT64 &mintime)
 		curTime.wSecond = 0;
 		curTime.wMilliseconds = 0;
 		INT64 mincurtime = UiFun::SystemTimeToTimet(curTime);
-		CString conditon;
-		conditon.Format(_T(" confirmed_time>=%d and confirmed_time<="),mincurtime);
-		conditon.AppendFormat(_T("%d"),maxcurtime);
+	
+		conditon =strprintf(" confirmed_time>=%d and confirmed_time<=",mincurtime);
+		conditon+=strprintf("%d",maxcurtime);
 		maxtime = maxcurtime;
 		mintime=mincurtime;
 		return conditon;
@@ -1349,9 +1348,9 @@ CString CTradDlg::GetConditonTime(INT64 &maxtime,INT64 &mintime)
 		curTime.wMilliseconds = 0;
 		INT64 maxcurtime = UiFun::SystemTimeToTimet(curTime);
 		INT64 mincurtime = maxcurtime - 24*60*60;
-		CString conditon;
-		conditon.Format(_T(" confirmed_time>=%d and confirmed_time<="),mincurtime);
-		conditon.AppendFormat(_T("%d"),maxcurtime);
+	
+		conditon=strprintf(" confirmed_time>=%d and confirmed_time<=",mincurtime);
+		conditon+=strprintf("%d",maxcurtime);
 		maxtime = maxcurtime;
 		mintime=mincurtime;
 		return conditon;
@@ -1362,14 +1361,14 @@ BOOL CTradDlg::IsInsertTx(uistruct::REVTRANSACTION_t txdetail)
 {
 	int operate = 0;
 	INT64 maxtime = 0,mintime = 0;
-	CString txtype = GetConditonTxType(operate);
-	CString time = GetConditonTime(maxtime,mintime);
-	CString addr = Getaddr();
-	if (txtype ==_T("") && time == _T("") && addr)
+	string txtype = GetConditonTxType(operate);
+	string time = GetConditonTime(maxtime,mintime);
+	string addr = Getaddr();
+	if (txtype =="" && time == "" && addr == "")
 	{
 		return TRUE;
 	}
-	if (time != _T(""))
+	if (time != "")
 	{
 		if (!(txdetail.confirmedtime >= mintime && txdetail.confirmedtime <=maxtime))
 		{
@@ -1377,9 +1376,9 @@ BOOL CTradDlg::IsInsertTx(uistruct::REVTRANSACTION_t txdetail)
 		}
 	}
 
-	if (txtype != _T(""))
+	if (txtype != "")
 	{
-		if (txtype.Find(txdetail.txtype.c_str())<0)
+		if (txtype.find(txdetail.txtype.c_str())<0)
 		{
 			return FALSE;
 		}
@@ -1399,22 +1398,22 @@ BOOL CTradDlg::IsInsertTx(uistruct::REVTRANSACTION_t txdetail)
 		}
 	}
 
-	if (addr != _T(""))
+	if (addr != "")
 	{
 		if (operate == 1)
 		{
-			if ( strcmp(txdetail.desaddr.c_str(),addr) != 0)
+			if ( strcmp(txdetail.desaddr.c_str(),addr.c_str()) != 0)
 			{
 				return FALSE;
 			}
 		}else if (operate == 2)
 		{
-			if ( strcmp(txdetail.addr.c_str(),addr) != 0)
+			if ( strcmp(txdetail.addr.c_str(),addr.c_str()) != 0)
 			{
 				return FALSE;
 			}
 		}else{
-			if ( strcmp(txdetail.addr.c_str(),addr) != 0 &&  strcmp(txdetail.desaddr.c_str(),addr) != 0)
+			if ( strcmp(txdetail.addr.c_str(),addr.c_str()) != 0 &&  strcmp(txdetail.desaddr.c_str(),addr.c_str()) != 0)
 			{
 				return FALSE;
 			}
@@ -1434,7 +1433,7 @@ void CTradDlg::OnBnClickedButtonRefresh()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	int operate = 0;
-	CString condtion = GetConditonStr(operate);
+	string condtion = GetConditonStr(operate);
 
 	uistruct::TRANSRECORDLIST pListInfo;
 	theApp.m_SqliteDeal.GetTransactionList(condtion, &pListInfo); 

@@ -459,10 +459,10 @@ void CP2PDlg::OnCbnSelchangeComboAddres()
 	//m_addrbook.GetWindowText(text) ;
 	if(text!=_T(""))
 	{
-		CString strCommand,strShowData =_T("");
+		string strCommand,strShowData =_T("");
 
-		CString strCond;
-		strCommand.Format(_T("%s %s %s"),_T("getappaccinfo") , theApp.m_betScritptid ,text);
+		string strCond;
+		strCommand = strprintf("%s %s %s","getappaccinfo" , theApp.m_betScritptid ,text);
 		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 
 		if (strShowData == _T(""))
@@ -471,26 +471,26 @@ void CP2PDlg::OnCbnSelchangeComboAddres()
 		}
 		Json::Reader reader;  
 		Json::Value root; 
-		if (!reader.parse(strShowData.GetString(), root)) 
+		if (!reader.parse(strShowData, root)) 
 			return  ;
 
-		int pos = strShowData.Find("FreeValues");
+		int pos = strShowData.find("FreeValues");
 		INT64 nMoney = 0;
 		if (pos >0)
 		{
 			nMoney = root["FreeValues"].asInt64() ;
 		}
 		double money = (nMoney*1.0/COIN);
-		strShowData.Format(_T("%.4f"),money);
+		strShowData = strprintf("%.4f",money);
 
-		((CStatic*)GetDlgItem(IDC_STATIC_BALANCE))->SetWindowText(strShowData);
+		((CStatic*)GetDlgItem(IDC_STATIC_BALANCE))->SetWindowText(strShowData.c_str());
 
 		uistruct::LISTADDR_t pAddr;
-		CString condon;
-		condon.Format(_T("reg_id = '%s'"),text);
+		string condon;
+		condon = strprintf("reg_id = '%s'",text);
 		theApp.m_SqliteDeal.GetWalletAddressItem(condon,&pAddr);
-		condon.Format(_T("%.3f"),pAddr.fMoney);
-		((CStatic*)GetDlgItem(IDC_STATIC_MONEY))->SetWindowText(condon);
+		condon = strprintf("%.3f",pAddr.fMoney);
+		((CStatic*)GetDlgItem(IDC_STATIC_MONEY))->SetWindowText(condon.c_str());
 
 		Invalidate();
 	}
@@ -514,16 +514,16 @@ void CP2PDlg::InsertComboxIitem()
 	string strTemp = postmsg.GetData();
 	addr.JsonToStruct(strTemp.c_str());
 
-	CString addressd;
-	addressd.Format(_T("%s"),addr.RegID);
+	string addressd;
+	addressd =strprintf("%s",addr.RegID);
 
 	int item = m_addrbook.GetCount();
-	m_addrbook.InsertString(item,addressd);
+	m_addrbook.InsertString(item,addressd.c_str());
 }
 
 BOOL CP2PDlg::AddListaddrDataBox(){
 
-	map<CString,uistruct::LISTADDR_t> m_mapAddrInfo;
+	map<string,uistruct::LISTADDR_t> m_mapAddrInfo;
 	theApp.m_SqliteDeal.GetWalletAddressList(_T(" sign=1 "), &m_mapAddrInfo);
 
 	if ( 0 == m_mapAddrInfo.size() ) return FALSE ;
@@ -532,10 +532,10 @@ BOOL CP2PDlg::AddListaddrDataBox(){
 	((CComboBox*)GetDlgItem(IDC_COMBO_ADDRES))->ResetContent();
 	//加载到ComBox控件
 	int nItem = 0;
-	std::map<CString,uistruct::LISTADDR_t>::const_iterator const_it;
+	std::map<string,uistruct::LISTADDR_t>::const_iterator const_it;
 	for ( const_it = m_mapAddrInfo.begin() ; const_it != m_mapAddrInfo.end() ; const_it++ ) {
 
-		((CComboBox*)GetDlgItem(IDC_COMBO_ADDRES))->InsertString(nItem , const_it->second.RegID );
+		((CComboBox*)GetDlgItem(IDC_COMBO_ADDRES))->InsertString(nItem , const_it->second.RegID.c_str() );
 		nItem++;
 	}
 	((CComboBox*)GetDlgItem(IDC_COMBO_ADDRES))->SetCurSel(0);
@@ -578,8 +578,8 @@ void  CP2PDlg::QueryNotDrawBalance(CString addr)
 	{
 		return;
 	}
-	CString strCond;
-	strCond.Format(_T(" (state != 2) and (left_addr ='%s' or right_addr = '%s') "),addr,addr);
+	string strCond;
+	strCond = strprintf(" (state != 2) and (left_addr ='%s' or right_addr = '%s') ",addr,addr);
 
 	//double   nmoney =  theApp.m_SqliteDeal.GetTableItemSum(_T("t_p2p_quiz") , _T("amount") , strCond) ;
 	//CString srtShow =_T("");
@@ -608,10 +608,10 @@ void  CP2PDlg::QueryNotDrawBalance(CString addr)
 		money += const_it->amount; 
 	}
 
-	CString srtShow =_T("");
-	srtShow.Format(_T("%.3lf"),money);
+	string srtShow ="";
+	srtShow = strprintf("%.3lf",money);
 
-	((CStatic*)GetDlgItem(IDC_STATIC_NOT_DRAW))->SetWindowText(srtShow);
+	((CStatic*)GetDlgItem(IDC_STATIC_NOT_DRAW))->SetWindowText(srtShow.c_str());
 
 	Invalidate();
 
@@ -636,7 +636,7 @@ void CP2PDlg::OnBnClickedButtonWithd()
 
 	if (!CheckRegIDValid( theApp.m_betScritptid )) return ;
 
-	CString strShowData =_T("");
+	string strShowData ="";
 
 	
 	CString addr;
@@ -653,7 +653,6 @@ void CP2PDlg::OnBnClickedButtonWithd()
 		return;
 	}
 
-	CString strCommand , strMaddress , strMoney;
 
 	string strContractData = m_P2PBetHelp.GetAppAccountMoneyContract(addr.GetString(),1,1);
 
@@ -664,25 +663,24 @@ void CP2PDlg::OnBnClickedButtonWithd()
 	}
 
 	
-	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_betScritptid.GetBuffer(),addr.GetString(),strContractData,0,strTxFee,0);
+	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_betScritptid,addr.GetString(),strContractData,0,strTxFee,0);
 	CSoyPayHelp::getInstance()->SendContacrRpc(strData.c_str(),strShowData);
 
-	if (strShowData == _T(""))
+	if (strShowData == "")
 	{
 		return;
 	}
 	Json::Reader reader;  
 	Json::Value root;
-	if (!reader.parse(strShowData.GetString(), root)) 
+	if (!reader.parse(strShowData, root)) 
 		return  ;
 	BOOL bRes = FALSE ;
-	CString strTip;
-	int pos = strShowData.Find("hash");
+	string strTip;
+	int pos = strShowData.find("hash");
 
 	if ( pos >=0 ) {
 		//插入到交易记录数据库
-		CString strHash;
-		strHash.Format(_T("'%s'") , root["hash"].asCString() );
+		string strHash =  root["hash"].asString();
 		CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_REVTRANSACTION);
 		postmsg.SetData(strHash);
 		theApp.m_MsgQueue.push(postmsg);
@@ -691,11 +689,11 @@ void CP2PDlg::OnBnClickedButtonWithd()
 	if ( pos >=0 ) {
 		bRes = TRUE ;
 		//strTip.Format( _T("恭喜提现成功!\n%s") , root["hash"].asCString() ) ;
-		strTip.Format( _T("恭喜提现成功，请等待1-2分钟确认交易\n")) ;
+		strTip = "恭喜提现成功，请等待1-2分钟确认交易\n" ;
 	}else{
-		strTip.Format( _T("提现失败!") ) ;
+		strTip = "提现失败!" ;
 	}
-	::MessageBox( this->GetSafeHwnd() ,strTip , _T("提示") , MB_ICONINFORMATION ) ;
+	::MessageBox( this->GetSafeHwnd() ,strTip.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
 }
 
 
@@ -722,7 +720,7 @@ void CP2PDlg::OnBnClickedButtonRech()
 		return ;
 	}
 
-	CString strShowData =_T("") ;
+	string strShowData ="" ;
 	CString addr;
 	int sel = m_addrbook.GetCurSel();
 	if (sel < 0)
@@ -737,8 +735,8 @@ void CP2PDlg::OnBnClickedButtonRech()
 		return;
 	}
 
-	CString strCondition;
-	strCondition.Format(_T("reg_id = '%s'"),addr);
+	string strCondition;
+	strCondition = strprintf("reg_id = '%s'",addr);
 	uistruct::LISTADDR_t pAddr;
 	theApp.m_SqliteDeal.GetWalletAddressItem(strCondition,&pAddr);
 	double sub = pAddr.fMoney - atof(theApp.m_strAddress);
@@ -748,7 +746,6 @@ void CP2PDlg::OnBnClickedButtonRech()
 		return;
 	}
 
-	CString strCommand , strMaddress , strMoney;
 
 	string strContractData = m_P2PBetHelp.GetReChangContract();
 
@@ -758,25 +755,24 @@ void CP2PDlg::OnBnClickedButtonRech()
 		return ;
 	}
 
-	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_betScritptid.GetBuffer(),addr.GetString(),strContractData,0,strTxFee,REAL_MONEY(atof(theApp.m_strAddress) ));
-	CSoyPayHelp::getInstance()->SendContacrRpc(strData.c_str(),strShowData);
+	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_betScritptid,addr.GetString(),strContractData,0,strTxFee,REAL_MONEY(atof(theApp.m_strAddress) ));
+	CSoyPayHelp::getInstance()->SendContacrRpc(strData,strShowData);
 
-	if (strShowData == _T(""))
+	if (strShowData == "")
 	{
 		return;
 	}
 	Json::Reader reader;  
 	Json::Value root;
-	if (!reader.parse(strShowData.GetString(), root)) 
+	if (!reader.parse(strShowData, root)) 
 		return  ;
 	BOOL bRes = FALSE ;
-	CString strTip;
-	int pos = strShowData.Find("hash");
+	string strTip;
+	int pos = strShowData.find("hash");
 
 	if ( pos >=0 ) {
 		//插入到交易记录数据库
-		CString strHash;
-		strHash.Format(_T("'%s'") , root["hash"].asCString() );
+		string strHash = root["hash"].asString();
 		CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_REVTRANSACTION);
 		postmsg.SetData(strHash);
 		theApp.m_MsgQueue.push(postmsg);
@@ -785,11 +781,11 @@ void CP2PDlg::OnBnClickedButtonRech()
 	if ( pos >=0 ) {
 		bRes = TRUE ;
 		//strTip.Format( _T("恭喜充值成功!\n%s") , root["hash"].asCString() ) ;
-		strTip.Format( _T("恭喜充值成功，请等待1-2分钟确认交易\n")) ;
+		strTip = "恭喜充值成功，请等待1-2分钟确认交易\n" ;
 	}else{
-		strTip.Format( _T("充值失败!") ) ;
+		strTip = "充值失败!";
 	}
-	::MessageBox( this->GetSafeHwnd() ,strTip , _T("提示") , MB_ICONINFORMATION ) ;
+	::MessageBox( this->GetSafeHwnd() ,strTip.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
 }
 
 void CP2PDlg::SendBet(int rewardnum)
@@ -858,26 +854,26 @@ void CP2PDlg::SendBet(int rewardnum)
 
 	string temp(strTemp,strTemp+33);
 	int aa = temp.length() ;
-	CString strCommand;
-	strCommand.Format(_T("%s %s"),_T("gethash") , strTemp );
-	CStringA strShowData ;
+	string strCommand;
+	strCommand = strprintf("%s %s","gethash" , strTemp );
+	string strShowData ;
 
 	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-	int pos = strShowData.Find("hash");
+	int pos = strShowData.find("hash");
 	if ( pos < 0 ) return ;
 
 	Json::Reader reader;  
 	Json::Value root; 
-	if (!reader.parse(strShowData.GetString(), root)) 
+	if (!reader.parse(strShowData, root)) 
 		return  ;
 
-	CString strHash ;
-	strHash.Format(_T("%s") ,  root["hash"].asCString() ) ;
+	string  strHash = root["hash"].asString() ;
+	//strHash.Format(_T("%s") ,  root["hash"].asCString() ) ;
 
 	TRACE(_T("contect:%s\r\n"),strTemp);
-	TRACE(_T("sendhash:%s"),strHash);
+	TRACE(_T("sendhash:%s"),strHash.c_str());
 	string strContractData;
-	string strRamdHash = CSoyPayHelp::getInstance()->GetReverseHash(strHash.GetString());
+	string strRamdHash = CSoyPayHelp::getInstance()->GetReverseHash(strHash);
 
 	double money = atof(strTxMoney);
 	CString nTemp;
@@ -890,24 +886,23 @@ void CP2PDlg::SendBet(int rewardnum)
 		return ;
 	}
 	
-	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_betScritptid.GetBuffer(),addr.GetString(),strContractData,0,strTxFee,0);
-	strShowData = _T("");
+	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_betScritptid,addr.GetString(),strContractData,0,strTxFee,0);
+	strShowData = "";
 	CSoyPayHelp::getInstance()->SendContacrRpc(strData.c_str(),strShowData);
 
-	if (strShowData == _T(""))
+	if (strShowData == "")
 	{
 		return;
 	}
-	if (!reader.parse(strShowData.GetString(), root)) 
+	if (!reader.parse(strShowData, root)) 
 		return  ;
 	BOOL bRes = FALSE ;
 	CString strTip;
-	pos = strShowData.Find("hash");
+	pos = strShowData.find("hash");
 
 	if ( pos >=0 ) {
 		//插入到交易记录数据库
-		CString strHash ;
-		strHash.Format(_T("'%s'") , root["hash"].asCString() );
+		string strHash = root["hash"].asString();
 		CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_REVTRANSACTION);
 		postmsg.SetData(strHash);
 		theApp.m_MsgQueue.push(postmsg);
@@ -928,35 +923,33 @@ void CP2PDlg::SendBet(int rewardnum)
 		SYSTEMTIME curTime ;
 		memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
 		GetLocalTime( &curTime ) ;
-		CString strSendTime;
-		strSendTime.Format("%04d-%02d-%02d %02d:%02d:%02d",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+		string strSendTime;
+		strSendTime= strprintf("%04d-%02d-%02d %02d:%02d:%02d",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
 		p2pbetrecord.send_time = UiFun::SystemTimeToTimet(curTime);
 		p2pbetrecord.time_out  = OUT_HEIGHT ;
-		memcpy(p2pbetrecord.tx_hash ,root["hash"].asCString() , sizeof(p2pbetrecord.tx_hash));
-		p2pbetrecord.tx_hash[64] = '\0';
-		memcpy(p2pbetrecord.left_addr ,addr , sizeof(p2pbetrecord.left_addr));
+		p2pbetrecord.tx_hash = root["hash"].asString();
+		p2pbetrecord.left_addr = strprintf("%s",addr);
 		p2pbetrecord.amount = atof(strTxMoney) ;
 		memcpy(p2pbetrecord.content ,strTemp , sizeof(p2pbetrecord.content));
 
 		p2pbetrecord.actor  = 0 ;
 		p2pbetrecord.state  = 0 ;
 		//插入到数据库
-		CString strSourceData;
-		strSourceData.Format(_T("'%s','%s','%d','%s' , '%s' , '%s' , '%lf'") , \
-			strSendTime , _T("") , p2pbetrecord.time_out , \
-			p2pbetrecord.tx_hash ,  p2pbetrecord.left_addr , p2pbetrecord.right_addr ,p2pbetrecord.amount);
+		string strSourceData;
+		strSourceData = strprintf("'%s','%s','%d','%s' , '%s' , '%s' , '%lf'" , \
+			strSendTime.c_str() , _T("") , p2pbetrecord.time_out , \
+			p2pbetrecord.tx_hash.c_str() ,  p2pbetrecord.left_addr.c_str() , p2pbetrecord.right_addr.c_str() ,p2pbetrecord.amount);
 
-		strSourceData.AppendFormat(",'%s' ,'%d','%d','%d','%d','%s','%d'",p2pbetrecord.content ,p2pbetrecord.actor ,p2pbetrecord.confirmed ,p2pbetrecord.height ,p2pbetrecord.state ,\
-			p2pbetrecord.relate_hash ,p2pbetrecord.guess_num ) ;
+		strSourceData += strprintf(",'%s' ,'%d','%d','%d','%d','%s','%d'",p2pbetrecord.content ,p2pbetrecord.actor ,p2pbetrecord.confirmed ,p2pbetrecord.height ,p2pbetrecord.state ,\
+			p2pbetrecord.relate_hash.c_str() ,p2pbetrecord.guess_num ) ;
 
 		uistruct::DATABASEINFO_t   pDatabase;
-		pDatabase.strSource = strSourceData.GetString();
+		pDatabase.strSource = strSourceData;
 		pDatabase.strTabName =  _T("t_p2p_quiz");
 		CPostMsg postmsg(MSG_USER_INSERT_DATA,0);
 		string strTemp = pDatabase.ToJson();
-		CString strShow;
-		strShow.Format(_T("%s"),strTemp.c_str());
-		postmsg.SetData(strShow);
+
+		postmsg.SetData(strTemp);
 		theApp.m_MsgQueue.push(postmsg);
 	}
 	::MessageBox( this->GetSafeHwnd() ,strTip , _T("提示") , MB_ICONINFORMATION ) ;
@@ -1021,9 +1014,9 @@ void CP2PDlg::OnListPool()
 	theApp.m_SqliteDeal.GetP2PQuizPoolList(_T(" 1=1 "), &m_PoolList);
 	m_pagecount = (m_PoolList.size()%m_pagesize)==0?(m_PoolList.size()/m_pagesize):(m_PoolList.size()/m_pagesize)+1;
 	
-	CString temp;
-	temp.Format(_T("共:%d"),m_pagecount);
-	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(temp);
+	string temp;
+	temp =strprintf("共:%d",m_pagecount);
+	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(temp.c_str());
 	GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T(""));
 	Invalidate();
 	m_BonusListBox.DeleteAllIndex();
@@ -1034,8 +1027,8 @@ void CP2PDlg::OnListPool()
 	List_AppendData* pinf = m_BonusListBox.GetAppendDataInfo((int)wParam);
 	if ( NULL != pinf ) { 
 		CString hash = pinf->pstr;
-		CString conditon;
-		conditon.Format(_T("hash='%s'"),hash);
+		string conditon;
+		conditon = strprintf("hash='%s'",hash);
 		uistruct::LISTP2POOL_T pPoolList;
 		theApp.m_SqliteDeal.GetP2PQuizPoolItem(conditon, &pPoolList);
 		if (pPoolList.hash.length() != 0)
@@ -1122,26 +1115,25 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 		 return ;
 	 }
 
-	 CString strShowData =_T("");
-	 string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_betScritptid.GetBuffer(),addr.GetString(),strContractData,0,theApp.m_P2PBetCfg.AcceptBetnFee,0);
-	 CSoyPayHelp::getInstance()->SendContacrRpc(strData.c_str(),strShowData);
+	 string strShowData ="";
+	 string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_betScritptid,addr.GetString(),strContractData,0,theApp.m_P2PBetCfg.AcceptBetnFee,0);
+	 CSoyPayHelp::getInstance()->SendContacrRpc(strData,strShowData);
 
-	 if (strShowData == _T(""))
+	 if (strShowData == "")
 	 {
 		 return;
 	 }
 	 Json::Reader reader;  
 	 Json::Value root; 
-	 if (!reader.parse(strShowData.GetString(), root)) 
+	 if (!reader.parse(strShowData, root)) 
 		 return  ;
 	 BOOL bRes = FALSE ;
-	 CString strTip;
-	 int pos = strShowData.Find("hash");
+	 string strTip;
+	 int pos = strShowData.find("hash");
 
 	 if ( pos >=0 ) {
 		 //插入到交易记录数据库
-		 CString strHash ;
-		 strHash.Format(_T("'%s'") , root["hash"].asCString() );
+		 string strHash= root["hash"].asString() ;
 		CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_REVTRANSACTION);
 		postmsg.SetData(strHash);
 		theApp.m_MsgQueue.push(postmsg);
@@ -1149,9 +1141,9 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 	 if ( pos >=0 ) {
 		 bRes = TRUE ;
 		 //strTip.Format( _T("恭喜接赌成功!\n%s") , root["hash"].asCString() ) ;
-		 strTip.Format( _T("恭喜接单成功，请等待1-2分钟确认交易\n")) ;
+		 strTip="恭喜接单成功，请等待1-2分钟确认交易\n";
 	 }else{
-		 strTip.Format( _T("此单已经被接!") ) ;
+		 strTip="此单已经被接!" ;
 	 }
 
 	 //保存到数据库
@@ -1160,75 +1152,71 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 		 //插入到交易记录数据库
 
 		 //// 查找数据库中是否存在此记录
-		 CString conditon;
-		 conditon.Format(_T("tx_hash ='%s'") , hash );
+		 string conditon;
+		 conditon = strprintf("tx_hash ='%s'", hash );
 		 uistruct::P2P_QUIZ_RECORD_t pPoolItem;
 		 int nItem =  theApp.m_SqliteDeal.GetP2PQuizRecordItem(conditon ,&pPoolItem ) ;
-		 if (strlen(pPoolItem.tx_hash) == 0) ///此记录不存在,插入记录
+		 if (pPoolItem.tx_hash == "") ///此记录不存在,插入记录
 		 {
 			 uistruct::P2P_QUIZ_RECORD_t p2pbetrecord ;
 			 memset(&p2pbetrecord , 0 , sizeof(uistruct::P2P_QUIZ_RECORD_t));
 			 SYSTEMTIME curTime ;
 			 memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
 			 GetLocalTime( &curTime ) ;
-			 CString strSendTime;
-			 strSendTime.Format("%04d-%02d-%02d %02d:%02d:%02d",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+			 string strSendTime;
+			 strSendTime = strprintf("%04d-%02d-%02d %02d:%02d:%02d",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
 			 p2pbetrecord.send_time = UiFun::SystemTimeToTimet(curTime);
 
-			 memcpy(p2pbetrecord.tx_hash ,hash , sizeof(p2pbetrecord.tx_hash));
-			 p2pbetrecord.tx_hash[64] = '\0';
+			p2pbetrecord.tx_hash = strprintf("%s",hash );
 
-			 CString txhash = root["hash"].asCString();
-			 memcpy(p2pbetrecord.relate_hash ,root["hash"].asCString() , sizeof(p2pbetrecord.tx_hash));
-			 p2pbetrecord.relate_hash[64] = '\0';
+			 p2pbetrecord.relate_hash=root["hash"].asString();
+		
 
-			 memcpy(p2pbetrecord.right_addr ,addr , sizeof(p2pbetrecord.right_addr));
-			 memcpy(p2pbetrecord.left_addr ,sendaddr , sizeof(p2pbetrecord.left_addr));
+			 p2pbetrecord.right_addr = strprintf("%s",addr);
+			 p2pbetrecord.left_addr = strprintf("%s",sendaddr);
 			 p2pbetrecord.amount = atof(money);
 
 			 p2pbetrecord.state = 4;
 			 p2pbetrecord.actor  = 1 ;
 			 p2pbetrecord.guess_num = (int)guess ;
 			 //插入到数据库
-			 CString strSourceData ;
-			 strSourceData.Format(_T("'%s','%s','%d','%s' , '%s' , '%s' , '%lf'") , \
-				 strSendTime , _T("") , timeout , \
+			 string strSourceData ;
+			 strSourceData = strprintf("'%s','%s','%d','%s' , '%s' , '%s' , '%lf'" , \
+				 strSendTime.c_str() , _T("") , timeout , \
 				 p2pbetrecord.tx_hash ,  p2pbetrecord.left_addr , p2pbetrecord.right_addr ,p2pbetrecord.amount);
 
-			 strSourceData.AppendFormat(",'%s' ,'%d','%d','%d','%d','%s','%d'",p2pbetrecord.content ,p2pbetrecord.actor ,p2pbetrecord.confirmed ,p2pbetrecord.height ,p2pbetrecord.state ,\
+			 strSourceData+=strprintf(",'%s' ,'%d','%d','%d','%d','%s','%d'",p2pbetrecord.content ,p2pbetrecord.actor ,p2pbetrecord.confirmed ,p2pbetrecord.height ,p2pbetrecord.state ,\
 				 p2pbetrecord.relate_hash ,p2pbetrecord.guess_num ) ;
 
 			 uistruct::DATABASEINFO_t   pDatabase;
-			 pDatabase.strSource = strSourceData.GetString();
+			 pDatabase.strSource = strSourceData;
 			 pDatabase.strTabName =  _T("t_p2p_quiz");
 			 CPostMsg postmsg(MSG_USER_INSERT_DATA,0);
 			 string strTemp = pDatabase.ToJson();
-			 CString datastr;
-			 datastr.Format(_T("%s"),strTemp.c_str());
-			 postmsg.SetData(datastr);
+
+			 postmsg.SetData(strTemp);
 			 theApp.m_MsgQueue.push(postmsg);
 
 		 }else{        ///更新记录
-			 CString txhash = root["hash"].asCString();
-			 CString strSourceData  , strW ;
-			 strSourceData.Format(_T("actor = %d , relate_hash = '%s' ,right_addr ='%s',") , 2 , txhash ,addr ) ;
-			 strSourceData.AppendFormat(" guess_num = %d,state = %d", (int)guess,4);
-			 strW.Format(_T("tx_hash = '%s'") , hash ) ;
+			 string txhash = root["hash"].asString();
+			 string strSourceData  , strW ;
+			 strSourceData = strprintf("actor = %d , relate_hash = '%s' ,right_addr ='%s',", 2 , txhash ,addr ) ;
+			 strSourceData += strprintf(" guess_num = %d,state = %d", (int)guess,4);
+			 strW = strprintf("tx_hash = '%s'" , hash ) ;
 
 			 uistruct::DATABASEINFO_t DatabaseInfo;
-			 DatabaseInfo.strSource = strSourceData.GetString();
-			 DatabaseInfo.strWhere = strW.GetString() ;
+			 DatabaseInfo.strSource = strSourceData;
+			 DatabaseInfo.strWhere = strW ;
 			 DatabaseInfo.strTabName = _T("t_p2p_quiz");
 			 CPostMsg postmsg(MSG_USER_UPDATA_DATA,0);
 			 string strTemp = DatabaseInfo.ToJson();
-			 CString datastr;
-			 datastr.Format(_T("%s"),strTemp.c_str());
-			 postmsg.SetData(datastr);
+
+			 postmsg.SetData(strTemp);
 			 theApp.m_MsgQueue.push(postmsg);
 
 		 }
 	 }
-	 ::MessageBox( this->GetSafeHwnd() ,strTip , _T("提示") , MB_ICONINFORMATION ) ;
+	 ::MessageBox( this->GetSafeHwnd() ,strTip.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
  }
  bool CP2PDlg::CheckBalance()
  {
@@ -1276,22 +1264,22 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 	 theApp.m_SqliteDeal.GetP2PQuizRecordList(_T("1=1") ,&m_P2pBetTxList ) ;
 
 	 double result = ComPuteBetWinAandLoser(m_P2pBetTxList);
-	 CString show;
-	 show.Format(_T("总盈亏:%.4f"),result);
-	 m_rBtnWinerloser.SetWindowText(show);
+	 string show;
+	 show =strprintf("总盈亏:%.4f",result);
+	 m_rBtnWinerloser.SetWindowText(show.c_str());
 	 m_rBtnWinerloser.Invalidate();
  }
  void   CP2PDlg::ShowAddressBetWinAndLoss(CString addr)
  {
 	 uistruct::P2PBETRECORDLIST       m_P2pBetTxList;
-	 CString condtion;
-	 condtion.Format(_T("left_addr = '%s' or right_addr = '%s'"),addr,addr);
+	 string condtion;
+	 condtion = strprintf("left_addr = '%s' or right_addr = '%s'",addr,addr);
 	 theApp.m_SqliteDeal.GetP2PQuizRecordList(condtion ,&m_P2pBetTxList ) ;
 
 	 double result = ComPuteAddrBetWinAandLoser(m_P2pBetTxList,addr);
-	 CString show;
-	 show.Format(_T("盈亏:%.4f"),result);
-	 m_rBtnAddrWinerloser.SetWindowText(show);
+	 string show;
+	 show = strprintf("盈亏:%.4f",result);
+	 m_rBtnAddrWinerloser.SetWindowText(show.c_str());
 	 m_rBtnAddrWinerloser.Invalidate();
  }
  double CP2PDlg::ComPuteBetWinAandLoser(uistruct::P2PBETRECORDLIST  m_P2pBetTxList)
@@ -1378,8 +1366,8 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 					 winer += const_it->amount;
 				 }
 			 }
-		 }else if(strcmp(const_it->left_addr,const_it->right_addr) != 0){
-			 if (strcmp(const_it->left_addr,addr) == 0)
+		 }else if(strcmp(const_it->left_addr.c_str(),const_it->right_addr.c_str()) != 0){
+			 if (strcmp(const_it->left_addr.c_str(),addr) == 0)
 			 {
 				 if (const_it->state == 2){       
 					 if (const_it->guess_num == const_it->content[32])
@@ -1394,7 +1382,7 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 						 loser += const_it->amount;
 					 }
 				 }
-			 }else if (strcmp(const_it->right_addr,addr) == 0)
+			 }else if (strcmp(const_it->right_addr.c_str(),addr) == 0)
 			 {
 				 if (const_it->state == 2)
 				 {
@@ -1451,9 +1439,9 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 
 
 	 m_BonusListBox.DeleteAllIndex();
-	 CString strpage;
-	 strpage.Format(_T("%d"),page);
-	GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(strpage);
+	 string strpage;
+	 strpage = strprintf("%d",page);
+	GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(strpage.c_str());
 	 m_curpage = page;
 	 int index = (page-1)*m_pagesize;
 	 unsigned int count = (m_PoolList.size() -index)>=m_pagesize?m_pagesize:(m_PoolList.size() -index);
@@ -1483,7 +1471,7 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 		 std::vector<unsigned char> vSendid;
 		 vSendid.assign(DBbet.sendbetid,DBbet.sendbetid+sizeof(DBbet.sendbetid));
 
-		 CString regid = CSoyPayHelp::getInstance()->GetNotFullRegID(vSendid);
+		 string regid = CSoyPayHelp::getInstance()->GetNotFullRegID(vSendid);
 
 		 double dmoney = (DBbet.money*1.0)/COIN;
 		 sprintf_s(buffer,"%.4f",dmoney);
@@ -1503,7 +1491,7 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 		// txhash.Format(_T("%s"),const_it.hash.c_str());
 		 m_BonusListBox.InsertStr(i,this->GetSafeHwnd());
 		 m_BonusListBox.SetIndexInage(i , IDB_BITMAP_P2P_LISTBOX_BUT);
-		 m_BonusListBox.SetIndexString(i , line.c_str(),regid, _T("接"), money.c_str(), const_it.hash.c_str(),strmoney.c_str());
+		 m_BonusListBox.SetIndexString(i , line.c_str(),regid.c_str(), _T("接"), money.c_str(), const_it.hash.c_str(),strmoney.c_str());
 		 i++;
 	 }
  }
@@ -1575,11 +1563,11 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 	 // TODO: 在此添加控件通知处理程序代码
 	 int nSel=m_BonusListBox.GetCurSel(); 
 	 int count = ((m_curpage -1)*m_pagesize) + nSel;
-	 if (count <=m_PoolList.size())
+	 if (count <=(int)m_PoolList.size())
 	 {
 		 uistruct::LISTP2POOL_T const_it = m_PoolList.at(count);
-		 CString temp = _T("竞猜交易ID: ");
-	    temp.AppendFormat(_T("%s") ,const_it.hash.c_str()) ;
-		 ::MessageBox( this->GetSafeHwnd() ,temp , _T("提示") , MB_ICONINFORMATION ) ;
+		 string temp = _T("竞猜交易ID: ");
+	    temp +=const_it.hash ;
+		 ::MessageBox( this->GetSafeHwnd() ,temp.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
 	 }
  }

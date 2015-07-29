@@ -26,7 +26,7 @@ public:
 	afx_msg LRESULT OnShowListCtrl(  WPARAM wParam, LPARAM lParam ) ;
 private:
 	CListCtrlCl m_listCtrl;
-	map<CString,uistruct::LISTADDR_t> m_MapAddrInfo;
+	map<string,uistruct::LISTADDR_t> m_MapAddrInfo;
 	CShadeButtonST     m_rBtnAcitve;
 	CShadeButtonST     m_rBtnNewaddr;
 	CShadeButtonST     m_rBtnCopyaddr;

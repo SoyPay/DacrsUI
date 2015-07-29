@@ -62,7 +62,7 @@ void COutGifDlg::LoadGifing( BOOL bState )
 	if( NULL != m_ProgressWnd ) {
 		if( m_ProgressWnd->GetSafeHwnd() ) {
 			if( TRUE == bState ) {
-				if( TRUE == ((CGIFControl*)m_ProgressWnd)->Load(theApp.m_ProgressOutGifFile.GetBuffer()) ) {
+				if( TRUE == ((CGIFControl*)m_ProgressWnd)->Load((char*)theApp.m_ProgressOutGifFile.c_str()) ) {
 					CRect rc ;
 					GetClientRect( rc ) ;
 					Invalidate() ;

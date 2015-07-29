@@ -75,23 +75,23 @@ void CEncryptWallet::OnBnClickedOk()
 		return;
 	}
 
-	CString strCommand;
-	strCommand.Format(_T("%s %s"),_T("encryptwallet"),inputE);
-	CStringA strShowData =_T("");
+	string strCommand;
+	strCommand = strprintf("%s %s",_T("encryptwallet"),inputE);
+	string strShowData ="";
 
 	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 
-	if (strShowData == _T(""))
+	if (strShowData == "")
 	{
 		return;
 	}
 	Json::Reader reader;  
 	Json::Value root; 
-	if (!reader.parse(strShowData.GetString(), root)) 
+	if (!reader.parse(strShowData, root)) 
 		return  ;
 		
 	bool isClose = FALSE; 
-	if (strShowData.Find("encrypt")>0)	{
+	if (strShowData.find("encrypt")>0)	{
 		bool isEntryp = root["encrypt"].asBool();
 		isClose = isEntryp;
 		if (isEntryp)

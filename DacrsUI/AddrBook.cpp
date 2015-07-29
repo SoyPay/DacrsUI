@@ -65,7 +65,7 @@ void CAddrBook::OnBnClickedButtonAddaddrbook()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	CNewSendAddr addsendaddr;
-	CString strShowData;
+	string strShowData;
 	INT_PTR nResponse = addsendaddr.DoModal();;
 	if (nResponse == IDOK)
 	{
@@ -74,16 +74,14 @@ void CAddrBook::OnBnClickedButtonAddaddrbook()
 		int count = m_listCtrl.GetItemCount();
 		int nSubIdx = 0;
 
-		strShowData.Format(_T("%s") ,addr.label) ;
-		m_listCtrl.InsertItem( count ,strShowData) ;
+		m_listCtrl.InsertItem( count ,addr.label.c_str()) ;
 
-		strShowData.Format(_T("%s") ,addr.address) ;
-		m_listCtrl.SetItemText(count , ++nSubIdx , strShowData ) ;
+		m_listCtrl.SetItemText(count , ++nSubIdx , addr.address.c_str() ) ;
 
 		//// 插入数据库
 		CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_UP_ADDRBOOK);
 		string temp =addr.ToJson();
-		postmsg.SetData(temp.c_str());
+		postmsg.SetData(temp);
 		theApp.m_MsgQueue.push(postmsg);
 	}
 
@@ -124,7 +122,7 @@ BOOL CAddrBook::OnInitDialog()
 	m_rBtnClose.SetWindowPos(NULL ,780-26 , 0 , 0 , 0 , SWP_NOSIZE); 
 
 	struct LISTCol {
-		CString		name ;
+		string		name ;
 		UINT		size ;
 	} listcol[3]  = {
 		{"标签" ,      200},
@@ -139,7 +137,7 @@ BOOL CAddrBook::OnInitDialog()
 	m_listCtrl.SetHeaderTextColor(RGB(0,0,0)); //设置头部字体颜色
 	m_listCtrl.SetTextColor(RGB(0,0,0));  
 	for( int i = 0 ; i < 2 ; i++  ) {
-		m_listCtrl.InsertColumn(i,listcol[i].name,LVCFMT_CENTER,listcol[i].size);
+		m_listCtrl.InsertColumn(i,listcol[i].name.c_str(),LVCFMT_CENTER,listcol[i].size);
 	}
 	m_listCtrl.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_HEADERDRAGDROP );
 	m_listCtrl.SetWindowPos( NULL , 0 , 40 , 780, 314 - 100  ,SWP_SHOWWINDOW ) ; 
@@ -206,16 +204,17 @@ bool CAddrBook::LoadAddrBook()
 	m_listCtrl.DeleteAllItems();
 
 	int nSubIdx = 0 , i = 0 ;
-	CString strShowData = _T("");
-	std::map<CString,uistruct::ADDRBOOK_t>::const_iterator const_it;
+	string strShowData = _T("");
+	std::map<string,uistruct::ADDRBOOK_t>::const_iterator const_it;
 	for ( const_it = m_mapAddrInfo.begin() ; const_it != m_mapAddrInfo.end() ; const_it++ ) {
 		nSubIdx = 0;
 		uistruct::ADDRBOOK_t address = const_it->second;
-		strShowData.Format(_T("%s") ,address.label) ;
-		m_listCtrl.InsertItem(i,strShowData);
+	
+		strShowData=strprintf("%s" ,address.label);
+		m_listCtrl.InsertItem(i,address.label.c_str());
 
-		strShowData.Format(_T("%s") ,address.address) ;
-		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
+		strShowData=strprintf("%s" ,address.address);
+		m_listCtrl.SetItemText(i , ++nSubIdx , address.address.c_str() ) ;
 		i++;
 	}
 
@@ -251,7 +250,7 @@ void CAddrBook::OnBnClickedButtonDeleitem()
 {
 	// TODO: 在此添加控件通知处理程序代码
 		//EndDialog(IDOK);
-		CString StrShow;
+		string StrShow;
 		POSITION pos = m_listCtrl.GetFirstSelectedItemPosition() ;
 		if ( pos ) {
 			if ( IDYES == ::MessageBox( this->GetSafeHwnd() ,_T("是否要删除此收款地址") , _T("提示") , MB_YESNO|MB_ICONINFORMATION ) ){
@@ -265,35 +264,21 @@ void CAddrBook::OnBnClickedButtonDeleitem()
 				addr.address = address;
 				addr.label = Leble;
 				string temp =addr.ToJson();
-				postmsg.SetData(temp.c_str());
+				postmsg.SetData(temp);
 				theApp.m_MsgQueue.push(postmsg);
 
 				//// 从控件中删除
 				m_listCtrl.DeleteItem(nRow);
 			}
 		}else{
-			StrShow.Format(_T("请选择地址!\n"));
-			::MessageBox( this->GetSafeHwnd() ,StrShow , _T("提示") , MB_ICONINFORMATION ) ;
+			//StrShow.Format(_T("请选择地址!\n"));
+			StrShow = "请选择地址!\n";
+			::MessageBox( this->GetSafeHwnd() ,StrShow.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
 			return;
 		}
 }
 
 
-//void CAddrBook::OnNMDblclkList1(NMHDR *pNMHDR, LRESULT *pResult)
-//{
-//	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
-//	 TODO: 在此添加控件通知处理程序代码
-//	if(-1 != pNMItemActivate->iItem) 
-//	{  
-//		int nRow = pNMItemActivate->iItem;
-//		CString Label =m_listCtrl.GetItemText(nRow, 0);
-//		CString addr =m_listCtrl.GetItemText(nRow, 1);
-//		m_selectAddr.label = Label;
-//		m_selectAddr.address = addr;
-//		CDialogEx::OnOK();
-//	}  
-//	*pResult = 0;
-//}
 
 
 BOOL CAddrBook::OnEraseBkgnd(CDC* pDC)
@@ -440,19 +425,18 @@ void CAddrBook::OnNMClickList(NMHDR *pNMHDR, LRESULT *pResult)
 			{
 				CString addr = _T("");
 				addr = m_listCtrl.GetItemText(hitRow,1);
-				CString strSourceData  , strW ;
-				strSourceData.Format(_T("Label = '%s'") , text  ) ;
-				strW.Format(_T("address = '%s'") , addr ) ;
+				string strSourceData  , strW ;
+				strSourceData = strprintf("Label = '%s'" , text  ) ;
+				strW= strprintf("address = '%s'" , addr ) ;
 
 				uistruct::DATABASEINFO_t DatabaseInfo;
-				DatabaseInfo.strSource = strSourceData.GetString();
-				DatabaseInfo.strWhere = strW.GetString() ;
+				DatabaseInfo.strSource = strSourceData;
+				DatabaseInfo.strWhere = strW ;
 				DatabaseInfo.strTabName = _T("t_address_book");
 				CPostMsg postmsg(MSG_USER_UPDATA_DATA,0);
 				string strtemp = DatabaseInfo.ToJson();
-				CString pstr;
-				pstr.Format(_T("%s"),strtemp.c_str());
-				postmsg.SetData(pstr);
+	
+				postmsg.SetData(strtemp.c_str());
 				theApp.m_MsgQueue.push(postmsg);
 			}
 		}

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "NoUiMsgBuffer.h"
-
+#include "DacrsUI.h"
 
 CNoUiMsgBuffer::CNoUiMsgBuffer(){
 	ClearBuffer();
@@ -69,8 +69,8 @@ bool CNoUiMsgBuffer::AddBytesToBuffer(char *pCh, int nLen)
 		nPos = nStart + 1;
 		//TRACE("nPos:%d\n", nPos);
 		cs_NoUiNotifyMsg.Lock();
-		CString strMsg;
-		strMsg.Format(_T("%s"), cMsgData);
+		string strMsg;
+		strMsg = strprintf("%s", cMsgData);
 		TRACE("push msg to deque:");
 		TRACE("%s\n", cMsgData);
 		m_dqNoUiMsg.push_back(strMsg);
@@ -93,7 +93,7 @@ bool CNoUiMsgBuffer::HaveNoUiMsg()
 	cs_NoUiNotifyMsg.Unlock();
 	return bRet;
 }
-void CNoUiMsgBuffer::GetNoUiMsg(CString &strNoUiMsg)
+void CNoUiMsgBuffer::GetNoUiMsg(string &strNoUiMsg)
 {
 	cs_NoUiNotifyMsg.Lock();
 	if(!m_dqNoUiMsg.empty()) {

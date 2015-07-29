@@ -59,22 +59,22 @@ void CWalletPassPhrase::OnBnClickedOk()
 		return;
 	}
 	
-	CString strCommand;
-	strCommand.Format(_T("%s %s %d"),_T("walletpassphrase"),PassWord,(atoi(passtime)*60));
-	CStringA strShowData =_T("");
+	string strCommand;
+	strCommand = strprintf("%s %s %d","walletpassphrase",PassWord,(atoi(passtime)*60));
+	string strShowData =_T("");
 
 	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 
-	if (strShowData == _T(""))
+	if (strShowData == "")
 	{
 		return;
 	}
 	Json::Reader reader;  
 	Json::Value root; 
-	if (!reader.parse(strShowData.GetString(), root)) 
+	if (!reader.parse(strShowData, root)) 
 		return  ;
 
-	if (strShowData.Find("passphrase") > 0)
+	if (strShowData.find("passphrase") > 0)
 	{
 		bool isEntryp = root["passphrase"].asBool();
 		if (!isEntryp)

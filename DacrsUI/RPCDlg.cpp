@@ -94,10 +94,11 @@ BOOL CRPCDlg::PreTranslateMessage(MSG* pMsg)
 			GetDlgItem(IDC_COMBO_INPUT)->GetWindowText(strCommand);
 			GetDlgItem(IDC_COMBO_INPUT)->SetWindowText(_T(""));
 
-			CStringA strSendData,strretshow;
-			RPCCommandToJson(strCommand,strSendData);
+			string strcom =strprintf("%s",strCommand);
+			string strSendData,strretshow;
+			RPCCommandToJson(strcom,strSendData);
 			CSoyPayHelp::getInstance()->SendRpcDlg(strSendData,strretshow);
-			ShowJson(strCommand,strretshow);
+			ShowJson(strcom,strretshow);
 			return TRUE;
 		}
 	}
@@ -175,17 +176,17 @@ void CRPCDlg::OnSize(UINT nType, int cx, int cy)
 	}
 }
 
-void CRPCDlg::ShowJson(CString rpcname,CString jsomstr){
+void CRPCDlg::ShowJson(string rpcname,string jsomstr){
 	if (jsomstr == _T(""))
 	{
 		return;
 	}
 	Json::Reader reader;  
 	Json::Value root; 
-	if (!reader.parse(jsomstr.GetString(), root)) 
+	if (!reader.parse(jsomstr, root)) 
 		return ;
 	m_rpccommand.Expand(m_rpccommand.GetRootItem(),TVE_COLLAPSE);
-	HTREEITEM hItemRoot = m_rpccommand.InsertItem(rpcname,TVI_ROOT);
+	HTREEITEM hItemRoot = m_rpccommand.InsertItem(rpcname.c_str(),TVI_ROOT);
 	CSoyPayHelp::getInstance()->Jiexi(root,hItemRoot,m_rpccommand);
 	m_rpccommand.Expand(hItemRoot,TVE_EXPAND);
 }

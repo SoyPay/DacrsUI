@@ -88,16 +88,17 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 		return;
 	}
 	uistruct::LISTADDR_t data;
-	CString strCommand , strMaddress , strMoney;
+	string strCommand  ;CString strMoney,strMaddress;
 	if(text!=_T(""))
 	{
-		if(m_mapAddrInfo.count(text)<=0)
+		string strAddr =strprintf("%s",text);
+		if(m_mapAddrInfo.count(strAddr)<=0)
 		{
 			//::MessageBox( this->GetSafeHwnd() ,_T("发送地址不存在") , _T("提示") , MB_ICONINFORMATION ) ;
 			return;
 		}
 		//uistruct::LISTADDR_t te = m_pListaddrInfo[text];
-		data = m_mapAddrInfo[text];
+		data = m_mapAddrInfo[strAddr];
 	
 	}
 
@@ -113,7 +114,7 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 			::MessageBox( this->GetSafeHwnd() ,_T("接受地址不能未空") , _T("提示") , MB_ICONINFORMATION ) ;
 			return;
 		}
-		if(!strcmp(strMaddress.GetString(), data.address))
+		if(!strcmp(strMaddress.GetString(), data.address.c_str()))
 		{
 			::MessageBox( this->GetSafeHwnd() ,_T("发送地址和目的地址不能相同") , _T("提示") , MB_ICONINFORMATION ) ;
 			return;
@@ -138,8 +139,8 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 			::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
 			return;
 		}
-		strCommand.Format(_T("%s %s %s %lld"),_T("sendtoaddress") ,data.address ,strMaddress ,REAL_MONEY(dSendMoney));
-		CStringA strShowData ;
+		strCommand = strprintf("%s %s %s %lld","sendtoaddress" ,data.address.c_str() ,strMaddress ,REAL_MONEY(dSendMoney));
+		string strShowData ;
 
 		CString strDisplay;
 		strDisplay.Format(_T("转账%.4lfsmc至%s"), dSendMoney, strMaddress);
@@ -150,28 +151,26 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 		strShowData = _T("");
 		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 
-		if (strShowData == _T(""))
+		if (strShowData == _T("") || strShowData.find("hash") <0)
 		{
 			return;
 		}
 		Json::Reader reader;  
 		Json::Value root; 
 
-		if (!reader.parse(strShowData.GetString(), root)) 
+		if (!reader.parse(strShowData, root)) 
 		{
-			::MessageBox( this->GetSafeHwnd() ,strShowData , _T("提示") , MB_ICONINFORMATION ) ;
+			::MessageBox( this->GetSafeHwnd() ,strShowData.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
 			return  ;
 		}
 		BOOL bRes = FALSE ;
-		CString strGettxdetail;
-		int pos = strShowData.Find("hash");
+
+		int pos = strShowData.find("hash");
 		if ( pos >=0 ) {
 			//插入到数据库
-			CString strHash,strHash1 ;
-			strHash.Format(_T("'%s'") , root["hash"].asCString() );
-			strHash1.Format(_T("%s") , root["hash"].asCString() );
-			CString strCond;
-			strCond.Format(_T(" hash='%s' "), strHash1);
+			string strHash = root["hash"].asString() ;
+			string strCond;
+			strCond = strprintf(" hash='%s' ", strHash.c_str());
 			int nItem =  theApp.m_SqliteDeal.GetTableCountItem(_T("t_transaction") , strCond) ;
 
 			if ( 0 == nItem ) {
@@ -182,13 +181,13 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 			}
 		}
 
-		CString strData;
+		string strData;
 		if ( pos >=0 ) {
-			strData.Format( _T(" 转账交易发送成功\n\n 源地址:%s\n\n 目的地址:%s\n\n 金额：%.4lf\n  hash:%s") , data.address,strMaddress, dSendMoney,root["hash"].asCString() ) ;
+			strData = strprintf(" 转账交易发送成功\n\n 源地址:%s\n\n 目的地址:%s\n\n 金额：%.4lf\n  hash:%s", data.address.c_str(),strMaddress, dSendMoney,root["hash"].asCString() ) ;
 		}else{
-			strData.Format( _T("转账失败!") ) ;
+			strData = "转账失败!";
 		}
-		::MessageBox( this->GetSafeHwnd() ,strData , _T("提示") , MB_ICONINFORMATION ) ;
+		::MessageBox( this->GetSafeHwnd() ,strData.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
 
 		//// 插入数据库,将收款人添加到地址簿
 		CString label;
@@ -198,7 +197,7 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 		addr.address = strMaddress;
 		addr.label = label;
 		string temp =addr.ToJson();
-		postmsg.SetData(temp.c_str());
+		postmsg.SetData(temp);
 		theApp.m_MsgQueue.push(postmsg);
 
 }
@@ -220,17 +219,19 @@ void CSendDlg::OnCbnSelchangeCombo1()
 	m_addrbook.GetLBText(sel,text);
 	
 	//m_addrbook.GetWindowText(text) ;
+	string strAddr= strprintf("%s",text);
 	if(text!=_T(""))
 	{
-	   if(m_mapAddrInfo.count(text)<=0)
+		
+	   if(m_mapAddrInfo.count(strAddr)<=0)
 	   {
 		   TRACE("map OnCbnSelchangeCombo1 error");
 		   return;
 	   }
 	//uistruct::LISTADDR_t te = m_pListaddrInfo[text];
-	CString strshow;
-	strshow.Format(_T("%.8f"),m_mapAddrInfo[text].fMoney);
-	((CStatic*)GetDlgItem(IDC_STATIC_XM))->SetWindowText(strshow);
+	string strshow;
+	strshow = strprintf("%.8f",m_mapAddrInfo[strAddr].fMoney);
+	((CStatic*)GetDlgItem(IDC_STATIC_XM))->SetWindowText(strshow.c_str());
 	Invalidate();
 	}
 
@@ -245,10 +246,10 @@ BOOL CSendDlg::AddListaddrDataBox(){
 	((CComboBox*)GetDlgItem(IDC_COMBO_ADDR_OUT))->ResetContent();
 	//加载到ComBox控件
 	int nItem = 0;
-	std::map<CString,uistruct::LISTADDR_t>::const_iterator const_it;
+	std::map<string,uistruct::LISTADDR_t>::const_iterator const_it;
 	for ( const_it = m_mapAddrInfo.begin() ; const_it != m_mapAddrInfo.end() ; const_it++ ) {
 
-		((CComboBox*)GetDlgItem(IDC_COMBO_ADDR_OUT))->InsertString(nItem , const_it->first );
+		((CComboBox*)GetDlgItem(IDC_COMBO_ADDR_OUT))->InsertString(nItem , const_it->first.c_str() );
 		//((CComboBox*)GetDlgItem(IDC_COMBO_ADDR_OUT))->SetItemData(nItem, (DWORD_PTR)&(*const_it));
 		nItem++;
 	}
@@ -261,13 +262,14 @@ BOOL CSendDlg::AddListaddrDataBox(){
 		return FALSE;
 	}
 	m_addrbook.GetLBText(sel,address);
-	std::map<CString,uistruct::LISTADDR_t>::const_iterator item = m_mapAddrInfo.find(address);
+	string strAddr =strprintf("%s",address);
+	std::map<string,uistruct::LISTADDR_t>::const_iterator item = m_mapAddrInfo.find(strAddr);
 
-	if (m_mapAddrInfo.count(address)>0 ) {
-		uistruct::LISTADDR_t addrstruc = m_mapAddrInfo[address];
-		CString strshow;
-		strshow.Format(_T("%.8f"),addrstruc.fMoney);
-		m_strTx1.SetWindowText(strshow);
+	if (m_mapAddrInfo.count(strAddr)>0 ) {
+		uistruct::LISTADDR_t addrstruc = m_mapAddrInfo[strAddr];
+		string strshow;
+		strshow = strprintf("%.8f",addrstruc.fMoney);
+		m_strTx1.SetWindowText(strshow.c_str());
 		Invalidate();
 	}
 	return TRUE ;
@@ -371,14 +373,13 @@ void CSendDlg::OnBnClickedButtonAddbook()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	CAddrBook addrbook;
-	CString strShowData;
 	INT_PTR nResponse = addrbook.DoModal();;
 	if (nResponse == IDOK)
 	{
 		uistruct::ADDRBOOK_t addr;
 		addrbook.GetAddrbook(addr);
-		GetDlgItem(IDC_EDIT_DESADDRESS)->SetWindowTextA(addr.address);
-		GetDlgItem(IDC_EDIT2)->SetWindowTextA(addr.label);
+		GetDlgItem(IDC_EDIT_DESADDRESS)->SetWindowTextA(addr.address.c_str());
+		GetDlgItem(IDC_EDIT2)->SetWindowTextA(addr.label.c_str());
 	}
 }
 void CSendDlg::ModifyComboxItem(){
@@ -392,15 +393,13 @@ void CSendDlg::ModifyComboxItem(){
 	string strTemp = postmsg.GetData();
 	addr.JsonToStruct(strTemp.c_str());
 
-	CString addressd;
-	addressd.Format(_T("%s"),addr.address);
 
-	if(m_mapAddrInfo.count(addressd)<=0)
+	if(m_mapAddrInfo.count(addr.address)<=0)
 	{
 		TRACE("map ModifyComboxItem error");
 		return;
 	}
-	m_mapAddrInfo[addressd]=addr;
+	m_mapAddrInfo[addr.address]=addr;
 	
 		
 }
@@ -416,18 +415,16 @@ void CSendDlg::InsertComboxIitem()
 	string strTemp = postmsg.GetData();
 	addr.JsonToStruct(strTemp.c_str());
 	
-	CString addressd;
-	addressd.Format(_T("%s"),addr.address);
 
-	if(m_mapAddrInfo.count(addressd)>0)
+	if(m_mapAddrInfo.count(addr.address)>0)
 	{
 		TRACE("map InsertComboxIitem error");
 		return;
 	}
-	m_mapAddrInfo[addressd]=addr;
+	m_mapAddrInfo[addr.address]=addr;
 
 	int item = m_addrbook.GetCount();
-	m_addrbook.InsertString(item,addressd);
+	m_addrbook.InsertString(item,addr.address.c_str());
 }
 
 
@@ -458,12 +455,12 @@ BOOL CSendDlg::PreTranslateMessage(MSG* pMsg)
 					if (bCtrl)
 					{
 						uistruct::ADDRBOOK_t addrBook;
-						CString strCond;
-						strCond.Format(_T(" address='%s' "), message);
+						string strCond;
+						strCond = strprintf(" address='%s' ", message);
 						int nItem =  theApp.m_SqliteDeal.GetAddressBookItem( strCond, &addrBook) ;
 						if (addrBook.label != _T(""))
 						{
-							GetDlgItem(IDC_EDIT2)->SetWindowText(addrBook.label);
+							GetDlgItem(IDC_EDIT2)->SetWindowText(addrBook.label.c_str());
 						}
 						
 					}
@@ -480,14 +477,15 @@ BOOL CSendDlg::PreTranslateMessage(MSG* pMsg)
 					::CloseClipboard(); // 关闭剪贴板
 					if (bCtrl)
 					{
-						if(m_mapAddrInfo.count(message)<=0)
+						string addr = strprintf("%s",message);
+						if(m_mapAddrInfo.count(addr)<=0)
 						{
 							//TRACE("map OnCbnSelchangeCombo1 error");
 							::MessageBox( this->GetSafeHwnd() ,_T("复制的地址有误") , _T("提示") , MB_ICONINFORMATION ) ;
 						}else{
 							//uistruct::LISTADDR_t te = m_pListaddrInfo[text];
 							CString strshow;
-							strshow.Format(_T("%.8f"),m_mapAddrInfo[message].fMoney);
+							strshow.Format(_T("%.8f"),m_mapAddrInfo[addr].fMoney);
 							((CStatic*)GetDlgItem(IDC_STATIC_XM))->SetWindowText(strshow);
 							Invalidate();
 						}

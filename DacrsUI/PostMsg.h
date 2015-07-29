@@ -4,24 +4,24 @@ class CPostMsg
 {
 	int UI_TYPE;
     int DATA_TYPE;
-	CString strType;
-	CString strData;
+	string strType;
+	string strData;
 public:
 
 	CPostMsg(int uitype,int datatype);
 	CPostMsg(void);
 	~CPostMsg(void);
-	void SetStrType(CString const &strTpye);
+	void SetStrType(string const &strTpye);
 	void SetType(int uitype,int datatype);
 	int GetUItype() const;
 	int GetDatatype() const;
-	void SetData(CString const & data){
+	void SetData(string const & data){
 		strData = data;
 	}
-	CString GetData(){
+	string GetData(){
 		return strData;
 	}
-	CString GetStrType() const;
+	string GetStrType() const;
 public:
 	 bool operator==(CPostMsg const&meg)const;
 };

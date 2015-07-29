@@ -30,35 +30,35 @@ void CTxDetailDlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CTxDetailDlg, CDialogEx)
 END_MESSAGE_MAP()
 
-CString CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
+string CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
 {
-	CString strCommand,strShowData;
-		strCommand.Format(_T("%s %s"),_T("getaccountinfo") ,tx.desaddr.c_str() );
+	string strCommand,strShowData;
+		strCommand = strprintf("%s %s","getaccountinfo" ,tx.desaddr.c_str() );
 		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 
-		if (strShowData  ==_T("")){		
+		if (strShowData  ==""){		
 			return _T("");
 		}
 		Json::Reader reader;  
 		Json::Value root; 
 	
-		if (reader.parse(strShowData.GetString(), root)) {		
+		if (reader.parse(strShowData, root)) {		
 
-			if (strShowData.Find("RegID") >0)
+			if (strShowData.find("RegID") >0)
 			{
-				tx.desregid.Format(_T("%s"),root["RegID"].asCString());
+				tx.desregid = root["RegID"].asString();
 			}
 		}
 		
-			CString txdetail =_T("");
+			string txdetail ="";
 		string nValue = tx.Contract;
 		std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue);
 
 		string strContract = CSoyPayHelp::getInstance()->HexStr(vTemp);
-		txdetail.AppendFormat(_T("合约内容:   %d\r\n\r\n"),strContract.c_str() );
+		txdetail +=strprintf("合约内容:   %d\r\n\r\n",strContract.c_str() );
 
 
-	if (!strcmp(tx.desregid,theApp.m_betScritptid))
+	if (!strcmp(tx.desregid.c_str(),theApp.m_betScritptid.c_str()))
 	{
 		string nValue = tx.Contract;
 		std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue);
@@ -70,32 +70,32 @@ CString CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
 			memset(&Openbet , 0 , sizeof(OPEN_DATA));
 			memcpy(&Openbet, &vTemp[0], sizeof(OPEN_DATA));
 
-			CString reward = _T("");
+			string reward = "";
 			if (Openbet.dhash[32] == 1)
 			{
-				reward.Format(_T("%s"),"妹");
+				reward="妹";
 			}else
 			{
-				reward.Format(_T("%s"),"哥");
+				reward="哥";
 			}
 
-			txdetail.AppendFormat(_T("应用名称:   %s\r\n\r\n"),"猜你妹" );
-			txdetail.AppendFormat(_T("合约类型:   %s\r\n\r\n"),"开奖" );
-			txdetail.AppendFormat(_T("开奖底牌:%s\r\n\r\n"),reward );
+			txdetail+=strprintf("应用名称:   %s\r\n\r\n","猜你妹" );
+			txdetail+=strprintf("合约类型:   %s\r\n\r\n","开奖" );
+			txdetail+=strprintf("开奖底牌:%s\r\n\r\n",reward.c_str() );
 
 			std::vector<unsigned char> vTemp;
 			vTemp.assign(Openbet.txhash,Openbet.txhash+sizeof(Openbet.txhash));
 			reverse(vTemp.begin(),vTemp.end());
 			string txhash = CSoyPayHelp::getInstance()->HexStr(vTemp);
 
-			txdetail.AppendFormat(_T("发起竞猜交易ID:   %s\r\n\r\n"),txhash.c_str() );
+			txdetail+=strprintf("发起竞猜交易ID:   %s\r\n\r\n",txhash.c_str() );
 			// temp = CSoyPayHelp::getInstance()->HexStr(Openbet.accepthash );
 
 			 vTemp.assign(Openbet.accepthash,Openbet.accepthash+sizeof(Openbet.accepthash));
 			 reverse(vTemp.begin(),vTemp.end());
 			 txhash = CSoyPayHelp::getInstance()->HexStr(vTemp);
 
-			txdetail.AppendFormat(_T("接单交易ID:   %s\r\n\r\n"),txhash.c_str() );
+			txdetail+=strprintf("接单交易ID:   %s\r\n\r\n",txhash.c_str() );
 			//OpenBetRecord(vTemp,transcion);
 		}else if (vTemp[0] == TX_ACCEPTBET)
 		{
@@ -106,26 +106,26 @@ CString CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
 			memset(&acceptcbet , 0 , sizeof(ACCEPT_DATA));
 			memcpy(&acceptcbet, &vTemp[0], sizeof(ACCEPT_DATA));
 
-			CString guess = _T("");
+			string guess = "";
 			if (acceptcbet.data == 1)
 			{
-				guess.Format(_T("%s"),"妹");
+				guess="妹";
 			}else
 			{
-				guess.Format(_T("%s"),"哥");
+				guess="哥";
 			}
 
-			txdetail.AppendFormat(_T("应用名称:  %s\r\n\r\n"),"猜你妹" );
-			txdetail.AppendFormat(_T("合约类型:   %s\r\n\r\n"),"接单" );
-			txdetail.AppendFormat(_T("竞猜内容: %s\r\n\r\n"),guess );
+			txdetail+=strprintf("应用名称:  %s\r\n\r\n","猜你妹" );
+			txdetail+=strprintf("合约类型:   %s\r\n\r\n","接单" );
+			txdetail+=strprintf("竞猜内容: %s\r\n\r\n",guess.c_str() );
 
 			std::vector<unsigned char> vTemp;
 			vTemp.assign(acceptcbet.txhash,acceptcbet.txhash+sizeof(acceptcbet.txhash));
 			reverse(vTemp.begin(),vTemp.end());
 			string txhash = CSoyPayHelp::getInstance()->HexStr(vTemp);
 
-			txdetail.AppendFormat(_T("发起竞猜交易ID:   %s\r\n\r\n"),txhash.c_str() );
-			txdetail.AppendFormat(_T("金额:     %.8f\r\n\r\n"),(acceptcbet.money*1.0)/COIN);
+			txdetail+=strprintf("发起竞猜交易ID:   %s\r\n\r\n",txhash.c_str() );
+			txdetail+=strprintf("金额:     %.8f\r\n\r\n",(acceptcbet.money*1.0)/COIN);
 		}else if (vTemp[0] == TX_SENDBET)
 		{
 			if(vTemp.size()==0)
@@ -135,22 +135,22 @@ CString CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
 			memset(&sendbetdata,0,sizeof(SEND_DATA));
 			memcpy(&sendbetdata, &vTemp[0],sizeof(SEND_DATA));
 	
-			txdetail.AppendFormat(_T("应用名称:  %s\r\n\r\n"),"猜你妹" );
-			txdetail.AppendFormat(_T("合约类型:   %s\r\n\r\n"),"发起竞猜" );
-			txdetail.AppendFormat(_T("金额:%.8f\r\n\r\n"),(sendbetdata.money*1.0)/COIN );
+			txdetail+=strprintf("应用名称:  %s\r\n\r\n","猜你妹" );
+			txdetail+=strprintf("合约类型:   %s\r\n\r\n","发起竞猜" );
+			txdetail+=strprintf("金额:%.8f\r\n\r\n",(sendbetdata.money*1.0)/COIN );
 		}else if (vTemp[0] == 0xff)
 		{
 			if (vTemp[1] == 0x02)    /// 充值
 			{
-				txdetail.AppendFormat(_T("应用名称:  %s\r\n\r\n"),"猜你妹" );
-				txdetail.AppendFormat(_T("合约类型:  %s\r\n\r\n"),"充值" );
+				txdetail+=strprintf("应用名称:  %s\r\n\r\n","猜你妹" );
+				txdetail+=strprintf("合约类型:  %s\r\n\r\n","充值" );
 			}else if (vTemp[1] == 0x01)   /// 提现
 			{
-				txdetail.AppendFormat(_T("应用名称:  %s\r\n\r\n"),"猜你妹" );
-				txdetail.AppendFormat(_T("合约类型:  %s\r\n\r\n"),"提现" );
+				txdetail+=strprintf("应用名称:  %s\r\n\r\n","猜你妹" );
+				txdetail+=strprintf("合约类型:  %s\r\n\r\n","提现" );
 			}
 		}
-	}else  if (!strcmp(tx.desregid,theApp.m_redPacketScriptid)){ //// 接龙红包	
+	}else  if (!strcmp(tx.desregid.c_str(),theApp.m_redPacketScriptid.c_str())){ //// 接龙红包	
 		string nValue = tx.Contract;
 
 		if (vTemp[0] == TX_COMM_SENDREDPACKET)
@@ -162,17 +162,17 @@ CString CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
 			memcpy(&redpacket, &vTemp[0],sizeof(SEND_DATA));
 
 			
-			txdetail.AppendFormat(_T("应用名称:  %s\r\n\r\n"),"抢红包" );
-			txdetail.AppendFormat(_T("合约类型:  %s\r\n\r\n"),"发送普通红包" );
+			txdetail+=strprintf("应用名称:  %s\r\n\r\n","抢红包" );
+			txdetail+=strprintf("合约类型:  %s\r\n\r\n","发送普通红包" );
 
-			txdetail.AppendFormat(_T("发普通红包金额:%.8f\r\n\r\n"),(redpacket.money*1.0)/COIN);
-			txdetail.AppendFormat(_T("发普通红包个数:%d\r\n\r\n"),redpacket.number);
-			CString message = _T("");
-			message.Format(_T("%s"),redpacket.message);
-			if (message != _T(""))
+			txdetail+=strprintf("发普通红包金额:%.8f\r\n\r\n",(redpacket.money*1.0)/COIN);
+			txdetail+=strprintf("发普通红包个数:%d\r\n\r\n",redpacket.number);
+			string message = "";
+			message+=strprintf("%s",redpacket.message);
+			if (message != "")
 			{
 				
-				txdetail.AppendFormat(_T("发普通红包广告语: %s\r\n\r\n"),redpacket.message);
+				txdetail+=strprintf("发普通红包广告语: %s\r\n\r\n",redpacket.message);
 			}
 			//SendRePacketCommtRecord(vTemp,transcion);
 
@@ -185,15 +185,15 @@ CString CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
 			memcpy(&redpacket, &vTemp[0],sizeof(ACCEPT_RED_PACKET));
 
 
-			txdetail.AppendFormat(_T("应用名称:  %s\r\n\r\n"),"抢红包" );
-			txdetail.AppendFormat(_T("合约类型:  %s\r\n\r\n"),"抢普通红包" );
+			txdetail+=strprintf("应用名称:  %s\r\n\r\n","抢红包" );
+			txdetail+=strprintf("合约类型:  %s\r\n\r\n","抢普通红包" );
 
 			std::vector<unsigned char> vTemp;
 			vTemp.assign(redpacket.redhash,redpacket.redhash+sizeof(redpacket.redhash));
 			reverse(vTemp.begin(),vTemp.end());
 			string txhash = CSoyPayHelp::getInstance()->HexStr(vTemp);
 
-			txdetail.AppendFormat(_T("普通红包ID: %s\r\n\r\n"),txhash.c_str());
+			txdetail+=strprintf("普通红包ID: %s\r\n\r\n",txhash.c_str());
 			//AcceptRePacketCommtRecord(vTemp,transcion);
 		}else if (vTemp[0] == TX_SPECIAL_SENDREDPACKET)
 		{
@@ -203,11 +203,11 @@ CString CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
 			memset(&redpacket,0,sizeof(RED_PACKET));
 			memcpy(&redpacket, &vTemp[0],sizeof(SEND_DATA));
 
-			txdetail.AppendFormat(_T("应用名称:  %s\r\n\r\n"),"抢红包" );
-			txdetail.AppendFormat(_T("合约类型:  %s\r\n\r\n"),"发送接龙红包" );
+			txdetail+=strprintf("应用名称:  %s\r\n\r\n","抢红包" );
+			txdetail+=strprintf("合约类型:  %s\r\n\r\n","发送接龙红包" );
 
-			txdetail.AppendFormat(_T("发接龙红包金额:  %.8f\r\n\r\n"),(redpacket.money*1.0)/COIN);
-			txdetail.AppendFormat(_T("发接龙红包个数:  %d\r\n\r\n"),redpacket.number);
+			txdetail+=strprintf("发接龙红包金额:  %.8f\r\n\r\n",(redpacket.money*1.0)/COIN);
+			txdetail+=strprintf("发接龙红包个数:  %d\r\n\r\n",redpacket.number);
 			//SendRePacketSpecailRecord(vTemp,transcion);
 		}else if (vTemp[0] == TX_SPECIAL_ACCEPTREDPACKET)
 		{
@@ -218,31 +218,31 @@ CString CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
 			memcpy(&redpacket, &vTemp[0],sizeof(ACCEPT_RED_PACKET));
 
 	
-			txdetail.AppendFormat(_T("应用名称:  %s\r\n\r\n"),"抢红包" );
-			txdetail.AppendFormat(_T("合约类型:  %s\r\n\r\n"),"抢接龙红包" );
+			txdetail+=strprintf("应用名称:  %s\r\n\r\n","抢红包" );
+			txdetail+=strprintf("合约类型:  %s\r\n\r\n","抢接龙红包" );
 
 			std::vector<unsigned char> vTemp;
 			vTemp.assign(redpacket.redhash,redpacket.redhash+sizeof(redpacket.redhash));
 			reverse(vTemp.begin(),vTemp.end());
 			string txhash = CSoyPayHelp::getInstance()->HexStr(vTemp);
 
-			txdetail.AppendFormat(_T("接龙红包ID:   %s\r\n\r\n"),txhash.c_str());
+			txdetail+=strprintf("接龙红包ID:   %s\r\n\r\n",txhash.c_str());
 		}else if (vTemp[0] == 0xff)
 		{
 			if (vTemp[1] == 0x02)    /// 充值
 			{
-				txdetail.AppendFormat(_T("应用名称:  %s\r\n\r\n"),"抢红包" );
-				txdetail.AppendFormat(_T("合约类型:  %s\r\n\r\n"),"充值" );
+				txdetail+=strprintf("应用名称:  %s\r\n\r\n","抢红包" );
+				txdetail+=strprintf("合约类型:  %s\r\n\r\n","充值" );
 			}else if (vTemp[1] == 0x01)   /// 提现
 			{
-				txdetail.AppendFormat(_T("应用名称:  %s\r\n\r\n"),"抢红包" );
-				txdetail.AppendFormat(_T("合约类型:  %s\r\n\r\n"),"提现" );
+				txdetail+=strprintf("应用名称:  %s\r\n\r\n","抢红包" );
+				txdetail+=strprintf("合约类型:  %s\r\n\r\n","提现" );
 			}
 		}
-	}else if (!strcmp(tx.desregid,theApp.m_ipoScritptid))
+	}else if (!strcmp(tx.desregid.c_str(),theApp.m_ipoScritptid.c_str()))
 	{
-		txdetail.AppendFormat(_T("应用名称:  %s\r\n\r\n"),"ipo领币" );
-		txdetail.AppendFormat(_T("合约类型:  %s\r\n\r\n"),"提现" );
+		txdetail+=strprintf("应用名称:  %s\r\n\r\n","ipo领币" );
+		txdetail+=strprintf("合约类型:  %s\r\n\r\n","提现" );
 	}
 	return txdetail;
 }
@@ -251,92 +251,92 @@ void CTxDetailDlg::ShowTxDetail(CString jsontx)
 {
 	if (jsontx == _T(""))
 	{
-		CString strShowData;
-		strShowData.AppendFormat(_T("%s") ,_T("此交易不存在")) ;
-		GetDlgItem(IDC_EDIT_TXDETAIL)->SetWindowText(strShowData);
+		string strShowData;
+		strShowData+=strprintf("%s" ,_T("此交易不存在")) ;
+		GetDlgItem(IDC_EDIT_TXDETAIL)->SetWindowText(strShowData.c_str());
 		return;
 	}
 	//string txdetail = tx.ToJson();
 	uistruct::REVTRANSACTION_t tx;
 	tx.JsonToStruct(jsontx.GetString());
-	CString txdetail,strShowData;
+	string txdetail,strShowData;
 
 	string txtype = tx.txtype;
 	if (!strcmp(txtype.c_str(),"REWARD_TX"))
 	{
-		strShowData.AppendFormat(_T("%s") ,_T("挖矿奖励交易")) ;
+		strShowData+=strprintf("%s" ,_T("挖矿奖励交易")) ;
 	}else if (!strcmp(txtype.c_str(),"REG_ACCT_TX"))
 	{
-		strShowData.AppendFormat(_T("%s") ,_T("注册账户交易")) ;
+		strShowData+=strprintf("%s" ,_T("注册账户交易")) ;
 	}else if (!strcmp(txtype.c_str(),"COMMON_TX"))
 	{
-		strShowData.AppendFormat(_T("%s") ,_T("转账交易")) ;
+		strShowData+=strprintf("%s" ,_T("转账交易")) ;
 	}else if (!strcmp(txtype.c_str(),"CONTRACT_TX"))
 	{
-		strShowData.AppendFormat(_T("%s") ,_T("合约交易")) ;
+		strShowData+=strprintf("%s" ,_T("合约交易")) ;
 	}else if (!strcmp(txtype.c_str(),"REG_APP_TX"))
 	{
-		strShowData.AppendFormat(_T("%s") ,_T("注册应用交易")) ;
+		strShowData+=strprintf("%s" ,_T("注册应用交易")) ;
 	}
-	txdetail.Format(_T("交易类型: %s\r\n\r\n"),strShowData);
-	txdetail.AppendFormat(_T("交易ID: %s\r\n\r\n"),tx.txhash);
-	txdetail.AppendFormat(_T("版本号:   %d\r\n\r\n"),tx.ver);
-	txdetail.AppendFormat(_T("源地址:   %s\r\n\r\n"),tx.addr.c_str());
+	txdetail=strprintf("交易类型: %s\r\n\r\n",strShowData.c_str());
+	txdetail+=strprintf("交易ID: %s\r\n\r\n",tx.txhash);
+	txdetail+=strprintf("版本号:   %d\r\n\r\n",tx.ver);
+	txdetail+=strprintf("源地址:   %s\r\n\r\n",tx.addr.c_str());
 	if (tx.pubkey != "")
 	{
-		txdetail.AppendFormat(_T("公钥:   %s\r\n\r\n"),tx.pubkey.c_str());
+		txdetail+=strprintf("公钥:   %s\r\n\r\n",tx.pubkey.c_str());
 	}
 	if (tx.miner_pubkey != "")
 	{
-		txdetail.AppendFormat(_T("冷挖矿公钥:   %s\r\n\r\n"),tx.miner_pubkey.c_str());
+		txdetail+=strprintf("冷挖矿公钥:   %s\r\n\r\n",tx.miner_pubkey.c_str());
 	}
 	if (tx.fees != 0)
 	{
-		txdetail.AppendFormat(_T("小费:   %.8f\r\n\r\n"),tx.fees*COIN);
+		txdetail+=strprintf("小费:   %.8f\r\n\r\n",tx.fees*COIN);
 	}
 	if (tx.height != 0)
 	{
 		int height = tx.height +250; 
-		txdetail.AppendFormat(_T("交易超时高度:   %d\r\n\r\n"),height);
+		txdetail+=strprintf("交易超时高度:   %d\r\n\r\n",height);
 	}
 	if (tx.desaddr != "")
 	{
-		txdetail.AppendFormat(_T("目的地址:   %s\r\n\r\n"),tx.desaddr.c_str() );
+		txdetail+=strprintf("目的地址:   %s\r\n\r\n",tx.desaddr.c_str() );
 	}
 	if (tx.money != 0)
 	{
-		txdetail.AppendFormat(_T("交易金额:   %.8f\r\n\r\n"),tx.money*COIN);
+		txdetail+=strprintf("交易金额:   %.8f\r\n\r\n",tx.money*COIN);
 	}
 	if (tx.Contract != "")
 	{
 		//txdetail.AppendFormat(_T("合约内容:   %d\r\n\r\n"),tx.Contract.c_str() );
-		txdetail.AppendFormat(_T("%s"),GetContacrDetail(tx));
+		txdetail+=strprintf("%s",GetContacrDetail(tx).c_str());
 		
 	}
 
 	if (tx.confirmedHeight != 0)
 	{
-		txdetail.AppendFormat(_T("确认高度:   %d\r\n\r\n"),tx.confirmedHeight );
+		txdetail+=strprintf("确认高度:   %d\r\n\r\n",tx.confirmedHeight );
 	}
 	if (tx.confirmedtime != 0)
 	{
 		SYSTEMTIME curTime = UiFun::Time_tToSystemTime(tx.confirmedtime);
-		txdetail.AppendFormat(_T("确认时间:   %04d-%02d-%02d %02d:%02d:%02d\r\n\r\n"),curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+		txdetail+=strprintf("确认时间:   %04d-%02d-%02d %02d:%02d:%02d\r\n\r\n",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
 	}
 	if (tx.blockhash != "")
 	{
-		txdetail.AppendFormat(_T("确认blockHash:   %s\r\n\r\n"),tx.blockhash.c_str());
+		txdetail+=strprintf("确认blockHash:   %s\r\n\r\n",tx.blockhash.c_str());
 	}
-	if ( theApp.blocktipheight != 0)
+	if ( theApp.blocktipheight != 0 && tx.confirmedHeight != 0)
 	{
 		unsigned int quredCount = theApp.blocktipheight - tx.confirmedHeight;
 		if (quredCount >=0)
 		{
-			txdetail.AppendFormat(_T("确认数:  %d\r\n\r\n"),quredCount );
+			txdetail+=strprintf("确认数:  %d\r\n\r\n",quredCount );
 		}	
 	}
 
-	GetDlgItem(IDC_EDIT_TXDETAIL)->SetWindowText(txdetail);
+	GetDlgItem(IDC_EDIT_TXDETAIL)->SetWindowText(txdetail.c_str());
 }
 
 BOOL CTxDetailDlg::OnInitDialog()

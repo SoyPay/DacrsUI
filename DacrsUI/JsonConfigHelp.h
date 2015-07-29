@@ -5,10 +5,10 @@
 class CScriptCfg
 {
 public:
-	CString	strScriptBetid;
-	CString	strSrcriptDarkid;
-	CString	m_ipoScritptid;
-	CString m_redpacketScriptid;
+	string	strScriptBetid;
+	string	strSrcriptDarkid;
+	string	m_ipoScritptid;
+	string m_redpacketScriptid;
 };
 class CMainCfg 
 {
@@ -109,7 +109,7 @@ class CJsonConfigHelp
 	DEFINE_SINGLETON(CJsonConfigHelp)
 public:
 	void Init();
-	void ReadJsonConfig(const CString& strFilePath);
+	void ReadJsonConfig(const string& strFilePath);
 	void GetMainCfgData(CMainCfg& mainCfg);
 	void GetDarkCfgData(CDarkTxCfg& darkCfg);
 	void GetAnonymCfgData(CAnonmyCfg& anonymCfg);

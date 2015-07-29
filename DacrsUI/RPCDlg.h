@@ -35,7 +35,7 @@ public:
 private:
 	Json::Value mRoot; 
 public:
-	void ShowJson(CString rpcname,CString jsomstr);
+	void ShowJson(string rpcname,string jsomstr);
 
 	CTreeCtrl m_rpccommand;
 	CComboBox m_comboxinput;

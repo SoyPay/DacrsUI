@@ -174,16 +174,21 @@ void CAcceptRedPacketRecord::Showlistbox(CString address)
 	m_AcceptRedPacketList.clear();
 	m_curpage = 0;
 	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(_T(""));
-	CString conditon;
-	conditon.Format(_T("grab_acct_id ='%s' order by grab_time desc") , address);
+	string conditon;
+	char buffer[1000] = {0};
+	sprintf_s(buffer,"grab_acct_id ='%s' order by grab_time desc",address);
+	conditon = buffer;
+	//conditon.Format(_T("grab_acct_id ='%s' order by grab_time desc") , address);
 
-	int nItem =  theApp.m_SqliteDeal.GetRedPacketGrabRecordList(conditon ,&m_AcceptRedPacketList ) ;
+	int nItem =  theApp.m_SqliteDeal.GetRedPacketGrabRecordList(conditon.c_str() ,&m_AcceptRedPacketList ) ;
 
 	m_pagecount = (m_AcceptRedPacketList.size()%m_pagesize)==0?(m_AcceptRedPacketList.size()/m_pagesize):(m_AcceptRedPacketList.size()/m_pagesize)+1;
 
-	CString temp;
-	temp.Format(_T("共:%d"),m_pagecount);
-	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(temp);
+	memset(buffer,0,1000);
+	sprintf_s(buffer,"共:%d",m_pagecount);
+	string temp = buffer;
+
+	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(temp.c_str());
 	GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T(""));
 	Invalidate();
 	m_ListBox.DeleteAllIndex();
@@ -200,9 +205,9 @@ void  CAcceptRedPacketRecord::OnShowPagePool(int page)
 
 
 	m_ListBox.DeleteAllIndex();
-	CString strpage;
-	strpage.Format(_T("%d"),page);
-	GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(strpage);
+
+	string strpage = strprintf("%d",page);
+	GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(strpage.c_str());
 
 	m_curpage = page;
 	int index = (page-1)*m_pagesize;
@@ -211,13 +216,12 @@ void  CAcceptRedPacketRecord::OnShowPagePool(int page)
 	char sendTime[1024] = {0};
 	string amount,Sendaddr,address,luckeMoney,strnum,type,luckeValue,operate;;
 	char buffer[100] = {0};
-	//CString sendTime;
 	int i = 0;
 	std::vector<uistruct::REDPACKETGRAB_t>::const_iterator const_it;
 	for (unsigned int k = index;k< (index+count) && k < m_AcceptRedPacketList.size();k++)
 	{
 		uistruct::REDPACKETGRAB_t const_it = m_AcceptRedPacketList.at(k);
-		sprintf_s(buffer,"%s",const_it.send_acc_id);
+		sprintf_s(buffer,"%s",const_it.send_acc_id.c_str());
 		Sendaddr =buffer;
 		memset(buffer,0,100);
 		sprintf_s(buffer,"%.4f",const_it.total_amount);
@@ -251,14 +255,12 @@ void  CAcceptRedPacketRecord::OnShowPagePool(int page)
 			sprintf_s(sendTime,"%02d-%02d %02d:%02d:%02d",curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
 			memset(buffer,0,100);
 		}
-		//CString luckeValue,operate;
+
 		if (const_it.lucky_fortune == 1)
 		{
-			//luckeValue.Format(_T("普通"));
 			luckeValue="普通";
 		}else if (const_it.lucky_fortune == 2)
 		{
-			//luckeValue.Format(_T("运气王"));
 			luckeValue="运气王";
 		}else
 		{

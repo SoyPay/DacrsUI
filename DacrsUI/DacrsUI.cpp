@@ -58,7 +58,6 @@ CDacrsUIApp::CDacrsUIApp()
 	IsWalletLocked = TRUE;
 	HaveLocked = FALSE;
 	netWork = 0;
-	dbpath =_T("");
 	m_reminder = 0;
 	m_passlock = TRUE;
 	m_dlgCreatfinsh = FALSE;
@@ -151,39 +150,9 @@ BOOL CDacrsUIApp::InitInstance()
 	gsLanguage = language();
 
 
-	CString temprpc = m_rpcport;
-	CString tempuiport = m_uirpcport;
+	string temprpc = m_rpcport;
+	string tempuiport = m_uirpcport;
 	ProductHttpHead(str_InsPath ,m_strServerCfgFileName,m_rpcport,m_sendPreHeadstr,m_sendendHeadstr,m_uirpcport,netWork);
-
-	dbpath.Format(_T("%s\\db"),str_InsPath);
-	if (!PathIsDirectory(dbpath))
-	{
-		::CreateDirectory(dbpath, NULL);
-	}
-	/// 0 是main网络(正式网络)  1 regtest网络(局域网络) 2testnet(测试网络) 
-	//if (netWork == 1)
-	//{
-	//	dbpath.Format(_T("%s\\regtest"),str_InsPath);
-	//	if (!PathIsDirectory(dbpath))
-	//	{
-	//		::CreateDirectory(dbpath, NULL);
-	//	}
-	//}else if (netWork == 2)
-	//{
-	//	dbpath.Format(_T("%s\\testnet"),str_InsPath);
-	//	if (!PathIsDirectory(dbpath))
-	//	{
-	//		::CreateDirectory(dbpath, NULL);
-	//	}
-	//}else
-	//{
-	//	dbpath.Format(_T("%s\\main"),str_InsPath);
-	//	if (!PathIsDirectory(dbpath))
-	//	{
-	//		::CreateDirectory(dbpath, NULL);
-	//	}
-	//}
-
 
 
 	//打开sqlite3数据库
@@ -193,7 +162,7 @@ BOOL CDacrsUIApp::InitInstance()
 	ClearTransaction();
 
 
-	if (strcmp(m_severip,_T("127.0.0.1")))
+	if (strcmp(m_severip.c_str(),_T("127.0.0.1")))
 	{
 		m_rpcport = temprpc;
 		m_uirpcport = tempuiport;
@@ -208,7 +177,7 @@ BOOL CDacrsUIApp::InitInstance()
 	//连接block
 	//连接到服务器
 	CSynchronousSocket te;
-	SOCKET nSocket = te.OnblockConnnect(m_severip,atoi(m_uirpcport) ) ;
+	SOCKET nSocket = te.OnblockConnnect(m_severip.c_str(),atoi(m_uirpcport.c_str()) ) ;
 	if ( INVALID_SOCKET != nSocket ){
 		TRACE("nSocket OK\n");
 		theApp.m_blockSock = nSocket ;
@@ -336,25 +305,27 @@ BOOL  EnableDebugPrivilege()
 	return fOk;
 }
 
-void CDacrsUIApp::GetMoFilename( CString & path , CString & filename ) 
+void CDacrsUIApp::GetMoFilename( string & path , string & filename ) 
 {
 	char strPath[MAX_PATH] ;
 	GetModuleFileName( AfxGetApp()->m_hInstance , strPath , MAX_PATH );
-	CString str=strPath;
-	int i=str.ReverseFind('\\');
-	path		= str.Left(i);
-	filename	= strPath;	
+
+	string strTemp=strPath;
+	int i = strTemp.rfind('\\');
+	path		= strTemp.substr(0,i);
+	filename	= strPath;
 }
 int CDacrsUIApp::language()
 {
 	// 取默认语言索引
 	char szText[256];
-	CString strG;
-	CString strAppIni = str_InsPath + (CString)LANGUAGE_FILE;
-	::GetPrivateProfileString("Default", "Index", "1", szText, 256,	(LPCTSTR)strAppIni);
+	string  strG;
+	string strAppIni = str_InsPath;// + (CString)LANGUAGE_FILE;
+	strAppIni += LANGUAGE_FILE;
+	::GetPrivateProfileString("Default", "Index", "1", szText, 256,	(LPCTSTR)strAppIni.c_str());
 
-	strG.Format("Language%d", atoi(szText));
-	::GetPrivateProfileString(strG, "gsLanguage", "1", szText, 256, (LPCTSTR)strAppIni);
+	strG +=strprintf("Language%d", atoi(szText));
+	::GetPrivateProfileString(strG.c_str(), "gsLanguage", "1", szText, 256, (LPCTSTR)strAppIni.c_str());
 	return atoi(szText);
 }
 BOOL CDacrsUIApp::CreateMaintainThrd() 
@@ -528,9 +499,9 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 							theApp.IsSyncTx = TRUE;
 							theApp.m_SqliteDeal.BeginDBTransaction();
 						}
-						CString txData = Postmsg.GetData();
-						if ( _T("") != txData ) {
-							((CDacrsUIApp*)pParam)->SyncTransaction(txData.GetString()) ;
+						string txData = Postmsg.GetData();
+						if ( "" != txData ) {
+							((CDacrsUIApp*)pParam)->SyncTransaction(txData) ;
 						}
 						LogPrint("PROCESSMSG", "WM_SYNC_TRANSACTION 启动同步交易:%s\n",txData);
 					}
@@ -539,20 +510,16 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 					{
 
 						//更新历史交易记录数据库
-						CString pHash = Postmsg.GetData();
-						if ( _T("") != pHash ) {
-							CString strHash;
-							strHash.Format("%s",pHash);
-							strHash.TrimLeft("'");
-							strHash.TrimRight("'");
-							CString strCondition(_T(""));
-							strCondition.Format(" hash = '%s' ", strHash);
+						string pHash = Postmsg.GetData();
+						if ( "" != pHash ) {
+							string strCondition("");
+							strCondition = strprintf(" hash = '%s' ", pHash.c_str());
 							int nItem =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.GetTableCountItem(_T("t_transaction") ,strCondition);
 							if (nItem == 0)
 							{
-								((CDacrsUIApp*)pParam)->InsertTransaction(strHash) ;
+								((CDacrsUIApp*)pParam)->InsertTransaction(pHash) ;
 							}else{
-								((CDacrsUIApp*)pParam)->UpdateTransaction(strHash);
+								((CDacrsUIApp*)pParam)->UpdateTransaction(pHash);
 							}
 						}
 						LogPrint("PROCESSMSG", "WM_REVTRANSACTION 收取跟钱包有关的交易:%s\n",pHash);
@@ -560,9 +527,9 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 					break;
 				case WM_APP_TRANSATION:
 					{
-						CString txDetail = Postmsg.GetData();
-						if ( _T("") != txDetail ) {
-							((CDacrsUIApp*)pParam)->UpdateAppRecord(txDetail.GetString());
+						string txDetail = Postmsg.GetData();
+						if ( "" != txDetail ) {
+							((CDacrsUIApp*)pParam)->UpdateAppRecord(txDetail);
 						}
 						LogPrint("PROCESSMSG", "WM_APP_TRANSATION 收取跟钱包有关的应用交易:%s\n",txDetail);
 					}
@@ -600,10 +567,10 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 						//更新最新blocktip数据库
 						if ( ((CDacrsUIApp*)pParam)->m_SqliteDeal.ClearTableData(_T("t_chain_tip") ) ) {
 
-							CString pHash = Postmsg.GetData();
+							string pHash = Postmsg.GetData();
 							if ( _T("") != pHash ) {
-								CString strinsert;
-								strinsert.Format("'%s'",pHash);
+								string strinsert;
+								strinsert = strprintf("'%s'",pHash);
 								((CDacrsUIApp*)pParam)->m_SqliteDeal.InsertTableItem(_T("t_chain_tip") ,strinsert ) ;
 							}
 						}
@@ -612,12 +579,12 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 				case WM_UP_ADDRBOOK:
 					{
 						LogPrint("PROCESSMSG", "WM_UP_ADDRBOOK 更新地址簿数据库\n");
-						CString josnaddr = Postmsg.GetData();
+						string josnaddr = Postmsg.GetData();
 						uistruct::ADDRBOOK_t addr;
-						if (addr.JsonToStruct(josnaddr.GetString()))
+						if (addr.JsonToStruct(josnaddr))
 						{
-							CString strCond;
-							strCond.Format(_T(" address='%s' "), addr.address);
+							string strCond;
+							strCond = strprintf(" address='%s' ", addr.address.c_str());
 							
 							int nItem =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.GetTableCountItem(_T("t_address_book"), strCond);
 							if (0 == nItem)
@@ -632,12 +599,12 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 				case WM_UP_DELETERBOOK:
 					{
 						LogPrint("PROCESSMSG", "WM_UP_DELETERBOOK 删除地址簿数据库\n");
-						CString josnaddr = Postmsg.GetData();
+						string josnaddr = Postmsg.GetData();
 						uistruct::ADDRBOOK_t addr;
-						if (addr.JsonToStruct(josnaddr.GetString()))
+						if (addr.JsonToStruct(josnaddr))
 						{
-							CString strCond;
-							strCond.Format(_T(" address='%s' "), addr.address);
+							string strCond;
+							strCond = strprintf(" address='%s' ", addr.address.c_str());
 							((CDacrsUIApp*)pParam)->m_SqliteDeal.DeleteTableItem(_T("t_address_book"),strCond);
 						}
 					}
@@ -646,11 +613,11 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 					{
 						LogPrint("PROCESSMSG", "WM_RELEASETX 收到交易重新放到mempool\n");
 						//更新历史交易记录数据库
-						CString pHash = Postmsg.GetData();
+						string pHash = Postmsg.GetData();
 						if ( _T("") != pHash ) {
 		
-							CString strCondition(_T(""));
-							strCondition.Format(" hash = '%s' ", pHash);
+							string strCondition("");
+							strCondition = strprintf(" hash = '%s' ", pHash.c_str());
 							int nItem =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.GetTableCountItem(_T("t_transaction") ,strCondition);
 							if (nItem != 0)
 							{
@@ -663,11 +630,11 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 					break;
 				case WM_REMOVETX:
 					{
-						CString pHash = Postmsg.GetData();
+						string pHash = Postmsg.GetData();
 						if ( _T("") != pHash ) {
 
-							CString strCondition(_T(""));
-							strCondition.Format(" hash = '%s' ", pHash);
+							string strCondition(_T(""));
+							strCondition = strprintf(" hash = '%s' ", pHash.c_str());
 							int nItem =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.GetTableCountItem(_T("t_transaction") ,strCondition);
 							if (nItem != 0)
 							{
@@ -801,56 +768,56 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 #define  RELEASE_TX            9
 #define  REMOVE_TX            10
 #define  CONNECTON_NET        11
-int GetMsgType(CString const strData,Json::Value &root)
+int GetMsgType(string const strData,Json::Value &root)
 {
-	CString strType;
-	int pos = strData.Find("type");
+	string strType;
+	int pos = strData.find("type");
 	if ( pos >=0 ){
-		strType.Format(_T("%s") ,  root["type"].asCString() ) ;
-		if ( !strcmp(strType ,_T("init") ) ) 
+		strType =root["type"].asString();// strprintf("%s" ,  root["type"].asCString() ) ;
+		if ( !strcmp(strType.c_str() ,_T("init") ) ) 
 		{
 			return ININTAL_TYPE;
 		}
-		if ( !strcmp(strType ,_T("revtransaction") ) )
+		if ( !strcmp(strType.c_str() ,_T("revtransaction") ) )
 		{
 			return REV_TRANSATION_TYPE;
 		}
-		if ( !strcmp(strType ,_T("blockchanged") ) )
+		if ( !strcmp(strType.c_str() ,_T("blockchanged") ) )
 		{
 			return BLOCK_CHANGE_TYPE;
 		}
-		if ( !strcmp(strType ,_T("rev_app_transaction") ) )
+		if ( !strcmp(strType.c_str() ,_T("rev_app_transaction") ) )
 		{
 			return APP_TRANSATION_TYPE;
 		}
-		if(!strcmp(strType, _T("notify"))) 
+		if(!strcmp(strType.c_str(), _T("notify"))) 
 		{
 			return SERVER_NOTIYF_TYPE;
 		}
-		if(!strcmp(strType, _T("SyncTx"))) 
+		if(!strcmp(strType.c_str(), _T("SyncTx"))) 
 		{
 			return SERVER_SYNC_TX;
 		}
-		if(!strcmp(strType, _T("releasetx"))) 
+		if(!strcmp(strType.c_str(), _T("releasetx"))) 
 		{
 			return RELEASE_TX;
 		}
-		if(!strcmp(strType, _T("rmtx"))) 
+		if(!strcmp(strType.c_str(), _T("rmtx"))) 
 		{
 			return REMOVE_TX;
 		}
 	}
 	return  -1;
 }
-bool JsonCheck(CString strjson){
-	strjson.TrimLeft(" ");
-	strjson.TrimRight(" ");
-	if (strjson.GetAt(0) != '{')
+bool JsonCheck(string strjson){
+	//strjson.TrimLeft(" ");
+	//strjson.TrimRight(" ");
+	if (strjson.at(0) != '{')
 	{
 		return false;
 	}
-	int len = strjson.GetLength();
-	if (strjson.GetAt(len-1) != '}')
+	int len = strjson.length();
+	if (strjson.at(len-1) != '}')
 	{
 		return false;
 	}
@@ -869,24 +836,24 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 		{
 //			CPostMsg postmsg(MSG_USER_SHOW_INIT,0);
 //			postmsg.SetStrType(msgValue["type"].asCString());
-			CString msg = msgValue["msg"].asCString();
-			TRACE("MEST:%s\r\n",msg);
-			if (!strcmp(msg,"Verifying blocks..."))
+			string msg = msgValue["msg"].asString();
+			TRACE("MEST:%s\r\n",msg.c_str());
+			if (!strcmp(msg.c_str(),"Verifying blocks..."))
 			{
 				CPostMsg postmsg(MSG_USER_STARTPROCESS_UI,1);
 				pApp->m_MsgQueue.push(postmsg);
 			}
-			else if (!strcmp(msg,"Verifying Finished"))
+			else if (!strcmp(msg.c_str(),"Verifying Finished"))
 			{
 				CPostMsg postmsg(MSG_USER_STARTPROCESS_UI,2);
 				pApp->m_MsgQueue.push(postmsg);
 			}
-			else if (!strcmp(msg,"Loading addresses..."))
+			else if (!strcmp(msg.c_str(),"Loading addresses..."))
 			{
 				CPostMsg postmsg(MSG_USER_STARTPROCESS_UI,3);
 				pApp->m_MsgQueue.push(postmsg);
 			}
-			else if (!strcmp(msg,"initialize end"))
+			else if (!strcmp(msg.c_str(),"initialize end"))
 			{
 				CPostMsg postmsg(MSG_USER_STARTPROCESS_UI,4);
 				pApp->m_MsgQueue.push(postmsg);				
@@ -901,8 +868,8 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 
 			Json::Value obj =msgValue["msg"]; 
 			//插入到数据库
-			CString txData ;
-			txData.Format(_T("%s") , obj.toStyledString().c_str() );
+			string txData ;
+			txData =strprintf("%s" , obj.toStyledString().c_str() );
 			CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_SYNC_TRANSACTION);
 			postmsg.SetData(txData);
 			pApp->m_MsgQueue.push(postmsg);
@@ -928,8 +895,7 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 		//	LogPrint("INFO", "REV_TRANSATION %s\n",msgValue.toStyledString().c_str());
 			const Json::Value& txArray = msgValue["transation"]; 
 			//插入到数据库
-			CString strHash ;
-			strHash.Format(_T("'%s'") , txArray["hash"].asCString() );
+			string strHash =txArray["hash"].asString();
 			CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_REVTRANSACTION);
 			postmsg.SetData(strHash);
 			pApp->m_MsgQueue.push(postmsg);
@@ -947,8 +913,7 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 	case RELEASE_TX:
 		{
 			//插入到数据库
-			CString strHash ;
-			strHash.Format(_T("%s") , msgValue["hash"].asCString());
+			string strHash =  msgValue["hash"].asString() ;
 			CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_RELEASETX);
 			postmsg.SetData(strHash);
 			pApp->m_MsgQueue.push(postmsg);
@@ -957,8 +922,8 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 	case REMOVE_TX:
 		{
 			//插入到数据库
-			CString strHash ;
-			strHash.Format(_T("%s") , msgValue["hash"].asCString());
+			string strHash = msgValue["hash"].asString() ;
+	
 			CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_REMOVETX);
 			postmsg.SetData(strHash);
 			pApp->m_MsgQueue.push(postmsg);
@@ -992,7 +957,7 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 			{	
 				/// 更新tipblock hash
 				CPostMsg postblockmsg(MSG_USER_GET_UPDATABASE,WM_UP_BlLOCKTIP);
-				CString msg = msgValue["hash"].asCString();
+				string msg = msgValue["hash"].asString();
 				postblockmsg.SetData(msg);
 				pApp->m_MsgQueue.push(postblockmsg);  
 
@@ -1022,24 +987,24 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 		}
 	case SERVER_NOTIYF_TYPE:
 		{
-			CString msg = msgValue["msg"].asCString();
-			TRACE("MEST:%s\r\n",msg);
-			if (!strcmp(msg,"server closed"))
+			string msg = msgValue["msg"].asString();
+			TRACE("MEST:%s\r\n",msg.c_str());
+			if (!strcmp(msg.c_str(),"server closed"))
 			{
 				theApp.m_bServerState = false;
-			}else if (!strcmp(msg,"Lock"))
+			}else if (!strcmp(msg.c_str(),"Lock"))
 			{
 				CPostMsg postmsg(MSG_USER_UP_PROGRESS,WM_LOCKSTATE);
 				postmsg.SetStrType(msg);
 				pApp->m_MsgQueue.push(postmsg);
 				pApp->IsWalletLocked = TRUE;
-			}else if (!strcmp(msg,"UnLock"))
+			}else if (!strcmp(msg.c_str(),"UnLock"))
 			{
 				CPostMsg postmsg(MSG_USER_UP_PROGRESS,WM_LOCKSTATE);
 				postmsg.SetStrType(msg);
 				pApp->m_MsgQueue.push(postmsg);
 				pApp->IsWalletLocked = FALSE;
-			}else if (!msg.Find("connections")>=0)
+			}else if (!msg.find("connections")>=0)
 			{
 				CPostMsg postmsg(MSG_USER_UP_PROGRESS,WM_CONNECTNET);
 				postmsg.SetStrType(msg);
@@ -1066,21 +1031,21 @@ UINT __stdcall CDacrsUIApp::ProcessNoUiMsg(LPVOID pParam)
 				return 1;
 			}
 			while(pUiDemeDlg->m_noUiMsgBuffer.HaveNoUiMsg()) {
-				CString strMsg;
+				string strMsg;
 				pUiDemeDlg->m_noUiMsgBuffer.GetNoUiMsg(strMsg);
 			//	TRACE("recv msg:%s\n", strMsg.GetString());
 				Json::Reader reader;  
 				Json::Value jsonValue; 
 				if (!JsonCheck(strMsg))
 				{
-					TRACE("JsonCheck noui msg error,msg content:%s\n", strMsg.GetString());
+					TRACE("JsonCheck noui msg error,msg content:%s\n", strMsg.c_str());
 					continue;
 				}
 				if (strMsg == _T(""))
 				{
 					continue;
 				}
-				if (!reader.parse(strMsg.GetString(), jsonValue)) 
+				if (!reader.parse(strMsg, jsonValue)) 
 					continue;
 				ProcessMsgJson(jsonValue, pUiDemeDlg);
 			}
@@ -1094,7 +1059,6 @@ UINT __stdcall CDacrsUIApp::blockProc(LPVOID pParam)
 	bool bReConnect(false);
 	int nMaxbufferLen(10*1024-1);
 	CDacrsUIApp * pUiDemeDlg  = (CDacrsUIApp*)pParam ;
-	CString RevData ;
 	if ( NULL != pUiDemeDlg ) {
 		while (true)
 		{
@@ -1106,7 +1070,7 @@ UINT __stdcall CDacrsUIApp::blockProc(LPVOID pParam)
 			if(bReConnect) {
 
 				CSynchronousSocket te;
-				SOCKET nSocket = te.OnblockConnnect(pUiDemeDlg->m_severip,atoi(pUiDemeDlg->m_uirpcport));
+				SOCKET nSocket = te.OnblockConnnect((char*)pUiDemeDlg->m_severip.c_str(),atoi(pUiDemeDlg->m_uirpcport.c_str()));
 				if( INVALID_SOCKET != nSocket) {
 					pUiDemeDlg->m_blockSock = nSocket;
 					bReConnect = false;
@@ -1287,12 +1251,12 @@ int CDacrsUIApp::SendPostThread(DWORD msgtype)
 	}
 	return 1 ;
 }
-void  CDacrsUIApp::ParseUIConfigFile(const CStringA& strExeDir){
-	CStringA configpath = "";
-	configpath.AppendFormat("%s",strExeDir);
-	configpath.AppendFormat("\\%s","dacrsclient.conf");
+void  CDacrsUIApp::ParseUIConfigFile(const string& strExeDir){
+	string configpath = "";
+	configpath += strprintf("%s",strExeDir);
+	configpath+= strprintf("\\%s","dacrsclient.conf");
 
-	if (PathFileExistsA(configpath))
+	if (PathFileExistsA(configpath.c_str()))
 	{
 		CJsonConfigHelp::getInstance()->Init();
 		CJsonConfigHelp::getInstance()->ReadJsonConfig(configpath);
@@ -1315,7 +1279,7 @@ void  CDacrsUIApp::ParseUIConfigFile(const CStringA& strExeDir){
 		m_rpcPassWord = netParm.rpc_password;
 	}
 }
-void CDacrsUIApp::StartSeverProcess(const CStringA& strdir){
+void CDacrsUIApp::StartSeverProcess(const string& strdir){
 	///// 启动前先关闭系统中dacrs-d.exe进程
 	CloseProcess("dacrs-d.exe");
 	LogPrint("INFO", "关闭服务端成功\n");
@@ -1326,17 +1290,17 @@ void CDacrsUIApp::StartSeverProcess(const CStringA& strdir){
 	si.dwFlags = STARTF_USESHOWWINDOW;  
 	si.wShowWindow =SW_HIDE;//SW_HIDE; //SW_SHOW;  
 
-	CString str = _T("dacrs-d.exe -datadir=");
-	str.AppendFormat("%s",strdir);
-	str.AppendFormat(" %s",_T("-ui=1"));
+	string str = _T("dacrs-d.exe -datadir=");
+	str +=strprintf("%s",strdir);
+	str+=strprintf(" %s",_T("-ui=1"));
 	if(m_bReIndexServer)
-		str.Append(_T(" -reindex=1"));
+		str+=" -reindex=1";
 	//if (!m_bStartServer)
 	//{
 	//	return ;
 	//}
 
-	if(!CreateProcessA(NULL,(LPSTR)str.GetString(),NULL,NULL,FALSE,0,NULL,NULL,&si,&sever_pi))   
+	if(!CreateProcessA(NULL,(LPSTR)str.c_str(),NULL,NULL,FALSE,0,NULL,NULL,&si,&sever_pi))   
 	{  
 		int n = GetLastError();
 		AfxMessageBox(_T("CreateProcessA sever error!"));
@@ -1400,7 +1364,8 @@ CString GetAppPath()
 }
 int CDacrsUIApp::Update()
 {
-	CString sPath=str_InsPath+"\\qupdater.exe";
+	CString sPath;//=str_InsPath+"\\qupdater.exe";
+	sPath.Format(_T("%s\\qupdater.exe"),str_InsPath.c_str());
 	LogPrint("INFO","Updata:%s\r\n",sPath);
 	sPath.Replace("\\\\","\\");
 	LogPrint("INFO","Updata:%s\r\n",sPath);
@@ -1466,8 +1431,8 @@ void  CDacrsUIApp::CheckUpdate(){
 void CDacrsUIApp::GetMainDlgStruct()
 {
 	uistruct::MINDLG_T maindlg;
-	CString strCommand,strShowData;
-	strCommand.Format(_T("0"));
+	string strCommand,strShowData;
+	strCommand = "0";
 //	theApp.cs_SqlData.Lock();
 	double nmoney =  theApp.m_SqliteDeal.GetTableItemSum(_T("t_wallet_address") ,_T("money"), _T(" 1=1 "));
 //	theApp.cs_SqlData.Unlock();
@@ -1475,13 +1440,13 @@ void CDacrsUIApp::GetMainDlgStruct()
 	{
 		maindlg.money = "0.0";
 	}else{
-		CString strmoney;
-		strmoney.Format(_T("%.3lf"),nmoney);
+		string strmoney;
+		strmoney = strprintf("%.3lf",nmoney);
 		maindlg.money = strmoney;
 	}
 
-	CString strCond;
-	strCond.Format(_T(" confirm_height = 0 "));
+	string strCond;
+	strCond = " confirm_height = 0 ";
 
 	nmoney =  theApp.m_SqliteDeal.GetTableItemSum(_T("t_transaction") , _T("money") , strCond) ;
 
@@ -1496,11 +1461,11 @@ void CDacrsUIApp::GetMainDlgStruct()
 
 	int nItem =  theApp.m_SqliteDeal.GetTableCountItem(_T("t_transaction"), _T(" 1=1 "));
 
-	strCommand.Format(_T("%d"),nItem);
-	maindlg.itemcount = strCommand.GetString();
+	strCommand = strprintf("%d",nItem);
+	maindlg.itemcount = strCommand;
 
 	uistruct::TRANSRECORDLIST pTransaction;
-	strCond.Format(_T(" tx_type='COMMON_TX' order by confirmed_time desc limit 5"));
+	strCond = " tx_type='COMMON_TX' order by confirmed_time desc limit 5";
 	theApp.m_SqliteDeal.GetTransactionList(strCond, &pTransaction);
 
 
@@ -1569,7 +1534,7 @@ BOOL CDacrsUIApp::RunOnlyOneApp()
 	return TRUE;
 }
 //// 通知发送界面或者接受界面地址的内容改变了获取要插入新地址
-void CDacrsUIApp::SendUIMsg(int message,CString jsonaddr){
+void CDacrsUIApp::SendUIMsg(int message,string jsonaddr){
 
 	//m_UiReciveDlgQueue.clear();
 	//m_MsgQueue
@@ -1588,7 +1553,7 @@ void CDacrsUIApp::SendUIMsg(int message,CString jsonaddr){
 	//DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_SEND_UI ,message,0);
 
 }
-void CDacrsUIApp::SendP2pMsg(int message,CString jsonaddr)
+void CDacrsUIApp::SendP2pMsg(int message,string jsonaddr)
 {
 	CPostMsg Postmsg(MSG_USER_MAIN_UI,message);
 	Postmsg.SetData(jsonaddr);
@@ -1603,12 +1568,12 @@ void CDacrsUIApp::SendP2pMsg(int message,CString jsonaddr)
 	m_MsgQueue.push(msg1);
 	//DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_REDPACKET_UI ,message,0);
 }
-void CDacrsUIApp::CheckPathValid(const CStringA& strDir)
+void CDacrsUIApp::CheckPathValid(const string& strDir)
 {
 	BOOL bExist = FALSE;
-	for(int i = 0;i <= strDir.GetLength();i++)
+	for(int i = 0;i < strDir.length();i++)
 	{
-		BYTE bchar = (BYTE)strDir.GetAt(i);
+		BYTE bchar = (BYTE)strDir.at(i);
 		if(bchar == ' ')
 		{
 			bExist = TRUE;
