@@ -45,9 +45,8 @@ void CBetInformation::ShowBetRecordDetail(CString jsontx)
 {
 	if (jsontx == _T(""))
 	{
-		CString strShowData;
-		strShowData.AppendFormat(_T("%s") ,_T("此交易不存在")) ;
-		GetDlgItem(IDC_EDIT_TXDETAIL)->SetWindowText(strShowData);
+		string strShowData = "此交易不存在";
+		GetDlgItem(IDC_EDIT_TXDETAIL)->SetWindowText(strShowData.c_str());
 		return;
 	}
 
@@ -57,32 +56,32 @@ void CBetInformation::ShowBetRecordDetail(CString jsontx)
 		return;
 	}
 
-	CString txdetail,strShowData;
-	txdetail.Format(_T("发起竞猜交易ID: %s\r\n\r\n"),betrecord.tx_hash);
-	txdetail.AppendFormat(_T("发起人ID: %s \r\n\r\n"),betrecord.left_addr);
-	txdetail.AppendFormat(_T("金额: %.4f \r\n\r\n"),betrecord.amount);
-	txdetail.AppendFormat(_T("超时时间: %d  分\r\n\r\n"),betrecord.time_out);
+	string txdetail,strShowData;
+	txdetail= strprintf("发起竞猜交易ID: %s\r\n\r\n",betrecord.tx_hash.c_str());
+	txdetail += strprintf("发起人ID: %s \r\n\r\n",betrecord.left_addr.c_str());
+	txdetail += strprintf("金额: %.4f \r\n\r\n",betrecord.amount);
+	txdetail += strprintf("超时时间: %d  分\r\n\r\n",betrecord.time_out);
 
 	//// 只是发了赌约，还没有接单
 	if (betrecord.state == 0)
 	{
 		if (betrecord.height == 0)
 		{
-			txdetail.AppendFormat(_T(" 发起竞猜交易交易还未确认\r\n\r\n"));
+			txdetail+=" 发起竞猜交易交易还未确认\r\n\r\n";
 		}else{
 			if (betrecord.send_time != 0)
 			{
 				char buffer[1024] = {0};
 				SYSTEMTIME rTime =UiFun::Time_tToSystemTime(betrecord.send_time);
 				sprintf_s(buffer,"%02d-%02d %02d:%02d:%02d", rTime.wMonth, rTime.wDay, rTime.wHour, rTime.wMinute, rTime.wSecond);
-				txdetail.AppendFormat(_T("发起竞猜交易确认时间: %s\r\n\r\n"),buffer);
-				txdetail.AppendFormat(_T("发起竞猜交易确认高度: %d\r\n\r\n"),betrecord.confirmed);
+				txdetail+= strprintf("发起竞猜交易确认时间: %s\r\n\r\n",buffer);
+				txdetail+= strprintf("发起竞猜交易确认高度: %d\r\n\r\n",betrecord.confirmed);
 			}
 			if (theApp.IsSyncBlock && theApp.blocktipheight != 0)
 			{
 				if ((betrecord.height + 500)<theApp.blocktipheight)
 				{
-					txdetail.AppendFormat(_T("发起竞猜交易超时未被接单(默认500分钟)\r\n\r\n"));
+					txdetail+= "发起竞猜交易超时未被接单(默认500分钟)\r\n\r\n";
 				}
 			}
 		}
@@ -94,23 +93,23 @@ void CBetInformation::ShowBetRecordDetail(CString jsontx)
 		{
 			SYSTEMTIME rTime =UiFun::Time_tToSystemTime(betrecord.send_time);
 			sprintf_s(buffer,"%02d-%02d %02d:%02d:%02d", rTime.wMonth, rTime.wDay, rTime.wHour, rTime.wMinute, rTime.wSecond);
-			txdetail.AppendFormat(_T(" 发起竞猜交易确认时间: %s\r\n\r\n"),buffer);
+			txdetail+= strprintf(" 发起竞猜交易确认时间: %s\r\n\r\n",buffer);
 		}
 		memset(buffer,0,1024);
 		if (betrecord.recv_time != 0)
 		{
-			txdetail.AppendFormat(_T("接单交易: %s\r\n\r\n"),betrecord.relate_hash);
+			txdetail+= strprintf("接单交易: %s\r\n\r\n",betrecord.relate_hash.c_str());
 			SYSTEMTIME rTime =UiFun::Time_tToSystemTime(betrecord.recv_time);
 			sprintf_s(buffer,"%02d-%02d %02d:%02d:%02d", rTime.wMonth, rTime.wDay, rTime.wHour, rTime.wMinute, rTime.wSecond);
-			txdetail.AppendFormat(_T("接单交易确认时间: %s\r\n\r\n"),buffer);
-			txdetail.AppendFormat(_T("接单交易确认高度: %d\r\n\r\n"),betrecord.height);
+			txdetail+= strprintf("接单交易确认时间: %s\r\n\r\n",buffer);
+			txdetail+= strprintf("接单交易确认高度: %d\r\n\r\n",betrecord.height);
 		}
 
 		if (theApp.IsSyncBlock && theApp.blocktipheight != 0)
 		{
 			if ((betrecord.height + betrecord.time_out)<theApp.blocktipheight)
 			{
-				txdetail.AppendFormat(_T("发起竞猜交易超时未开奖(默认超时时间60分钟)\r\n\r\n"));
+				txdetail+= "发起竞猜交易超时未开奖(默认超时时间60分钟)\r\n\r\n";
 			}
 		}
 		
@@ -121,23 +120,23 @@ void CBetInformation::ShowBetRecordDetail(CString jsontx)
 		{
 			SYSTEMTIME rTime =UiFun::Time_tToSystemTime(betrecord.send_time);
 			sprintf_s(buffer,"%02d-%02d %02d:%02d:%02d", rTime.wMonth, rTime.wDay, rTime.wHour, rTime.wMinute, rTime.wSecond);
-			txdetail.AppendFormat(_T("发起竞猜交易确认时间: %s\r\n\r\n"),buffer);
+			txdetail+= strprintf("发起竞猜交易确认时间: %s\r\n\r\n",buffer);
 		}
 		memset(buffer,0,1024);
 		if (betrecord.recv_time != 0)
 		{
-			txdetail.AppendFormat(_T("接单交易: %s\r\n\r\n"),betrecord.relate_hash);
+			txdetail+= strprintf("接单交易: %s\r\n\r\n",betrecord.relate_hash.c_str());
 			SYSTEMTIME rTime =UiFun::Time_tToSystemTime(betrecord.recv_time);
 			sprintf_s(buffer,"%02d-%02d %02d:%02d:%02d", rTime.wMonth, rTime.wDay, rTime.wHour, rTime.wMinute, rTime.wSecond);
-			txdetail.AppendFormat(_T("接单交易确认时间: %s\r\n\r\n"),buffer);
+			txdetail+= strprintf("接单交易确认时间: %s\r\n\r\n",buffer);
 		}
 		memset(buffer,0,1024);
 		if (betrecord.confirmed != 0)
 		{
 			SYSTEMTIME rTime =UiFun::Time_tToSystemTime(betrecord.confirmed);
 			sprintf_s(buffer,"%02d-%02d %02d:%02d:%02d", rTime.wMonth, rTime.wDay, rTime.wHour, rTime.wMinute, rTime.wSecond);
-			txdetail.AppendFormat(_T("竞猜开奖时间: %s\r\n\r\n"),buffer);
-			txdetail.AppendFormat(_T("竞猜开奖高度: %d\r\n\r\n"),betrecord.height);
+			txdetail+= strprintf("竞猜开奖时间: %s\r\n\r\n",buffer);
+			txdetail+= strprintf("竞猜开奖高度: %d\r\n\r\n",betrecord.height);
 		}
 	}
 	
@@ -145,10 +144,10 @@ void CBetInformation::ShowBetRecordDetail(CString jsontx)
 	{
 		if (betrecord.guess_num == 1)
 		{
-			txdetail.AppendFormat(_T(" 竞猜内容:妹\r\n\r\n"));
+			txdetail+= " 竞猜内容:妹\r\n\r\n";
 		}else
 		{
-			txdetail.AppendFormat(_T(" 竞猜内容:哥\r\n\r\n"));
+			txdetail+= " 竞猜内容:哥\r\n\r\n";
 		}
 	}
 
@@ -156,10 +155,10 @@ void CBetInformation::ShowBetRecordDetail(CString jsontx)
 	{
 		if (betrecord.content[32] == 1)
 		{
-			txdetail.AppendFormat(_T(" 开奖底牌:妹\r\n\r\n"));
+			txdetail+= " 开奖底牌:妹\r\n\r\n";
 		}else
 		{
-			txdetail.AppendFormat(_T(" 开奖底牌:哥\r\n\r\n"));
+			txdetail+= " 开奖底牌:哥\r\n\r\n";
 		}
 	}
 
@@ -167,20 +166,20 @@ void CBetInformation::ShowBetRecordDetail(CString jsontx)
 	{
 		if (betrecord.guess_num == 1)
 		{
-			txdetail.AppendFormat(_T(" 竞猜内容:妹\r\n\r\n"));
+			txdetail+= " 竞猜内容:妹\r\n\r\n";
 		}else
 		{
-			txdetail.AppendFormat(_T(" 竞猜内容:哥\r\n\r\n"));
+			txdetail+= " 竞猜内容:哥\r\n\r\n";
 		}
 
 		if (betrecord.content[32] == 1)
 		{
-			txdetail.AppendFormat(_T(" 开奖底牌:妹\r\n\r\n"));
+			txdetail+= " 开奖底牌:妹\r\n\r\n";
 		}else
 		{
-			txdetail.AppendFormat(_T(" 开奖底牌:哥\r\n\r\n"));
+			txdetail+= " 开奖底牌:哥\r\n\r\n";
 		}
 	}
 
-		GetDlgItem(IDC_EDIT_TXDETAIL)->SetWindowText(txdetail);
+		GetDlgItem(IDC_EDIT_TXDETAIL)->SetWindowText(txdetail.c_str());
 }

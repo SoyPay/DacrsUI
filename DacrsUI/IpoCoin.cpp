@@ -172,7 +172,7 @@ void CIpoCoin::OnBnClickedButtonDrawal()
 
 	if (!CheckRegIDValid( theApp.m_ipoScritptid )) return ;
 
-	CString strShowData = _T("");
+	string  strShowData = _T("");
 
 	//if (m_mapAddrInfo.size() == 0)
 	//{
@@ -187,7 +187,6 @@ void CIpoCoin::OnBnClickedButtonDrawal()
 		return;
 	}
 
-	CString strCommand , strMaddress , strMoney;
 
 	string strContractData = m_P2PBetHelp.GetAppAccountMoneyContract(addr.GetString(),1,2);
 
@@ -201,25 +200,24 @@ void CIpoCoin::OnBnClickedButtonDrawal()
 		return ;
 	}
 
-	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_ipoScritptid.GetBuffer(),addr.GetString(),strContractData,0,(INT64)REAL_MONEY((atof(strTxFee))),0);
-	CSoyPayHelp::getInstance()->SendContacrRpc(strData.c_str(),strShowData);
+	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_ipoScritptid,addr.GetString(),strContractData,0,(INT64)REAL_MONEY((atof(strTxFee))),0);
+	CSoyPayHelp::getInstance()->SendContacrRpc(strData,strShowData);
 
-	if (strShowData == _T(""))
+	if (strShowData =="")
 	{
 		return;
 	}
 	Json::Reader reader;  
 	Json::Value root;
-	if (!reader.parse(strShowData.GetString(), root)) 
+	if (!reader.parse(strShowData, root)) 
 		return  ;
 	BOOL bRes = FALSE ;
-	CString strTip;
-	int pos = strShowData.Find("hash");
+	string strTip;
+	int pos = strShowData.find("hash");
 
 	if ( pos >=0 ) {
 		//插入到交易记录数据库
-		CString strHash;
-		strHash.Format(_T("'%s'") , root["hash"].asCString() );
+		string strHash = root["hash"].asString();
 		CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_REVTRANSACTION);
 		postmsg.SetData(strHash);
 		theApp.m_MsgQueue.push(postmsg);
@@ -227,11 +225,11 @@ void CIpoCoin::OnBnClickedButtonDrawal()
 
 	if ( pos >=0 ) {
 		bRes = TRUE ;
-		strTip.Format( _T("恭喜提现成功!\n%s") , root["hash"].asCString() ) ;
+		strTip = strprintf("恭喜提现成功!\n%s" , root["hash"].asCString() ) ;
 	}else{
-		strTip.Format( _T("提现失败!") ) ;
+		strTip = "提现失败!" ;
 	}
-	::MessageBox( this->GetSafeHwnd() ,strTip , _T("提示") , MB_ICONINFORMATION ) ;
+	::MessageBox( this->GetSafeHwnd() ,strTip.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
 }
 
 
@@ -291,29 +289,29 @@ void CIpoCoin::OnSize(UINT nType, int cx, int cy)
 
 void CIpoCoin::OnShowListCtrol(CString addr)
 {
-	CString strCommand,strShowData =_T("");
-	strCommand.Format(_T("%s %s %s"),_T("getappaccinfo") , theApp.m_ipoScritptid ,addr);
+	string strCommand,strShowData ="";
+	strCommand =strprintf("%s %s %s","getappaccinfo" , theApp.m_ipoScritptid ,addr);
 	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 
-	if (strShowData == _T(""))
+	if (strShowData == "")
 	{
 		return;
 	}
 	Json::Reader reader;  
 	Json::Value root; 
-	if (!reader.parse(strShowData.GetString(), root)) 
+	if (!reader.parse(strShowData, root)) 
 		return  ;
 	m_listCtrl.DeleteAllItems();
 
-	int pos = strShowData.Find("FreeValues");
+	int pos = strShowData.find("FreeValues");
 	INT64 nMoney = 0;
 	if (pos >0)
 	{
 		nMoney = root["FreeValues"].asInt64() ;
 	}
 	double money = (nMoney*1.0/COIN);
-	strShowData.Format(_T("可提现金额:%.8f"),money);
-	((CStatic*)GetDlgItem(IDC_STATIC_AMOUNT))->SetWindowText(strShowData);
+	strShowData = strprintf("可提现金额:%.8f",money);
+	((CStatic*)GetDlgItem(IDC_STATIC_AMOUNT))->SetWindowText(strShowData.c_str());
 	Invalidate();
 	Json::Value valuearray = root["vFreezedFund"]; 
 
@@ -321,17 +319,17 @@ void CIpoCoin::OnShowListCtrol(CString addr)
 	for(unsigned int i =0;i<valuearray.size();i++)
 	{
 		int nSubIdx = 0;
-		CString strOrder("");
-		strOrder.Format(_T("%d"), i+1);
-		m_listCtrl.InsertItem(coulum,strOrder);
+		string strOrder ="";
+		strOrder= strprintf("%d", i+1);
+		m_listCtrl.InsertItem(coulum,strOrder.c_str());
 
 		nMoney = valuearray[i]["value"].asInt64() ;
 		money = (nMoney*1.0/COIN);
-		strShowData.Format(_T("%.8f"),money);
-		m_listCtrl.SetItemText( coulum , ++nSubIdx, strShowData) ;
+		strShowData = strprintf("%.8f",money);
+		m_listCtrl.SetItemText( coulum , ++nSubIdx, strShowData.c_str()) ;
 
-		strShowData.Format(_T("%d") , valuearray[i]["nHeight"].asInt()) ;
-		m_listCtrl.SetItemText(coulum , ++nSubIdx , strShowData ) ;
+		strShowData =strprintf("%d" , valuearray[i]["nHeight"].asInt()) ;
+		m_listCtrl.SetItemText(coulum , ++nSubIdx , strShowData.c_str() ) ;
 		coulum++;
 	}
 }

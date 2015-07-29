@@ -555,27 +555,26 @@ void CMortgageTardDlg::SendRedPacketComm(){
 		::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
 		return ;
 	}
-	CString strShowData = _T("");
-	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_redPacketScriptid.GetString(),addr.GetString(),strContractData,0,strTxFee,0);
-	CSoyPayHelp::getInstance()->SendContacrRpc(strData.c_str(),strShowData);
+	string strShowData = "";
+	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_redPacketScriptid,addr.GetString(),strContractData,0,strTxFee,0);
+	CSoyPayHelp::getInstance()->SendContacrRpc(strData,strShowData);
 
-	if (strShowData ==_T(""))
+	if (strShowData =="")
 	{
 		return;
 	}
 
 	Json::Reader reader;  
 	Json::Value root; 
-	if (!reader.parse(strShowData.GetString(), root)) 
+	if (!reader.parse(strShowData, root)) 
 		return  ;
 	BOOL bRes = FALSE ;
-	CString strTip;
-	int pos = strShowData.Find("hash");
+	string strTip;
+	int pos = strShowData.find("hash");
 
 	if ( pos >=0 ) {
 		//插入到交易记录数据库
-		CString strHash ;
-		strHash.Format(_T("'%s'") , root["hash"].asCString() );
+		string strHash =root["hash"].asString() ;
 		CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_REVTRANSACTION);
 		postmsg.SetData(strHash);
 		theApp.m_MsgQueue.push(postmsg);
@@ -584,32 +583,31 @@ void CMortgageTardDlg::SendRedPacketComm(){
 	if ( pos >=0 ) {
 		bRes = TRUE ;
 		//strTip.Format( _T("恭喜发送赌约成功!\n%s") , root["hash"].asCString() ) ;
-		strTip.Format( _T("恭喜发送成功，请等待1-2分钟确认交易\n")) ;
+		strTip = "恭喜发送成功，请等待1-2分钟确认交易\n" ;
 	}else{
-		strTip.Format( _T("发送红包失败!") ) ;
+		strTip = "发送红包失败!" ;
 	}
 
 	//保存到数据库
 	if ( bRes ) {
 
-		CString txhash = root["hash"].asCString();
+		string txhash = root["hash"].asString();
 		double amount = atof(nTemp);
 		//插入到数据库
-		CString strSourceData;
-		strSourceData.Format(_T("'%s','%d','%lf','%d' , '%s' , '%d' , '%d'") , \
+		string strSourceData;
+		strSourceData= strprintf("'%s','%d','%lf','%d' , '%s' , '%d' , '%d'" , \
 			                     txhash ,0, amount ,redNum , addr , 0 ,1);
 
 		uistruct::DATABASEINFO_t   pDatabase;
-		pDatabase.strSource = strSourceData.GetString();
+		pDatabase.strSource = strSourceData;
 		pDatabase.strTabName =  _T("t_red_packets_send");
 		CPostMsg postmsg(MSG_USER_INSERT_DATA,0);
 		string strTemp = pDatabase.ToJson();
-		CString strShow;
-		strShow.Format(_T("%s"),strTemp.c_str());
-		postmsg.SetData(strShow);
+
+		postmsg.SetData(strTemp);
 		theApp.m_MsgQueue.push(postmsg);
 	}
-	::MessageBox( this->GetSafeHwnd() ,strTip , _T("提示") , MB_ICONINFORMATION ) ;
+	::MessageBox( this->GetSafeHwnd() ,strTip.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
 }
 /// 发送普通红包
 void CMortgageTardDlg::OnBnClickedButtonCommred()
@@ -640,7 +638,7 @@ void CMortgageTardDlg::OnBnClickedButtonCommred()
 
 BOOL CMortgageTardDlg::AddListaddrDataBox(){
 
-	map<CString,uistruct::LISTADDR_t> m_mapAddrInfo;
+	map<string,uistruct::LISTADDR_t> m_mapAddrInfo;
 	theApp.m_SqliteDeal.GetWalletAddressList(_T(" sign=1 "), &m_mapAddrInfo);
 
 	if ( 0 == m_mapAddrInfo.size() ) return FALSE ;
@@ -649,10 +647,10 @@ BOOL CMortgageTardDlg::AddListaddrDataBox(){
 	((CComboBox*)GetDlgItem(IDC_COMBO_ADDRES))->ResetContent();
 	//加载到ComBox控件
 	int nItem = 0;
-	std::map<CString,uistruct::LISTADDR_t>::const_iterator const_it;
+	std::map<string,uistruct::LISTADDR_t>::const_iterator const_it;
 	for ( const_it = m_mapAddrInfo.begin() ; const_it != m_mapAddrInfo.end() ; const_it++ ) {
 
-		((CComboBox*)GetDlgItem(IDC_COMBO_ADDRES))->InsertString(nItem , const_it->second.RegID );
+		((CComboBox*)GetDlgItem(IDC_COMBO_ADDRES))->InsertString(nItem , const_it->second.RegID.c_str() );
 		nItem++;
 	}
 	((CComboBox*)GetDlgItem(IDC_COMBO_ADDRES))->SetCurSel(0);
@@ -682,10 +680,10 @@ void CMortgageTardDlg::OnCbnSelchangeComboAddres()
 	//m_addrbook.GetWindowText(text) ;
 	if(text!=_T(""))
 	{
-		CString strCommand,strShowData =_T("");
+		string strCommand,strShowData =("");
 
-		CString strCond;
-		strCommand.Format(_T("%s %s %s"),_T("getappaccinfo") , theApp.m_redPacketScriptid ,text);
+		string strCond;
+		strCommand =strprintf("%s %s %s",_T("getappaccinfo") , theApp.m_redPacketScriptid ,text);
 		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 
 		if (strShowData == _T(""))
@@ -694,24 +692,24 @@ void CMortgageTardDlg::OnCbnSelchangeComboAddres()
 		}
 		Json::Reader reader;  
 		Json::Value root; 
-		if (!reader.parse(strShowData.GetString(), root)) 
+		if (!reader.parse(strShowData, root)) 
 			return  ;
 
-		int pos = strShowData.Find("FreeValues");
+		int pos = strShowData.find("FreeValues");
 		INT64 nMoney = 0;
 		if (pos >0)
 		{
 			nMoney = root["FreeValues"].asInt64() ;
 		}
 		double money = (nMoney*1.0/COIN);
-		CString strText= _T("");
-		strText.Format(_T("%.4f"),money);
+		string strText= _T("");
+		strText = strprintf("%.4f",money);
 
 		//// 应用账户余额
-		((CStatic*)GetDlgItem(IDC_STATIC_BALANCE))->SetWindowText(strText);
+		((CStatic*)GetDlgItem(IDC_STATIC_BALANCE))->SetWindowText(strText.c_str());
 
 		
-		pos = strShowData.Find("vFreezedFund");
+		pos = strShowData.find("vFreezedFund");
 		if (pos >0)
 		{
 			Json::Value valuearray = root["vFreezedFund"]; 
@@ -724,19 +722,19 @@ void CMortgageTardDlg::OnCbnSelchangeComboAddres()
 			}
 			if(valuearray.size() >0)
 			{
-				strShowData.Format(_T("%.4f"),vFreeAmount);
+				strShowData = strprintf("%.4f",vFreeAmount);
 				//// 应用冻结账户余额
-				((CStatic*)GetDlgItem(IDC_STATIC_NOT_DRAW))->SetWindowText(strShowData);
+				((CStatic*)GetDlgItem(IDC_STATIC_NOT_DRAW))->SetWindowText(strShowData.c_str());
 			}else{
 				((CStatic*)GetDlgItem(IDC_STATIC_NOT_DRAW))->SetWindowText(_T("0.0"));
 			}
 		}
 		uistruct::LISTADDR_t pAddr;
-		CString condon;
-		condon.Format(_T("reg_id = '%s'"),text);
+		string condon;
+		condon = strprintf("reg_id = '%s'",text);
 		theApp.m_SqliteDeal.GetWalletAddressItem(condon,&pAddr);
-		condon.Format(_T("%.3f"),pAddr.fMoney);
-		((CStatic*)GetDlgItem(IDC_STATIC_MONEY4))->SetWindowText(condon);
+		condon = strprintf("%.3f",pAddr.fMoney);
+		((CStatic*)GetDlgItem(IDC_STATIC_MONEY4))->SetWindowText(condon.c_str());
 
 		Invalidate();
 
@@ -782,7 +780,7 @@ void CMortgageTardDlg::OnBnClickedButtonWithd()
 
 	if (!CheckRegIDValid( theApp.m_redPacketScriptid)) return ;
 
-	CString strShowData = _T("");
+	string strShowData = _T("");
 
 
 	CString addr;
@@ -799,8 +797,6 @@ void CMortgageTardDlg::OnBnClickedButtonWithd()
 		return;
 	}
 
-	CString strCommand , strMaddress , strMoney;
-
 	string strContractData = m_P2PBetHelp.GetAppAccountMoneyContract(addr.GetString(),1,1);
 
 	INT64 strTxFee = theApp.m_P2PBetCfg.GetAppAmountnFee;
@@ -810,25 +806,24 @@ void CMortgageTardDlg::OnBnClickedButtonWithd()
 	}
 
 
-	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_redPacketScriptid.GetBuffer(),addr.GetString(),strContractData,0,strTxFee,0);
-	CSoyPayHelp::getInstance()->SendContacrRpc(strData.c_str(),strShowData);
+	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_redPacketScriptid,addr.GetString(),strContractData,0,strTxFee,0);
+	CSoyPayHelp::getInstance()->SendContacrRpc(strData,strShowData);
 
-	if (strShowData ==_T(""))
+	if (strShowData =="")
 	{
 		return;
 	}
 	Json::Reader reader;  
 	Json::Value root;
-	if (!reader.parse(strShowData.GetString(), root)) 
+	if (!reader.parse(strShowData, root)) 
 		return  ;
 	BOOL bRes = FALSE ;
-	CString strTip;
-	int pos = strShowData.Find("hash");
+	string strTip;
+	int pos = strShowData.find("hash");
 
 	if ( pos >=0 ) {
 		//插入到交易记录数据库
-		CString strHash;
-		strHash.Format(_T("'%s'") , root["hash"].asCString() );
+		string strHash =root["hash"].asString();
 		CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_REVTRANSACTION);
 		postmsg.SetData(strHash);
 		theApp.m_MsgQueue.push(postmsg);
@@ -837,11 +832,11 @@ void CMortgageTardDlg::OnBnClickedButtonWithd()
 	if ( pos >=0 ) {
 		bRes = TRUE ;
 		//strTip.Format( _T("恭喜提现成功!\n%s") , root["hash"].asCString() ) ;
-		strTip.Format( _T("恭喜提现成功，请等待1-2分钟确认交易\n")) ;
+		strTip = "恭喜提现成功，请等待1-2分钟确认交易\n";
 	}else{
-		strTip.Format( _T("提现失败!") ) ;
+		strTip = "提现失败!" ;
 	}
-	::MessageBox( this->GetSafeHwnd() ,strTip , _T("提示") , MB_ICONINFORMATION ) ;
+	::MessageBox( this->GetSafeHwnd() ,strTip.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
 }
 
 
@@ -867,7 +862,7 @@ void CMortgageTardDlg::OnBnClickedButtonRech()
 		return ;
 	}
 
-	CString strShowData = _T("");
+	string strShowData = _T("");
 	CString addr;
 	int sel = m_addrbook.GetCurSel();
 	if (sel < 0)
@@ -882,8 +877,8 @@ void CMortgageTardDlg::OnBnClickedButtonRech()
 		return;
 	}
 
-	CString strCondition;
-	strCondition.Format(_T("reg_id = '%s'"),addr);
+	string strCondition;
+	strCondition = strprintf("reg_id = '%s'",addr);
 	uistruct::LISTADDR_t pAddr;
 	theApp.m_SqliteDeal.GetWalletAddressItem(strCondition,&pAddr);
 	double sub = pAddr.fMoney - atof(theApp.m_strAddress);
@@ -893,7 +888,6 @@ void CMortgageTardDlg::OnBnClickedButtonRech()
 		return;
 	}
 
-	CString strCommand , strMaddress , strMoney;
 
 	string strContractData = m_P2PBetHelp.GetReChangContract();
 
@@ -903,25 +897,24 @@ void CMortgageTardDlg::OnBnClickedButtonRech()
 		return ;
 	}
 
-	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_redPacketScriptid.GetBuffer(),addr.GetString(),strContractData,0,strTxFee,REAL_MONEY(atof(theApp.m_strAddress) ));
-	CSoyPayHelp::getInstance()->SendContacrRpc(strData.c_str(),strShowData);
+	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_redPacketScriptid,addr.GetString(),strContractData,0,strTxFee,REAL_MONEY(atof(theApp.m_strAddress) ));
+	CSoyPayHelp::getInstance()->SendContacrRpc(strData,strShowData);
 
-	if (strShowData == _T(""))
+	if (strShowData == "")
 	{
 		return;
 	}
 	Json::Reader reader;  
 	Json::Value root;
-	if (!reader.parse(strShowData.GetString(), root)) 
+	if (!reader.parse(strShowData, root)) 
 		return  ;
 	BOOL bRes = FALSE ;
-	CString strTip;
-	int pos = strShowData.Find("hash");
+	string strTip;
+	int pos = strShowData.find("hash");
 
 	if ( pos >=0 ) {
 		//插入到交易记录数据库
-		CString strHash;
-		strHash.Format(_T("'%s'") , root["hash"].asCString() );
+		string strHash =root["hash"].asString();
 		CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_REVTRANSACTION);
 		postmsg.SetData(strHash);
 		theApp.m_MsgQueue.push(postmsg);
@@ -930,11 +923,11 @@ void CMortgageTardDlg::OnBnClickedButtonRech()
 	if ( pos >=0 ) {
 		bRes = TRUE ;
 		//strTip.Format( _T("恭喜充值成功!\n%s") , root["hash"].asCString() ) ;
-		strTip.Format( _T("恭喜充值成功，请等待1-2分钟确认交易\n")) ;
+		strTip = "恭喜充值成功，请等待1-2分钟确认交易\n" ;
 	}else{
-		strTip.Format( _T("充值失败!") ) ;
+		strTip = "充值失败!" ;
 	}
-	::MessageBox( this->GetSafeHwnd() ,strTip , _T("提示") , MB_ICONINFORMATION ) ;
+	::MessageBox( this->GetSafeHwnd() ,strTip.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
 }
 
 void CMortgageTardDlg::OnSelectShowWin(int nCurSelTab)
@@ -1018,11 +1011,11 @@ void CMortgageTardDlg::InsertComboxIitem()
 	string strTemp = postmsg.GetData();
 	addr.JsonToStruct(strTemp.c_str());
 
-	CString addressd;
-	addressd.Format(_T("%s"),addr.RegID);
+	string addressd;
+	addressd = strprintf("%s",addr.RegID);
 
 	int item = m_addrbook.GetCount();
-	m_addrbook.InsertString(item,addressd);
+	m_addrbook.InsertString(item,addressd.c_str());
 }
 LRESULT CMortgageTardDlg::OnShowListCtrol( WPARAM wParam, LPARAM lParam ) 
 {
@@ -1124,39 +1117,6 @@ void  CMortgageTardDlg::OnShowPagePool(int page)
 		return;
 	}
 
-
-	//m_BonusListBox.DeleteAllIndex();
-	//CString strpage;
-	//strpage.Format(_T("%d"),page);
-	//GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(strpage);
-	//m_curpage = page;
-	//int index = (page-1)*m_pagesize;
-	//int count = (m_PoolList.size() -index)>=m_pagesize?m_pagesize:(m_PoolList.size() -index);
-	//int i =0;
-	//for (int k = index;k< (index+count);k++)
-	//{
-	//	uistruct::REDPACKETPOOL_t const_it = m_PoolList.at(k);
-
-	//	CString strmoney;
-	//	strmoney.Format(_T("%.8f"),const_it.total_amount);
-	//	CString money;
-	//	money.Format(_T("%.4f"),const_it.total_amount);
-
-	//	CString txhash, line;
-	//	line.Format(_T("%d"),(i+1));
-	//	CString strShow;
-	//	if (const_it.packet_type == 1)
-	//	{
-	//		strShow.Format(_T(("普通红包")));
-	//	}else if (const_it.packet_type == 2)
-	//	{
-	//		strShow.Format(_T(("接龙红包")));
-	//	}
-	//	m_BonusListBox.InsertStr(i,this->GetSafeHwnd());
-	//	m_BonusListBox.SetIndexInage(i , IDB_BITMAP_P2P_LISTBOX_BUT);
-	//	m_BonusListBox.SetIndexString(i , line,const_it.send_acc_id, money,strShow,_T("抢"),const_it.send_hash,strmoney);
-	//	i++;
-	//}
 }
 void   CMortgageTardDlg::SendRedPackeSpecail(){
 	if (!theApp.IsSyncBlock )
@@ -1225,27 +1185,26 @@ void   CMortgageTardDlg::SendRedPackeSpecail(){
 		::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
 		return ;
 	}
-	CString strShowData =_T("");
-	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_redPacketScriptid.GetString(),addr.GetString(),strContractData,0,strTxFee,0);
-	CSoyPayHelp::getInstance()->SendContacrRpc(strData.c_str(),strShowData);
+	string strShowData =_T("");
+	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_redPacketScriptid,addr.GetString(),strContractData,0,strTxFee,0);
+	CSoyPayHelp::getInstance()->SendContacrRpc(strData,strShowData);
 
-	if (strShowData == _T(""))
+	if (strShowData == "")
 	{
 		return;
 	}
 
 	Json::Reader reader;  
 	Json::Value root; 
-	if (!reader.parse(strShowData.GetString(), root)) 
+	if (!reader.parse(strShowData, root)) 
 		return  ;
 	BOOL bRes = FALSE ;
 	CString strTip;
-	int pos = strShowData.Find("hash");
+	int pos = strShowData.find("hash");
 
 	if ( pos >=0 ) {
 		//插入到交易记录数据库
-		CString strHash ;
-		strHash.Format(_T("'%s'") , root["hash"].asCString() );
+		string strHash =  root["hash"].asString();
 		CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_REVTRANSACTION);
 		postmsg.SetData(strHash);
 		theApp.m_MsgQueue.push(postmsg);
@@ -1262,21 +1221,20 @@ void   CMortgageTardDlg::SendRedPackeSpecail(){
 	//保存到数据库
 	if ( bRes ) {
 
-		CString txhash = root["hash"].asCString();
+		string txhash = root["hash"].asString();
 		double amount = atof(nTemp);
 		//插入到数据库
-		CString strSourceData;
-		strSourceData.Format(_T("'%s','%s','%lf','%d' , '%s' , '%d' , '%d'") , \
+		string strSourceData;
+		strSourceData = strprintf("'%s','%s','%lf','%d' , '%s' , '%d' , '%d'" , \
 			txhash ,0 , amount ,redNum , addr , 0 ,2);
 
 		uistruct::DATABASEINFO_t   pDatabase;
-		pDatabase.strSource = strSourceData.GetString();
+		pDatabase.strSource = strSourceData;
 		pDatabase.strTabName =  _T("t_red_packets_send");
 		CPostMsg postmsg(MSG_USER_INSERT_DATA,0);
 		string strTemp = pDatabase.ToJson();
-		CString strShow;
-		strShow.Format(_T("%s"),strTemp.c_str());
-		postmsg.SetData(strShow);
+
+		postmsg.SetData(strTemp);
 		theApp.m_MsgQueue.push(postmsg);
 	}
 	::MessageBox( this->GetSafeHwnd() ,strTip , _T("提示") , MB_ICONINFORMATION ) ;
@@ -1316,7 +1274,7 @@ void   CMortgageTardDlg::AcceptRedPacketComm(CString sendhash,uistruct::REDPACKE
 
 	if (!CheckRegIDValid( theApp.m_redPacketScriptid)) return ;
 
-	::MessageBox( this->GetSafeHwnd() ,pPoolList.message , _T("提示") , MB_ICONINFORMATION ) ;
+	::MessageBox( this->GetSafeHwnd() ,pPoolList.message.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
 
 	CString walletaddr;
 	((CStatic*)GetDlgItem(IDC_STATIC_MONEY4))->GetWindowText(walletaddr);
@@ -1339,7 +1297,7 @@ void   CMortgageTardDlg::AcceptRedPacketComm(CString sendhash,uistruct::REDPACKE
 		::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
-	if (strcmp(pPoolList.send_acc_id,addr) == 0)
+	if (strcmp(pPoolList.send_acc_id.c_str(),addr) == 0)
 	{
 		::MessageBox( this->GetSafeHwnd() ,_T("发红包地址不能抢红包") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
@@ -1359,27 +1317,26 @@ void   CMortgageTardDlg::AcceptRedPacketComm(CString sendhash,uistruct::REDPACKE
 		::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
 		return ;
 	}
-	CString strShowData =_T("");
-	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_redPacketScriptid.GetString(),addr.GetString(),strContractData,0,strTxFee,0);
+	string strShowData =_T("");
+	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_redPacketScriptid,addr.GetString(),strContractData,0,strTxFee,0);
 	CSoyPayHelp::getInstance()->SendContacrRpc(strData.c_str(),strShowData);
 
-	if (strShowData == _T(""))
+	if (strShowData == "")
 	{
 		return;
 	}
 
 	Json::Reader reader;  
 	Json::Value root; 
-	if (!reader.parse(strShowData.GetString(), root)) 
+	if (!reader.parse(strShowData, root)) 
 		return  ;
 	BOOL bRes = FALSE ;
 	CString strTip;
-	int pos = strShowData.Find("hash");
+	int pos = strShowData.find("hash");
 
 	if ( pos >=0 ) {
 		//插入到交易记录数据库
-		CString strHash ;
-		strHash.Format(_T("'%s'") , root["hash"].asCString() );
+		string strHash =  root["hash"].asString();
 		CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_REVTRANSACTION);
 		postmsg.SetData(strHash);
 		theApp.m_MsgQueue.push(postmsg);
@@ -1396,20 +1353,19 @@ void   CMortgageTardDlg::AcceptRedPacketComm(CString sendhash,uistruct::REDPACKE
 	//保存到数据库
 	if ( bRes ) {
 
-		CString txhash = root["hash"].asCString();
+		string txhash = root["hash"].asString();
 		//插入到数据库
-		CString strSourceData;
-		strSourceData.Format(_T("'%s','%s','%d','%lf' , '%s' ,'%s' , '%d' , '%d','%d','%lf'") , \
+		string strSourceData;
+		strSourceData = strprintf("'%s','%s','%d','%lf' , '%s' ,'%s' , '%d' , '%d','%d','%lf'" , \
 			pPoolList.send_hash ,txhash , 0 ,0.0 ,  pPoolList.send_acc_id ,addr ,0,1,0,pPoolList.total_amount);
 
 		uistruct::DATABASEINFO_t   pDatabase;
-		pDatabase.strSource = strSourceData.GetString();
+		pDatabase.strSource = strSourceData;
 		pDatabase.strTabName =  _T("t_red_packets_grab");
 		CPostMsg postmsg(MSG_USER_INSERT_DATA,0);
 		string strTemp = pDatabase.ToJson();
-		CString strShow;
-		strShow.Format(_T("%s"),strTemp.c_str());
-		postmsg.SetData(strShow);
+
+		postmsg.SetData(strTemp);
 		theApp.m_MsgQueue.push(postmsg);
 	}
 	::MessageBox( this->GetSafeHwnd() ,strTip , _T("提示") , MB_ICONINFORMATION ) ;
@@ -1453,7 +1409,7 @@ void   CMortgageTardDlg::AcceptRedPackeSpecail(CString sendhash,uistruct::REDPAC
 		return;
 	}
 
-	if (strcmp(pPoolList.send_acc_id,addr) == 0)
+	if (strcmp(pPoolList.send_acc_id.c_str(),addr) == 0)
 	{
 		::MessageBox( this->GetSafeHwnd() ,_T("发红包地址不能抢红包") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
@@ -1472,27 +1428,26 @@ void   CMortgageTardDlg::AcceptRedPackeSpecail(CString sendhash,uistruct::REDPAC
 		::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
 		return ;
 	}
-	CString strShowData =_T("");
-	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_redPacketScriptid.GetString(),addr.GetString(),strContractData,0,strTxFee,0);
-	CSoyPayHelp::getInstance()->SendContacrRpc(strData.c_str(),strShowData);
+	string strShowData ="";
+	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_redPacketScriptid,addr.GetString(),strContractData,0,strTxFee,0);
+	CSoyPayHelp::getInstance()->SendContacrRpc(strData,strShowData);
 
-	if (strShowData == _T(""))
+	if (strShowData == "")
 	{
 		return;
 	}
 
 	Json::Reader reader;  
 	Json::Value root; 
-	if (!reader.parse(strShowData.GetString(), root)) 
+	if (!reader.parse(strShowData, root)) 
 		return  ;
 	BOOL bRes = FALSE ;
 	CString strTip;
-	int pos = strShowData.Find("hash");
+	int pos = strShowData.find("hash");
 
 	if ( pos >=0 ) {
 		//插入到交易记录数据库
-		CString strHash ;
-		strHash.Format(_T("'%s'") , root["hash"].asCString() );
+		string strHash =  root["hash"].asString();
 		CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_REVTRANSACTION);
 		postmsg.SetData(strHash);
 		theApp.m_MsgQueue.push(postmsg);
@@ -1509,20 +1464,19 @@ void   CMortgageTardDlg::AcceptRedPackeSpecail(CString sendhash,uistruct::REDPAC
 	//保存到数据库
 	if ( bRes ) {
 
-		CString txhash = root["hash"].asCString();
+		string txhash = root["hash"].asString();
 		//插入到数据库
-		CString strSourceData;
-		strSourceData.Format(_T("'%s','%s','%d','%lf' , '%s' ,'%s' , '%d' , '%d','%d','%lf'") , \
+		string strSourceData;
+		strSourceData = strprintf("'%s','%s','%d','%lf' , '%s' ,'%s' , '%d' , '%d','%d','%lf'" , \
 			pPoolList.send_hash ,txhash , 0 ,0.0 ,pPoolList.send_acc_id , addr ,0,1,0,pPoolList.total_amount);
 
 		uistruct::DATABASEINFO_t   pDatabase;
-		pDatabase.strSource = strSourceData.GetString();
+		pDatabase.strSource = strSourceData;
 		pDatabase.strTabName =  _T("t_red_packets_grab");
 		CPostMsg postmsg(MSG_USER_INSERT_DATA,0);
 		string strTemp = pDatabase.ToJson();
-		CString strShow;
-		strShow.Format(_T("%s"),strTemp.c_str());
-		postmsg.SetData(strShow);
+
+		postmsg.SetData(strTemp);
 		theApp.m_MsgQueue.push(postmsg);
 	}
 	::MessageBox( this->GetSafeHwnd() ,strTip , _T("提示") , MB_ICONINFORMATION ) ;
@@ -1555,19 +1509,19 @@ bool  CMortgageTardDlg::IsAcceptRedPacket(CString account,uistruct::REDPACKETPOO
 {
 	//for (int i =0;i < pPoolList.packets_num;i++)
 	//{
-		CString strCommand,strShowData;
-		strCommand.Format(_T("%s %s"),_T("gettxdetail") ,pPoolList.send_hash );
+		string strCommand,strShowData;
+		strCommand = strprintf("%s %s","gettxdetail" ,pPoolList.send_hash );
 		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 
-		if (strShowData == _T(""))
+		if (strShowData == "")
 		{
 			return false;
 		}
 		Json::Reader reader; 
 		Json::Value root;
-		if (!reader.parse(strShowData.GetString(), root)) 
+		if (!reader.parse(strShowData, root)) 
 			return false;
-		int npos = strShowData.Find("confirmHeight");
+		int npos = strShowData.find("confirmHeight");
 		int confirHeight = 1440;
 		if ( npos >= 0 ) { //
 			confirHeight += root["confirmHeight"].asInt() ;    //交易被确认的高度
@@ -1583,25 +1537,25 @@ bool  CMortgageTardDlg::IsAcceptRedPacket(CString account,uistruct::REDPACKETPOO
 		vHash.assign(key,key+sizeof(key));
 		string strKeyHex = CSoyPayHelp::getInstance()->HexStr(vHash);
 
-		vHash =CSoyPayHelp::getInstance()->ParseHex(pPoolList.send_hash.GetString());
+		vHash =CSoyPayHelp::getInstance()->ParseHex(pPoolList.send_hash);
 		reverse(vHash.begin(),vHash.end());
 		string SendHash = CSoyPayHelp::getInstance()->HexStr(vHash);
 
-		CString keyValue;
-		keyValue.Format(_T("%s%s"),strKeyHex.c_str(),SendHash.c_str());
-		strCommand.Format(_T("%s %s %s"),_T("getscriptdata") ,theApp.m_redPacketScriptid,keyValue );
+		string keyValue;
+		keyValue = strprintf("%s%s",strKeyHex.c_str(),SendHash.c_str());
+		strCommand = strprintf("%s %s %s",_T("getscriptdata") ,theApp.m_redPacketScriptid,keyValue.c_str());
 		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 
-		if (strShowData == _T("") || strShowData.Find("value") < 0)
+		if (strShowData == "" || strShowData.find("value") < 0)
 			return false;
 
-		if (!reader.parse(strShowData.GetString(), root)) 
+		if (!reader.parse(strShowData, root)) 
 			return false;;
 
-		CString nValue = root["value"].asCString();
+		string nValue = root["value"].asString();
 		uistruct::RED_DATA redPacket;
 		memset(&redPacket , 0 , sizeof(uistruct::RED_DATA));
-		std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue.GetString());
+		std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue);
 		if (vTemp.size() <=0)
 		{
 			return false;
@@ -1691,21 +1645,21 @@ void    CMortgageTardDlg::ShowAllSpecailWinAndLoss(){
 	uistruct::REDPACKETGRABLIST  RedPackeGrabRecordList;
 	theApp.m_SqliteDeal.GetRedPacketGrabRecordList(_T(" packet_type = 2 "), &RedPackeGrabRecordList);
 	double result = ComputeSpecailRedPacket(RedPackeGrabRecordList);
-	CString show;
-	show.Format(_T("接龙总盈亏:%.4f"),result);
-	m_rBtnWinerloser.SetWindowText(show);
+	string show;
+	show = strprintf("接龙总盈亏:%.4f",result);
+	m_rBtnWinerloser.SetWindowText(show.c_str());
 	m_rBtnWinerloser.Invalidate();
 }
 void   CMortgageTardDlg::ShowAddressSpecailWinAndLoss(CString addr)
 {
-	CString condtion;
-	condtion.Format(_T("grab_acct_id = '%s'and packet_type = 2 "),addr);
+	string condtion;
+	condtion =strprintf("grab_acct_id = '%s'and packet_type = 2 ",addr);
 
 	uistruct::REDPACKETGRABLIST  RedPackeGrabRecordList;
 	theApp.m_SqliteDeal.GetRedPacketGrabRecordList(condtion, &RedPackeGrabRecordList);
 	double result = ComputeSpecailRedPacket(RedPackeGrabRecordList);
-	CString show;
-	show.Format(_T("盈亏:%.4f"),result);
-	m_rBtnAddrWinerloser.SetWindowText(show);
+	string show;
+	show = strprintf("盈亏:%.4f",result);
+	m_rBtnAddrWinerloser.SetWindowText(show.c_str());
 	m_rBtnAddrWinerloser.Invalidate();
 }

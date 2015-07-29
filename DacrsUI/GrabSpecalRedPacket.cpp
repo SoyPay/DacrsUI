@@ -179,9 +179,9 @@ void CGrabSpecalRedPacket::Showlistbox()
 	theApp.m_SqliteDeal.GetRedPacketPoolRecordList(_T(" packet_type = 2 "), &m_PoolList);
 	m_pagecount = (m_PoolList.size()%m_pagesize)==0?(m_PoolList.size()/m_pagesize):(m_PoolList.size()/m_pagesize)+1;
 
-	CString temp;
-	temp.Format(_T("共:%d"),m_pagecount);
-	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(temp);
+	string temp;
+	temp =strprintf("共:%d",m_pagecount);
+	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(temp.c_str());
 	GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T(""));
 	Invalidate();
 	m_BonusListBox.DeleteAllIndex();
@@ -198,39 +198,39 @@ void  CGrabSpecalRedPacket::OnShowPagePool(int page)
 
 
 	m_BonusListBox.DeleteAllIndex();
-	CString strpage;
-	strpage.Format(_T("%d"),page);
-	GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(strpage);
+	string strpage;
+	strpage = strprintf("%d",page);
+	GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(strpage.c_str());
 	m_curpage = page;
 	int index = (page-1)*m_pagesize;
 	unsigned int count = (m_PoolList.size() -index)>=m_pagesize?m_pagesize:(m_PoolList.size() -index);
 	int i =0;
-	CString strmoney;
-	CString money;
-	CString txhash, line;
-	CString strShow;
-	CString temp;
+	string strmoney;
+	string money;
+	string txhash, line;
+	string strShow;
+	string temp;
 	for (unsigned int k = index;k< (index+count);k++)
 	{
 		uistruct::REDPACKETPOOL_t const_it = m_PoolList.at(k);
 
 
-		strmoney.Format(_T("%.8f"),const_it.total_amount);
-		money.Format(_T("%.4f"),const_it.total_amount);
+		strmoney=strprintf("%.8f",const_it.total_amount);
+		money = strprintf("%.4f",const_it.total_amount);
 
-		temp = const_it.send_hash.Left(6);
-		line.Format(_T("%s"),temp);
+		temp = const_it.send_hash.substr(0,6);
+		line = strprintf("%s",temp.c_str());
 		//line.Format(_T("%d"),(i+1));
 		if (const_it.packet_type == 1)
 		{
-			strShow.Format(_T(("普通红包")));
+			strShow = "普通红包";
 		}else if (const_it.packet_type == 2)
 		{
-			strShow.Format(_T(("接龙红包")));
+			strShow = "接龙红包";
 		}
 		m_BonusListBox.InsertStr(i,this->GetSafeHwnd());
 		m_BonusListBox.SetotherIndexInage(i , IDB_BITMAP_GRAB_RED);
-		m_BonusListBox.SetIndexString(i , line,const_it.send_acc_id, _T("抢"), money, const_it.send_hash,strmoney);
+		m_BonusListBox.SetIndexString(i , line.c_str(),const_it.send_acc_id.c_str(), _T("抢"), money.c_str(), const_it.send_hash.c_str(),strmoney.c_str());
 		i++;
 	}
 }
@@ -277,15 +277,15 @@ LRESULT CGrabSpecalRedPacket::onBnCLick( WPARAM wParam, LPARAM lParam )
 	List_AppendData* pinf = m_BonusListBox.GetAppendDataInfo((int)wParam);
 	if ( NULL != pinf ) { 
 		CString hash = pinf->pstr;
-		CString conditon;
-		conditon.Format(_T("send_hash='%s'"),hash);
+		string conditon;
+		conditon = strprintf("send_hash='%s'",hash);
 		uistruct::REDPACKETPOOL_t pPoolList;
 		theApp.m_SqliteDeal.GetRedPacketPoolItem(conditon, &pPoolList);
-		if (pPoolList.send_hash.GetLength() != 0)
+		if (pPoolList.send_hash.length() != 0)
 		{
 			if (pPoolList.packet_type == 2)
 			{
-				AcceptRedPackeSpecail(pPoolList.send_hash,pPoolList);
+				AcceptRedPackeSpecail(pPoolList.send_hash.c_str(),pPoolList);
 			}
 		}
 
@@ -326,7 +326,7 @@ void   CGrabSpecalRedPacket::AcceptRedPackeSpecail(CString sendhash,uistruct::RE
 		return;
 	}
 
-	if (strcmp(pPoolList.send_acc_id,addr) == 0)
+	if (strcmp(pPoolList.send_acc_id.c_str(),addr) == 0)
 	{
 		::MessageBox( this->GetSafeHwnd() ,_T("发红包地址不能抢红包") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
@@ -345,27 +345,26 @@ void   CGrabSpecalRedPacket::AcceptRedPackeSpecail(CString sendhash,uistruct::RE
 		::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
 		return ;
 	}
-	CString strShowData =_T("");
-	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_redPacketScriptid.GetString(),addr.GetString(),strContractData,0,strTxFee,0);
-	CSoyPayHelp::getInstance()->SendContacrRpc(strData.c_str(),strShowData);
+	string strShowData ="";
+	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_redPacketScriptid,addr.GetString(),strContractData,0,strTxFee,0);
+	CSoyPayHelp::getInstance()->SendContacrRpc(strData,strShowData);
 
-	if (strShowData == _T(""))
+	if (strShowData =="")
 	{
 		return;
 	}
 
 	Json::Reader reader;  
 	Json::Value root; 
-	if (!reader.parse(strShowData.GetString(), root)) 
+	if (!reader.parse(strShowData, root)) 
 		return  ;
 	BOOL bRes = FALSE ;
-	CString strTip;
-	int pos = strShowData.Find("hash");
+	string strTip;
+	int pos = strShowData.find("hash");
 
 	if ( pos >=0 ) {
 		//插入到交易记录数据库
-		CString strHash ;
-		strHash.Format(_T("'%s'") , root["hash"].asCString() );
+		string strHash = root["hash"].asString();
 		CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_REVTRANSACTION);
 		postmsg.SetData(strHash);
 		theApp.m_MsgQueue.push(postmsg);
@@ -374,50 +373,49 @@ void   CGrabSpecalRedPacket::AcceptRedPackeSpecail(CString sendhash,uistruct::RE
 	if ( pos >=0 ) {
 		bRes = TRUE ;
 		//strTip.Format( _T("恭喜发送赌约成功!\n%s") , root["hash"].asCString() ) ;
-		strTip.Format( _T("抢红包成功，请等待1-2分钟确认交易\n")) ;
+		strTip ="抢红包成功，请等待1-2分钟确认交易\n";
 	}else{
-		strTip.Format( _T("红包已被抢!") ) ;
+		strTip ="红包已被抢!" ;
 	}
 
 	//保存到数据库
 	if ( bRes ) {
 
-		CString txhash = root["hash"].asCString();
+		string txhash = root["hash"].asString();
 		//插入到数据库
-		CString strSourceData;
-		strSourceData.Format(_T("'%s','%s','%d','%lf' , '%s' ,'%s' , '%d' , '%d','%d','%lf','%d'") , \
-			pPoolList.send_hash ,txhash , 0 ,0.0 ,pPoolList.send_acc_id , addr ,0,2,0,pPoolList.total_amount,pPoolList.packets_num);
+		string strSourceData;
+		strSourceData =strprintf("'%s','%s','%d','%lf' , '%s' ,'%s' , '%d' , '%d','%d','%lf','%d'" , \
+			pPoolList.send_hash.c_str() ,txhash.c_str() , 0 ,0.0 ,pPoolList.send_acc_id , addr ,0,2,0,pPoolList.total_amount,pPoolList.packets_num);
 
 		uistruct::DATABASEINFO_t   pDatabase;
-		pDatabase.strSource = strSourceData.GetString();
+		pDatabase.strSource = strSourceData;
 		pDatabase.strTabName =  _T("t_red_packets_grab");
 		CPostMsg postmsg(MSG_USER_INSERT_DATA,0);
 		string strTemp = pDatabase.ToJson();
-		CString strShow;
-		strShow.Format(_T("%s"),strTemp.c_str());
-		postmsg.SetData(strShow);
+
+		postmsg.SetData(strTemp);
 		theApp.m_MsgQueue.push(postmsg);
 	}
-	::MessageBox( this->GetSafeHwnd() ,strTip , _T("提示") , MB_ICONINFORMATION ) ;
+	::MessageBox( this->GetSafeHwnd() ,strTip.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
 }
 
 bool  CGrabSpecalRedPacket::IsAcceptRedPacket(CString account,uistruct::REDPACKETPOOL_t pPoolList)
 {
 	//for (int i =0;i < pPoolList.packets_num;i++)
 	//{
-		CString strCommand,strShowData;
-		strCommand.Format(_T("%s %s"),_T("gettxdetail") ,pPoolList.send_hash );
+		string strCommand,strShowData;
+		strCommand =strprintf("%s %s","gettxdetail" ,pPoolList.send_hash.c_str() );
 		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 
-		if (strShowData == _T(""))
+		if (strShowData =="")
 		{
 			return false;
 		}
 		Json::Reader reader; 
 		Json::Value root;
-		if (!reader.parse(strShowData.GetString(), root)) 
+		if (!reader.parse(strShowData, root)) 
 			return false;
-		int npos = strShowData.Find("confirmHeight");
+		int npos = strShowData.find("confirmHeight");
 		int confirHeight = 1440;
 		if ( npos >= 0 ) { //
 			confirHeight += root["confirmHeight"].asInt() ;    //交易被确认的高度
@@ -433,25 +431,25 @@ bool  CGrabSpecalRedPacket::IsAcceptRedPacket(CString account,uistruct::REDPACKE
 		vHash.assign(key,key+sizeof(key));
 		string strKeyHex = CSoyPayHelp::getInstance()->HexStr(vHash);
 
-		vHash =CSoyPayHelp::getInstance()->ParseHex(pPoolList.send_hash.GetString());
+		vHash =CSoyPayHelp::getInstance()->ParseHex(pPoolList.send_hash);
 		reverse(vHash.begin(),vHash.end());
 		string SendHash = CSoyPayHelp::getInstance()->HexStr(vHash);
 
-		CString keyValue;
-		keyValue.Format(_T("%s%s"),strKeyHex.c_str(),SendHash.c_str());
-		strCommand.Format(_T("%s %s %s"),_T("getscriptdata") ,theApp.m_redPacketScriptid,keyValue );
+		string keyValue;
+		keyValue = strprintf("%s%s",strKeyHex.c_str(),SendHash.c_str());
+		strCommand= strprintf("%s %s %s","getscriptdata" ,theApp.m_redPacketScriptid,keyValue.c_str() );
 		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 
-		if (strShowData == _T("") || strShowData.Find("value") < 0)
+		if (strShowData == _T("") || strShowData.find("value") < 0)
 			return false;
 
-		if (!reader.parse(strShowData.GetString(), root)) 
+		if (!reader.parse(strShowData, root)) 
 			return false;;
 
-		CString nValue = root["value"].asCString();
+		string nValue = root["value"].asString();
 		uistruct::RED_DATA redPacket;
 		memset(&redPacket , 0 , sizeof(uistruct::RED_DATA));
-		std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue.GetString());
+		std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue);
 		if (vTemp.size() <=0)
 		{
 			return false;
@@ -505,9 +503,9 @@ void CGrabSpecalRedPacket::OnLbnDblclkListBox()
 	if (count <=(int)m_PoolList.size())
 	{
 		uistruct::REDPACKETPOOL_t const_it = m_PoolList.at(count);
-		CString temp = _T("接龙红包ID: ");
-		CString strShowid = const_it.send_hash.Left(30); 
-		temp.AppendFormat(_T("%s") ,strShowid) ;
-		::MessageBox( this->GetSafeHwnd() ,temp , _T("提示") , MB_ICONINFORMATION ) ;
+		string temp = "接龙红包ID: ";
+		string strShowid = const_it.send_hash.substr(0,30); 
+		temp +=strprintf("%s" ,strShowid.c_str()) ;
+		::MessageBox( this->GetSafeHwnd() ,temp.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
 	}
 }

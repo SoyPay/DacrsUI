@@ -47,8 +47,8 @@ void CNewSendAddr::OnBnClickedOk()
 		::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
 	}
 	uistruct::ADDRBOOK_t sAddrBookItem;
-	CString strCond;
-	strCond.Format(_T(" address='%s' "), addr);
+	string strCond;
+	strCond = strprintf(" address='%s' ", addr);
 	
 	int  item = theApp.m_SqliteDeal.GetAddressBookItem(strCond, &sAddrBookItem);
 	if (sAddrBookItem.address != _T(""))

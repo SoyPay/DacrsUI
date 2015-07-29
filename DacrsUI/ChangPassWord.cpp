@@ -84,21 +84,21 @@ void CChangPassWord::OnBnClickedOk()
 		return;
 	}
 
-	CString strCommand;
-	strCommand.Format(_T("%s %s %s"),_T("walletpassphrasechange"),inputOld,confiedNew);
-	CStringA strShowData  = _T("");
+	string strCommand;
+	strCommand = strprintf("%s %s %s",_T("walletpassphrasechange"),inputOld,confiedNew);
+	string strShowData  = _T("");
 
-	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-	if (strShowData == _T(""))
+	CSoyPayHelp::getInstance()->SendRpc(strCommand.c_str(),strShowData);
+	if (strShowData == "")
 	{
 		return;
 	}
 	Json::Reader reader;  
 	Json::Value root; 
-	if (!reader.parse(strShowData.GetString(), root)) 
+	if (!reader.parse(strShowData, root)) 
 		return  ;
 
-	if (strShowData.Find("chgpwd") > 0)
+	if (strShowData.find("chgpwd") > 0)
 	{
 		bool isEntryp = root["chgpwd"].asBool();
 		if (!isEntryp)

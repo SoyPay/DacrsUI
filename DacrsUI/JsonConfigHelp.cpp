@@ -16,7 +16,7 @@ void CJsonConfigHelp::Init()
 		//memset(&m_RedPacketCfg,0,sizeof(CRedPacketCfg));
 }
 
-void CJsonConfigHelp::ReadJsonConfig(const CString& strFilePath)
+void CJsonConfigHelp::ReadJsonConfig(const string& strFilePath)
 {
 	ifstream ifs;
 	ifs.open(strFilePath,ios::in);
@@ -157,10 +157,10 @@ void CJsonConfigHelp::ReadAnonymCfgData(const Json::Value& root)
 void CJsonConfigHelp::ReadScriptCfgData(const Json::Value& root){
 	Json::Value script = root["script"];
 	ASSERT(!script.isNull());
-	m_Scriptid.strScriptBetid = script["betscript"].asCString();
-	m_Scriptid.strSrcriptDarkid = script["darkscript"].asCString();
-	m_Scriptid.m_ipoScritptid = script["iposcript"].asCString();
-	m_Scriptid.m_redpacketScriptid = script["redpacketscript"].asCString();
+	m_Scriptid.strScriptBetid = script["betscript"].asString();
+	m_Scriptid.strSrcriptDarkid = script["darkscript"].asString();
+	m_Scriptid.m_ipoScritptid = script["iposcript"].asString();
+	m_Scriptid.m_redpacketScriptid = script["redpacketscript"].asString();
 	
 }
 void CJsonConfigHelp::GetMainCfgData(CMainCfg& mainCfg)

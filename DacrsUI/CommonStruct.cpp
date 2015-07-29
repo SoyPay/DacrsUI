@@ -5,32 +5,33 @@
 
 IMPLEMENT_SINGLETON(CSoyPayHelp)
 
-CStringA rand_str(int len)
+string rand_str(int len)
 {
-	CStringA str;
+	string str;
 	int i;
 	for(i=0;i<len;++i)
 	{
 		char Temp = 'A'+rand()%26;
-		str.AppendChar(Temp);
+		//str.AppendChar(Temp);
+		str += strprintf("%c",Temp);
 	}
 	return str;
 }
 
-void ProductHttpHead(const CStringA& configdir,const string& strCfgFileName,CStringA &strPort,CStringA& strPreHeadstr,CStringA& strendHeadstr,CStringA& struiport,int &netWork)
+void ProductHttpHead(const string& configdir,const string& strCfgFileName,string &strPort,string& strPreHeadstr,string& strendHeadstr,string& struiport,int &netWork)
 {
-	CStringA configpath = "";
-	configpath.AppendFormat("%s",configdir);
-	configpath.AppendFormat("\\%s",strCfgFileName.c_str());
+	string configpath = "";
+	configpath+=strprintf("%s",configdir);
+	configpath+=strprintf("\\%s",strCfgFileName.c_str());
 	BOOL userflag = false;
 	BOOL passFlag = false;
-	CStringA strTemp = "";
-	CStringA user = "";
-	CStringA regtest = "";
-	CStringA testnet = "";
+	string strTemp = "";
+	string user = "";
+	string regtest = "";
+	string testnet = "";
 	string rpcpassword;
 	string rpcuser;
-	if (PathFileExistsA(configpath))
+	if (PathFileExistsA(configpath.c_str()))
 	{
 		fstream mfile;
 		mfile.open(configpath,ios::in);
@@ -39,61 +40,61 @@ void ProductHttpHead(const CStringA& configdir,const string& strCfgFileName,CStr
 		{
 			getline(mfile,linestr);
 			strTemp=linestr.c_str() ;
-			int upos = strTemp.Find("rpcuser");
-			int passpos = strTemp.Find("rpcpassword");
-			int regpos = strTemp.Find("regtest");
-			int netpos =  strTemp.Find("testnet");
-			int rpcpos =  strTemp.Find("rpcport");
-			int uirpcpos =  strTemp.Find("uiport");
+			int upos = strTemp.find("rpcuser");
+			int passpos = strTemp.find("rpcpassword");
+			int regpos = strTemp.find("regtest");
+			int netpos =  strTemp.find("testnet");
+			int rpcpos =  strTemp.find("rpcport");
+			int uirpcpos =  strTemp.find("uiport");
 			if (passpos>=0)
 			{
-				passpos = strTemp.Find("=",passpos);
-				rpcpassword= strTemp.Mid(passpos+1);
+				passpos = strTemp.find("=",passpos);
+				rpcpassword= strTemp.substr(passpos+1,strTemp.length());
 				userflag = TRUE;
 			}
 			if (upos >=0)
 			{
-				upos = strTemp.Find("=",upos);
-				rpcuser= strTemp.Mid(upos+1);
-				user = strTemp.Mid(upos+1);
+				upos = strTemp.find("=",upos);
+				rpcuser= strTemp.substr(upos+1,strTemp.length());
+				user = strTemp.substr(upos+1,strTemp.length());
 				passFlag = TRUE;
 			}
 
 			if (regpos>=0)
 			{
-				regpos = strTemp.Find("=",regpos);
-				regtest= strTemp.Mid(regpos+1);
-				regtest.TrimLeft();
-				regtest.TrimRight();
-				if (strTemp.GetAt(0) == '#')
+				regpos = strTemp.find("=",regpos);
+				regtest= strTemp.substr(regpos+1,strTemp.length());
+				//regtest.TrimLeft();
+				//regtest.TrimRight();
+				if (strTemp.at(0) == '#')
 				{
-					regtest = _T("");
+					regtest = "";
 				}
 			}
 			if (netpos>=0)
 			{
-				netpos = strTemp.Find("=",netpos);
-				testnet= strTemp.Mid(netpos+1);
-				testnet.TrimLeft();
-				testnet.TrimRight();
-				if (strTemp.GetAt(0) == '#')
+				netpos = strTemp.find("=",netpos);
+				testnet= strTemp.substr(netpos+1,strTemp.length());
+				//testnet.TrimLeft();
+				//testnet.TrimRight();
+				if (strTemp.at(0) == '#')
 				{
-					testnet = _T("");
+					testnet = "";
 				}
 			}
 			if (rpcpos>=0)
 			{
-				rpcpos = strTemp.Find("=",rpcpos);
-				strPort= strTemp.Mid(rpcpos+1);
-				strPort.TrimLeft();
-				strPort.TrimRight();
+				rpcpos = strTemp.find("=",rpcpos);
+				strPort= strTemp.substr(rpcpos+1,strTemp.length());
+				//strPort.TrimLeft();
+				//strPort.TrimRight();
 			}
 			if (uirpcpos>=0)
 			{
-				uirpcpos = strTemp.Find("=",uirpcpos);
-				struiport= strTemp.Mid(uirpcpos+1);
-				struiport.TrimLeft();
-				struiport.TrimRight();
+				uirpcpos = strTemp.find("=",uirpcpos);
+				struiport= strTemp.substr(uirpcpos+1,strTemp.length());
+				//struiport.TrimLeft();
+				//struiport.TrimRight();
 			}
 		}
 	}
@@ -135,45 +136,45 @@ void ProductHttpHead(const CStringA& configdir,const string& strCfgFileName,CStr
 	if (!userflag)
 	{
 		srand(static_cast<unsigned int>(time(NULL)));
-		CStringA name = rand_str(LEN_NAME+1);
-		strTemp.AppendFormat("%s%s\r\n","rpcuser=",name);
-		rpcuser = name.GetString();
+		string name = rand_str(LEN_NAME+1);
+		strTemp += strprintf("%s%s\r\n","rpcuser=",name);
+		rpcuser = name;
 	}
 	if (!passFlag)
 	{
 		srand(static_cast<unsigned int>(time(NULL)+100));
-		CStringA rpcpass= rand_str(LEN_NAME+1);
-		strTemp.AppendFormat("%s%s\r\n","rpcpassword=",rpcpass);
-		rpcpassword = rpcpass.GetString();
+		string rpcpass= rand_str(LEN_NAME+1);
+		strTemp += strprintf("%s%s\r\n","rpcpassword=",rpcpass);
+		rpcpassword = rpcpass;
 	}
 	if (!userflag||!passFlag )
 	{
 		CFile mFile;
-		mFile.Open(CString(configpath.GetString()),CFile::modeCreate|CFile::modeWrite);
+		mFile.Open(configpath.c_str(),CFile::modeCreate|CFile::modeWrite);
 
-		mFile.Write((LPSTR)strTemp.GetString(),strTemp.GetLength());
+		mFile.Write((LPSTR)strTemp.c_str(),strTemp.length());
 		mFile.Close();
 	}
 
-	if(strcmp(theApp.m_severip, "127.0.0.1")) {
-		rpcuser = theApp.m_rpcUser.GetString();
-		rpcpassword = theApp.m_rpcPassWord.GetString();
+	if(strcmp(theApp.m_severip.c_str(), "127.0.0.1")) {
+		rpcuser = theApp.m_rpcUser;
+		rpcpassword = theApp.m_rpcPassWord;
 	}else{
-		theApp.m_rpcUser = _T(rpcuser.c_str());
-		theApp.m_rpcPassWord = _T(rpcpassword.c_str());
+		theApp.m_rpcUser = rpcuser;
+		theApp.m_rpcPassWord =rpcpassword;
 	}
 
-	CStringA UserPass = "";
+	string UserPass = "";
 	if (rpcuser!= "" && rpcpassword!="")
 	{
-		UserPass = rpcuser.c_str();
-		UserPass.TrimLeft();
-		UserPass.TrimRight();
-		CStringA temp = rpcpassword.c_str();
-		temp.TrimLeft();
-		temp.TrimRight();
-		UserPass.AppendFormat(":%s",temp);
-		string strUserPass64 = CSoyPayHelp::getInstance()->EncodeBase64(UserPass.GetString());
+		UserPass = rpcuser;
+		//UserPass.TrimLeft();
+	//	UserPass.TrimRight();
+		string temp = rpcpassword;
+		//temp.TrimLeft();
+		//temp.TrimRight();
+		UserPass += strprintf(":%s",temp);
+		string strUserPass64 = CSoyPayHelp::getInstance()->EncodeBase64(UserPass);
 
 		strPreHeadstr += "POST / HTTP/1.1\r\n";
 		strPreHeadstr +=	"bitcoin-json-rpc/v1.0.0.0-unk-beta\r\n";
@@ -206,55 +207,59 @@ bool IsAllDigtal(const char* pData)
 	return true;
 }
 
-void RPCCommandToJson(const CString& strRPCCommand,CStringA& strSendData)
+
+void RPCCommandToJson(const string& strRPCCommand,string& strSendData)
 {
-	USES_CONVERSION;
-	char* pData = W2A(A2CW((LPCSTR)strRPCCommand));
-	CStringA rpcCommand(pData);
 
 	Json::Value root;
 	Json::Value arrayObj;  
 	Json::Value item;
 
-	int pos = rpcCommand.Find(" ");
-	CStringA method;
-	CStringA param;
+	string rpcCommand = strRPCCommand;
+	int pos = rpcCommand.find(" ");
+	string method;
+	string param;
 	if (pos >=0)
 	{
-		method = rpcCommand.Left(pos);
-		rpcCommand = rpcCommand.Mid(pos + 1);
+		method = rpcCommand.substr(0,pos);
+		rpcCommand = rpcCommand.substr(pos + 1);
 
 	}
-	else if (!rpcCommand.IsEmpty())
+	else if (!rpcCommand.empty())
 	{
-		root["method"] = rpcCommand.GetString();
+		root["method"] = rpcCommand;
 		root["params"]=arrayObj;
 	}
 	if (method != "")
 	{
-		root["method"] = method.GetString();
-		pos = rpcCommand.Find(" ");
+		root["method"] = method;
+		pos = rpcCommand.find(" ");
 		while(pos >=0)
 		{
-			param = rpcCommand.Left(pos);
-			param.TrimLeft();
-			param.TrimRight();
-			rpcCommand = rpcCommand.Mid(pos+1);
-			rpcCommand = rpcCommand.TrimLeft();
-			if (param.GetLength()<10 &&IsAllDigtal(param))
+			param = rpcCommand.substr(0,pos);
+			//param.TrimLeft();
+			//param.TrimRight();
+			rpcCommand = rpcCommand.substr(pos+1);
+			//rpcCommand = rpcCommand.TrimLeft();
+			//if (param.GetLength()<10&&IsAllDigtal(param))
+			if (IsAllDigtal(param.c_str()))
 			{
-				root["params"].append(atoi(param));
+				INT64 nparam;
+				sscanf_s(param.c_str(),"%lld",&nparam);
+				root["params"].append(nparam);
 			}
 			else
 			{
-				root["params"].append(param.GetString());
+				root["params"].append(param);
 			}
-			pos = rpcCommand.Find(" ");
+			pos = rpcCommand.find(" ");
 		}
 
-		if (IsAllDigtal(rpcCommand) && rpcCommand.GetLength() != 12)
+		if (IsAllDigtal(rpcCommand.c_str()) && (method != _T("gethash"))) //&& rpcCommand.GetLength() != 12)
 		{
-			root["params"].append(atoi(rpcCommand));
+			INT64 param;
+			sscanf_s(rpcCommand.c_str(),"%lld",&param);
+			root["params"].append(param);
 		}
 		else
 		{
@@ -268,14 +273,84 @@ void RPCCommandToJson(const CString& strRPCCommand,CStringA& strSendData)
 			}
 			else
 			{
-				root["params"].append(rpcCommand.GetString());
+				root["params"].append(rpcCommand);
 			}
-			
+
 		}
 	}
 
-	strSendData = root.toStyledString().c_str();
+	strSendData = root.toStyledString();
 }
+//void RPCCommandToJson(const CString& strRPCCommand,CStringA& strSendData)
+//{
+//	USES_CONVERSION;
+//	char* pData = W2A(A2CW((LPCSTR)strRPCCommand));
+//	CStringA rpcCommand(pData);
+//
+//	Json::Value root;
+//	Json::Value arrayObj;  
+//	Json::Value item;
+//
+//	int pos = rpcCommand.Find(" ");
+//	CStringA method;
+//	CStringA param;
+//	if (pos >=0)
+//	{
+//		method = rpcCommand.Left(pos);
+//		rpcCommand = rpcCommand.Mid(pos + 1);
+//
+//	}
+//	else if (!rpcCommand.IsEmpty())
+//	{
+//		root["method"] = rpcCommand.GetString();
+//		root["params"]=arrayObj;
+//	}
+//	if (method != "")
+//	{
+//		root["method"] = method.GetString();
+//		pos = rpcCommand.Find(" ");
+//		while(pos >=0)
+//		{
+//			param = rpcCommand.Left(pos);
+//			param.TrimLeft();
+//			param.TrimRight();
+//			rpcCommand = rpcCommand.Mid(pos+1);
+//			rpcCommand = rpcCommand.TrimLeft();
+//			if (param.GetLength()<10 &&IsAllDigtal(param))
+//			{
+//				root["params"].append(atoi(param));
+//			}
+//			else
+//			{
+//				root["params"].append(param.GetString());
+//			}
+//			pos = rpcCommand.Find(" ");
+//		}
+//
+//		if (IsAllDigtal(rpcCommand) && rpcCommand.GetLength() != 12)
+//		{
+//			root["params"].append(atoi(rpcCommand));
+//		}
+//		else
+//		{
+//			if (rpcCommand == "true")
+//			{
+//				root["params"].append(true);
+//			}
+//			else if (rpcCommand == "false")
+//			{
+//				root["params"].append(false);
+//			}
+//			else
+//			{
+//				root["params"].append(rpcCommand.GetString());
+//			}
+//			
+//		}
+//	}
+//
+//	strSendData = root.toStyledString().c_str();
+//}
 
 void SendRPCData(const string& strData,emSendDataType emType)
 {
@@ -331,16 +406,16 @@ void ParseJsonAddrToMap(const CStringA& strValue,map<CString,CString>& mapAccoun
 	}
 }
 
-CStringA ParseJsonToList(const CStringA& strValue)
+string ParseJsonToList(const string& strValue)
 {
-	if (strValue == _T(""))
+	if (strValue == "")
 	{
-		return _T("");
+		return "";
 	}
-	CStringA strData = strValue;
+	string strData = strValue;
 	Json::Reader reader; 
 	Json::Value value;
-	if(reader.parse(strData.GetString(),value))
+	if(reader.parse(strData,value))
 	{
 		Json::Value obj = value["result"];
 		if(obj.isString())
@@ -349,32 +424,22 @@ CStringA ParseJsonToList(const CStringA& strValue)
 		}
 		else
 		{
-			strData = obj.toStyledString().c_str();
+			strData = obj.toStyledString();
 		}		
 	}
-	/*int pos = strData.Find(",");
-	CStringA strTemp;
 
-	while(pos >=0)
-	{
-		CStringA addstr = strData.Left(pos+1);
-		strData = strData.Mid(pos+1);
-		pos = strData.Find(",");
-		strTemp.AppendFormat("%s\r\n",addstr);
-	}
-	strTemp.AppendFormat("%s\r\n",strData);*/
 	return strData;
 }
 
-CStringA ParseRecvData(const char*pRecvData)
+string ParseRecvData(const char*pRecvData)
 {
-	CStringA strShowData = ParseJsonToList(pRecvData);
-	if (0 == strShowData.Find("null"))
+	string strShowData = ParseJsonToList(pRecvData);
+	if (0 == strShowData.find("null"))
 	{
 		string strErrorMsg;
 		if(CSoyPayHelp::getInstance()->GetErrorMsg(pRecvData,strErrorMsg))
 		{
-			strShowData = strErrorMsg.c_str();
+			strShowData = strErrorMsg;
 		}
 	}
 
@@ -387,16 +452,16 @@ void Setgenerate(bool bStart)
 	SendRPCData(str,emBaseFunction);
 }
 
-string GetFullRegID(const CString& strRegID)
+string GetFullRegID(const string& strRegID)
 {
 	int nHeight = 0;
 	short nIndex = 0;
 	int nPos = 0;
 
-	nPos = strRegID.Find('-');
+	nPos = strRegID.find('-');
 	ASSERT(-1 != nPos);
-	nHeight = _ttoi(strRegID.Left(nPos));
-	nIndex = _ttoi(strRegID.Mid(nPos+1));
+	nHeight = _ttoi(strRegID.substr(0,nPos).c_str());
+	nIndex = _ttoi(strRegID.substr(nPos+1).c_str());
 
 	vector<unsigned char> vData;
 	vData.insert(vData.end(), BEGIN(nHeight), END(nHeight));
@@ -404,15 +469,14 @@ string GetFullRegID(const CString& strRegID)
 	return CSoyPayHelp::getInstance()->HexStr(vData);
 }
 
-CString GetCompressRegID(const CString& strRegID)
+string GetCompressRegID(const string& strRegID)
 {
-	if (strRegID.IsEmpty())
+	if (strRegID.empty())
 	{
-		return CString(_T(""));
+		return "";
 	}
-	USES_CONVERSION;
-	char* pData = W2A(A2CW((LPCSTR)strRegID));
-	vector<unsigned char>vRegID = CSoyPayHelp::getInstance()->ParseHex(pData);
+
+	vector<unsigned char>vRegID = CSoyPayHelp::getInstance()->ParseHex(strRegID);
 
 	int nHeight = 0;
 	short nIndex = 0;
@@ -421,57 +485,57 @@ CString GetCompressRegID(const CString& strRegID)
 		memcpy(&nHeight,&vRegID[0],sizeof(nHeight));
 		memcpy(&nIndex,&vRegID[sizeof(nHeight)],sizeof(nIndex));
 	}
-	CString str;
-	str.Format(_T("%d-%d"),nHeight,nIndex);
+	string str;
+	str = strprintf("%d-%d",nHeight,nIndex);
 	return str;
 }
-int CSoyPayHelp::SendRpcDlg(CString cmd,CStringA &rev)
+int CSoyPayHelp::SendRpcDlg(string cmd,string &rev)
 {
 	string revtemp;
 	mRpcCmd.SendContactRpc(cmd,revtemp);
-	CStringA strShowData = ParseRecvData(revtemp.c_str());
+	string strShowData = ParseRecvData(revtemp.c_str());
 
 	rev = strShowData;
-	return rev.GetLength();
+	return rev.length();
 }
-int CSoyPayHelp::SendContacrRpc(CString cmd,CStringA &rev){
+int CSoyPayHelp::SendContacrRpc(string cmd,string &rev){
 	if (theApp.IsLockWallet())
 	{
 		return 0;
 	}
 		string revtemp;
 	mRpcCmd.SendContactRpc(cmd,revtemp);
-	CStringA strShowData = ParseRecvData(revtemp.c_str());
+	string strShowData = ParseRecvData(revtemp.c_str());
 	/*if(m_pRPCDlg != NULL)
 	{
 		m_pRPCDlg->SendMessage(WM_SHOW_SEND_DATA,(WPARAM)&mRpcCmd.RpcJosnStr);
 		m_pRPCDlg->SendMessage(WM_SHOW_RECV_DATA,(WPARAM)&strShowData);
 	}*/
 	rev = strShowData;
-	return rev.GetLength();
+	return rev.length();
 }
-int CSoyPayHelp::SendRpc(CString cmd,CStringA &rev)
+int CSoyPayHelp::SendRpc(string cmd,string &rev)
 {
 	string revtemp;
-	mRpcCmd.SendRpc(cmd.GetString(),revtemp);
-	CStringA strShowData = ParseRecvData(revtemp.c_str());
+	mRpcCmd.SendRpc(cmd,revtemp);
+	string strShowData = ParseRecvData(revtemp.c_str());
 	/*if(m_pRPCDlg != NULL)
 	{
 		m_pRPCDlg->SendMessage(WM_SHOW_SEND_DATA,(WPARAM)&mRpcCmd.RpcJosnStr);
 		m_pRPCDlg->SendMessage(WM_SHOW_RECV_DATA,(WPARAM)&strShowData);
 	}*/
 	rev = strShowData;
-	return rev.GetLength();
+	return rev.length();
 }
-CStringA CSoyPayHelp::ParseRecvData(const char*pRecvData)
+string CSoyPayHelp::ParseRecvData(const char*pRecvData)
 {
-	CStringA strShowData = ParseJsonToList(pRecvData);
-	if (0 == strShowData.Find("null"))
+	string strShowData = ParseJsonToList(pRecvData);
+	if (0 == strShowData.find("null"))
 	{
 		string strErrorMsg;
 		if(CSoyPayHelp::getInstance()->GetErrorMsg(pRecvData,strErrorMsg))
 		{
-			strShowData = strErrorMsg.c_str();
+			strShowData = strErrorMsg;
 		}
 	}
 
@@ -534,11 +598,11 @@ std::string CSoyPayHelp::HexStr(const T itbegin, const T itend, bool fSpaces) {
 	return rv;
 }
 
-CString CSoyPayHelp::DisPlayMoney(CString &strMoney)
+string CSoyPayHelp::DisPlayMoney(string &strMoney)
 {
-	int iStart = strMoney.Find(".");
-	if(strMoney.GetLength() > iStart + 4)
-		return strMoney.Left(iStart+4);
+	int iStart = strMoney.find(".");
+	if(strMoney.length() > iStart + 4)
+		return strMoney.substr(iStart+4);
 	return strMoney;
 }
 
@@ -845,7 +909,7 @@ string CSoyPayHelp::GetFullRegID(const string& strRegID)
 }
 
 
-CString  CSoyPayHelp::GetNotFullRegID(std::vector<unsigned char>strRegID)
+string  CSoyPayHelp::GetNotFullRegID(std::vector<unsigned char>strRegID)
 {
 	int nHeight = 0;
 	short nIndex = 0;
@@ -854,8 +918,8 @@ CString  CSoyPayHelp::GetNotFullRegID(std::vector<unsigned char>strRegID)
 		memcpy(&nHeight, &strRegID[0], sizeof(nHeight));
 		memcpy(&nIndex, &strRegID[4], sizeof(nIndex));
 	}
-	CString ret;
-	ret.Format("%d-%d",nHeight,nIndex);
+	string ret;
+	ret = strprintf("%d-%d",nHeight,nIndex);
 	return ret;
 }
 
@@ -1057,10 +1121,10 @@ string CP2PBetHelp::GetReChangContract(){
 	accdata.type = 0x02;  /// 0xff 表示提现 或者充值 0x01 提现 0x02 充值
 	return CSoyPayHelp::getInstance()->GetHexData((const char*)&accdata,sizeof(APPACC));
 }
-bool CheckRegIDValid(const CString& strRegID)
+bool CheckRegIDValid(const string& strRegID)
 {
-	int nLen = strRegID.GetLength();
-	int nPos = strRegID.Find('-');
+	int nLen = strRegID.length();
+	int nPos = strRegID.find('-');
 	if (0 == nLen || -1 == nPos)
 	{
 		return false;
@@ -1068,7 +1132,7 @@ bool CheckRegIDValid(const CString& strRegID)
 
 	for (int i = 0;i<nLen;++i)
 	{
-		TCHAR ch = strRegID.GetAt(i);
+		TCHAR ch = strRegID.at(i);
 		if (!((ch>='0' && ch<='9') || (ch>='a' && ch<='f') || ch == '-'))
 		{
 			return false;
@@ -1078,9 +1142,9 @@ bool CheckRegIDValid(const CString& strRegID)
 	return true;
 }
 
-bool CheckHash(const CString& strRegID)
+bool CheckHash(const string& strRegID)
 {
-	if (HASH_SIZE != strRegID.GetLength())
+	if (HASH_SIZE != strRegID.length())
 	{
 		return false;
 	}
@@ -1163,21 +1227,21 @@ void CSoyPayHelp::Onexpandtree(CTreeCtrl& m_tree) //展开所有节点
 }
 double CSoyPayHelp::GetAccountBalance(CString addr){
 
-	CString strCommand,strShowData = _T("");
-	strCommand.Format(_T("%s %s"),_T("getaccountinfo") ,addr );
+	string strCommand,strShowData = "";
+	strCommand = strprintf("%s %s","getaccountinfo" ,addr );
 	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 
-	if (strShowData == _T(""))
+	if (strShowData == "")
 	{
 		return 0.0;
 	}
 	Json::Reader reader; 
 	Json::Value root;
-	if (!reader.parse(strShowData.GetString(), root)) 
+	if (!reader.parse(strShowData, root)) 
 		return 0.0;
-	CString acceptbase;
+
 	int64_t ret = 0;
-	if (strShowData.Find("Balance") >= 0)
+	if (strShowData.find("Balance") >= 0)
 	{
 		ret =  root["Balance"].asInt64();
 	}

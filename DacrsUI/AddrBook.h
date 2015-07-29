@@ -30,7 +30,7 @@ private:
 	bool LoadAddrBook();
 private:
 	CString    m_strTip      ;
-	map<CString,uistruct::ADDRBOOK_t> m_mapAddrInfo;
+	map<string,uistruct::ADDRBOOK_t> m_mapAddrInfo;
 	uistruct::ADDRBOOK_t m_selectAddr;
 public:
 	void GetAddrbook(uistruct::ADDRBOOK_t &addr);

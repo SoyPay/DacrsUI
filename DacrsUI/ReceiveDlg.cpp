@@ -66,46 +66,43 @@ void CReceiveDlg::ShowListInfo()
 
 	//加载到ComBox控件
 	int nSubIdx = 0 , i = 0 ;
-	CString strShowData = _T("");
-	std::map<CString,uistruct::LISTADDR_t>::const_iterator const_it;
+	string strShowData = "";
+	std::map<string,uistruct::LISTADDR_t>::const_iterator const_it;
 	for ( const_it = m_MapAddrInfo.begin() ; const_it != m_MapAddrInfo.end() ; const_it++ ) {
 		nSubIdx = 0;
-		CString strOrder("");
-		strOrder.Format(_T("%d"), i+1);
-		m_listCtrl.InsertItem(i,strOrder);
+		string strOrder="";
+		strOrder = strprintf("%d", i+1);
+		m_listCtrl.InsertItem(i,strOrder.c_str());
 
 		uistruct::LISTADDR_t address = const_it->second;
 
-		strShowData.Format(_T("%s") ,address.RegID) ;
-		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
+		m_listCtrl.SetItemText(i , ++nSubIdx , address.RegID.c_str() ) ;
 
-		strShowData.Format(_T("%s") ,address.Label) ;
-		m_listCtrl.SetItemText( i , ++nSubIdx, strShowData) ;
+		
+		m_listCtrl.SetItemText( i , ++nSubIdx, address.Label.c_str()) ;
 		//m_listCtrl.SetItemData(item , (DWORD_PTR)&(*const_it)) ;
 
-
-		strShowData.Format(_T("%s") ,address.address) ;
-		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
+		m_listCtrl.SetItemText(i , ++nSubIdx , address.address.c_str() ) ;
 
 		if (address.bSign == 1)
 		{
-			strShowData.Format(_T("已激活")) ;
+			strShowData="已激活" ;
 		}else{
-			strShowData.Format(_T("未激活")) ;
+			strShowData="未激活" ;
 		}
 
-		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
+		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData.c_str() ) ;
 
 		if (address.nColdDig== 1)
 		{
-			strShowData.Format(_T("支持")) ;
+			strShowData="支持" ;
 		}else{
-			strShowData.Format(_T("不支持")) ;
+			strShowData="不支持" ;
 		}
-		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
+		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData.c_str() ) ;
 
-		strShowData.Format(_T("%.8f") , address.fMoney ) ;
-		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
+		strShowData = strprintf("%.8f" , address.fMoney ) ;
+		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData.c_str() ) ;
 
 		i++;
 	}
@@ -195,7 +192,7 @@ BOOL CReceiveDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT n
 void CReceiveDlg::OnBnClickedCopyaddress()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	CString StrShow;
+	string StrShow;
 	POSITION pos = m_listCtrl.GetFirstSelectedItemPosition() ;
 	if ( pos ) {
 			int nRow = m_listCtrl.GetNextSelectedItem(pos) ;
@@ -213,13 +210,13 @@ void CReceiveDlg::OnBnClickedCopyaddress()
 				GlobalUnlock(clipbuffer);
 				SetClipboardData(CF_TEXT,clipbuffer);
 				CloseClipboard();
-				StrShow.Format(_T("地址已复制到剪贴板\n"));
-				::MessageBox( this->GetSafeHwnd() ,StrShow , _T("提示") , MB_ICONINFORMATION ) ;
+				StrShow ="地址已复制到剪贴板\n";
+				::MessageBox( this->GetSafeHwnd() ,StrShow.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
 		     }
 	}
 	else{
-		StrShow.Format(_T("请选择地址!\n"));
-		::MessageBox( this->GetSafeHwnd() ,StrShow , _T("提示") , MB_ICONINFORMATION ) ;
+		StrShow = "请选择地址!\n";
+		::MessageBox( this->GetSafeHwnd() ,StrShow.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
 	}
 	
 }
@@ -273,14 +270,15 @@ void CReceiveDlg::OnBnClickedButtonSignAccount()
 	if ( pos ) {
 		int nRow = m_listCtrl.GetNextSelectedItem(pos) ;
 		CString str = m_listCtrl.GetItemText(nRow, 3);
-		if(!m_MapAddrInfo.count(str))
+		string addr = strprintf("%s",str);
+		if(!m_MapAddrInfo.count(addr))
 			{
 					TRACE("ERROR");
 				StrShow.Format(_T("地址不存在\n"));
 				::MessageBox( this->GetSafeHwnd() ,StrShow , _T("提示") , MB_ICONINFORMATION ) ;
 				return;
 		   }
-		uistruct::LISTADDR_t te =  m_MapAddrInfo[str];
+		uistruct::LISTADDR_t te =  m_MapAddrInfo[addr];
 		//uistruct::LISTADDR_t * pAddrItem = (uistruct::LISTADDR_t*)m_listCtrl.GetItemData(nRow) ;
 		if (te.fMoney <=0)
 		{
@@ -419,16 +417,15 @@ void   CReceiveDlg::ModifyListCtrlItem()
 	string strTemp = postmsg.GetData();
 	addr.JsonToStruct(strTemp.c_str());
 
-	CString addressd;
-	addressd.Format(_T("%s"),addr.address);
 
-	if(m_MapAddrInfo.count(addressd) <= 0)
+
+	if(m_MapAddrInfo.count(addr.address) <= 0)
 	{
 		TRACE("map ModifyListCtrlItem ERROR");
 		return;
 	}
 	
-	m_MapAddrInfo[addressd]=addr;
+	m_MapAddrInfo[addr.address]=addr;
 	
 	int count = m_listCtrl.GetItemCount();
 	if ( 17 <= count )  {
@@ -439,7 +436,7 @@ void   CReceiveDlg::ModifyListCtrlItem()
 	for(int i = 0; i < count; i++)
 	{
 		CString str = m_listCtrl.GetItemText(i, 3); // 这个函数名具体忘了，就是取得每个item第0列的值
-		if(str == addressd)
+		if(strcmp(str,addr.address.c_str()) == 0)
 		////uistruct::LISTADDR_t *pListAddr = (uistruct::LISTADDR_t*)m_listCtrl.GetItemData(i);
 		//if (!memcmp(pListAddr->address,addr.address,sizeof(pListAddr->address)) &&\
 		//	(pListAddr->fMoney != addr.fMoney || pListAddr->bSign != addr.bSign))
@@ -448,38 +445,35 @@ void   CReceiveDlg::ModifyListCtrlItem()
 			pListAddr->bSign = addr.bSign;*/
 		
 			int nSubIdx = 0;
-			CString  strShowData;
-			strShowData.Format(_T("%s") ,addr.RegID ) ;
-			m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
-
-			strShowData.Format(_T("%s") ,addr.Label) ;
-			m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
+			string  strShowData;
+		
+			m_listCtrl.SetItemText(i , ++nSubIdx , addr.RegID.c_str() ) ;
+	
+			m_listCtrl.SetItemText(i , ++nSubIdx , addr.Label.c_str() ) ;
 			//m_listCtrl.SetItemData(i , (DWORD_PTR)&(*m_pListaddrInfo.rbegin())) ;
 
-		//	uistruct::LISTADDR_t *pListAddr1 = (uistruct::LISTADDR_t*)m_listCtrl.GetItemData(i);
 
-			strShowData.Format(_T("%s") ,addr.address) ;
-			m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
+			m_listCtrl.SetItemText(i , ++nSubIdx , addr.address.c_str() ) ;
 
 			if (addr.bSign == 1)
 			{
-				strShowData.Format(_T("已激活")) ;
+				strShowData="已激活" ;
 			}else{
-				strShowData.Format(_T("未激活")) ;
+				strShowData = "未激活" ;
 			}
 
-			m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
+			m_listCtrl.SetItemText(i , ++nSubIdx , strShowData.c_str() ) ;
 
 			if (addr.nColdDig== 1)
 			{
-				strShowData.Format(_T("支持")) ;
+				strShowData = "支持" ;
 			}else{
-				strShowData.Format(_T("不支持")) ;
+				strShowData = "不支持" ;
 			}
-			m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
+			m_listCtrl.SetItemText(i , ++nSubIdx , strShowData.c_str()) ;
 
-			strShowData.Format(_T("%.8f") ,addr.fMoney ) ;
-			m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
+			strShowData = strprintf("%.8f" ,addr.fMoney ) ;
+			m_listCtrl.SetItemText(i , ++nSubIdx , strShowData.c_str() ) ;
 			break;
 		}
 	}
@@ -496,10 +490,9 @@ void   CReceiveDlg::InsertListCtrlItem()
 	string strTemp = postmsg.GetData();
 	addr.JsonToStruct(strTemp.c_str());
 
-	CString addressd;
-	addressd.Format(_T("%s"),addr.address);
 
-	if(m_MapAddrInfo.count(addressd) > 0){
+
+	if(m_MapAddrInfo.count(addr.address) > 0){
 		TRACE("map InsertListCtrlItem ERROR");
 		return ;
 	}
@@ -508,41 +501,41 @@ void   CReceiveDlg::InsertListCtrlItem()
 
 	int nSubIdx = 0,i =count;
 
-	CString strOrder(_T(""));
-	strOrder.Format(_T("%d"), ++count);
+	string strOrder(_T(""));
+	strOrder =strprintf("%d", ++count);
 	
-	m_listCtrl.InsertItem( i , strOrder);  //序号
-	CString  strShowData;
-	strShowData.Format(_T("%s") ,addr.RegID ) ;
-	m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
+	m_listCtrl.InsertItem( i , strOrder.c_str());  //序号
+	string  strShowData;
 
-	strShowData.Format(_T("%s") ,addr.Label) ;
-	m_listCtrl.SetItemText( i , ++nSubIdx, strShowData ) ; //标签
+	m_listCtrl.SetItemText(i , ++nSubIdx , addr.RegID.c_str() ) ;
+
+
+	m_listCtrl.SetItemText( i , ++nSubIdx, addr.Label.c_str() ) ; //标签
 	
-	m_MapAddrInfo[addressd]=addr;
+	m_MapAddrInfo[addr.address]=addr;
 
-	strShowData.Format(_T("%s"),addr.address);    //地址
-	m_listCtrl.SetItemText( i , ++nSubIdx, strShowData ); 
+	    //地址
+	m_listCtrl.SetItemText( i , ++nSubIdx, addr.address.c_str() ); 
 
 	if (addr.bSign == 1)
 	{
-		strShowData.Format(_T("已激活")) ;
+		strShowData="已激活" ;
 	}else{
-		strShowData.Format(_T("未激活")) ;
+		strShowData="未激活" ;
 	}
 
-	m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
+	m_listCtrl.SetItemText(i , ++nSubIdx , strShowData.c_str() ) ;
 
 	if (addr.nColdDig== 1)
 	{
-		strShowData.Format(_T("支持")) ;
+		strShowData="支持";
 	}else{
-		strShowData.Format(_T("不支持")) ;
+		strShowData="不支持" ;
 	}
-	m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
+	m_listCtrl.SetItemText(i , ++nSubIdx , strShowData.c_str() ) ;
 
-	strShowData.Format(_T("%.8f") , addr.fMoney ) ;
-	m_listCtrl.SetItemText(i , ++nSubIdx , strShowData ) ;
+	strShowData =strprintf("%.8f" , addr.fMoney ) ;
+	m_listCtrl.SetItemText(i , ++nSubIdx , strShowData.c_str() ) ;
 
 }
 
@@ -613,19 +606,18 @@ void CReceiveDlg::OnNMClickListShow(NMHDR *pNMHDR, LRESULT *pResult)
 				{
 					CString addr = _T("");
 					addr = m_listCtrl.GetItemText(hitRow,3);
-					CString strSourceData  , strW ;
-					strSourceData.Format(_T("label = '%s'") , text  ) ;
-					strW.Format(_T("address = '%s'") , addr ) ;
+					string strSourceData  , strW ;
+					strSourceData =strprintf("label = '%s'", text  ) ;
+					strW =strprintf("address = '%s'" , addr ) ;
 
 					uistruct::DATABASEINFO_t DatabaseInfo;
-					DatabaseInfo.strSource = strSourceData.GetString();
-					DatabaseInfo.strWhere = strW.GetString() ;
+					DatabaseInfo.strSource = strSourceData;
+					DatabaseInfo.strWhere = strW ;
 					DatabaseInfo.strTabName = _T("t_wallet_address");
 					CPostMsg postmsg(MSG_USER_UPDATA_DATA,0);
 					string strtemp = DatabaseInfo.ToJson();
-					CString pstr;
-					pstr.Format(_T("%s"),strtemp.c_str());
-					postmsg.SetData(pstr);
+
+					postmsg.SetData(strtemp);
 					theApp.m_MsgQueue.push(postmsg);
 				}
 			}

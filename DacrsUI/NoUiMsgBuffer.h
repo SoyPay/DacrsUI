@@ -10,12 +10,12 @@ public:
 	void ClearBuffer();
 
 	bool AddBytesToBuffer(char *pCh, int nSize);
-	void GetNoUiMsg(CString &strMsg);
+	void GetNoUiMsg(string &strMsg);
 	bool HaveNoUiMsg(); 
 public:
 	char  m_Recvbuffer[nBufferMaxLength];
 private:
 	CMyMutex        cs_NoUiNotifyMsg;  //noui通知消息临界
-	std::deque<CString> m_dqNoUiMsg;
+	std::deque<string> m_dqNoUiMsg;
 	int   m_nLength;
 };
