@@ -82,7 +82,7 @@ bool CSetAppFee::IsRegId(const char* pData)
 void CSetAppFee::OnBnClickedOk()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	if (PathFileExistsA(theApp.str_InsPath))
+	if (PathFileExistsA(theApp.str_InsPath.c_str()))
 	{
 		CStringA configpath = "";
 		configpath.AppendFormat("%s",theApp.str_InsPath);
@@ -255,7 +255,9 @@ void CSetAppFee::OnBnClickedOk()
 		}
 
 		CStdioFile  File;
-		File.Open(theApp.str_InsPath+_T("\\dacrsclient.conf"),CFile::modeWrite | CFile::modeCreate); 
+		string strpath = theApp.str_InsPath;
+		strpath+="\\dacrsclient.conf";
+		File.Open((LPCTSTR)(LPSTR)strpath.c_str(),CFile::modeWrite | CFile::modeCreate); 
 		string strfile = root.toStyledString();
 		File.WriteString(strfile.c_str());
 		File.Close();

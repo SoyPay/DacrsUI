@@ -137,7 +137,7 @@ void CReminderdlg::OnBnClickedCancel()
 
 void  CReminderdlg::WriteClosConfig(int &close)
 {
-	if (PathFileExistsA(theApp.str_InsPath))
+	if (PathFileExistsA(theApp.str_InsPath.c_str()))
 	{
 		CStringA configpath = "";
 		configpath.AppendFormat("%s",theApp.str_InsPath);
@@ -152,16 +152,21 @@ void  CReminderdlg::WriteClosConfig(int &close)
 
 		if (!reader.parse(strFile.GetString(), root)) 
 			return;
-
-		Json::Value p2pbet = root["closeconf"];
-		ASSERT(!p2pbet.isNull());
-		p2pbet["colse"]= close;
-		root["closeconf"]=p2pbet;
-		CStdioFile  File;
-		File.Open(theApp.str_InsPath+_T("\\dacrsclient.conf"),CFile::modeWrite | CFile::modeCreate); 
-		string strfile = root.toStyledString();
-		File.WriteString(strfile.c_str());
-		File.Close();
+		if (strFile.Find("closeconf")>=0)
+		{
+			Json::Value p2pbet = root["closeconf"];
+			ASSERT(!p2pbet.isNull());
+			p2pbet["colse"]= close;
+			root["closeconf"]=p2pbet;
+			CStdioFile  File;
+			string strpathe=theApp.str_InsPath;
+			strpathe +="\\dacrsclient.conf";
+			File.Open((LPCTSTR)(LPSTR)strpathe.c_str(),CFile::modeWrite | CFile::modeCreate); 
+			string strfile = root.toStyledString();
+			File.WriteString(strfile.c_str());
+			File.Close();
+		}
+		
 	}
 }
 void CReminderdlg::OnBnClickedOk()

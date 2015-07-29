@@ -169,16 +169,16 @@ void CBetRecord::Showlistbox(CString address)
 	m_PoolList.clear();
 	m_curpage = 0;
 	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(_T(""));
-	CString conditon;
-	conditon.Format(_T("right_addr ='%s' and (actor = 1 or actor = 2) order by recv_time desc") , address);
+	string conditon;
+	conditon = strprintf("right_addr ='%s' and (actor = 1 or actor = 2) order by recv_time desc" , address);
 
-	int nItem =  theApp.m_SqliteDeal.GetP2PQuizRecordList(conditon ,&m_PoolList ) ;
+	int nItem =  theApp.m_SqliteDeal.GetP2PQuizRecordList(conditon.c_str() ,&m_PoolList ) ;
 
 	m_pagecount = (m_PoolList.size()%m_pagesize)==0?(m_PoolList.size()/m_pagesize):(m_PoolList.size()/m_pagesize)+1;
 
-	CString temp;
-	temp.Format(_T("¹²:%d"),m_pagecount);
-	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(temp);
+	string temp;
+	temp= strprintf("¹²:%d",m_pagecount);
+	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(temp.c_str());
 	GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T(""));
 	Invalidate();
 	m_ListBox.DeleteAllIndex();
@@ -195,9 +195,9 @@ void  CBetRecord::OnShowPagePool(int page)
 
 
 	m_ListBox.DeleteAllIndex();
-	CString strpage;
-	strpage.Format(_T("%d"),page);
-	GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(strpage);
+	string strpage;
+	strpage= strprintf("%d",page);
+	GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(strpage.c_str());
 
 	m_curpage = page;
 	int index = (page-1)*m_pagesize;
@@ -213,10 +213,10 @@ void  CBetRecord::OnShowPagePool(int page)
 	{
 		uistruct::P2P_QUIZ_RECORD_t const_it = m_PoolList.at(k);
 		
-		sprintf_s(buffer,"%s",const_it.left_addr);
+		sprintf_s(buffer,"%s",const_it.left_addr.c_str());
 		Sendaddr=buffer;
 		memset(buffer,0,1024);
-		sprintf_s(buffer,"%s",const_it.right_addr);
+		sprintf_s(buffer,"%s",const_it.right_addr.c_str());
 		address =buffer;
 		memset(buffer,0,1024);
 		sprintf_s(buffer,"%.4f",const_it.amount);

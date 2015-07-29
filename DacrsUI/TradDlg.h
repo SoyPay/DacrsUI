@@ -53,13 +53,13 @@ public:
 	void OnShowListCtrl(uistruct::TRANSRECORDLIST pListInfo,int flag =0);
 	bool  isMine(CString addr);
 	afx_msg void OnCbnSelchangeComboTime();
-	CString GetConditonTime();
-	CString GetConditonTime(INT64 &maxtime,INT64 &mintime);
-	CString GetConditonTxType(int &operate);
-	CString Getaddr();
+	string GetConditonTime();
+	string GetConditonTime(INT64 &maxtime,INT64 &mintime);
+	string GetConditonTxType(int &operate);
+	string Getaddr();
 	void ShowAddrConditon();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
-	CString GetConditonStr(int &operate);
+	string GetConditonStr(int &operate);
 	BOOL IsInsertTx(uistruct::REVTRANSACTION_t txdetail);
 	BOOL FindDesTx(uistruct::TRANSRECORDLIST pListInfo,int flag,uistruct::REVTRANSACTION_t txdetail);
 	

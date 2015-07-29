@@ -326,21 +326,21 @@ class CSoyPayHelp
 
 	
 private:
-	CStringA ParseRecvData(const char*pRecvData);
+	string ParseRecvData(const char*pRecvData);
 
 public:
    //CRPCDlg * pdlg,
-	void InitialRpcCmd(const CStringA &severip,const CStringA	 &sendPreHeadstr,const CStringA &sendendHeadstr,const CStringA &rpcport)
+	void InitialRpcCmd(const string &severip,const string	 &sendPreHeadstr,const string &sendendHeadstr,const string &rpcport)
 	{
 		mRpcCmd.SetHeadString(sendPreHeadstr,sendendHeadstr);
-		mRpcCmd.SetPort(atoi(rpcport));
+		mRpcCmd.SetPort(atoi(rpcport.c_str()));
 		mRpcCmd.SetSeverIp(severip);
 		//m_pRPCDlg = pdlg;
 	}
 
-	int SendRpc(CString cmd,CStringA &rev);
-	int SendContacrRpc(CString cmd,CStringA &rev);
-	int SendRpcDlg(CString cmd,CStringA &rev);
+	int SendRpc(string cmd,string &rev);
+	int SendContacrRpc(string cmd,string &rev);
+	int SendRpcDlg(string cmd,string &rev);
 	void Jiexi(Json::Value &obj, HTREEITEM hItemRoot,CTreeCtrl&m_rpccommand);
 	void Onexpandtree(CTreeCtrl& m_tree) ;  //展开所有节点
 	double GetAccountBalance(CString addr);
@@ -363,7 +363,7 @@ public:
 	bool	GetErrorMsg(const string& strRecvData,string& strErrorMsg);
 	string	Setgenerate(bool bStart);
 	string  GetFullRegID(const string& strRegID);
-	CString  GetNotFullRegID(std::vector<unsigned char>strRegID);
+	string  GetNotFullRegID(std::vector<unsigned char>strRegID);
 
 	template<typename T>
 	std::string HexStr(const T itbegin, const T itend, bool fSpaces = false);
@@ -379,7 +379,7 @@ public:
 
 	void LoadPng( CImage &img);
 
-	CString DisPlayMoney(CString &strMoney);
+	string DisPlayMoney(string &strMoney);
 
 	bool IsOSVersionBelowXp();
 	void revert(char*pchar);
@@ -467,15 +467,15 @@ private:
 
 
 
-extern void ProductHttpHead(const CStringA& configdir,const string& strCfgFileName,CStringA &strPort,CStringA& strPreHeadstr,CStringA& strendHeadstr,CStringA& struiport,int &netWork);
-extern void RPCCommandToJson(const CString& strRPCCommand,CStringA& strSendData);
+extern void ProductHttpHead(const string& configdir,const string& strCfgFileName,string &strPort,string& strPreHeadstr,string& strendHeadstr,string& struiport,int &netWork);
+extern void RPCCommandToJson(const string& strRPCCommand,string& strSendData);
 
 
 extern void ParseJsonAddrToMap(const CStringA& strValue,map<CString,CString>& mapAccount);
-extern CStringA ParseRecvData(const char*pRecvData);
+extern string ParseRecvData(const char*pRecvData);
 extern void Setgenerate(bool bStart);
-extern string GetFullRegID(const CString& strRegID);
-extern CString GetCompressRegID(const CString& strRegID);
+extern string GetFullRegID(const string& strRegID);
+extern string GetCompressRegID(const string& strRegID);
 extern void SendRPCData(const string& strData,emSendDataType emType);
-extern bool CheckRegIDValid(const CString& strRegID);
+extern bool CheckRegIDValid(const string& strRegID);
 extern bool CheckHash(const CString& strRegID);

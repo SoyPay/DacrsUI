@@ -128,8 +128,8 @@ void CMainDlg::OnnitCtrlText()
 {
 
 	ClearCtrlText();
-	CString strCommand,strShowData;
-	strCommand.Format(_T("0"));
+	string strCommand,strShowData;
+	strCommand  = "0";
 
 	double dmoney =  theApp.m_SqliteDeal.GetTableItemSum(_T("t_wallet_address") ,_T("money"), _T(" 1=1 "));
 
@@ -137,25 +137,25 @@ void CMainDlg::OnnitCtrlText()
 	{
 		m_strOver.SetWindowText(_T("0.0")) ;
 	}else{
-		CString strMoney;
-		strMoney.Format(_T("%.3lf"), dmoney);
+		string strMoney;
+		strMoney = strprintf("%.3lf", dmoney);
 		strMoney = CSoyPayHelp::getInstance()->DisPlayMoney(strMoney);
-		m_strOver.SetWindowText(strMoney.GetString()) ;
+		m_strOver.SetWindowText(strMoney.c_str()) ;
 	}
 
-	CString strCond;
-	strCond.Format(_T(" confirm_height = 0 "));
+	string strCond;
+	strCond=" confirm_height = 0 ";
 
-	dmoney =  theApp.m_SqliteDeal.GetTableItemSum(_T("t_transaction") , _T("money") , strCond) ;
+	dmoney =  theApp.m_SqliteDeal.GetTableItemSum("t_transaction" , _T("money") , strCond) ;
 
 
 	if (dmoney<0)
 	{
 		GetDlgItem(IDC_STATIC_NOTCOF)->SetWindowText(_T("0.0")) ;
 	}else{
-		CString strMoney;
-		strMoney.Format(_T("%.3lf"), dmoney);
-		GetDlgItem(IDC_STATIC_NOTCOF)->SetWindowText(strMoney) ;
+		string strMoney;
+		strMoney = strprintf("%.3lf", dmoney);
+		GetDlgItem(IDC_STATIC_NOTCOF)->SetWindowText(strMoney.c_str()) ;
 	}
 	
 
@@ -163,78 +163,40 @@ void CMainDlg::OnnitCtrlText()
 	int nItem =  theApp.m_SqliteDeal.GetTableCountItem(_T("t_transaction"), _T(" 1=1 ")) ;
 
 
-	strCommand.Format(_T("%d"),nItem);
-	m_strTranNum.SetWindowText(strCommand) ;
+	strCommand = strprintf("%d",nItem);
+	m_strTranNum.SetWindowText(strCommand.c_str()) ;
 
 	uistruct::TRANSRECORDLIST pTransaction;
-	CString strSource;
-	strCond.Format(_T(" tx_type='COMMON_TX' order by confirmed_time desc limit 5"));
+	string strSource;
+	strCond=" tx_type='COMMON_TX' order by confirmed_time desc limit 5";
 	theApp.m_SqliteDeal.GetTransactionList(strCond,&pTransaction);
 
 
 	int i = 1;
-	strCommand.Format(_T("IDC_TX%d"),nItem);
+	strCommand=strprintf("IDC_TX%d",nItem);
 	int item = IDC_TX1;
 	int item1 = IDC_TX_JY2;
-	//int pic = IDC_STATIC_TARGET1;
+
 	int desitem = IDC_STATIC_DES1;
-	CString desStr =_T("");
+	string desStr ="";
 	if (pTransaction.size() != 0  ) {
 		int nSubIdx = 0 , i = 0 ;
-		CString strShowaddr ;
+		string strShowaddr ;
 		std::vector<uistruct::REVTRANSACTION_t>::const_iterator const_it;
 		for (const_it = pTransaction.begin() ; const_it != pTransaction.end()&&i<6 ; const_it++ ) {
-			//if (const_it->state == 1)
-			//{
-			//	strSource.Format(_T("-%.8f"),const_it->money);
-			//	strShowaddr.Format(_T("%s  %s"),const_it->addr.c_str(),const_it->desaddr);
-			//	i++;
-			//}else if (const_it->state == 2)
-			//{
-			//	strSource.Format(_T("+%.8f"),const_it->money);
-			//	strShowaddr.Format(_T("%s "),const_it->desaddr.c_str());
-			//	i++;
-			//}
-			strSource.Format(_T("%.4f"),const_it->money);
-			strShowaddr.Format(_T("%s"),const_it->addr.c_str());
-			desStr.Format(_T("%s"),const_it->desaddr.c_str());
-			//if (const_it->state == 1)
-			//{
-			//	if(i == 1)
-			//	m_strTrading.SetTextColor(RGB(255,0,0));			//字体颜色
-			//	if(i == 2)
-			//	m_strTrading2.SetTextColor(RGB(255,0,0));
-			//	if(i == 3)
-			//		m_strTrading3.SetTextColor(RGB(255,0,0));			//字体颜色
-			//	if(i == 4)
-			//		m_strTrading4.SetTextColor(RGB(255,0,0));
-			//	if(i == 5)
-			//		m_strTrading5.SetTextColor(RGB(255,0,0));
-			//}else if (const_it->state == 2)
-			//{
-			//	if(i == 1)
-			//		m_strTrading.SetTextColor(RGB(166,162,247));			//字体颜色
-			//	if(i == 2)
-			//		m_strTrading2.SetTextColor(RGB(166,162,247));
-			//	if(i == 3)
-			//		m_strTrading3.SetTextColor(RGB(166,162,247));			//字体颜色
-			//	if(i == 4)
-			//		m_strTrading4.SetTextColor(RGB(166,162,247));
-			//	if(i == 5)
-			//		m_strTrading5.SetTextColor(RGB(166,162,247));
-
-			//}
+			
+			strSource = strprintf("%.4f",const_it->money);
+			strShowaddr= strprintf("%s",const_it->addr.c_str());
+			desStr = strprintf("%s",const_it->desaddr.c_str());
+			
 			if(item <=IDC_TX5)
-			GetDlgItem(item)->SetWindowText(strShowaddr) ;
+			GetDlgItem(item)->SetWindowText(strShowaddr.c_str()) ;
 			if(item1 <=IDC_TX_JY7)
-			GetDlgItem(item1)->SetWindowText(strSource) ;
-			//if (pic <=IDC_STATIC_TARGET5)
-			//{
-			//	GetDlgItem(pic)->ShowWindow(SW_SHOW);
-			//}
+			GetDlgItem(item1)->SetWindowText(strSource.c_str()) ;
+
 			if (desitem <=IDC_STATIC_DES5)
 			{
-				GetDlgItem(desitem)->SetWindowText(desStr);
+				GetDlgItem(desitem)->SetWindowText(desStr.c_str());
 			}
 			item++;
 			item1++;
@@ -258,20 +220,20 @@ void CMainDlg::SetCtrlText()
 	maindlg.JsonToStruct(strTemp.c_str());
 
 
-	CString strCommand,strShowData;
+	string strCommand,strShowData;
 
-	CString strMoney = _T("");
-	strMoney.Format(_T("%s"),maindlg.money.c_str());//)= _T(maindlg.money.c_str());
+	string strMoney = "";
+	strMoney = strprintf("%s",maindlg.money.c_str());//)= _T(maindlg.money.c_str());
 	strMoney = CSoyPayHelp::getInstance()->DisPlayMoney(strMoney);
-	GetDlgItem(IDC_STATIC_AMOUNT)->SetWindowText(strMoney);
+	GetDlgItem(IDC_STATIC_AMOUNT)->SetWindowText(strMoney.c_str());
 	//strMoney = _T(maindlg.unconfirmmoney.c_str());
-	strMoney.Format(_T("%s"),maindlg.unconfirmmoney.c_str());
+	strMoney = strprintf("%s",maindlg.unconfirmmoney.c_str());
 	strMoney = CSoyPayHelp::getInstance()->DisPlayMoney(strMoney);
-	GetDlgItem(IDC_STATIC_NOTCOF)->SetWindowText(strMoney);
+	GetDlgItem(IDC_STATIC_NOTCOF)->SetWindowText(strMoney.c_str());
 
 	m_strTranNum.SetWindowText(maindlg.itemcount.c_str()) ;
 
-	CString strDes = _T("");
+	string strDes = "";
 	string addr1 = maindlg.addr1;
 	uistruct::REVTRANSACTION_t temp;
 	if (addr1 != "")
@@ -289,92 +251,67 @@ void CMainDlg::SetCtrlText()
 		//	m_strTrading.SetTextColor(RGB(166,162,247));
 		//}
 
-		strCommand.Format(_T("%.4f"),temp.money*COIN);
-		strShowData.Format(_T("%s"),temp.addr.c_str());
-		strDes.Format(_T("%s"),temp.desaddr.c_str());
+		strCommand =strprintf("%.4f",temp.money*COIN);
+		strShowData = strprintf("%s",temp.addr.c_str());
+		strDes = strprintf("%s",temp.desaddr.c_str());
 		
-		GetDlgItem(IDC_STATIC_DES1)->SetWindowText(strDes) ;
-		GetDlgItem(IDC_TX1)->SetWindowText(strShowData) ;
-		GetDlgItem(IDC_TX_JY2)->SetWindowText(strCommand) ;
-		//GetDlgItem(IDC_STATIC_TARGET1)->ShowWindow(SW_SHOW
-		//GetDlgItem(IDC_STATIC_TARGET1)->ShowWindow(SW_HIDE);
+		GetDlgItem(IDC_STATIC_DES1)->SetWindowText(strDes.c_str()) ;
+		GetDlgItem(IDC_TX1)->SetWindowText(strShowData.c_str()) ;
+		GetDlgItem(IDC_TX_JY2)->SetWindowText(strCommand.c_str()) ;
 	}
 	
 	addr1 = maindlg.addr2;
 	if (addr1 != "")
 	{
 		temp.JsonToStruct(addr1);
-		//if (temp.state == 1)
-		//{
-		//	strCommand.Format(_T("-%.8f"),temp.money*COIN);
-		//	strShowData.Format(_T("%s "),temp.addr.c_str());
-		//	m_strTrading2.SetTextColor(RGB(255,0,0));
-		//}else if (temp.state == 2)
-		//{
-		//	strCommand.Format(_T("+%.8f"),temp.money*COIN);
-		//	strShowData.Format(_T("%s "),temp.desaddr.c_str());
-		//	m_strTrading2.SetTextColor(RGB(166,162,247));
-		//}
-		strCommand.Format(_T("%.4f"),temp.money*COIN);
-		strShowData.Format(_T("%s"),temp.addr.c_str());
-		strDes.Format(_T("%s"),temp.desaddr.c_str());
 
-		GetDlgItem(IDC_STATIC_DES2)->SetWindowText(strDes) ;
-		GetDlgItem(IDC_TX2)->SetWindowText(strShowData) ;
-		GetDlgItem(IDC_TX_JY3)->SetWindowText(strCommand) ;
-		//GetDlgItem(IDC_STATIC_TARGET2)->ShowWindow(SW_HIDE);
+		strCommand = strprintf("%.4f",temp.money*COIN);
+		strShowData = strprintf("%s",temp.addr.c_str());
+		strDes = strprintf("%s",temp.desaddr.c_str());
+
+		GetDlgItem(IDC_STATIC_DES2)->SetWindowText(strDes.c_str()) ;
+		GetDlgItem(IDC_TX2)->SetWindowText(strShowData.c_str()) ;
+		GetDlgItem(IDC_TX_JY3)->SetWindowText(strCommand.c_str()) ;
 	}
 
 	addr1 = maindlg.addr3;
 	if (addr1 != "")
 	{
 		temp.JsonToStruct(addr1);
-		//if (temp.state == 1)
-		//{
-		//	strCommand.Format(_T("-%.8f"),temp.money*COIN);
-		//	strShowData.Format(_T("%s "),temp.addr.c_str());
-		//	m_strTrading3.SetTextColor(RGB(255,0,0));
-		//}else if (temp.state == 2)
-		//{
-		//	strCommand.Format(_T("+%.8f"),temp.money*COIN);
-		//	strShowData.Format(_T("%s "),temp.desaddr.c_str());
-		//	m_strTrading3.SetTextColor(RGB(166,162,247));
-		//}
 
-		strCommand.Format(_T("%.4f"),temp.money*COIN);
-		strShowData.Format(_T("%s"),temp.addr.c_str());
-		strDes.Format(_T("%s"),temp.desaddr.c_str());
+		strCommand = strprintf("%.4f",temp.money*COIN);
+		strShowData = strprintf("%s",temp.addr.c_str());
+		strDes = strprintf("%s",temp.desaddr.c_str());
 
-		GetDlgItem(IDC_STATIC_DES3)->SetWindowText(strDes) ;
-		GetDlgItem(IDC_TX3)->SetWindowText(strShowData) ;
-		GetDlgItem(IDC_TX_JY4)->SetWindowText(strCommand) ;
+		GetDlgItem(IDC_STATIC_DES3)->SetWindowText(strDes.c_str()) ;
+		GetDlgItem(IDC_TX3)->SetWindowText(strShowData.c_str()) ;
+		GetDlgItem(IDC_TX_JY4)->SetWindowText(strCommand.c_str()) ;
 		//GetDlgItem(IDC_STATIC_TARGET3)->ShowWindow(SW_HIDE);
 	}
 	addr1 = maindlg.addr4;
 	if (addr1 != "")
 	{
 		temp.JsonToStruct(addr1);
-		strCommand.Format(_T("%.4f"),temp.money*COIN);
-		strShowData.Format(_T("%s"),temp.addr.c_str());
-		strDes.Format(_T("%s"),temp.desaddr.c_str());
+		strCommand = strprintf("%.4f",temp.money*COIN);
+		strShowData = strprintf("%s",temp.addr.c_str());
+		strDes =strprintf("%s",temp.desaddr.c_str());
 
-		GetDlgItem(IDC_STATIC_DES4)->SetWindowText(strDes) ;
-		GetDlgItem(IDC_TX4)->SetWindowText(strShowData) ;
-		GetDlgItem(IDC_TX_JY5)->SetWindowText(strCommand) ;
+		GetDlgItem(IDC_STATIC_DES4)->SetWindowText(strDes.c_str()) ;
+		GetDlgItem(IDC_TX4)->SetWindowText(strShowData.c_str()) ;
+		GetDlgItem(IDC_TX_JY5)->SetWindowText(strCommand.c_str()) ;
 		//GetDlgItem(IDC_STATIC_TARGET4)->ShowWindow(SW_HIDE);
 	}
 	addr1 = maindlg.addr5;
 	if (addr1 != "")
 	{
 		temp.JsonToStruct(addr1);
-		strCommand.Format(_T("%.4f"),temp.money*COIN);
-		strShowData.Format(_T("%s"),temp.addr.c_str());
-		strDes.Format(_T("%s"),temp.desaddr.c_str());
+		strCommand = strprintf("%.4f",temp.money*COIN);
+		strShowData = strprintf("%s",temp.addr.c_str());
+		strDes = strprintf("%s",temp.desaddr.c_str());
 
-		GetDlgItem(IDC_STATIC_DES5)->SetWindowText(strDes) ;
-		GetDlgItem(IDC_TX5)->SetWindowText(strShowData) ;
-		GetDlgItem(IDC_TX_JY7)->SetWindowText(strCommand) ;
-		//GetDlgItem(IDC_STATIC_TARGET5)->ShowWindow(SW_HIDE);
+		GetDlgItem(IDC_STATIC_DES5)->SetWindowText(strDes.c_str()) ;
+		GetDlgItem(IDC_TX5)->SetWindowText(strShowData.c_str()) ;
+		GetDlgItem(IDC_TX_JY7)->SetWindowText(strCommand.c_str()) ;
 	}
 	Invalidate();
 }
@@ -490,11 +427,13 @@ bool CMainDlg::GetUrlServer()
 	{
 		CStdioFile myFile;
 		CString strLine; 
-		if(myFile.Open(theApp.str_InsPath+_T("\\dacrsUpdate.json"), CFile::modeRead))
+		string strpath = theApp.str_InsPath;
+		strpath +="\\dacrsUpdate.json";
+		if(myFile.Open((LPCTSTR)(LPSTR)strpath.c_str(), CFile::modeRead))
 		{
 			while(myFile.ReadString(strLine))
 			{
-				strHtml +=strLine.GetString();
+				strHtml +=strprintf("%s",strLine);
 			}
 			//读取
 			myFile.Close();
@@ -504,7 +443,9 @@ bool CMainDlg::GetUrlServer()
 	}else{
 			//创建
 			CStdioFile  File;
-			File.Open(theApp.str_InsPath+_T("\\dacrsUpdate.json"),CFile::modeWrite | CFile::modeCreate);  
+			string strpath = theApp.str_InsPath;
+			strpath +="\\dacrsUpdate.json";
+			File.Open((LPCTSTR)(LPSTR)strpath.c_str(),CFile::modeWrite | CFile::modeCreate);  
 			File.WriteString(strHtml.c_str());
 			File.Close();
 	}

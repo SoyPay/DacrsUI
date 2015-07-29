@@ -11,17 +11,17 @@ public:
 	mPort = port;
 	mTimerout = timerout;
 	}
-	void SetHeadString(const CStringA	 &sendPreHeadstr,const CStringA &sendendHeadstr)
+	void SetHeadString(const string	 &sendPreHeadstr,const string &sendendHeadstr)
 	{
-		m_sendPreHeadstr = sendPreHeadstr.GetString();
-		m_sendendHeadstr = sendendHeadstr.GetString();
+		m_sendPreHeadstr = sendPreHeadstr;
+		m_sendendHeadstr = sendendHeadstr;
 	}
 	void SetPort(int port)
 	{
 		mPort = port;
 	}
-	void SetSeverIp(const CStringA & ip){
-		mIp = ip.GetString();
+	void SetSeverIp(const string & ip){
+		mIp = ip;
 	}
 	 CStringA RpcJosnStr;
     void BuildSendString(const string	 &cmd,string &sendStr);
@@ -36,7 +36,7 @@ private:
 	void RPCCommandToJson(const string& strRPCCommand,string& strSendData);
 public:
 	int SendRpc(string cmd,string &rev);
-	int SendContactRpc(CString cmd,string &rev);
+	int SendContactRpc(string cmd,string &rev);
 };
 
 extern bool IsAllDigtal(const char* pData);

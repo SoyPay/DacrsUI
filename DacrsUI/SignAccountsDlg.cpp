@@ -69,7 +69,7 @@ void CSignAccountsDlg::OnBnClickedButtonSend()
 	CString address;
 	GetDlgItem(IDC_EDIT_ADDRESS)->GetWindowText(address);
 	if ( _T("") != address ) {
-		CString strCommand , strShowData,strFee ;
+		string strCommand , strShowData;CString strFee ;
 
 	/*	strCommand.Format(_T("%s %s"),_T("getaccountinfo") ,address);
 		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
@@ -84,7 +84,7 @@ void CSignAccountsDlg::OnBnClickedButtonSend()
 
 
 		GetDlgItem(IDC_EDIT_FEE)->GetWindowText(strFee);
-		strCommand.Format(_T("%s %s %lld"),_T("registaccounttx") ,address  , (INT64)REAL_MONEY(atof(strFee)) );
+		strCommand = strprintf("%s %s %lld","registaccounttx" ,address  , (INT64)REAL_MONEY(atof(strFee)) );
 
 		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 
@@ -93,21 +93,20 @@ void CSignAccountsDlg::OnBnClickedButtonSend()
 			::MessageBox( this->GetSafeHwnd() ,_T("服务器没有反应") , _T("提示") , MB_ICONINFORMATION ) ;
 		}
 
-		if (!reader.parse(strShowData.GetString(), root)) 
+		if (!reader.parse(strShowData, root)) 
 			return  ;
 
-		CString strData;
-		int pos = strShowData.Find("hash");
+		string strData;
+		int pos = strShowData.find("hash");
 
 		if ( pos >=0 ) {
 			//插入到数据库
-			CString strHash , strHash1;
-			strHash1.Format(_T("%s") , root["hash"].asCString() );
-			CString strCond;
-			strCond.Format(_T(" hash = '%s' "), strHash1);
+			string strHash;
+			strHash =root["hash"].asString();
+			string strCond;
+			strCond = strprintf(" hash = '%s' ", (LPSTR)(LPCTSTR)strHash.c_str());
 			int nItem =  theApp.m_SqliteDeal.GetTableCountItem(_T("t_transaction") , strCond) ;
 
-			strHash.Format(_T("'%s'") , root["hash"].asCString() );
 			if ( 0 == nItem ) {
 
 				CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_REVTRANSACTION);
@@ -118,11 +117,11 @@ void CSignAccountsDlg::OnBnClickedButtonSend()
 		}
 
 		if ( pos >=0 ) {
-			strData.Format( _T("激活交易发送成功，请等待1-2分钟确认激活交易\n%s") , root["hash"].asCString() ) ;
+			strData = strprintf("激活交易发送成功，请等待1-2分钟确认激活交易\n%s" , root["hash"].asCString() ) ;
 		}else{
-			strData.Format( _T("激活账户失败!") ) ;
+			strData="激活账户失败!" ;
 		}
-		if ( IDOK == ::MessageBox( this->GetSafeHwnd() ,strData , _T("提示") , MB_ICONINFORMATION ) ){
+		if ( IDOK == ::MessageBox( this->GetSafeHwnd() ,strData.c_str(), _T("提示") , MB_ICONINFORMATION ) ){
 			EndDialog(IDOK);
 		}
 	}

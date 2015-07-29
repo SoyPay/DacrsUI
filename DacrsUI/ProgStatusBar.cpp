@@ -77,7 +77,7 @@ void CProgStatusBar::LoadGifing( BOOL bState )
 	if( NULL != m_ProgressWnd ) {
 		if( m_ProgressWnd->GetSafeHwnd() ) {
 			if( TRUE == bState ) {
-				if( TRUE == ((CGIFControl*)m_ProgressWnd)->Load(theApp.m_ProgressGifFile.GetBuffer()) ) {
+				if( TRUE == ((CGIFControl*)m_ProgressWnd)->Load((char*)theApp.m_ProgressGifFile.c_str()) ) {
 					CRect rc ;
 					GetClientRect( rc ) ;
 					Invalidate() ;
@@ -159,9 +159,9 @@ BOOL CProgStatusBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UIN
 		m_strNeting.SetFont(90, _T("宋体"));				//设置显示字体和大小
 		m_strNeting.SetTextColor(RGB(255,255,255));			    //字体颜色
 //		m_strNeting.SetWindowText(_T("网络同步中..."));
-		CString strTemp =_T("");
-		strTemp.Format(_T("获取%s网络连接"),netStr);
-		m_strNeting.SetWindowText(strTemp) ;
+		string strTemp ="";
+		strTemp = strprintf("获取%s网络连接",netStr);
+		m_strNeting.SetWindowText(strTemp.c_str()) ;
 
 		m_strHeight.SetFont(90, _T("宋体"));				//设置显示字体和大小
 		m_strHeight.SetTextColor(RGB(255,255,255));			    //字体颜色
@@ -218,9 +218,9 @@ int CProgStatusBar::ShowProgressCtrl(){
 	theApp.blocktipheight = pBlockchanged.tips ;
 	if (!m_bProgressType)
 	{
-		CString strTemp = _T("");
-		strTemp.Format(_T("%s网络同步中..."),netStr);
-		m_strNeting.SetWindowText(strTemp);
+		string strTemp = "";
+		strTemp = strprintf("%s网络同步中...",netStr);
+		m_strNeting.SetWindowText(strTemp.c_str());
 		m_strNeting.ShowWindow(SW_HIDE);
 		m_strNeting.ShowWindow(SW_SHOW);
 
@@ -280,9 +280,9 @@ int CProgStatusBar::ShowProgressCtrl(){
 		theApp.IsSyncBlock = true;
 	}
 	if ( m_walletui && !m_prosshiden) {
-		CString strTemp = _T("");
-		strTemp.Format(_T("%s网络已同步"),netStr);
-		m_strNeting.SetWindowText(strTemp) ;
+		string strTemp = "";
+		strTemp =strprintf("%s网络已同步",netStr);
+		m_strNeting.SetWindowText(strTemp.c_str()) ;
 		m_strNeting.ShowWindow(SW_HIDE);
 		m_strNeting.ShowWindow(SW_SHOW);
 
@@ -295,9 +295,9 @@ int CProgStatusBar::ShowProgressCtrl(){
 
 	if (m_walletui && m_prosshiden)
 	{
-		CString strTips;
-		strTips.Format(_T("当前高度:%d") ,pBlockchanged.tips ) ;
-		m_strHeight.SetWindowText(strTips) ;
+		string strTips;
+		strTips = strprintf("当前高度:%d" ,pBlockchanged.tips ) ;
+		m_strHeight.SetWindowText(strTips.c_str()) ;
 		m_strHeight.ShowWindow(SW_HIDE);
 		m_strHeight.ShowWindow(SW_SHOW);
 	}
@@ -311,12 +311,12 @@ void CProgStatusBar::ShowLockCtrl()
 	{
 		return ;
 	}
-	CString strTemp = postmsg.GetStrType();
-	if (!strcmp(strTemp,"Lock"))
+	string strTemp = postmsg.GetStrType();
+	if (!strcmp(strTemp.c_str(),"Lock"))
 	{
 		theApp.HaveLocked = TRUE;
 		m_nLockIndex = 0;
-	}else if(!strcmp(strTemp,"UnLock")){
+	}else if(!strcmp(strTemp.c_str(),"UnLock")){
 		theApp.HaveLocked = TRUE;
 		m_nLockIndex = 1;
 	}
@@ -329,24 +329,24 @@ void CProgStatusBar::ShowNetCount()
 	{
 		return ;
 	}
-	CString strTemp = postmsg.GetStrType();
-	int pos = strTemp.Find("connections") ;
+	string strTemp = postmsg.GetStrType();
+	int pos = strTemp.find("connections") ;
 	if (pos >=0)
 	{
-		pos = strTemp.Find("=") ;
+		pos = strTemp.find("=") ;
 		if (pos >=0)
 		{
-			strTemp = strTemp.Mid(pos+1);
-			strTemp.TrimLeft();
-			strTemp.TrimRight();
-			int netCount = atoi(strTemp);
+			strTemp = strTemp.substr(pos+1,strTemp.length());
+			//strTemp.TrimLeft();
+			//strTemp.TrimRight();
+			int netCount = atoi(strTemp.c_str());
 			m_nSigIndex = netCount>3?3:netCount;
 			InvalidateRect(m_bmpsig);
 			if (netCount == 0 )
 			{
-				CString strTemp =_T("");
-				strTemp.Format(_T("获取%s网络连接"),netStr);
-				m_strNeting.SetWindowText(strTemp) ;
+				string strTemp ="";
+				strTemp =strprintf("获取%s网络连接",netStr);
+				m_strNeting.SetWindowText(strTemp.c_str()) ;
 				Invalidate(); 
 			}
 		}	
@@ -394,22 +394,22 @@ void CProgStatusBar::OnPaint()
 }
 void CProgStatusBar::OnIniLockParam()
 {
-	CString strCommand;
-	strCommand.Format(_T("%s"),_T("islocked"));
-	CStringA strShowData =_T("");
+	string strCommand;
+	strCommand = strprintf("%s",_T("islocked"));
+	string strShowData ="";
 
 	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 
-	if (strShowData == _T(""))
+	if (strShowData == "")
 	{
 		return;
 	}
 	Json::Reader reader;  
 	Json::Value root; 
-	if (!reader.parse(strShowData.GetString(), root)) 
+	if (!reader.parse(strShowData, root)) 
 		return ;
 
-	if (strShowData.Find("islock") > 0)
+	if (strShowData.find("islock") > 0)
 	{
 		int state = root["islock"].asInt();
 		if (state == 0)     /// 没有锁

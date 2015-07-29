@@ -474,42 +474,38 @@ void CDacrsUIDlg::InitialRpcCmd()
 }
 void    CDacrsUIDlg::SyncAddrInfo()
 {
-	CString strCommand;
-	strCommand.Format(_T("%s"),"listaddr");
-	CStringA strShowData =_T("");
+	string strCommand;
+	strCommand = strprintf("%s","listaddr");
+	string strShowData ="";
 
 	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 
-	if (strShowData.Find("addr") <0)
+	if (strShowData.find("addr") <0)
 	{
 		return;
 	}
 	Json::Reader reader;  
 	Json::Value root; 
-	if (!reader.parse(strShowData.GetString(), root)) 
+	if (!reader.parse(strShowData, root)) 
 		return  ;
-	map<CString,uistruct::LISTADDR_t> pListInfo;
+	map<string,uistruct::LISTADDR_t> pListInfo;
 	theApp.m_SqliteDeal.GetWalletAddressList(_T(" 1=1 "), (&pListInfo));
 
 	/// 数据库中没有的地址要插入
-	map<CString,int> SListInfo;
+	map<string,int> SListInfo;
 	uistruct::LISTADDR_t listaddr;
 	for(unsigned int i = 0; i < root.size(); ++i){
 		//address
-		CString address;
-		address.Format( _T("%s") , root[i]["addr"].asCString() ) ;		
+		string address = root[i]["addr"].asString();	
 		SListInfo[address] = i;
 
 		memset(&listaddr , 0 , sizeof(uistruct::LISTADDR_t));
 		//address
-		CString strData;
-		strData.Format( _T("%s") , root[i]["addr"].asCString() ) ;
-	//	strncpy(listaddr.address  , strData , strlen(strData) > sizeof(listaddr.address) ? sizeof(listaddr.address):strlen(strData));
-		//strncpy_s((char*)listaddr.address  , strData.GetBuffer(strData.GetLength()) , strlen(strData) > sizeof(listaddr.address) ? sizeof(listaddr.address):strlen(strData));
-		strncpy_s(listaddr.address  , strData , strlen(strData) > sizeof(listaddr.address) ? sizeof(listaddr.address):strlen(strData));
+	
+		listaddr.address = root[i]["addr"].asString(); ;
 		//RegID
-		strData.Format( _T("%s") , root[i]["regid"].asCString() ) ;
-		strncpy_s(listaddr.RegID  , strData , strlen(strData) > sizeof(listaddr.RegID) ? sizeof(listaddr.RegID):strlen(strData));
+
+		listaddr.RegID = root[i]["regid"].asString() ;
 		//金额
 		double fmoney = 0.0 ;  
 		fmoney = root[i]["balance"].asDouble(); 
@@ -518,23 +514,21 @@ void    CDacrsUIDlg::SyncAddrInfo()
 		listaddr.nColdDig = root[i]["haveminerkey"].asBool() ;
 
 		//是否注册GetLength();
-		CString strSign ;
-		strSign.Format(_T("%s") ,listaddr.RegID ) ;
-		if ( 3 <= strSign.GetLength() ) {
+		if ( 3 <= listaddr.RegID.length() ) {
 			listaddr.bSign    = 1 ;
 		}else{
 			listaddr.bSign   = 0 ;
 		}
 	
-		CString strCond;
-		strCond.Format(_T(" address = '%s' "), listaddr.address);
+		string strCond;
+		strCond=strprintf(" address = '%s' ", listaddr.address.c_str());
 		uistruct::LISTADDR_t addrsql;
 		int item = theApp.m_SqliteDeal.GetWalletAddressItem(strCond, &addrsql) ;
 
-		if (strlen(addrsql.address) == 0 )
+		if (addrsql.address.length() == 0 )
 		{
-			CString strData;
-			strData.Format(_T("'%s' , '%s' , '%.8f' , '%d' ,'%d','%s'") , listaddr.address ,listaddr.RegID ,listaddr.fMoney ,listaddr.nColdDig ,listaddr.bSign,listaddr.Label ) ;
+			string strData;
+			strData= strprintf("'%s' , '%s' , '%.8f' , '%d' ,'%d','%s'" , listaddr.address.c_str() ,listaddr.RegID.c_str() ,listaddr.fMoney ,listaddr.nColdDig ,listaddr.bSign,listaddr.Label.c_str() ) ;
 			if (!theApp.m_SqliteDeal.InsertTableItem(_T("t_wallet_address") ,strData ))
 			{
 				TRACE("INSERT t_wallet_address data failed!\n");
@@ -542,9 +536,9 @@ void    CDacrsUIDlg::SyncAddrInfo()
 		}else{
 			if (listaddr.fMoney != addrsql.fMoney || listaddr.bSign != addrsql.bSign)
 			{
-				CString strSourceData,strWhere;
-				strSourceData.Format(_T("reg_id = '%s', money = %.8f ,cold_dig =%d, sign =%d") ,listaddr.RegID ,listaddr.fMoney ,listaddr.nColdDig ,listaddr.bSign ) ;
-				strWhere.Format(_T("address = '%s'") , listaddr.address  ) ;
+				string strSourceData,strWhere;
+				strSourceData =strprintf("reg_id = '%s', money = %.8f ,cold_dig =%d, sign =%d" ,listaddr.RegID.c_str() ,listaddr.fMoney ,listaddr.nColdDig ,listaddr.bSign ) ;
+				strWhere=strprintf("address = '%s'" , listaddr.address.c_str()  ) ;
 				if ( !theApp.m_SqliteDeal.UpdateTableItem(_T("t_wallet_address") , strSourceData , strWhere ) ){
 					TRACE("UPDATE t_wallet_address data failed!\n");
 				}
@@ -553,13 +547,13 @@ void    CDacrsUIDlg::SyncAddrInfo()
 	}
 
 	////// 剔除数据库中钱包没有的地址
-	map<CString,uistruct::LISTADDR_t>::const_iterator it;
+	map<string,uistruct::LISTADDR_t>::const_iterator it;
 	for (it= pListInfo.begin();it != pListInfo.end();it++)
 	{
 		if (SListInfo.count(it->first) <= 0)
 		{
-			CString strCond;
-			strCond.Format(_T(" address='%s' "), it->first);
+			string strCond;
+			strCond = strprintf(" address='%s' ", it->first.c_str());
 			int item = theApp.m_SqliteDeal.DeleteTableItem(_T("t_wallet_address"), strCond);
 		}
 	}
@@ -618,10 +612,10 @@ void CDacrsUIDlg::CloseThread()
 
 void  CDacrsUIDlg::StopSever()
 {
-	CString strCommand;
-	strCommand.Format(_T("%s"),_T("stop"));
-	CStringA strSendData;
-	CString strret = _T("Dacrsd server stopping");
+	string strCommand;
+	strCommand = strprintf("%s",_T("stop"));
+	string strSendData;
+	string strret = _T("Dacrsd server stopping");
 
 	SYSTEMTIME curTime ;
 	memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
@@ -634,7 +628,7 @@ void  CDacrsUIDlg::StopSever()
 		{
 			CSoyPayHelp::getInstance()->SendRpc(strCommand,strSendData);
 		}
-		if (strSendData.Find(strret) >=0)
+		if (strSendData.find(strret) >=0)
 		{
 			nRecStopCmd = true;
 		}
@@ -671,13 +665,13 @@ bool  CDacrsUIDlg::IsP2pBetFinsh()
 {
 
 	/// 处于发赌约状态
-	CString strCond;
-	strCond.Format(_T("(height+500) > %d and (state = 0 or state = 4) and (actor = 0 or actor =2)"),theApp.blocktipheight);
+	string strCond;
+	strCond = strprintf("(height+500) > %d and (state = 0 or state = 4) and (actor = 0 or actor =2)",theApp.blocktipheight);
 	uistruct::P2PBETRECORDLIST pPoolList;
 	theApp.m_SqliteDeal.GetP2PQuizRecordList(strCond,&pPoolList);
 	// 处于接赌状态
 	uistruct::P2PBETRECORDLIST pPoolList1;
-	strCond.Format(_T("(height +time_out)> %d and (state = 1 or state = 5)  and (actor = 0 or actor =2)"),theApp.blocktipheight);
+	strCond= strprintf("(height +time_out)> %d and (state = 1 or state = 5)  and (actor = 0 or actor =2)",theApp.blocktipheight);
 	theApp.m_SqliteDeal.GetP2PQuizRecordList(strCond,&pPoolList1);
 	if (pPoolList.size() != 0 && pPoolList1.size() != 0)
 	{
@@ -728,7 +722,7 @@ void CDacrsUIDlg::OnBnClickedButtonClose()
 	if (!IsP2pBetFinsh())
 	{
 		CString strDisplay;
-		strDisplay.Format(_T("猜你妹有些单还未接赌或者开奖,关闭系统接赌了未在指定时间内开奖,自动判输"));
+		strDisplay.Format(_T("猜你妹有些单还未接赌或开奖,关闭系统已接赌超时未开奖,自动判输"));
 		COut outdlg(NULL, strDisplay,100,_T("继续"),_T("退出"));
 		if ( IDOK == outdlg.DoModal()){
 			ClosWallet();
@@ -868,9 +862,9 @@ void CDacrsUIDlg::BakWallet()
 		}
 
 		//strPath.AppendFormat(_T(".dat"));
-		CString strCommand;
-		strCommand.Format(_T("%s %s"),_T("backupwallet"),strPath);
-		CStringA strSendData;
+		string strCommand;
+		strCommand = strprintf("%s %s",_T("backupwallet"),strPath);
+		string strSendData;
 		CSoyPayHelp::getInstance()->SendRpc(strCommand,strSendData);
 
 		CString strShowData;
@@ -1000,9 +994,9 @@ void CDacrsUIDlg:: LockWallet()
 		MessageBox(_T("钱包没有加锁"));
 		return;
 	}
-	CString strCommand;
-	strCommand.Format(_T("%s"),_T("walletlock"));
-	CStringA strShowData =_T("");
+	string strCommand;
+	strCommand = strprintf("%s",_T("walletlock"));
+	string strShowData ="";
 
 	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 
@@ -1012,10 +1006,10 @@ void CDacrsUIDlg:: LockWallet()
 	}
 	Json::Reader reader;  
 	Json::Value root; 
-	if (!reader.parse(strShowData.GetString(), root)) 
+	if (!reader.parse(strShowData, root)) 
 		return  ;
 
-	if (strShowData.Find("walletlock") > 0)
+	if (strShowData.find("walletlock") > 0)
 	{
 		bool isEntryp = root["walletlock"].asBool();
 		if (!isEntryp)
@@ -1055,23 +1049,23 @@ void CDacrsUIDlg::WriteExportWalletAndBookAddr(CString fileName)
 			int cold = obj["cold_dig"].asInt();
 			int sig = obj["sign"].asInt();
 
-			CString conditon = _T("");
-			conditon.Format(_T("address = '%s'"),addr);
+			string conditon = _T("");
+			conditon = strprintf("address = '%s'",addr);
 			uistruct::LISTADDR_t pAddr;
 			theApp.m_SqliteDeal.GetWalletAddressItem(conditon,&pAddr);
-			if (strlen(pAddr.address) == 0)
+			if (pAddr.address.length() == 0)
 			{
-				CString strSourceData= _T("");
-				strSourceData.Format(_T("'%s' , '%s' , '%.8f' , '%d' ,'%d','%s'") , addr ,regid ,money ,cold ,sig,label ) ;
+				string strSourceData= "";
+				strSourceData = strprintf("'%s' , '%s' , '%.8f' , '%d' ,'%d','%s'" , addr ,regid ,money ,cold ,sig,label ) ;
 				if (!theApp.m_SqliteDeal.InsertTableItem(_T("t_wallet_address") ,strSourceData ) )
 				{
 					TRACE("Insert t_wallet_address error!\n");
 				}
 
 			}else{
-				CString strSourceData,strWhere;
-				strSourceData.Format(_T("label = '%s'") ,label) ;
-				strWhere.Format(_T("address = '%s'") , addr ) ;
+				string strSourceData,strWhere;
+				strSourceData = strprintf("label = '%s'" ,label) ;
+				strWhere= strprintf("address = '%s'" , addr ) ;
 				if ( !theApp.m_SqliteDeal.UpdateTableItem(_T("t_wallet_address") , strSourceData , strWhere ) ){
 					TRACE(_T("Update t_wallet_address failed!") );
 				}
@@ -1086,23 +1080,23 @@ void CDacrsUIDlg::WriteExportWalletAndBookAddr(CString fileName)
 			Json::Value obj = addrValue[i];
 			CString addr = obj["addr"].asCString();
 			CString label =obj["label"].asCString();
-			CString conditon = _T("");
-			conditon.Format(_T("address = '%s'"),addr);
+			string conditon = _T("");
+			conditon = strprintf("address = '%s'",addr);
 			uistruct::ADDRBOOK_t  pAddr;
 			theApp.m_SqliteDeal.GetAddressBookItem(conditon,&pAddr);
-			if (strlen(pAddr.address) == 0)
+			if (pAddr.address.length() == 0)
 			{
-				CString strSourceData= _T("");
-				strSourceData.Format(_T("'%s' , '%s' ")  ,label, addr) ;
+				string strSourceData= "";
+				strSourceData= strprintf("'%s' , '%s' "  ,label, addr) ;
 				if (!theApp.m_SqliteDeal.InsertTableItem(_T("t_address_book") ,strSourceData ) )
 				{
 					TRACE("Insert t_wallet_address error!\n");
 				}
 
 			}else{
-				CString strSourceData,strWhere;
-				strSourceData.Format(_T("Label = '%s'") ,label) ;
-				strWhere.Format(_T("address = '%s'") , addr ) ;
+				string strSourceData,strWhere;
+				strSourceData=strprintf("Label = '%s'",label) ;
+				strWhere= strprintf("address = '%s'", addr ) ;
 				if ( !theApp.m_SqliteDeal.UpdateTableItem(_T("t_address_book") , strSourceData , strWhere ) ){
 					TRACE(_T("Update t_wallet_address failed!") );
 				}
@@ -1125,16 +1119,16 @@ void CDacrsUIDlg::AddImportWalletAndBookAddr(CString fileName)
 		return;
 	/// 自己钱包地址保存  walletaddr
 	Json::Value walletaddr; 
-	map<CString,uistruct::LISTADDR_t> pListInfo;
+	map<string,uistruct::LISTADDR_t> pListInfo;
 	theApp.m_SqliteDeal.GetWalletAddressList(_T(" 1=1 "), (&pListInfo));
 	if (pListInfo.size() != 0)
 	{
 		Json::Value Array;
 		Json::Value itemValue;
-		map<CString,uistruct::LISTADDR_t>::iterator item = pListInfo.begin();
+		map<string,uistruct::LISTADDR_t>::iterator item = pListInfo.begin();
 		for (;item != pListInfo.end();item++)
 		{
-			if (strlen(item->second.Label) != 0)
+			if (item->second.Label.length() != 0)
 			{
 				itemValue["addr"]=item->second.address;
 				itemValue["label"] = item->second.Label;
@@ -1148,20 +1142,20 @@ void CDacrsUIDlg::AddImportWalletAndBookAddr(CString fileName)
 	root["walletaddr"] = Array;
 	}
 
-	map<CString,uistruct::ADDRBOOK_t> pAddrBookMap;
+	map<string,uistruct::ADDRBOOK_t> pAddrBookMap;
 	theApp.m_SqliteDeal.GetAddressBookList(_T(" 1=1 "),(&pAddrBookMap));
 
 	if (pAddrBookMap.size() != 0)
 	{
 		Json::Value Array;
 		Json::Value itemValue;
-		map<CString,uistruct::ADDRBOOK_t>::iterator item = pAddrBookMap.begin();
+		map<string,uistruct::ADDRBOOK_t>::iterator item = pAddrBookMap.begin();
 		for (;item != pAddrBookMap.end();item++)
 		{
 			//if (item->second.label != _T(""))
 			{
-				itemValue["addr"]=item->second.address.GetString();
-				itemValue["label"] = item->second.label.GetString();
+				itemValue["addr"]=item->second.address;
+				itemValue["label"] = item->second.label;
 				Array.append(itemValue);
 			}
 		}
@@ -1192,9 +1186,9 @@ void CDacrsUIDlg:: ExportPriveKey()
 			return;
 		}
 		//strPath.AppendFormat(_T(".smc"));
-		CString strCommand;
-		strCommand.Format(_T("%s %s"),_T("dumpwallet"),strPath);
-		CStringA strSendData;
+		string strCommand;
+		strCommand = strprintf("%s %s","dumpwallet",strPath);
+		string strSendData;
 		CSoyPayHelp::getInstance()->SendRpc(strCommand,strSendData);
 		CString strShowData;
 		strShowData.Format(_T("导出私钥成功:%s"),strPath);
@@ -1226,17 +1220,20 @@ void CDacrsUIDlg:: ImportPrvieKey()
 	if (::GetOpenFileName(&ofn))
 	{
 			CString strPath = ofn.lpstrFile;
-			CString strCommand;
-			strCommand.Format(_T("%s %s"),_T("importwallet"),strPath);
-			CStringA strSendData;
+			string strCommand;
+			strCommand = strprintf("%s %s",_T("importwallet"),strPath);
+			string strSendData;
 	
 			CSoyPayHelp::getInstance()->SendRpc(strCommand,strSendData);	
-
+			if (strSendData == "")
+			{
+				return;
+			}
 			Json::Reader reader;  
 			Json::Value root; 
-			if (!reader.parse(strSendData.GetString(), root)) 
+			if (!reader.parse(strSendData, root)) 
 				return  ;
-			if (strSendData.Find(_T("imorpt key size")) >=0)
+			if (strSendData.find(_T("imorpt key size")) >=0)
 			{
 				int size = root["imorpt key size"].asInt();
 				if (size > 0)

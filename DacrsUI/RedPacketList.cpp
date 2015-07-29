@@ -36,8 +36,8 @@ END_MESSAGE_MAP()
 
 void CRedPacketList::ShowTxDetail(CString txhash)
 {
-	CString strCommand,strShowData;
-	strCommand.Format(_T("%s %s"),_T("gettxdetail") ,txhash );
+	string strCommand,strShowData;
+	strCommand = strprintf("%s %s","gettxdetail" ,txhash );
 	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 
 	if (strShowData == _T(""))
@@ -46,9 +46,9 @@ void CRedPacketList::ShowTxDetail(CString txhash)
 	}
 	Json::Reader reader; 
 	Json::Value root;
-	if (!reader.parse(strShowData.GetString(), root)) 
+	if (!reader.parse(strShowData, root)) 
 		return ;
-	int npos = strShowData.Find("confirmHeight");
+	int npos = strShowData.find("confirmHeight");
 	int confirHeight = 1440;
 	if ( npos >= 0 ) { //
 		confirHeight += root["confirmHeight"].asInt() ;    //交易被确认的高度
@@ -68,28 +68,28 @@ void CRedPacketList::ShowTxDetail(CString txhash)
 	reverse(vHash.begin(),vHash.end());
 	string SendHash = CSoyPayHelp::getInstance()->HexStr(vHash);
 
-	CString keyValue;
-	keyValue.Format(_T("%s%s"),strKeyHex.c_str(),SendHash.c_str());
-	strCommand.Format(_T("%s %s %s"),_T("getscriptdata") ,theApp.m_redPacketScriptid,keyValue );
+	string keyValue;
+	keyValue = strprintf("%s%s",strKeyHex.c_str(),SendHash.c_str());
+	strCommand =strprintf("%s %s %s","getscriptdata" ,theApp.m_redPacketScriptid,keyValue );
 	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 
-	if (strShowData == _T("") || strShowData.Find("value") < 0)
+	if (strShowData == _T("") || strShowData.find("value") < 0)
 		return ;
 
-	if (!reader.parse(strShowData.GetString(), root)) 
+	if (!reader.parse(strShowData, root)) 
 		return ;
 
-	CString nValue = root["value"].asCString();
+	string nValue = root["value"].asString();
 	uistruct::RED_DATA redPacket;
 	memset(&redPacket , 0 , sizeof(uistruct::RED_DATA));
-	std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue.GetString());
+	std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue);
 	if (vTemp.size() <=0)
 	{
 		return;
 	}
 	memcpy(&redPacket, &vTemp[0], sizeof(uistruct::RED_DATA));
 
-	CString showdata = _T(""); //= _T(" 地址                            金额 \r\n\r\n");
+	string showdata = _T(""); //= _T(" 地址                            金额 \r\n\r\n");
 	m_listCtrl.DeleteAllItems();
 	 if (redPacket.dbdata.type == 3 && !redPacket.dbdata.fover)
 	{
@@ -120,14 +120,14 @@ void CRedPacketList::ShowTxDetail(CString txhash)
 
 			 double money = (item->second*1.0)/COIN;
 			 //showdata.AppendFormat(_T(" %s                       %.8f\r\n\r\n"),regid.c_str(),money);
-			 showdata.Format(_T("%d"),(i+1));
-			 m_listCtrl.InsertItem(i, showdata);					//序号
+			 showdata =strprintf("%d",(i+1));
+			 m_listCtrl.InsertItem(i, showdata.c_str());					//序号
 
-			 showdata.Format(_T("%s"),item->first);
-			 m_listCtrl.SetItemText(i , ++nSubIdx , showdata );  //
+			 showdata = strprintf("%s",item->first);
+			 m_listCtrl.SetItemText(i , ++nSubIdx , showdata.c_str() );  //
 
-			 strShowData.Format(_T("%.8f"), money); 
-			 m_listCtrl.SetItemText(i , ++nSubIdx , strShowData );  //交易hash
+			 showdata = strprintf("%.8f", money); 
+			 m_listCtrl.SetItemText(i , ++nSubIdx , showdata.c_str() );  //交易hash
 		 }
 		//for (int i =0;i <redPacket.dbdata.takennum;i++)
 		//{

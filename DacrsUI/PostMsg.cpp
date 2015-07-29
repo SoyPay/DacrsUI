@@ -19,7 +19,7 @@ CPostMsg::CPostMsg(void){
 CPostMsg::~CPostMsg(void)
 {
 }
-void CPostMsg::SetStrType(CString const &strTpye){
+void CPostMsg::SetStrType(string const &strTpye){
 	strType = strTpye;
 }
 bool CPostMsg::operator==(CPostMsg const&meg)const{
@@ -40,7 +40,7 @@ int CPostMsg::GetUItype() const{
 int CPostMsg::GetDatatype() const{
 	return DATA_TYPE;
 }
-CString CPostMsg::GetStrType() const{
+string CPostMsg::GetStrType() const{
 	return strType;
 }
 void CPostMsg::SetType(int uitype,int datatype){

@@ -15,32 +15,12 @@ CRpcCmd::CRpcCmd(void)
 CRpcCmd::~CRpcCmd(void)
 {
 }
-int CRpcCmd::SendContactRpc(CString cmd,string &rev){
-//	CStringA strSendData = _T("");
-
-	//RpcJosnStr = cmd;
-//	RpcJosnStr.Format(_T("%s"),cmd);
-	//string tepsend = cmd.GetString();
-	//string nSendStr = "";
-	//nSendStr += m_sendPreHeadstr;
-	//CStringA nMidStr = "Content-Length: ";
-	//nMidStr.AppendFormat("%d\r\n",tepsend.length());
-	//nSendStr += nMidStr.GetString();
-	//nSendStr += m_sendendHeadstr.GetString();
-	//nSendStr += cmd;
-	//strSendData = nSendStr.c_str();
-
-	//strSendData.AppendFormat(_T("%s"),m_sendPreHeadstr);
-	//CStringA nMidStr = "Content-Length: ";
-	//nMidStr.AppendFormat("%d\r\n",cmd.GetLength());
-	//strSendData.AppendFormat(_T("%s"),nMidStr);
-	//strSendData.AppendFormat(_T("%s"),m_sendendHeadstr);
-	//strSendData.AppendFormat(_T("%s"),cmd);
+int CRpcCmd::SendContactRpc(string cmd,string &rev){
 
 	string strSendData = "";
 	strSendData +=m_sendPreHeadstr;
 	char buffer[100] = {0};
-	sprintf_s(buffer,"%d",cmd.GetLength());
+	sprintf_s(buffer,"%d",cmd.length());
 	strSendData +="Content-Length: ";
 	strSendData+=buffer;
 	strSendData +="\r\n";

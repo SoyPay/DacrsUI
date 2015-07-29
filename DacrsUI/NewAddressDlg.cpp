@@ -174,37 +174,37 @@ void CNewAddressDlg::OnBnClickedButtonScdz()
 	{
 		return;
 	}
-	CString strCommand;
+	string strCommand;
 	int nCold = 0;
 	if( ((CButton*)GetDlgItem(IDC_RADIO_YES))->GetCheck() ) {
-		strCommand.Format(_T("%s"),_T("getnewaddress true"));
+		strCommand = strprintf("%s",_T("getnewaddress true"));
 		nCold = 1;
 	}else if ( ((CButton*)GetDlgItem(IDC_RADIO_NO))->GetCheck()){
-		strCommand.Format(_T("%s"),_T("getnewaddress"));
+		strCommand = strprintf("%s",_T("getnewaddress"));
 	}
-	CStringA strShowData ;
+	string strShowData ;
 	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 
-	int pos = strShowData.Find("addr");
+	int pos = strShowData.find("addr");
 	if ( pos < 0 ) return ;
 
 	Json::Reader reader;  
 	Json::Value root; 
-	if (!reader.parse(strShowData.GetString(), root)) 
+	if (!reader.parse(strShowData, root)) 
 		return  ;
-	CString addr = root["addr"].asCString();
+	string addr = root["addr"].asString();
 
 	CString Lable;
 	GetDlgItem(IDC_EDIT_Leble)->GetWindowText(Lable);
 
 	uistruct::LISTADDR_t newaddr; 
-	memcpy(newaddr.address,addr,sizeof(newaddr.address));
+	newaddr.address = addr;
 	newaddr.nColdDig = nCold;
-	memcpy(newaddr.Label,Lable,sizeof(newaddr.Label));
+	newaddr.Label=strprintf("%s",Lable);
 
-	CString strSourceData;
+	string strSourceData;
 	double money = 0.0;
-	strSourceData.Format(_T("'%s' , '%s' , '%.8f' , '%d' ,'%d','%s'") , addr ,"",money ,nCold ,0,Lable) ;
+	strSourceData =strprintf("'%s' , '%s' , '%.8f' , '%d' ,'%d','%s'" , addr.c_str() ,"",money ,nCold ,0,Lable) ;
 	uistruct::DATABASEINFO_t   pDatabase;
 	pDatabase.strSource = strSourceData;
 	pDatabase.strcutjson = newaddr.ToJson();
@@ -216,9 +216,9 @@ void CNewAddressDlg::OnBnClickedButtonScdz()
 
 	
 
-	strCommand.Format(_T("恭喜生成新地址:\n%s\n重新备份钱包或者重新导出私钥"),addr);
+	strCommand = strprintf("恭喜生成新地址:\n%s\n重新备份钱包或者重新导出私钥",addr);
 
-	if(IDOK == ::MessageBox( this->GetSafeHwnd() ,strCommand , _T("提示") , MB_ICONINFORMATION ))
+	if(IDOK == ::MessageBox( this->GetSafeHwnd() ,strCommand.c_str() , _T("提示") , MB_ICONINFORMATION ))
 	{
 		EndDialog(IDOK);
 	}
