@@ -503,7 +503,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 						if ( "" != txData ) {
 							((CDacrsUIApp*)pParam)->SyncTransaction(txData) ;
 						}
-						LogPrint("PROCESSMSG", "WM_SYNC_TRANSACTION 启动同步交易:%s\n",txData);
+						LogPrint("PROCESSMSG", "WM_SYNC_TRANSACTION 启动同步交易:%s\n",txData.c_str());
 					}
 					break;
 				case WM_REVTRANSACTION:
@@ -522,7 +522,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 								((CDacrsUIApp*)pParam)->UpdateTransaction(pHash);
 							}
 						}
-						LogPrint("PROCESSMSG", "WM_REVTRANSACTION 收取跟钱包有关的交易:%s\n",pHash);
+						LogPrint("PROCESSMSG", "WM_REVTRANSACTION 收取跟钱包有关的交易:%s\n",pHash.c_str());
 					}
 					break;
 				case WM_APP_TRANSATION:
@@ -531,7 +531,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 						if ( "" != txDetail ) {
 							((CDacrsUIApp*)pParam)->UpdateAppRecord(txDetail);
 						}
-						LogPrint("PROCESSMSG", "WM_APP_TRANSATION 收取跟钱包有关的应用交易:%s\n",txDetail);
+						LogPrint("PROCESSMSG", "WM_APP_TRANSATION 收取跟钱包有关的应用交易:%s\n",txDetail.c_str());
 					}
 					break;
 				case WM_P2P_BET_RECORD:
@@ -621,7 +621,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 							int nItem =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.GetTableCountItem(_T("t_transaction") ,strCondition);
 							if (nItem != 0)
 							{
-								LogPrint("INFO","WM_RELEASETX:%s",pHash);
+								LogPrint("INFO","WM_RELEASETX:%s",pHash.c_str());
 								((CDacrsUIApp*)pParam)->InsertTransaction(pHash ) ;
 								theApp.m_SqliteDeal.UpdataAllTableData();   /// 更新应用表格
 							}
@@ -638,12 +638,12 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 							int nItem =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.GetTableCountItem(_T("t_transaction") ,strCondition);
 							if (nItem != 0)
 							{
-								LogPrint("INFO","WM_REMOVETX:%s",pHash);
+								LogPrint("INFO","WM_REMOVETX:%s",pHash.c_str());
 								((CDacrsUIApp*)pParam)->m_SqliteDeal.DeleteTableItem(_T("t_transaction"),strCondition);
 								theApp.m_SqliteDeal.UpdataAllTableData();   /// 更新应用表格
 							}
 						}
-							LogPrint("PROCESSMSG", "WM_REMOVETX 删除交易:%s\n",pHash);
+							LogPrint("PROCESSMSG", "WM_REMOVETX 删除交易:%s\n",pHash.c_str());
 					}
 					break;
 				default:
@@ -676,7 +676,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 						TRACE("change:%s\r\n","MSG_USER_UP_PROGRESS");
 						//pUiDemeDlg->m_MsgQueue.ClearMessageType(MSG_USER_UP_PROGRESS);
 						pUiDemeDlg->m_UimsgQueue.push(Postmsg);
-						LogPrint("PROCESSMSG", "MSG_USER_UP_PROGRESS  更新进度条消息:%s\n",Postmsg.GetData());
+						LogPrint("PROCESSMSG", "MSG_USER_UP_PROGRESS  更新进度条消息:%s\n",Postmsg.GetData().c_str());
 					}
 					break;
 				}
@@ -711,7 +711,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 					LogPrint("PROCESSMSG", "MSG_USER_UPDATA_DATA 更新数据消息\n");
 				uistruct::DATABASEINFO_t pDatabase;// = (uistruct::DATABASEINFO_t *)Postmsg.GetStrPoint();
 				string strTemp = Postmsg.GetData();
-				pDatabase.JsonToStruct(strTemp.c_str());
+				pDatabase.JsonToStruct(strTemp);
 
 				if ( !((CDacrsUIApp*)pParam)->m_SqliteDeal.UpdateTableItem(pDatabase.strTabName.c_str() , pDatabase.strSource.c_str() , pDatabase.strWhere.c_str() ) ){
 					TRACE(_T("t_p2p_quiz数据更新失败!") );
