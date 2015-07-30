@@ -169,7 +169,7 @@ void CDacrsUIApp::UpdateAddressData(){
 		
 				listaddr.Label=addrsql.Label;
 				string Temp = listaddr.ToJson();
-				SendUIMsg((int)WM_UP_ADDRESS,Temp.c_str());
+				SendUIMsg((int)WM_UP_ADDRESS,Temp);
 				if (listaddr.bSign != addrsql.bSign)
 				{
 					/// p2pdlg 激活的地址要插入
