@@ -771,7 +771,7 @@ void  CSqliteDeal::UpdataAllTableData(){
 			strCondition=strprintf(" hash = '%s'", const_it->tx_hash.c_str());
 			uistruct::REVTRANSACTION_t pTxItem;
 			GetTransactionItem(strCondition, &pTxItem);
-			if (pTxItem.txhash == _T(""))
+			if (pTxItem.txhash == "")
 			{
 				strCondition=strprintf(" tx_hash='%s'", const_it->tx_hash.c_str());
 				DeleteTableItem(_T("t_p2p_quiz"),strCondition);
@@ -779,7 +779,7 @@ void  CSqliteDeal::UpdataAllTableData(){
 				//更新数据
 				string strField,strCond;
 				strField +=strprintf("send_time='%s',recv_time = '%s',comfirmed = %d,height =%d,state = %d ,relate_hash = '%s' ,guess_num = %d,right_addr ='%s'" ,"" ,"",0,0,0,"",0,"" ) ;
-				strCond=strprintf(" tx_hash='%s'", const_it->tx_hash,const_it->relate_hash.c_str());
+				strCond=strprintf(" tx_hash='%s'", const_it->tx_hash);
 				if ( !UpdateTableItem(_T("t_p2p_quiz") ,strField,strCond )) {
 					TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , const_it->tx_hash.c_str() );
 				}
@@ -789,7 +789,7 @@ void  CSqliteDeal::UpdataAllTableData(){
 			strCondition=strprintf(" hash = '%s'", const_it->relate_hash.c_str());
 			uistruct::REVTRANSACTION_t pTxItem;
 			GetTransactionItem(strCondition, &pTxItem);
-			if (pTxItem.txhash == _T(""))
+			if (pTxItem.txhash == "")
 			{
 				strCondition=strprintf("relate_hash = '%s'",const_it->relate_hash.c_str());
 				DeleteTableItem(_T("t_p2p_quiz"),strCondition);
@@ -810,7 +810,7 @@ void  CSqliteDeal::UpdataAllTableData(){
 			uistruct::REVTRANSACTION_t pTxItem1;
 			strCondition=strprintf(" hash = '%s'",const_it->relate_hash.c_str());
 			GetTransactionItem(strCondition, &pTxItem1);
-			if (pTxItem.txhash == _T(""))
+			if (pTxItem.txhash =="")
 			{
 				strCondition=strprintf(" tx_hash='%s'", const_it->tx_hash.c_str());
 				DeleteTableItem(_T("t_p2p_quiz"),strCondition);
@@ -818,17 +818,17 @@ void  CSqliteDeal::UpdataAllTableData(){
 				//更新数据
 				string strField,strCond;
 				strField+=strprintf("send_time='%s',recv_time = '%s',comfirmed = %d,height =%d,state = %d ,relate_hash = '%s' ,guess_num = %d,right_addr ='%s'" ,"" ,"",0,0,0,"",0,"" ) ;
-				strCond=strprintf(" tx_hash='%s'", const_it->tx_hash.c_str(),const_it->relate_hash.c_str());
+				strCond=strprintf(" tx_hash='%s'", const_it->tx_hash.c_str());
 				if ( !UpdateTableItem(_T("t_p2p_quiz") ,strField,strCond )) {
 					TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , const_it->tx_hash.c_str() );
 				}
 			}else{
 			 
-				if (pTxItem1.txhash == _T(""))
+				if (pTxItem1.txhash == "")
 				{
 					string strField,strCond;
 					strField+=strprintf("recv_time = '%s',comfirmed = %d,state = %d ,relate_hash = '%s' ,guess_num = %d,right_addr ='%s',actor=%d" ,"",0,0,"",0,"",0 ) ;
-					strCond=strprintf(" tx_hash='%s'", const_it->tx_hash.c_str(),const_it->relate_hash.c_str());
+					strCond=strprintf(" tx_hash='%s'", const_it->tx_hash.c_str());
 					if ( !UpdateTableItem(_T("t_p2p_quiz") ,strField,strCond )) {
 						TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , const_it->tx_hash.c_str() );
 					}
@@ -836,7 +836,7 @@ void  CSqliteDeal::UpdataAllTableData(){
 					//更新数据
 					string strField,strCond;
 					strField+=strprintf("recv_time = '%s',state = %d,height =%d " ,"" ,4,pTxItem.confirmedHeight) ;
-					strCond=strprintf(" tx_hash='%s'", const_it->tx_hash.c_str(),const_it->relate_hash.c_str());
+					strCond=strprintf(" tx_hash='%s'", const_it->tx_hash.c_str());
 					if ( !UpdateTableItem(_T("t_p2p_quiz") ,strField,strCond )) {
 						TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , const_it->tx_hash.c_str() );
 					}
