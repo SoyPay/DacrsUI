@@ -221,8 +221,7 @@ void  CSendRedPacketRecord::OnShowPagePool(int page)
 	{
 		uistruct::REDPACKETSEND_t const_it = m_SendRedPacketList.at(k);
 
-		sprintf_s(buffer,"%s",const_it.send_acc_id);
-		sendaddr = buffer;
+		sendaddr = strprintf("%s",const_it.send_acc_id);
 		memset(buffer,0,1024);
 		//sendaddr.Format(_T("%s"),const_it.send_acc_id);
 
