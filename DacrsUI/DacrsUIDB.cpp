@@ -66,9 +66,9 @@ void CDacrsUIApp::UpdateQuizPoolData()
 			}
 
 			strCommand = strprintf("%s %s",_T("gettxdetail"),strTemp.c_str());
-			string strShowData =_T("");
+			string strShowData ="";
 			CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-			if (strShowData == _T(""))
+			if (strShowData == "" && strShowData.find("hash") <0)
 			{
 				return;
 			}
