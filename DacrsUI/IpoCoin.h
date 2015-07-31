@@ -41,4 +41,6 @@ private:
 	CP2PBetHelp		                    m_P2PBetHelp;
 public:
 	afx_msg void OnBnClickedButtonQuery();
+	void  GetAppAccountSomeMoney();
+	void CheckBalance(double dmoney);
 };

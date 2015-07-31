@@ -1103,15 +1103,28 @@ string CP2PBetHelp::PacketP2PExposeContract(const string& SendHash,const string&
 	m_openContract.out_heitht = outheight;
 	return CSoyPayHelp::getInstance()->GetHexData((const char*)&m_openContract,sizeof(OPEN_DATA));
 }
-string CP2PBetHelp::GetAppAccountMoneyContract(const string& straccid,int type,int typeaddr){
+string CP2PBetHelp::GetAppAccountMoneyContract(const string& straccid,int type,int typeaddr,int64_t nMoney){
 	APPACC accdata;
 	memset(&accdata,0,sizeof(APPACC));
 	accdata.systype = 0xff;
 	accdata.type = type;  /// 0xff 表示提现 或者充值 0x01 提现 0x02 充值
 	accdata.typeaddr = typeaddr;   /// 0x01是regid 0x02是base58地址
-	//vector<unsigned char> v = CSoyPayHelp::getInstance()->ParseHex(straccid);
-	//memcpy(accdata.accountid,&v[0],sizeof(accdata.accountid));
+	accdata.money = nMoney;
+
 	return CSoyPayHelp::getInstance()->GetHexData((const char*)&accdata,sizeof(APPACC));
+}
+/// 提现一定的金额
+string CP2PBetHelp::GetAppAccountSomeMoneyContract(const string& straccid,int type,int typeaddr,int64_t nMoney)
+{
+	APPACC accdata;
+	memset(&accdata,0,sizeof(APPACC));
+	accdata.systype = 0xff;
+	accdata.type = type;  /// 0xff 表示提现 或者充值 0x01 提现 0x02 充值 03 提现一定的金额
+	accdata.typeaddr = typeaddr;   /// 0x01是regid 0x02是base58地址
+	char buffer[12] = {0};
+	memcpy(buffer,(const char*)&accdata,sizeof(APPACC));
+	memcpy(&buffer[3],&nMoney,sizeof(int64_t));
+	return CSoyPayHelp::getInstance()->GetHexData((const char*)&buffer,12);
 }
 string CP2PBetHelp::GetReChangContract(){
 
