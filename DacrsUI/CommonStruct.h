@@ -244,8 +244,9 @@ typedef struct {
 
 typedef struct {
 	unsigned char systype;               //0xff
-	unsigned char type;            // 0x01 提现
+	unsigned char type;            // 0x01 提现  02 充值  03 提现一定的金额
 	unsigned char typeaddr;            // 0x01 regid 0x02 base58
+    ULONGLONG     money;
 } APPACC;
 
 typedef struct {
@@ -431,8 +432,9 @@ public:
 	string PacketP2PSendContract(int64_t nMoney,int nHeight,const string& strRandomHash);
 	string PacketP2PAcceptContract(int64_t nMoney, const string& strSendHash,char nData );
 	string PacketP2PExposeContract(const string& SendHash,const string& strRandomHash,const string& AcceptHash,int outheight);
-	string GetAppAccountMoneyContract(const string& straccid,int type,int typeaddr);
+	string GetAppAccountMoneyContract(const string& straccid,int type,int typeaddr,int64_t nMoney);
 	string GetReChangContract();
+	string GetAppAccountSomeMoneyContract(const string& straccid,int type,int typeaddr,int64_t nMoney);
 private:
 	SEND_DATA		m_sendContract;
 	ACCEPT_DATA		m_acceptContract;

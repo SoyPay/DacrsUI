@@ -148,6 +148,12 @@ string CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
 			{
 				txdetail+=strprintf("应用名称:  %s\r\n\r\n","猜你妹" );
 				txdetail+=strprintf("合约类型:  %s\r\n\r\n","提现" );
+				if (vTemp.size() == sizeof(APPACC))
+				{
+					APPACC drawtx;
+					memcpy(&drawtx, &vTemp[0],sizeof(APPACC));
+					txdetail+=strprintf("提现金额:  %.8f\r\n\r\n",(drawtx.money*1.0)/COIN);
+				}
 			}
 		}
 	}else  if (!strcmp(tx.desregid.c_str(),theApp.m_redPacketScriptid.c_str())){ //// 接龙红包	
@@ -160,8 +166,7 @@ string CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
 			RED_PACKET redpacket;
 			memset(&redpacket,0,sizeof(RED_PACKET));
 			memcpy(&redpacket, &vTemp[0],sizeof(SEND_DATA));
-
-			
+	
 			txdetail+=strprintf("应用名称:  %s\r\n\r\n","抢红包" );
 			txdetail+=strprintf("合约类型:  %s\r\n\r\n","发送普通红包" );
 
@@ -237,12 +242,24 @@ string CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
 			{
 				txdetail+=strprintf("应用名称:  %s\r\n\r\n","抢红包" );
 				txdetail+=strprintf("合约类型:  %s\r\n\r\n","提现" );
+				if (vTemp.size() == sizeof(APPACC))
+				{
+					APPACC draw;
+					memcpy(&draw, &vTemp[0],sizeof(APPACC));
+					txdetail+=strprintf("提现金额:  %.8f\r\n\r\n",(draw.money*1.0)/COIN);
+				}
 			}
 		}
 	}else if (!strcmp(tx.desregid.c_str(),theApp.m_ipoScritptid.c_str()))
 	{
 		txdetail+=strprintf("应用名称:  %s\r\n\r\n","ipo领币" );
 		txdetail+=strprintf("合约类型:  %s\r\n\r\n","提现" );
+		if (vTemp.size() == sizeof(APPACC))
+		{
+			APPACC draw;
+			memcpy(&draw, &vTemp[0],sizeof(APPACC));
+			txdetail+=strprintf("提现金额:  %.8f\r\n\r\n",(draw.money*1.0)/COIN);
+		}
 	}
 	return txdetail;
 }

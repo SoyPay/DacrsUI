@@ -187,8 +187,11 @@ void CIpoCoin::OnBnClickedButtonDrawal()
 		return;
 	}
 
-
-	string strContractData = m_P2PBetHelp.GetAppAccountMoneyContract(addr.GetString(),1,2);
+	CString Money = _T("");
+	GetDlgItem(IDC_STATIC_AMOUNT)->GetWindowText(Money);
+	
+	double dmoney = strtod(Money,NULL);
+	string strContractData = m_P2PBetHelp.GetAppAccountMoneyContract(addr.GetString(),1,2,REAL_MONEY(dmoney));
 
 	CString strTxFee;
 	INT64 minFee = theApp.m_P2PBetCfg.GetAppAmountnFee; //45266;theApp.m_P2PBetCfg.GetAppAmountnFee
