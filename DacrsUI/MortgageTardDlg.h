@@ -63,6 +63,7 @@ public:
 public:
 	BOOL AddListaddrDataBox();
 	bool CheckBalance();
+	bool CheckBalance(double dmoney);
 	afx_msg void OnBnClickedButtonWithd();
 	afx_msg void OnBnClickedButtonRech();
 	afx_msg void OnBnClickedButtonCommred();
@@ -113,4 +114,6 @@ public:
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 	void       onShowLink();
 	CMFCLinkCtrl v_linkCtrl;
+	void GetAppAccountSomeMoney();
+
 };

@@ -26,7 +26,8 @@ void CDacrsUIApp::UpdateQuizPoolData()
 		string strShowData;
 		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 		//m_AppID
-		if (strShowData.find("key") < 0)
+		int pos = strShowData.find("key");
+		if (pos < 0)
 		{
 			return;
 		}
@@ -624,7 +625,8 @@ void CDacrsUIApp::UpdateRedPacketPoolData()
 		strCommand = strprintf("%s %s %s %s",_T("getscriptvalidedata"),theApp.m_redPacketScriptid,"100","1");
 		string strShowData;		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 		//m_AppID
-		if (strShowData.find("key") < 0)
+		int pos = strShowData.find("key");
+		if (pos < 0)
 		{
 			return;
 		}

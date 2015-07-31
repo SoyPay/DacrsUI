@@ -620,7 +620,6 @@ void  CP2PDlg::QueryNotDrawBalance(CString addr)
 void CP2PDlg::OnBnClickedButtonWithd()
 {
 	// TODO: 在此添加控件通知处理程序代码
-
 	if ( IDNO == ::MessageBox( this->GetSafeHwnd() ,_T("是否确定要体现") , _T("提示") , MB_YESNO|MB_ICONINFORMATION ) )
 		return;
 	if (!theApp.IsSyncBlock )
@@ -653,8 +652,12 @@ void CP2PDlg::OnBnClickedButtonWithd()
 		return;
 	}
 
+	CString Money = _T("");
+	GetDlgItem(IDC_STATIC_BALANCE)->GetWindowText(Money);
 
-	string strContractData = m_P2PBetHelp.GetAppAccountMoneyContract(addr.GetString(),1,1);
+	double dmoney = strtod(Money,NULL);
+
+	string strContractData = m_P2PBetHelp.GetAppAccountMoneyContract(addr.GetString(),1,1,REAL_MONEY(dmoney));
 
 	INT64 strTxFee = theApp.m_P2PBetCfg.GetAppAmountnFee;
 	if (  strTxFee < 10000  ) {
@@ -1571,3 +1574,111 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 		 ::MessageBox( this->GetSafeHwnd() ,temp.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
 	 }
  }
+bool CP2PDlg::CheckBalance(double dmoney)
+{
+	OnCbnSelchangeComboAddres();
+	CString strMoney;
+	((CStatic*)GetDlgItem(IDC_STATIC_BALANCE))->GetWindowText(strMoney);
+	double money =atof(strMoney);
+	if (money == 0.0)
+	{
+		::MessageBox( this->GetSafeHwnd() ,_T("账户金额为零,请先充值") , _T("提示") , MB_ICONINFORMATION ) ;
+		return false;
+	}
+
+	if (dmoney >money)
+	{
+		::MessageBox( this->GetSafeHwnd() ,_T("提现金额大于账户中的金额") , _T("提示") , MB_ICONINFORMATION ) ;
+		return false;
+	}
+	return true;
+}
+void  CP2PDlg::GetAppAccountSomeMoney()
+{
+	if ( IDNO == ::MessageBox( this->GetSafeHwnd() ,_T("是否确定要体现") , _T("提示") , MB_YESNO|MB_ICONINFORMATION ) )
+		return;
+	if (!theApp.IsSyncBlock )
+	{
+		::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
+		return;
+	}
+
+
+	if (!CheckRegIDValid( theApp.m_betScritptid )) return ;
+
+	CReCharge outdlg(NULL,"提现:","提现金额");
+	if ( IDOK != outdlg.DoModal()){
+		return;
+	}
+
+	if (theApp.m_strAddress == _T(""))
+	{
+		::MessageBox( this->GetSafeHwnd() ,_T("提现金额不能为零") , _T("提示") , MB_ICONINFORMATION ) ;
+		return ;
+	}
+	
+	double money = strtod(theApp.m_strAddress,NULL);
+	if (!CheckBalance())
+	{
+		return;
+	}
+
+	string strShowData ="";
+
+
+	CString addr;
+	int sel = m_addrbook.GetCurSel();
+	if (sel < 0)
+	{
+		return ;
+	}
+	m_addrbook.GetLBText(sel,addr);
+
+	if (addr == _T(""))
+	{
+		::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		return;
+	}
+
+
+	string strContractData = m_P2PBetHelp.GetAppAccountSomeMoneyContract(addr.GetString(),3,1,REAL_MONEY(money));
+
+	INT64 strTxFee = theApp.m_P2PBetCfg.GetAppAmountnFee;
+	if (  strTxFee < 10000  ) {
+		::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
+		return ;
+	}
+
+
+	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_betScritptid,addr.GetString(),strContractData,0,strTxFee,0);
+	CSoyPayHelp::getInstance()->SendContacrRpc(strData.c_str(),strShowData);
+
+	if (strShowData == "")
+	{
+		return;
+	}
+	Json::Reader reader;  
+	Json::Value root;
+	if (!reader.parse(strShowData, root)) 
+		return  ;
+	BOOL bRes = FALSE ;
+	string strTip;
+	int pos = strShowData.find("hash");
+
+	if ( pos >=0 ) {
+		//插入到交易记录数据库
+		string strHash =  root["hash"].asString();
+		CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_REVTRANSACTION);
+		postmsg.SetData(strHash);
+		theApp.m_MsgQueue.push(postmsg);
+	}
+
+	if ( pos >=0 ) {
+		bRes = TRUE ;
+		//strTip.Format( _T("恭喜提现成功!\n%s") , root["hash"].asCString() ) ;
+		strTip = "恭喜提现成功，请等待1-2分钟确认交易\n" ;
+	}else{
+		strTip = "提现失败!" ;
+	}
+	::MessageBox( this->GetSafeHwnd() ,strTip.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+}

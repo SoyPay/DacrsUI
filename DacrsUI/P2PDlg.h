@@ -78,6 +78,7 @@ public:
 	void OnListPool();
 	void AcceptBet(CString hash,CString money,CString sendaddr,int timeout);
 	bool CheckBalance();
+	bool CheckBalance(double dmoney);
 	CCTabCtrl m_tab;
 	afx_msg void OnTcnSelchangeTab(NMHDR *pNMHDR, LRESULT *pResult);
 	void   ShowListItem(int seltab);
@@ -88,6 +89,7 @@ public:
 	double ComPuteAddrBetWinAandLoser(uistruct::P2PBETRECORDLIST  m_P2pBetTxList,CString addr);
 	void   ShowAllBetWinAndLoss();
 	void   ShowAddressBetWinAndLoss(CString addr);
+	void  GetAppAccountSomeMoney();
 private:
 	int                   m_pagecount;
 	int                   m_curpage;
