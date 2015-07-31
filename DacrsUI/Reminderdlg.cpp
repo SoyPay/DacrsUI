@@ -159,15 +159,18 @@ void  CReminderdlg::WriteClosConfig(int &close)
 			ASSERT(!p2pbet.isNull());
 			p2pbet["colse"]= close;
 			root["closeconf"]=p2pbet;
-			CStdioFile  File;
-			string strpathe=theApp.str_InsPath;
-			strpathe +="\\dacrsclient.conf";
-			File.Open((LPCTSTR)(LPSTR)strpathe.c_str(),CFile::modeWrite | CFile::modeCreate); 
-			string strfile = root.toStyledString();
-			File.WriteString(strfile.c_str());
-			File.Close();
+		}else{
+			Json::Value obj;
+			obj["colse"]=close;
+			root["closeconf"]=obj;
 		}
-		
+		CStdioFile  File;
+		string strpathe=theApp.str_InsPath;
+		strpathe +="\\dacrsclient.conf";
+		File.Open((LPCTSTR)(LPSTR)strpathe.c_str(),CFile::modeWrite | CFile::modeCreate); 
+		string strfile = root.toStyledString();
+		File.WriteString(strfile.c_str());
+		File.Close();
 	}
 }
 void CReminderdlg::OnBnClickedOk()

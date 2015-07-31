@@ -744,7 +744,7 @@ void CSqliteDeal::CheckFailedCode(int retCode)
 			m_pCs = NULL;
 		}
 		CString strFullPath(_T(""));
-		strFullPath.Format(_T("%s\\db\\data.db") , theApp.str_InsPath );
+		strFullPath.Format(_T("%s\\db\\data.db") , theApp.str_InsPath.c_str() );
 		//strFullPath.Format(_T("%s\\data.db") , theApp.dbpath); 
 		if(!DeleteFile((LPCTSTR)strFullPath))
 			LogPrint("INFO", "删除数据库文件失败：%s\n", strFullPath.GetBuffer());
