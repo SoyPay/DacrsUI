@@ -98,7 +98,7 @@ void CStartProgress::LoadGifing( BOOL bState )
 		if( m_ProgressWnd->GetSafeHwnd() ) {
 			if( TRUE == bState ) {
 				CString gifpath;
-				gifpath.Format(_T("%s\\gif\\init.gif\0"),theApp.str_InsPath);
+				gifpath.Format(_T("%s\\gif\\init.gif\0"),theApp.str_InsPath.c_str());
 				if( TRUE == ((CGIFControl*)m_ProgressWnd)->Load(gifpath.GetBuffer())) {
 					CRect rc ;
 					GetClientRect( rc ) ;
