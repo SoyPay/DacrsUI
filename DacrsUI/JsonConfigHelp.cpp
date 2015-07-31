@@ -325,7 +325,7 @@ void CJsonConfigHelp::GetClosConfig(int &closeconf)
 {
 	closeconf = m_close;
 }
-CString  CJsonConfigHelp::GetConfigRootStr(const CString& strFilePath){
+string  CJsonConfigHelp::GetConfigRootStr(const string& strFilePath){
 	ifstream ifs;
 	ifs.open(strFilePath,ios::in);
 	Json::Value root; 
@@ -337,7 +337,7 @@ CString  CJsonConfigHelp::GetConfigRootStr(const CString& strFilePath){
 	//ifs.read()  
 	if (reader.parse(ifs, root,false))
 	{
-		return root.toStyledString().c_str();
+		return root.toStyledString();
 	}
 	ifs.close();
 	return _T("");

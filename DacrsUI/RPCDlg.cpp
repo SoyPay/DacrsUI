@@ -70,7 +70,7 @@ BOOL CRPCDlg::OnInitDialog()
 	AutoCombo.Init(&m_comboxinput);
 
 	CStringA configpath = "";
-	configpath.AppendFormat("%s",theApp.str_InsPath);
+	configpath.AppendFormat("%s",theApp.str_InsPath.c_str());
 	configpath.AppendFormat("\\%s","dacrsclient.conf");
 
 	if (PathFileExistsA(configpath))

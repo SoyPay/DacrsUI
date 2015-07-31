@@ -309,7 +309,7 @@ void CSendRedPacketRecord::OnLbnDblclkListBox()
 
 	if (const_it.send_hash != _T(""))
 	{
-		theApp.m_strAddress.Format(_T("%s") ,const_it.send_hash ) ;
+		theApp.m_strAddress.Format(_T("%s") ,const_it.send_hash.c_str() ) ;
 	}else
 	{		
 		theApp.m_strAddress =_T("");

@@ -538,9 +538,9 @@ void CMortgageTardDlg::SendRedPacketComm(){
 		return;
 	}
 	double minamout = atof(strTxMoney)/redNum;
-	if (minamout < 0.01)
+	if (minamout < 1.0) /// 平均每个热你的红包吧不能少于1
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("平均每个红包的金额不能小于0.001") , _T("提示") , MB_ICONINFORMATION ) ;
+		::MessageBox( this->GetSafeHwnd() ,_T("平均每个红包的金额不能小于1") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
 
@@ -763,7 +763,8 @@ bool CMortgageTardDlg::CheckBalance()
 }
 void CMortgageTardDlg::OnBnClickedButtonWithd()
 {
-
+	GetAppAccountSomeMoney();
+	return;
 	// TODO: 在此添加控件通知处理程序代码
 	if ( IDNO == ::MessageBox( this->GetSafeHwnd() ,_T("是否确定要体现") , _T("提示") , MB_YESNO|MB_ICONINFORMATION ) )
 		return;
@@ -1746,7 +1747,7 @@ void  CMortgageTardDlg::GetAppAccountSomeMoney()
 	}
 
 
-	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_betScritptid,addr.GetString(),strContractData,0,strTxFee,0);
+	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_redPacketScriptid,addr.GetString(),strContractData,0,strTxFee,0);
 	CSoyPayHelp::getInstance()->SendContacrRpc(strData.c_str(),strShowData);
 
 	if (strShowData == "")
