@@ -619,6 +619,8 @@ void  CP2PDlg::QueryNotDrawBalance(CString addr)
 
 void CP2PDlg::OnBnClickedButtonWithd()
 {
+	GetAppAccountSomeMoney();
+	return;
 	// TODO: 在此添加控件通知处理程序代码
 	if ( IDNO == ::MessageBox( this->GetSafeHwnd() ,_T("是否确定要体现") , _T("提示") , MB_YESNO|MB_ICONINFORMATION ) )
 		return;

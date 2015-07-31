@@ -144,7 +144,7 @@ string CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
 			{
 				txdetail+=strprintf("应用名称:  %s\r\n\r\n","猜你妹" );
 				txdetail+=strprintf("合约类型:  %s\r\n\r\n","充值" );
-			}else if (vTemp[1] == 0x01)   /// 提现
+			}else if (vTemp[1] == 0x01|| vTemp[1] == 0x03)   /// 提现
 			{
 				txdetail+=strprintf("应用名称:  %s\r\n\r\n","猜你妹" );
 				txdetail+=strprintf("合约类型:  %s\r\n\r\n","提现" );
@@ -238,7 +238,7 @@ string CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
 			{
 				txdetail+=strprintf("应用名称:  %s\r\n\r\n","抢红包" );
 				txdetail+=strprintf("合约类型:  %s\r\n\r\n","充值" );
-			}else if (vTemp[1] == 0x01)   /// 提现
+			}else if (vTemp[1] == 0x01 || vTemp[1] == 0x03)   /// 提现
 			{
 				txdetail+=strprintf("应用名称:  %s\r\n\r\n","抢红包" );
 				txdetail+=strprintf("合约类型:  %s\r\n\r\n","提现" );

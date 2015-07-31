@@ -139,10 +139,10 @@ void  CReminderdlg::WriteClosConfig(int &close)
 {
 	if (PathFileExistsA(theApp.str_InsPath.c_str()))
 	{
-		CStringA configpath = "";
-		configpath.AppendFormat("%s",theApp.str_InsPath);
-		configpath.AppendFormat("\\%s","dacrsclient.conf");
-		CString strFile = CJsonConfigHelp::getInstance()->GetConfigRootStr(configpath);
+		string configpath = "";
+		configpath = strprintf("%s",theApp.str_InsPath);
+		configpath+= strprintf("\\%s","dacrsclient.conf");
+		string strFile = CJsonConfigHelp::getInstance()->GetConfigRootStr(configpath);
 		if (strFile == _T(""))
 		{
 			return;
@@ -150,9 +150,10 @@ void  CReminderdlg::WriteClosConfig(int &close)
 		Json::Reader reader;  
 		Json::Value root; 
 
-		if (!reader.parse(strFile.GetString(), root)) 
+		if (!reader.parse(strFile, root)) 
 			return;
-		if (strFile.Find("closeconf")>=0)
+		int pos = strFile.find("closeconf");
+		if (pos>=0)
 		{
 			Json::Value p2pbet = root["closeconf"];
 			ASSERT(!p2pbet.isNull());

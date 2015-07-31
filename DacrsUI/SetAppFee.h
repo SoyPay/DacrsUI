@@ -40,6 +40,7 @@ public:
 	afx_msg void OnBnClickedButtonClose();
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg LRESULT OnNcHitTest(CPoint point);
+	void SetDaluft();
 public:
 	CStaticTrans     m_strTrading  ;   
 	CStaticTrans     m_strTrading2  ;   

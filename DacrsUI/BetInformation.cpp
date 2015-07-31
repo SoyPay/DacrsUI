@@ -75,7 +75,7 @@ void CBetInformation::ShowBetRecordDetail(CString jsontx)
 				SYSTEMTIME rTime =UiFun::Time_tToSystemTime(betrecord.send_time);
 				sprintf_s(buffer,"%02d-%02d %02d:%02d:%02d", rTime.wMonth, rTime.wDay, rTime.wHour, rTime.wMinute, rTime.wSecond);
 				txdetail+= strprintf("发起竞猜交易确认时间: %s\r\n\r\n",buffer);
-				txdetail+= strprintf("发起竞猜交易确认高度: %d\r\n\r\n",betrecord.confirmed);
+				txdetail+= strprintf("发起竞猜交易确认高度: %d\r\n\r\n",betrecord.height);
 			}
 			if (theApp.IsSyncBlock && theApp.blocktipheight != 0)
 			{

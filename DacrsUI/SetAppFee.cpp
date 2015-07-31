@@ -63,7 +63,7 @@ bool CSetAppFee::IsAllDigtal(const char* pData)
 {
 	for(int i = 0;pData[i] != '\0';i++)
 	{
-		if (!isdigit(pData[i])&&pData[i] !='.')
+		if (!(pData[i] >= '0' && pData[i] <='9')&&pData[i] !='.')
 			return false;
 	}
 
@@ -73,7 +73,7 @@ bool CSetAppFee::IsRegId(const char* pData)
 {
 	for(int i = 0;pData[i] != '\0';i++)
 	{
-		if (!isdigit(pData[i]) && pData[i] !='_')
+		if (!isdigit(pData[i]) && pData[i] !='-')
 			return false;
 	}
 
@@ -84,10 +84,10 @@ void CSetAppFee::OnBnClickedOk()
 	// TODO: 在此添加控件通知处理程序代码
 	if (PathFileExistsA(theApp.str_InsPath.c_str()))
 	{
-		CStringA configpath = "";
-		configpath.AppendFormat("%s",theApp.str_InsPath);
-		configpath.AppendFormat("\\%s","dacrsclient.conf");
-		CString strFile = CJsonConfigHelp::getInstance()->GetConfigRootStr(configpath);
+		string configpath = "";
+		configpath = strprintf("%s",theApp.str_InsPath);
+		configpath+= strprintf("\\%s","dacrsclient.conf");
+		string strFile = CJsonConfigHelp::getInstance()->GetConfigRootStr(configpath);
 		if (strFile == _T(""))
 		{
 			return;
@@ -95,7 +95,7 @@ void CSetAppFee::OnBnClickedOk()
 		Json::Reader reader;  
 		Json::Value root; 
 
-		if (!reader.parse(strFile.GetString(), root)) 
+		if (!reader.parse(strFile, root)) 
 			return;
 
 		CString strTemp = _T("");
@@ -215,45 +215,6 @@ void CSetAppFee::OnBnClickedOk()
 			}
 		}
 
-		strTemp = _T("");
-		GetDlgItem(IDC_BETID)->GetWindowText(strTemp);
-		if (strTemp != _T(""))
-		{
-			if (!IsRegId(strTemp))
-			{
-				::MessageBox( NULL , _T("猜你妹AppID格式不正确") , "Error" , MB_ICONERROR) ;
-			}else
-			{
-				CJsonConfigHelp::getInstance()->ModifyAppFeeCfgData(root,_T("script"),_T("betscript"),strTemp);
-			}
-		}
-
-		strTemp = _T("");
-		GetDlgItem(IDC_GRBID)->GetWindowText(strTemp);
-		if (strTemp != _T(""))
-		{
-			if (!IsRegId(strTemp))
-			{
-				::MessageBox( NULL , _T("抢红包AppID格式不正确") , "Error" , MB_ICONERROR) ;
-			}else
-			{
-				CJsonConfigHelp::getInstance()->ModifyAppFeeCfgData(root,_T("script"),_T("redpacketscript"),strTemp);
-			}
-		}
-
-		strTemp = _T("");
-		GetDlgItem(IDC_IPOID)->GetWindowText(strTemp);
-		if (strTemp != _T(""))
-		{
-			if (!IsRegId(strTemp))
-			{
-				::MessageBox( NULL , _T("IPO AppID格式不正确") , "Error" , MB_ICONERROR) ;
-			}else
-			{
-				CJsonConfigHelp::getInstance()->ModifyAppFeeCfgData(root,_T("script"),_T("iposcript"),strTemp);
-			}
-		}
-
 		CStdioFile  File;
 		string strpath = theApp.str_InsPath;
 		strpath+="\\dacrsclient.conf";
@@ -275,7 +236,37 @@ void CSetAppFee::OnBnClickedCancel()
 	CDialogEx::OnCancel();
 }
 
+void CSetAppFee::SetDaluft()
+{
+	string strShow = "";
+	strShow =strprintf("%.8f",(theApp.m_P2PBetCfg.SendBetFee*1.0)/COIN);
+	GetDlgItem(IDC_SENDBETFEE)->SetWindowText(strShow.c_str());
 
+	strShow =strprintf("%.8f",(theApp.m_P2PBetCfg.AcceptBetnFee*1.0)/COIN);
+	GetDlgItem(IDC_ACCEPTEFEE)->SetWindowText(strShow.c_str());
+
+	strShow =strprintf("%.8f",(theApp.m_P2PBetCfg.OpenBetnFee*1.0)/COIN);
+	GetDlgItem(IDC_OPENFEE)->SetWindowText(strShow.c_str());
+
+	strShow =strprintf("%.8f",(theApp.m_P2PBetCfg.GetRechangeFee*1.0)/COIN);
+	GetDlgItem(IDC_ReChange)->SetWindowText(strShow.c_str());
+
+	strShow =strprintf("%.8f",(theApp.m_P2PBetCfg.GetAppAmountnFee*1.0)/COIN);
+	GetDlgItem(IDC_WITHDRAW)->SetWindowText(strShow.c_str());
+
+	strShow =strprintf("%.8f",(theApp.m_RedPacketCfg.SendRedPacketCommFee*1.0)/COIN);
+	GetDlgItem(IDC_SENDCOMREDFEE)->SetWindowText(strShow.c_str());
+
+	strShow =strprintf("%.8f",(theApp.m_RedPacketCfg.AcceptRedPacketCommFee*1.0)/COIN);
+	GetDlgItem(IDC_ACCEPTCOMREDFEE)->SetWindowText(strShow.c_str());
+
+	strShow =strprintf("%.8f",(theApp.m_RedPacketCfg.SendRedPacketSpecailFee*1.0)/COIN);
+	GetDlgItem(IDC_SENDSPECAILREDFEE)->SetWindowText(strShow.c_str());
+
+	strShow =strprintf("%.8f",(theApp.m_RedPacketCfg.AcceptRedPacketSpecailFee*1.0)/COIN);
+	GetDlgItem(IDC_ACCEPTSPECAILREDFEE)->SetWindowText(strShow.c_str());
+
+}
 BOOL CSetAppFee::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
@@ -299,6 +290,7 @@ BOOL CSetAppFee::OnInitDialog()
 	//m_rBtnCancel.SizeToContent();
 	// TODO:  在此添加额外的初始化
 	//SetBkBmpNid( IDB_BITMAP_DLG_BALCK ) ;
+	SetDaluft();
 	m_fontGrid.CreatePointFont(100,_T("新宋体"));
 	/// listbox 背景颜色
 	m_hbrush = CreateSolidBrush(RGB(255,236,229));
@@ -310,20 +302,20 @@ BOOL CSetAppFee::OnInitDialog()
 BOOL CSetAppFee::OnEraseBkgnd(CDC* pDC)
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
-	CRect   rect; 
-	GetClientRect(&rect); 
+	//CRect   rect; 
+	//GetClientRect(&rect); 
 
-	if(m_pBmp   !=   NULL) { 
-		BITMAP   bm; 
-		CDC   dcMem; 
-		::GetObject(m_pBmp,sizeof(BITMAP),   (LPVOID)&bm); 
-		dcMem.CreateCompatibleDC(NULL); 
-		HBITMAP     pOldBitmap   =(HBITMAP   )   dcMem.SelectObject(m_pBmp); 
-		pDC->StretchBlt(rect.left,rect.top-1,rect.Width(),rect.Height(),   &dcMem,   0,   0,bm.bmWidth-1,bm.bmHeight-1,   SRCCOPY); 
+	//if(m_pBmp   !=   NULL) { 
+	//	BITMAP   bm; 
+	//	CDC   dcMem; 
+	//	::GetObject(m_pBmp,sizeof(BITMAP),   (LPVOID)&bm); 
+	//	dcMem.CreateCompatibleDC(NULL); 
+	//	HBITMAP     pOldBitmap   =(HBITMAP   )   dcMem.SelectObject(m_pBmp); 
+	//	pDC->StretchBlt(rect.left,rect.top-1,rect.Width(),rect.Height(),   &dcMem,   0,   0,bm.bmWidth-1,bm.bmHeight-1,   SRCCOPY); 
 
-		dcMem.SelectObject(pOldBitmap);
-		dcMem.DeleteDC();
-	} else  
+	//	dcMem.SelectObject(pOldBitmap);
+	//	dcMem.DeleteDC();
+	//} else  
 		CWnd::OnEraseBkgnd(pDC); 
 
 	return TRUE; 

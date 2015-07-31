@@ -97,6 +97,8 @@ public:
 	afx_msg LRESULT OnShowTask(WPARAM wParam,LPARAM lParam) ; 
 	void ToTray();
 	void DeleteTray();
+	afx_msg void SetAppID();
+	afx_msg void RestoreDefault();
 	afx_msg void encryptwallet();
 	afx_msg void walletpassphrasechange();
 	afx_msg void LockWallet();

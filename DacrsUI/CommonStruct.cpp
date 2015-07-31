@@ -1110,7 +1110,6 @@ string CP2PBetHelp::GetAppAccountMoneyContract(const string& straccid,int type,i
 	accdata.type = type;  /// 0xff 表示提现 或者充值 0x01 提现 0x02 充值
 	accdata.typeaddr = typeaddr;   /// 0x01是regid 0x02是base58地址
 	accdata.money = nMoney;
-
 	return CSoyPayHelp::getInstance()->GetHexData((const char*)&accdata,sizeof(APPACC));
 }
 /// 提现一定的金额
@@ -1121,10 +1120,8 @@ string CP2PBetHelp::GetAppAccountSomeMoneyContract(const string& straccid,int ty
 	accdata.systype = 0xff;
 	accdata.type = type;  /// 0xff 表示提现 或者充值 0x01 提现 0x02 充值 03 提现一定的金额
 	accdata.typeaddr = typeaddr;   /// 0x01是regid 0x02是base58地址
-	char buffer[12] = {0};
-	memcpy(buffer,(const char*)&accdata,sizeof(APPACC));
-	memcpy(&buffer[3],&nMoney,sizeof(int64_t));
-	return CSoyPayHelp::getInstance()->GetHexData((const char*)&buffer,12);
+	accdata.money=nMoney;
+	return CSoyPayHelp::getInstance()->GetHexData((const char*)&accdata,sizeof(APPACC));
 }
 string CP2PBetHelp::GetReChangContract(){
 
@@ -1262,7 +1259,7 @@ double CSoyPayHelp::GetAccountBalance(CString addr){
 	return nmoney;
 }
 
-
+#define  HEAD_LEN 13
 string CRedPacketHelp::PacketSendCommContract(int64_t nMoney,int num,const string& message){
 
 	m_sendContract.money = nMoney;
@@ -1270,7 +1267,7 @@ string CRedPacketHelp::PacketSendCommContract(int64_t nMoney,int num,const strin
 	m_sendContract.nType = TX_COMM_SENDREDPACKET;
 	memcpy(m_sendContract.message,message.c_str(),sizeof(m_sendContract.message));
 
-	return CSoyPayHelp::getInstance()->GetHexData((const char*)&m_sendContract,sizeof(RED_PACKET));
+	return CSoyPayHelp::getInstance()->GetHexData((const char*)&m_sendContract,HEAD_LEN+message.length()+1);
 
 }
 string CRedPacketHelp::PacketAcceptCommContract(const string& strSendHash){

@@ -296,6 +296,7 @@
     <ClInclude Include="SendRecord.h" />
     <ClInclude Include="SendRedPacketRecord.h" />
     <ClInclude Include="SetAppFee.h" />
+    <ClInclude Include="SetAppId.h" />
     <ClInclude Include="Subclass.h" />
     <ClInclude Include="TabCtrl.h" />
     <ClInclude Include="TxDetailDlg.h" />
@@ -411,6 +412,7 @@
     <ClCompile Include="SendRecord.cpp" />
     <ClCompile Include="SendRedPacketRecord.cpp" />
     <ClCompile Include="SetAppFee.cpp" />
+    <ClCompile Include="SetAppId.cpp" />
     <ClCompile Include="ShadeButtonST.cpp" />
     <ClCompile Include="SignAccountsDlg.cpp" />
     <ClCompile Include="SplashThread.cpp" />
