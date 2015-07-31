@@ -12,7 +12,7 @@
 #include "EncryptWallet.h"
 #include "ChangPassWord.h"
 #include "Reminderdlg.h"
-
+#include "SetAppId.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -104,6 +104,9 @@ BEGIN_MESSAGE_MAP(CDacrsUIDlg, CDialogEx)
 	ON_COMMAND(ID__LOCK, &CDacrsUIDlg::LockWallet)
 	ON_COMMAND(ID__EXPORTPRIVEKEY, &CDacrsUIDlg::ExportPriveKey)
 	ON_COMMAND(ID__IMPORTPRIVEKEY, &CDacrsUIDlg::ImportPrvieKey)
+	ON_COMMAND(ID__SETAPPID, &CDacrsUIDlg::SetAppID)
+	ON_COMMAND(ID__SETDEFAULT, &CDacrsUIDlg::RestoreDefault)
+	
 	ON_UPDATE_COMMAND_UI(ID__SET, &CDacrsUIDlg::OnUpdataState)
 	ON_COMMAND(WM_CLOSEAPP,&CDacrsUIDlg::OnCloseApp)
 END_MESSAGE_MAP()
@@ -1025,7 +1028,8 @@ void CDacrsUIDlg:: LockWallet()
 }
 void CDacrsUIDlg::WriteExportWalletAndBookAddr(CString fileName)
 {
-	CString strFile = CJsonConfigHelp::getInstance()->GetConfigRootStr(fileName);
+	string fiename =strprintf("%s",fileName);
+	string strFile = CJsonConfigHelp::getInstance()->GetConfigRootStr(fiename);
 	if (strFile == _T(""))
 	{
 		return;
@@ -1033,10 +1037,11 @@ void CDacrsUIDlg::WriteExportWalletAndBookAddr(CString fileName)
 	Json::Reader reader;  
 	Json::Value root; 
 
-	if (!reader.parse(strFile.GetString(), root)) 
+	if (!reader.parse(strFile, root)) 
 		return;
 
-	if (strFile.Find("walletaddr") >=0)
+	int pos = strFile.find("walletaddr");
+	if ( pos>=0)
 	{
 		Json::Value addrValue = root["walletaddr"]; 
 		for(int i =0;i<(int)addrValue.size();i++){
@@ -1072,8 +1077,8 @@ void CDacrsUIDlg::WriteExportWalletAndBookAddr(CString fileName)
 			}
 		}
 	}
-
-	if (strFile.Find("wbookaddr") >=0)
+	 pos = strFile.find("wbookaddr");
+	if (pos >=0)
 	{
 		Json::Value addrValue = root["bookaddr"]; 
 		for(int i =0;i<(int)addrValue.size();i++){
@@ -1107,7 +1112,8 @@ void CDacrsUIDlg::WriteExportWalletAndBookAddr(CString fileName)
 
 void CDacrsUIDlg::AddImportWalletAndBookAddr(CString fileName)
 {
-	CString strFile = CJsonConfigHelp::getInstance()->GetConfigRootStr(fileName);
+	string fiename =strprintf("%s",fileName);
+	string strFile = CJsonConfigHelp::getInstance()->GetConfigRootStr(fiename);
 	if (strFile == _T(""))
 	{
 		return;
@@ -1115,7 +1121,7 @@ void CDacrsUIDlg::AddImportWalletAndBookAddr(CString fileName)
 	Json::Reader reader;  
 	Json::Value root; 
 
-	if (!reader.parse(strFile.GetString(), root)) 
+	if (!reader.parse(strFile, root)) 
 		return;
 	/// 自己钱包地址保存  walletaddr
 	Json::Value walletaddr; 
@@ -1272,4 +1278,86 @@ void  CDacrsUIDlg::ClosWalletWind()
 		}
 		//::PostThreadMessage( theApp.GetMtHthrdId() , MSG_USER_OUT , 0 , 0 ) ;
 		SetTimer( 0x10 , 2000 , NULL ) ; 
+}
+void CDacrsUIDlg::SetAppID()
+{
+	CSetAppId dlg;
+	if (dlg.DoModal() == IDOK)
+	{
+		return;
+	}
+	return;
+}
+void CDacrsUIDlg::RestoreDefault()
+{
+	if (PathFileExistsA(theApp.str_InsPath.c_str()))
+	{
+		string configpath = "";
+		configpath = strprintf("%s",theApp.str_InsPath);
+		configpath+= strprintf("\\%s","dacrsclient.conf");
+		string strFile = CJsonConfigHelp::getInstance()->GetConfigRootStr(configpath);
+		if (strFile == _T(""))
+		{
+			return;
+		}
+		Json::Reader reader;  
+		Json::Value root; 
+
+		if (!reader.parse(strFile, root)) 
+			return;
+
+		int pos =strFile.find("closeconf");
+		if (pos>=0)
+		{
+			Json::Value setclose = root["closeconf"];
+			ASSERT(!setclose.isNull());
+			setclose["colse"]= 0;
+			root["closeconf"]=setclose;
+		}
+		pos =strFile.find("script");
+		if (pos>=0)
+		{
+			Json::Value setscriptid = root["script"];
+			ASSERT(!setscriptid.isNull());
+			setscriptid["betscript"]= "29283-1";
+			setscriptid["iposcript"]= "10-1";
+			setscriptid["redpacketscript"]= "29282-1";
+			root["script"]=setscriptid;
+		}
+		
+		pos =strFile.find("p2pbet");
+		if (pos>=0)
+		{
+			Json::Value setbet = root["p2pbet"];
+			ASSERT(!setbet.isNull());
+			setbet["SendBetFee"]= 63806;
+			setbet["AcceptBetnFee"]= 89407;
+			setbet["OpenBetnFee"]= 84457;
+			setbet["GetAppAmountnFee"]= 84457;
+			setbet["GetRechangeFee"]= 32587;
+			root["p2pbet"]=setbet;
+		}
+
+		pos =strFile.find("redpacket");
+		if (pos>=0)
+		{
+			Json::Value setred = root["redpacket"];
+			ASSERT(!setred.isNull());
+			setred["sendredcommFee"]= 1800000;
+			setred["acceptredcommFee"]= 180000;
+			setred["sendredspecalFee"]= 480000;
+			setred["acceptredspecalFee"]= 960000;
+			root["redpacket"]=setred;
+		}
+
+		CStdioFile  File;
+		string strpath = theApp.str_InsPath;
+		strpath+="\\dacrsclient.conf";
+		File.Open((LPCTSTR)(LPSTR)strpath.c_str(),CFile::modeWrite | CFile::modeCreate); 
+		string strfile = root.toStyledString();
+		File.WriteString(strfile.c_str());
+		File.Close();
+	}
+
+	theApp.ParseUIConfigFile(theApp.str_InsPath);
 }

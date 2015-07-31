@@ -324,9 +324,9 @@ void CAcceptRedPacketRecord::OnLbnDblclkListBox()
 	int count = ((m_curpage -1)*m_pagesize) + nSel;
 	uistruct::REDPACKETGRAB_t const_it = m_AcceptRedPacketList.at(count);
 
-	if (const_it.send_hash != _T(""))
+	if (const_it.send_hash != "")
 	{
-		theApp.m_strAddress.Format(_T("%s") ,const_it.send_hash ) ;
+		theApp.m_strAddress.Format(_T("%s") ,const_it.send_hash.c_str() ) ;
 	}else
 	{		
 		theApp.m_strAddress =_T("");

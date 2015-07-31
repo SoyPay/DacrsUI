@@ -121,7 +121,7 @@ public:
 	void GetRedPacketCfgData(CRedPacketCfg &redpacketcfg);
 	void GetClosConfig(int &closeconf);
 	void AddItemString(const CString& strFilePath,CAutoComplete &m_comboxinput);
-	CString  GetConfigRootStr(const CString& strFilePath);
+	string  GetConfigRootStr(const string& strFilePath);
 private:
 	void ReadMainCfgData(const Json::Value& root);
 	void ReadSesureTradeCfgData(const Json::Value& root);
