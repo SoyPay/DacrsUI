@@ -210,12 +210,12 @@ void CIpoDlg::OnBnClickedButtonDrawal()
 	double dnum = (minFee*1.0/COIN);
 	strTxFee.Format(_T("%.8f"),dnum);
 	//GetDlgItem(IDC_EDIT_GETFEE)->GetWindowText(strTxFee) ;
-	if (  (INT64)REAL_MONEY(atof(strTxFee)) < 10000  ) {
+	if (  (INT64)REAL_MONEY(strtod(strTxFee,NULL)) < 10000  ) {
 		::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
 		return ;
 	}
 
-	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_ipoScritptid,addr.GetString(),strContractData,0,(INT64)REAL_MONEY((atof(strTxFee))),0);
+	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_ipoScritptid,addr.GetString(),strContractData,0,(INT64)REAL_MONEY((strtod(strTxFee,NULL))),0);
 	CSoyPayHelp::getInstance()->SendContacrRpc(strData,strShowData);
 
 	if (strShowData == "")

@@ -93,6 +93,15 @@ BOOL CSqliteDeal::InitializationDB(){
 			LogPrint("INFO", "Create table t_p2p_quiz failed\n");
 			return FALSE;
 		}
+	}else if (!IsExistField(_T("t_quiz_pool"),_T("send_acct_id"),_T("1=1")))
+	{
+		DeleteTable(_T("t_quiz_pool"));
+		string createSQL="CREATE TABLE t_quiz_pool(hash TEXT PRIMARY KEY,send_acct_id TEXT,total_amount INT,height INT)";
+		if(!ExcuteSQL(pDBConn, NULL, createSQL, NULL))
+		{
+			LogPrint("INFO", "Create table t_quiz_pool failed\n");
+			return FALSE;
+		}
 	}
 
 	strCondition = "type='table' and name='t_transaction'";
@@ -319,7 +328,7 @@ int CallGetWalletAddressItem(void *para, int n_column, char ** column_value, cha
 ;
 	pAddr->RegID=strprintf("%s",column_value[1]);
 
-	pAddr->fMoney = atof(column_value[2]);
+	pAddr->fMoney = strtod(column_value[2],NULL);
 
 	pAddr->nColdDig = atoi(column_value[3]) ;
 
@@ -350,14 +359,17 @@ int CallGetP2PQuizPoolItem(void *para, int n_column, char ** column_value, char 
 	uistruct::LISTP2POOL_T* pPoolInfo = (uistruct::LISTP2POOL_T*)para;
 	if(NULL == column_value[0])
 		return -1;
-	if(n_column != 2)
+	if(n_column != 4)
 		return -1;
 	string strValue ;
 	strValue = strprintf("%s" , column_value[0]) ;
 	pPoolInfo->hash = strValue;
 
 	strValue= strprintf("%s" , column_value[1] ) ;
-	pPoolInfo->data = strValue;
+	pPoolInfo->sendbetid = strValue;
+
+	sscanf_s(column_value[2],"%lld",&pPoolInfo->nPayMoney);
+	pPoolInfo->outheight = atoi(column_value[3]);
 	return 0;
 }
 //获取quiz pool列表
