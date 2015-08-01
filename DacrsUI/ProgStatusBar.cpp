@@ -337,8 +337,8 @@ void CProgStatusBar::ShowNetCount()
 		if (pos >=0)
 		{
 			strTemp = strTemp.substr(pos+1,strTemp.length());
-			//strTemp.TrimLeft();
-			//strTemp.TrimRight();
+			strTemp =  UiFun::trimleft(strTemp);
+			strTemp =  UiFun::trimright(strTemp);
 			int netCount = atoi(strTemp.c_str());
 			m_nSigIndex = netCount>3?3:netCount;
 			InvalidateRect(m_bmpsig);

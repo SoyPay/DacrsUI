@@ -153,3 +153,24 @@ CString UiFun::MbcsToUtf8(const char *file)
 	}
 	return str;
 }
+
+std::string& UiFun::trimleft(std::string &s) 
+{
+	if (s.empty()) 
+	{
+		return s;
+	}
+
+	s.erase(0,s.find_first_not_of(" "));
+	return s;
+}
+std::string& UiFun::trimright(std::string &s) 
+{
+	if (s.empty()) 
+	{
+		return s;
+	}
+
+	s.erase(s.find_last_not_of(" ") + 1);
+	return s;
+}

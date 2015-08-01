@@ -111,6 +111,7 @@ public:
 	CDarkTxCfg		m_DarkCfg;
 	CP2PBetCfg		m_P2PBetCfg;
 	CRedPacketCfg   m_RedPacketCfg;
+	CNewestScriptCfg m_neststcriptid;
 public:
 	void         OnInitList();   //≥ı ºªØlist
 	int          SendPostThread(DWORD msgtype);

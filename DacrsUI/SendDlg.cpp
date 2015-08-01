@@ -92,6 +92,8 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 	if(text!=_T(""))
 	{
 		string strAddr =strprintf("%s",text);
+		strAddr =UiFun::trimleft(strAddr);
+		strAddr =UiFun::trimright(strAddr);
 		if(m_mapAddrInfo.count(strAddr)<=0)
 		{
 			//::MessageBox( this->GetSafeHwnd() ,_T("发送地址不存在") , _T("提示") , MB_ICONINFORMATION ) ;
