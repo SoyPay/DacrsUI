@@ -282,6 +282,7 @@
     <ClInclude Include="GuessNum.h" />
     <ClInclude Include="IpoCoin.h" />
     <ClInclude Include="Log.h" />
+    <ClInclude Include="MessageBoxEx.h" />
     <ClInclude Include="NewMenu.h" />
     <ClInclude Include="NewSendAddr.h" />
     <ClInclude Include="Out.h" />
@@ -386,6 +387,7 @@
     <ClCompile Include="ListCtrlCl.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="MainDlg.cpp" />
+    <ClCompile Include="MessageBoxEx.cpp" />
     <ClCompile Include="MortgageTardDlg.cpp" />
     <ClCompile Include="MyMutex.cpp" />
     <ClCompile Include="MyQueue.cpp" />

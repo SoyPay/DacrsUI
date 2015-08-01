@@ -167,7 +167,8 @@ BOOL CIpoCoin::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 void CIpoCoin::OnBnClickedButtonDrawal()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	if ( IDNO == ::MessageBox( this->GetSafeHwnd() ,_T("是否确定要体现") , _T("提示") , MB_YESNO|MB_ICONINFORMATION ) )
+	CMessageBoxEx message(_T("\n是否确定要体现!") , 1 );
+	if ( IDNO == message.DoModal() )
 		return;
 
 	if (!CheckRegIDValid( theApp.m_ipoScritptid )) return ;
@@ -183,7 +184,9 @@ void CIpoCoin::OnBnClickedButtonDrawal()
 	GetDlgItem(IDC_EDIT_ADDR)->GetWindowText(addr);
 	if (addr == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(_T("\n地址不能为空!") , 0 );
+	        message.DoModal();
+	//	::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
 
@@ -199,7 +202,9 @@ void CIpoCoin::OnBnClickedButtonDrawal()
 	strTxFee.Format(_T("%.8f"),dnum);
 	//GetDlgItem(IDC_EDIT_GETFEE)->GetWindowText(strTxFee) ;
 	if (  (INT64)REAL_MONEY(atof(strTxFee)) < 10000  ) {
-		::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(_T("\n小费不足!") , 0 );
+	        message.DoModal();
+		//::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
 		return ;
 	}
 
@@ -232,7 +237,9 @@ void CIpoCoin::OnBnClickedButtonDrawal()
 	}else{
 		strTip = "提现失败!" ;
 	}
-	::MessageBox( this->GetSafeHwnd() ,strTip.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+	CMessageBoxEx message1(strTip.c_str() , 0 );
+	        message1.DoModal();
+	//::MessageBox( this->GetSafeHwnd() ,strTip.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
 }
 
 
@@ -345,7 +352,9 @@ void CIpoCoin::OnBnClickedButtonQuery()
 	GetDlgItem(IDC_EDIT_ADDR)->GetWindowText(addr);
 	if (addr == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(_T("\n地址不能为空!") , 0 );
+	        message.DoModal();
+		//::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
 	OnShowListCtrol(addr);

@@ -59,7 +59,9 @@ void CReCharge::OnBnClickedOk()
 		GetDlgItem(IDC_EDIT_MONEY)->GetWindowText(strTxMoney) ;
 		if (strTxMoney == _T(""))
 		{
-			::MessageBox( this->GetSafeHwnd() ,_T("金额不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+			CMessageBoxEx message(_T("\n金额不能为空!") , 0 );
+	        message.DoModal();
+			//::MessageBox( this->GetSafeHwnd() ,_T("金额不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
 			return ;
 		}
 		theApp.m_strAddress = strTxMoney;
@@ -68,7 +70,9 @@ void CReCharge::OnBnClickedOk()
 		GetDlgItem(IDC_EDIT_MONEY)->GetWindowText(strTxmessage) ;
 		if (strTxmessage.GetLength() >200)
 		{
-			::MessageBox( this->GetSafeHwnd() ,_T("广告语不能超过两百个字节") , _T("提示") , MB_ICONINFORMATION ) ;
+			CMessageBoxEx message(_T("\n广告语不能超过两百个字节!") , 0 );
+	        message.DoModal();
+			//::MessageBox( this->GetSafeHwnd() ,_T("广告语不能超过两百个字节") , _T("提示") , MB_ICONINFORMATION ) ;
 			return ;
 		}
 		theApp.m_strAddress = strTxmessage;

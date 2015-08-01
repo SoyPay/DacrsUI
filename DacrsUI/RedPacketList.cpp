@@ -94,7 +94,9 @@ void CRedPacketList::ShowTxDetail(CString txhash)
 	 if (redPacket.dbdata.type == 3 && !redPacket.dbdata.fover)
 	{
 		//showdata.Format(_T("接龙红包还未抢完"));
-		::MessageBox( this->GetSafeHwnd() ,_T("接龙红包还未抢完"), _T("提示") , MB_ICONINFORMATION );
+		CMessageBoxEx message(_T("\n接龙红包还未抢完!") , 0 );
+	        message.DoModal();
+		//::MessageBox( this->GetSafeHwnd() ,_T("接龙红包还未抢完"), _T("提示") , MB_ICONINFORMATION );
 		CDialog::OnOK();
 	}else{
 		 //map<INT64,CString > mapindex;

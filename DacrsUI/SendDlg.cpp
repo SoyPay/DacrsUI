@@ -72,7 +72,9 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 
 	if (m_mapAddrInfo.size() == 0)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("发送地址不存在") , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(_T("\n发送地址不存在!") , 0 );
+	        message.DoModal();
+		//::MessageBox( this->GetSafeHwnd() ,_T("发送地址不存在") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
 	CString text =_T("");
@@ -104,19 +106,25 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 
 		if(!data.bSign) 
 		{
-			::MessageBox( this->GetSafeHwnd() ,_T("发送地址未激活") , _T("提示") , MB_ICONINFORMATION ) ;
+			CMessageBoxEx message(_T("\n发送地址未激活!") , 0 );
+	        message.DoModal();
+			//::MessageBox( this->GetSafeHwnd() ,_T("发送地址未激活") , _T("提示") , MB_ICONINFORMATION ) ;
 			return;
 		}
 
 		GetDlgItem(IDC_EDIT_DESADDRESS)->GetWindowTextA(strMaddress);
 		if (strMaddress == _T(""))
 		{
-			::MessageBox( this->GetSafeHwnd() ,_T("接受地址不能未空") , _T("提示") , MB_ICONINFORMATION ) ;
+			CMessageBoxEx message(_T("\n接受地址不能未空!") , 0 );
+	        message.DoModal();
+			//::MessageBox( this->GetSafeHwnd() ,_T("接受地址不能未空") , _T("提示") , MB_ICONINFORMATION ) ;
 			return;
 		}
 		if(!strcmp(strMaddress.GetString(), data.address.c_str()))
 		{
-			::MessageBox( this->GetSafeHwnd() ,_T("发送地址和目的地址不能相同") , _T("提示") , MB_ICONINFORMATION ) ;
+			CMessageBoxEx message(_T("\n发送地址和目的地址不能相同!") , 0 );
+	        message.DoModal();
+			//::MessageBox( this->GetSafeHwnd() ,_T("发送地址和目的地址不能相同") , _T("提示") , MB_ICONINFORMATION ) ;
 			return;
 		}
 		
@@ -124,19 +132,25 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 		double dSendMoney = atof(strMoney);
 		if(dSendMoney > data.fMoney || ( data.fMoney>-0.0000001 && data.fMoney< 0.000001 )) 
 		{
-			::MessageBox( this->GetSafeHwnd() ,_T("账户余额不足") , _T("提示") , MB_ICONINFORMATION ) ;
+			CMessageBoxEx message(_T("\n账户余额不足!") , 0 );
+	        message.DoModal();
+		//	::MessageBox( this->GetSafeHwnd() ,_T("账户余额不足") , _T("提示") , MB_ICONINFORMATION ) ;
 			return;
 		}
 
 		if(_T("") == strMoney.GetString() || (dSendMoney >-0.0000001 && dSendMoney< 0.000001))
 		{
-			::MessageBox( this->GetSafeHwnd() ,_T("发送金额不能为0") , _T("提示") , MB_ICONINFORMATION ) ;
+			CMessageBoxEx message(_T("\n发送金额不能为0!") , 0 );
+	        message.DoModal();
+			//::MessageBox( this->GetSafeHwnd() ,_T("发送金额不能为0") , _T("提示") , MB_ICONINFORMATION ) ;
 			return;
 		}
 
 		if (!theApp.IsSyncBlock )
 		{
-			::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
+			CMessageBoxEx message(_T("\n同步未完成,不能发送交易!") , 0 );
+	        message.DoModal();
+			//::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
 			return;
 		}
 		strCommand = strprintf("%s %s %s %lld","sendtoaddress" ,data.address.c_str() ,strMaddress ,REAL_MONEY(dSendMoney));
@@ -160,7 +174,9 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 
 		if (!reader.parse(strShowData, root)) 
 		{
-			::MessageBox( this->GetSafeHwnd() ,strShowData.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+			CMessageBoxEx message(strShowData.c_str() , 0 );
+	        message.DoModal();
+			//::MessageBox( this->GetSafeHwnd() ,strShowData.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
 			return  ;
 		}
 		BOOL bRes = FALSE ;
@@ -187,7 +203,9 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 		}else{
 			strData = "转账失败!";
 		}
-		::MessageBox( this->GetSafeHwnd() ,strData.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(strData.c_str() , 0 );
+	        message.DoModal();
+		//::MessageBox( this->GetSafeHwnd() ,strData.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
 
 		//// 插入数据库,将收款人添加到地址簿
 		CString label;
@@ -481,7 +499,9 @@ BOOL CSendDlg::PreTranslateMessage(MSG* pMsg)
 						if(m_mapAddrInfo.count(addr)<=0)
 						{
 							//TRACE("map OnCbnSelchangeCombo1 error");
-							::MessageBox( this->GetSafeHwnd() ,_T("复制的地址有误") , _T("提示") , MB_ICONINFORMATION ) ;
+							CMessageBoxEx message(_T("\n复制的地址有误!")  , 0 );
+	                        message.DoModal();
+							//::MessageBox( this->GetSafeHwnd() ,_T("复制的地址有误") , _T("提示") , MB_ICONINFORMATION ) ;
 						}else{
 							//uistruct::LISTADDR_t te = m_pListaddrInfo[text];
 							CString strshow;
