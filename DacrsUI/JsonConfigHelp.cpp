@@ -349,7 +349,7 @@ void CJsonConfigHelp::ModifyAppFeeCfgData( Json::Value& root,const CString &Lead
 	{
 		Json::Value p2pbet = root[LeaderKey];
 		ASSERT(!p2pbet.isNull());
-		p2pbet[Key]= (INT64)(atof(KeyValue)*COIN);
+		p2pbet[Key]= (INT64)(strtod(KeyValue,NULL)*COIN);
 		root[LeaderKey]=p2pbet;
 	}else{
 		CString strTemp =_T("");

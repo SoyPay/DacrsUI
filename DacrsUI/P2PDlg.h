@@ -77,7 +77,7 @@ public:
 	afx_msg void OnBnClickedButtonWoman();
 	void OnListPool();
 	void AcceptBet(CString hash,CString money,CString sendaddr,int timeout);
-	bool CheckBalance();
+	bool CheckBalance(string strshow = "");
 	bool CheckBalance(double dmoney);
 	CCTabCtrl m_tab;
 	afx_msg void OnTcnSelchangeTab(NMHDR *pNMHDR, LRESULT *pResult);

@@ -308,7 +308,7 @@ void   CGrabCommRedPacket::AcceptRedPacketComm(CString sendhash,uistruct::REDPAC
 	::MessageBox( this->GetSafeHwnd() ,pPoolList.message.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
 
 	CString walletaddr = m_walletmoney;
-	INT64 sub = (INT64)(atof(walletaddr)*COIN) - theApp.m_RedPacketCfg.AcceptRedPacketCommFee;
+	INT64 sub = (INT64)(strtod(walletaddr,NULL)*COIN) - theApp.m_RedPacketCfg.AcceptRedPacketCommFee;
 	if (sub < 0)
 	{
 		::MessageBox( this->GetSafeHwnd() ,_T("此钱包账户金额不足付小费,请先充值") , _T("提示") , MB_ICONINFORMATION ) ;

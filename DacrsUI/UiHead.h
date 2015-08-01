@@ -454,11 +454,15 @@ namespace uistruct {
 
 	typedef struct LISTP2POOL{   
 		string   hash ;   //address
-		string   data ;   //RegID
+		string   sendbetid ;   //RegID
+		INT64   nPayMoney;
+		int     outheight;
 		string ToJson(){
 			Json::Value root;
 			root["hash"] = hash;
-			root["data"] = data;
+			root["sendbetid"] = sendbetid;
+			root["money"] = nPayMoney;
+			root["height"] = outheight;
 			return root.toStyledString();
 		}
 		bool JsonToStruct(string json){
@@ -468,7 +472,9 @@ namespace uistruct {
 				return false ;
 
 			this->hash = root["hash"].asString();
-			this->data = root["data"].asString();
+			this->sendbetid = root["data"].asString();
+			this->nPayMoney = root["money"].asInt64();
+			this->outheight=root["height"].asInt();
 			return true;
 		}
 	}LISTP2POOL_T;

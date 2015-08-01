@@ -481,30 +481,12 @@ void CMortgageTardDlg::SendRedPacketComm(){
 		return;
 	}
 
-	if (!CheckBalance())
-	{
-		return;
-	}
 	if (!CheckRegIDValid( theApp.m_redPacketScriptid)) return ;
 
-	CString strMoney;
-	((CStatic*)GetDlgItem(IDC_STATIC_BALANCE))->GetWindowText(strMoney);
-	double balance =atof(strMoney);
 
 	CString strTxMoney;
 	GetDlgItem(IDC_EDIT_MONEY)->GetWindowText(strTxMoney) ;
-	if (strTxMoney == _T(""))
-	{
-		::MessageBox( this->GetSafeHwnd() ,_T("金额不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
-		return ;
-	}
-
-	if (atof(strTxMoney) > balance)
-	{
-		::MessageBox( this->GetSafeHwnd() ,_T("投注金额大于账户余额") , _T("提示") , MB_ICONINFORMATION ) ;
-		return ;
-	}
-
+	
 
 	CReCharge outdlg(NULL,_T("广告语句"),_T("广告词:"),_T("  "));
 	if (outdlg.DoModal() == IDCANCEL)
@@ -537,7 +519,7 @@ void CMortgageTardDlg::SendRedPacketComm(){
 		::MessageBox( this->GetSafeHwnd() ,_T("请正确填写红包个数,红包的个数在2-100范围之内") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
-	double minamout = atof(strTxMoney)/redNum;
+	double minamout = strtod(strTxMoney,NULL)/redNum;
 	if (minamout < 1.0) /// 平均每个热你的红包吧不能少于1
 	{
 		::MessageBox( this->GetSafeHwnd() ,_T("平均每个红包的金额不能小于1") , _T("提示") , MB_ICONINFORMATION ) ;
@@ -545,10 +527,10 @@ void CMortgageTardDlg::SendRedPacketComm(){
 	}
 
 	string strContractData;
-	double money = atof(strTxMoney);
+	double money = strtod(strTxMoney,NULL);
 	CString nTemp;
 	nTemp.Format(_T("%.8f"),money);
-	strContractData = m_RedPacketHelp.PacketSendCommContract((INT64)REAL_MONEY(atof(nTemp)),redNum,message.GetString());
+	strContractData = m_RedPacketHelp.PacketSendCommContract((INT64)REAL_MONEY(strtod(nTemp,NULL)),redNum,message.GetString());
 
 	INT64 strTxFee = theApp.m_RedPacketCfg.SendRedPacketCommFee;
 	if (  strTxFee < 10000  ) {
@@ -592,7 +574,7 @@ void CMortgageTardDlg::SendRedPacketComm(){
 	if ( bRes ) {
 
 		string txhash = root["hash"].asString();
-		double amount = atof(nTemp);
+		double amount = strtod(nTemp,NULL);
 		//插入到数据库
 		string strSourceData;
 		strSourceData= strprintf("'%s','%d','%lf','%d' , '%s' , '%d' , '%d'" , \
@@ -613,6 +595,15 @@ void CMortgageTardDlg::SendRedPacketComm(){
 void CMortgageTardDlg::OnBnClickedButtonCommred()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	if (!CheckBalance())
+	{
+		return;
+	}
+
+	CString strMoney;
+	((CStatic*)GetDlgItem(IDC_STATIC_BALANCE))->GetWindowText(strMoney);
+	double balance =strtod(strMoney,NULL);
+
 	CString strTxMoney;
 	GetDlgItem(IDC_EDIT_MONEY)->GetWindowText(strTxMoney) ;
 	if (strTxMoney == _T(""))
@@ -621,9 +612,15 @@ void CMortgageTardDlg::OnBnClickedButtonCommred()
 		return ;
 	}
 
-	if (atof(strTxMoney)<0.0001)
+	if (strtod(strTxMoney,NULL) > balance)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("投注金额必须大于0.0001") , _T("提示") , MB_ICONINFORMATION ) ;
+		::MessageBox( this->GetSafeHwnd() ,_T("红包金额大于账户余额") , _T("提示") , MB_ICONINFORMATION ) ;
+		return ;
+	}
+
+	if (strtod(strTxMoney,NULL)<1)
+	{
+		::MessageBox( this->GetSafeHwnd() ,_T("红包金额必须大于1") , _T("提示") , MB_ICONINFORMATION ) ;
 		return ;
 	}
 
@@ -748,15 +745,21 @@ void CMortgageTardDlg::OnCbnSelchangeComboAddres()
 	}
 }
 
-bool CMortgageTardDlg::CheckBalance()
+bool CMortgageTardDlg::CheckBalance(string strshow)
 {
 	OnCbnSelchangeComboAddres();
 	CString strMoney;
 	((CStatic*)GetDlgItem(IDC_STATIC_BALANCE))->GetWindowText(strMoney);
-	double money =atof(strMoney);
+	double money =strtod(strMoney,NULL);
 	if (money == 0.0)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("账户金额为零,请先充值") , _T("提示") , MB_ICONINFORMATION ) ;
+		if (strshow == "")
+		{
+			::MessageBox( this->GetSafeHwnd() ,_T("账户金额为零,请先充值") , _T("提示") , MB_ICONINFORMATION ) ;
+		}else{
+			::MessageBox( this->GetSafeHwnd() ,strshow.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+		}
+		
 		return false;
 	}
 	return true;
@@ -888,7 +891,7 @@ void CMortgageTardDlg::OnBnClickedButtonRech()
 	strCondition = strprintf("reg_id = '%s'",addr);
 	uistruct::LISTADDR_t pAddr;
 	theApp.m_SqliteDeal.GetWalletAddressItem(strCondition,&pAddr);
-	double sub = pAddr.fMoney - atof(theApp.m_strAddress);
+	double sub = pAddr.fMoney - strtod(theApp.m_strAddress,NULL);
 	if (sub <1.0)
 	{
 		::MessageBox( this->GetSafeHwnd() ,_T("系统账户最少余额1smc,作为后续合约交易小费") , _T("提示") , MB_ICONINFORMATION ) ;
@@ -904,7 +907,7 @@ void CMortgageTardDlg::OnBnClickedButtonRech()
 		return ;
 	}
 
-	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_redPacketScriptid,addr.GetString(),strContractData,0,strTxFee,REAL_MONEY(atof(theApp.m_strAddress) ));
+	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_redPacketScriptid,addr.GetString(),strContractData,0,strTxFee,REAL_MONEY(strtod(theApp.m_strAddress,NULL) ));
 	CSoyPayHelp::getInstance()->SendContacrRpc(strData,strShowData);
 
 	if (strShowData == "")
@@ -1132,29 +1135,10 @@ void   CMortgageTardDlg::SendRedPackeSpecail(){
 		return;
 	}
 
-	if (!CheckBalance())
-	{
-		return;
-	}
 	if (!CheckRegIDValid( theApp.m_redPacketScriptid)) return ;
-
-	CString strMoney;
-	((CStatic*)GetDlgItem(IDC_STATIC_BALANCE))->GetWindowText(strMoney);
-	double balance =atof(strMoney);
 
 	CString strTxMoney;
 	GetDlgItem(IDC_EDIT_MONEY)->GetWindowText(strTxMoney) ;
-	if (strTxMoney == _T(""))
-	{
-		::MessageBox( this->GetSafeHwnd() ,_T("金额不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
-		return ;
-	}
-
-	if (atof(strTxMoney) > balance)
-	{
-		::MessageBox( this->GetSafeHwnd() ,_T("投注金额大于账户余额") , _T("提示") , MB_ICONINFORMATION ) ;
-		return ;
-	}
 
 	CString addr;
 	int sel = m_addrbook.GetCurSel();
@@ -1182,10 +1166,10 @@ void   CMortgageTardDlg::SendRedPackeSpecail(){
 	}
 
 	string strContractData;
-	double money = atof(strTxMoney);
+	double money = strtod(strTxMoney,NULL);
 	CString nTemp;
 	nTemp.Format(_T("%.8f"),money);
-	strContractData = m_RedPacketHelp.PacketSendSecpailContract((INT64)REAL_MONEY(atof(nTemp)),redNum,_T(""));
+	strContractData = m_RedPacketHelp.PacketSendSecpailContract((INT64)REAL_MONEY(strtod(nTemp,NULL)),redNum,_T(""));
 
 	INT64 strTxFee = theApp.m_RedPacketCfg.SendRedPacketSpecailFee;
 	if (  strTxFee < 10000  ) {
@@ -1229,7 +1213,7 @@ void   CMortgageTardDlg::SendRedPackeSpecail(){
 	if ( bRes ) {
 
 		string txhash = root["hash"].asString();
-		double amount = atof(nTemp);
+		double amount = strtod(nTemp,NULL);
 		//插入到数据库
 		string strSourceData;
 		strSourceData = strprintf("'%s','%s','%lf','%d' , '%s' , '%d' , '%d'" , \
@@ -1249,6 +1233,16 @@ void   CMortgageTardDlg::SendRedPackeSpecail(){
 void CMortgageTardDlg::OnBnClickedButtonSpecailred()
 {
 	// TODO: 在此添加控件通知处理程序代码
+
+	if (!CheckBalance())
+	{
+		return;
+	}
+
+	CString strMoney;
+	((CStatic*)GetDlgItem(IDC_STATIC_BALANCE))->GetWindowText(strMoney);
+	double balance =strtod(strMoney,NULL);
+
 	CString strTxMoney;
 	GetDlgItem(IDC_EDIT_MONEY)->GetWindowText(strTxMoney) ;
 	if (strTxMoney == _T(""))
@@ -1257,11 +1251,20 @@ void CMortgageTardDlg::OnBnClickedButtonSpecailred()
 		return ;
 	}
 
-	if (atof(strTxMoney)<10.0)
+	if (strtod(strTxMoney,NULL) > balance)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("投注金额必须大于10") , _T("提示") , MB_ICONINFORMATION ) ;
+		::MessageBox( this->GetSafeHwnd() ,_T("红包金额大于账户余额") , _T("提示") , MB_ICONINFORMATION ) ;
 		return ;
 	}
+
+	if (strtod(strTxMoney,NULL)<10.0)
+	{
+		::MessageBox( this->GetSafeHwnd() ,_T("接龙红包金额必须大于10.0") , _T("提示") , MB_ICONINFORMATION ) ;
+		return ;
+	}
+
+
+
 
 	CString strDisplay;
 	strDisplay.Format(_T("确定要发红包--->金额:%s"), strTxMoney);
@@ -1285,7 +1288,7 @@ void   CMortgageTardDlg::AcceptRedPacketComm(CString sendhash,uistruct::REDPACKE
 
 	CString walletaddr;
 	((CStatic*)GetDlgItem(IDC_STATIC_MONEY4))->GetWindowText(walletaddr);
-	INT64 sub = (INT64)(atof(walletaddr)*COIN) - theApp.m_RedPacketCfg.AcceptRedPacketCommFee;
+	INT64 sub = (INT64)(strtod(walletaddr,NULL)*COIN) - theApp.m_RedPacketCfg.AcceptRedPacketCommFee;
 	if (sub < 0)
 	{
 		::MessageBox( this->GetSafeHwnd() ,_T("此钱包账户金额不足付小费,请先充值") , _T("提示") , MB_ICONINFORMATION ) ;
@@ -1389,7 +1392,7 @@ void   CMortgageTardDlg::AcceptRedPackeSpecail(CString sendhash,uistruct::REDPAC
 
 
 	CString walletaddr;
-	INT64 sub = (INT64)(atof(walletaddr)*COIN) - theApp.m_RedPacketCfg.AcceptRedPacketSpecailFee;
+	INT64 sub = (INT64)(strtod(walletaddr,NULL)*COIN) - theApp.m_RedPacketCfg.AcceptRedPacketSpecailFee;
 	if (sub < 0)
 	{
 		::MessageBox( this->GetSafeHwnd() ,_T("此钱包账户金额不足付小费,请先充值") , _T("提示") , MB_ICONINFORMATION ) ;
@@ -1397,7 +1400,7 @@ void   CMortgageTardDlg::AcceptRedPackeSpecail(CString sendhash,uistruct::REDPAC
 	}
 	((CStatic*)GetDlgItem(IDC_STATIC_BALANCE))->GetWindowText(walletaddr);
 
-	if (atof(walletaddr) < pPoolList.total_amount)
+	if (strtod(walletaddr,NULL) < pPoolList.total_amount)
 	{
 		::MessageBox( this->GetSafeHwnd() ,_T("此钱包账户金额小于接龙红包金额,请先充值") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
@@ -1676,7 +1679,7 @@ bool CMortgageTardDlg::CheckBalance(double dmoney)
 	OnCbnSelchangeComboAddres();
 	CString strMoney;
 	((CStatic*)GetDlgItem(IDC_STATIC_BALANCE))->GetWindowText(strMoney);
-	double money =atof(strMoney);
+	double money =strtod(strMoney,NULL);
 	if (money == 0.0)
 	{
 		::MessageBox( this->GetSafeHwnd() ,_T("账户金额为零,请先充值") , _T("提示") , MB_ICONINFORMATION ) ;
@@ -1692,8 +1695,7 @@ bool CMortgageTardDlg::CheckBalance(double dmoney)
 }
 void  CMortgageTardDlg::GetAppAccountSomeMoney()
 {
-	if ( IDNO == ::MessageBox( this->GetSafeHwnd() ,_T("是否确定要体现") , _T("提示") , MB_YESNO|MB_ICONINFORMATION ) )
-		return;
+
 	if (!theApp.IsSyncBlock )
 	{
 		::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
@@ -1702,6 +1704,11 @@ void  CMortgageTardDlg::GetAppAccountSomeMoney()
 
 
 	if (!CheckRegIDValid( theApp.m_betScritptid )) return ;
+
+	if (!CheckBalance("账户金额为零不能提现"))
+	{
+		return;
+	}
 
 	CReCharge outdlg(NULL,"提现:","提现金额");
 	if ( IDOK != outdlg.DoModal()){
@@ -1715,10 +1722,13 @@ void  CMortgageTardDlg::GetAppAccountSomeMoney()
 	}
 
 	double money = strtod(theApp.m_strAddress,NULL);
-	if (!CheckBalance())
+	if (!CheckBalance(money))
 	{
 		return;
 	}
+	string show = strprintf("是否确定要体现 金额为:%lf",money);
+	if ( IDNO == ::MessageBox( this->GetSafeHwnd() ,show.c_str() , _T("提示") , MB_YESNO|MB_ICONINFORMATION ) )
+		return;
 
 	string strShowData ="";
 

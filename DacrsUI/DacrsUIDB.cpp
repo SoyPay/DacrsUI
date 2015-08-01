@@ -95,8 +95,13 @@ void CDacrsUIApp::UpdateQuizPoolData()
 				std::vector<unsigned char> txTemp = CSoyPayHelp::getInstance()->ParseHex(txhash);
 				reverse(txTemp.begin(),txTemp.end());
 				string newTxhash =  CSoyPayHelp::getInstance()->HexStr(txTemp);
+
+				std::vector<unsigned char> vSendid;
+				vSendid.assign(DBbet.sendbetid,DBbet.sendbetid+sizeof(DBbet.sendbetid));
+				string regid = CSoyPayHelp::getInstance()->GetNotFullRegID(vSendid);
+
 				string strSourceData;
-				strSourceData=strprintf("'%s' , '%s'" , newTxhash.c_str(), nValue.c_str());
+				strSourceData=strprintf("'%s' , '%s',%ld,%d" , newTxhash.c_str(), regid.c_str(),DBbet.money,DBbet.hight);
 				m_SqliteDeal.InsertTableItem(_T("t_quiz_pool") ,strSourceData);
 			}
 		}
