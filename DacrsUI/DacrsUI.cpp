@@ -198,7 +198,9 @@ BOOL CDacrsUIApp::InitInstance()
 		{
 		case OutOfMemory :
 			{
-				::MessageBox( NULL , "OutOfMemory" , "Error" , MB_ICONERROR) ;
+				CMessageBoxEx message(_T("\n OutOfMemory!") , 0 );
+	            message.DoModal();
+				//::MessageBox( NULL , "OutOfMemory" , "Error" , MB_ICONERROR) ;
 			}
 			break;
 		}
@@ -234,8 +236,9 @@ BOOL CDacrsUIApp::InitInstance()
 			*/
 			int errorCode = GetLastError();
 			TRACE("Error OpenProcess:%d " , errorCode );
-			::MessageBox( NULL , _T("区块链数据库损坏，请双击运行钱包下clear.bat文件，在重新打开钱包\r\n") , "Error" , MB_ICONERROR) ;
-			//AfxMessageBox(_T(errorCode));
+			CMessageBoxEx message(_T("\n区块链数据库损坏，请双击运行钱包下clear.bat文件，在重新打开钱包\r\n!") , 0 );
+	        message.DoModal();
+			//::MessageBox( NULL , _T("区块链数据库损坏，请双击运行钱包下clear.bat文件，在重新打开钱包\r\n") , "Error" , MB_ICONERROR) ;
 			exit(1);
 		}
 		CloseHandle(processHandle);
@@ -336,7 +339,9 @@ BOOL CDacrsUIApp::CreateMaintainThrd()
 
 	hMtThrd = (HANDLE)_beginthreadex( NULL, 0, &MtProc, this, 0, &nMtThrdID ) ;
 	if( INVALID_HANDLE_VALUE == hMtThrd ) {
-		::MessageBox( NULL , "维护线程创建失败!" , "出错" , MB_ICONERROR ) ;
+		CMessageBoxEx message(_T("\n维护线程创建失败!") , 0 );
+	    message.DoModal();
+		//::MessageBox( NULL , "维护线程创建失败!" , "出错" , MB_ICONERROR ) ;
 		CloseHandle( hMtStartEvent ) ;
 		hMtStartEvent = NULL ;
 		return  FALSE;
@@ -1583,7 +1588,9 @@ void CDacrsUIApp::CheckPathValid(const string& strDir)
 
 	if (bExist)
 	{
-		::MessageBox( NULL , _T("程序不可以放在含有空格的目录下\r\n") , "Error" , MB_ICONERROR) ;
+		CMessageBoxEx message(_T("\n程序不可以放在含有空格的目录下!") , 0 );
+	    message.DoModal();
+		//::MessageBox( NULL , _T("程序不可以放在含有空格的目录下\r\n") , "Error" , MB_ICONERROR) ;
 		exit(0);
 	}
 }

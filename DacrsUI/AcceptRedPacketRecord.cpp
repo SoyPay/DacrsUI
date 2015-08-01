@@ -294,7 +294,9 @@ BOOL CAcceptRedPacketRecord::PreTranslateMessage(MSG* pMsg)
 				}else
 				{
 					GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T(""));
-					::MessageBox( this->GetSafeHwnd() ,_T("输入有误,请输入数字") , _T("提示") , MB_ICONINFORMATION ) ;
+					CMessageBoxEx message(_T("\n输入有误,请输入数字") , 0 );
+	                message.DoModal();
+					//::MessageBox( this->GetSafeHwnd() ,_T("输入有误,请输入数字") , _T("提示") , MB_ICONINFORMATION ) ;
 				}
 				return TRUE;
 			}

@@ -90,7 +90,9 @@ void CSignAccountsDlg::OnBnClickedButtonSend()
 
 		if (strShowData == _T(""))
 		{
-			::MessageBox( this->GetSafeHwnd() ,_T("服务器没有反应") , _T("提示") , MB_ICONINFORMATION ) ;
+			CMessageBoxEx message(_T("\n 服务器没有反应!")  , 0 );
+	            message.DoModal();
+			//::MessageBox( this->GetSafeHwnd() ,_T("服务器没有反应") , _T("提示") , MB_ICONINFORMATION ) ;
 		}
 
 		if (!reader.parse(strShowData, root)) 
@@ -121,7 +123,8 @@ void CSignAccountsDlg::OnBnClickedButtonSend()
 		}else{
 			strData="激活账户失败!" ;
 		}
-		if ( IDOK == ::MessageBox( this->GetSafeHwnd() ,strData.c_str(), _T("提示") , MB_ICONINFORMATION ) ){
+		CMessageBoxEx message(strData.c_str()  , 0 );
+		if ( IDOK == message.DoModal() ){
 			EndDialog(IDOK);
 		}
 	}

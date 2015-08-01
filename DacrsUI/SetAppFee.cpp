@@ -104,7 +104,9 @@ void CSetAppFee::OnBnClickedOk()
 		{
 			if (!IsAllDigtal(strTemp))
 			{
-				::MessageBox( NULL , _T("发送赌约小费必须是数字") , "Error" , MB_ICONERROR) ;
+				CMessageBoxEx message(_T("\n发送赌约小费必须是数字!")  , 0 );
+	                        message.DoModal();
+				//::MessageBox( NULL , _T("发送赌约小费必须是数字") , "Error" , MB_ICONERROR) ;
 			}else
 			{
 				CJsonConfigHelp::getInstance()->ModifyAppFeeCfgData(root,_T("p2pbet"),_T("SendBetFee"),strTemp);
@@ -117,7 +119,9 @@ void CSetAppFee::OnBnClickedOk()
 		{
 			if (!IsAllDigtal(strTemp))
 			{
-				::MessageBox( NULL , _T("接赌约小费必须是数字") , "Error" , MB_ICONERROR) ;
+				CMessageBoxEx message(_T("\n接赌约小费必须是数字!")  , 0 );
+	                        message.DoModal();
+			//	::MessageBox( NULL , _T("接赌约小费必须是数字") , "Error" , MB_ICONERROR) ;
 			}else
 			{
 				CJsonConfigHelp::getInstance()->ModifyAppFeeCfgData(root,_T("p2pbet"),_T("AcceptBetnFee"),strTemp);
@@ -130,7 +134,9 @@ void CSetAppFee::OnBnClickedOk()
 		{
 			if (!IsAllDigtal(strTemp))
 			{
-				::MessageBox( NULL , _T("开奖小费必须是数字") , "Error" , MB_ICONERROR) ;
+				CMessageBoxEx message(_T("\n开奖小费必须是数字!")  , 0 );
+	                        message.DoModal();
+				//::MessageBox( NULL , _T("开奖小费必须是数字") , "Error" , MB_ICONERROR) ;
 			}else
 			{
 				CJsonConfigHelp::getInstance()->ModifyAppFeeCfgData(root,_T("p2pbet"),_T("OpenBetnFee"),strTemp);
@@ -143,7 +149,9 @@ void CSetAppFee::OnBnClickedOk()
 		{
 			if (!IsAllDigtal(strTemp))
 			{
-				::MessageBox( NULL , _T("发普通红包小费必须是数字") , "Error" , MB_ICONERROR) ;
+				CMessageBoxEx message(_T("\n发普通红包小费必须是数字!")  , 0 );
+	                        message.DoModal();
+				//::MessageBox( NULL , _T("发普通红包小费必须是数字") , "Error" , MB_ICONERROR) ;
 			}else
 			{
 				CJsonConfigHelp::getInstance()->ModifyAppFeeCfgData(root,_T("redpacket"),_T("sendredcommFee"),strTemp);
@@ -156,7 +164,9 @@ void CSetAppFee::OnBnClickedOk()
 		{
 			if (!IsAllDigtal(strTemp))
 			{
-				::MessageBox( NULL , _T("接普通红包小费必须是数字") , "Error" , MB_ICONERROR) ;
+				CMessageBoxEx message(_T("\n接普通红包小费必须是数字!")  , 0 );
+	            message.DoModal();
+				//::MessageBox( NULL , _T("接普通红包小费必须是数字") , "Error" , MB_ICONERROR) ;
 			}else
 			{
 				CJsonConfigHelp::getInstance()->ModifyAppFeeCfgData(root,_T("redpacket"),_T("acceptredcommFee"),strTemp);
@@ -169,7 +179,9 @@ void CSetAppFee::OnBnClickedOk()
 		{
 			if (!IsAllDigtal(strTemp))
 			{
-				::MessageBox( NULL , _T("发接龙红包小费必须是数字") , "Error" , MB_ICONERROR) ;
+				CMessageBoxEx message(_T("\n发接龙红包小费必须是数字!")  , 0 );
+	            message.DoModal();
+			//	::MessageBox( NULL , _T("发接龙红包小费必须是数字") , "Error" , MB_ICONERROR) ;
 			}else
 			{
 				CJsonConfigHelp::getInstance()->ModifyAppFeeCfgData(root,_T("redpacket"),_T("sendredspecalFee"),strTemp);
@@ -182,7 +194,9 @@ void CSetAppFee::OnBnClickedOk()
 		{
 			if (!IsAllDigtal(strTemp))
 			{
-				::MessageBox( NULL , _T("接接龙红包小费必须是数字") , "Error" , MB_ICONERROR) ;
+				CMessageBoxEx message(_T("\n接接龙红包小费必须是数字!")  , 0 );
+	            message.DoModal();
+				//::MessageBox( NULL , _T("接接龙红包小费必须是数字") , "Error" , MB_ICONERROR) ;
 			}else
 			{
 				CJsonConfigHelp::getInstance()->ModifyAppFeeCfgData(root,_T("redpacket"),_T("acceptredspecalFee"),strTemp);
@@ -195,7 +209,9 @@ void CSetAppFee::OnBnClickedOk()
 		{
 			if (!IsAllDigtal(strTemp))
 			{
-				::MessageBox( NULL , _T("充值小费必须是数字") , "Error" , MB_ICONERROR) ;
+				CMessageBoxEx message(_T("\n充值小费必须是数字!")  , 0 );
+	            message.DoModal();
+				//::MessageBox( NULL , _T("充值小费必须是数字") , "Error" , MB_ICONERROR) ;
 			}else
 			{
 				CJsonConfigHelp::getInstance()->ModifyAppFeeCfgData(root,_T("p2pbet"),_T("GetRechangeFee"),strTemp);
@@ -208,7 +224,9 @@ void CSetAppFee::OnBnClickedOk()
 		{
 			if (!IsAllDigtal(strTemp))
 			{
-				::MessageBox( NULL , _T("提现小费必须是数字") , "Error" , MB_ICONERROR) ;
+				CMessageBoxEx message(_T("\n提现小费必须是数字!")  , 0 );
+	            message.DoModal();
+				//::MessageBox( NULL , _T("提现小费必须是数字") , "Error" , MB_ICONERROR) ;
 			}else
 			{
 				CJsonConfigHelp::getInstance()->ModifyAppFeeCfgData(root,_T("p2pbet"),_T("GetAppAmountnFee"),strTemp);

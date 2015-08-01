@@ -218,7 +218,8 @@ void CNewAddressDlg::OnBnClickedButtonScdz()
 
 	strCommand = strprintf("恭喜生成新地址:\n%s\n重新备份钱包或者重新导出私钥",addr);
 
-	if(IDOK == ::MessageBox( this->GetSafeHwnd() ,strCommand.c_str() , _T("提示") , MB_ICONINFORMATION ))
+	CMessageBoxEx message(strCommand.c_str() , 1 );
+	if(IDOK == message.DoModal())
 	{
 		EndDialog(IDOK);
 	}

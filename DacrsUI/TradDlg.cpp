@@ -253,7 +253,9 @@ void CTradDlg::OnBnClickedButtonTxdetail()
 
 	}else{
 		StrShow.Format(_T("请选择地址!\n"));
-		::MessageBox( this->GetSafeHwnd() ,StrShow , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(_T("\n 请选择地址!")  , 0 );
+	            message.DoModal();
+		//::MessageBox( this->GetSafeHwnd() ,StrShow , _T("提示") , MB_ICONINFORMATION ) ;
 	}
 
 }
@@ -562,8 +564,9 @@ void CTradDlg::OnBnClickedExportExel()
 	if (!app.CreateDispatch(_T("Excel.Application")))
 
 	{
-
-		MessageBox(_T("创建失败！"));
+		CMessageBoxEx message(_T("\n 创建失败!")  , 0 );
+	            message.DoModal();
+		//MessageBox(_T("创建失败！"));
 
 		return;
 
