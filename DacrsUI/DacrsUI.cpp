@@ -154,7 +154,11 @@ BOOL CDacrsUIApp::InitInstance()
 	string tempuiport = m_uirpcport;
 	ProductHttpHead(str_InsPath ,m_strServerCfgFileName,m_rpcport,m_sendPreHeadstr,m_sendendHeadstr,m_uirpcport,netWork);
 
-
+	string dbpath = strprintf("%s\\db",str_InsPath);
+	if (!PathIsDirectory(dbpath.c_str()))
+	{
+		::CreateDirectory(dbpath.c_str(), NULL);
+	}
 	//打开sqlite3数据库
 	m_SqliteDeal.InitializationDB();
 
@@ -810,8 +814,9 @@ int GetMsgType(string const strData,Json::Value &root)
 	return  -1;
 }
 bool JsonCheck(string strjson){
-	//strjson.TrimLeft(" ");
-	//strjson.TrimRight(" ");
+
+	strjson =  UiFun::trimleft(strjson);
+	strjson =  UiFun::trimright(strjson);
 	if (strjson.at(0) != '{')
 	{
 		return false;
@@ -1270,6 +1275,7 @@ void  CDacrsUIApp::ParseUIConfigFile(const string& strExeDir){
 		CJsonConfigHelp::getInstance()->GetP2PBetCfgData(m_P2PBetCfg);
 		CJsonConfigHelp::getInstance()->GetRedPacketCfgData(m_RedPacketCfg);
 		CJsonConfigHelp::getInstance()->GetClosConfig(m_reminder);
+		CJsonConfigHelp::getInstance()->GetNewestScriptData(m_neststcriptid);
 		CNetParamCfg netParm;
 		CJsonConfigHelp::getInstance()->GetNetParamCfgData(netParm);
 		m_severip = netParm.server_ip;

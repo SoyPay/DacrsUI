@@ -742,5 +742,8 @@ namespace UiFun
 	CString MbcsToUtf8(const char *file) ;
 
 
+	std::string& trimleft(std::string &s) ;
+
+	std::string& trimright(std::string &s) ;
 }
 #endif

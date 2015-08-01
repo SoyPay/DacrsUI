@@ -87,6 +87,11 @@ void CJsonConfigHelp::ReadJsonConfig(const string& strFilePath)
 		{
 			ReadCloseCfgData(root);
 		}
+		pos = strTemp.find("newestscript");
+		if (pos > 0)
+		{
+			ReadNewestCfgData(root);
+		}
 	}
 	ifs.close();
 }
@@ -356,4 +361,16 @@ void CJsonConfigHelp::ModifyAppFeeCfgData( Json::Value& root,const CString &Lead
 		strTemp.Format(_T("%s %s  Œ¥≈‰÷√"),LeaderKey,Key);
 		::MessageBox( NULL , strTemp , "Error" , MB_ICONERROR) ;
 	}
+}
+void CJsonConfigHelp::GetNewestScriptData(CNewestScriptCfg &newScript)
+{
+	newScript = m_newScript;
+}
+void  CJsonConfigHelp::ReadNewestCfgData(const Json::Value &root)
+{
+	Json::Value script = root["newestscript"];
+	ASSERT(!script.isNull());
+	m_newScript.strNewipoScritptid = script["iposcript"].asString();
+	m_newScript.strNewScriptBetid = script["betscript"].asString();
+    m_newScript.strNewSrcriptRedPacektid = script["redpacketscript"].asString();
 }
