@@ -8,7 +8,6 @@
 #include "SignAccountsDlg.h"
 #include "afxdialogex.h"
 
-
 // CReceiveDlg 对话框
 
 IMPLEMENT_DYNAMIC(CReceiveDlg, CDialogBar)
@@ -211,12 +210,16 @@ void CReceiveDlg::OnBnClickedCopyaddress()
 				SetClipboardData(CF_TEXT,clipbuffer);
 				CloseClipboard();
 				StrShow ="地址已复制到剪贴板\n";
-				::MessageBox( this->GetSafeHwnd() ,StrShow.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+				CMessageBoxEx message(StrShow.c_str() , 0 );
+	        message.DoModal();
+				//::MessageBox( this->GetSafeHwnd() ,StrShow.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
 		     }
 	}
 	else{
 		StrShow = "请选择地址!\n";
-		::MessageBox( this->GetSafeHwnd() ,StrShow.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+		//::MessageBox( this->GetSafeHwnd() ,StrShow.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(StrShow.c_str() , 0 );
+	        message.DoModal();
 	}
 	
 }
@@ -258,10 +261,11 @@ void CReceiveDlg::OnBnClickedButtonNewaddress()
 void CReceiveDlg::OnBnClickedButtonSignAccount()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	
 	if (!theApp.IsSyncBlock )
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送激活交易") , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(_T("\n同步未完成,不能发送激活交易!") , 0 );
+	        message.DoModal();
+		//::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送激活交易") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
 
@@ -275,7 +279,9 @@ void CReceiveDlg::OnBnClickedButtonSignAccount()
 			{
 					TRACE("ERROR");
 				StrShow.Format(_T("地址不存在\n"));
-				::MessageBox( this->GetSafeHwnd() ,StrShow , _T("提示") , MB_ICONINFORMATION ) ;
+				//::MessageBox( this->GetSafeHwnd() ,StrShow , _T("提示") , MB_ICONINFORMATION ) ;
+				CMessageBoxEx message(_T("\n地址不存在!") , 0 );
+	        message.DoModal();
 				return;
 		   }
 		uistruct::LISTADDR_t te =  m_MapAddrInfo[addr];
@@ -289,7 +295,9 @@ void CReceiveDlg::OnBnClickedButtonSignAccount()
 		if(te.bSign) 
 		{
 			StrShow.Format(_T("账户已激活!\n"));
-			::MessageBox( this->GetSafeHwnd() ,StrShow , _T("提示") , MB_ICONINFORMATION ) ;
+			CMessageBoxEx message(_T("\n账户已激活!") , 0 );
+	        message.DoModal();
+			//::MessageBox( this->GetSafeHwnd() ,StrShow , _T("提示") , MB_ICONINFORMATION ) ;
 			return;
 		}
 		theApp.m_strAddress.Format(_T("%s") ,te.address ) ;
@@ -303,7 +311,9 @@ void CReceiveDlg::OnBnClickedButtonSignAccount()
 		m_accountDlg->ShowWindow(SW_SHOW);*/
 	}else{
 		StrShow.Format(_T("请选择地址!\n"));
-		::MessageBox( this->GetSafeHwnd() ,StrShow , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(_T("\n请选择地址!") , 0 );
+	        message.DoModal();
+		//::MessageBox( this->GetSafeHwnd() ,StrShow , _T("提示") , MB_ICONINFORMATION ) ;
 	}
 }
 

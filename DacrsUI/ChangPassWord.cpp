@@ -47,40 +47,54 @@ void CChangPassWord::OnBnClickedOk()
 	int pos = confiedNew.Find(_T(" "));
 	if (pos >=0)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("输入新密码中不能有空格") , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(_T("\n输入新密码中不能有空格!") , 0 );
+	    message.DoModal();
+		//::MessageBox( this->GetSafeHwnd() ,_T("输入新密码中不能有空格") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
 
 	if (inputOld == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("请输入旧密码") , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(_T("\n请输入旧密码!") , 0 );
+	    message.DoModal();
+		//::MessageBox( this->GetSafeHwnd() ,_T("请输入旧密码") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
 	if (confiedNew == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("请输入新密码") , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(_T("\n请输入新密码!") , 0 );
+	    message.DoModal();
+		//::MessageBox( this->GetSafeHwnd() ,_T("请输入新密码") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
 	if (confiedPassWord == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("请输入确定新密码") , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(_T("\n请输入确定新密码!") , 0 );
+	    message.DoModal();
+		//::MessageBox( this->GetSafeHwnd() ,_T("请输入确定新密码") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
 	if (IsAllDigtal(confiedNew))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("密码不能全是数字") , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(_T("\n密码不能全是数字!") , 0 );
+	    message.DoModal();
+	//	::MessageBox( this->GetSafeHwnd() ,_T("密码不能全是数字") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
 
 	if (confiedNew.GetLength()<6)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("密码个数最少六位") , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(_T("\n密码个数最少六位!") , 0 );
+	    message.DoModal();
+		//::MessageBox( this->GetSafeHwnd() ,_T("密码个数最少六位") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
 
 	if (strcmp(confiedPassWord,confiedNew) != 0)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("确认密码和输入密码不一致") , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(_T("\n确认密码和输入密码不一致!") , 0 );
+	    message.DoModal();
+		//::MessageBox( this->GetSafeHwnd() ,_T("确认密码和输入密码不一致") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
 
@@ -103,13 +117,19 @@ void CChangPassWord::OnBnClickedOk()
 		bool isEntryp = root["chgpwd"].asBool();
 		if (!isEntryp)
 		{
-			MessageBox(_T("输入旧密码不正确,请重新输入"));
+			CMessageBoxEx message(_T("\n输入旧密码不正确,请重新输入!") , 0 );
+	        message.DoModal();
+			//MessageBox(_T("输入旧密码不正确,请重新输入"));
 			return;
 		}else{
-			MessageBox(_T("恭喜修改密码成功"));
+			CMessageBoxEx message(_T("\n恭喜修改密码成功!") , 0 );
+	        message.DoModal();
+			//MessageBox(_T("恭喜修改密码成功"));
 		}
 	}else{
-		MessageBox(_T("输入旧密码不正确,请重新输入"));
+		CMessageBoxEx message(_T("\n输入旧密码不正确,请重新输入!") , 0 );
+	    message.DoModal();
+		//MessageBox(_T("输入旧密码不正确,请重新输入"));
 		return;
 	}
 	

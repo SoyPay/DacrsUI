@@ -622,11 +622,14 @@ void CP2PDlg::OnBnClickedButtonWithd()
 	GetAppAccountSomeMoney();
 	return;
 	// TODO: 在此添加控件通知处理程序代码
-	if ( IDNO == ::MessageBox( this->GetSafeHwnd() ,_T("是否确定要体现") , _T("提示") , MB_YESNO|MB_ICONINFORMATION ) )
+	CMessageBoxEx message(_T("\n是否确定要体现!") , 1 );
+	if ( IDNO == message.DoModal() )
 		return;
 	if (!theApp.IsSyncBlock )
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(_T("\n同步未完成,不能发送交易!") , 0 );
+	        message.DoModal();
+		//::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
 
@@ -650,7 +653,9 @@ void CP2PDlg::OnBnClickedButtonWithd()
 
 	if (addr == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(_T("\n地址不能为空!") , 0 );
+	        message.DoModal();
+	//	::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
 
@@ -663,7 +668,9 @@ void CP2PDlg::OnBnClickedButtonWithd()
 
 	INT64 strTxFee = theApp.m_P2PBetCfg.GetAppAmountnFee;
 	if (  strTxFee < 10000  ) {
-		::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(_T("\n小费不足!") , 0 );
+	        message.DoModal();
+		//::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
 		return ;
 	}
 
@@ -698,7 +705,9 @@ void CP2PDlg::OnBnClickedButtonWithd()
 	}else{
 		strTip = "提现失败!" ;
 	}
-	::MessageBox( this->GetSafeHwnd() ,strTip.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+//	::MessageBox( this->GetSafeHwnd() ,strTip.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+	CMessageBoxEx message1(strTip.c_str()  , 0 );
+	        message1.DoModal();
 }
 
 
@@ -708,7 +717,9 @@ void CP2PDlg::OnBnClickedButtonRech()
 
 	if (!theApp.IsSyncBlock )
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(_T("\n同步未完成,不能发送交易!") , 0 );
+	        message.DoModal();
+		//::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
 
@@ -721,7 +732,9 @@ void CP2PDlg::OnBnClickedButtonRech()
 
 	if (theApp.m_strAddress == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("金额不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(_T("\n金额不能为空!") , 0 );
+	        message.DoModal();
+	//	::MessageBox( this->GetSafeHwnd() ,_T("金额不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
 		return ;
 	}
 
@@ -736,7 +749,9 @@ void CP2PDlg::OnBnClickedButtonRech()
 
 	if (addr == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(_T("\n地址不能为空!") , 0 );
+	        message.DoModal();
+		//::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
 
@@ -747,7 +762,9 @@ void CP2PDlg::OnBnClickedButtonRech()
 	double sub = pAddr.fMoney - atof(theApp.m_strAddress);
 	if (sub <1.0)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("系统账户最少余额1smc,作为后续合约交易小费") , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(_T("\n系统账户最少余额1smc,作为后续合约交易小费!") , 0 );
+	        message.DoModal();
+		//::MessageBox( this->GetSafeHwnd() ,_T("系统账户最少余额1smc,作为后续合约交易小费") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
 
@@ -756,7 +773,9 @@ void CP2PDlg::OnBnClickedButtonRech()
 
 	INT64 strTxFee = theApp.m_P2PBetCfg.GetAppAmountnFee;
 	if (  strTxFee < 10000  ) {
-		::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(_T("\n小费不足!") , 0 );
+	        message.DoModal();
+	//	::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
 		return ;
 	}
 
@@ -790,7 +809,9 @@ void CP2PDlg::OnBnClickedButtonRech()
 	}else{
 		strTip = "充值失败!";
 	}
-	::MessageBox( this->GetSafeHwnd() ,strTip.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+	CMessageBoxEx message(strTip.c_str()  , 0 );
+	        message.DoModal();
+	//::MessageBox( this->GetSafeHwnd() ,strTip.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
 }
 
 void CP2PDlg::SendBet(int rewardnum)
@@ -799,7 +820,9 @@ void CP2PDlg::SendBet(int rewardnum)
 
 	if (!theApp.IsSyncBlock )
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(_T("\n同步未完成,不能发送交易!") , 0 );
+	        message.DoModal();
+	//	::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
 
@@ -817,13 +840,17 @@ void CP2PDlg::SendBet(int rewardnum)
 	GetDlgItem(IDC_EDIT_MONEY)->GetWindowText(strTxMoney) ;
 	if (strTxMoney == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("金额不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+			CMessageBoxEx message(_T("\n金额不能为空!") , 0 );
+	        message.DoModal();
+		//::MessageBox( this->GetSafeHwnd() ,_T("金额不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
 		return ;
 	}
 
 	if (atof(strTxMoney) > balance)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("投注金额大于账户余额") , _T("提示") , MB_ICONINFORMATION ) ;
+			CMessageBoxEx message(_T("\n投注金额大于账户余额!") , 0 );
+	        message.DoModal();
+	//	::MessageBox( this->GetSafeHwnd() ,_T("投注金额大于账户余额") , _T("提示") , MB_ICONINFORMATION ) ;
 		return ;
 	}
 
@@ -838,7 +865,9 @@ void CP2PDlg::SendBet(int rewardnum)
 
 	if (addr == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(_T("\n地址不能为空!") , 0 );
+	        message.DoModal();
+		//::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
 	//// 查询地址是否激活
@@ -887,7 +916,9 @@ void CP2PDlg::SendBet(int rewardnum)
 
 	INT64 strTxFee = theApp.m_P2PBetCfg.SendBetFee;
 	if (  strTxFee < 10000  ) {
-		::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(_T("\n小费不足!") , 0 );
+	        message.DoModal();
+		//::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
 		return ;
 	}
 	
@@ -957,7 +988,9 @@ void CP2PDlg::SendBet(int rewardnum)
 		postmsg.SetData(strTemp);
 		theApp.m_MsgQueue.push(postmsg);
 	}
-	::MessageBox( this->GetSafeHwnd() ,strTip , _T("提示") , MB_ICONINFORMATION ) ;
+	//::MessageBox( this->GetSafeHwnd() ,strTip , _T("提示") , MB_ICONINFORMATION ) ;
+	CMessageBoxEx message(strTip , 0 );
+	        message.DoModal();
 }
 
 void CP2PDlg::OnBnClickedButtonMale()
@@ -967,13 +1000,17 @@ void CP2PDlg::OnBnClickedButtonMale()
 	GetDlgItem(IDC_EDIT_MONEY)->GetWindowText(strTxMoney) ;
 	if (strTxMoney == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("金额不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(_T("\n金额不能为空!") , 0 );
+	        message.DoModal();
+		//::MessageBox( this->GetSafeHwnd() ,_T("金额不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
 		return ;
 	}
 
 	if (atof(strTxMoney)<0.0001)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("投注金额必须大于0.0001") , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(_T("\n投注金额必须大于0.0001!") , 0 );
+	        message.DoModal();
+	//	::MessageBox( this->GetSafeHwnd() ,_T("投注金额必须大于0.0001") , _T("提示") , MB_ICONINFORMATION ) ;
 		return ;
 	}
 
@@ -994,13 +1031,17 @@ void CP2PDlg::OnBnClickedButtonWoman()
 	GetDlgItem(IDC_EDIT_MONEY)->GetWindowText(strTxMoney) ;
 	if (strTxMoney == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("金额不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(_T("\n金额不能为空!") , 0 );
+	        message.DoModal();
+		//::MessageBox( this->GetSafeHwnd() ,_T("金额不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
 		return ;
 	}
 
 	if (atof(strTxMoney)<0.0001)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("投注金额必须大于0.0001") , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(_T("\n投注金额必须大于0.0001!") , 0 );
+	        message.DoModal();
+		//::MessageBox( this->GetSafeHwnd() ,_T("投注金额必须大于0.0001") , _T("提示") , MB_ICONINFORMATION ) ;
 		return ;
 	}
 
@@ -1062,7 +1103,9 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 
 	 if (!theApp.IsSyncBlock )
 	 {
-		 ::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
+		 CMessageBoxEx message(_T("\n同步未完成,不能发送交易!") , 0 );
+	        message.DoModal();
+	//	 ::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
 		 return;
 	 }
 	 if (!CheckBalance())
@@ -1076,7 +1119,9 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 
 	 if (atof(strTxMoney) < atof(money))
 	 {
-		 ::MessageBox( this->GetSafeHwnd() ,_T("接单金额大于账户余额") , _T("提示") , MB_ICONINFORMATION ) ;
+		  CMessageBoxEx message(_T("\n接单金额大于账户余额!") , 0 );
+	        message.DoModal();
+		// ::MessageBox( this->GetSafeHwnd() ,_T("接单金额大于账户余额") , _T("提示") , MB_ICONINFORMATION ) ;
 		 return ;
 	 }
 
@@ -1091,7 +1136,9 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 
 	 if (addr == _T(""))
 	 {
-		 ::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		  CMessageBoxEx message(_T("\n地址不能为空!") , 0 );
+	        message.DoModal();
+		// ::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
 		 return;
 	 }
 	 //// 查询地址是否激活
@@ -1221,7 +1268,9 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 
 		 }
 	 }
-	 ::MessageBox( this->GetSafeHwnd() ,strTip.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+	// ::MessageBox( this->GetSafeHwnd() ,strTip.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+	  CMessageBoxEx message(strTip.c_str() , 0 );
+	        message.DoModal();
  }
  bool CP2PDlg::CheckBalance()
  {
@@ -1231,7 +1280,9 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 	 double money =atof(strMoney);
 	if (money == 0.0)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("账户金额为零,请先充值") , _T("提示") , MB_ICONINFORMATION ) ;
+		 CMessageBoxEx message(_T("\n账户金额为零,请先充值!") , 0 );
+	        message.DoModal();
+		//::MessageBox( this->GetSafeHwnd() ,_T("账户金额为零,请先充值") , _T("提示") , MB_ICONINFORMATION ) ;
 		return false;
 	}
 	return true;
@@ -1518,7 +1569,9 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 				 }else
 				 {
 					  GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T(""));
-					::MessageBox( this->GetSafeHwnd() ,_T("输入有误,请输入数字") , _T("提示") , MB_ICONINFORMATION ) ;
+					   CMessageBoxEx message(_T("\n输入有误,请输入数字!") , 0 );
+	        message.DoModal();
+				//	::MessageBox( this->GetSafeHwnd() ,_T("输入有误,请输入数字") , _T("提示") , MB_ICONINFORMATION ) ;
 				 }
 				 return TRUE;
 			 }
@@ -1573,7 +1626,9 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 		 uistruct::LISTP2POOL_T const_it = m_PoolList.at(count);
 		 string temp = _T("竞猜交易ID: ");
 	    temp +=const_it.hash ;
-		 ::MessageBox( this->GetSafeHwnd() ,temp.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(temp.c_str()  , 0 );
+	        message.DoModal();
+		// ::MessageBox( this->GetSafeHwnd() ,temp.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
 	 }
  }
 bool CP2PDlg::CheckBalance(double dmoney)
@@ -1584,24 +1639,31 @@ bool CP2PDlg::CheckBalance(double dmoney)
 	double money =atof(strMoney);
 	if (money == 0.0)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("账户金额为零,请先充值") , _T("提示") , MB_ICONINFORMATION ) ;
+		 CMessageBoxEx message(_T("\n账户金额为零,请先充值!") , 0 );
+	        message.DoModal();
+	//	::MessageBox( this->GetSafeHwnd() ,_T("账户金额为零,请先充值") , _T("提示") , MB_ICONINFORMATION ) ;
 		return false;
 	}
 
 	if (dmoney >money)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("提现金额大于账户中的金额") , _T("提示") , MB_ICONINFORMATION ) ;
+		 CMessageBoxEx message(_T("\n提现金额大于账户中的金额!") , 0 );
+	        message.DoModal();
+	//::MessageBox( this->GetSafeHwnd() ,_T("提现金额大于账户中的金额") , _T("提示") , MB_ICONINFORMATION ) ;
 		return false;
 	}
 	return true;
 }
 void  CP2PDlg::GetAppAccountSomeMoney()
 {
-	if ( IDNO == ::MessageBox( this->GetSafeHwnd() ,_T("是否确定要体现") , _T("提示") , MB_YESNO|MB_ICONINFORMATION ) )
+	 CMessageBoxEx message(_T("\n是否确定要体现!") , 1 );
+	if ( IDNO == message.DoModal() )
 		return;
 	if (!theApp.IsSyncBlock )
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
+		 CMessageBoxEx message(_T("\n同步未完成,不能发送交易!") , 0 );
+	        message.DoModal();
+	//	::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
 
@@ -1615,7 +1677,9 @@ void  CP2PDlg::GetAppAccountSomeMoney()
 
 	if (theApp.m_strAddress == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("提现金额不能为零") , _T("提示") , MB_ICONINFORMATION ) ;
+		 CMessageBoxEx message(_T("\n提现金额不能为零!") , 0 );
+	        message.DoModal();
+	//	::MessageBox( this->GetSafeHwnd() ,_T("提现金额不能为零") , _T("提示") , MB_ICONINFORMATION ) ;
 		return ;
 	}
 	
@@ -1638,7 +1702,9 @@ void  CP2PDlg::GetAppAccountSomeMoney()
 
 	if (addr == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(_T("\n地址不能为空!") , 0 );
+	        message.DoModal();
+		//::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
 
@@ -1647,7 +1713,9 @@ void  CP2PDlg::GetAppAccountSomeMoney()
 
 	INT64 strTxFee = theApp.m_P2PBetCfg.GetAppAmountnFee;
 	if (  strTxFee < 10000  ) {
-		::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(_T("\n小费不足!") , 0 );
+	        message.DoModal();
+		//::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
 		return ;
 	}
 
@@ -1682,5 +1750,7 @@ void  CP2PDlg::GetAppAccountSomeMoney()
 	}else{
 		strTip = "提现失败!" ;
 	}
-	::MessageBox( this->GetSafeHwnd() ,strTip.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+	//::MessageBox( this->GetSafeHwnd() ,strTip.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+	CMessageBoxEx message1(strTip.c_str() , 0 );
+	        message1.DoModal();
 }

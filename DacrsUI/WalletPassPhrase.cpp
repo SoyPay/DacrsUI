@@ -45,17 +45,23 @@ void CWalletPassPhrase::OnBnClickedOk()
 	GetDlgItem(IDC_EDIT_TIEM)->GetWindowText(passtime);
 	if (PassWord == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("请输入密码") , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(_T("\n请输入密码!")  , 0 );
+	            message.DoModal();
+		//::MessageBox( this->GetSafeHwnd() ,_T("请输入密码") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
 	if (passtime == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("请输入时间") , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(_T("\n请输入时间!")  , 0 );
+	            message.DoModal();
+		//::MessageBox( this->GetSafeHwnd() ,_T("请输入时间") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
 	if (!IsAllDigtal(passtime))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("时间必须数字") , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(_T("\n时间必须数字!")  , 0 );
+	            message.DoModal();
+		//::MessageBox( this->GetSafeHwnd() ,_T("时间必须数字") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
 	
@@ -79,13 +85,19 @@ void CWalletPassPhrase::OnBnClickedOk()
 		bool isEntryp = root["passphrase"].asBool();
 		if (!isEntryp)
 		{
-			MessageBox(_T("输入就密码不正确,请重新输入"));
+			CMessageBoxEx message(_T("\n输入就密码不正确,请重新输入!")  , 0 );
+	            message.DoModal();
+			//MessageBox(_T("输入就密码不正确,请重新输入"));
 			return;
 		}else{
-			MessageBox(_T("恭喜钱包解锁成功"));
+			CMessageBoxEx message(_T("\n恭喜钱包解锁成功!")  , 0 );
+	            message.DoModal();
+			//MessageBox(_T("恭喜钱包解锁成功"));
 		}
 	}else{
-		MessageBox(_T("输入就密码不正确,请重新输入"));
+		CMessageBoxEx message(_T("\n输入就密码不正确,请重新输入!")  , 0 );
+	            message.DoModal();
+		//MessageBox(_T("输入就密码不正确,请重新输入"));
 		return;
 	}
 	theApp.m_passlock = TRUE;

@@ -203,13 +203,17 @@ void CSendRecord::OpenBet(CString txhash)
 {
 	if (!theApp.IsSyncBlock )
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(_T("\n同步未完成,不能发送交易!")  , 0 );
+	                        message.DoModal();
+		//::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
 
 	if (m_addr == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("请选择地址") , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(_T("\n请选择地址!")  , 0 );
+	                        message.DoModal();
+		//::MessageBox( this->GetSafeHwnd() ,_T("请选择地址") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
 	if (!CheckRegIDValid( theApp.m_betScritptid )) return ;
@@ -220,7 +224,9 @@ void CSendRecord::OpenBet(CString txhash)
 	int nItem =  theApp.m_SqliteDeal.GetP2PQuizRecordItem(conditon ,&pPoolItem ) ;
 	if (pPoolItem.tx_hash == "")
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("数据库中无此记录") , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(_T("\n数据库中无此记录!")  , 0 );
+	                        message.DoModal();
+		//::MessageBox( this->GetSafeHwnd() ,_T("数据库中无此记录") , _T("提示") , MB_ICONINFORMATION ) ;
 	}
 
 	string strCommand1;
@@ -313,7 +319,9 @@ void CSendRecord::OpenBet(CString txhash)
 
 		}
 	}
-	::MessageBox( this->GetSafeHwnd() ,strTip.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+	CMessageBoxEx message(strTip.c_str()   , 0 );
+	                        message.DoModal();
+	//::MessageBox( this->GetSafeHwnd() ,strTip.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
 }
 ///开接赌了没有开奖的
 void  CSendRecord::OpenAcceptbet()
@@ -341,7 +349,9 @@ void  CSendRecord::OpenAcceptbet()
 				double minfee = (theApp.m_P2PBetCfg.OpenBetnFee*1.0)/COIN;
 				if (minfee > pAddr.fMoney)
 				{
-					::MessageBox(NULL ,_T("有些赌约未开奖,请先充值") , _T("提示") , MB_ICONINFORMATION ) ;
+					CMessageBoxEx message(_T("\n有些赌约未开奖,请先充值!")  , 0 );
+	                        message.DoModal();
+					//::MessageBox(NULL ,_T("有些赌约未开奖,请先充值") , _T("提示") , MB_ICONINFORMATION ) ;
 				}
 				CString txhash;
 				txhash.Format(_T("%s"),const_it.tx_hash);
@@ -549,7 +559,9 @@ BOOL CSendRecord::PreTranslateMessage(MSG* pMsg)
 				}else
 				{
 					GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T(""));
-					::MessageBox( this->GetSafeHwnd() ,_T("输入有误,请输入数字") , _T("提示") , MB_ICONINFORMATION ) ;
+					CMessageBoxEx message(_T("\n输入有误,请输入数字!")  , 0 );
+	                        message.DoModal();
+					//::MessageBox( this->GetSafeHwnd() ,_T("输入有误,请输入数字") , _T("提示") , MB_ICONINFORMATION ) ;
 				}
 				return TRUE;
 			}

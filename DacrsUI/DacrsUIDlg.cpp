@@ -829,7 +829,9 @@ bool CDacrsUIDlg::GetFileName(CString &fileName,CString strexe )
 	int spcace = fileName.Find(" ");
 	if (spcace >=0)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("路径不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(_T("\n路径不能为空!") , 0 );
+	    message.DoModal();
+		//::MessageBox( this->GetSafeHwnd() ,_T("路径不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
 		return false;
 	}
 	int pos = fileName.Find(".",0);
@@ -872,7 +874,9 @@ void CDacrsUIDlg::BakWallet()
 
 		CString strShowData;
 		strShowData.Format(_T("钱包备份成功:%s"),strPath);
-		::MessageBox( this->GetSafeHwnd() ,strShowData , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(strShowData , 0 );
+	    message.DoModal();
+		//::MessageBox( this->GetSafeHwnd() ,strShowData , _T("提示") , MB_ICONINFORMATION ) ;
 	}
 
 }
@@ -971,7 +975,9 @@ void CDacrsUIDlg::encryptwallet()
 {
 	if (theApp.HaveLocked)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("已经加过密") , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(_T("\n已经加过密!") , 0 );
+	    message.DoModal();
+		//::MessageBox( this->GetSafeHwnd() ,_T("已经加过密") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
 	CEncryptWallet enwalletdlg;
@@ -994,7 +1000,9 @@ void CDacrsUIDlg:: LockWallet()
 {
 	if (!theApp.HaveLocked)
 	{
-		MessageBox(_T("钱包没有加锁"));
+		CMessageBoxEx message(_T("\n钱包没有加锁!") , 0 );
+	    message.DoModal();
+	//	MessageBox(_T("钱包没有加锁"));
 		return;
 	}
 	string strCommand;
@@ -1017,12 +1025,16 @@ void CDacrsUIDlg:: LockWallet()
 		bool isEntryp = root["walletlock"].asBool();
 		if (!isEntryp)
 		{
-			MessageBox(_T("钱包锁定失败"));
+			CMessageBoxEx message(_T("\n钱包锁定失败!") , 0 );
+	        message.DoModal();
+			//MessageBox(_T("钱包锁定失败"));
 			return;
 		}
 	}else
 	{
-		MessageBox(_T("钱包锁定失败"));
+		CMessageBoxEx message(_T("\n钱包锁定失败!") , 0 );
+	    message.DoModal();
+		//MessageBox(_T("钱包锁定失败"));
 	}
 
 }
@@ -1199,7 +1211,9 @@ void CDacrsUIDlg:: ExportPriveKey()
 		CString strShowData;
 		strShowData.Format(_T("导出私钥成功:%s"),strPath);
 		AddImportWalletAndBookAddr(strPath);
-		::MessageBox( this->GetSafeHwnd() ,strShowData , _T("提示") , MB_ICONINFORMATION ) ;
+		CMessageBoxEx message(strShowData , 0 );
+	    message.DoModal();
+		//::MessageBox( this->GetSafeHwnd() ,strShowData , _T("提示") , MB_ICONINFORMATION ) ;
 	}
 }
 void CDacrsUIDlg:: ImportPrvieKey()
@@ -1245,17 +1259,23 @@ void CDacrsUIDlg:: ImportPrvieKey()
 				if (size > 0)
 				{
 					WriteExportWalletAndBookAddr(strPath);
-					MessageBox(_T("导入钱包成功请重新启动钱包"));
+					CMessageBoxEx message(_T("\n导入钱包成功请重新启动钱包!") , 0 );
+	                message.DoModal();
+					//MessageBox(_T("导入钱包成功请重新启动钱包"));
 					//ClosWallet();
 					//((CDacrsUIDlg*)(this->GetParent()))->Close();
 					ClosWalletWind();
 				}else{
-					MessageBox(_T("导入钱包失败"));
+					CMessageBoxEx message(_T("\n导入钱包失败!") , 0 );
+	                message.DoModal();
+					//MessageBox(_T("导入钱包失败"));
 				}
 				
 			}else
 			{
-				MessageBox(_T("导入钱包失败"));
+				CMessageBoxEx message(_T("\n导入钱包失败!") , 0 );
+	            message.DoModal();
+				//MessageBox(_T("导入钱包失败"));
 			}
 	}
 }

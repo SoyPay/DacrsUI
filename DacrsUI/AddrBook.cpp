@@ -239,7 +239,9 @@ void CAddrBook::OnBnClickedOk()
 		m_selectAddr.address = addr;
 		}else{
 			StrShow.Format(_T("请选择地址!\n"));
-			::MessageBox( this->GetSafeHwnd() ,StrShow , _T("提示") , MB_ICONINFORMATION ) ;
+			CMessageBoxEx message(_T("\n请选择地址!") , 0 );
+	        message.DoModal();
+			//::MessageBox( this->GetSafeHwnd() ,StrShow , _T("提示") , MB_ICONINFORMATION ) ;
 			return;
 		}
 	CDialogEx::OnOK();
@@ -253,7 +255,8 @@ void CAddrBook::OnBnClickedButtonDeleitem()
 		string StrShow;
 		POSITION pos = m_listCtrl.GetFirstSelectedItemPosition() ;
 		if ( pos ) {
-			if ( IDYES == ::MessageBox( this->GetSafeHwnd() ,_T("是否要删除此收款地址") , _T("提示") , MB_YESNO|MB_ICONINFORMATION ) ){
+			CMessageBoxEx message(_T("\n是否要删除此收款地址!") , 1 );
+			if ( IDYES == message.DoModal() ){
 				int nRow = m_listCtrl.GetNextSelectedItem(pos) ;
 
 				//// 删除此条数据库
@@ -273,7 +276,9 @@ void CAddrBook::OnBnClickedButtonDeleitem()
 		}else{
 			//StrShow.Format(_T("请选择地址!\n"));
 			StrShow = "请选择地址!\n";
-			::MessageBox( this->GetSafeHwnd() ,StrShow.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+			CMessageBoxEx message(_T("\n请选择地址!") , 0 );
+	        message.DoModal();
+			//::MessageBox( this->GetSafeHwnd() ,StrShow.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
 			return;
 		}
 }

@@ -77,7 +77,9 @@ void CSetAppId::OnBnClickedOk()
 		{
 			if (!IsRegId(strTemp))
 			{
-				::MessageBox( NULL , _T("猜你妹AppID格式不正确") , "Error" , MB_ICONERROR) ;
+				CMessageBoxEx message(_T("\n猜你妹AppID格式不正确!")  , 0 );
+	            message.DoModal();
+				//::MessageBox( NULL , _T("猜你妹AppID格式不正确") , "Error" , MB_ICONERROR) ;
 			}else
 			{
 				Json::Value setscriptid = root["script"];
@@ -93,7 +95,9 @@ void CSetAppId::OnBnClickedOk()
 		{
 			if (!IsRegId(strTemp))
 			{
-				::MessageBox( NULL , _T("抢红包AppID格式不正确") , "Error" , MB_ICONERROR) ;
+				CMessageBoxEx message(_T("\n抢红包AppID格式不正确!")  , 0 );
+	            message.DoModal();
+				//::MessageBox( NULL , _T("抢红包AppID格式不正确") , "Error" , MB_ICONERROR) ;
 			}else
 			{
 				Json::Value setscriptid = root["script"];
@@ -109,7 +113,9 @@ void CSetAppId::OnBnClickedOk()
 		{
 			if (!IsRegId(strTemp))
 			{
-				::MessageBox( NULL , _T("IPO AppID格式不正确") , "Error" , MB_ICONERROR) ;
+				CMessageBoxEx message(_T("\n IPO AppID格式不正确!")  , 0 );
+	            message.DoModal();
+				//::MessageBox( NULL , _T("IPO AppID格式不正确") , "Error" , MB_ICONERROR) ;
 			}else
 			{
 				Json::Value setscriptid = root["script"];
