@@ -84,7 +84,7 @@ void CSignAccountsDlg::OnBnClickedButtonSend()
 
 
 		GetDlgItem(IDC_EDIT_FEE)->GetWindowText(strFee);
-		strCommand = strprintf("%s %s %lld","registaccounttx" ,address  , (INT64)REAL_MONEY(atof(strFee)) );
+		strCommand = strprintf("%s %s %lld","registaccounttx" ,address  , (INT64)REAL_MONEY(strtod(strFee,NULL)) );
 
 		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 

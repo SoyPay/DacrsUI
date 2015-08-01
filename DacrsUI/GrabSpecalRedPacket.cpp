@@ -306,14 +306,14 @@ void   CGrabSpecalRedPacket::AcceptRedPackeSpecail(CString sendhash,uistruct::RE
 
 
 	CString walletaddr = m_walletmoney;
-	INT64 sub = (INT64)(atof(walletaddr)*COIN) - theApp.m_RedPacketCfg.AcceptRedPacketSpecailFee;
+	INT64 sub = (INT64)(strtod(walletaddr,NULL)*COIN) - theApp.m_RedPacketCfg.AcceptRedPacketSpecailFee;
 	if (sub < 0)
 	{
 		::MessageBox( this->GetSafeHwnd() ,_T("此钱包账户金额不足付小费,请先充值") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
 
-	if (atof(m_balance) < pPoolList.total_amount)
+	if (strtod(m_balance,NULL) < pPoolList.total_amount)
 	{
 		::MessageBox( this->GetSafeHwnd() ,_T("此钱包账户金额小于接龙红包金额,请先充值") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;

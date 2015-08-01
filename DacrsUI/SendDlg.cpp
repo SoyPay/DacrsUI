@@ -121,7 +121,7 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 		}
 		
 		GetDlgItem(IDC_EDIT_MONEY)->GetWindowTextA(strMoney);
-		double dSendMoney = atof(strMoney);
+		double dSendMoney = strtod(strMoney,NULL);
 		if(dSendMoney > data.fMoney || ( data.fMoney>-0.0000001 && data.fMoney< 0.000001 )) 
 		{
 			::MessageBox( this->GetSafeHwnd() ,_T("账户余额不足") , _T("提示") , MB_ICONINFORMATION ) ;

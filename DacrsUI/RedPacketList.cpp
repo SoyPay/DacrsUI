@@ -197,8 +197,8 @@ static int CALLBACK MyCompareProc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamS
  
 	if (sort_column==2)
 	{
-		INT64 p1 = (INT64)(atof(lp1)*COIN);
-		INT64 p2 = (INT64)(atof(lp2)*COIN);
+		INT64 p1 = (INT64)(strtod(lp1,NULL)*COIN);
+		INT64 p2 = (INT64)(strtod(lp2,NULL)*COIN);
 	// int–Õ±»Ωœ
 		if (!method)
 		return (int)(p1-p2);
