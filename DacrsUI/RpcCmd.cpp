@@ -220,10 +220,11 @@ void CRpcCmd::RPCCommandToJson(const string& strRPCCommand,string& strSendData)
 		while(pos >=0)
 		{
 			param = rpcCommand.substr(0,pos);
-			//param.TrimLeft();
-			//param.TrimRight();
+			param =UiFun::trimleft(param);
+			param =UiFun::trimright(param);
+		
 			rpcCommand = rpcCommand.substr(pos+1);
-			//rpcCommand = rpcCommand.TrimLeft();
+			rpcCommand = UiFun::trimleft(rpcCommand);
 			//if (param.GetLength()<10&&IsAllDigtal(param))
 			if (IsAllDigtal(param.c_str()))
 			{

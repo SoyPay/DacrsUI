@@ -853,6 +853,12 @@ void CMortgageTardDlg::OnBnClickedButtonWithd()
 void CMortgageTardDlg::OnBnClickedButtonRech()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	if (strcmp(theApp.m_betScritptid.c_str(),theApp.m_neststcriptid.strNewSrcriptRedPacektid.c_str()))
+	{
+		::MessageBox( this->GetSafeHwnd() ,_T("红包已经升级,请到菜单栏中选择恢复默认设置") , _T("提示") , MB_ICONINFORMATION ) ;
+		return;
+	}
+
 	if (!theApp.IsSyncBlock )
 	{
 		::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
@@ -1276,6 +1282,12 @@ void CMortgageTardDlg::OnBnClickedButtonSpecailred()
 }
 void   CMortgageTardDlg::AcceptRedPacketComm(CString sendhash,uistruct::REDPACKETPOOL_t pPoolList)
 {
+	if (strcmp(theApp.m_betScritptid.c_str(),theApp.m_neststcriptid.strNewSrcriptRedPacektid.c_str()))
+	{
+		::MessageBox( this->GetSafeHwnd() ,_T("红包已经升级,请到菜单栏中选择恢复默认设置") , _T("提示") , MB_ICONINFORMATION ) ;
+		return;
+	}
+
 	if (!theApp.IsSyncBlock )
 	{
 		::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
@@ -1382,6 +1394,12 @@ void   CMortgageTardDlg::AcceptRedPacketComm(CString sendhash,uistruct::REDPACKE
 }
 void   CMortgageTardDlg::AcceptRedPackeSpecail(CString sendhash,uistruct::REDPACKETPOOL_t pPoolList)
 {
+	if (strcmp(theApp.m_betScritptid.c_str(),theApp.m_neststcriptid.strNewSrcriptRedPacektid.c_str()))
+	{
+		::MessageBox( this->GetSafeHwnd() ,_T("红包已经升级,请到菜单栏中选择恢复默认设置") , _T("提示") , MB_ICONINFORMATION ) ;
+		return;
+	}
+
 	if (!theApp.IsSyncBlock )
 	{
 		::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
