@@ -1630,8 +1630,10 @@ void  CP2PDlg::GetAppAccountSomeMoney()
 	{
 		return;
 	}
-
-	CReCharge outdlg(NULL,"提现:","提现金额");
+	CString balance ="";
+	
+	GetDlgItem(IDC_STATIC_BALANCE)->GetWindowText(balance);
+	CReCharge outdlg(NULL,"提现:","提现金额","",balance);
 	if ( IDOK != outdlg.DoModal()){
 		return;
 	}

@@ -1761,8 +1761,10 @@ void  CMortgageTardDlg::GetAppAccountSomeMoney()
 	{
 		return;
 	}
+	CString balance ="";
 
-	CReCharge outdlg(NULL,"提现:","提现金额");
+	GetDlgItem(IDC_STATIC_BALANCE)->GetWindowText(balance);
+	CReCharge outdlg(NULL,"提现:","提现金额","",balance);
 	if ( IDOK != outdlg.DoModal()){
 		return;
 	}

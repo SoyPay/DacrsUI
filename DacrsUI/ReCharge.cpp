@@ -11,13 +11,14 @@
 
 IMPLEMENT_DYNAMIC(CReCharge, CDialogEx)
 
-CReCharge::CReCharge(CWnd* pParent /*=NULL*/,CString text,CString strsms,CString strhead)
+CReCharge::CReCharge(CWnd* pParent /*=NULL*/,CString text,CString strsms,CString strhead,CString amount)
 	: CDialogEx(CReCharge::IDD, pParent)
 {
 	m_pBmp = NULL ;
 	m_strText = text;
 	m_strSms = strsms;
 	m_strHead = strhead;
+	m_edit = amount;
 }
 
 CReCharge::~CReCharge()
@@ -111,6 +112,10 @@ BOOL CReCharge::OnInitDialog()
 		((CStatic*)GetDlgItem(IDC_STATIC))->SetWindowText(m_strSms);
 	}
 
+	if (m_edit != _T(""))
+	{
+		((CEdit*)GetDlgItem(IDC_EDIT_MONEY))->SetWindowText(m_edit);
+	}
 	m_rBtnClose.SetBitmaps( IDB_BITMAP_CLOSE , RGB(255, 255, 0) , IDB_BITMAP_CLOSE2 , RGB(255, 255, 255) );
 	m_rBtnClose.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
 	m_rBtnClose.SetWindowText("") ;
