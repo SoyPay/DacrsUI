@@ -784,11 +784,12 @@ bool CMortgageTardDlg::CheckBalance(string strshow)
 }
 void CMortgageTardDlg::OnBnClickedButtonWithd()
 {
-	GetAppAccountSomeMoney();
-	return;
-	// TODO: 在此添加控件通知处理程序代码
-	if ( IDNO == ::MessageBox( this->GetSafeHwnd() ,_T("是否确定要体现") , _T("提示") , MB_YESNO|MB_ICONINFORMATION ) )
+	if (strcmp(theApp.m_redPacketScriptid.c_str(),theApp.m_neststcriptid.strNewSrcriptRedPacektid.c_str()) == 0)
+	{
+		GetAppAccountSomeMoney();
 		return;
+	}
+	// TODO: 在此添加控件通知处理程序代码
 
 	if (!theApp.IsSyncBlock )
 	{
@@ -796,10 +797,13 @@ void CMortgageTardDlg::OnBnClickedButtonWithd()
 		return;
 	}
 
-	if (!CheckBalance())
+	if (!CheckBalance("账户金额为零,不能提现"))
 	{
 		return;
 	}
+
+	if ( IDNO == ::MessageBox( this->GetSafeHwnd() ,_T("是否确定要体现") , _T("提示") , MB_YESNO|MB_ICONINFORMATION ) )
+		return;
 
 	if (!CheckRegIDValid( theApp.m_redPacketScriptid)) return ;
 
