@@ -498,34 +498,13 @@ void CMortgageTardDlg::SendRedPacketComm(){
 
 	CString addr;
 	int sel = m_addrbook.GetCurSel();
-	if (sel < 0)
-	{
-		return ;
-	}
+
 	m_addrbook.GetLBText(sel,addr);
 
-	if (addr == _T(""))
-	{
-		::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
-		return;
-	}
 	CString strrednum;
 	int redNum = 0;
 	GetDlgItem(IDC_EDIT_NUM)->GetWindowText(strrednum) ;
-	redNum = atoi(strrednum);
-
-	if (redNum < 2 || redNum >100)
-	{
-		::MessageBox( this->GetSafeHwnd() ,_T("请正确填写红包个数,红包的个数在2-100范围之内") , _T("提示") , MB_ICONINFORMATION ) ;
-		return;
-	}
-	double minamout = strtod(strTxMoney,NULL)/redNum;
-	if (minamout < 1.0) /// 平均每个热你的红包吧不能少于1
-	{
-		::MessageBox( this->GetSafeHwnd() ,_T("平均每个红包的金额不能小于1") , _T("提示") , MB_ICONINFORMATION ) ;
-		return;
-	}
-
+	
 	string strContractData;
 	double money = strtod(strTxMoney,NULL);
 	CString nTemp;
@@ -595,6 +574,13 @@ void CMortgageTardDlg::SendRedPacketComm(){
 void CMortgageTardDlg::OnBnClickedButtonCommred()
 {
 	// TODO: 在此添加控件通知处理程序代码
+
+	if (strcmp(theApp.m_redPacketScriptid.c_str(),theApp.m_neststcriptid.strNewSrcriptRedPacektid.c_str()))
+	{
+		::MessageBox( this->GetSafeHwnd() ,_T("红包已经升级,请到菜单栏中选择恢复默认设置") , _T("提示") , MB_ICONINFORMATION ) ;
+		return;
+	}
+
 	if (!CheckBalance())
 	{
 		return;
@@ -622,6 +608,38 @@ void CMortgageTardDlg::OnBnClickedButtonCommred()
 	{
 		::MessageBox( this->GetSafeHwnd() ,_T("红包金额必须大于1") , _T("提示") , MB_ICONINFORMATION ) ;
 		return ;
+	}
+
+	CString strrednum;
+	int redNum = 0;
+	GetDlgItem(IDC_EDIT_NUM)->GetWindowText(strrednum) ;
+	redNum = atoi(strrednum);
+
+	if (redNum < 2 || redNum >100)
+	{
+		::MessageBox( this->GetSafeHwnd() ,_T("请正确填写红包个数,红包的个数在2-100范围之内") , _T("提示") , MB_ICONINFORMATION ) ;
+		return;
+	}
+	double minamout = strtod(strTxMoney,NULL)/redNum;
+	if (minamout < 1.0) /// 平均每个热你的红包吧不能少于1
+	{
+		::MessageBox( this->GetSafeHwnd() ,_T("平均每个红包的金额不能小于1") , _T("提示") , MB_ICONINFORMATION ) ;
+		return;
+	}
+
+	CString addr;
+	int sel = m_addrbook.GetCurSel();
+	if (sel < 0)
+	{
+		::MessageBox( this->GetSafeHwnd() ,_T("请选择地址") , _T("提示") , MB_ICONINFORMATION ) ;
+		return ;
+	}
+	m_addrbook.GetLBText(sel,addr);
+
+	if (addr == _T(""))
+	{
+		::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		return;
 	}
 
 	CString strDisplay;
@@ -853,7 +871,7 @@ void CMortgageTardDlg::OnBnClickedButtonWithd()
 void CMortgageTardDlg::OnBnClickedButtonRech()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	if (strcmp(theApp.m_betScritptid.c_str(),theApp.m_neststcriptid.strNewSrcriptRedPacektid.c_str()))
+	if (strcmp(theApp.m_redPacketScriptid.c_str(),theApp.m_neststcriptid.strNewSrcriptRedPacektid.c_str()))
 	{
 		::MessageBox( this->GetSafeHwnd() ,_T("红包已经升级,请到菜单栏中选择恢复默认设置") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
@@ -1148,28 +1166,14 @@ void   CMortgageTardDlg::SendRedPackeSpecail(){
 
 	CString addr;
 	int sel = m_addrbook.GetCurSel();
-	if (sel < 0)
-	{
-		return ;
-	}
+
 	m_addrbook.GetLBText(sel,addr);
 
-	if (addr == _T(""))
-	{
-		::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
-		return;
-	}
 
 	CString strrednum;
 	int redNum = 0;
 	GetDlgItem(IDC_EDIT_NUM)->GetWindowText(strrednum) ;
 	redNum = atoi(strrednum);
-
-	if (redNum < 2 || redNum >20)
-	{
-		::MessageBox( this->GetSafeHwnd() ,_T("请正确填写红包个数,接龙红包的个数在2-20范围之内") , _T("提示") , MB_ICONINFORMATION ) ;
-		return;
-	}
 
 	string strContractData;
 	double money = strtod(strTxMoney,NULL);
@@ -1240,6 +1244,12 @@ void CMortgageTardDlg::OnBnClickedButtonSpecailred()
 {
 	// TODO: 在此添加控件通知处理程序代码
 
+	if (strcmp(theApp.m_redPacketScriptid.c_str(),theApp.m_neststcriptid.strNewSrcriptRedPacektid.c_str()))
+	{
+		::MessageBox( this->GetSafeHwnd() ,_T("红包已经升级,请到菜单栏中选择恢复默认设置") , _T("提示") , MB_ICONINFORMATION ) ;
+		return;
+	}
+
 	if (!CheckBalance())
 	{
 		return;
@@ -1269,8 +1279,38 @@ void CMortgageTardDlg::OnBnClickedButtonSpecailred()
 		return ;
 	}
 
+	CString strrednum;
+	int redNum = 0;
+	GetDlgItem(IDC_EDIT_NUM)->GetWindowText(strrednum) ;
+	redNum = atoi(strrednum);
 
+	if (redNum < 2 || redNum >20)
+	{
+		::MessageBox( this->GetSafeHwnd() ,_T("请正确填写红包个数,接龙红包的个数在2-20范围之内") , _T("提示") , MB_ICONINFORMATION ) ;
+		return;
+	}
 
+	double minamout = strtod(strTxMoney,NULL)/redNum;
+	if (minamout < 1.0) /// 平均每个热你的红包吧不能少于1
+	{
+		::MessageBox( this->GetSafeHwnd() ,_T("平均每个红包的金额不能小于1") , _T("提示") , MB_ICONINFORMATION ) ;
+		return;
+	}
+
+	CString addr;
+	int sel = m_addrbook.GetCurSel();
+	if (sel < 0)
+	{
+		::MessageBox( this->GetSafeHwnd() ,_T("请选择地址") , _T("提示") , MB_ICONINFORMATION ) ;
+		return ;
+	}
+	m_addrbook.GetLBText(sel,addr);
+
+	if (addr == _T(""))
+	{
+		::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		return;
+	}
 
 	CString strDisplay;
 	strDisplay.Format(_T("确定要发红包--->金额:%s"), strTxMoney);
@@ -1282,11 +1322,6 @@ void CMortgageTardDlg::OnBnClickedButtonSpecailred()
 }
 void   CMortgageTardDlg::AcceptRedPacketComm(CString sendhash,uistruct::REDPACKETPOOL_t pPoolList)
 {
-	if (strcmp(theApp.m_betScritptid.c_str(),theApp.m_neststcriptid.strNewSrcriptRedPacektid.c_str()))
-	{
-		::MessageBox( this->GetSafeHwnd() ,_T("红包已经升级,请到菜单栏中选择恢复默认设置") , _T("提示") , MB_ICONINFORMATION ) ;
-		return;
-	}
 
 	if (!theApp.IsSyncBlock )
 	{
@@ -1394,11 +1429,6 @@ void   CMortgageTardDlg::AcceptRedPacketComm(CString sendhash,uistruct::REDPACKE
 }
 void   CMortgageTardDlg::AcceptRedPackeSpecail(CString sendhash,uistruct::REDPACKETPOOL_t pPoolList)
 {
-	if (strcmp(theApp.m_betScritptid.c_str(),theApp.m_neststcriptid.strNewSrcriptRedPacektid.c_str()))
-	{
-		::MessageBox( this->GetSafeHwnd() ,_T("红包已经升级,请到菜单栏中选择恢复默认设置") , _T("提示") , MB_ICONINFORMATION ) ;
-		return;
-	}
 
 	if (!theApp.IsSyncBlock )
 	{
