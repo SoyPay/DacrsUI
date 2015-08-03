@@ -619,21 +619,26 @@ void  CP2PDlg::QueryNotDrawBalance(CString addr)
 
 void CP2PDlg::OnBnClickedButtonWithd()
 {
-	GetAppAccountSomeMoney();
-	return;
-	// TODO: 在此添加控件通知处理程序代码
-	if ( IDNO == ::MessageBox( this->GetSafeHwnd() ,_T("是否确定要体现") , _T("提示") , MB_YESNO|MB_ICONINFORMATION ) )
+	if (strcmp(theApp.m_betScritptid.c_str(),theApp.m_neststcriptid.strNewScriptBetid.c_str()) == 0)
+	{
+		GetAppAccountSomeMoney();
 		return;
+	}
+
+	// TODO: 在此添加控件通知处理程序代码
+
 	if (!theApp.IsSyncBlock )
 	{
 		::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
 
-	if (!CheckBalance())
+	if (!CheckBalance("账户金额为零,不能提现"))
 	{
 		return;
 	}
+	if ( IDNO == ::MessageBox( this->GetSafeHwnd() ,_T("是否确定要体现") , _T("提示") , MB_YESNO|MB_ICONINFORMATION ) )
+		return;
 
 	if (!CheckRegIDValid( theApp.m_betScritptid )) return ;
 
