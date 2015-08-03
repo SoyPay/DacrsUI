@@ -1360,4 +1360,5 @@ void CDacrsUIDlg::RestoreDefault()
 	}
 
 	theApp.ParseUIConfigFile(theApp.str_InsPath);
+	MessageBox(_T("恢复默认设置成功"));
 }
