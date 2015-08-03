@@ -637,7 +637,7 @@ void CP2PDlg::OnBnClickedButtonWithd()
 	{
 		return;
 	}
-	if ( IDNO == ::MessageBox( this->GetSafeHwnd() ,_T("是否确定要体现") , _T("提示") , MB_YESNO|MB_ICONINFORMATION ) )
+	if ( IDNO == ::MessageBox( this->GetSafeHwnd() ,_T("是否确定要提现") , _T("提示") , MB_YESNO|MB_ICONINFORMATION ) )
 		return;
 
 	if (!CheckRegIDValid( theApp.m_betScritptid )) return ;
@@ -1647,7 +1647,7 @@ void  CP2PDlg::GetAppAccountSomeMoney()
 	{
 		return;
 	}
-		string show = strprintf("是否确定要体现 金额为:%lf",money);
+		string show = strprintf("是否确定要提现 金额为:%lf",money);
 	if ( IDNO == ::MessageBox( this->GetSafeHwnd() ,show.c_str() , _T("提示") , MB_YESNO|MB_ICONINFORMATION ) )
 		return;
 
