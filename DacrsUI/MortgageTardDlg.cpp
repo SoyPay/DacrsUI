@@ -802,7 +802,7 @@ void CMortgageTardDlg::OnBnClickedButtonWithd()
 		return;
 	}
 
-	if ( IDNO == ::MessageBox( this->GetSafeHwnd() ,_T("是否确定要体现") , _T("提示") , MB_YESNO|MB_ICONINFORMATION ) )
+	if ( IDNO == ::MessageBox( this->GetSafeHwnd() ,_T("是否确定要提现") , _T("提示") , MB_YESNO|MB_ICONINFORMATION ) )
 		return;
 
 	if (!CheckRegIDValid( theApp.m_redPacketScriptid)) return ;
