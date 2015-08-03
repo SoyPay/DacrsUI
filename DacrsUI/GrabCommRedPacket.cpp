@@ -296,7 +296,7 @@ LRESULT CGrabCommRedPacket::onBnCLick( WPARAM wParam, LPARAM lParam )
 
 void   CGrabCommRedPacket::AcceptRedPacketComm(CString sendhash,uistruct::REDPACKETPOOL_t pPoolList)
 {
-	if (strcmp(theApp.m_betScritptid.c_str(),theApp.m_neststcriptid.strNewSrcriptRedPacektid.c_str()))
+	if (strcmp(theApp.m_redPacketScriptid.c_str(),theApp.m_neststcriptid.strNewSrcriptRedPacektid.c_str()))
 	{
 		::MessageBox( this->GetSafeHwnd() ,_T("红包已经升级,请到菜单栏中选择恢复默认设置") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
