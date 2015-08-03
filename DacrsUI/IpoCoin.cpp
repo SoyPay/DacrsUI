@@ -313,7 +313,7 @@ void CIpoCoin::OnShowListCtrol(CString addr)
 		nMoney = root["FreeValues"].asInt64() ;
 	}
 	double money = (nMoney*1.0/COIN);
-	strShowData = strprintf("可提现金额:%.8f",money);
+	strShowData = strprintf("提现金额:%.8f",money);
 	((CStatic*)GetDlgItem(IDC_STATIC_AMOUNT))->SetWindowText(strShowData.c_str());
 	Invalidate();
 	Json::Value valuearray = root["vFreezedFund"]; 
