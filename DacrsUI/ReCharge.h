@@ -10,7 +10,7 @@ class CReCharge : public CDialogEx
 	DECLARE_DYNAMIC(CReCharge)
 
 public:
-	CReCharge(CWnd* pParent = NULL,CString text = _T(""),CString strsms = _T(""),CString strhead = _T(""));   // 标准构造函数
+	CReCharge(CWnd* pParent = NULL,CString text = _T(""),CString strsms = _T(""),CString strhead = _T(""),CString amount=_T(""));   // 标准构造函数
 	virtual ~CReCharge();
 
 // 对话框数据
@@ -34,6 +34,7 @@ private:
 	CString          m_strText;
 	CString          m_strSms;
 	CString          m_strHead;
+	CString          m_edit;
 public:
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
