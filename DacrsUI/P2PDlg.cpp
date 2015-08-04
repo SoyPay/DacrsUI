@@ -1197,9 +1197,20 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 		 {
 			 uistruct::P2P_QUIZ_RECORD_t p2pbetrecord ;
 			 memset(&p2pbetrecord , 0 , sizeof(uistruct::P2P_QUIZ_RECORD_t));
-			 SYSTEMTIME curTime ;
-			 memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
-			 GetLocalTime( &curTime ) ;
+
+			 strData = strprintf("%s %s",_T("gettxdetail"),hash);
+			 string strShowData ="";
+			 CSoyPayHelp::getInstance()->SendRpc(strData,strShowData);
+			 int pos = strShowData.find("confirmedtime");
+			 if (strShowData == "" && pos <0)
+			 {
+				 return;
+			 }
+			 if (!reader.parse(strShowData, root)) 
+				 return;
+			 int confirtime =root["confirmedtime"].asInt();
+
+			SYSTEMTIME curTime =UiFun::Time_tToSystemTime(confirtime);
 			 string strSendTime;
 			 strSendTime = strprintf("%04d-%02d-%02d %02d:%02d:%02d",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
 			 p2pbetrecord.send_time = UiFun::SystemTimeToTimet(curTime);
