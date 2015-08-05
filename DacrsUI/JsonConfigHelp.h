@@ -89,6 +89,26 @@ public:
 	INT64	SendRedPacketSpecailFee;
 	INT64	AcceptRedPacketSpecailFee;
 };
+
+class CRedPacketStepCfg
+{
+public:
+	INT64	SendRedPacketCommStep;
+	INT64	AcceptRedPacketCommStep;
+	INT64	SendRedPacketSpecailStep;
+	INT64	AcceptRedPacketSpecailStep;
+};
+
+class CP2PBetStepCfg
+{
+public:
+	INT64	SendBetStep;
+	INT64	AcceptBetnStep;
+	INT64	OpenBetnStep;
+	INT64	GetAppAmountnStep;
+	INT64   GetRechangeStep;
+};
+
 class CNetParamCfg
 {
 public:
@@ -132,6 +152,8 @@ public:
 	void AddItemString(const CString& strFilePath,CAutoComplete &m_comboxinput);
 	string  GetConfigRootStr(const string& strFilePath);
 	void GetNewestScriptData(CNewestScriptCfg &newScript);
+	void GetRedPacketStep(CRedPacketStepCfg &redPackestep);
+	void GetP2pBetStep(CP2PBetCfg &p2pbetstep);
 private:
 	void ReadMainCfgData(const Json::Value& root);
 	void ReadSesureTradeCfgData(const Json::Value& root);
@@ -144,6 +166,8 @@ private:
 	void ReadRedPacketCfgData(const Json::Value &root);
 	void ReadCloseCfgData(const Json::Value &root);
 	void ReadNewestCfgData(const Json::Value &root);
+	void ReadRedPacketStep(const Json::Value &root);
+	void ReadP2pBetStep(const Json::Value &root);
 	void AddString(const Json::Value& root,CAutoComplete &m_comboxinput);
 public:
 	void ModifyAppFeeCfgData( Json::Value& root,const CString &LeaderKey,const CString &Key,const CString &KeyValue);
@@ -161,5 +185,7 @@ private:
 	CRedPacketCfg    m_RedPacketCfg;
 	int              m_close;                     /// 0 提示关闭对话框 1 不提示关闭对话框并且隐藏 2不提示关闭对话框并且关闭钱包
 	CNewestScriptCfg m_newScript;
+	CRedPacketStepCfg m_redPackestep;
+	CP2PBetCfg        m_p2pbetstep;
 };
 

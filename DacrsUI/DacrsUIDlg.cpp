@@ -13,6 +13,7 @@
 #include "ChangPassWord.h"
 #include "Reminderdlg.h"
 #include "SetAppId.h"
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -72,6 +73,7 @@ CDacrsUIDlg::CDacrsUIDlg(CWnd* pParent /*=NULL*/)
 	m_pOutGifDlg =  NULL ;
 	m_pRPCDlg = NULL;
 	m_pIpoCoinDlg = NULL;
+	m_BalloonTip = NULL;
 }
 
 void CDacrsUIDlg::DoDataExchange(CDataExchange* pDX)
@@ -109,6 +111,8 @@ BEGIN_MESSAGE_MAP(CDacrsUIDlg, CDialogEx)
 	
 	ON_UPDATE_COMMAND_UI(ID__SET, &CDacrsUIDlg::OnUpdataState)
 	ON_COMMAND(WM_CLOSEAPP,&CDacrsUIDlg::OnCloseApp)
+	ON_MESSAGE(WM_POPUPBAR,OnPopupBar)
+	ON_WM_ACTIVATE()
 END_MESSAGE_MAP()
 
 
@@ -879,6 +883,11 @@ void CDacrsUIDlg::BakWallet()
 
 void CDacrsUIDlg::ToTray() 
 { 
+	
+	if(m_BalloonTip != NULL)
+	{
+		CBalloonTip::Hide(m_BalloonTip);
+	}
 	NOTIFYICONDATA nid; 
 	nid.cbSize=(DWORD)sizeof(NOTIFYICONDATA); 
 	nid.hWnd=this->m_hWnd; 
@@ -935,6 +944,12 @@ LRESULT CDacrsUIDlg::OnShowTask(WPARAM wParam,LPARAM lParam)
 			}else{
 				SetWindowPos(&this->wndTopMost, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);  
 				this->ShowWindow(SW_SHOW);//简单的显示主窗口完事儿 
+				SetWindowPos(&this->wndNoTopMost,0,0,0,0, SWP_NOMOVE | SWP_NOSIZE);
+
+				if(m_BalloonTip != NULL)
+				{
+					CBalloonTip::Hide(m_BalloonTip);
+				}
 			}
 			 
 		}
@@ -1361,4 +1376,79 @@ void CDacrsUIDlg::RestoreDefault()
 
 	theApp.ParseUIConfigFile(theApp.str_InsPath);
 	MessageBox(_T("恢复默认设置成功"));
+}
+
+LRESULT CDacrsUIDlg::OnPopupBar(WPARAM wParam,LPARAM lParam) 
+{
+	char* message = (char*)(lParam);
+	RECT ret;
+	GetWindowRect(&ret);
+
+
+	LOGFONT lf;
+	::ZeroMemory (&lf, sizeof (lf));
+	lf.lfHeight = 11;
+	lf.lfWeight = FW_BOLD;
+	lf.lfUnderline = FALSE;
+	strcpy((char*)lf.lfFaceName, "宋体");
+
+	if (IsWindowVisible())
+	{
+		m_BalloonTip =CBalloonTip::Show(
+			CPoint(ret.right -90, ret.bottom-10),         // Point on the screen where the tip will be shown
+			CSize(270, 150),          // Size of the total rectangle encompassing the balloon 
+			_T(message), // Message to be shown in the balloon
+			lf,                               // LOGFONT structure for font properties 
+			30,                 // Time in seconds to show the balloon
+			TRUE              // TRUE  == Balloon is up(Balloon Tip is down) 
+			// FALSE ==  Balloon is down(Balloon Tip is up)
+			);
+	}else{
+		int x=GetSystemMetrics(SM_CXSCREEN); //得到x坐标
+			int y=GetSystemMetrics(SM_CYSCREEN);//得到y坐标
+		m_BalloonTip =CBalloonTip::Show(
+			CPoint(x-90, y-10),         // Point on the screen where the tip will be shown
+			CSize(270, 150),          // Size of the total rectangle encompassing the balloon 
+			_T(message), // Message to be shown in the balloon
+			lf,                               // LOGFONT structure for font properties 
+			30,                 // Time in seconds to show the balloon
+			TRUE              // TRUE  == Balloon is up(Balloon Tip is down) 
+			// FALSE ==  Balloon is down(Balloon Tip is up)
+			);
+	}
+
+	return 0;
+}
+
+//void CDacrsUIDlg::OnNcLButtonDown(UINT nHitTest, CPoint point)
+//{
+//	// TODO: 在此添加消息处理程序代码和/或调用默认值
+//
+//	CRect   rect; 
+//	GetWindowRect(&rect); 
+//	if   (rect.PtInRect(point)) 
+//	{ 
+//		if (m_BalloonTip != NULL)
+//		{
+//			CBalloonTip::Hide(m_BalloonTip);
+//		}
+//		return; 
+//	} 
+//	CDialogEx::OnNcLButtonDown(nHitTest, point);
+//}
+
+
+void CDacrsUIDlg::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
+{
+
+	if (nState == 0)
+	{
+		if (m_BalloonTip != NULL)
+		{
+			CBalloonTip::Hide(m_BalloonTip);
+		}
+	}
+	CDialogEx::OnActivate(nState, pWndOther, bMinimized);
+
+	// TODO: 在此处添加消息处理程序代码
 }

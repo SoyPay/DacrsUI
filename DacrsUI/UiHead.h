@@ -32,6 +32,7 @@ using namespace std;
 #define MSG_USER_REDPACKET_UI			    WM_USER+117	    //更新到P2P界面
 
 #define WM_SHOWTASK                        (WM_USER +118) 
+#define WM_POPUPBAR                       (WM_USER +119) 
 
 #define MSG_USER_QUITTHREAD			        WM_USER+200	    //退出线程
 #define MSG_USER_OUT                        WM_USER+201     //退出软件
@@ -260,7 +261,7 @@ namespace uistruct {
 		int      confirmedHeight ; //确认时间
 		int      confirmedtime ; //确认时间
 		string     blockhash      ;  //1:为确认状态   0:为未为确认状态
-		int       state;
+		int       state;      ///3 平账 1 扣钱 2加钱
 		string   regid;
 		string   desregid;
 		string ToJson(){

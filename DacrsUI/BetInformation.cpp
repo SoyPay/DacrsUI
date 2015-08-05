@@ -164,21 +164,28 @@ void CBetInformation::ShowBetRecordDetail(CString jsontx)
 
 	if (betrecord.actor == 2 || betrecord.state == 2)
 	{
-		if (betrecord.guess_num == 1)
+		if (betrecord.actor == 2)
 		{
-			txdetail+= " ¾º²ÂÄÚÈÝ:ÃÃ\r\n\r\n";
-		}else
+			if (betrecord.guess_num == 1)
+			{
+				txdetail+= " ¾º²ÂÄÚÈÝ:ÃÃ\r\n\r\n";
+			}else
+			{
+				txdetail+= " ¾º²ÂÄÚÈÝ:¸ç\r\n\r\n";
+			}
+		}
+		
+		if (betrecord.actor == 2)
 		{
-			txdetail+= " ¾º²ÂÄÚÈÝ:¸ç\r\n\r\n";
+			if (betrecord.content[32] == 1)
+			{
+				txdetail+= " ¿ª½±µ×ÅÆ:ÃÃ\r\n\r\n";
+			}else
+			{
+				txdetail+= " ¿ª½±µ×ÅÆ:¸ç\r\n\r\n";
+			}
 		}
 
-		if (betrecord.content[32] == 1)
-		{
-			txdetail+= " ¿ª½±µ×ÅÆ:ÃÃ\r\n\r\n";
-		}else
-		{
-			txdetail+= " ¿ª½±µ×ÅÆ:¸ç\r\n\r\n";
-		}
 	}
 
 		GetDlgItem(IDC_EDIT_TXDETAIL)->SetWindowText(txdetail.c_str());

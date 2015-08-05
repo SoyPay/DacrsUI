@@ -174,7 +174,8 @@ public:
 	INT64 GetRedPacketAmount(CString acceptregid,uistruct::RED_DATA redPacket);
 	bool  isMine(CString addr);
 	bool IsLockWallet();
-	
+	void PopupCommBalloonTip(string hash);
+	void PopupContactBalloonTip(uistruct::REVTRANSACTION_t,int apptype,int txtype);
 public:
 	bool isStartMainDlg;
 	CNoUiMsgBuffer m_noUiMsgBuffer;
