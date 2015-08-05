@@ -433,6 +433,18 @@ void CSendDlg::InsertComboxIitem()
 BOOL CSendDlg::PreTranslateMessage(MSG* pMsg)
 {
 	// TODO: 在此添加专用代码和/或调用基类
+	//if (pMsg->message==WM_RBUTTONDOWN)
+	//{
+	//	if (pMsg->wParam == WM_COPY)
+	//	{
+	//		int c = 6;
+	//	}
+	//	if (GetDlgItem(IDC_COMBO_ADDR_OUT)->SetFocus() == this->GetFocus())
+	//	{
+	//		TRACE("菜单:%d",pMsg->wParam);
+	//		int b = 6;
+	//	}
+	//}
 	if (pMsg->message==WM_KEYDOWN)
 	{
 		BOOL bCtrl=::GetKeyState(VK_CONTROL)&0x8000;
@@ -442,6 +454,10 @@ BOOL CSendDlg::PreTranslateMessage(MSG* pMsg)
 		BOOL bAlt=::GetKeyState(VK_MENU)&0x8000;
 		switch( pMsg->wParam )
 		{
+			if (GetDlgItem(IDC_COMBO_ADDR_OUT)->SetFocus() == this->GetFocus())
+			{
+				int b = 6;
+			}
 		case 'V':
 			{
 				if (GetDlgItem(IDC_EDIT_DESADDRESS) == this->GetFocus())

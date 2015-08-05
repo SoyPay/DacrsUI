@@ -998,6 +998,7 @@ void CP2PDlg::OnBnClickedButtonMale()
 		return;
 	}
 	SendBet(1);
+	OnBnClickedButtonRefresh2();
 }
 
 
@@ -1046,6 +1047,7 @@ void CP2PDlg::OnBnClickedButtonWoman()
 		return;
 	}
 	SendBet(2);
+	OnBnClickedButtonRefresh2();
 }
 void CP2PDlg::OnListPool()
 {

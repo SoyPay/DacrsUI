@@ -240,7 +240,7 @@ void CSendRecord::OpenBet(CString txhash)
 	
 
 	TRACE(_T("contect:%s\r\n"),pPoolItem.content);
-	TRACE(_T("open:%s\r\n"),strHash1);
+	TRACE(_T("open:%s\r\n"),strHash1.c_str());
 
 	string randnumber,strShowData,txaccepthash;
 	randnumber = strprintf("%s",pPoolItem.content);

@@ -92,6 +92,18 @@ void CJsonConfigHelp::ReadJsonConfig(const string& strFilePath)
 		{
 			ReadNewestCfgData(root);
 		}
+
+		pos = strTemp.find("p2pbetstep");
+		if (pos >0)
+		{
+			ReadP2pBetStep(root);
+		}
+
+		pos = strTemp.find("redpacketstep");
+		if (pos >0)
+		{
+			ReadRedPacketStep(root);
+		}
 	}
 	ifs.close();
 }
@@ -373,4 +385,31 @@ void  CJsonConfigHelp::ReadNewestCfgData(const Json::Value &root)
 	m_newScript.strNewipoScritptid = script["iposcript"].asString();
 	m_newScript.strNewScriptBetid = script["betscript"].asString();
     m_newScript.strNewSrcriptRedPacektid = script["redpacketscript"].asString();
+}
+void CJsonConfigHelp::ReadRedPacketStep(const Json::Value &root)
+{
+	Json::Value redpacketparam = root["redpacketstep"];
+	ASSERT(!redpacketparam.isNull());
+	m_redPackestep.AcceptRedPacketCommStep = redpacketparam["acceptredcommstep"].asInt64();
+	m_redPackestep.AcceptRedPacketSpecailStep= redpacketparam["acceptredspecalstep"].asInt64();
+	m_redPackestep.SendRedPacketCommStep =redpacketparam["sendredcommstep"].asInt64();
+	m_redPackestep.SendRedPacketSpecailStep =  redpacketparam["sendredspecalstep"].asInt64();
+}
+void CJsonConfigHelp::ReadP2pBetStep(const Json::Value &root)
+{
+	Json::Value p2pbet = root["p2pbetstep"];
+	ASSERT(!p2pbet.isNull());
+	m_p2pbetstep.AcceptBetnFee = p2pbet["Acceptstep"].asInt64();
+	m_p2pbetstep.GetAppAmountnFee = p2pbet["GetAppAmountnstep"].asInt64();
+	m_p2pbetstep.GetRechangeFee = p2pbet["GetRechangestep"].asInt64();
+	m_P2PBetCfg.OpenBetnFee = p2pbet["OpenBetnstep"].asInt64();
+	m_P2PBetCfg.SendBetFee = p2pbet["SendBetstep"].asInt64();
+}
+void CJsonConfigHelp::GetRedPacketStep(CRedPacketStepCfg &redPackestep)
+{
+	redPackestep = m_redPackestep;
+}
+void CJsonConfigHelp::GetP2pBetStep(CP2PBetCfg &p2pbetstep)
+{
+	p2pbetstep = m_p2pbetstep;
 }

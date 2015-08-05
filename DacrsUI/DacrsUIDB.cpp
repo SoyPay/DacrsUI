@@ -7,6 +7,7 @@
 #include "DacrsUIDlg.h"
 
 
+
 #include <afxsock.h>
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -215,6 +216,7 @@ void CDacrsUIApp::UpdateTransaction(string hash){
 				TRACE(_T("update t_transaction failed\n"));
 			}
 		}
+		PopupCommBalloonTip(hash);
 	}
 }
 void CDacrsUIApp::OpenBetRecord(vector<unsigned char> openbet,uistruct::REVTRANSACTION_t transcion)
@@ -242,6 +244,7 @@ void CDacrsUIApp::OpenBetRecord(vector<unsigned char> openbet,uistruct::REVTRANS
 			LogPrint("INFO","OpenBetRecord 更新失败:%s",hexHash.c_str() );
 		}
 		LogPrint("OPENBET","发赌约hash:%s  开奖hash:%s",hexHash.c_str(),transcion.txhash);
+		PopupContactBalloonTip(transcion,0,1);
 	}
 }
 
@@ -481,6 +484,15 @@ void CDacrsUIApp::UpdateAppRecord(string txdetail){
 			}else if (vTemp[0] == TX_SENDBET)
 			{
 				SendBetRecord(vTemp,transcion);
+			}else{
+				string strCond;
+				strCond = strprintf(" address='%s' ", transcion.addr);
+				int nItem =  theApp.m_SqliteDeal.GetTableCountItem(_T("t_wallet_address"), strCond) ;
+				if (nItem != 0)
+				{
+					PopupContactBalloonTip(transcion,0,5);
+				}
+				
 			}
 		}else  if (!strcmp(transcion.desregid.c_str(),theApp.m_redPacketScriptid.c_str())){ //// 接龙红包	
 			string nValue = transcion.Contract;
@@ -488,16 +500,22 @@ void CDacrsUIApp::UpdateAppRecord(string txdetail){
 			if (vTemp[0] == TX_COMM_SENDREDPACKET)
 			{
 				SendRePacketCommtRecord(vTemp,transcion);
+				PopupContactBalloonTip(transcion,1,1);
 
 			}else if (vTemp[0] == TX_COMM_ACCEPTREDPACKET)
 			{
 				AcceptRePacketCommtRecord(vTemp,transcion);
+				PopupContactBalloonTip(transcion,1,2);
 			}else if (vTemp[0] == TX_SPECIAL_SENDREDPACKET)
 			{
 				SendRePacketSpecailRecord(vTemp,transcion);
+				PopupContactBalloonTip(transcion,1,3);
 			}else if (vTemp[0] == TX_SPECIAL_ACCEPTREDPACKET)
 			{
 				AcceptRePacketSpecailRecord(vTemp,transcion);
+				PopupContactBalloonTip(transcion,1,4);
+			}else{
+				PopupContactBalloonTip(transcion,0,5);
 			}
 		}
 	}
@@ -531,7 +549,7 @@ void CDacrsUIApp::InsertTransaction(string hash){
 			int nItem1 =  theApp.m_SqliteDeal.GetTableCountItem(_T("t_wallet_address"),conditon) ;
 			if (nItem1 !=0&&nItem != 0)
 			{
-				transcion.state = 3; 
+				transcion.state = 3;      /// 平
 			}else if (nItem != 0)
 			{
 				transcion.state = 1;        //// 扣钱
@@ -555,6 +573,7 @@ void CDacrsUIApp::InsertTransaction(string hash){
 		Postmsg.SetData(temp.c_str());	
 		m_UiTxDetailQueue.push(Postmsg);
 		DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_TRANSRECORD_UI ,WM_INSERT,0);
+		PopupCommBalloonTip(transcion.txhash);
 	}
 }
 void  CDacrsUIApp::InsertAddbook(uistruct::ADDRBOOK_t addr)
@@ -610,6 +629,8 @@ void CDacrsUIApp:: SyncTransaction(string obj)
 			transcion.txtype.c_str() ,transcion.ver ,transcion.addr.c_str() ,transcion.pubkey.c_str(),transcion.miner_pubkey.c_str(),transcion.fees,transcion.height,\
 			transcion.desaddr.c_str(), transcion.money,transcion.Contract.c_str(),transcion.confirmedHeight,transcion.confirmedtime,transcion.blockhash.c_str(),transcion.state) ;
 		m_SqliteDeal.InsertTableItem(_T("t_transaction") ,strSourceData );
+
+		PopupCommBalloonTip(transcion.txhash);
 	}
 }
 void CDacrsUIApp::ClearTransaction()
@@ -965,4 +986,228 @@ void CDacrsUIApp::SendRePacketSpecailRecord(vector<unsigned char> sendRedPacket,
 				LogPrint("INFO","SendRePacketSpecailRecord 更新失败:%s",transcion.txhash.c_str());
 		}
 	}
+}
+
+
+void CDacrsUIApp::PopupCommBalloonTip(string hash)//)
+{
+	string conditon;
+	conditon =strprintf("hash='%s'",hash);
+	uistruct::REVTRANSACTION_t commtx;
+	theApp.m_SqliteDeal.GetTransactionItem(conditon,&commtx);
+	if (commtx.txhash == "" || commtx.confirmedHeight ==0 || theApp.m_pMainWnd == NULL)
+	{
+		return;
+	}
+	string strShow = "";
+	if (strcmp(commtx.txtype.c_str(),"REWARD_TX") == 0)
+	{
+		strShow ="  流入交易\r\n";
+
+		SYSTEMTIME curTime =UiFun::Time_tToSystemTime(commtx.confirmedtime);
+		strShow += strprintf("日期: %04d-%02d-%02d %02d:%02d:%02d\r\n",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+		strShow += strprintf("金额: +%.8f\r\n",commtx.money);
+		strShow += strprintf("类别: %s\r\n","挖矿");
+		strShow += strprintf("地址: (%s)\r\n",commtx.addr.c_str());
+	}else if(strcmp(commtx.txtype.c_str(),"COMMON_TX") == 0 && commtx.state == 1){
+		strShow ="  流出交易\r\n";
+
+		SYSTEMTIME curTime =UiFun::Time_tToSystemTime(commtx.confirmedtime);
+		strShow += strprintf("日期: %04d-%02d-%02d %02d:%02d:%02d\r\n",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+		strShow += strprintf("金额: -%.8f\r\n",commtx.money);
+		strShow += strprintf("类别: %s\r\n","转账");
+		strShow += strprintf("地址: (%s)\r\n",commtx.addr.c_str());
+	}else if(strcmp(commtx.txtype.c_str(),"COMMON_TX") == 0 && commtx.state == 2){
+		strShow ="  流入交易\r\n";
+
+		SYSTEMTIME curTime =UiFun::Time_tToSystemTime(commtx.confirmedtime);
+		strShow += strprintf("日期: %04d-%02d-%02d %02d:%02d:%02d\r\n",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+		strShow += strprintf("金额: +%.8f",commtx.money);
+		strShow += strprintf("类别: %s\r\n","接受于");
+		strShow += strprintf("地址: (%s)\r\n",commtx.addr.c_str());
+	}else if(strcmp(commtx.txtype.c_str(),"COMMON_TX") == 0 && commtx.state == 3){
+		strShow =" 转账交易\r\n";
+
+		SYSTEMTIME curTime =UiFun::Time_tToSystemTime(commtx.confirmedtime);
+		strShow += strprintf("日期: %04d-%02d-%02d %02d:%02d:%02d\r\n",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+		strShow += strprintf("金额: %.8f\r\n",commtx.money);
+		strShow += strprintf("类别: %s","平账\r\n");
+		strShow += strprintf("地址: %s\r\n",commtx.addr.c_str());
+	}
+	if(strShow != "")
+	::SendMessage(theApp.m_pMainWnd->m_hWnd,WM_POPUPBAR,0,(LPARAM)strShow.c_str());
+}
+/// apptype 0 表示猜你妹 1 表示抢红包
+//
+void CDacrsUIApp::PopupContactBalloonTip(uistruct::REVTRANSACTION_t tx,int apptype,int txtype)
+{
+	if (theApp.m_pMainWnd == NULL)
+	{
+		return;
+	}
+
+	if (apptype == 1)     // 红包
+	{
+		string strCond;
+		strCond = strprintf(" address='%s' ", tx.addr);
+		int nItem =  theApp.m_SqliteDeal.GetTableCountItem(_T("t_wallet_address"), strCond) ;
+		if (nItem != 0)
+		{
+			return;
+		}
+	}
+	string strShow = "";
+	if (apptype ==0)
+	{
+		strShow = "猜你妹交易";
+		if (txtype == 1)  /// 表示开奖
+		{
+			string nValue = tx.Contract;
+			std::vector<unsigned char> openbet = CSoyPayHelp::getInstance()->ParseHex(nValue);
+			OPEN_DATA Openbet;
+			memset(&Openbet , 0 , sizeof(OPEN_DATA));
+			memcpy(&Openbet, &openbet[0], sizeof(OPEN_DATA));
+
+			vector<unsigned char>vHash;
+			vHash.assign(Openbet.txhash,Openbet.txhash+sizeof(Openbet.txhash));
+			reverse(vHash.begin(),vHash.end());
+			string hexHash = CSoyPayHelp::getInstance()->HexStr(vHash);
+			string strCond;
+			strCond = strprintf(" tx_hash='%s' ", hexHash.c_str());
+			uistruct::P2P_QUIZ_RECORD_t pPoolItem;
+			theApp.m_SqliteDeal.GetP2PQuizRecordItem(strCond, &pPoolItem) ;
+			if (pPoolItem.tx_hash == "")
+			{
+				return;
+			}
+			{
+				string amount = "";
+				string acotor = "";
+				string addr = "";
+				if (pPoolItem.actor == 0)
+				{
+					if (pPoolItem.content[32] != pPoolItem.guess_num)
+					{
+						strShow +="(恭喜赢了)\r\n" ;
+						amount=strprintf("+%.8f\r\n",pPoolItem.amount);
+					}else{
+						strShow +="(输了)\r\n" ;
+						amount=strprintf("金额:-%.8f\r\n",pPoolItem.amount);
+					}
+					acotor = "类别:发竞猜\r\n";
+					addr= pPoolItem.left_addr;
+				}else if (pPoolItem.actor == 1)
+				{
+					if (pPoolItem.content[32] == pPoolItem.guess_num)
+					{
+						strShow +="(恭喜赢了)\r\n" ;
+						amount=strprintf("+%.8f\r\n",pPoolItem.amount);
+					}else{
+						strShow +="(输了)\r\n" ;
+						amount=strprintf("金额:-%.8f\r\n",pPoolItem.amount);
+					}
+					acotor = "类别:接单\r\n";
+					addr= pPoolItem.right_addr;
+				}else{
+					strShow +="(持平)\r\n" ;
+					amount=strprintf("金额:%.8f\r\n",pPoolItem.amount);
+					acotor = "类别:即是发竞猜也是接单\r\n";
+					addr= pPoolItem.right_addr;
+				}
+				SYSTEMTIME curTime =UiFun::Time_tToSystemTime(tx.confirmedtime);
+				strShow += strprintf("日期: %04d-%02d-%02d %02d:%02d:%02d\r\n",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+				strShow += amount;
+				strShow += acotor;
+				strShow += strprintf("地址:%s",addr);
+			}
+		}
+	}else if (apptype == 1)
+	{
+		if (txtype ==1 || txtype ==3)
+		{
+			if(txtype ==1)
+			strShow = "普通红包交易\r\n";
+			if(txtype ==3)
+			strShow = "接龙红包交易\r\n";
+
+			SYSTEMTIME curTime =UiFun::Time_tToSystemTime(tx.confirmedtime);
+			strShow += strprintf("日期: %04d-%02d-%02d %02d:%02d:%02d\r\n",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+
+			string nValue = tx.Contract;
+			std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue);
+			RED_PACKET redpacket;
+			memset(&redpacket,0,sizeof(RED_PACKET));
+			memcpy(&redpacket, &vTemp[0],sizeof(SEND_DATA));
+
+			strShow += strprintf("金额:-%.8f",(redpacket.money*1.0)/COIN);
+			strShow += strprintf("类别:%s","发红包");
+			strShow += strprintf("地址:%s",tx.addr);
+		}else if (txtype ==2 || txtype ==4)
+		{
+			if(txtype ==2)
+				strShow = "抢普通红包交易\r\n";
+			if(txtype ==4)
+				strShow = "抢接龙红包交易\r\n";
+
+			SYSTEMTIME curTime =UiFun::Time_tToSystemTime(tx.confirmedtime);
+			strShow += strprintf("日期: %04d-%02d-%02d %02d:%02d:%02d\r\n",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+
+			string conditon;
+			conditon =strprintf("grab_hash='%s'",tx.txhash);
+			uistruct::REDPACKETGRAB_t redpacket;
+			theApp.m_SqliteDeal.GetRedPacketGrabItem(conditon,&redpacket);
+			if (redpacket.send_hash != "")
+			{
+				strShow += strprintf("金额:+%.8f",redpacket.lucky_amount);
+			
+			}
+			strShow += strprintf("类别:%s","发红包");
+			strShow += strprintf("地址:%s",tx.addr);
+		 }
+
+	}
+
+	if (txtype ==5)
+	{
+		string strCond;
+		strCond = strprintf(" address='%s' ", tx.addr);
+		int nItem =  theApp.m_SqliteDeal.GetTableCountItem(_T("t_wallet_address"), strCond) ;
+		if (nItem != 0)
+		{
+			return;
+		}
+		if (apptype == 0)
+		{
+			strShow = "猜你妹交易\r\n";
+		}else if (apptype == 1)
+		{
+			strShow = "红包交易\r\n";
+		}
+		string nValue = tx.Contract;
+		std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue);
+		if (vTemp[0] == 0xff)
+		{
+
+			if (vTemp[1] == 0x02)    /// 充值
+			{
+				SYSTEMTIME curTime =UiFun::Time_tToSystemTime(tx.confirmedtime);
+				strShow += strprintf("日期: %04d-%02d-%02d %02d:%02d:%02d\r\n",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+				strShow+=strprintf("金额:  %.8f\r\n",tx.money );
+				strShow+=strprintf("地址:  %s\r\n",tx.addr );
+			}else if (vTemp[1] == 0x03)   /// 提现
+			{
+				SYSTEMTIME curTime =UiFun::Time_tToSystemTime(tx.confirmedtime);
+				strShow += strprintf("日期: %04d-%02d-%02d %02d:%02d:%02d\r\n",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+				if (vTemp.size() == sizeof(APPACC))
+				{
+					APPACC drawtx;
+					memcpy(&drawtx, &vTemp[0],sizeof(APPACC));
+					strShow+=strprintf("金额:  %.8f\r\n",tx.money );
+					strShow+=strprintf("地址:  %s\r\n",tx.addr );
+				}
+			}
+		}
+	}
+
+	::SendMessage(theApp.m_pMainWnd->m_hWnd,WM_POPUPBAR,0,(LPARAM)strShow.c_str());
 }

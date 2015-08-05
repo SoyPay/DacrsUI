@@ -233,7 +233,7 @@ BOOL CSqliteDeal::ExcuteSQL(sqlite3** ppDb, CallBackFunc pFunc, string strSQL, v
 	LOCK(m_pCs);
 	char *pzErrMsg = NULL;
 	int nResult = sqlite3_exec(*ppDb, strSQL.c_str(), pFunc, pPara, &pzErrMsg);
-	TRACE("%s\n", strSQL);
+	TRACE("%s\n", strSQL.c_str());
 	if ( nResult != SQLITE_OK ){
 		if(pzErrMsg != NULL) {
 			LogPrint("INFO", "call ExcuteSQL retCode:%d, error:%s,SQL:%s\n", nResult, pzErrMsg, strSQL);

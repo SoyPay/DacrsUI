@@ -145,6 +145,7 @@
     <None Include="res\close.bmp" />
     <None Include="res\close2.bmp" />
     <None Include="res\close3.bmp" />
+    <None Include="res\CLOSE_BUTTON.BMP" />
     <None Include="res\copy_addr_1.bmp" />
     <None Include="res\copy_addr_2.bmp" />
     <None Include="res\copy_addr_3.bmp" />
@@ -260,6 +261,7 @@
     <ClInclude Include="AddApp.h" />
     <ClInclude Include="AddrBook.h" />
     <ClInclude Include="AutoComplete.h" />
+    <ClInclude Include="BalloonTip.h" />
     <ClInclude Include="BetInformation.h" />
     <ClInclude Include="BetRecord.h" />
     <ClInclude Include="BmpBtn.h" />
@@ -357,6 +359,7 @@
     <ClCompile Include="AddApp.cpp" />
     <ClCompile Include="AddrBook.cpp" />
     <ClCompile Include="AutoComplete.cpp" />
+    <ClCompile Include="BalloonTip.cpp" />
     <ClCompile Include="BetInformation.cpp" />
     <ClCompile Include="BetRecord.cpp" />
     <ClCompile Include="BmpBtn.cpp" />
