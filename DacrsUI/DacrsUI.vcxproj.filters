@@ -229,6 +229,9 @@
     <ClCompile Include="SetAppId.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="BalloonTip.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BmpBtn.h">
@@ -515,6 +518,9 @@
     </ClInclude>
     <ClInclude Include="SetAppId.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BalloonTip.h">
+      <Filter>源文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -967,6 +973,9 @@
       <Filter>资源文件</Filter>
     </None>
     <None Include="res\unlock.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\CLOSE_BUTTON.BMP">
       <Filter>资源文件</Filter>
     </None>
   </ItemGroup>
