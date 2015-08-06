@@ -5,6 +5,8 @@
 #include "TabCtrl.h"
 #include "BetRecord.h"
 #include "SendRecord.h"
+
+#include "BalloonTip.h"
 // CP2PDlg ¶Ô»°¿ò
 
 class CP2PDlg : public CDialogBar
@@ -90,6 +92,7 @@ public:
 	void   ShowAllBetWinAndLoss();
 	void   ShowAddressBetWinAndLoss(CString addr);
 	void  GetAppAccountSomeMoney();
+	void AutoSendBet();
 private:
 	int                   m_pagecount;
 	int                   m_curpage;
@@ -104,4 +107,5 @@ public:
 	void       onShowLink();
 	CMFCLinkCtrl v_linkCtrl;
 	afx_msg void OnLbnDblclkListBonus();
+
 };

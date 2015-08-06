@@ -504,7 +504,8 @@ void CMortgageTardDlg::SendRedPacketComm(){
 	CString strrednum;
 	int redNum = 0;
 	GetDlgItem(IDC_EDIT_NUM)->GetWindowText(strrednum) ;
-	
+	redNum = atoi(strrednum);
+
 	string strContractData;
 	double money = strtod(strTxMoney,NULL);
 	CString nTemp;
