@@ -455,16 +455,16 @@ void CProgStatusBar::SetAppStepfee(int fuelrate)
 	{
 		return;
 	}
-	theApp.m_P2PBetCfg.SendBetFee = (theApp.m_p2pbetstep.SendBetStep/100+1)*fuelrate + 1000;
-	theApp.m_P2PBetCfg.AcceptBetnFee = (theApp.m_p2pbetstep.AcceptBetnStep/100+1)*fuelrate+ 1000;
-	theApp.m_P2PBetCfg.OpenBetnFee = (theApp.m_p2pbetstep.OpenBetnStep/100+1)*fuelrate+ 1000;
-	theApp.m_P2PBetCfg.GetAppAmountnFee = (theApp.m_p2pbetstep.GetAppAmountnStep/100+1)*fuelrate+ 1000;
-	theApp.m_P2PBetCfg.GetRechangeFee = (theApp.m_p2pbetstep.GetRechangeStep/100+1)*fuelrate+ 1000;
+	theApp.m_P2PBetCfg.SendBetFee = (theApp.m_p2pbetstep.SendBetStep/100+1)*fuelrate + 10000;
+	theApp.m_P2PBetCfg.AcceptBetnFee = (theApp.m_p2pbetstep.AcceptBetnStep/100+1)*fuelrate+ 10000;
+	theApp.m_P2PBetCfg.OpenBetnFee = (theApp.m_p2pbetstep.OpenBetnStep/100+1)*fuelrate+ 10000;
+	theApp.m_P2PBetCfg.GetAppAmountnFee = (theApp.m_p2pbetstep.GetAppAmountnStep/100+1)*fuelrate+ 10000;
+	theApp.m_P2PBetCfg.GetRechangeFee = (theApp.m_p2pbetstep.GetRechangeStep/100+1)*fuelrate+ 10000;
 
-	theApp.m_RedPacketCfg.SendRedPacketCommFee =  (theApp.m_redPackestep.SendRedPacketCommStep/100+1)*fuelrate+ 1000;
-	theApp.m_RedPacketCfg.AcceptRedPacketCommFee =  (theApp.m_redPackestep.AcceptRedPacketCommStep/100+1)*fuelrate+ 1000;
-	theApp.m_RedPacketCfg.SendRedPacketSpecailFee =  (theApp.m_redPackestep.SendRedPacketSpecailStep/100+1)*fuelrate+ 1000;
-	theApp.m_RedPacketCfg.AcceptRedPacketSpecailFee =  (theApp.m_redPackestep.AcceptRedPacketSpecailStep/100+1)*fuelrate+ 1000;
+	theApp.m_RedPacketCfg.SendRedPacketCommFee =  (theApp.m_redPackestep.SendRedPacketCommStep/100+1)*fuelrate+ 10000;
+	theApp.m_RedPacketCfg.AcceptRedPacketCommFee =  (theApp.m_redPackestep.AcceptRedPacketCommStep/100+1)*fuelrate+ 10000;
+	theApp.m_RedPacketCfg.SendRedPacketSpecailFee =  (theApp.m_redPackestep.SendRedPacketSpecailStep/100+1)*fuelrate+ 10000;
+	theApp.m_RedPacketCfg.AcceptRedPacketSpecailFee =  (theApp.m_redPackestep.AcceptRedPacketSpecailStep/100+1)*fuelrate+ 10000;
 }
 
 void CProgStatusBar::OnMouseMove(UINT nFlags, CPoint point)
