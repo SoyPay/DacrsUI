@@ -461,10 +461,10 @@ void CProgStatusBar::SetAppStepfee(int fuelrate)
 	theApp.m_P2PBetCfg.GetAppAmountnFee = (theApp.m_p2pbetstep.GetAppAmountnStep/100+1)*fuelrate+ 1000;
 	theApp.m_P2PBetCfg.GetRechangeFee = (theApp.m_p2pbetstep.GetRechangeStep/100+1)*fuelrate+ 1000;
 
-	theApp.m_redPackestep.SendRedPacketCommStep =  (theApp.m_redPackestep.SendRedPacketCommStep/100+1)*fuelrate+ 1000;
-	theApp.m_redPackestep.AcceptRedPacketCommStep =  (theApp.m_redPackestep.AcceptRedPacketCommStep/100+1)*fuelrate+ 1000;
-	theApp.m_redPackestep.SendRedPacketSpecailStep =  (theApp.m_redPackestep.SendRedPacketSpecailStep/100+1)*fuelrate+ 1000;
-	theApp.m_redPackestep.AcceptRedPacketSpecailStep =  (theApp.m_redPackestep.AcceptRedPacketSpecailStep/100+1)*fuelrate+ 1000;
+	theApp.m_RedPacketCfg.SendRedPacketCommFee =  (theApp.m_redPackestep.SendRedPacketCommStep/100+1)*fuelrate+ 1000;
+	theApp.m_RedPacketCfg.AcceptRedPacketCommFee =  (theApp.m_redPackestep.AcceptRedPacketCommStep/100+1)*fuelrate+ 1000;
+	theApp.m_RedPacketCfg.SendRedPacketSpecailFee =  (theApp.m_redPackestep.SendRedPacketSpecailStep/100+1)*fuelrate+ 1000;
+	theApp.m_RedPacketCfg.AcceptRedPacketSpecailFee =  (theApp.m_redPackestep.AcceptRedPacketSpecailStep/100+1)*fuelrate+ 1000;
 }
 
 void CProgStatusBar::OnMouseMove(UINT nFlags, CPoint point)
