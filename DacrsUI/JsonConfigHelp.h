@@ -153,7 +153,7 @@ public:
 	string  GetConfigRootStr(const string& strFilePath);
 	void GetNewestScriptData(CNewestScriptCfg &newScript);
 	void GetRedPacketStep(CRedPacketStepCfg &redPackestep);
-	void GetP2pBetStep(CP2PBetCfg &p2pbetstep);
+	void GetP2pBetStep(CP2PBetStepCfg &p2pbetstep);
 private:
 	void ReadMainCfgData(const Json::Value& root);
 	void ReadSesureTradeCfgData(const Json::Value& root);
@@ -186,6 +186,6 @@ private:
 	int              m_close;                     /// 0 提示关闭对话框 1 不提示关闭对话框并且隐藏 2不提示关闭对话框并且关闭钱包
 	CNewestScriptCfg m_newScript;
 	CRedPacketStepCfg m_redPackestep;
-	CP2PBetCfg        m_p2pbetstep;
+	CP2PBetStepCfg    m_p2pbetstep;
 };
 

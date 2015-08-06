@@ -2,7 +2,6 @@
 #include "RoundButton.h"
 #include "StaticTrans.h"
 #include "XProgressCtrl.h"
-
 // CProgStatusBar ¶Ô»°¿ò
 
 class CProgStatusBar : public CDialogBar
@@ -44,7 +43,7 @@ public:
 	void ShowLockCtrl();
 	void OnIniLockParam();
 	void ShowNetCount();
-;public:
+public:
 	BOOL        m_bProgressType;
 	int         m_ProgressMax  ;
 //	CProgressCtrl m_progress;
@@ -55,4 +54,9 @@ public:
 	bool   m_prosshiden;
 	CRect  m_bmplock;
 	CString netStr;
+	int  m_connectCount;
+public:
+	void SetAppStepfee(int fuelrate);
+	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+
 };

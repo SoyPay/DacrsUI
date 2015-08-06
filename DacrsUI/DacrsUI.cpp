@@ -949,6 +949,7 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 			m_Blockchanged.high = msgValue["high"].asInt64() ;
 			m_Blockchanged.hash = msgValue["hash"].asString();
 			m_Blockchanged.connections = msgValue["connections"].asInt();
+			m_Blockchanged.fuelrate = msgValue["fuelrate"].asInt();
 
 			string strJson = m_Blockchanged.ToJson();
 			CPostMsg postmsg(MSG_USER_UP_PROGRESS,0);
@@ -1276,6 +1277,9 @@ void  CDacrsUIApp::ParseUIConfigFile(const string& strExeDir){
 		CJsonConfigHelp::getInstance()->GetRedPacketCfgData(m_RedPacketCfg);
 		CJsonConfigHelp::getInstance()->GetClosConfig(m_reminder);
 		CJsonConfigHelp::getInstance()->GetNewestScriptData(m_neststcriptid);
+		CJsonConfigHelp::getInstance()->GetP2pBetStep(m_p2pbetstep);
+		CJsonConfigHelp::getInstance()->GetRedPacketStep(m_redPackestep);
+
 		CNetParamCfg netParm;
 		CJsonConfigHelp::getInstance()->GetNetParamCfgData(netParm);
 		m_severip = netParm.server_ip;

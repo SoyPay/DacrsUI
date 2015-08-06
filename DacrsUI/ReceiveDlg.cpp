@@ -292,7 +292,7 @@ void CReceiveDlg::OnBnClickedButtonSignAccount()
 			::MessageBox( this->GetSafeHwnd() ,StrShow , _T("ÌבÊ¾") , MB_ICONINFORMATION ) ;
 			return;
 		}
-		theApp.m_strAddress.Format(_T("%s") ,te.address ) ;
+		theApp.m_strAddress.Format(_T("%s") ,te.address.c_str() ) ;
 		CSignAccountsDlg dlg;
 		dlg.DoModal();
 

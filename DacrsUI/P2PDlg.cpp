@@ -1464,11 +1464,12 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 	 double result = winer-loser;
 	 return result;
  }
+
  void CP2PDlg::OnBnClickedButtonRefresh2()
  {
 	 // TODO: 在此添加控件通知处理程序代码
 	 ShowListItem(m_seltab);
-	  ShowAllBetWinAndLoss();
+	 ShowAllBetWinAndLoss();
  }
 
 
@@ -1724,4 +1725,100 @@ void  CP2PDlg::GetAppAccountSomeMoney()
 		strTip = "提现失败!" ;
 	}
 	::MessageBox( this->GetSafeHwnd() ,strTip.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+}
+void  CP2PDlg::AutoSendBet()
+{
+	if (m_PoolList.size() != 0)
+	{
+		return;
+	}
+	CString addr;
+	for (int i =0;i<3;i++)
+	{
+		CString strTxMoney;
+		if (i == 0)
+		{
+			strTxMoney = "10000";
+		}
+		if (i == 1)
+		{
+			strTxMoney = "500";
+		}
+		if (i == 2)
+		{
+			strTxMoney = "200";
+		}
+		CString strMoney;
+		((CStatic*)GetDlgItem(IDC_STATIC_BALANCE))->GetWindowText(strMoney);
+		double balance =strtod(strMoney,NULL);
+
+		if (strtod(strTxMoney,NULL) > balance)
+		{
+			//::MessageBox( this->GetSafeHwnd() ,_T("投注金额大于账户余额") , _T("提示") , MB_ICONINFORMATION ) ;
+			continue ;
+		}
+
+		int rewardnum =(rand()%2+1);
+		//// 查询地址是否激活
+		CString strCond;
+
+		char strTemp[34];
+		memset(strTemp , 0 , 34 );
+		memcpy(strTemp , UiFun::Rnd32() , 32 );
+		strTemp[32] =rewardnum ;
+
+
+		string temp(strTemp,strTemp+33);
+		int aa = temp.length() ;
+		string strCommand;
+		strCommand = strprintf("%s %s","gethash" , strTemp );
+		string strShowData ;
+
+		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
+		int pos = strShowData.find("hash");
+		if ( pos < 0 ) return ;
+
+		Json::Reader reader;  
+		Json::Value root; 
+		if (!reader.parse(strShowData, root)) 
+			return  ;
+
+		string  strHash = root["hash"].asString() ;
+
+		string strContractData;
+		string strRamdHash = CSoyPayHelp::getInstance()->GetReverseHash(strHash);
+
+		double money = strtod(strTxMoney,NULL);
+		CString nTemp;
+		nTemp.Format(_T("%.8f"),money);
+		strContractData = m_P2PBetHelp.PacketP2PSendContract((INT64)REAL_MONEY(strtod(nTemp,NULL)),OUT_HEIGHT ,strRamdHash );
+
+		INT64 strTxFee = theApp.m_P2PBetCfg.SendBetFee;
+		if (  strTxFee < 10000  ) {
+			::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
+			return ;
+		}
+
+		string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_betScritptid,addr.GetString(),strContractData,0,strTxFee,0);
+		strShowData = "";
+		CSoyPayHelp::getInstance()->SendContacrRpc(strData.c_str(),strShowData);
+		if (strShowData == "")
+		{
+			return;
+		}
+		if (!reader.parse(strShowData, root)) 
+			return  ;
+		BOOL bRes = FALSE ;
+		CString strTip;
+		pos = strShowData.find("hash");
+
+		if ( pos >=0 ) {
+			//插入到交易记录数据库
+			string strHash = root["hash"].asString();
+			CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_REVTRANSACTION);
+			postmsg.SetData(strHash);
+			theApp.m_MsgQueue.push(postmsg);
+		}
+	}
+
 }

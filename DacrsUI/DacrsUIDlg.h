@@ -113,7 +113,9 @@ public:
 	void WriteExportWalletAndBookAddr(CString fileName);
     /// 自定义关闭程序消息
 	afx_msg void OnCloseApp() ; 
+	void OnCloseWriteAppFee();
 public:
 	CBalloonTip*  m_BalloonTip;
 	afx_msg void OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized);
+	CMyQueue m_barpoomesg;
 };
