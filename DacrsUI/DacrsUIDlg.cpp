@@ -698,7 +698,8 @@ void  CDacrsUIDlg::ClosWallet()
 	}else if (theApp.m_reminder == 1)
 	{
 		ToTray();                              /// 最小化
-	}else if (theApp.m_reminder == 2){
+	}else if (theApp.m_reminder == 2){        /// 关闭程序
+		OnCloseWriteAppFee();
 		BeginWaitCursor();
 		if ( NULL != m_pOutGifDlg ) {
 			CRect rc;
@@ -1294,6 +1295,7 @@ void CDacrsUIDlg::OnUpdataState(CCmdUI *pCmdUI)
 
 void  CDacrsUIDlg::ClosWalletWind()
 {
+	   OnCloseWriteAppFee();
 		BeginWaitCursor();
 		if ( NULL != m_pOutGifDlg ) {
 			CRect rc;
