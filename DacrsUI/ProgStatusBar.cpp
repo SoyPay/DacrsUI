@@ -470,42 +470,42 @@ void CProgStatusBar::SetAppStepfee(int fuelrate)
 void CProgStatusBar::OnMouseMove(UINT nFlags, CPoint point)
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
-	//CRect temp = m_bmpsig;
-	////ClientToScreen(&temp);
-	//CDacrsUIDlg *pDlg = (CDacrsUIDlg*)(theApp.m_pMainWnd);
-	//if (temp.PtInRect(point))
-	//{
-	//	RECT ret;
-	//	GetWindowRect(&ret);
+	CRect temp = m_bmpsig;
+	//ClientToScreen(&temp);
+	CDacrsUIDlg *pDlg = (CDacrsUIDlg*)(theApp.m_pMainWnd);
+	if (temp.PtInRect(point))
+	{
+		RECT ret;
+		GetWindowRect(&ret);
 
 
-	//	LOGFONT lf;
-	//	::ZeroMemory (&lf, sizeof (lf));
-	//	lf.lfHeight = 11;
-	//	lf.lfWeight = FW_BOLD;
-	//	lf.lfUnderline = FALSE;
-	//	strcpy((char*)lf.lfFaceName, "宋体");
+		LOGFONT lf;
+		::ZeroMemory (&lf, sizeof (lf));
+		lf.lfHeight = 11;
+		lf.lfWeight = FW_BOLD;
+		lf.lfUnderline = FALSE;
+		strcpy((char*)lf.lfFaceName, "宋体");
 
-	//	string strShow = strprintf("网络连接数:%d",m_connectCount);
-	//	if (IsWindowVisible())
-	//	{
-	//		pDlg->m_BalloonTip=CBalloonTip::Show(
-	//			CPoint(ret.right -90, ret.bottom-20),         // Point on the screen where the tip will be shown
-	//			CSize(85, 60),          // Size of the total rectangle encompassing the balloon 
-	//			_T(strShow.c_str()), // Message to be shown in the balloon
-	//			lf,                               // LOGFONT structure for font properties 
-	//			30,                 // Time in seconds to show the balloon
-	//			TRUE ,             // TRUE  == Balloon is up(Balloon Tip is down) 
-	//			 FALSE // ==  Balloon is down(Balloon Tip is up)
-	//			);
-	//	 }
-	//}else if (pDlg->m_BalloonTip != NULL && pDlg->m_BalloonTip->nBalloonInstances ==1){
-	//	int pos = pDlg->m_BalloonTip->m_strMessage.Find("网络连接");
-	//	if (pos >=0)
-	//	{
-	//		CBalloonTip::Hide(pDlg->m_BalloonTip);
-	//	}
-	//}
+		string strShow = strprintf("当前网络连接数:%d",m_connectCount);
+		if (IsWindowVisible()&& pDlg->m_BalloonTip->nBalloonInstances !=1)
+		{
+			pDlg->m_BalloonTip=CBalloonTip::Show(
+				CPoint(ret.right -50, ret.bottom),         // Point on the screen where the tip will be shown
+				CSize(85, 60),          // Size of the total rectangle encompassing the balloon 
+				_T(strShow.c_str()), // Message to be shown in the balloon
+				lf,                               // LOGFONT structure for font properties 
+				30,                 // Time in seconds to show the balloon
+				FALSE ,             // TRUE  == Balloon is up(Balloon Tip is down) 
+				 FALSE // ==  Balloon is down(Balloon Tip is up)
+				);
+		 }
+	}else if (pDlg->m_BalloonTip != NULL && pDlg->m_BalloonTip->nBalloonInstances ==1){
+		int pos = pDlg->m_BalloonTip->m_strMessage.Find("网络连接");
+		if (pos >=0)
+		{
+			CBalloonTip::Hide(pDlg->m_BalloonTip);
+		}
+	}
 
 	CDialogBar::OnMouseMove(nFlags, point);
 }
