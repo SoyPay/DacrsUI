@@ -344,6 +344,9 @@ int CDacrsUIDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	//显示主界面
 	ShowDialog(CMainDlg::IDD) ;
 	theApp.m_dlgCreatfinsh = TRUE;
+
+	SetTimer( 0x11 , 30000 , NULL); 
+	
 	return 0;
 }
 void CDacrsUIDlg::ShowDialog(UINT dlgid) 
@@ -777,6 +780,14 @@ void CDacrsUIDlg::OnTimer(UINT_PTR nIDEvent)
 		theApp.m_bOutApp = TRUE ;
 		CloseThread();
 		CloseApp();
+	}else if (0x11  == nIDEvent)
+	{
+		CPostMsg Postmsg ;
+		if (m_BalloonTip!= NULL && CBalloonTip::nBalloonInstances == 0 && m_barpoomesg.pop(Postmsg))
+		{
+			string message = Postmsg.GetData();
+			 ::SendMessage(theApp.m_pMainWnd->m_hWnd,WM_POPUPBAR,0,(LPARAM)message.c_str());	
+		}
 	}
 	CDialogEx::OnTimer(nIDEvent);
 }
@@ -884,7 +895,7 @@ void CDacrsUIDlg::BakWallet()
 void CDacrsUIDlg::ToTray() 
 { 
 	
-	if(m_BalloonTip != NULL)
+	if(m_BalloonTip != NULL&& m_BalloonTip->nBalloonInstances==1)
 	{
 		CBalloonTip::Hide(m_BalloonTip);
 	}
@@ -946,7 +957,7 @@ LRESULT CDacrsUIDlg::OnShowTask(WPARAM wParam,LPARAM lParam)
 				this->ShowWindow(SW_SHOW);//简单的显示主窗口完事儿 
 				SetWindowPos(&this->wndNoTopMost,0,0,0,0, SWP_NOMOVE | SWP_NOSIZE);
 
-				if(m_BalloonTip != NULL)
+				if(m_BalloonTip != NULL&& m_BalloonTip->nBalloonInstances==1)
 				{
 					CBalloonTip::Hide(m_BalloonTip);
 				}
@@ -1299,6 +1310,11 @@ void CDacrsUIDlg::SetAppID()
 	CSetAppId dlg;
 	if (dlg.DoModal() == IDOK)
 	{
+		CPostMsg p2ppmsg(MSG_USER_P2P_UI,WM_UP_ADDRESS);
+		theApp.m_MsgQueue.push(p2ppmsg);
+
+		CPostMsg redmsg(MSG_USER_REDPACKET_UI,WM_UP_ADDRESS);
+		theApp.m_MsgQueue.push(redmsg);
 		return;
 	}
 	return;
@@ -1375,12 +1391,29 @@ void CDacrsUIDlg::RestoreDefault()
 	}
 
 	theApp.ParseUIConfigFile(theApp.str_InsPath);
+
+	CPostMsg p2ppmsg(MSG_USER_P2P_UI,WM_UP_ADDRESS);
+	theApp.m_MsgQueue.push(p2ppmsg);
+
+	CPostMsg redmsg(MSG_USER_REDPACKET_UI,WM_UP_ADDRESS);
+	theApp.m_MsgQueue.push(redmsg);
 	MessageBox(_T("恢复默认设置成功"));
 }
 
 LRESULT CDacrsUIDlg::OnPopupBar(WPARAM wParam,LPARAM lParam) 
 {
 	char* message = (char*)(lParam);
+	string strmessage =strprintf("%s",message);
+
+	if (m_BalloonTip!= NULL && CBalloonTip::nBalloonInstances != 0)
+	{
+		CPostMsg Postmsg ;
+		Postmsg.SetData(strmessage);
+		m_barpoomesg.push(Postmsg);
+		return 0;
+	}
+
+
 	RECT ret;
 	GetWindowRect(&ret);
 
@@ -1420,35 +1453,88 @@ LRESULT CDacrsUIDlg::OnPopupBar(WPARAM wParam,LPARAM lParam)
 	return 0;
 }
 
-//void CDacrsUIDlg::OnNcLButtonDown(UINT nHitTest, CPoint point)
-//{
-//	// TODO: 在此添加消息处理程序代码和/或调用默认值
-//
-//	CRect   rect; 
-//	GetWindowRect(&rect); 
-//	if   (rect.PtInRect(point)) 
-//	{ 
-//		if (m_BalloonTip != NULL)
-//		{
-//			CBalloonTip::Hide(m_BalloonTip);
-//		}
-//		return; 
-//	} 
-//	CDialogEx::OnNcLButtonDown(nHitTest, point);
-//}
-
 
 void CDacrsUIDlg::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
 {
 
-	if (nState == 0)
+	CDialogEx::OnActivate(nState, pWndOther, bMinimized);
+	if (nState == WA_INACTIVE )
 	{
-		if (m_BalloonTip != NULL)
+		if (m_BalloonTip != NULL && m_BalloonTip->nBalloonInstances==1)
 		{
 			CBalloonTip::Hide(m_BalloonTip);
 		}
 	}
-	CDialogEx::OnActivate(nState, pWndOther, bMinimized);
+	
 
 	// TODO: 在此处添加消息处理程序代码
+}
+
+/// 程序关闭的时候将费用保留到配置文件中
+void CDacrsUIDlg::OnCloseWriteAppFee()
+{
+	if (PathFileExistsA(theApp.str_InsPath.c_str()))
+	{
+		string configpath = "";
+		configpath = strprintf("%s",theApp.str_InsPath);
+		configpath+= strprintf("\\%s","dacrsclient.conf");
+		string strFile = CJsonConfigHelp::getInstance()->GetConfigRootStr(configpath);
+		if (strFile == _T(""))
+		{
+			return;
+		}
+		Json::Reader reader;  
+		Json::Value root; 
+
+		if (!reader.parse(strFile, root)) 
+			return;
+
+		int pos =strFile.find("p2pbet");
+		if (pos>=0)
+		{
+			Json::Value setbet = root["p2pbet"];
+			ASSERT(!setbet.isNull());
+			setbet["SendBetFee"]= theApp.m_P2PBetCfg.SendBetFee;
+			setbet["AcceptBetnFee"]= theApp.m_P2PBetCfg.AcceptBetnFee;
+			setbet["OpenBetnFee"]= theApp.m_P2PBetCfg.OpenBetnFee;
+			setbet["GetAppAmountnFee"]= theApp.m_P2PBetCfg.GetAppAmountnFee;
+			setbet["GetRechangeFee"]= theApp.m_P2PBetCfg.GetRechangeFee;
+			root["p2pbet"]=setbet;
+		}else{
+			Json::Value setbet ;
+			setbet["SendBetFee"]= theApp.m_P2PBetCfg.SendBetFee;
+			setbet["AcceptBetnFee"]= theApp.m_P2PBetCfg.AcceptBetnFee;
+			setbet["OpenBetnFee"]= theApp.m_P2PBetCfg.OpenBetnFee;
+			setbet["GetAppAmountnFee"]= theApp.m_P2PBetCfg.GetAppAmountnFee;
+			setbet["GetRechangeFee"]= theApp.m_P2PBetCfg.GetRechangeFee;
+			root["p2pbet"]=setbet;
+		}
+
+		pos =strFile.find("redpacket");
+		if (pos>=0)
+		{
+			Json::Value setred = root["redpacket"];
+			ASSERT(!setred.isNull());
+			setred["sendredcommFee"]= theApp.m_RedPacketCfg.SendRedPacketCommFee;
+			setred["acceptredcommFee"]= theApp.m_RedPacketCfg.AcceptRedPacketCommFee;
+			setred["sendredspecalFee"]= theApp.m_RedPacketCfg.SendRedPacketSpecailFee;
+			setred["acceptredspecalFee"]= theApp.m_RedPacketCfg.AcceptRedPacketSpecailFee;
+			root["redpacket"]=setred;
+		}else{
+			Json::Value setred ;
+			setred["sendredcommFee"]= theApp.m_RedPacketCfg.SendRedPacketCommFee;
+			setred["acceptredcommFee"]= theApp.m_RedPacketCfg.AcceptRedPacketCommFee;
+			setred["sendredspecalFee"]= theApp.m_RedPacketCfg.SendRedPacketSpecailFee;
+			setred["acceptredspecalFee"]= theApp.m_RedPacketCfg.AcceptRedPacketSpecailFee;
+			root["redpacket"]=setred;
+		}
+
+		CStdioFile  File;
+		string strpath = theApp.str_InsPath;
+		strpath+="\\dacrsclient.conf";
+		File.Open((LPCTSTR)(LPSTR)strpath.c_str(),CFile::modeWrite | CFile::modeCreate); 
+		string strfile = root.toStyledString();
+		File.WriteString(strfile.c_str());
+		File.Close();
+	}
 }

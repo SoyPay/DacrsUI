@@ -42,11 +42,12 @@ END_MESSAGE_MAP()
  Revisions : none
 ----------------------------------------------------------------------------*/
  
-CBalloonTip::CBalloonTip(CString strMessage, LOGFONT lf, BOOL bBalloonUp)
+CBalloonTip::CBalloonTip(CString strMessage, LOGFONT lf, BOOL bBalloonUp,BOOL Bpic)
 {
  
     m_strMessage       = strMessage;
     m_bBalloonUp       = bBalloonUp;
+	m_showpic          = Bpic;
      
     VERIFY(m_fontBalloonText.CreateFontIndirect(&lf));
  
@@ -106,7 +107,7 @@ CBalloonTip::~CBalloonTip()
  Revisions : none
 ----------------------------------------------------------------------------*/
  static   long rwith = 0;
-CBalloonTip* CBalloonTip::Show(CPoint pt, CSize size, CString strMessage, LOGFONT lf, UINT nSecs, BOOL bBalloonUp)
+CBalloonTip* CBalloonTip::Show(CPoint pt, CSize size, CString strMessage, LOGFONT lf, UINT nSecs, BOOL bBalloonUp,BOOL Bpic)
 {
  
 	if( CBalloonTip::nBalloonInstances != 0) // No window creation if already one instance of the class
@@ -116,7 +117,7 @@ CBalloonTip* CBalloonTip::Show(CPoint pt, CSize size, CString strMessage, LOGFON
      
 	}
  
-	CBalloonTip* pBalloonTip = new CBalloonTip(strMessage, lf, bBalloonUp);
+	CBalloonTip* pBalloonTip = new CBalloonTip(strMessage, lf, bBalloonUp,Bpic);
      
 	CBalloonTip::nBalloonInstances = 1; // Only one instance of window possible.
          
@@ -279,8 +280,8 @@ void CBalloonTip::OnTimer(UINT nIDEvent)
  
 void CBalloonTip::OnLButtonDown(UINT nFlags, CPoint point)
 {
- 
-	if (point.x >= m_close.left && point.x <= m_close.right && point.y >= m_close.top && point.y <= m_close.bottom)
+    
+	if (point.x >= m_close.left && point.x <= m_close.right && point.y >= m_close.top && point.y <= m_close.bottom && m_showpic)
 	{
 		KillTimer(ID_TIMER);
 		DestroyWindow();
@@ -314,8 +315,8 @@ void CBalloonTip::OnLButtonDown(UINT nFlags, CPoint point)
 void CBalloonTip::OnRButtonDown(UINT nFlags, CPoint point)
 {
  
-    KillTimer(ID_TIMER);
-    DestroyWindow();
+  //  KillTimer(ID_TIMER);
+  //  DestroyWindow();
  
 }
  
@@ -526,27 +527,30 @@ void CBalloonTip::OnPaint()
         dc.DrawText(m_strMessage, m_rectText, DT_LEFT | DT_WORDBREAK);//DT_CENTER
      }
      
-	CBitmap          m_bmp;
-	m_bmp.LoadBitmap(IDB_BITMAP_TIPCLOSE);
+	if (m_showpic)
+	{
+		CBitmap          m_bmp;
+		m_bmp.LoadBitmap(IDB_BITMAP_TIPCLOSE);
 
 
-	BITMAP bm1;
-	m_bmp.GetObject(sizeof(BITMAP),&bm1);
+		BITMAP bm1;
+		m_bmp.GetObject(sizeof(BITMAP),&bm1);
 
-	int width = bm1.bmWidth; //图片的宽度（逻辑单位）。 
-	int height=	bm1.bmHeight; ////图片的高度（逻辑单位）。
+		int width = bm1.bmWidth; //图片的宽度（逻辑单位）。 
+		int height=	bm1.bmHeight; ////图片的高度（逻辑单位）。
 
-	CDC memDC;  
-	memDC.CreateCompatibleDC(&dc);  
-	CRect rc;  
-	GetClientRect(&rc);  
+		CDC memDC;  
+		memDC.CreateCompatibleDC(&dc);  
+		CRect rc;  
+		GetClientRect(&rc);  
 
-	HBITMAP hOldbmp = (HBITMAP)memDC.SelectObject(m_bmp); 
-	dc.BitBlt(rwith -35, 5, width,height, &memDC, 0, 0, SRCCOPY); 
-	CRect close(rwith -35,5, rc.Width(), rc.Height());
-	m_close = close;
-	memDC.SelectObject(hOldbmp); 
-	memDC.DeleteDC(); 
+		HBITMAP hOldbmp = (HBITMAP)memDC.SelectObject(m_bmp); 
+		dc.BitBlt(rwith -35, 5, width,height, &memDC, 0, 0, SRCCOPY); 
+		CRect close(rwith -35,5, rc.Width(), rc.Height());
+		m_close = close;
+		memDC.SelectObject(hOldbmp); 
+		memDC.DeleteDC(); 
+	}
 
     // Restore the DC to its oroginal state
     dc.SelectObject(pFont);

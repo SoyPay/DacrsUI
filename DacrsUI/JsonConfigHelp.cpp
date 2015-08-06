@@ -399,17 +399,17 @@ void CJsonConfigHelp::ReadP2pBetStep(const Json::Value &root)
 {
 	Json::Value p2pbet = root["p2pbetstep"];
 	ASSERT(!p2pbet.isNull());
-	m_p2pbetstep.AcceptBetnFee = p2pbet["Acceptstep"].asInt64();
-	m_p2pbetstep.GetAppAmountnFee = p2pbet["GetAppAmountnstep"].asInt64();
-	m_p2pbetstep.GetRechangeFee = p2pbet["GetRechangestep"].asInt64();
-	m_P2PBetCfg.OpenBetnFee = p2pbet["OpenBetnstep"].asInt64();
-	m_P2PBetCfg.SendBetFee = p2pbet["SendBetstep"].asInt64();
+	m_p2pbetstep.AcceptBetnStep = p2pbet["Acceptstep"].asInt64();
+	m_p2pbetstep.GetAppAmountnStep = p2pbet["GetAppAmountnstep"].asInt64();
+	m_p2pbetstep.GetRechangeStep = p2pbet["GetRechangestep"].asInt64();
+	m_p2pbetstep.OpenBetnStep= p2pbet["OpenBetnstep"].asInt64();
+	m_p2pbetstep.SendBetStep = p2pbet["SendBetstep"].asInt64();
 }
 void CJsonConfigHelp::GetRedPacketStep(CRedPacketStepCfg &redPackestep)
 {
 	redPackestep = m_redPackestep;
 }
-void CJsonConfigHelp::GetP2pBetStep(CP2PBetCfg &p2pbetstep)
+void CJsonConfigHelp::GetP2pBetStep(CP2PBetStepCfg &p2pbetstep)
 {
 	p2pbetstep = m_p2pbetstep;
 }

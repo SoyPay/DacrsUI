@@ -112,6 +112,10 @@ public:
 	CP2PBetCfg		m_P2PBetCfg;
 	CRedPacketCfg   m_RedPacketCfg;
 	CNewestScriptCfg m_neststcriptid;
+
+	CRedPacketStepCfg m_redPackestep;
+	CP2PBetStepCfg m_p2pbetstep;
+	
 public:
 	void         OnInitList();   //≥ı ºªØlist
 	int          SendPostThread(DWORD msgtype);

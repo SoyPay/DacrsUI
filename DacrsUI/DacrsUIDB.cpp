@@ -1051,7 +1051,7 @@ void CDacrsUIApp::PopupContactBalloonTip(uistruct::REVTRANSACTION_t tx,int appty
 		string strCond;
 		strCond = strprintf(" address='%s' ", tx.addr);
 		int nItem =  theApp.m_SqliteDeal.GetTableCountItem(_T("t_wallet_address"), strCond) ;
-		if (nItem != 0)
+		if (nItem == 0)
 		{
 			return;
 		}
@@ -1139,15 +1139,15 @@ void CDacrsUIApp::PopupContactBalloonTip(uistruct::REVTRANSACTION_t tx,int appty
 			memset(&redpacket,0,sizeof(RED_PACKET));
 			memcpy(&redpacket, &vTemp[0],sizeof(SEND_DATA));
 
-			strShow += strprintf("金额:-%.8f",(redpacket.money*1.0)/COIN);
-			strShow += strprintf("类别:%s","发红包");
-			strShow += strprintf("地址:%s",tx.addr);
+			strShow += strprintf("金额:-%.8f\r\n",(redpacket.money*1.0)/COIN);
+			strShow += strprintf("类别:%s","发红包\r\n");
+			strShow += strprintf("地址:%s",tx.regid);
 		}else if (txtype ==2 || txtype ==4)
 		{
 			if(txtype ==2)
-				strShow = "抢普通红包交易\r\n";
+				strShow = "普通红包交易\r\n";
 			if(txtype ==4)
-				strShow = "抢接龙红包交易\r\n";
+				strShow = "接龙红包交易\r\n";
 
 			SYSTEMTIME curTime =UiFun::Time_tToSystemTime(tx.confirmedtime);
 			strShow += strprintf("日期: %04d-%02d-%02d %02d:%02d:%02d\r\n",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
@@ -1158,11 +1158,11 @@ void CDacrsUIApp::PopupContactBalloonTip(uistruct::REVTRANSACTION_t tx,int appty
 			theApp.m_SqliteDeal.GetRedPacketGrabItem(conditon,&redpacket);
 			if (redpacket.send_hash != "")
 			{
-				strShow += strprintf("金额:+%.8f",redpacket.lucky_amount);
+				strShow += strprintf("金额:+%.8f\r\n",redpacket.lucky_amount);
 			
 			}
-			strShow += strprintf("类别:%s","发红包");
-			strShow += strprintf("地址:%s",tx.addr);
+			strShow += strprintf("类别:%s","抢红包\r\n");
+			strShow += strprintf("地址:%s",tx.regid);
 		 }
 
 	}
@@ -1172,7 +1172,7 @@ void CDacrsUIApp::PopupContactBalloonTip(uistruct::REVTRANSACTION_t tx,int appty
 		string strCond;
 		strCond = strprintf(" address='%s' ", tx.addr);
 		int nItem =  theApp.m_SqliteDeal.GetTableCountItem(_T("t_wallet_address"), strCond) ;
-		if (nItem != 0)
+		if (nItem == 0)
 		{
 			return;
 		}
@@ -1193,7 +1193,7 @@ void CDacrsUIApp::PopupContactBalloonTip(uistruct::REVTRANSACTION_t tx,int appty
 				SYSTEMTIME curTime =UiFun::Time_tToSystemTime(tx.confirmedtime);
 				strShow += strprintf("日期: %04d-%02d-%02d %02d:%02d:%02d\r\n",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
 				strShow+=strprintf("金额:  %.8f\r\n",tx.money );
-				strShow+=strprintf("地址:  %s\r\n",tx.addr );
+				strShow+=strprintf("地址:  %s\r\n",tx.regid );
 			}else if (vTemp[1] == 0x03)   /// 提现
 			{
 				SYSTEMTIME curTime =UiFun::Time_tToSystemTime(tx.confirmedtime);
@@ -1203,7 +1203,7 @@ void CDacrsUIApp::PopupContactBalloonTip(uistruct::REVTRANSACTION_t tx,int appty
 					APPACC drawtx;
 					memcpy(&drawtx, &vTemp[0],sizeof(APPACC));
 					strShow+=strprintf("金额:  %.8f\r\n",tx.money );
-					strShow+=strprintf("地址:  %s\r\n",tx.addr );
+					strShow+=strprintf("地址:  %s\r\n",tx.regid );
 				}
 			}
 		}
