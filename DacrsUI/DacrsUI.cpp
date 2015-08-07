@@ -11,6 +11,10 @@
 #include "StartProgress.h"
 #include "WalletPassPhrase.h"
 
+#include  <io.h>
+#include  <stdio.h>
+#include  <stdlib.h>
+
 #include <afxsock.h>
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -172,6 +176,24 @@ BOOL CDacrsUIApp::InitInstance()
 		m_uirpcport = tempuiport;
 	}
 
+	string strSeverPath = strprintf("%s\\dacrs-d.exe",str_InsPath);
+
+	if (PathIsDirectory(strSeverPath.c_str()))
+	{
+		::CreateDirectory(strSeverPath.c_str(), NULL);
+		::RemoveDirectory(strSeverPath.c_str());
+		if( (_access( strSeverPath.c_str(), 0 )) == -1 )
+		{
+			::MessageBox( NULL , _T("dacrs-d 文件不存在,请重新启动钱包\r\n") , "Error" , MB_ICONERROR) ;
+			exit(1);
+		}
+	}
+	/// 判断文件是否存在
+	 if( (_access( strSeverPath.c_str(), 0 )) == -1 )
+	{
+		::MessageBox( NULL , _T("dacrs-d 文件不存在,请重新下载\r\n") , "Error" , MB_ICONERROR) ;
+		exit(1);
+	}
 	//启动服务程序
 	StartSeverProcess(str_InsPath);
 	m_bServerState = true;
