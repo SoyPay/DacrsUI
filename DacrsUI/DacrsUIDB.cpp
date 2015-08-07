@@ -1089,7 +1089,7 @@ void CDacrsUIApp::PopupContactBalloonTip(uistruct::REVTRANSACTION_t tx,int appty
 					if (pPoolItem.content[32] != pPoolItem.guess_num)
 					{
 						strShow +="(恭喜赢了)\r\n" ;
-						amount=strprintf("+%.8f\r\n",pPoolItem.amount);
+						amount=strprintf("金额:+%.8f\r\n",pPoolItem.amount);
 					}else{
 						strShow +="(输了)\r\n" ;
 						amount=strprintf("金额:-%.8f\r\n",pPoolItem.amount);
@@ -1101,7 +1101,7 @@ void CDacrsUIApp::PopupContactBalloonTip(uistruct::REVTRANSACTION_t tx,int appty
 					if (pPoolItem.content[32] == pPoolItem.guess_num)
 					{
 						strShow +="(恭喜赢了)\r\n" ;
-						amount=strprintf("+%.8f\r\n",pPoolItem.amount);
+						amount=strprintf("金额:+%.8f\r\n",pPoolItem.amount);
 					}else{
 						strShow +="(输了)\r\n" ;
 						amount=strprintf("金额:-%.8f\r\n",pPoolItem.amount);
@@ -1193,6 +1193,7 @@ void CDacrsUIApp::PopupContactBalloonTip(uistruct::REVTRANSACTION_t tx,int appty
 				SYSTEMTIME curTime =UiFun::Time_tToSystemTime(tx.confirmedtime);
 				strShow += strprintf("日期: %04d-%02d-%02d %02d:%02d:%02d\r\n",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
 				strShow+=strprintf("金额:  %.8f\r\n",tx.money );
+				strShow+=strprintf("类别:  %s\r\n","充值" );
 				strShow+=strprintf("地址:  %s\r\n",tx.regid );
 			}else if (vTemp[1] == 0x03)   /// 提现
 			{
@@ -1203,6 +1204,7 @@ void CDacrsUIApp::PopupContactBalloonTip(uistruct::REVTRANSACTION_t tx,int appty
 					APPACC drawtx;
 					memcpy(&drawtx, &vTemp[0],sizeof(APPACC));
 					strShow+=strprintf("金额:  %.8f\r\n",tx.money );
+					strShow+=strprintf("类别:  %s\r\n","提现" );
 					strShow+=strprintf("地址:  %s\r\n",tx.regid );
 				}
 			}
