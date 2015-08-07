@@ -1583,6 +1583,7 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 	 case 1:
 		 OnBnClickedButtonRefresh2();
 		 OnBnClickedButtonRefresh1();
+	//	 AutoSendBet();
 		 break;
 	 default:
 		 break;
@@ -1732,7 +1733,7 @@ void  CP2PDlg::AutoSendBet()
 	{
 		return;
 	}
-	CString addr;
+	CString addr ="38215-1";
 	for (int i =0;i<3;i++)
 	{
 		CString strTxMoney;
@@ -1742,11 +1743,11 @@ void  CP2PDlg::AutoSendBet()
 		}
 		if (i == 1)
 		{
-			strTxMoney = "500";
+			strTxMoney = "1000";
 		}
 		if (i == 2)
 		{
-			strTxMoney = "200";
+			strTxMoney = "500";
 		}
 		CString strMoney;
 		((CStatic*)GetDlgItem(IDC_STATIC_BALANCE))->GetWindowText(strMoney);
@@ -1817,6 +1818,51 @@ void  CP2PDlg::AutoSendBet()
 			string strHash = root["hash"].asString();
 			CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_REVTRANSACTION);
 			postmsg.SetData(strHash);
+			theApp.m_MsgQueue.push(postmsg);
+		}
+
+		if ( pos >=0 ) {
+			bRes = TRUE ;
+			//strTip.Format( _T("恭喜发送赌约成功!\n%s") , root["hash"].asCString() ) ;
+			strTip.Format( _T("恭喜发送成功，请等待1-2分钟确认交易\n")) ;
+		}else{
+			strTip.Format( _T("发送赌约失败!") ) ;
+		}
+
+		//保存到数据库
+		if ( bRes ) {
+			uistruct::P2P_QUIZ_RECORD_t p2pbetrecord ;
+			memset(&p2pbetrecord , 0 , sizeof(uistruct::P2P_QUIZ_RECORD_t));
+			SYSTEMTIME curTime ;
+			memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
+			GetLocalTime( &curTime ) ;
+			string strSendTime;
+			strSendTime= strprintf("%04d-%02d-%02d %02d:%02d:%02d",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+			p2pbetrecord.send_time = UiFun::SystemTimeToTimet(curTime);
+			p2pbetrecord.time_out  = OUT_HEIGHT ;
+			p2pbetrecord.tx_hash = root["hash"].asString();
+			p2pbetrecord.left_addr = strprintf("%s",addr);
+			p2pbetrecord.amount = strtod(strTxMoney,NULL) ;
+			memcpy(p2pbetrecord.content ,strTemp , sizeof(p2pbetrecord.content));
+
+			p2pbetrecord.actor  = 0 ;
+			p2pbetrecord.state  = 0 ;
+			//插入到数据库
+			string strSourceData;
+			strSourceData = strprintf("'%s','%s','%d','%s' , '%s' , '%s' , '%lf'" , \
+				strSendTime.c_str() , _T("") , p2pbetrecord.time_out , \
+				p2pbetrecord.tx_hash.c_str() ,  p2pbetrecord.left_addr.c_str() , p2pbetrecord.right_addr.c_str() ,p2pbetrecord.amount);
+
+			strSourceData += strprintf(",'%s' ,'%d','%d','%d','%d','%s','%d'",p2pbetrecord.content ,p2pbetrecord.actor ,p2pbetrecord.confirmed ,p2pbetrecord.height ,p2pbetrecord.state ,\
+				p2pbetrecord.relate_hash.c_str() ,p2pbetrecord.guess_num ) ;
+
+			uistruct::DATABASEINFO_t   pDatabase;
+			pDatabase.strSource = strSourceData;
+			pDatabase.strTabName =  _T("t_p2p_quiz");
+			CPostMsg postmsg(MSG_USER_INSERT_DATA,0);
+			string strTemp = pDatabase.ToJson();
+
+			postmsg.SetData(strTemp);
 			theApp.m_MsgQueue.push(postmsg);
 		}
 	}
