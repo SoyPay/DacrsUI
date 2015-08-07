@@ -1427,7 +1427,8 @@ LRESULT CDacrsUIDlg::OnPopupBar(WPARAM wParam,LPARAM lParam)
 	lf.lfUnderline = FALSE;
 	strcpy((char*)lf.lfFaceName, "宋体");
 
-	if (IsWindowVisible())
+	//// 对话框没有被隐藏并且要处于前端
+	if (IsWindowVisible() && this->IsTopParentActive())
 	{
 		m_BalloonTip =CBalloonTip::Show(
 			CPoint(ret.right -90, ret.bottom-10),         // Point on the screen where the tip will be shown
