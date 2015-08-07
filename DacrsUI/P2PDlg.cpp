@@ -1729,24 +1729,59 @@ void  CP2PDlg::GetAppAccountSomeMoney()
 }
 void  CP2PDlg::AutoSendBet()
 {
-	if (m_PoolList.size() != 0)
+	//if (m_PoolList.size() != 0)
+	//{
+	//	return;
+	//}
+	BOOL bsend1 = TRUE;
+	BOOL bsend2 = TRUE;
+	BOOL bsend3 = TRUE;
+	vector<uistruct::LISTP2POOL_T>::const_iterator const_it = m_PoolList.begin();
+	for(;const_it != m_PoolList.end();const_it++)
 	{
-		return;
+		double dmoney = (const_it->nPayMoney*1.0)/COIN;
+		if (dmoney >= 10000.0)
+		{
+			bsend1 = FALSE;
+		}
+
+		if (dmoney >= 10000.0 && dmoney <= 2000.0)
+		{
+			bsend2 = FALSE;
+		}
+
+		if (dmoney >= 300.0 && dmoney <= 1000.0)
+		{
+			bsend3 = FALSE;
+		}
 	}
+
 	CString addr ="38215-1";
 	for (int i =0;i<3;i++)
 	{
 		CString strTxMoney;
 		if (i == 0)
 		{
+			if (!bsend1)
+			{
+				continue;
+			}
 			strTxMoney = "10000";
 		}
 		if (i == 1)
 		{
+			if (!bsend2)
+			{
+				continue;
+			}
 			strTxMoney = "1000";
 		}
 		if (i == 2)
 		{
+			if (!bsend3)
+			{
+				continue;
+			}
 			strTxMoney = "500";
 		}
 		CString strMoney;
