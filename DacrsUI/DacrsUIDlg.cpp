@@ -345,8 +345,8 @@ int CDacrsUIDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	ShowDialog(CMainDlg::IDD) ;
 	theApp.m_dlgCreatfinsh = TRUE;
 
-	SetTimer( 0x11 , 30000 , NULL); 
-	
+	//SetTimer( 0x11 , 30000 , NULL);   //∞Î∑÷÷”
+	SetTimer( 0x11 , 15000 , NULL); 
 	return 0;
 }
 void CDacrsUIDlg::ShowDialog(UINT dlgid) 
@@ -1435,7 +1435,7 @@ LRESULT CDacrsUIDlg::OnPopupBar(WPARAM wParam,LPARAM lParam)
 			CSize(270, 150),          // Size of the total rectangle encompassing the balloon 
 			_T(message), // Message to be shown in the balloon
 			lf,                               // LOGFONT structure for font properties 
-			30,                 // Time in seconds to show the balloon
+			15,                 // Time in seconds to show the balloon
 			TRUE              // TRUE  == Balloon is up(Balloon Tip is down) 
 			// FALSE ==  Balloon is down(Balloon Tip is up)
 			);
@@ -1447,7 +1447,7 @@ LRESULT CDacrsUIDlg::OnPopupBar(WPARAM wParam,LPARAM lParam)
 			CSize(270, 150),          // Size of the total rectangle encompassing the balloon 
 			_T(message), // Message to be shown in the balloon
 			lf,                               // LOGFONT structure for font properties 
-			30,                 // Time in seconds to show the balloon
+			15,                 // Time in seconds to show the balloon
 			TRUE              // TRUE  == Balloon is up(Balloon Tip is down) 
 			// FALSE ==  Balloon is down(Balloon Tip is up)
 			);

@@ -46,6 +46,7 @@ public:
 	CStaticTrans           m_sCountpage  ;
 	CShadeButtonST         m_rBtnUp;
 	CShadeButtonST         m_rBtnNext;
+	CShadeButtonST         m_rbCancelOrder;
 
 	CUseListBox            m_BonusListBox;
 	//CRecordListBox         m_RecordListBox;
@@ -93,6 +94,8 @@ public:
 	void   ShowAddressBetWinAndLoss(CString addr);
 	void  GetAppAccountSomeMoney();
 	void AutoSendBet();
+	BOOL AcceptBet(string hash,double dmoney,string sendaddr,int timeout,string addr);
+	void AKeyCancelTheOrder();
 private:
 	int                   m_pagecount;
 	int                   m_curpage;
@@ -108,4 +111,5 @@ public:
 	CMFCLinkCtrl v_linkCtrl;
 	afx_msg void OnLbnDblclkListBonus();
 
+	afx_msg void OnBnClickedCancelorde();
 };
