@@ -107,6 +107,10 @@ void CDacrsUIApp::UpdateQuizPoolData()
 			}
 		}
 	}
+
+	////////////////////通知更新赌约数据界面
+	::SendMessage(theApp.m_pMainWnd->m_hWnd,WM_REFRESHP2PUI,0,0);
+
 }
 void CDacrsUIApp::UpdateAddressData(){
 	string strCommand;
@@ -712,6 +716,9 @@ void CDacrsUIApp::UpdateRedPacketPoolData()
 			}
 		}
 	}
+
+	////////////////////通知更新红包池数据界面
+	::SendMessage(theApp.m_pMainWnd->m_hWnd,WM_REFRESHREDPACKET,0,0);
 }
 
 void CDacrsUIApp::AcceptRePacketCommtRecord(vector<unsigned char> acceptRedPacket,uistruct::REVTRANSACTION_t transcion){
@@ -1022,7 +1029,7 @@ void CDacrsUIApp::PopupCommBalloonTip(string hash)//)
 
 		SYSTEMTIME curTime =UiFun::Time_tToSystemTime(commtx.confirmedtime);
 		strShow += strprintf("日期: %04d-%02d-%02d %02d:%02d:%02d\r\n",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
-		strShow += strprintf("金额: +%.8f",commtx.money);
+		strShow += strprintf("金额: +%.8f\r\n",commtx.money);
 		strShow += strprintf("类别: %s\r\n","接受于");
 		strShow += strprintf("地址: (%s)\r\n",commtx.addr.c_str());
 	}else if(strcmp(commtx.txtype.c_str(),"COMMON_TX") == 0 && commtx.state == 3){

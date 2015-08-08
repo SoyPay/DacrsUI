@@ -174,9 +174,9 @@ void CGrabSpecalRedPacket::Showlistbox()
 {
 	//// 查找数据库中是否存在此记录
 	m_BonusListBox.DeleteAllIndex();
-	m_PoolList.clear();
+	//m_PoolList.clear();
 	m_curpage = 0;
-	theApp.m_SqliteDeal.GetRedPacketPoolRecordList(_T(" packet_type = 2 "), &m_PoolList);
+//	theApp.m_SqliteDeal.GetRedPacketPoolRecordList(_T(" packet_type = 2 "), &m_PoolList);
 	m_pagecount = (m_PoolList.size()%m_pagesize)==0?(m_PoolList.size()/m_pagesize):(m_PoolList.size()/m_pagesize)+1;
 
 	string temp;
@@ -514,4 +514,10 @@ void CGrabSpecalRedPacket::OnLbnDblclkListBox()
 		temp +=strprintf("%s" ,strShowid.c_str()) ;
 		::MessageBox( this->GetSafeHwnd() ,temp.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
 	}
+}
+void CGrabSpecalRedPacket::ReadSpecailRedPacketPool()
+{
+	m_PoolList.clear();
+	theApp.m_SqliteDeal.GetRedPacketPoolRecordList(_T(" packet_type = 2 "), &m_PoolList);
+	Showlistbox();
 }

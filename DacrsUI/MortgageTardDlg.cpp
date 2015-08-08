@@ -1844,3 +1844,8 @@ void  CMortgageTardDlg::GetAppAccountSomeMoney()
 	}
 	::MessageBox( this->GetSafeHwnd() ,strTip.c_str() , _T("ÌבÊ¾") , MB_ICONINFORMATION ) ;
 }
+void CMortgageTardDlg::ReadRedPacketPoolFromDB()
+{
+	m_GrabCommRedPacket.ReadComRedPacketPool();
+	m_GrabSpecailRedPacket.ReadSpecailRedPacketPool();
+}
