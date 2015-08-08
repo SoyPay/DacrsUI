@@ -97,6 +97,8 @@ public:
 	afx_msg void SetAppFee();
 	afx_msg LRESULT OnShowTask(WPARAM wParam,LPARAM lParam) ; 
 	afx_msg LRESULT OnPopupBar(WPARAM wParam,LPARAM lParam) ; 
+	afx_msg LRESULT OnRefreshP2Pool(WPARAM wParam,LPARAM lParam) ; 
+	afx_msg LRESULT OnRefreshRedPacketPool(WPARAM wParam,LPARAM lParam) ; 
 	void ToTray();
 	void DeleteTray();
 	afx_msg void SetAppID();

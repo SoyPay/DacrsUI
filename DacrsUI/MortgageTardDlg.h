@@ -115,5 +115,5 @@ public:
 	void       onShowLink();
 	CMFCLinkCtrl v_linkCtrl;
 	void GetAppAccountSomeMoney();
-
+	void ReadRedPacketPoolFromDB();
 };

@@ -37,6 +37,8 @@ using namespace std;
 #define MSG_USER_QUITTHREAD			        WM_USER+200	    //退出线程
 #define MSG_USER_OUT                        WM_USER+201     //退出软件
 
+#define WM_REFRESHP2PUI                      (WM_USER +202) 
+#define WM_REFRESHREDPACKET                  (WM_USER +203) 
 
 #define MSG_USER_END			        WM_USER+800	    //退出线程
 #define WM_BN_CLICK						WM_USER+801

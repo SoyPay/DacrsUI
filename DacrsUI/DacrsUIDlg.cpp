@@ -112,6 +112,8 @@ BEGIN_MESSAGE_MAP(CDacrsUIDlg, CDialogEx)
 	ON_UPDATE_COMMAND_UI(ID__SET, &CDacrsUIDlg::OnUpdataState)
 	ON_COMMAND(WM_CLOSEAPP,&CDacrsUIDlg::OnCloseApp)
 	ON_MESSAGE(WM_POPUPBAR,OnPopupBar)
+	ON_MESSAGE(WM_REFRESHP2PUI,OnRefreshP2Pool)
+	ON_MESSAGE(WM_REFRESHREDPACKET,OnRefreshRedPacketPool)
 	ON_WM_ACTIVATE()
 END_MESSAGE_MAP()
 
@@ -683,7 +685,7 @@ bool  CDacrsUIDlg::IsP2pBetFinsh()
 	uistruct::P2PBETRECORDLIST pPoolList1;
 	strCond= strprintf("(height +time_out)> %d and (state = 1 or state = 5)  and (actor = 0 or actor =2)",theApp.blocktipheight);
 	theApp.m_SqliteDeal.GetP2PQuizRecordList(strCond,&pPoolList1);
-	if (pPoolList.size() != 0 && pPoolList1.size() != 0)
+	if (pPoolList.size() != 0 || pPoolList1.size() != 0)
 	{
 		return false;
 	}
@@ -1540,4 +1542,21 @@ void CDacrsUIDlg::OnCloseWriteAppFee()
 		File.WriteString(strfile.c_str());
 		File.Close();
 	}
+}
+
+LRESULT CDacrsUIDlg::OnRefreshP2Pool(WPARAM wParam,LPARAM lParam) 
+{
+	if (m_pP2PDlg !=NULL)
+	{
+		m_pP2PDlg->ReadP2pPoolFromDB();
+	}
+	return 0;
+}
+LRESULT CDacrsUIDlg::OnRefreshRedPacketPool(WPARAM wParam,LPARAM lParam) 
+{
+	if (m_pMortgageTardDlg != NULL)
+	{
+		m_pMortgageTardDlg->ReadRedPacketPoolFromDB();
+	}
+	return 0;
 }

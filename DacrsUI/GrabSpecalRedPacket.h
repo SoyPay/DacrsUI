@@ -53,4 +53,5 @@ public:
 	void      SetTxt(CString addr,CString strwallet,CString strbalance);
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 	afx_msg void OnLbnDblclkListBox();
+	void ReadSpecailRedPacketPool();
 };
