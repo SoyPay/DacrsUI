@@ -172,9 +172,9 @@ void CGrabCommRedPacket::OnSize(UINT nType, int cx, int cy)
 void CGrabCommRedPacket::Showlistbox()
 {
 	//// 查找数据库中是否存在此记录
-	m_PoolList.clear();
+//	m_PoolList.clear();
 	m_curpage = 0;
-	theApp.m_SqliteDeal.GetRedPacketPoolRecordList(_T(" packet_type = 1 order by average_amount desc"), &m_PoolList);
+//	theApp.m_SqliteDeal.GetRedPacketPoolRecordList(_T(" packet_type = 1 order by average_amount desc"), &m_PoolList);
 	m_pagecount = (m_PoolList.size()%m_pagesize)==0?(m_PoolList.size()/m_pagesize):(m_PoolList.size()/m_pagesize)+1;
 
 	string temp;
@@ -511,4 +511,10 @@ void CGrabCommRedPacket::OnLbnDblclkListBox()
 		temp +=strprintf("%s" ,strShowid.c_str()) ;
 		::MessageBox( this->GetSafeHwnd() ,temp.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
 	}
+}
+void CGrabCommRedPacket::ReadComRedPacketPool()
+{
+	m_PoolList.clear();
+	theApp.m_SqliteDeal.GetRedPacketPoolRecordList(_T(" packet_type = 1 order by average_amount desc"), &m_PoolList);
+	Showlistbox();
 }

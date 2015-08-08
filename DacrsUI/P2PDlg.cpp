@@ -454,7 +454,7 @@ void CP2PDlg::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,450 , 270 ,rect.Width() ,rect.Height(), SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,440 , 270 ,rect.Width() ,rect.Height(), SWP_SHOWWINDOW ) ; 
 		}
 		
 
@@ -1068,9 +1068,9 @@ void CP2PDlg::OnBnClickedButtonWoman()
 }
 void CP2PDlg::OnListPool()
 {
-	m_PoolList.clear();
+	//m_PoolList.clear();
 	m_curpage = 0;
-	theApp.m_SqliteDeal.GetP2PQuizPoolList(_T(" 1=1 order by total_amount desc"), &m_PoolList);
+	//theApp.m_SqliteDeal.GetP2PQuizPoolList(_T(" 1=1 order by total_amount desc"), &m_PoolList);
 	m_pagecount = (m_PoolList.size()%m_pagesize)==0?(m_PoolList.size()/m_pagesize):(m_PoolList.size()/m_pagesize)+1;
 	
 	string temp;
@@ -1599,8 +1599,8 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 	 {
 	 case 1:
 		 OnBnClickedButtonRefresh2();
-		 OnBnClickedButtonRefresh1();
-	//	 AutoSendBet();
+		 //OnBnClickedButtonRefresh1();
+		// AutoSendBet();
 		 break;
 	 default:
 		 break;
@@ -1750,11 +1750,13 @@ void  CP2PDlg::AutoSendBet()
 	//{
 	//	return;
 	//}
+	uistruct::P2PLIST PoolList;
+	ReadP2pPoolFromCmd(PoolList);
 	BOOL bsend1 = TRUE;
 	BOOL bsend2 = TRUE;
 	BOOL bsend3 = TRUE;
-	vector<uistruct::LISTP2POOL_T>::const_iterator const_it = m_PoolList.begin();
-	for(;const_it != m_PoolList.end();const_it++)
+	vector<uistruct::LISTP2POOL_T>::const_iterator const_it = PoolList.begin();
+	for(;const_it != PoolList.end();const_it++)
 	{
 		double dmoney = (const_it->nPayMoney*1.0)/COIN;
 		if (dmoney >= 10000.0)
@@ -1762,7 +1764,7 @@ void  CP2PDlg::AutoSendBet()
 			bsend1 = FALSE;
 		}
 
-		if (dmoney >= 10000.0 && dmoney <= 2000.0)
+		if (dmoney >= 1000.0 && dmoney <= 2000.0)
 		{
 			bsend2 = FALSE;
 		}
@@ -1773,7 +1775,7 @@ void  CP2PDlg::AutoSendBet()
 		}
 	}
 
-	CString addr ="38215-1";
+	CString addr ="39412-1";
 	for (int i =0;i<3;i++)
 	{
 		CString strTxMoney;
@@ -2119,6 +2121,8 @@ void CP2PDlg::AKeyCancelTheOrder()
 					acceptaccount++;
 					const_it++;
 				}
+			}else{
+				const_it++;
 			}
 		}
 	}
@@ -2149,4 +2153,106 @@ void CP2PDlg::OnBnClickedCancelorde()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	AKeyCancelTheOrder();
+}
+void CP2PDlg::ReadP2pPoolFromDB()
+{
+	m_PoolList.clear();
+	theApp.m_SqliteDeal.GetP2PQuizPoolList(_T(" 1=1 order by total_amount desc"), &m_PoolList);
+	OnListPool();	
+}
+void CP2PDlg::ReadP2pPoolFromCmd(uistruct::P2PLIST &PoolList)
+{
+	Json::Reader reader;  
+	Json::Value root; 
+	Json::Value root1;
+	if(theApp.m_betScritptid != _T(""))
+	{
+		string strCommand;
+		strCommand = strprintf("%s %s %s %s 0",_T("getscriptvalidedata"),theApp.m_betScritptid,_T("100"),_T("1"));
+		string strShowData;
+		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
+		//m_AppID
+		int pos = strShowData.find("key");
+		if (pos < 0)
+		{
+			return;
+		}
+		if (!reader.parse(strShowData, root)) 
+			return;
+		int size = root.size();
+		for ( int index =0; index < size; ++index )
+		{
+			string txhash = root[index]["key"].asString();
+			txhash = txhash.substr(txhash.length()-64);
+			string nValue = root[index]["value"].asString();
+			uistruct::DBBET_DATA DBbet;
+			memset(&DBbet , 0 , sizeof(uistruct::DBBET_DATA));
+			std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue);
+
+			if (vTemp.size() <=0)
+			{
+				continue;
+			}
+
+			memcpy(&DBbet, &vTemp[0], sizeof(DBbet));
+
+			std::vector<unsigned char> vnTemp = CSoyPayHelp::getInstance()->ParseHex(txhash);
+			reverse(vnTemp.begin(),vnTemp.end());
+			string strTemp = CSoyPayHelp::getInstance()->HexStr(vnTemp);
+
+			/// 查找数据库中此赌约是否正在接赌
+			uistruct::P2P_QUIZ_RECORD_t  betrecord;
+			string strCond;
+			strCond =strprintf(" tx_hash = '%s' ", strTemp.c_str());
+
+			int nItem =  theApp.m_SqliteDeal.GetP2PQuizRecordItem(strCond, &betrecord );
+
+			if (nItem != 0 && betrecord.state == 4) ////此赌约正在接赌，只是在block中没有确认
+			{
+				continue;
+			}
+
+			strCommand = strprintf("%s %s",_T("gettxdetail"),strTemp.c_str());
+			string strShowData ="";
+			CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
+			if (strShowData == "" && strShowData.find("hash") <0)
+			{
+				return;
+			}
+			if (!reader.parse(strShowData, root1)) 
+				return;
+			int confirheight =root1["confirmHeight"].asInt();
+
+			strCommand= strprintf("%s",_T("getinfo"));
+			strShowData ="";
+			CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
+			if (strShowData == _T(""))
+			{
+				return;
+			}
+			if (!reader.parse(strShowData, root1)) 
+				return;
+			int curheight =root1["blocks"].asInt();
+			if(curheight >=(confirheight+500))
+				continue;
+
+			if (DBbet.betstate == 0x00)
+			{
+				std::vector<unsigned char> txTemp = CSoyPayHelp::getInstance()->ParseHex(txhash);
+				reverse(txTemp.begin(),txTemp.end());
+				string newTxhash =  CSoyPayHelp::getInstance()->HexStr(txTemp);
+
+				std::vector<unsigned char> vSendid;
+				vSendid.assign(DBbet.sendbetid,DBbet.sendbetid+sizeof(DBbet.sendbetid));
+				string regid = CSoyPayHelp::getInstance()->GetNotFullRegID(vSendid);
+
+				uistruct::LISTP2POOL_T item;
+				item.hash = newTxhash;
+				item.nPayMoney = DBbet.money;
+				item.sendbetid = regid;
+				item.outheight = DBbet.hight;
+				PoolList.push_back(item);
+			}
+		}
+	}
 }

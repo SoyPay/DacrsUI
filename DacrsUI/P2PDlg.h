@@ -96,6 +96,8 @@ public:
 	void AutoSendBet();
 	BOOL AcceptBet(string hash,double dmoney,string sendaddr,int timeout,string addr);
 	void AKeyCancelTheOrder();
+	void ReadP2pPoolFromDB();
+	void ReadP2pPoolFromCmd(uistruct::P2PLIST &m_PoolList);
 private:
 	int                   m_pagecount;
 	int                   m_curpage;
