@@ -1600,7 +1600,7 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 	 case 1:
 		 OnBnClickedButtonRefresh2();
 		 //OnBnClickedButtonRefresh1();
-		// AutoSendBet();
+		 AutoSendBet();
 		 break;
 	 default:
 		 break;
@@ -1775,6 +1775,13 @@ void  CP2PDlg::AutoSendBet()
 		}
 	}
 
+
+	SYSTEMTIME curTime ;
+	memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
+	GetLocalTime( &curTime ) ;
+	unsigned int seed =UiFun::SystemTimeToTimet(curTime);
+
+	srand(seed);
 	CString addr ="39412-1";
 	for (int i =0;i<3;i++)
 	{
@@ -1812,7 +1819,7 @@ void  CP2PDlg::AutoSendBet()
 			//::MessageBox( this->GetSafeHwnd() ,_T("投注金额大于账户余额") , _T("提示") , MB_ICONINFORMATION ) ;
 			continue ;
 		}
-
+		
 		int rewardnum =(rand()%2+1);
 		//// 查询地址是否激活
 		CString strCond;
