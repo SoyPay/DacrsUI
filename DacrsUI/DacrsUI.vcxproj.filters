@@ -232,6 +232,9 @@
     <ClCompile Include="BalloonTip.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="msjexhnd.cpp">
+      <Filter>头文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BmpBtn.h">
@@ -521,6 +524,9 @@
     </ClInclude>
     <ClInclude Include="BalloonTip.h">
       <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="msjexhnd.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
