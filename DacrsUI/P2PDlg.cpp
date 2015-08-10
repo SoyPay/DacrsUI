@@ -1600,7 +1600,7 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 	 case 1:
 		 OnBnClickedButtonRefresh2();
 		 //OnBnClickedButtonRefresh1();
-		 AutoSendBet();
+		// AutoSendBet();
 		 break;
 	 default:
 		 break;
