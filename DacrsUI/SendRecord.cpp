@@ -562,7 +562,8 @@ void CSendRecord::ExportSendBetRecordToexel()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	// TODO: 在此添加控件通知处理程序代码
-	CFileDialog dlg(FALSE,NULL,NULL,OFN_HIDEREADONLY|OFN_FILEMUSTEXIST ,"文件 (*.xls)|*.xls||");
+	CFileDialog dlg(FALSE,NULL,"猜你妹发起记录",OFN_HIDEREADONLY|OFN_FILEMUSTEXIST ,"文件 (*.xls)|*.xls||");
+
 	if (IDOK != dlg.DoModal())
 	{
 		return;
@@ -578,7 +579,7 @@ void CSendRecord::ExportSendBetRecordToexel()
 		string		name ;
 		UINT		size ;
 	} listheadr[10]  = {
-		{"竞猜hash" ,  65},
+		{"发起竞猜hash" ,  65},
 		{"发起人" ,    10},
 		{"接单人" ,   10},
 		{"发起时间" ,  15}, 

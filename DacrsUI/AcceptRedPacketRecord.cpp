@@ -412,7 +412,7 @@ void CAcceptRedPacketRecord::GetExportCol(map<int,string> &item,uistruct::REDPAC
 void CAcceptRedPacketRecord::ExportAcceptRedPacektToexel()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	CFileDialog dlg(FALSE,NULL,NULL,OFN_HIDEREADONLY|OFN_FILEMUSTEXIST ,"文件 (*.xls)|*.xls||");
+	CFileDialog dlg(FALSE,NULL,"抢到红包记录",OFN_HIDEREADONLY|OFN_FILEMUSTEXIST ,"文件 (*.xls)|*.xls||");
 	if (IDOK != dlg.DoModal())
 	{
 		return;

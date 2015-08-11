@@ -451,7 +451,7 @@ void   CBetRecord::GetCellName(int nRow, int nCol, CString &strName)
 void CBetRecord::OExportAcceptBetToexel()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	CFileDialog dlg(FALSE,NULL,NULL,OFN_HIDEREADONLY|OFN_FILEMUSTEXIST ,"文件 (*.xls)|*.xls||");
+	CFileDialog dlg(FALSE,NULL,"猜你妹接单记录",OFN_HIDEREADONLY|OFN_FILEMUSTEXIST ,"文件 (*.xls)|*.xls||");
 	if (IDOK != dlg.DoModal())
 	{
 		return;
