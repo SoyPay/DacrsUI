@@ -36,11 +36,14 @@ private:
 	int                              m_pagecount;
 	int                              m_curpage;
 	unsigned int                              m_pagesize;
-	uistruct::P2PBETRECORDLIST       m_PoolList;;
+	uistruct::P2PBETRECORDLIST       m_PoolList;
 public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	void      OnShowPagePool(int page);
 	afx_msg void OnBnClickedButtonUp();
 	afx_msg void OnBnClickedButtonNext();
 	afx_msg void OnLbnDblclkListBox();
+	void OExportAcceptBetToexel();
+	void GetCellName(int nRow, int nCol, CString &strName);
+	void GetExportCol(map<int,string> &item,uistruct::P2P_QUIZ_RECORD_t pitem);
 };

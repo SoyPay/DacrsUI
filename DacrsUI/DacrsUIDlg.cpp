@@ -108,9 +108,14 @@ BEGIN_MESSAGE_MAP(CDacrsUIDlg, CDialogEx)
 	ON_COMMAND(ID__IMPORTPRIVEKEY, &CDacrsUIDlg::ImportPrvieKey)
 	ON_COMMAND(ID__SETAPPID, &CDacrsUIDlg::SetAppID)
 	ON_COMMAND(ID__SETDEFAULT, &CDacrsUIDlg::RestoreDefault)
-	
 	ON_UPDATE_COMMAND_UI(ID__SET, &CDacrsUIDlg::OnUpdataState)
 	ON_COMMAND(WM_CLOSEAPP,&CDacrsUIDlg::OnCloseApp)
+
+	ON_COMMAND(ID_SENDBET,&CDacrsUIDlg::OnSendBetExportHistory)
+	ON_COMMAND(ID_ACCEPTBET,&CDacrsUIDlg::OnAcceptBetExportHistory)
+	ON_COMMAND(ID_SENDREDPAKET,&CDacrsUIDlg::OnSendRedPacketExportHistory)
+	ON_COMMAND(ID_GRABREDPACKE,&CDacrsUIDlg::OnGrabRedPacketExportHistory)
+
 	ON_MESSAGE(WM_POPUPBAR,OnPopupBar)
 	ON_MESSAGE(WM_REFRESHP2PUI,OnRefreshP2Pool)
 	ON_MESSAGE(WM_REFRESHREDPACKET,OnRefreshRedPacketPool)
@@ -1559,4 +1564,36 @@ LRESULT CDacrsUIDlg::OnRefreshRedPacketPool(WPARAM wParam,LPARAM lParam)
 		m_pMortgageTardDlg->ReadRedPacketPoolFromDB();
 	}
 	return 0;
+}
+
+void CDacrsUIDlg::OnSendBetExportHistory()
+{
+	if (m_pP2PDlg != NULL)
+	{
+		m_pP2PDlg->m_SendRecord.ExportSendBetRecordToexel();
+	}
+	
+}
+void CDacrsUIDlg::OnAcceptBetExportHistory(){
+	if (m_pP2PDlg != NULL)
+	{
+		m_pP2PDlg->m_BetRecord.OExportAcceptBetToexel();
+	}
+	
+}
+void CDacrsUIDlg::OnSendRedPacketExportHistory()
+{
+	if (m_pMortgageTardDlg != NULL)
+	{
+		m_pMortgageTardDlg->m_SendRecord.ExportSendRedPacketToexel();
+	}
+	
+}
+void CDacrsUIDlg::OnGrabRedPacketExportHistory()
+{
+	if (m_pMortgageTardDlg != NULL)
+	{
+		m_pMortgageTardDlg->m_BetRecord.ExportAcceptRedPacektToexel();
+	}
+
 }

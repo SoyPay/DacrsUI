@@ -116,6 +116,11 @@ public:
     /// 自定义关闭程序消息
 	afx_msg void OnCloseApp() ; 
 	void OnCloseWriteAppFee();
+
+	afx_msg void OnSendBetExportHistory();
+	afx_msg void OnAcceptBetExportHistory();
+	afx_msg void OnSendRedPacketExportHistory();
+	afx_msg void OnGrabRedPacketExportHistory();
 public:
 	CBalloonTip*  m_BalloonTip;
 	afx_msg void OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized);

@@ -70,7 +70,7 @@ void CNewMenu::MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct)
 
 	// TODO:  添加您的代码以确定指定项的大小
 	lpMeasureItemStruct->itemHeight=25;//项高
-	lpMeasureItemStruct->itemWidth=60;//项宽
+	lpMeasureItemStruct->itemWidth=68;//项宽
 	//lpMeasureItemStruct->itemWidth=120;//项宽
 }
 void CNewMenu::ChangeMenuItem(CMenu *pMenu)
