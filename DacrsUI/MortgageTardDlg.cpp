@@ -719,8 +719,9 @@ void CMortgageTardDlg::OnCbnSelchangeComboAddres()
 		}
 		double money = (nMoney*1.0/COIN);
 		string strText= _T("");
-		strText = strprintf("%.4f",money);
-
+		//strText = strprintf("%.4f",money);
+		strText = strprintf("%.8f",money);
+		strText = strText.substr(0,strText.length()-4);
 		//// Ó¦ÓÃÕË»§Óà¶î
 		((CStatic*)GetDlgItem(IDC_STATIC_BALANCE))->SetWindowText(strText.c_str());
 

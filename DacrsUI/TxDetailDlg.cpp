@@ -252,13 +252,21 @@ string CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
 		}
 	}else if (!strcmp(tx.desregid.c_str(),theApp.m_ipoScritptid.c_str()))
 	{
-		txdetail+=strprintf("应用名称:  %s\r\n\r\n","ipo领币" );
-		txdetail+=strprintf("合约类型:  %s\r\n\r\n","提现" );
-		if (vTemp.size() == sizeof(APPACC))
+
+		if (vTemp[1] == 0x02)    /// 充值
 		{
-			APPACC draw;
-			memcpy(&draw, &vTemp[0],sizeof(APPACC));
-			txdetail+=strprintf("提现金额:  %.8f\r\n\r\n",(draw.money*1.0)/COIN);
+			txdetail+=strprintf("应用名称:  %s\r\n\r\n","ipo领币" );
+			txdetail+=strprintf("合约类型:  %s\r\n\r\n","充值" );
+		}else if (vTemp[1] == 0x01 || vTemp[1] == 0x03)   /// 提现
+		{
+			txdetail+=strprintf("应用名称:  %s\r\n\r\n","ipo领币" );
+			txdetail+=strprintf("合约类型:  %s\r\n\r\n","提现" );
+			if (vTemp.size() == sizeof(APPACC))
+			{
+				APPACC draw;
+				memcpy(&draw, &vTemp[0],sizeof(APPACC));
+				txdetail+=strprintf("提现金额:  %.8f\r\n\r\n",(draw.money*1.0)/COIN);
+			}
 		}
 	}
 	return txdetail;

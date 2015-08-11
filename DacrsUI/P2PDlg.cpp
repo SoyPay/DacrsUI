@@ -498,7 +498,8 @@ void CP2PDlg::OnCbnSelchangeComboAddres()
 			nMoney = root["FreeValues"].asInt64() ;
 		}
 		double money = (nMoney*1.0/COIN);
-		strShowData = strprintf("%.4f",money);
+		strShowData = strprintf("%.8f",money);
+		strShowData = strShowData.substr(0,strShowData.length()-4);
 
 		((CStatic*)GetDlgItem(IDC_STATIC_BALANCE))->SetWindowText(strShowData.c_str());
 
@@ -636,11 +637,11 @@ void  CP2PDlg::QueryNotDrawBalance(CString addr)
 
 void CP2PDlg::OnBnClickedButtonWithd()
 {
-	//if (strcmp(theApp.m_betScritptid.c_str(),theApp.m_neststcriptid.strNewScriptBetid.c_str()) == 0)
-	//{
-	//	GetAppAccountSomeMoney();
-	//	return;
-	//}
+	if (strcmp(theApp.m_betScritptid.c_str(),theApp.m_neststcriptid.strNewScriptBetid.c_str()) == 0)
+	{
+		GetAppAccountSomeMoney();
+		return;
+	}
 
 	// TODO: 在此添加控件通知处理程序代码
 
