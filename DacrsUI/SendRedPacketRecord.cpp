@@ -221,30 +221,20 @@ void  CSendRedPacketRecord::OnShowPagePool(int page)
 	string SendTime,amount,state,numred,operate,type;
 	string sendaddr;
 
-	char buffer[1024] = {0};
 	int i = 0;
 	std::vector<uistruct::REDPACKETSEND_t>::const_iterator const_it;
 	for (unsigned int k = index;k< (index+count) && k<m_SendRedPacketList.size();k++)
 	{
 		uistruct::REDPACKETSEND_t const_it = m_SendRedPacketList.at(k);
 
-		sendaddr = strprintf("%s",const_it.send_acc_id);
-		memset(buffer,0,1024);
-		//sendaddr.Format(_T("%s"),const_it.send_acc_id);
-
-
 		if (const_it.send_time == 0)
 		{
 			SendTime = "---";
 			state = "未开启";
-			//SendTime.Format(_T("---"));
-			//state.Format(_T("未开启"));
+
 		}else{
 			SYSTEMTIME curTime =UiFun::Time_tToSystemTime(const_it.send_time);
-			//SendTime.Format("%02d-%02d %02d:%02d:%02d",curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
-			sprintf_s(buffer,"%02d-%02d %02d:%02d:%02d",curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
-			SendTime = buffer;
-			memset(buffer,0,1024);
+			SendTime =strprintf("%02d-%02d %02d:%02d:%02d",curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
 			state = "已开启";
 		}
 		if (const_it.packet_type == 1)
@@ -253,16 +243,11 @@ void  CSendRedPacketRecord::OnShowPagePool(int page)
 		}else{
 			type="接龙";
 		}
-		sprintf_s(buffer,"%.4f",const_it.amount);
-		amount = buffer;
-		memset(buffer,0,1024);
-		sprintf_s(buffer,"%d",const_it.packet_num);
-		numred = buffer;
-		//amount.Format(_T("%.4f"),const_it.amount);
-		//numred.Format(_T("%d"),const_it.packet_num);
+		amount =strprintf("%.4f",const_it.amount);
+		numred =strprintf("%d",const_it.packet_num);
 		operate ="发";
 		m_listBox.InsertStr(i,this->GetSafeHwnd());
-		m_listBox.SetIndexString(i , sendaddr.c_str(), type.c_str(),SendTime.c_str(),amount.c_str(), numred.c_str(),state.c_str());
+		m_listBox.SetIndexString(i , const_it.send_acc_id.c_str(), type.c_str(),SendTime.c_str(),amount.c_str(), numred.c_str(),state.c_str());
 			
 		i++;
 	}

@@ -220,26 +220,13 @@ void  CBetRecord::OnShowPagePool(int page)
 	{
 		uistruct::P2P_QUIZ_RECORD_t const_it = m_PoolList.at(k);
 		
-		sprintf_s(buffer,"%s",const_it.left_addr.c_str());
-		Sendaddr=buffer;
-		memset(buffer,0,1024);
-		sprintf_s(buffer,"%s",const_it.right_addr.c_str());
-		address =buffer;
-		memset(buffer,0,1024);
-		sprintf_s(buffer,"%.4f",const_it.amount);
-		dmoney=buffer;
-		memset(buffer,0,1024);
-		//Sendaddr.Format(_T("%s"),const_it.left_addr);
-		//address.Format(_T("%s"),const_it.right_addr);
-		//dmoney.Format(_T("%.4f"),const_it.amount);
+		dmoney =strprintf("%.4f",const_it.amount);
 
 		if (const_it.guess_num == 1)
 		{
-			//guess.Format(_T("%s"),"ÃÃ");
 			guess = "ÃÃ";
 		}else
 		{
-			//guess.Format(_T("%s"),"¸ç");
 			guess = "¸ç";
 		}
 		m_ListBox.InsertStr(i,this->GetSafeHwnd());
@@ -250,31 +237,21 @@ void  CBetRecord::OnShowPagePool(int page)
 
 		if (const_it.send_time == 0)
 		{
-			//sendTime = _T("--");
 			sendTime = "--";
 		}else{
 			SYSTEMTIME curTime =UiFun::Time_tToSystemTime(const_it.send_time);
-			sprintf_s(buffer,"%02d-%02d %02d:%02d:%02d", curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
-			sendTime = buffer;
-			memset(buffer,0,1024);
-			//sendTime.Format("%02d-%02d %02d:%02d:%02d", curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+			sendTime =strprintf("%02d-%02d %02d:%02d:%02d", curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
 		}
 		if (const_it.recv_time == 0)
 		{
-			//reciveTime =_T("--");
 			reciveTime = "--";
 		}else{
 			SYSTEMTIME rTime =UiFun::Time_tToSystemTime(const_it.recv_time);
-			sprintf_s(buffer,"%02d-%02d %02d:%02d:%02d", rTime.wMonth, rTime.wDay, rTime.wHour, rTime.wMinute, rTime.wSecond);
-			reciveTime = buffer;
-			memset(buffer,0,1024);
-			//reciveTime.Format("%02d-%02d %02d:%02d:%02d",rTime.wMonth, rTime.wDay, rTime.wHour, rTime.wMinute, rTime.wSecond);
+			reciveTime =strprintf("%02d-%02d %02d:%02d:%02d", rTime.wMonth, rTime.wDay, rTime.wHour, rTime.wMinute, rTime.wSecond);
 		}
 
-		sprintf_s(buffer,"%.4f", const_it.amount);
-		reward = buffer;
-		memset(buffer,0,1024);
-		//reward.Format(_T("%.4f"),const_it.amount);
+		reward =strprintf("%.4f", const_it.amount);
+		
 		///ËµÃ÷¿ª½±ÁË
 		if (const_it.state == 2)
 		{
@@ -283,42 +260,33 @@ void  CBetRecord::OnShowPagePool(int page)
 			{
 				m_ListBox.SetIndexBackCol(i , 6 , RGB(242,32,32));
 
-				sprintf_s(buffer,"+%.4f", const_it.amount);
-				reward = buffer;
-				//reward.Format(_T("+%.4f"),const_it.amount);
+				reward =strprintf("+%.4f", const_it.amount);
 			}else
 			{
 				m_ListBox.SetIndexBackCol(i , 6 , RGB(1,127,1));
-				sprintf_s(buffer,"-%.4f", const_it.amount);
-				reward = buffer;
-				//reward.Format(_T("-%.4f"),const_it.amount);
+				reward =strprintf("-%.4f", const_it.amount);
 			}
 
-			memset(buffer,0,1024);
 
 			if (const_it.content[32] == 1)
 			{
-				//result.Format(_T("%s"),"ÃÃ");
 				result = "ÃÃ";
 			}else
 			{
-				//result.Format(_T("%s"),"¸ç");
 				result = "¸ç";
 			}
-			m_ListBox.SetIndexString(i , Sendaddr.c_str(),address.c_str(),sendTime.c_str(),reciveTime.c_str(), result.c_str(),guess.c_str(), reward.c_str());
+			m_ListBox.SetIndexString(i , const_it.left_addr.c_str(),const_it.right_addr.c_str(),sendTime.c_str(),reciveTime.c_str(), result.c_str(),guess.c_str(), reward.c_str());
 
 		}else{
 			if (const_it.height>0 &&(const_it.time_out + const_it.height)> theApp.blocktipheight&& theApp.IsSyncBlock)
 			{
-				m_ListBox.SetIndexString(i , Sendaddr.c_str(),address.c_str(),sendTime.c_str(),reciveTime.c_str(), _T("Î´¿ª½±"),guess.c_str(),reward.c_str());
+				m_ListBox.SetIndexString(i , const_it.left_addr.c_str(),const_it.right_addr.c_str(),sendTime.c_str(),reciveTime.c_str(), _T("Î´¿ª½±"),guess.c_str(),reward.c_str());
 			}else if(theApp.IsSyncBlock && const_it.height != 0){
 				m_ListBox.SetIndexBackCol(i , 6 , RGB(242,32,32));
-				//reward.Format(_T("+%.4f"),const_it.amount);
-				sprintf_s(buffer,"+%.4f", const_it.amount);
-				reward = buffer;
-				m_ListBox.SetIndexString(i , Sendaddr.c_str(),address.c_str(),sendTime.c_str(),reciveTime.c_str(), _T("³¬Ê±"),guess.c_str(),reward.c_str());
+				reward =strprintf("+%.4f", const_it.amount);
+				m_ListBox.SetIndexString(i , const_it.left_addr.c_str(),const_it.right_addr.c_str(),sendTime.c_str(),reciveTime.c_str(), _T("³¬Ê±"),guess.c_str(),reward.c_str());
 			}else{
-				m_ListBox.SetIndexString(i , Sendaddr.c_str(),address.c_str(),sendTime.c_str(),reciveTime.c_str(), _T("Î´¿ª½±"),guess.c_str(),reward.c_str());
+				m_ListBox.SetIndexString(i , const_it.left_addr.c_str(),const_it.right_addr.c_str(),sendTime.c_str(),reciveTime.c_str(), _T("Î´¿ª½±"),guess.c_str(),reward.c_str());
 			}
 		}
 		i++;
