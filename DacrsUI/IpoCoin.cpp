@@ -174,11 +174,6 @@ void CIpoCoin::OnBnClickedButtonDrawal()
 
 	string  strShowData = _T("");
 
-	//if (m_mapAddrInfo.size() == 0)
-	//{
-	//	::MessageBox( this->GetSafeHwnd() ,_T("发送地址不存在") , _T("提示") , MB_ICONINFORMATION ) ;
-	//	return;
-	//}
 	CString addr;
 	GetDlgItem(IDC_EDIT_ADDR)->GetWindowText(addr);
 	if (addr == _T(""))
@@ -187,17 +182,34 @@ void CIpoCoin::OnBnClickedButtonDrawal()
 		return;
 	}
 
-	CString Money = _T("");
-	GetDlgItem(IDC_STATIC_AMOUNT)->GetWindowText(Money);
-	
-	double dmoney = strtod(Money,NULL);
+	string strCond;
+	strCond = strprintf(" address='%s' ", addr);
+	uistruct::LISTADDR_t pAddr;
+	int nItem =  theApp.m_SqliteDeal.GetWalletAddressItem(strCond, &pAddr) ;
+	if (pAddr.address == "")
+	{
+		::MessageBox( this->GetSafeHwnd() ,_T("此地址不是钱包地址,不能提现") , _T("提示") , MB_ICONINFORMATION ) ;
+		return;
+	}
+
+	if (pAddr.bSign == 0 )
+	{
+		::MessageBox( this->GetSafeHwnd() ,_T("此地址没有注册,不能提现") , _T("提示") , MB_ICONINFORMATION ) ;
+		return;
+	}
+	double dmoney = GetFreeMoney(addr);
+	if (dmoney <=0.0)
+	{
+		::MessageBox( this->GetSafeHwnd() ,_T("此地址没有可提现的金额") , _T("提示") , MB_ICONINFORMATION ) ;
+		return;
+	}
 	string strContractData = m_P2PBetHelp.GetAppAccountMoneyContract(addr.GetString(),1,2,REAL_MONEY(dmoney));
 
 	CString strTxFee;
 	INT64 minFee = theApp.m_P2PBetCfg.GetAppAmountnFee; //45266;theApp.m_P2PBetCfg.GetAppAmountnFee
 	double dnum = (minFee*1.0/COIN);
 	strTxFee.Format(_T("%.8f"),dnum);
-	//GetDlgItem(IDC_EDIT_GETFEE)->GetWindowText(strTxFee) ;
+
 	if (  (INT64)REAL_MONEY(strtod(strTxFee,NULL)) < 10000  ) {
 		::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
 		return ;
@@ -289,7 +301,30 @@ void CIpoCoin::OnSize(UINT nType, int cx, int cy)
 		}
 	}
 }
+double CIpoCoin::GetFreeMoney(CString addr)
+{
+	string strCommand,strShowData ="";
+	strCommand =strprintf("%s %s %s","getappaccinfo" , theApp.m_ipoScritptid ,addr);
+	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 
+	if (strShowData == "")
+	{
+		return 0.0;
+	}
+	Json::Reader reader;  
+	Json::Value root; 
+	if (!reader.parse(strShowData, root)) 
+		return 0.0 ;
+
+	int pos = strShowData.find("FreeValues");
+	INT64 nMoney = 0;
+	if (pos >0)
+	{
+		nMoney = root["FreeValues"].asInt64() ;
+	}
+	double money = (nMoney*1.0/COIN);
+	return money;
+}
 void CIpoCoin::OnShowListCtrol(CString addr)
 {
 	string strCommand,strShowData ="";

@@ -1202,7 +1202,7 @@ void CDacrsUIApp::PopupContactBalloonTip(uistruct::REVTRANSACTION_t tx,int appty
 				strShow+=strprintf("金额:  %.8f\r\n",tx.money );
 				strShow+=strprintf("类别:  %s\r\n","充值" );
 				strShow+=strprintf("地址:  %s\r\n",tx.regid );
-			}else if (vTemp[1] == 0x03)   /// 提现
+			}else if (vTemp[1] == 0x03 ||vTemp[1] == 0x02 )   /// 提现
 			{
 				SYSTEMTIME curTime =UiFun::Time_tToSystemTime(tx.confirmedtime);
 				strShow += strprintf("日期: %04d-%02d-%02d %02d:%02d:%02d\r\n",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
@@ -1210,9 +1210,11 @@ void CDacrsUIApp::PopupContactBalloonTip(uistruct::REVTRANSACTION_t tx,int appty
 				{
 					APPACC drawtx;
 					memcpy(&drawtx, &vTemp[0],sizeof(APPACC));
-					strShow+=strprintf("金额:  %.8f\r\n",tx.money );
+					strShow+=strprintf("金额:  %.8f\r\n",(drawtx.money*1.0)/COIN );
 					strShow+=strprintf("类别:  %s\r\n","提现" );
 					strShow+=strprintf("地址:  %s\r\n",tx.regid );
+				}else{
+					strShow="";
 				}
 			}
 		}

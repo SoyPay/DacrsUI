@@ -45,4 +45,7 @@ public:
 	afx_msg void OnBnClickedButtonNext();
 	afx_msg void OnLbnDblclkListBox();
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
+	void ExportAcceptRedPacektToexel();
+	void GetCellName(int nRow, int nCol, CString &strName);
+	void GetExportCol(map<int,string> &item,uistruct::REDPACKETGRAB_t const_it);
 };

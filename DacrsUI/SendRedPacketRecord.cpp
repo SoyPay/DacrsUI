@@ -6,7 +6,14 @@
 #include "SendRedPacketRecord.h"
 #include "afxdialogex.h"
 #include "RedPacketList.h"
-
+#include "DacrsUIDlg.h"
+#include "CApplication.h"
+#include "CFont0.h"
+#include "CRange.h"
+#include "CWorkbook.h"
+#include "CWorksheet.h"
+#include "CWorkbooks.h"
+#include "CWorksheets.h"
 // CSendRedPacketRecord 对话框
 
 IMPLEMENT_DYNAMIC(CSendRedPacketRecord, CDialogEx)
@@ -332,4 +339,271 @@ HBRUSH CSendRedPacketRecord::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 	{
 		return  CDialogEx::OnCtlColor(pDC, pWnd, nCtlColor);
 	}
+}
+
+void CSendRedPacketRecord::GetExportCol(map<int,string> &item,uistruct::REDPACKETSEND_t const_it)
+{
+	int i = 0;
+
+	string SendTime,state,type,amount,number,operate;
+	if (const_it.send_time == 0)
+	{
+		SendTime = "---";
+		state = "未开启";
+	}else{
+		SYSTEMTIME curTime =UiFun::Time_tToSystemTime(const_it.send_time);
+		SendTime= strprintf("%02d-%02d %02d:%02d:%02d",curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+		state = "已开启";
+	}
+	if (const_it.packet_type == 1)
+	{
+		type ="普通";
+	}else{
+		type="接龙";
+	}
+	amount = strprintf("%.4f",const_it.amount);
+	number =strprintf("%d",const_it.packet_num);
+	operate ="发";
+	item[i++]=const_it.send_hash;
+	item[i++]=const_it.send_acc_id;
+	item[i++]=type;
+	item[i++]=SendTime;
+	item[i++]=amount;
+	item[i++]=number;
+	item[i++]=state;
+}
+void   CSendRedPacketRecord::GetCellName(int nRow, int nCol, CString &strName)
+
+{
+
+	int nSeed = nCol;
+
+	CString strRow;
+
+	char cCell = 'A' + nCol - 1;
+
+
+
+	strName.Format(_T("%c"), cCell);
+
+
+
+	strRow.Format(_T( "%d "), nRow);
+
+	strName += strRow;
+
+}
+void CSendRedPacketRecord::ExportSendRedPacketToexel()
+{
+	// TODO: 在此添加控件通知处理程序代码
+
+	CFileDialog dlg(FALSE,NULL,NULL,OFN_HIDEREADONLY|OFN_FILEMUSTEXIST ,"文件 (*.xls)|*.xls||");
+	if (IDOK != dlg.DoModal())
+	{
+		return;
+	}
+
+	CString strFile = dlg.GetPathName();
+	if (!((CDacrsUIDlg*)(theApp.m_pMainWnd))->GetFileName(strFile,_T(".xls")))
+	{
+		return;
+	}
+
+	struct LISTCol {
+		string		name ;
+		UINT		size ;
+	} listheadr[7]  = {
+		{"发红包hash" ,  70},
+		{"发起人" ,    30},
+		{"类型" ,    10},
+		{"发起时间" ,  20}, 
+		{"总金额" ,30},
+		{"个数" ,10},
+		{"状态" , 10}
+
+	};
+
+	COleVariant
+
+		covTrue((short)TRUE),
+
+		covFalse((short)FALSE),
+
+		covOptional((long)DISP_E_PARAMNOTFOUND,   VT_ERROR);
+
+	CApplication   app;
+
+	CWorkbooks   books;
+
+	CWorkbook   book;
+
+	CWorksheets   sheets;
+
+	CWorksheet   sheet;
+
+	CRange   range;
+
+	CFont0   font;
+
+
+
+	if (!app.CreateDispatch(_T("Excel.Application")))
+
+	{
+
+		MessageBox(_T("创建失败！"));
+
+		return;
+
+	}
+
+
+
+	//Get   a   new   workbook.
+
+	books = app.get_Workbooks();
+
+	book = books.Add(covOptional);
+
+
+
+	sheets = book.get_Worksheets();
+
+	sheet = sheets.get_Item(COleVariant((short)1));
+
+
+
+	////////////////////////////////////CListCtrl控件report风格//////////////////////////////////////////////////////////
+
+	//CHeaderCtrl   *pmyHeaderCtrl;
+
+	//pmyHeaderCtrl = m_listCtrl.GetHeaderCtrl();//此句取得CListCtrl控件的列表頭
+
+
+
+	int   iRow,iCol;
+
+	int   m_cols   =   7;
+
+	int   m_rows = m_SendRedPacketList.size();
+
+	HDITEM   hdi;
+
+	TCHAR     lpBuffer[256];
+
+	bool       fFound   =   false;
+
+
+
+	hdi.mask   =   HDI_TEXT;
+
+	hdi.pszText   =   lpBuffer;
+
+	hdi.cchTextMax   =   256;
+
+	CString   colname;
+
+	CString strTemp;
+
+	for(iCol=0;   iCol <m_cols;   iCol++)//将列表的标题头写入EXCEL
+
+	{
+
+		GetCellName(1 ,iCol + 1, colname);
+
+		range   =   sheet.get_Range(COleVariant(colname),COleVariant(colname));
+
+		//pmyHeaderCtrl-> GetItem(iCol,   &hdi);
+
+		range.put_Value2(COleVariant(listheadr[iCol].name.c_str()));
+
+		int   nWidth   = listheadr[iCol].size;  //m_listCtrl.GetColumnWidth(iCol)/6;
+
+		//得到第iCol+1列  
+
+		range.AttachDispatch(range.get_Item(_variant_t((long)(iCol+1)),vtMissing).pdispVal,true);  
+
+		//设置列宽 
+
+		range.put_ColumnWidth(_variant_t((long)nWidth));
+
+	}
+
+	range   =   sheet.get_Range(COleVariant( _T("A1 ")),   COleVariant(colname));
+
+	range.put_RowHeight(_variant_t((long)50));//设置行的高度
+
+	font = range.get_Font();
+
+	font.put_Bold(covTrue);
+
+	range.put_VerticalAlignment(COleVariant((short)-4108));//xlVAlignCenter   =   -4108
+
+
+
+	COleSafeArray   saRet;
+
+	DWORD   numElements[]={m_rows,m_cols};       //5x2   element   array
+
+	saRet.Create(VT_BSTR,   2,   numElements);
+
+	range   =   sheet.get_Range(COleVariant( _T("A2 ")),covOptional);
+
+	range = range.get_Resize(COleVariant((short)m_rows),COleVariant((short)m_cols));
+
+	long   index[2];
+
+	range   =   sheet.get_Range(COleVariant( _T("A2 ")),covOptional);
+
+	range   =   range.get_Resize(COleVariant((short)m_rows),COleVariant((short)m_cols));
+
+
+	int iLine = 0;
+	iRow   =   1;
+	iCol   =   1;
+	vector<uistruct::REDPACKETSEND_t>::const_iterator pitem = m_SendRedPacketList.begin();
+	for(;pitem != m_SendRedPacketList.end();pitem++,iRow++)
+	{
+		map<int,string> item;
+		GetExportCol(item,*pitem);
+		for   (   iCol   =   1;   iCol   <=   m_cols;   iCol++)  
+
+		{
+
+			index[0]=iRow-1;
+
+			index[1]=iCol-1;
+			string strTemp =  item[iCol-1];
+			CString   szTemp = strTemp.c_str();
+
+			BSTR   bstr   =   szTemp.AllocSysString();
+
+			saRet.PutElement(index,bstr);
+
+			SysFreeString(bstr);
+
+		}
+	}
+
+
+	range.put_Value2(COleVariant(saRet));
+
+
+	saRet.Detach();
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	book.SaveCopyAs(COleVariant(strFile));
+
+	//       cellinterior.ReleaseDispatch();
+
+	book.put_Saved(true);
+
+	book.ReleaseDispatch();  
+
+	books.ReleaseDispatch();  
+
+	app.Quit();
+
+	app.ReleaseDispatch();
 }
