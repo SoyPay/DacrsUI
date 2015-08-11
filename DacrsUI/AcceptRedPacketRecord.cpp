@@ -183,18 +183,14 @@ void CAcceptRedPacketRecord::Showlistbox(CString address)
 	m_curpage = 0;
 	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(_T(""));
 	string conditon;
-	char buffer[1000] = {0};
-	sprintf_s(buffer,"grab_acct_id ='%s' order by grab_time desc",address);
-	conditon = buffer;
-	//conditon.Format(_T("grab_acct_id ='%s' order by grab_time desc") , address);
+	conditon =strprintf("grab_acct_id ='%s' order by grab_time desc",address);
 
 	int nItem =  theApp.m_SqliteDeal.GetRedPacketGrabRecordList(conditon.c_str() ,&m_AcceptRedPacketList ) ;
 
 	m_pagecount = (m_AcceptRedPacketList.size()%m_pagesize)==0?(m_AcceptRedPacketList.size()/m_pagesize):(m_AcceptRedPacketList.size()/m_pagesize)+1;
 
-	memset(buffer,0,1000);
-	sprintf_s(buffer,"共:%d",m_pagecount);
-	string temp = buffer;
+	string temp;
+	temp =strprintf("共:%d",m_pagecount);
 
 	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(temp.c_str());
 	GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T(""));
@@ -221,22 +217,14 @@ void  CAcceptRedPacketRecord::OnShowPagePool(int page)
 	int index = (page-1)*m_pagesize;
 	unsigned int count = (m_AcceptRedPacketList.size() -index)>=m_pagesize?m_pagesize:(m_AcceptRedPacketList.size() -index);
 
-	char sendTime[1024] = {0};
-	string amount,Sendaddr,address,luckeMoney,strnum,type,luckeValue,operate;
-	char buffer[100] = {0};
+	string amount,address,luckeMoney,strnum,type,luckeValue,operate,sendTime;
 	int i = 0;
 	std::vector<uistruct::REDPACKETGRAB_t>::const_iterator const_it;
 	for (unsigned int k = index;k< (index+count) && k < m_AcceptRedPacketList.size();k++)
 	{
 		uistruct::REDPACKETGRAB_t const_it = m_AcceptRedPacketList.at(k);
-		sprintf_s(buffer,"%s",const_it.send_acc_id.c_str());
-		Sendaddr =buffer;
-		memset(buffer,0,100);
-		sprintf_s(buffer,"%.4f",const_it.total_amount);
-		amount =buffer;
-		memset(buffer,0,100);
-		//Sendaddr.Format(_T("%s"),const_it.send_acc_id);
-		//amount.Format(_T("%.4f"),const_it.total_amount);
+		
+		amount =strprintf("%.4f",const_it.total_amount);
 
 		if (const_it.packet_type == 1)
 		{
@@ -244,24 +232,19 @@ void  CAcceptRedPacketRecord::OnShowPagePool(int page)
 		}else if (const_it.packet_type == 2)
 		{
 			type="接龙";
-			//type.Format(_T("接龙"));
+
 		}
 
 		if (const_it.grab_time == 0)
 		{
 			//luckeMoney = _T("--");
 			luckeMoney="--";
-			sprintf_s(sendTime,"%s","--");
+			sendTime="--";
 
 		}else{
 			SYSTEMTIME curTime =UiFun::Time_tToSystemTime(const_it.grab_time);
-			//sendTime.Format("%02d-%02d %02d:%02d:%02d", curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
-			//luckeMoney.Format(_T("%.4f"),const_it.lucky_amount);
-			sprintf_s(buffer,"%.4f",const_it.lucky_amount);
-			luckeMoney=buffer;
-			memset(buffer,0,100);
-			sprintf_s(sendTime,"%02d-%02d %02d:%02d:%02d",curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
-			memset(buffer,0,100);
+			sendTime= strprintf("%02d-%02d %02d:%02d:%02d",curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+			luckeMoney =strprintf("%.4f",const_it.lucky_amount);
 		}
 
 		if (const_it.lucky_fortune == 1)
@@ -272,15 +255,11 @@ void  CAcceptRedPacketRecord::OnShowPagePool(int page)
 			luckeValue="运气王";
 		}else
 		{
-			//luckeValue.Format(_T("--"));
 			luckeValue="--";
 		}
-		memset(buffer,0,100);
-		sprintf_s(buffer,"%d",const_it.total_num);
-		strnum=buffer;
-		memset(buffer,0,100);
+		strnum =strprintf("%d",const_it.total_num);
 		m_ListBox.InsertStr(i,this->GetSafeHwnd());
-		m_ListBox.SetIndexString(i , Sendaddr.c_str(),type.c_str(),sendTime,amount.c_str(), strnum.c_str(),luckeValue.c_str(),luckeMoney.c_str());
+		m_ListBox.SetIndexString(i , const_it.send_acc_id.c_str(),type.c_str(),sendTime.c_str(),amount.c_str(), strnum.c_str(),luckeValue.c_str(),luckeMoney.c_str());
 	
 		i++;
 	}

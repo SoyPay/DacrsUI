@@ -71,9 +71,9 @@ void CBetInformation::ShowBetRecordDetail(CString jsontx)
 		}else{
 			if (betrecord.send_time != 0)
 			{
-				char buffer[1024] = {0};
+				string buffer;
 				SYSTEMTIME rTime =UiFun::Time_tToSystemTime(betrecord.send_time);
-				sprintf_s(buffer,"%02d-%02d %02d:%02d:%02d", rTime.wMonth, rTime.wDay, rTime.wHour, rTime.wMinute, rTime.wSecond);
+				buffer = strprintf("%02d-%02d %02d:%02d:%02d", rTime.wMonth, rTime.wDay, rTime.wHour, rTime.wMinute, rTime.wSecond);
 				txdetail+= strprintf("发起竞猜交易确认时间: %s\r\n\r\n",buffer);
 				txdetail+= strprintf("发起竞猜交易确认高度: %d\r\n\r\n",betrecord.height);
 			}
@@ -88,19 +88,19 @@ void CBetInformation::ShowBetRecordDetail(CString jsontx)
 
 	}else if (betrecord.state == 1)  ///赌约被接单了
 	{
-		char buffer[1024] = {0};
+		string buffer;
 		if (betrecord.send_time != 0)
 		{
 			SYSTEMTIME rTime =UiFun::Time_tToSystemTime(betrecord.send_time);
-			sprintf_s(buffer,"%02d-%02d %02d:%02d:%02d", rTime.wMonth, rTime.wDay, rTime.wHour, rTime.wMinute, rTime.wSecond);
+			buffer = strprintf("%02d-%02d %02d:%02d:%02d", rTime.wMonth, rTime.wDay, rTime.wHour, rTime.wMinute, rTime.wSecond);
 			txdetail+= strprintf(" 发起竞猜交易确认时间: %s\r\n\r\n",buffer);
 		}
-		memset(buffer,0,1024);
+
 		if (betrecord.recv_time != 0)
 		{
 			txdetail+= strprintf("接单交易: %s\r\n\r\n",betrecord.relate_hash.c_str());
 			SYSTEMTIME rTime =UiFun::Time_tToSystemTime(betrecord.recv_time);
-			sprintf_s(buffer,"%02d-%02d %02d:%02d:%02d", rTime.wMonth, rTime.wDay, rTime.wHour, rTime.wMinute, rTime.wSecond);
+			buffer= strprintf("%02d-%02d %02d:%02d:%02d", rTime.wMonth, rTime.wDay, rTime.wHour, rTime.wMinute, rTime.wSecond);
 			txdetail+= strprintf("接单交易确认时间: %s\r\n\r\n",buffer);
 			txdetail+= strprintf("接单交易确认高度: %d\r\n\r\n",betrecord.height);
 		}
@@ -115,26 +115,26 @@ void CBetInformation::ShowBetRecordDetail(CString jsontx)
 		
 	}else if (betrecord.state == 2) /// 开奖
 	{
-		char buffer[1024] = {0};
+		string buffer;
 		if (betrecord.send_time != 0)
 		{
 			SYSTEMTIME rTime =UiFun::Time_tToSystemTime(betrecord.send_time);
-			sprintf_s(buffer,"%02d-%02d %02d:%02d:%02d", rTime.wMonth, rTime.wDay, rTime.wHour, rTime.wMinute, rTime.wSecond);
+			buffer= strprintf("%02d-%02d %02d:%02d:%02d", rTime.wMonth, rTime.wDay, rTime.wHour, rTime.wMinute, rTime.wSecond);
 			txdetail+= strprintf("发起竞猜交易确认时间: %s\r\n\r\n",buffer);
 		}
-		memset(buffer,0,1024);
+
 		if (betrecord.recv_time != 0)
 		{
 			txdetail+= strprintf("接单交易: %s\r\n\r\n",betrecord.relate_hash.c_str());
 			SYSTEMTIME rTime =UiFun::Time_tToSystemTime(betrecord.recv_time);
-			sprintf_s(buffer,"%02d-%02d %02d:%02d:%02d", rTime.wMonth, rTime.wDay, rTime.wHour, rTime.wMinute, rTime.wSecond);
+			buffer= strprintf("%02d-%02d %02d:%02d:%02d", rTime.wMonth, rTime.wDay, rTime.wHour, rTime.wMinute, rTime.wSecond);
 			txdetail+= strprintf("接单交易确认时间: %s\r\n\r\n",buffer);
 		}
-		memset(buffer,0,1024);
+	
 		if (betrecord.confirmed != 0)
 		{
 			SYSTEMTIME rTime =UiFun::Time_tToSystemTime(betrecord.confirmed);
-			sprintf_s(buffer,"%02d-%02d %02d:%02d:%02d", rTime.wMonth, rTime.wDay, rTime.wHour, rTime.wMinute, rTime.wSecond);
+			buffer= strprintf("%02d-%02d %02d:%02d:%02d", rTime.wMonth, rTime.wDay, rTime.wHour, rTime.wMinute, rTime.wSecond);
 			txdetail+= strprintf("竞猜开奖时间: %s\r\n\r\n",buffer);
 			txdetail+= strprintf("竞猜开奖高度: %d\r\n\r\n",betrecord.height);
 		}
