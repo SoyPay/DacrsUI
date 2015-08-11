@@ -375,36 +375,22 @@ void  CSendRecord::OnShowPagePool(int page)
 	int index = (page-1)*m_pagesize;
 	unsigned int count = (m_PoolList.size() -index)>=m_pagesize?m_pagesize:(m_PoolList.size() -index);
 
-	string sendaddr,acceptaddr;
 	string SendTime;
 	string dmoney,reward,result,guess;
 	string strTime;
 	string time;
 
-	char buffer[1024] = {0};
 	int i = 0;
 	std::vector<uistruct::P2P_QUIZ_RECORD_t>::const_iterator const_it;
 	for (unsigned int k = index;k< (index+count) && k<m_PoolList.size();k++)
 	{
 		uistruct::P2P_QUIZ_RECORD_t const_it = m_PoolList.at(k);
 
-		sprintf_s(buffer,"%s",const_it.left_addr.c_str());
-		sendaddr = buffer;
-		memset(buffer,0,1024);
-		sprintf_s(buffer,"%s",const_it.right_addr.c_str());
-		acceptaddr = buffer;
-		memset(buffer,0,1024);
-	//	sendaddr.Format(_T("%s"),const_it.left_addr);
-	//	acceptaddr.Format(_T("%s"),const_it.right_addr);
-
 
 		if (const_it.send_time != 0)
 		{
 			SYSTEMTIME curTime =UiFun::Time_tToSystemTime(const_it.send_time);
-			sprintf_s(buffer,"%02d-%02d %02d:%02d:%02d",curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
-			SendTime=buffer;
-			memset(buffer,0,1024);
-			//SendTime.Format("%02d-%02d %02d:%02d:%02d",curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+			SendTime =strprintf("%02d-%02d %02d:%02d:%02d",curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
 		}else{
 			SendTime = "--";
 		}
@@ -413,104 +399,64 @@ void  CSendRecord::OnShowPagePool(int page)
 		if (const_it.content[32] == 1)
 		{
 			result = "妹";
-			//result.Format(_T("%s"),"妹");
 		}else
 		{
 			result = "哥";
-			//result.Format(_T("%s"),"哥");
 		}
-		sprintf_s(buffer,"%.4f",const_it.amount);
-		reward = buffer;
-		memset(buffer,0,1024);
-		//reward.Format(_T("%.4f"),const_it.amount);
+		reward =strprintf("%.4f",const_it.amount);
+
 		m_listBox.InsertStr(i,this->GetSafeHwnd());
 		m_listBox.SetIndexInage(i , IDB_BITMAP_P2PLIST);
 		m_listBox.SetIndexBackCol(i, 1, RGB(242,32,32));
 		m_listBox.SetIndexBackCol(i, 5, RGB(242,32,32));
 		List_SendAppendData* pinf = m_listBox.GetAppendDataInfo(i);
-		//pinf->pBut0->EnableWindow(false);
 
 		///说明开奖了
 		if (const_it.state == 2 || const_it.state == 1)
 		{
 			SYSTEMTIME curTime =UiFun::Time_tToSystemTime(const_it.recv_time);
 
-			sprintf_s(buffer,"%02d-%02d %02d:%02d:%02d",curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
-			strTime = buffer;
-			memset(buffer,0,1024);
-			//strTime.Format("%02d-%02d %02d:%02d:%02d",curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
-
+			strTime =strprintf("%02d-%02d %02d:%02d:%02d",curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+		
 			if (const_it.guess_num == 1)
 			{
 				guess = "妹";
-				//guess.Format(_T("%s"),"妹");
 			}else
 			{
 				guess = "哥";
-				//guess.Format(_T("%s"),"哥");
 			}
 			if (const_it.state == 2)  /// 开奖
 			{
 				if (const_it.guess_num == const_it.content[32])
 				{
 					m_listBox.SetIndexBackCol(i, 6, RGB(1,127,1));
-					sprintf_s(buffer,"-%.4f",const_it.amount);
-					reward =buffer;
-					//reward.Format(_T("-%.4f"),const_it.amount);
+					reward =strprintf("-%.4f",const_it.amount);
 				}else
 				{
 					m_listBox.SetIndexBackCol(i, 6, RGB(242,32,32));
-					sprintf_s(buffer,"+%.4f",const_it.amount);
-					reward =buffer;
-					//reward.Format(_T("+%.4f"),const_it.amount);
+					reward =strprintf("+%.4f",const_it.amount);
 				}
 			}
 
-			memset(buffer,0,1024);
 			
 			time_t timeout =const_it.recv_time+const_it.time_out*60; 
 			SYSTEMTIME curTimeOut =UiFun::Time_tToSystemTime(timeout);
-			//curTime.wMinute = (curTime.wMinute+const_it.time_out)>60?(curTime.wMinute+const_it.time_out)-60:(curTime.wMinute+const_it.time_out);
-			//curTime.wHour = (curTime.wMinute+const_it.time_out)>60?curTime.wHour+1:curTime.wHour;
-			sprintf_s(buffer,"%02d:%02d:%02d",curTimeOut.wHour, curTimeOut.wMinute, curTimeOut.wSecond);
-			time = buffer;
-			memset(buffer,0,1024);
-			//time.Format("%02d:%02d:%02d",curTimeOut.wHour, curTimeOut.wMinute, curTimeOut.wSecond);
+			time =strprintf("%02d:%02d:%02d",curTimeOut.wHour, curTimeOut.wMinute, curTimeOut.wSecond);
+		
 			if (const_it.state == 2)
 			{
-				m_listBox.SetIndexString(i ,sendaddr.c_str(), acceptaddr.c_str(),SendTime.c_str(),strTime.c_str(), result.c_str(),guess.c_str(), reward.c_str(),time.c_str(),_T("已开"),const_it.tx_hash.c_str());
+				m_listBox.SetIndexString(i ,const_it.left_addr.c_str(), const_it.right_addr.c_str(),SendTime.c_str(),strTime.c_str(), result.c_str(),guess.c_str(), reward.c_str(),time.c_str(),_T("已开"),const_it.tx_hash.c_str());
 			}else{
 				if ((const_it.time_out + const_it.height)> theApp.blocktipheight && theApp.IsSyncBlock)
 				{
-					//pinf->pBut0->EnableWindow(true);
-					//if (!flag)
-				//	{
-				/*		CString strCond;
-						uistruct::LISTADDR_t pAddr;
-						strCond.Format(_T("reg_id ='%s'"),const_it.left_addr);
-						theApp.m_SqliteDeal.GetWalletAddressItem(strCond, &pAddr);
-						double minfee = (theApp.m_P2PBetCfg.OpenBetnFee*1.0)/COIN;
-						if (minfee > pAddr.fMoney)
-						{
-							::MessageBox(NULL ,_T("有些赌约未开奖,请先充值") , _T("提示") , MB_ICONINFORMATION ) ;
-						}
-						CString txhash;
-						txhash.Format(_T("%s"),const_it.tx_hash);
-						theApp.OpenBet(txhash);*/
-						//flag = true;
-					//}
-					sprintf_s(buffer,"%.4f",const_it.amount);
-					reward = buffer;
-					//reward.Format(_T("%.4f"),const_it.amount);
-					m_listBox.SetIndexString(i , sendaddr.c_str(), acceptaddr.c_str(),SendTime.c_str(),strTime.c_str(), result.c_str(),_T("--"),reward.c_str(),time.c_str(), _T("待开"),const_it.tx_hash.c_str());
+					reward =strprintf("%.4f",const_it.amount);
+					m_listBox.SetIndexString(i , const_it.left_addr.c_str(), const_it.right_addr.c_str(),SendTime.c_str(),strTime.c_str(), result.c_str(),_T("--"),reward.c_str(),time.c_str(), _T("待开"),const_it.tx_hash.c_str());
 				}else if(theApp.IsSyncBlock && const_it.height != 0 &&(const_it.time_out + const_it.height)< theApp.blocktipheight){
 					m_listBox.SetIndexBackCol(i, 6, RGB(1,127,1));
-					//reward.Format(_T("-%.4f"),const_it.amount);
-					sprintf_s(buffer,"-%.4f",const_it.amount);
-					reward = buffer;
-					m_listBox.SetIndexString(i , sendaddr.c_str(), acceptaddr.c_str(),SendTime.c_str(),strTime.c_str(), result.c_str(),guess.c_str(),reward.c_str(),time.c_str(), _T("超时"),const_it.tx_hash.c_str());
+					reward =strprintf("-%.4f",const_it.amount);
+					m_listBox.SetIndexString(i , const_it.left_addr.c_str(), const_it.right_addr.c_str(),SendTime.c_str(),strTime.c_str(), result.c_str(),guess.c_str(),reward.c_str(),time.c_str(), _T("超时"),const_it.tx_hash.c_str());
 				}else{
-					m_listBox.SetIndexString(i , sendaddr.c_str(), acceptaddr.c_str(),SendTime.c_str(),strTime.c_str(), result.c_str(),_T("--"),reward.c_str(),time.c_str(), _T("待开"),const_it.tx_hash.c_str());
+					m_listBox.SetIndexString(i , const_it.left_addr.c_str(), const_it.right_addr.c_str(),SendTime.c_str(),strTime.c_str(), result.c_str(),_T("--"),reward.c_str(),time.c_str(), _T("待开"),const_it.tx_hash.c_str());
 				}
 
 			}
@@ -518,21 +464,15 @@ void  CSendRecord::OnShowPagePool(int page)
 
 		}else
 		{
-			//reward.Format(_T("%.4f"),const_it.amount);
-			sprintf_s(buffer,"%.4f",const_it.amount);
-			reward = buffer;
+			reward =strprintf("%.4f",const_it.amount);
 			if (const_it.state == 0 &&(500 + const_it.height)> theApp.blocktipheight&& theApp.IsSyncBlock )
 			{
-				m_listBox.SetIndexString(i , sendaddr.c_str(), acceptaddr.c_str(),SendTime.c_str(),_T("--"), result.c_str(),_T("--"),reward.c_str(),_T(""),_T("未接"),const_it.tx_hash.c_str());
+				m_listBox.SetIndexString(i , const_it.left_addr.c_str(), const_it.right_addr.c_str(),SendTime.c_str(),_T("--"), result.c_str(),_T("--"),reward.c_str(),_T(""),_T("未接"),const_it.tx_hash.c_str());
 			}else if(theApp.IsSyncBlock&&const_it.height !=0 && (500 + const_it.height)< theApp.blocktipheight){
-				//reward.Format(_T("+%.4f"),const_it.amount);
-				memset(buffer,0,1024);
-				sprintf_s(buffer,"%.4f",const_it.amount);
-				reward = buffer;
-				m_listBox.SetIndexString(i , sendaddr.c_str(), acceptaddr.c_str(),SendTime.c_str(),_T("--"), result.c_str(),_T("--"),reward.c_str(),_T(""),_T("超时"),const_it.tx_hash.c_str());
+				m_listBox.SetIndexString(i , const_it.left_addr.c_str(), const_it.right_addr.c_str(),SendTime.c_str(),_T("--"), result.c_str(),_T("--"),reward.c_str(),_T(""),_T("超时"),const_it.tx_hash.c_str());
 			}else
 			{
-				m_listBox.SetIndexString(i , sendaddr.c_str(), acceptaddr.c_str(),SendTime.c_str(),_T("--"), result.c_str(),_T("--"),reward.c_str(),_T(""),_T("未接"),const_it.tx_hash.c_str());
+				m_listBox.SetIndexString(i , const_it.left_addr.c_str(), const_it.right_addr.c_str(),SendTime.c_str(),_T("--"), result.c_str(),_T("--"),reward.c_str(),_T(""),_T("未接"),const_it.tx_hash.c_str());
 			}
 
 		}

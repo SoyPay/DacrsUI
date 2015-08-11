@@ -1534,13 +1534,9 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 		 uistruct::LISTP2POOL_T const_it = m_PoolList.at(k);
 
 		 double dmoney = (const_it.nPayMoney*1.0)/COIN;
-		 sprintf_s(buffer,"%.4f",dmoney);
-		 money = buffer;
-		 memset(buffer,0,1024);
-
-		 sprintf_s(buffer,"%.8f",dmoney);
-		 strmoney = buffer;
-		 memset(buffer,0,1024);
+		 money =strprintf("%.4f",dmoney);
+	
+		 strmoney =strprintf("%.8f",dmoney);
 
 		 temp = const_it.hash.substr(0,6);
 		 line = temp;
