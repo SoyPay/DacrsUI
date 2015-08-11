@@ -519,8 +519,11 @@ void CDacrsUIApp::UpdateAppRecord(string txdetail){
 				AcceptRePacketSpecailRecord(vTemp,transcion);
 				PopupContactBalloonTip(transcion,1,4);
 			}else{
-				PopupContactBalloonTip(transcion,0,5);
+				PopupContactBalloonTip(transcion,1,5);
 			}
+		}else if (!strcmp(transcion.desregid.c_str(),theApp.m_ipoScritptid.c_str()))//// ipo领币
+		{
+			PopupContactBalloonTip(transcion,2,5);
 		}
 	}
 }
@@ -1053,7 +1056,7 @@ void CDacrsUIApp::PopupContactBalloonTip(uistruct::REVTRANSACTION_t tx,int appty
 		return;
 	}
 
-	if (apptype == 1)     // 红包
+	if (apptype == 1 || apptype == 2 || txtype ==5)     // 红包 ipo领币
 	{
 		string strCond;
 		strCond = strprintf(" address='%s' ", tx.addr);
@@ -1176,19 +1179,15 @@ void CDacrsUIApp::PopupContactBalloonTip(uistruct::REVTRANSACTION_t tx,int appty
 
 	if (txtype ==5)
 	{
-		string strCond;
-		strCond = strprintf(" address='%s' ", tx.addr);
-		int nItem =  theApp.m_SqliteDeal.GetTableCountItem(_T("t_wallet_address"), strCond) ;
-		if (nItem == 0)
-		{
-			return;
-		}
 		if (apptype == 0)
 		{
 			strShow = "猜你妹交易\r\n";
 		}else if (apptype == 1)
 		{
 			strShow = "红包交易\r\n";
+		}else if (apptype == 2)
+		{
+			strShow = "IPO领币\r\n";
 		}
 		string nValue = tx.Contract;
 		std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue);
