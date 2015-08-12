@@ -235,6 +235,9 @@
     <ClCompile Include="msjexhnd.cpp">
       <Filter>头文件</Filter>
     </ClCompile>
+    <ClCompile Include="MessageBoxEx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BmpBtn.h">
@@ -526,6 +529,9 @@
       <Filter>源文件</Filter>
     </ClInclude>
     <ClInclude Include="msjexhnd.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageBoxEx.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -982,6 +988,21 @@
       <Filter>资源文件</Filter>
     </None>
     <None Include="res\CLOSE_BUTTON.BMP">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\btn1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\btn2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\btn3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\message.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\red.bmp">
       <Filter>资源文件</Filter>
     </None>
   </ItemGroup>

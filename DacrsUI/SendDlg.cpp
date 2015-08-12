@@ -61,10 +61,12 @@ void CSendDlg::SetBkBmpNid( UINT nBitmapIn )
 	}
 }
 
+
 void CSendDlg::OnBnClickedSendtrnsfer()
 {
 	// TODO: 在此添加控件通知处理程序代码
-
+	CMessageBoxEx message(_T("\n发送地址和目的地址不能相同!\n") , 0 );
+	message.DoModal();
 	if (theApp.IsLockWallet())
 	{
 		return ;
