@@ -71,6 +71,11 @@ time_t UiFun::SystemTimeToTimet(const SYSTEMTIME& st)
 		0};
 	return mktime(&temptm);
 }
+void UiFun::MessageBoxEx(CString strText , CString strCaption , UINT uType)
+{
+	CMessageBoxEx message(strText ,strCaption ,uType );
+	message.DoModal();
+}
 CString UiFun::UI_LoadString( CString secID , CString szID , UINT language ) 
 {
 	CString szValue;

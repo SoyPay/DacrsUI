@@ -164,6 +164,7 @@
     <None Include="res\diya_logo_4.bmp" />
     <None Include="res\dlg_balck_ground.bmp" />
     <None Include="res\dlg_bj.bmp" />
+    <None Include="res\error_icon.bmp" />
     <None Include="res\exit_bj.bmp" />
     <None Include="res\grab_bt.bmp" />
     <None Include="res\grab_red_packet.bmp" />
@@ -249,6 +250,7 @@
     <None Include="res\sister_3.bmp" />
     <None Include="res\target.bmp" />
     <None Include="res\Tip.bmp" />
+    <None Include="res\tip_icon.bmp" />
     <None Include="res\title.bmp" />
     <None Include="res\tradedetail_logo_1.bmp" />
     <None Include="res\tradedetail_logo_2.bmp" />
@@ -257,6 +259,7 @@
     <None Include="res\Trad_dlg.bmp" />
     <None Include="res\unlock.bmp" />
     <None Include="res\wallet_uipro.bmp" />
+    <None Include="res\warning_icon.bmp" />
     <None Include="res\wndtitlebk.bmp" />
     <None Include="res\xh_2.bmp" />
     <None Include="res\xh_3.bmp" />

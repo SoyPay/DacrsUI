@@ -9,7 +9,7 @@ class CMessageBoxEx : public CDialogEx
 
 public:
 	//CMessageBoxEx(CWnd* pParent = NULL);   // 标准构造函数
-	CMessageBoxEx(CString strText,int nType,UINT nImageType = IDB_BITMAP_MESSAGE_H ,CWnd* pParent = NULL);   // 标准构造函数
+	CMessageBoxEx(CString strText,CString strTip ,UINT uType ,CWnd* pParent = NULL);   // 标准构造函数
 	virtual ~CMessageBoxEx();
 
 // 对话框数据
@@ -21,11 +21,14 @@ protected:
 	DECLARE_MESSAGE_MAP()
 private:
 	CString m_Text;
-	int m_nType;
+	CString m_Tip;
+	int  m_nType;
+	UINT m_uType ;
 
 	CShadeButtonST m_quit;    //关闭
 	CShadeButtonST m_OK;      //确认
 	CShadeButtonST m_cancel;  //取消
+	CStaticTrans   m_strTip   ;  //提示信息
 	CStaticTrans   m_strText ;//显示内容
 	CFont  m_fontGrid;//字体变量
 	int m_select;
@@ -33,6 +36,7 @@ private:
 public:
 	HBITMAP		     m_pBmp; 
 	void		     SetBkBmpNid( UINT nBitmapIn ) ;
+	void             SetBitmap(UINT uBmpResource)  ;
 	int       GetSelect();
 public:
 	virtual BOOL OnInitDialog();
