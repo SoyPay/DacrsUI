@@ -1,9 +1,12 @@
 #pragma once
-
+#include "DialogBase.h"
+#include "StaticTrans.h"
+#include "BmpBtn.h"
+#include "ShadeButtonST.h"
 
 // CRedPacketList ¶Ô»°¿ò
 
-class CRedPacketList : public CDialogEx
+class CRedPacketList : public CDialogBase
 {
 	DECLARE_DYNAMIC(CRedPacketList)
 
@@ -24,4 +27,13 @@ public:
 	CListCtrl   m_listCtrl;
 	afx_msg void OnLvnColumnclickList2(NMHDR *pNMHDR, LRESULT *pResult);
 
+	afx_msg void OnBnClickedOk();
+	afx_msg void OnBnClickedClose();
+public:
+	CStaticTrans     m_strTx1  ;  
+	CStaticTrans     m_strTx2  ;  
+
+	CStaticTrans     m_headText;
+	CShadeButtonST   m_rBtnClose;
+	CShadeButtonST   m_rBtnOk;
 };

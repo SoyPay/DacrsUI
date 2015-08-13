@@ -238,6 +238,9 @@
     <ClCompile Include="MessageBoxEx.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="DialogBase.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BmpBtn.h">
@@ -532,6 +535,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="MessageBoxEx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DialogBase.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1003,6 +1009,12 @@
       <Filter>资源文件</Filter>
     </None>
     <None Include="res\red.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\contentbk.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\title.bmp">
       <Filter>资源文件</Filter>
     </None>
   </ItemGroup>
