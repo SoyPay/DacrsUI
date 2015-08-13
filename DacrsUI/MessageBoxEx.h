@@ -1,9 +1,10 @@
 #pragma once
+#include "DialogBase.h"
 #include "ShadeButtonST.h"
 #include "StaticTrans.h"
 // CMessageBoxEx ¶Ô»°¿ò
 
-class CMessageBoxEx : public CDialogEx
+class CMessageBoxEx : public CDialogBase
 {
 	DECLARE_DYNAMIC(CMessageBoxEx)
 
@@ -37,7 +38,7 @@ public:
 	HBITMAP		     m_pBmp; 
 	void		     SetBkBmpNid( UINT nBitmapIn ) ;
 	void             SetBitmap(UINT uBmpResource)  ;
-	int       GetSelect();
+	int              GetSelect();
 public:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnBnClickedOk();
@@ -45,6 +46,4 @@ public:
 	afx_msg void OnBnClickedCancel();
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
-	afx_msg LRESULT OnNcHitTest(CPoint point);
-	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 };

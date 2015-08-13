@@ -65,6 +65,8 @@ void CSendDlg::SetBkBmpNid( UINT nBitmapIn )
 void CSendDlg::OnBnClickedSendtrnsfer()
 {
 	// TODO: 在此添加控件通知处理程序代码
+
+	UiFun::MessageBoxEx(_T("\n发送地址不存在\n") , _T("提示") ,MFB_OKCANCEL|MFB_TIP );
 	if (theApp.IsLockWallet())
 	{
 		return ;

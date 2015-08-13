@@ -9,14 +9,15 @@
 
 // CMessageBoxEx 对话框
 
-IMPLEMENT_DYNAMIC(CMessageBoxEx, CDialogEx)
+IMPLEMENT_DYNAMIC(CMessageBoxEx, CDialogBase)
 
 CMessageBoxEx::CMessageBoxEx(CString strText,CString strTip ,UINT uType ,CWnd* pParent /*=NULL*/)
-	: CDialogEx(CMessageBoxEx::IDD, pParent)
+	: CDialogBase(CMessageBoxEx::IDD, pParent)
 {
 	m_Text = strText;
 	m_Tip  = strTip ;
 	m_uType = uType ;
+	m_pBmp = NULL;
 	SetBkBmpNid( IDB_BITMAP_MESSAGE_H ) ;
 }
 
@@ -30,7 +31,7 @@ CMessageBoxEx::~CMessageBoxEx()
 
 void CMessageBoxEx::DoDataExchange(CDataExchange* pDX)
 {
-	CDialogEx::DoDataExchange(pDX);
+	CDialogBase::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_QUIT, m_quit);
 	DDX_Control(pDX, IDC_OK, m_OK);
 	DDX_Control(pDX, IDC_CANCEL, m_cancel);
@@ -39,7 +40,7 @@ void CMessageBoxEx::DoDataExchange(CDataExchange* pDX)
 }
 
 
-BEGIN_MESSAGE_MAP(CMessageBoxEx, CDialogEx)
+BEGIN_MESSAGE_MAP(CMessageBoxEx, CDialogBase)
 	ON_BN_CLICKED(IDC_OK, &CMessageBoxEx::OnBnClickedOk)
 	ON_BN_CLICKED(IDC_QUIT, &CMessageBoxEx::OnBnClickedQuit)
 	ON_BN_CLICKED(IDC_CANCEL, &CMessageBoxEx::OnBnClickedCancel)
@@ -82,7 +83,7 @@ void CMessageBoxEx::SetBitmap(UINT uBmpResource)
 }
 BOOL CMessageBoxEx::OnInitDialog()
 {
-	CDialogEx::OnInitDialog();
+	CDialogBase::OnInitDialog();
 
 	// TODO:  在此添加额外的初始化
 	UpdateData(FALSE);
@@ -90,7 +91,8 @@ BOOL CMessageBoxEx::OnInitDialog()
 	CRect rect;
 	GetWindowRect(&rect);
 	ClientToScreen(rect);
-	MoveWindow((rect.left + rect.right)/2 - 381/2  ,(rect.top + rect.bottom)/2 - 145/2 ,381,145,FALSE);
+	//MoveWindow((rect.left + rect.right)/2 - 381/2  ,(rect.top + rect.bottom)/2 - 145/2 ,381,145,FALSE);
+	MoveWindow((rect.left + rect.right)/2 - 381/2  ,(rect.top + rect.bottom)/2 - 145/2 ,381,300,FALSE);
 	m_fontGrid.CreatePointFont(100,_T("新宋体"));
 
 	m_quit.SetBitmaps( IDB_BITMAP_CLOSE , RGB(255, 255, 0) , IDB_BITMAP_CLOSE2 , RGB(255, 255, 255) );
@@ -131,7 +133,7 @@ BOOL CMessageBoxEx::OnInitDialog()
 		   m_OK.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
 		   m_OK.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
 		   m_OK.SetWindowText("确认") ;
-		   m_OK.SetFontEx(12 , _T("宋体"));
+		  // m_OK.SetFontEx(12 , _T("宋体"));
 		   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 		   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
@@ -143,7 +145,7 @@ BOOL CMessageBoxEx::OnInitDialog()
 		  m_OK.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
 		   m_OK.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
 		   m_OK.SetWindowText("确认") ;
-		   m_OK.SetFontEx(12 , _T("宋体"));
+		  // m_OK.SetFontEx(12 , _T("宋体"));
 		   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 		   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
@@ -155,7 +157,7 @@ BOOL CMessageBoxEx::OnInitDialog()
 		   m_cancel.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
 		   m_cancel.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
 		   m_cancel.SetWindowText("取消") ;
-		   m_cancel.SetFontEx(12 , _T("宋体"));
+		  // m_cancel.SetFontEx(12 , _T("宋体"));
 		   m_cancel.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		   m_cancel.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 		   m_cancel.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
@@ -167,7 +169,7 @@ BOOL CMessageBoxEx::OnInitDialog()
 		   m_OK.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
 		   m_OK.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
 		   m_OK.SetWindowText("是") ;
-		   m_OK.SetFontEx(12 , _T("宋体"));
+		  // m_OK.SetFontEx(12 , _T("宋体"));
 		   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 		   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
@@ -179,7 +181,7 @@ BOOL CMessageBoxEx::OnInitDialog()
 		   m_OK.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
 		   m_OK.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
 		   m_OK.SetWindowText("是") ;
-		   m_OK.SetFontEx(12 , _T("宋体"));
+		  // m_OK.SetFontEx(12 , _T("宋体"));
 		   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 		   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
@@ -191,7 +193,7 @@ BOOL CMessageBoxEx::OnInitDialog()
 		   m_cancel.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
 		   m_cancel.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
 		   m_cancel.SetWindowText("否") ;
-		   m_cancel.SetFontEx(12 , _T("宋体"));
+		  // m_cancel.SetFontEx(12 , _T("宋体"));
 		   m_cancel.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		   m_cancel.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 		   m_cancel.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
@@ -210,7 +212,7 @@ void CMessageBoxEx::OnBnClickedOk()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	m_select = 1;
-	CDialogEx::OnCancel();
+	CDialogBase::OnCancel();
 }
 
 
@@ -218,7 +220,7 @@ void CMessageBoxEx::OnBnClickedQuit()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	m_select = 0;
-	CDialogEx::OnCancel();
+	CDialogBase::OnCancel();
 }
 
 
@@ -226,14 +228,15 @@ void CMessageBoxEx::OnBnClickedCancel()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	m_select = 0;
-	CDialogEx::OnCancel();
+	CDialogBase::OnCancel();
 }
 
 
 BOOL CMessageBoxEx::OnEraseBkgnd(CDC* pDC)
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
-	CRect   rect; 
+	CDialogBase::OnEraseBkgnd(pDC);
+	/*CRect   rect; 
 	GetClientRect(&rect); 
 	if(m_pBmp   !=   NULL) { 
 		BITMAP   bm; 
@@ -246,7 +249,7 @@ BOOL CMessageBoxEx::OnEraseBkgnd(CDC* pDC)
 		dcMem.SelectObject(pOldBitmap);
 		dcMem.DeleteDC();
 	} else  
-		CWnd::OnEraseBkgnd(pDC); 
+		CWnd::OnEraseBkgnd(pDC); */
 
 	return TRUE;
 }
@@ -256,12 +259,12 @@ HBRUSH CMessageBoxEx::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 {
 	HBRUSH hbr = CDialogEx::OnCtlColor(pDC, pWnd, nCtlColor);
 
-	if (nCtlColor == CTLCOLOR_STATIC)
-	{
-		/*pDC->SetBkMode(TRANSPARENT);
-		pDC->SelectObject(&m_fontGrid);
-		hbr = (HBRUSH)CreateSolidBrush(RGB(224,224,224));*/
-	}
+	//if (nCtlColor == CTLCOLOR_STATIC)
+	//{
+	//	/*pDC->SetBkMode(TRANSPARENT);
+	//	pDC->SelectObject(&m_fontGrid);
+	//	hbr = (HBRUSH)CreateSolidBrush(RGB(224,224,224));*/
+	//}
 	return hbr;
 }
 int CMessageBoxEx::GetSelect()
@@ -269,19 +272,3 @@ int CMessageBoxEx::GetSelect()
 	return m_select;
 }
 
-LRESULT CMessageBoxEx::OnNcHitTest(CPoint point)
-{
-	// TODO: 在此添加消息处理程序代码和/或调用默认值
-	UINT nResult = CDialog::OnNcHitTest(point);
-	return nResult  == HTCLIENT ? HTCAPTION : nResult;//鼠标的坐标在客户区么？在的话就把它当成标题栏
-	return CDialogEx::OnNcHitTest(point);
-}
-
-
-void CMessageBoxEx::OnLButtonDown(UINT nFlags, CPoint point)
-{
-	// TODO: 在此添加消息处理程序代码和/或调用默认值
-	SendMessage(WM_SYSCOMMAND, SC_MOVE, 0);//发送一个移动的消息
-	CDialogEx::OnLButtonDown(nFlags, point);
-	//CDialogEx::OnLButtonDown(nFlags, point);
-}
