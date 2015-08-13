@@ -10,7 +10,8 @@
 #include <math.h>
 #include <string>
 #include "json\json.h"
-
+#include "resource.h"		// 主符号
+#include "MessageBoxEx.h"
 using namespace std;
 //#define
 #define LANGUAGE_FILE			"\\Config\\Language.ini"
@@ -46,6 +47,16 @@ using namespace std;
 enum {
 	LANGUAGE_CN = 0x01,
 	LANGUAGE_EN ,
+} ;
+enum {
+	MFB_OK = 0x00001L,   //确认
+	MFB_OKCANCEL ,         //确认 & 取消
+	MFB_YES      ,         //是
+	MFB_YESNO    ,         //是 &　否
+
+	MFB_TIP      ,         //提示
+	MFB_ERROR    ,         //错误
+	MFB_WARNING  ,         //警告
 } ;
 typedef enum tagDialogType{
 	DIALOG_MYWALLET     = 0x01,    //我的钱包 
@@ -740,7 +751,7 @@ namespace UiFun
 	time_t  SystemTimeToTimet(const SYSTEMTIME& st) ;
 	SYSTEMTIME Time_tToSystemTime(time_t t);
 	int     RandNumber();   //生成一个1-6的随机数
-
+	void    MessageBoxEx(CString strText , CString strCaption , UINT uType); //自制MessageBox对话框
 	CString UI_LoadString( CString secID , CString szID , UINT language ) ;  //根据字符串ID加载字符串
 
 	HBITMAP GlobalBkgndBMP(UINT nIDBitmap);

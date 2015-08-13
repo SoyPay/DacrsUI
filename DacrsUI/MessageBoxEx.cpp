@@ -11,12 +11,13 @@
 
 IMPLEMENT_DYNAMIC(CMessageBoxEx, CDialogEx)
 
-CMessageBoxEx::CMessageBoxEx(CString strText,int nType,UINT nImageType ,CWnd* pParent /*=NULL*/)
+CMessageBoxEx::CMessageBoxEx(CString strText,CString strTip ,UINT uType ,CWnd* pParent /*=NULL*/)
 	: CDialogEx(CMessageBoxEx::IDD, pParent)
 {
 	m_Text = strText;
-	m_nType = nType;
-	SetBkBmpNid( nImageType ) ;
+	m_Tip  = strTip ;
+	m_uType = uType ;
+	SetBkBmpNid( IDB_BITMAP_MESSAGE_H ) ;
 }
 
 CMessageBoxEx::~CMessageBoxEx()
@@ -34,6 +35,7 @@ void CMessageBoxEx::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_OK, m_OK);
 	DDX_Control(pDX, IDC_CANCEL, m_cancel);
 	DDX_Control(pDX, IDC_TEXT, m_strText);
+	DDX_Control(pDX, IDC_TIP, m_strTip);
 }
 
 
@@ -63,7 +65,21 @@ void CMessageBoxEx::SetBkBmpNid( UINT nBitmapIn )
 		m_pBmp = (HBITMAP)::LoadImage(hInstResource, MAKEINTRESOURCE(nBitmapIn), IMAGE_BITMAP, 0, 0, 0);
 	}
 }
-
+void CMessageBoxEx::SetBitmap(UINT uBmpResource)
+{
+	HBITMAP hBitmap; //添加meaasgebox窗口中的图片 
+	CStatic *pStatic = (CStatic *)GetDlgItem(IDC_IMAGE); 
+	//关联图片ID 
+	hBitmap = (HBITMAP)LoadImage(    
+	AfxGetInstanceHandle(), 
+	MAKEINTRESOURCE(uBmpResource), 
+	IMAGE_BITMAP, 
+	0, 
+	0, 
+	LR_LOADMAP3DCOLORS); 
+	pStatic->ModifyStyle(0xF, SS_BITMAP|SS_CENTERIMAGE); 
+	pStatic->SetBitmap(hBitmap); 
+}
 BOOL CMessageBoxEx::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
@@ -74,7 +90,7 @@ BOOL CMessageBoxEx::OnInitDialog()
 	CRect rect;
 	GetWindowRect(&rect);
 	ClientToScreen(rect);
-	MoveWindow((rect.left + rect.right)/2 - 381  ,(rect.top + rect.bottom)/2 - 145/2 ,381,145,FALSE);
+	MoveWindow((rect.left + rect.right)/2 - 381/2  ,(rect.top + rect.bottom)/2 - 145/2 ,381,145,FALSE);
 	m_fontGrid.CreatePointFont(100,_T("新宋体"));
 
 	m_quit.SetBitmaps( IDB_BITMAP_CLOSE , RGB(255, 255, 0) , IDB_BITMAP_CLOSE2 , RGB(255, 255, 255) );
@@ -86,53 +102,103 @@ BOOL CMessageBoxEx::OnInitDialog()
 	m_quit.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
 	m_quit.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
 	m_quit.SizeToContent();
+	//图片
+	if ( (m_uType & MFB_TIP) == MFB_TIP ) {
+		SetBitmap(IDB_BITMAP_TIP);
+	}else if ( (m_uType & MFB_ERROR) == MFB_ERROR ) {
+		SetBitmap(IDB_BITMAP_ERROR);
+	}else if ( (m_uType & MFB_WARNING) == MFB_WARNING ) {
+		SetBitmap(IDB_BITMAP_WARNING);
+	}
+	GetDlgItem(IDC_IMAGE)->MoveWindow(381/6 - 39/2 , (145 - 145/5 )/2 - 38/2 + 10 , 39 , 38);
 	//关闭按钮位置
 	m_quit.MoveWindow(381-25-2,2,26,22);
+
+	//提示信息位置
+	m_strTip.SetFont(100, _T("微软雅黑"));				//设置显示字体和大小
+	m_strTip.SetTextColor(RGB(255,255,255));	
+	m_strTip.MoveWindow(2,2,381/4,145/5);
+	m_strTip.SetWindowText(m_Tip);
 
 	//显示文本的位置
 	m_strText.SetFont(100, _T("宋体"));				//设置显示字体和大小
 	m_strText.SetTextColor(RGB(0,0,0));	
-	m_strText.MoveWindow(40,50,381-80,145-36-70);
+	m_strText.MoveWindow(381/6 + 39/2 + 20 ,(145 - 145/5 )/2 - 38/2 + 10,381-381/6 + 39/2,145-145/5-((145 - 145/5 )/2 - 38/2 + 10));
 	m_strText.SetWindowText(m_Text);
 
-	if ( m_nType == 0 ) {
-	   //确定按钮
-	   m_OK.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
-	   m_OK.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-	   m_OK.SetWindowText("确认") ;
-	   m_OK.SetFontEx(12 , _T("宋体"));
-	   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
-	   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
-	   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
-	   m_OK.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
-	   m_OK.SizeToContent();
-	   m_OK.MoveWindow(381/2 + 381/4 - 56/2,145-36-6,56,23);
-	   m_cancel.ShowWindow(SW_HIDE);
-	}else if ( m_nType == 1 ) {
-	   //是按钮
-	   m_OK.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
-	   m_OK.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-	   m_OK.SetWindowText("是") ;
-	   m_OK.SetFontEx(12 , _T("宋体"));
-	   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
-	   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
-	   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
-	   m_OK.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
-	   m_OK.SizeToContent();
-	   //是按钮位置
-	   m_OK.MoveWindow(381/2 - 381/4 - 56/2,145-36-6,56,23);
-	   //否按钮
-	   m_cancel.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
-	   m_cancel.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-	   m_cancel.SetWindowText("否") ;
-	   m_cancel.SetFontEx(12 , _T("宋体"));
-	   m_cancel.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
-	   m_cancel.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
-	   m_cancel.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
-	   m_cancel.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
-	   m_cancel.SizeToContent();
-	   //否按钮位置
-	   m_cancel.MoveWindow(381/2 + 381/4 - 56/2,145-36-6,56,23);
+	//按钮
+	if ( (m_uType & MFB_OK) == MFB_OK ) {
+		   m_OK.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
+		   m_OK.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+		   m_OK.SetWindowText("确认") ;
+		   m_OK.SetFontEx(12 , _T("宋体"));
+		   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
+		   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+		   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
+		   m_OK.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
+		   m_OK.SizeToContent();
+		   m_OK.MoveWindow(381/2 + 381/4 - 56/2,145-36-6,56,23);
+		   m_cancel.ShowWindow(SW_HIDE);
+	}else if ( (m_uType & MFB_OKCANCEL) == MFB_OKCANCEL ) {
+		  m_OK.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
+		   m_OK.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+		   m_OK.SetWindowText("确认") ;
+		   m_OK.SetFontEx(12 , _T("宋体"));
+		   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
+		   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+		   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
+		   m_OK.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
+		   m_OK.SizeToContent();
+		   //是按钮位置
+		   m_OK.MoveWindow(381/2 - 381/4 - 56/2,145-36-6,56,23);
+		   //否按钮
+		   m_cancel.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
+		   m_cancel.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+		   m_cancel.SetWindowText("取消") ;
+		   m_cancel.SetFontEx(12 , _T("宋体"));
+		   m_cancel.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
+		   m_cancel.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+		   m_cancel.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
+		   m_cancel.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
+		   m_cancel.SizeToContent();
+		   //否按钮位置
+		   m_cancel.MoveWindow(381/2 + 381/4 - 56/2,145-36-6,56,23);
+	}else if ( (m_uType & MFB_YES) == MFB_YES ) {
+		   m_OK.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
+		   m_OK.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+		   m_OK.SetWindowText("是") ;
+		   m_OK.SetFontEx(12 , _T("宋体"));
+		   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
+		   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+		   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
+		   m_OK.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
+		   m_OK.SizeToContent();
+		   m_OK.MoveWindow(381/2 + 381/4 - 56/2,145-36-6,56,23);
+		   m_cancel.ShowWindow(SW_HIDE);
+	}else if ( (m_uType & MFB_YESNO) == MFB_YESNO ) {
+		   m_OK.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
+		   m_OK.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+		   m_OK.SetWindowText("是") ;
+		   m_OK.SetFontEx(12 , _T("宋体"));
+		   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
+		   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+		   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
+		   m_OK.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
+		   m_OK.SizeToContent();
+		   //是按钮位置
+		   m_OK.MoveWindow(381/2 - 381/4 - 56/2,145-36-6,56,23);
+		   //否按钮
+		   m_cancel.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
+		   m_cancel.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+		   m_cancel.SetWindowText("否") ;
+		   m_cancel.SetFontEx(12 , _T("宋体"));
+		   m_cancel.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
+		   m_cancel.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+		   m_cancel.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
+		   m_cancel.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
+		   m_cancel.SizeToContent();
+		   //否按钮位置
+		   m_cancel.MoveWindow(381/2 + 381/4 - 56/2,145-36-6,56,23);
 	}
 
 	return TRUE;  // return TRUE unless you set the focus to a control
