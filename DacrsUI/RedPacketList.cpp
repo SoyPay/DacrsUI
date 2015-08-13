@@ -178,10 +178,10 @@ BOOL CRedPacketList::OnInitDialog()
 	m_rBtnClose.SizeToContent();
 	//m_rBtnClose.SetWindowPos(NULL ,320 , 0 , 0 , 0 , SWP_NOSIZE); 
 
-	m_rBtnOk.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
+	m_rBtnOk.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
 	m_rBtnOk.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
 	m_rBtnOk.SetWindowText("È· ¶¨") ;
-	m_rBtnOk.SetFontEx(20 , _T("Î¢ÈíÑÅºÚ"));
+	//m_rBtnOk.SetFontEx(20 , _T("Î¢ÈíÑÅºÚ"));
 	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));

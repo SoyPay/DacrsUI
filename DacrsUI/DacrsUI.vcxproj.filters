@@ -1017,6 +1017,15 @@
     <None Include="res\title.bmp">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="res\error_icon.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\tip_icon.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\warning_icon.bmp">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="资源文件">
