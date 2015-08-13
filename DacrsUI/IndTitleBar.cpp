@@ -325,9 +325,9 @@ void CIndTitleBar::OnBnClickedMenubar()
 	CMenu *pPopup=newMenu.GetSubMenu(0);
 	if (theApp.HaveLocked)
 	{
-		pPopup->EnableMenuItem(ID__ENCRYPTWALLET,MF_GRAYED);
+		//pPopup->EnableMenuItem(ID__ENCRYPTWALLET,MF_GRAYED);
 	}
-	int b =pPopup->EnableMenuItem(ID__SET,MF_GRAYED);
+	//int b =pPopup->EnableMenuItem(ID__SET,MF_GRAYED);
 	
 	pPopup->SetMenuItemBitmaps(0,MF_BYPOSITION, &pMenuBitmap, &pMenuBitmap);
 	//显示右键菜单，由视类窗口拥有。

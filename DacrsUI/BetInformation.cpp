@@ -9,10 +9,10 @@
 
 // CBetInformation 对话框
 
-IMPLEMENT_DYNAMIC(CBetInformation, CDialogEx)
+IMPLEMENT_DYNAMIC(CBetInformation, CDialogBase)
 
 CBetInformation::CBetInformation(CWnd* pParent /*=NULL*/)
-	: CDialogEx(CBetInformation::IDD, pParent)
+	: CDialogBase(CBetInformation::IDD, pParent)
 {
 
 }
@@ -23,19 +23,52 @@ CBetInformation::~CBetInformation()
 
 void CBetInformation::DoDataExchange(CDataExchange* pDX)
 {
-	CDialogEx::DoDataExchange(pDX);
+	CDialogBase::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_HEAD, m_headText);	
+	DDX_Control(pDX, IDC_CLOSE, m_rBtnClose);
+	DDX_Control(pDX, IDOK, m_rBtnOk);
 }
 
 
-BEGIN_MESSAGE_MAP(CBetInformation, CDialogEx)
+BEGIN_MESSAGE_MAP(CBetInformation, CDialogBase)
+	ON_BN_CLICKED(IDC_CLOSE, &CBetInformation::OnBnClickedClose)
 END_MESSAGE_MAP()
 
 
 // CBetInformation 消息处理程序
 BOOL CBetInformation::OnInitDialog()
 {
-	CDialogEx::OnInitDialog();
+	CDialogBase::OnInitDialog();
 
+	m_headText.SetFont(90, _T("微软雅黑"));
+	m_headText.SetTextColor(RGB(255,255,255));	
+
+	m_rBtnClose.SetBitmaps( IDB_BITMAP_CLOSE , RGB(255, 255, 0) , IDB_BITMAP_CLOSE2 , RGB(255, 255, 255) );
+	m_rBtnClose.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+	m_rBtnClose.SetWindowText("") ;
+	m_rBtnClose.SetFontEx(20 , _T("微软雅黑"));
+	m_rBtnClose.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
+	m_rBtnClose.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+	m_rBtnClose.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
+	m_rBtnClose.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
+	m_rBtnClose.SizeToContent();
+
+	CRect rect ;
+	m_rBtnClose.GetClientRect(rect);
+
+	RECT ret;
+	GetWindowRect(&ret);
+	m_rBtnClose.SetWindowPos(NULL ,(ret.right-ret.left)-rect.Width() , 2 , 0 , 0 , SWP_NOSIZE); 
+
+	m_rBtnOk.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
+	m_rBtnOk.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+	m_rBtnOk.SetWindowText("确 定") ;
+	m_rBtnOk.SetFontEx(20 , _T("微软雅黑"));
+	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
+	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
+	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
+	m_rBtnOk.SizeToContent();
 	// TODO:  在此添加额外的初始化
 	ShowBetRecordDetail(theApp.m_strAddress);
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -189,4 +222,10 @@ void CBetInformation::ShowBetRecordDetail(CString jsontx)
 	}
 
 		GetDlgItem(IDC_EDIT_TXDETAIL)->SetWindowText(txdetail.c_str());
+}
+
+void CBetInformation::OnBnClickedClose()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CDialogBase::OnCancel();
 }

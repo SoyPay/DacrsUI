@@ -1,12 +1,12 @@
 #pragma once
-#include "RoundButton.h"
+#include "DialogBase.h"
 #include "StaticTrans.h"
 #include "BmpBtn.h"
 #include "ShadeButtonST.h"
 
 // CSetAppFee 对话框
 
-class CSetAppFee : public CDialogEx
+class CSetAppFee : public CDialogBase
 {
 	DECLARE_DYNAMIC(CSetAppFee)
 
@@ -27,19 +27,10 @@ public:
 	bool IsAllDigtal(const char* pData);
 	bool IsRegId(const char* pData);
 public:
-	CFont            m_fontGrid;//字体变量
-	HBITMAP		     m_pBmp; 
-	void		     SetBkBmpNid( UINT nBitmapIn ) ;
 	virtual BOOL OnInitDialog();
-	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
-	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 public:
-	CShadeButtonST   m_rBtnOk;
-	CShadeButtonST   m_rBtnCancel;
 	afx_msg void OnBnClickedButtonClose();
-	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
-	afx_msg LRESULT OnNcHitTest(CPoint point);
 	void SetDaluft();
 public:
 	CStaticTrans     m_strTrading  ;   
@@ -55,9 +46,11 @@ public:
 	CStaticTrans     m_strTx5  ;  
 
 	CStaticTrans     m_strDesTx1  ;  
-	CStaticTrans     m_strDesTx2  ;  
-	CStaticTrans     m_strDesTx3  ;  
-	CStaticTrans     m_strDesTx4  ;  
-	CStaticTrans     m_strDesTx5  ;  
-	HBRUSH            m_hbrush;
+
+
+	CStaticTrans     m_headText;
+	CShadeButtonST   m_rBtnClose;
+	CShadeButtonST   m_rBtnCancel;
+	CShadeButtonST   m_rBtnOk;
+	afx_msg void OnBnClickedClose();
 };

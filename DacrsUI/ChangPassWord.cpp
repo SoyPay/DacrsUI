@@ -9,10 +9,10 @@
 
 // CChangPassWord 对话框
 
-IMPLEMENT_DYNAMIC(CChangPassWord, CDialogEx)
+IMPLEMENT_DYNAMIC(CChangPassWord, CDialogBase)
 
 CChangPassWord::CChangPassWord(CWnd* pParent /*=NULL*/)
-	: CDialogEx(CChangPassWord::IDD, pParent)
+	: CDialogBase(CChangPassWord::IDD, pParent)
 {
 
 }
@@ -23,12 +23,20 @@ CChangPassWord::~CChangPassWord()
 
 void CChangPassWord::DoDataExchange(CDataExchange* pDX)
 {
-	CDialogEx::DoDataExchange(pDX);
+	CDialogBase::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_STATICODLE, m_oldpassword);
+	DDX_Control(pDX, IDC_STATICNEW, m_newpassword);	
+	DDX_Control(pDX, IDC_STATICCOMFIRED, m_comfiredpassword);	
+	DDX_Control(pDX, IDC_STATIC4, m_headText);	
+	DDX_Control(pDX, IDC_CLOSE, m_rBtnClose);
+	DDX_Control(pDX, IDCANCEL, m_rBtnCancel);
+	DDX_Control(pDX, IDOK, m_rBtnOk);
 }
 
 
-BEGIN_MESSAGE_MAP(CChangPassWord, CDialogEx)
+BEGIN_MESSAGE_MAP(CChangPassWord, CDialogBase)
 	ON_BN_CLICKED(IDOK, &CChangPassWord::OnBnClickedOk)
+	ON_BN_CLICKED(IDC_CLOSE, &CChangPassWord::OnBnClickedClose)
 END_MESSAGE_MAP()
 
 
@@ -114,5 +122,60 @@ void CChangPassWord::OnBnClickedOk()
 	}
 	
 
-	CDialogEx::OnOK();
+	CDialogBase::OnOK();
+}
+
+
+void CChangPassWord::OnBnClickedClose()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CDialogBase::OnCancel();
+}
+
+
+BOOL CChangPassWord::OnInitDialog()
+{
+	CDialogBase::OnInitDialog();
+
+	// TODO:  在此添加额外的初始化
+	m_headText.SetFont(90, _T("微软雅黑"));
+	m_headText.SetTextColor(RGB(255,255,255));	
+
+	m_rBtnClose.SetBitmaps( IDB_BITMAP_CLOSE , RGB(255, 255, 0) , IDB_BITMAP_CLOSE2 , RGB(255, 255, 255) );
+	m_rBtnClose.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+	m_rBtnClose.SetWindowText("") ;
+	m_rBtnClose.SetFontEx(20 , _T("微软雅黑"));
+	m_rBtnClose.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
+	m_rBtnClose.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+	m_rBtnClose.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
+	m_rBtnClose.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
+	m_rBtnClose.SizeToContent();
+	CRect rect ;
+	m_rBtnClose.GetClientRect(rect);
+
+	RECT ret;
+	GetWindowRect(&ret);
+	m_rBtnClose.SetWindowPos(NULL ,(ret.right-ret.left)-rect.Width() , 2 , 0 , 0 , SWP_NOSIZE); 
+
+	m_rBtnOk.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
+	m_rBtnOk.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+	m_rBtnOk.SetWindowText("确 定") ;
+	m_rBtnOk.SetFontEx(20 , _T("微软雅黑"));
+	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
+	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
+	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
+	m_rBtnOk.SizeToContent();
+
+	m_rBtnCancel.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
+	m_rBtnCancel.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+	m_rBtnCancel.SetWindowText("取 消") ;
+	m_rBtnCancel.SetFontEx(20 , _T("微软雅黑"));
+	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
+	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
+	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
+	m_rBtnCancel.SizeToContent();
+	return TRUE;  // return TRUE unless you set the focus to a control
+	// 异常: OCX 属性页应返回 FALSE
 }
