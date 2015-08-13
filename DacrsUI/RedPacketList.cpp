@@ -9,10 +9,10 @@
 
 // CRedPacketList 对话框
 
-IMPLEMENT_DYNAMIC(CRedPacketList, CDialogEx)
+IMPLEMENT_DYNAMIC(CRedPacketList, CDialogBase)
 
 CRedPacketList::CRedPacketList(CWnd* pParent /*=NULL*/)
-	: CDialogEx(CRedPacketList::IDD, pParent)
+	: CDialogBase(CRedPacketList::IDD, pParent)
 {
 }
 
@@ -24,11 +24,19 @@ void CRedPacketList::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LIST2, m_listCtrl);
+
+	DDX_Control(pDX, IDC_REDID, m_strTx1);
+	DDX_Control(pDX, IDC_TXHASH, m_strTx2);	
+	DDX_Control(pDX, IDC_HEAD, m_headText);	
+	DDX_Control(pDX, IDC_CLOSE, m_rBtnClose);
+	DDX_Control(pDX, IDOK, m_rBtnOk);
 }
 
 
-BEGIN_MESSAGE_MAP(CRedPacketList, CDialogEx)
+BEGIN_MESSAGE_MAP(CRedPacketList, CDialogBase)
 	ON_NOTIFY(LVN_COLUMNCLICK, IDC_LIST2, &CRedPacketList::OnLvnColumnclickList2)
+	ON_BN_CLICKED(IDOK, &CRedPacketList::OnBnClickedOk)
+	ON_BN_CLICKED(IDC_CLOSE, &CRedPacketList::OnBnClickedClose)
 END_MESSAGE_MAP()
 
 
@@ -154,7 +162,32 @@ void CRedPacketList::ShowTxDetail(CString txhash)
 }
 BOOL CRedPacketList::OnInitDialog()
 {
-	CDialogEx::OnInitDialog();
+	CDialogBase::OnInitDialog();
+
+	m_headText.SetFont(90, _T("微软雅黑"));
+	m_headText.SetTextColor(RGB(255,255,255));	
+
+	m_rBtnClose.SetBitmaps( IDB_BITMAP_CLOSE , RGB(255, 255, 0) , IDB_BITMAP_CLOSE2 , RGB(255, 255, 255) );
+	m_rBtnClose.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+	m_rBtnClose.SetWindowText("") ;
+	m_rBtnClose.SetFontEx(20 , _T("微软雅黑"));
+	m_rBtnClose.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
+	m_rBtnClose.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+	m_rBtnClose.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
+	m_rBtnClose.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
+	m_rBtnClose.SizeToContent();
+	//m_rBtnClose.SetWindowPos(NULL ,320 , 0 , 0 , 0 , SWP_NOSIZE); 
+
+	m_rBtnOk.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
+	m_rBtnOk.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+	m_rBtnOk.SetWindowText("确 定") ;
+	m_rBtnOk.SetFontEx(20 , _T("微软雅黑"));
+	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
+	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
+	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
+	m_rBtnOk.SizeToContent();
+
 
 	struct LISTCol {
 		CString		name ;
@@ -162,7 +195,7 @@ BOOL CRedPacketList::OnInitDialog()
 	} listcol[3]  = {
 		{"序号",          70},
 		{"账户ID",          85},
-		{"金额" ,      150}
+		{"金额" ,      180}
 	};
 
 	for( int i = 0 ; i < 3 ; i++  ) {
@@ -241,4 +274,18 @@ void CRedPacketList::OnLvnColumnclickList2(NMHDR *pNMHDR, LRESULT *pResult)
 	m_listCtrl.SortItems(MyCompareProc,(DWORD_PTR)&m_listCtrl);//排序 第二个参数是比较函数的第三个参数
 	method =!method;
 	*pResult =0;
+}
+
+
+void CRedPacketList::OnBnClickedOk()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CDialogBase::OnOK();
+}
+
+
+void CRedPacketList::OnBnClickedClose()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CDialogBase::OnCancel();
 }

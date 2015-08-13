@@ -65,8 +65,6 @@ void CSendDlg::SetBkBmpNid( UINT nBitmapIn )
 void CSendDlg::OnBnClickedSendtrnsfer()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	CMessageBoxEx message(_T("\n发送地址和目的地址不能相同!\n") , 0 );
-	message.DoModal();
 	if (theApp.IsLockWallet())
 	{
 		return ;
@@ -187,7 +185,7 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 
 		string strData;
 		if ( pos >=0 ) {
-			strData = strprintf(" 转账交易发送成功\n\n 源地址:%s\n\n 目的地址:%s\n\n 金额：%.4lf\n  hash:%s", data.address.c_str(),strMaddress, dSendMoney,root["hash"].asCString() ) ;
+			strData = strprintf(" 转账交易发送成功\n\n 源地址:%s\n\n 目的地址:%s\n\n 金额：%.4lf\n  hash:%s", data.address.c_str(),strMaddress, dSendMoney,root["hash"].asCString()) ;
 		}else{
 			strData = "转账失败!";
 		}

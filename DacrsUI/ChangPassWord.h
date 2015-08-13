@@ -1,9 +1,11 @@
 #pragma once
-
-
+#include "DialogBase.h"
+#include "StaticTrans.h"
+#include "BmpBtn.h"
+#include "ShadeButtonST.h"
 // CChangPassWord ¶Ô»°¿ò
 
-class CChangPassWord : public CDialogEx
+class CChangPassWord : public CDialogBase
 {
 	DECLARE_DYNAMIC(CChangPassWord)
 
@@ -20,4 +22,14 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnBnClickedOk();
+	afx_msg void OnBnClickedClose();
+	virtual BOOL OnInitDialog();
+public:
+	CStaticTrans     m_oldpassword;
+	CStaticTrans     m_newpassword;
+	CStaticTrans     m_comfiredpassword;
+	CStaticTrans     m_headText;
+	CShadeButtonST   m_rBtnClose;
+	CShadeButtonST   m_rBtnCancel;
+	CShadeButtonST   m_rBtnOk;
 };
