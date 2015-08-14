@@ -112,7 +112,7 @@ void CSignAccountsDlg::OnBnClickedButtonSend()
 		}else{
 			strData="激活账户失败!" ;
 		}
-		if ( IDOK == ::MessageBox( this->GetSafeHwnd() ,strData.c_str(), _T("提示") , MB_ICONINFORMATION ) ){
+		if ( IDOK == UiFun::MessageBoxEx(strData.c_str(), _T("提示") , MFB_OK|MFB_TIP ) ){
 			EndDialog(IDOK);
 		}
 	}

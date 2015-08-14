@@ -652,7 +652,7 @@ void CP2PDlg::OnBnClickedButtonWithd()
 	{
 		return;
 	}
-	if ( IDNO == ::MessageBox( this->GetSafeHwnd() ,_T("是否确定要提现") , _T("提示") , MB_YESNO|MB_ICONINFORMATION ) )
+	if ( IDNO == UiFun::MessageBoxEx( _T("是否确定要提现") , _T("提示") ,MB_YESNO|MFB_TIP ) )
 		return;
 
 	if (!CheckRegIDValid( theApp.m_betScritptid )) return ;
@@ -1015,8 +1015,8 @@ void CP2PDlg::OnBnClickedButtonMale()
 
 	CString strDisplay;
 	strDisplay.Format(_T("确定要发送妹--->金额:%s"), strTxMoney);
-	COut outdlg(NULL, strDisplay,100);
-	if ( IDOK != outdlg.DoModal()){
+	if (IDCANCEL == UiFun::MessageBoxEx(strDisplay , _T("提示") , MB_OKCANCEL|MFB_TIP ) )
+	{
 		return;
 	}
 	SendBet(1);
@@ -1068,8 +1068,8 @@ void CP2PDlg::OnBnClickedButtonWoman()
 
 	CString strDisplay;
 	strDisplay.Format(_T("确定要发送哥--->金额:%s"), strTxMoney);
-	COut outdlg(NULL, strDisplay,100);
-	if ( IDOK != outdlg.DoModal()){
+	if (IDCANCEL == UiFun::MessageBoxEx(strDisplay , _T("提示") , MB_OKCANCEL|MFB_TIP ) )
+	{
 		return;
 	}
 	SendBet(2);
@@ -1693,7 +1693,7 @@ void  CP2PDlg::GetAppAccountSomeMoney()
 		return;
 	}
 		string show = strprintf("是否确定要提现 金额为:%lf",money);
-	if ( IDNO == ::MessageBox( this->GetSafeHwnd() ,show.c_str() , _T("提示") , MB_YESNO|MB_ICONINFORMATION ) )
+	if ( IDNO == UiFun::MessageBoxEx( show.c_str() , _T("提示") , MB_YESNO|MFB_TIP ) )
 		return;
 
 	string strShowData ="";

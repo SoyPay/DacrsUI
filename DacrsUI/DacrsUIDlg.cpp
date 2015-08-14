@@ -863,9 +863,9 @@ bool CDacrsUIDlg::GetFileName(CString &fileName,CString strexe )
 	if(PathFileExistsA(fileName)){
 		CString strDisplay;
 		strDisplay.Format(_T("此文件已经存在是否要覆盖"));
-		COut outdlg(NULL, strDisplay,100);
-		if ( IDOK != outdlg.DoModal()){
-			return false;
+		if (IDOK == UiFun::MessageBoxEx(strDisplay , _T("提示") , MB_OKCANCEL|MFB_TIP ) )
+		{
+			return TRUE;
 		}
 	}
 	
