@@ -71,12 +71,6 @@ void CSignAccountsDlg::OnBnClickedButtonSend()
 	if ( _T("") != address ) {
 		string strCommand , strShowData;CString strFee ;
 
-	/*	strCommand.Format(_T("%s %s"),_T("getaccountinfo") ,address);
-		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-		if (strShowData == _T(""))
-		{
-			::MessageBox( this->GetSafeHwnd() ,_T("服务器没有反应") , _T("提示") , MB_ICONINFORMATION ) ;
-		}*/
 		Json::Reader reader;  
 		Json::Value root; 
 		//if (!reader.parse(strShowData.GetString(), root)) 
@@ -118,7 +112,7 @@ void CSignAccountsDlg::OnBnClickedButtonSend()
 		}else{
 			strData="激活账户失败!" ;
 		}
-		if ( IDOK == ::MessageBox( this->GetSafeHwnd() ,strData.c_str(), _T("提示") , MB_ICONINFORMATION ) ){
+		if ( IDOK == UiFun::MessageBoxEx(strData.c_str(), _T("提示") , MFB_OK|MFB_TIP ) ){
 			EndDialog(IDOK);
 		}
 	}

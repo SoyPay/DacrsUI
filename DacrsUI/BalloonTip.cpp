@@ -442,7 +442,7 @@ int CBalloonTip::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (iRetComb == ERROR)
 	{
  
-		::MessageBox( NULL,_T("ERROR in Combining Region"),_T("提示"),MB_ICONINFORMATION );
+		UiFun::MessageBoxEx(_T("ERROR in Combining Region") , _T("提示") ,MFB_OK|MFB_TIP );
 		return -1;
  
 	}
@@ -492,7 +492,7 @@ void CBalloonTip::OnPaint()
     int iRetComb = rgnComb.CombineRgn(&m_rgnTip, &m_rgnRoundRect, RGN_OR );
     if (iRetComb == ERROR)
 	{
-		::MessageBox( NULL,_T("ERROR in Combining Region"),_T("提示"),MB_ICONINFORMATION );
+		UiFun::MessageBoxEx(_T("ERROR in Combining Region") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 
 	}

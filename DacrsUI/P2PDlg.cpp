@@ -644,7 +644,7 @@ void CP2PDlg::OnBnClickedButtonWithd()
 
 	if (!theApp.IsSyncBlock )
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("同步未完成,不能发送交易") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -652,7 +652,7 @@ void CP2PDlg::OnBnClickedButtonWithd()
 	{
 		return;
 	}
-	if ( IDNO == ::MessageBox( this->GetSafeHwnd() ,_T("是否确定要提现") , _T("提示") , MB_YESNO|MB_ICONINFORMATION ) )
+	if ( IDNO == UiFun::MessageBoxEx( _T("是否确定要提现") , _T("提示") ,MB_YESNO|MFB_TIP ) )
 		return;
 
 	if (!CheckRegIDValid( theApp.m_betScritptid )) return ;
@@ -670,7 +670,8 @@ void CP2PDlg::OnBnClickedButtonWithd()
 
 	if (addr == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("地址不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -683,7 +684,8 @@ void CP2PDlg::OnBnClickedButtonWithd()
 
 	INT64 strTxFee = theApp.m_P2PBetCfg.GetAppAmountnFee;
 	if (  strTxFee < 10000  ) {
-		::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("小费不足") , _T("提示") ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
@@ -718,7 +720,8 @@ void CP2PDlg::OnBnClickedButtonWithd()
 	}else{
 		strTip = "提现失败!" ;
 	}
-	::MessageBox( this->GetSafeHwnd() ,strTip.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+	
+	UiFun::MessageBoxEx(strTip.c_str(), _T("提示") ,MFB_OK|MFB_TIP );
 }
 
 
@@ -726,14 +729,15 @@ void CP2PDlg::OnBnClickedButtonRech()
 {
 	// TODO: 在此添加控件通知处理程序代码
 
-	//if (strcmp(theApp.m_betScritptid.c_str(),theApp.m_neststcriptid.strNewScriptBetid.c_str()))
-	//{
-	//	::MessageBox( this->GetSafeHwnd() ,_T("猜你妹已经升级,请到菜单栏中选择恢复默认设置") , _T("提示") , MB_ICONINFORMATION ) ;
-	//	return;
-	//}
+	if (strcmp(theApp.m_betScritptid.c_str(),theApp.m_neststcriptid.strNewScriptBetid.c_str()))
+	{
+		UiFun::MessageBoxEx(_T("猜你妹已经升级,请到菜单栏中选择恢复默认设置") , _T("提示") ,MFB_OK|MFB_TIP );
+		return;
+	}
 	if (!theApp.IsSyncBlock )
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("同步未完成,不能发送交易") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -746,7 +750,8 @@ void CP2PDlg::OnBnClickedButtonRech()
 
 	if (theApp.m_strAddress == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("金额不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("金额不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
@@ -761,7 +766,8 @@ void CP2PDlg::OnBnClickedButtonRech()
 
 	if (addr == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("地址不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -772,7 +778,8 @@ void CP2PDlg::OnBnClickedButtonRech()
 	double sub = pAddr.fMoney - strtod(theApp.m_strAddress,NULL);
 	if (sub <1.0)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("系统账户最少余额1smc,作为后续合约交易小费") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("系统账户最少余额1smc,作为后续合约交易小费") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -781,7 +788,8 @@ void CP2PDlg::OnBnClickedButtonRech()
 
 	INT64 strTxFee = theApp.m_P2PBetCfg.GetAppAmountnFee;
 	if (  strTxFee < 10000  ) {
-		::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("小费不足") , _T("提示") ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
@@ -815,7 +823,8 @@ void CP2PDlg::OnBnClickedButtonRech()
 	}else{
 		strTip = "充值失败!";
 	}
-	::MessageBox( this->GetSafeHwnd() ,strTip.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+	
+	UiFun::MessageBoxEx(strTip.c_str(), _T("提示") ,MFB_OK|MFB_TIP );
 }
 
 void CP2PDlg::SendBet(int rewardnum)
@@ -824,7 +833,8 @@ void CP2PDlg::SendBet(int rewardnum)
 
 	if (!theApp.IsSyncBlock )
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("同步未完成,不能发送交易") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -845,19 +855,13 @@ void CP2PDlg::SendBet(int rewardnum)
 
 	if (addr == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("地址不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 	//// 查询地址是否激活
 	CString strCond;
-	/*strCond.Format(_T(" address = '%s' "), addr);
-	uistruct::LISTADDR_t addrsql;
-	int item = theApp.m_SqliteDeal.GetWalletAddressItem(strCond, &addrsql) ;
-	if (!addrsql.bSign)
-	{
-		::MessageBox( this->GetSafeHwnd() ,_T("账户未激活不能发生合约交易") , _T("提示") , MB_ICONINFORMATION ) ;
-		return;
-	}*/
+
 	char strTemp[34];
 	memset(strTemp , 0 , 34 );
 	memcpy(strTemp , UiFun::Rnd32() , 32 );
@@ -891,7 +895,8 @@ void CP2PDlg::SendBet(int rewardnum)
 
 	INT64 strTxFee = theApp.m_P2PBetCfg.SendBetFee;
 	if (  strTxFee < 10000  ) {
-		::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("小费不足") , _T("提示") ,MFB_OK|MFB_TIP );
 		return ;
 	}
 	
@@ -962,18 +967,19 @@ void CP2PDlg::SendBet(int rewardnum)
 		postmsg.SetData(strTemp);
 		theApp.m_MsgQueue.push(postmsg);
 	}
-	::MessageBox( this->GetSafeHwnd() ,strTip , _T("提示") , MB_ICONINFORMATION ) ;
+	
+	UiFun::MessageBoxEx(strTip, _T("提示") ,MFB_OK|MFB_TIP );
 }
 
 void CP2PDlg::OnBnClickedButtonMale()
 {
 	// TODO: 在此添加控件通知处理程序代码
 
-	//if (strcmp(theApp.m_betScritptid.c_str(),theApp.m_neststcriptid.strNewScriptBetid.c_str()))
-	//{
-	//	::MessageBox( this->GetSafeHwnd() ,_T("猜你妹已经升级,请到菜单栏中选择恢复默认设置") , _T("提示") , MB_ICONINFORMATION ) ;
-	//	return;
-	//}
+	if (strcmp(theApp.m_betScritptid.c_str(),theApp.m_neststcriptid.strNewScriptBetid.c_str()))
+	{
+		UiFun::MessageBoxEx(_T("猜你妹已经升级,请到菜单栏中选择恢复默认设置") , _T("提示") ,MFB_OK|MFB_TIP );
+		return;
+	}
 
 	if (!CheckBalance())
 	{
@@ -988,26 +994,29 @@ void CP2PDlg::OnBnClickedButtonMale()
 	GetDlgItem(IDC_EDIT_MONEY)->GetWindowText(strTxMoney) ;
 	if (strTxMoney == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("金额不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("金额不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
 	if (strtod(strTxMoney,NULL) > balance)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("投注金额大于账户余额") , _T("提示") , MB_ICONINFORMATION ) ;
+	
+		UiFun::MessageBoxEx(_T("投注金额大于账户余额") , _T("提示") ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
 	if (strtod(strTxMoney,NULL)<1)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("投注金额必须大于1") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("投注金额必须大于1") , _T("提示") ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
 	CString strDisplay;
 	strDisplay.Format(_T("确定要发送妹--->金额:%s"), strTxMoney);
-	COut outdlg(NULL, strDisplay,100);
-	if ( IDOK != outdlg.DoModal()){
+	if (IDCANCEL == UiFun::MessageBoxEx(strDisplay , _T("提示") , MB_OKCANCEL|MFB_TIP ) )
+	{
 		return;
 	}
 	SendBet(1);
@@ -1020,7 +1029,8 @@ void CP2PDlg::OnBnClickedButtonWoman()
 	// TODO: 在此添加控件通知处理程序代码
 	if (strcmp(theApp.m_betScritptid.c_str(),theApp.m_neststcriptid.strNewScriptBetid.c_str()))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("猜你妹已经升级,请到菜单栏中选择恢复默认设置") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("猜你妹已经升级,请到菜单栏中选择恢复默认设置") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -1037,26 +1047,29 @@ void CP2PDlg::OnBnClickedButtonWoman()
 	GetDlgItem(IDC_EDIT_MONEY)->GetWindowText(strTxMoney) ;
 	if (strTxMoney == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("金额不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("金额不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
 	if (strtod(strTxMoney,NULL) > balance)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("投注金额大于账户余额") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("投注金额大于账户余额") , _T("提示") ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
 	if (strtod(strTxMoney,NULL)<1)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("投注金额必须大于1") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("投注金额必须大于1") , _T("提示") ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
 	CString strDisplay;
 	strDisplay.Format(_T("确定要发送哥--->金额:%s"), strTxMoney);
-	COut outdlg(NULL, strDisplay,100);
-	if ( IDOK != outdlg.DoModal()){
+	if (IDCANCEL == UiFun::MessageBoxEx(strDisplay , _T("提示") , MB_OKCANCEL|MFB_TIP ) )
+	{
 		return;
 	}
 	SendBet(2);
@@ -1103,13 +1116,15 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
  {
 	 if (strcmp(theApp.m_betScritptid.c_str(),theApp.m_neststcriptid.strNewScriptBetid.c_str()))
 	 {
-		 ::MessageBox( this->GetSafeHwnd() ,_T("猜你妹已经升级,请到菜单栏中选择恢复默认设置") , _T("提示") , MB_ICONINFORMATION ) ;
+		 
+		 UiFun::MessageBoxEx(_T("猜你妹已经升级,请到菜单栏中选择恢复默认设置") , _T("提示") ,MFB_OK|MFB_TIP );
 		 return;
 	 }
 
 	 if (!theApp.IsSyncBlock )
 	 {
-		 ::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
+		 
+		 UiFun::MessageBoxEx(_T("同步未完成,不能发送交易") , _T("提示") ,MFB_OK|MFB_TIP );
 		 return;
 	 }
 	 if (!CheckBalance())
@@ -1123,7 +1138,7 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 
 	 if (strtod(strTxMoney,NULL) < strtod(money,NULL))
 	 {
-		 ::MessageBox( this->GetSafeHwnd() ,_T("接单金额大于账户余额") , _T("提示") , MB_ICONINFORMATION ) ;
+		 UiFun::MessageBoxEx(_T("接单金额大于账户余额") , _T("提示") ,MFB_OK|MFB_TIP );
 		 return ;
 	 }
 
@@ -1138,19 +1153,11 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 
 	 if (addr == _T(""))
 	 {
-		 ::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		 
+		 UiFun::MessageBoxEx(_T("地址不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
 		 return;
 	 }
-	 //// 查询地址是否激活
-	 //CString strCond;
-	 //strCond.Format(_T(" address = '%s' "), addr);
-	 //uistruct::LISTADDR_t addrsql;
-	 //int item = theApp.m_SqliteDeal.GetWalletAddressItem(strCond, &addrsql) ;
-	 //if (!addrsql.bSign)
-	 //{
-		// ::MessageBox( this->GetSafeHwnd() ,_T("账户未激活不能发生合约交易") , _T("提示") , MB_ICONINFORMATION ) ;
-		// return;
-	 //}
+
 
 	 CGuessNum guessdlg;
 	 if (IDOK != guessdlg.DoModal())
@@ -1283,7 +1290,8 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 
 		 }
 	 }
-	 ::MessageBox( this->GetSafeHwnd() ,strTip.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+	
+	 UiFun::MessageBoxEx(strTip.c_str() , _T("提示") ,MFB_OK|MFB_TIP );
  }
  bool CP2PDlg::CheckBalance(string strshow)
  {
@@ -1295,9 +1303,10 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 	{
 		if (strshow == "")
 		{
-			::MessageBox( this->GetSafeHwnd() ,_T("账户金额为零,请先充值") , _T("提示") , MB_ICONINFORMATION ) ;
+			
+			UiFun::MessageBoxEx(_T("账户金额为零,请先充值") , _T("提示") ,MFB_OK|MFB_TIP );
 		}else{
-			::MessageBox( this->GetSafeHwnd() ,strshow.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+			UiFun::MessageBoxEx(strshow.c_str() , _T("提示") ,MFB_OK|MFB_TIP );
 		}
 		
 		return false;
@@ -1564,7 +1573,8 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 				 }else
 				 {
 					  GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T(""));
-					::MessageBox( this->GetSafeHwnd() ,_T("输入有误,请输入数字") , _T("提示") , MB_ICONINFORMATION ) ;
+					
+					UiFun::MessageBoxEx(_T("输入有误,请输入数字") , _T("提示") ,MFB_OK|MFB_TIP );
 				 }
 				 return TRUE;
 			 }
@@ -1620,7 +1630,8 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 		 uistruct::LISTP2POOL_T const_it = m_PoolList.at(count);
 		 string temp = _T("竞猜交易ID: ");
 	    temp +=const_it.hash ;
-		 ::MessageBox( this->GetSafeHwnd() ,temp.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		 UiFun::MessageBoxEx(temp.c_str() , _T("提示") ,MFB_OK|MFB_TIP );
 	 }
  }
 bool CP2PDlg::CheckBalance(double dmoney)
@@ -1631,13 +1642,15 @@ bool CP2PDlg::CheckBalance(double dmoney)
 	double money =strtod(strMoney,NULL);
 	if (money == 0.0)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("账户金额为零,请先充值") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("账户金额为零,请先充值") , _T("提示") ,MFB_OK|MFB_TIP );
 		return false;
 	}
 
 	if (dmoney >money)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("提现金额大于账户中的金额") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("提现金额大于账户中的金额") , _T("提示") ,MFB_OK|MFB_TIP );
 		return false;
 	}
 	return true;
@@ -1647,7 +1660,8 @@ void  CP2PDlg::GetAppAccountSomeMoney()
 
 	if (!theApp.IsSyncBlock )
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("同步未完成,不能发送交易") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -1668,7 +1682,8 @@ void  CP2PDlg::GetAppAccountSomeMoney()
 
 	if (theApp.m_strAddress == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("提现金额不能为零") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("提现金额不能为零") , _T("提示") ,MFB_OK|MFB_TIP );
 		return ;
 	}
 	
@@ -1678,7 +1693,7 @@ void  CP2PDlg::GetAppAccountSomeMoney()
 		return;
 	}
 		string show = strprintf("是否确定要提现 金额为:%lf",money);
-	if ( IDNO == ::MessageBox( this->GetSafeHwnd() ,show.c_str() , _T("提示") , MB_YESNO|MB_ICONINFORMATION ) )
+	if ( IDNO == UiFun::MessageBoxEx( show.c_str() , _T("提示") , MB_YESNO|MFB_TIP ) )
 		return;
 
 	string strShowData ="";
@@ -1694,7 +1709,8 @@ void  CP2PDlg::GetAppAccountSomeMoney()
 
 	if (addr == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+	
+		UiFun::MessageBoxEx(_T("地址不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -1703,7 +1719,8 @@ void  CP2PDlg::GetAppAccountSomeMoney()
 
 	INT64 strTxFee = theApp.m_P2PBetCfg.GetAppAmountnFee;
 	if (  strTxFee < 10000  ) {
-		::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("小费不足") , _T("提示") ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
@@ -1738,7 +1755,8 @@ void  CP2PDlg::GetAppAccountSomeMoney()
 	}else{
 		strTip = "提现失败!" ;
 	}
-	::MessageBox( this->GetSafeHwnd() ,strTip.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+	
+	UiFun::MessageBoxEx(strTip.c_str() , _T("提示") ,MFB_OK|MFB_TIP );
 }
 void  CP2PDlg::AutoSendBet()
 {
@@ -1812,7 +1830,7 @@ void  CP2PDlg::AutoSendBet()
 
 		if (strtod(strTxMoney,NULL) > balance)
 		{
-			//::MessageBox( this->GetSafeHwnd() ,_T("投注金额大于账户余额") , _T("提示") , MB_ICONINFORMATION ) ;
+			
 			continue ;
 		}
 		
@@ -1851,7 +1869,8 @@ void  CP2PDlg::AutoSendBet()
 
 		INT64 strTxFee = theApp.m_P2PBetCfg.SendBetFee;
 		if (  strTxFee < 10000  ) {
-			::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
+			
+			UiFun::MessageBoxEx(_T("小费不足") , _T("提示") ,MFB_OK|MFB_TIP );
 			return ;
 		}
 
@@ -1927,15 +1946,16 @@ void  CP2PDlg::AutoSendBet()
 
 BOOL CP2PDlg::AcceptBet(string hash,double dmoney,string sendaddr,int timeout,string addr)
 {
-	//if (strcmp(theApp.m_betScritptid.c_str(),theApp.m_neststcriptid.strNewScriptBetid.c_str()))
-	//{
-	//	::MessageBox( this->GetSafeHwnd() ,_T("猜你妹已经升级,请到菜单栏中选择恢复默认设置") , _T("提示") , MB_ICONINFORMATION ) ;
-	//	return FALSE;
-	//}
+	if (strcmp(theApp.m_betScritptid.c_str(),theApp.m_neststcriptid.strNewScriptBetid.c_str()))
+	{
+		UiFun::MessageBoxEx(_T("猜你妹已经升级,请到菜单栏中选择恢复默认设置") , _T("提示") ,MFB_OK|MFB_TIP );
+		return FALSE;
+	}
 
 	if (!theApp.IsSyncBlock )
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("同步未完成,不能发送交易") , _T("提示") ,MFB_OK|MFB_TIP );
 		return FALSE;
 	}
 
@@ -2066,7 +2086,7 @@ BOOL CP2PDlg::AcceptBet(string hash,double dmoney,string sendaddr,int timeout,st
 	}
 
 	return bRes;
-	//::MessageBox( this->GetSafeHwnd() ,strTip.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+	
 }
 void CP2PDlg::AKeyCancelTheOrder()
 {
@@ -2076,7 +2096,8 @@ void CP2PDlg::AKeyCancelTheOrder()
 	theApp.m_SqliteDeal.GetP2PQuizRecordList(strCond,&pPoolList);
 	if (pPoolList.size() == 0)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("没有可取消的订单") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("没有可取消的订单") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -2084,7 +2105,8 @@ void CP2PDlg::AKeyCancelTheOrder()
 	theApp.m_SqliteDeal.GetWalletAddressList(_T(" sign=1 "), &mapAddrInfo);
 	if (mapAddrInfo.size() == 0)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("没有激活的地址") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("没有激活的地址") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -2152,7 +2174,8 @@ void CP2PDlg::AKeyCancelTheOrder()
 	{
 		strShow = "恭喜订单全部取消成功";
 	}
-	::MessageBox( this->GetSafeHwnd() ,strShow.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+	
+	UiFun::MessageBoxEx(strShow.c_str()  , _T("提示") ,MFB_OK|MFB_TIP );
 
 }
 

@@ -248,7 +248,6 @@ void CDacrsUIApp::OpenBet(CString txhash,BOOL Flag)
 	m_addr = pPoolItem.left_addr;
 	if (m_addr == ""|| pPoolItem.state == 2) ///////地址不存在或者已经开奖
 	{
-		//::MessageBox(NULL,_T("请选择地址") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
 	if (pPoolItem.actor != 0 && pPoolItem.actor != 2)
@@ -257,13 +256,11 @@ void CDacrsUIApp::OpenBet(CString txhash,BOOL Flag)
 	}
 	if (pPoolItem.tx_hash.length()== 0)
 	{
-		//::MessageBox(NULL ,_T("数据库中无此记录") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
 
 	if (!theApp.IsSyncBlock && Flag)
 	{
-		//::MessageBox(NULL ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
 		return;
 	}
 
@@ -340,7 +337,7 @@ void CDacrsUIApp::OpenBet(CString txhash,BOOL Flag)
 
 		}
 	}
-	//::MessageBox(NULL,strTip , _T("提示") , MB_ICONINFORMATION ) ;
+	
 }
 void CDacrsUIApp::AcceptBetRecord(vector<unsigned char> acceptbet,uistruct::REVTRANSACTION_t transcion)
 {

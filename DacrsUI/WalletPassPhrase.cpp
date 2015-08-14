@@ -54,17 +54,20 @@ void CWalletPassPhrase::OnBnClickedOk()
 	GetDlgItem(IDC_EDIT_TIEM)->GetWindowText(passtime);
 	if (PassWord == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("请输入密码") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("请输入密码") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 	if (passtime == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("请输入时间") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("请输入时间") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 	if (!IsAllDigtal(passtime))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("时间必须数字") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("时间必须数字") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 	
@@ -82,10 +85,10 @@ void CWalletPassPhrase::OnBnClickedOk()
 	bool isEntryp = root["passphrase"].asBool();
 	if (!isEntryp)
 	{
-		MessageBox(_T("输入就密码不正确,请重新输入"));
+		UiFun::MessageBoxEx(_T("输入就密码不正确,请重新输入") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}else{
-		MessageBox(_T("恭喜钱包解锁成功"));
+		UiFun::MessageBoxEx(_T("恭喜钱包解锁成功") , _T("提示") ,MFB_OK|MFB_TIP );
 	}
 
 	theApp.m_passlock = TRUE;

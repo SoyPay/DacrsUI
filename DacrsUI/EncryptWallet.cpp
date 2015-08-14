@@ -98,32 +98,32 @@ void CEncryptWallet::OnBnClickedOk()
 	int pos = inputE.Find(_T(" "));
 	if (pos >=0)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("输入密码中不能有空格") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("输入密码中不能有空格") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 	if (inputE == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("输入密码") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("输入密码") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 	if (confiedE == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("请输入确认密码") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("请输入确认密码") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 	if (inputE.GetLength()<6)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("密码个数最少六位") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("密码个数最少六位") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 	if (IsAllDigtal(inputE))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("密码不能全是数字") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("密码不能全是数字") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 	if (strcmp(inputE,confiedE) != 0)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("确认密码和输入密码不一致") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("确认密码和输入密码不一致") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -143,11 +143,10 @@ void CEncryptWallet::OnBnClickedOk()
 	isClose = isEntryp;
 	if (isEntryp)
 	{
-		MessageBox(_T("钱包加密成功请重新启动钱包"));
-
+		UiFun::MessageBoxEx(_T("钱包加密成功请重新启动钱包") , _T("提示") ,MFB_OK|MFB_TIP );
 	}else
 	{
-		MessageBox(_T("钱包加密失败"));
+		UiFun::MessageBoxEx(_T("钱包加密失败") , _T("提示") ,MFB_OK|MFB_TIP );
 	}
 
 	CDialogBase::OnOK();
