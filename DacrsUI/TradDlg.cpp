@@ -213,7 +213,6 @@ BOOL CTradDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_time.InsertString(4,_T("上月"));
 		m_time.InsertString(5,_T("今年"));
 		m_time.InsertString(6,_T("昨天"));
-
 		m_edit.SetWindowText(_T("请输入地址进行搜索"));
 
 		m_condition.SetCurSel(0);
