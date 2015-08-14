@@ -253,7 +253,7 @@ void CAddrBook::OnBnClickedButtonDeleitem()
 		string StrShow;
 		POSITION pos = m_listCtrl.GetFirstSelectedItemPosition() ;
 		if ( pos ) {
-			if ( IDYES == ::MessageBox( this->GetSafeHwnd() ,_T("是否要删除此收款地址") , _T("提示") , MB_YESNO|MB_ICONINFORMATION ) ){
+			if ( IDYES == UiFun::MessageBoxEx(_T("是否要删除此收款地址") , _T("提示") , MB_YESNO|MFB_TIP ) ){
 				int nRow = m_listCtrl.GetNextSelectedItem(pos) ;
 
 				//// 删除此条数据库
