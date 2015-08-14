@@ -35,7 +35,7 @@ void CJsonConfigHelp::ReadJsonConfig(const string& strFilePath)
 		{
 			ReadScriptCfgData(root);
 		}else{
-			::MessageBox( NULL , _T("script Œ¥≈‰÷√") , "Error" , MB_ICONERROR) ;
+			UiFun::MessageBoxEx(_T("script Œ¥≈‰÷√") , _T("Error") ,MFB_OK|MFB_ERROR );
 			exit(0);
 		}
 
@@ -44,7 +44,7 @@ void CJsonConfigHelp::ReadJsonConfig(const string& strFilePath)
 		{
 			ReadDarkCoinCfgData(root);
 		}else{
-			::MessageBox( NULL , _T("darkcoin Œ¥≈‰÷√") , "Error" , MB_ICONERROR) ;
+			UiFun::MessageBoxEx(_T("darkcoin Œ¥≈‰÷√") , _T("Error") ,MFB_OK|MFB_ERROR );
 			exit(0);
 		}
 		pos = strTemp.find("p2pbet");
@@ -52,7 +52,7 @@ void CJsonConfigHelp::ReadJsonConfig(const string& strFilePath)
 		{
 			ReadP2PCfgData(root);
 		}else{
-			::MessageBox( NULL , _T("p2pbet Œ¥≈‰÷√") , "Error" , MB_ICONERROR) ;
+			UiFun::MessageBoxEx(_T("p2pbet Œ¥≈‰÷√") , _T("Error") ,MFB_OK|MFB_ERROR );
 			exit(0);
 		}
 		
@@ -61,7 +61,7 @@ void CJsonConfigHelp::ReadJsonConfig(const string& strFilePath)
 		{
 			ReadNetParmCfgData(root);
 		}else{
-			::MessageBox( NULL , _T("netparam Œ¥≈‰÷√") , "Error" , MB_ICONERROR) ;
+			UiFun::MessageBoxEx(_T("netparam Œ¥≈‰÷√") , _T("Error") ,MFB_OK|MFB_ERROR );
 			exit(0);
 		}
 
@@ -70,7 +70,7 @@ void CJsonConfigHelp::ReadJsonConfig(const string& strFilePath)
 		{
 			ReadLogParamCfg(root);
 		}else{
-			::MessageBox( NULL , _T("logcfg Œ¥≈‰÷√") , "Error" , MB_ICONERROR) ;
+			UiFun::MessageBoxEx(_T("logcfg Œ¥≈‰÷√") , _T("Error") ,MFB_OK|MFB_ERROR );
 			exit(0);
 		}
 
@@ -79,7 +79,7 @@ void CJsonConfigHelp::ReadJsonConfig(const string& strFilePath)
 		{
 			ReadRedPacketCfgData(root);
 		}else{
-			::MessageBox( NULL , _T("redpacket Œ¥≈‰÷√") , "Error" , MB_ICONERROR) ;
+			UiFun::MessageBoxEx(_T("redpacket Œ¥≈‰÷√") , _T("Error") ,MFB_OK|MFB_ERROR );
 			exit(0);
 		}
 		pos = strTemp.find("closeconf");
@@ -371,7 +371,7 @@ void CJsonConfigHelp::ModifyAppFeeCfgData( Json::Value& root,const CString &Lead
 	}else{
 		CString strTemp =_T("");
 		strTemp.Format(_T("%s %s  Œ¥≈‰÷√"),LeaderKey,Key);
-		::MessageBox( NULL , strTemp , "Error" , MB_ICONERROR) ;
+		UiFun::MessageBoxEx(strTemp , _T("Error") ,MFB_OK|MFB_ERROR );
 	}
 }
 void CJsonConfigHelp::GetNewestScriptData(CNewestScriptCfg &newScript)

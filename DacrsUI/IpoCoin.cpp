@@ -167,7 +167,7 @@ BOOL CIpoCoin::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 void CIpoCoin::OnBnClickedButtonDrawal()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	if ( IDNO == ::MessageBox( this->GetSafeHwnd() ,_T("是否确定要提现") , _T("提示") , MB_YESNO|MB_ICONINFORMATION ) )
+	if ( IDNO == UiFun::MessageBoxEx(_T("是否确定要提现") , _T("提示") , MB_YESNO|MFB_TIP ) )
 		return;
 
 	if (!CheckRegIDValid( theApp.m_ipoScritptid )) return ;
@@ -178,7 +178,7 @@ void CIpoCoin::OnBnClickedButtonDrawal()
 	GetDlgItem(IDC_EDIT_ADDR)->GetWindowText(addr);
 	if (addr == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("地址不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -188,19 +188,19 @@ void CIpoCoin::OnBnClickedButtonDrawal()
 	int nItem =  theApp.m_SqliteDeal.GetWalletAddressItem(strCond, &pAddr) ;
 	if (pAddr.address == "")
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("此地址不是钱包地址,不能提现") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("此地址不是钱包地址,不能提现") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
 	if (pAddr.bSign == 0 )
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("此地址没有注册,不能提现") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("此地址没有注册,不能提现") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 	double dmoney = GetFreeMoney(addr);
 	if (dmoney <=0.0)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("此地址没有可提现的金额") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("此地址没有可提现的金额") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 	string strContractData = m_P2PBetHelp.GetAppAccountMoneyContract(addr.GetString(),1,2,REAL_MONEY(dmoney));
@@ -211,7 +211,7 @@ void CIpoCoin::OnBnClickedButtonDrawal()
 	strTxFee.Format(_T("%.8f"),dnum);
 
 	if (  (INT64)REAL_MONEY(strtod(strTxFee,NULL)) < 10000  ) {
-		::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("小费不足") , _T("提示") ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
@@ -244,7 +244,7 @@ void CIpoCoin::OnBnClickedButtonDrawal()
 	}else{
 		strTip = "提现失败!" ;
 	}
-	::MessageBox( this->GetSafeHwnd() ,strTip.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+	UiFun::MessageBoxEx(strTip.c_str() , _T("提示") ,MFB_OK|MFB_TIP );
 }
 
 
@@ -372,7 +372,7 @@ void CIpoCoin::OnBnClickedButtonQuery()
 	GetDlgItem(IDC_EDIT_ADDR)->GetWindowText(addr);
 	if (addr == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("地址不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 	OnShowListCtrol(addr);
