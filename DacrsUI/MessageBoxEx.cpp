@@ -19,7 +19,8 @@ CMessageBoxEx::CMessageBoxEx(CString strText,CString strTip ,UINT uType ,CWnd* p
 	m_Tip  = strTip ;
 	m_uType = uType ;
 	m_pBmp = NULL;
-	SetBkBmpNid( IDB_BITMAP_MESSAGE_H ) ;
+//	SetBkBmpNid( IDB_BITMAP_MESSAGE_H) ;
+	
 }
 
 CMessageBoxEx::~CMessageBoxEx()
@@ -53,7 +54,7 @@ END_MESSAGE_MAP()
 
 
 // CMessageBoxEx 消息处理程序
-
+/*
 void CMessageBoxEx::SetBkBmpNid( UINT nBitmapIn ) 
 {
 	if( NULL != m_pBmp ) {
@@ -67,7 +68,7 @@ void CMessageBoxEx::SetBkBmpNid( UINT nBitmapIn )
 		m_pBmp = (HBITMAP)::LoadImage(hInstResource, MAKEINTRESOURCE(nBitmapIn), IMAGE_BITMAP, 0, 0, 0);
 	}
 }
-
+*/
 void CMessageBoxEx::SetBitmap(UINT uBmpResource)
 {
 	HBITMAP hBitmap; //添加meaasgebox窗口中的图片 
@@ -87,6 +88,10 @@ void CMessageBoxEx::SetBitmap(UINT uBmpResource)
 BOOL CMessageBoxEx::OnInitDialog()
 {
 	CDialogBase::OnInitDialog();
+
+//	CDialogBase::SetBkBmpNid(IDB_BITMAP_RED_BK, CDialogBase::m_pBmp) ;
+//	CDialogBase::SetBkBmpNid(IDB_BITMAP_RED_TITLE, CDialogBase::m_HeadBmp);
+
 	int nIconLeftMargin = 25;    //图标相对提示框左边距
 	int nIconTopMargin = 45;     //图标相对提示框上边距
 	int nBtBottomMargin = 10;    //按钮相对提示框下边距
@@ -290,21 +295,36 @@ void CMessageBoxEx::OnBnClickedCancel()
 BOOL CMessageBoxEx::OnEraseBkgnd(CDC* pDC)
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
-	CDialogBase::OnEraseBkgnd(pDC);
-	/*CRect   rect; 
-	GetClientRect(&rect); 
-	if(m_pBmp   !=   NULL) { 
-		BITMAP   bm; 
-		CDC   dcMem; 
-		::GetObject(m_pBmp,sizeof(BITMAP),   (LPVOID)&bm); 
-		dcMem.CreateCompatibleDC(NULL); 
-		HBITMAP     pOldBitmap   =(HBITMAP   )   dcMem.SelectObject(m_pBmp); 
-		pDC->StretchBlt(rect.left,rect.top-1,rect.Width(),rect.Height(),   &dcMem,   0,   0,bm.bmWidth-1,bm.bmHeight-1,   SRCCOPY); 
+	/*
+	if((m_uType & MFB_BK_RED) == MFB_BK_RED) 
+	{
+		CRect   rect; 
+		GetClientRect(&rect); 
 
-		dcMem.SelectObject(pOldBitmap);
-		dcMem.DeleteDC();
-	} else  
-		CWnd::OnEraseBkgnd(pDC); */
+		if(m_pBmp   !=   NULL) { 
+			BITMAP   bm; 
+			CDC   dcMem; 
+
+			::GetObject(m_HeadBmp, sizeof(BITMAP),   (LPVOID)&bm); 
+			dcMem.CreateCompatibleDC(NULL); 
+			HBITMAP     pOldhBitmap   =(HBITMAP   )   dcMem.SelectObject(m_HeadBmp); 
+			int height = bm.bmHeight;
+			pDC->StretchBlt(rect.left,rect.top-1,rect.Width(),rect.Height(),   &dcMem,   0,   0,bm.bmWidth-1,bm.bmHeight-1,   SRCCOPY); 
+			dcMem.SelectObject(pOldhBitmap);
+
+			::GetObject(m_pBkBmp, sizeof(BITMAP),   (LPVOID)&bm); 
+			dcMem.CreateCompatibleDC(NULL); 
+			HBITMAP     pOldBitmap   =(HBITMAP   )   dcMem.SelectObject(m_pBmp); 
+			pDC->StretchBlt(rect.left,rect.top-1+height,rect.Width(),rect.Height(),   &dcMem,   0,   0,bm.bmWidth-1,bm.bmHeight-1,   SRCCOPY); 
+			dcMem.SelectObject(pOldBitmap);
+
+			dcMem.DeleteDC();	
+		} 
+	}
+	else {
+	*/
+
+	CDialogBase::OnEraseBkgnd(pDC);
 
 	return TRUE;
 }
