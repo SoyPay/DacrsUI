@@ -71,32 +71,23 @@ void CWalletPassPhrase::OnBnClickedOk()
 	string strCommand;
 	strCommand = strprintf("%s %s %d","walletpassphrase",PassWord,(atoi(passtime)*60));
 	string strShowData =_T("");
-
-	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-	if (strShowData == "")
+	Json::Value root; 
+	if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 	{
+		TRACE(" rpccmd walletpassphrase error");
 		return;
 	}
-	Json::Reader reader;  
-	Json::Value root; 
-	if (!reader.parse(strShowData, root)) 
-		return  ;
 
-	if (strShowData.find("passphrase") > 0)
+
+	bool isEntryp = root["passphrase"].asBool();
+	if (!isEntryp)
 	{
-		bool isEntryp = root["passphrase"].asBool();
-		if (!isEntryp)
-		{
-			MessageBox(_T("输入就密码不正确,请重新输入"));
-			return;
-		}else{
-			MessageBox(_T("恭喜钱包解锁成功"));
-		}
-	}else{
 		MessageBox(_T("输入就密码不正确,请重新输入"));
 		return;
+	}else{
+		MessageBox(_T("恭喜钱包解锁成功"));
 	}
+
 	theApp.m_passlock = TRUE;
 	CDialogBase::OnOK();
 }

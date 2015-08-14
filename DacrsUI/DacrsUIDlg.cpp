@@ -495,16 +495,13 @@ void    CDacrsUIDlg::SyncAddrInfo()
 	strCommand = strprintf("%s","listaddr");
 	string strShowData ="";
 
-	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-	if (strShowData.find("addr") <0)
+	Json::Value root; 
+	if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 	{
+		TRACE("SyncAddrInfo rpccmd listaddr error");
 		return;
 	}
-	Json::Reader reader;  
-	Json::Value root; 
-	if (!reader.parse(strShowData, root)) 
-		return  ;
+
 	map<string,uistruct::LISTADDR_t> pListInfo;
 	theApp.m_SqliteDeal.GetWalletAddressList(_T(" 1=1 "), (&pListInfo));
 
@@ -1033,30 +1030,20 @@ void CDacrsUIDlg:: LockWallet()
 	}
 	string strCommand;
 	strCommand = strprintf("%s",_T("walletlock"));
-	string strShowData ="";
 
-	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-	if (strShowData ==_T(""))
+	Json::Value root;
+	if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 	{
+		TRACE("UpdateAddressData rpccmd listaddr error");
 		return;
 	}
-	Json::Reader reader;  
-	Json::Value root; 
-	if (!reader.parse(strShowData, root)) 
-		return  ;
 
-	if (strShowData.find("walletlock") > 0)
-	{
-		bool isEntryp = root["walletlock"].asBool();
-		if (!isEntryp)
-		{
-			MessageBox(_T("钱包锁定失败"));
-			return;
-		}
-	}else
+
+	bool isEntryp = root["walletlock"].asBool();
+	if (!isEntryp)
 	{
 		MessageBox(_T("钱包锁定失败"));
+		return;
 	}
 
 }
@@ -1262,33 +1249,23 @@ void CDacrsUIDlg:: ImportPrvieKey()
 			CString strPath = ofn.lpstrFile;
 			string strCommand;
 			strCommand = strprintf("%s %s",_T("importwallet"),strPath);
-			string strSendData;
+			Json::Value root;
 	
-			CSoyPayHelp::getInstance()->SendRpc(strCommand,strSendData);	
-			if (strSendData == "")
+			if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 			{
+				TRACE("UpdateAddressData rpccmd listaddr error");
 				return;
 			}
-			Json::Reader reader;  
-			Json::Value root; 
-			if (!reader.parse(strSendData, root)) 
-				return  ;
-			if (strSendData.find(_T("imorpt key size")) >=0)
+			
+			int size = root["imorpt key size"].asInt();
+			if (size > 0)
 			{
-				int size = root["imorpt key size"].asInt();
-				if (size > 0)
-				{
-					WriteExportWalletAndBookAddr(strPath);
-					MessageBox(_T("导入钱包成功请重新启动钱包"));
-					//ClosWallet();
-					//((CDacrsUIDlg*)(this->GetParent()))->Close();
-					ClosWalletWind();
-				}else{
-					MessageBox(_T("导入钱包失败"));
-				}
-				
-			}else
-			{
+				WriteExportWalletAndBookAddr(strPath);
+				MessageBox(_T("导入钱包成功请重新启动钱包"));
+				//ClosWallet();
+				//((CDacrsUIDlg*)(this->GetParent()))->Close();
+				ClosWalletWind();
+			}else{
 				MessageBox(_T("导入钱包失败"));
 			}
 	}
