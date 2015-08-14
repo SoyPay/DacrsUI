@@ -106,14 +106,23 @@ BOOL CMessageBoxEx::OnInitDialog()
 	if(nFontSize.cx > MAX_WIDTH - nLeftMargin -nRightMargin) {
 		nDialogWidth = MAX_WIDTH;
 		nStaticWidth = MAX_WIDTH - nLeftMargin -nRightMargin;
-		nRow =  nFontSize.cx / nStaticWidth;
+		
 	}
 	else {
 		nDialogWidth = nFontSize.cx + nLeftMargin + nRightMargin;	
 		nStaticWidth = nFontSize.cx;
 		
 	}
-	nRow += m_Text.Replace("\n", "\n");
+	int nPos = m_Text.ReverseFind('\n');
+	if(nPos != -1) {
+		nRow = m_Text.Replace("\n", "\n");
+		CString substr = m_Text.Right(m_Text.GetLength()-nPos);
+		CSize nSubstrSize = dc.GetTextExtent(substr);
+		nRow +=  nSubstrSize.cx / nStaticWidth;
+	}else {
+		nRow =  nFontSize.cx / nStaticWidth;
+	}
+	
 	nDialogHight = nRow * nFontSize.cy + nBottomMargin + nIconTopMargin;
 	nStaticHeigh = nRow * nFontSize.cy;
 
