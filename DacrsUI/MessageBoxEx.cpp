@@ -67,6 +67,7 @@ void CMessageBoxEx::SetBkBmpNid( UINT nBitmapIn )
 		m_pBmp = (HBITMAP)::LoadImage(hInstResource, MAKEINTRESOURCE(nBitmapIn), IMAGE_BITMAP, 0, 0, 0);
 	}
 }
+
 void CMessageBoxEx::SetBitmap(UINT uBmpResource)
 {
 	HBITMAP hBitmap; //添加meaasgebox窗口中的图片 
@@ -82,6 +83,7 @@ void CMessageBoxEx::SetBitmap(UINT uBmpResource)
 	pStatic->ModifyStyle(0xF, SS_BITMAP|SS_CENTERIMAGE); 
 	pStatic->SetBitmap(hBitmap); 
 }
+
 BOOL CMessageBoxEx::OnInitDialog()
 {
 	CDialogBase::OnInitDialog();
@@ -104,16 +106,25 @@ BOOL CMessageBoxEx::OnInitDialog()
 	if(nFontSize.cx > MAX_WIDTH - nLeftMargin -nRightMargin) {
 		nDialogWidth = MAX_WIDTH;
 		nStaticWidth = MAX_WIDTH - nLeftMargin -nRightMargin;
-		nRow =  nFontSize.cx / nStaticWidth;
+		
 	}
 	else {
 		nDialogWidth = nFontSize.cx + nLeftMargin + nRightMargin;	
 		nStaticWidth = nFontSize.cx;
 		
 	}
-	nRow += m_Text.Replace("\n", "\n");
-	nDialogHight = nRow * nFontSize.cy + nBottomMargin + nIconTopMargin;
-	nStaticHeigh = nRow * nFontSize.cy;
+	int nPos = m_Text.ReverseFind('\n');
+	if(nPos != -1) {
+		nRow = m_Text.Replace("\n", "\n");
+		CString substr = m_Text.Right(m_Text.GetLength()-nPos);
+		CSize nSubstrSize = dc.GetTextExtent(substr);
+		nRow +=  nSubstrSize.cx / nStaticWidth;
+	}else {
+		nRow =  nFontSize.cx / nStaticWidth;
+	}
+	nStaticHeigh = nRow * (nFontSize.cy-3);
+	nDialogHight = nStaticHeigh + nBottomMargin + nIconTopMargin;
+	
 
 	// TODO:  在此添加额外的初始化
 	UpdateData(FALSE);
@@ -240,30 +251,41 @@ BOOL CMessageBoxEx::OnInitDialog()
 	// 异常: OCX 属性页应返回 FALSE
 }
 
-
 void CMessageBoxEx::OnBnClickedOk()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	m_select = 1;
-	CDialogBase::OnCancel();
+	if((m_uType & MFB_OK) == MFB_OK){
+		EndDialog(IDOK);
+	}
+	else if((m_uType & MFB_YES) == MFB_YES) {
+		EndDialog(IDYES);
+	}
+	CDialogBase::OnOK();
 }
-
 
 void CMessageBoxEx::OnBnClickedQuit()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	m_select = 0;
-	CDialogBase::OnCancel();
+	if((m_uType & MFB_CANCEL) == MFB_CANCEL){
+		EndDialog(IDCANCEL);
+	}
+	else if((m_uType & MFB_NO) == MFB_NO) {
+		EndDialog(IDNO);
+	}
+	CDialogBase::OnClose();
 }
-
 
 void CMessageBoxEx::OnBnClickedCancel()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	m_select = 0;
+	if((m_uType & MFB_CANCEL) == MFB_CANCEL){
+		EndDialog(IDCANCEL);
+	}
+	else if((m_uType & MFB_NO) == MFB_NO) {
+		EndDialog(IDNO);
+	}
 	CDialogBase::OnCancel();
 }
-
 
 BOOL CMessageBoxEx::OnEraseBkgnd(CDC* pDC)
 {
@@ -287,7 +309,6 @@ BOOL CMessageBoxEx::OnEraseBkgnd(CDC* pDC)
 	return TRUE;
 }
 
-
 HBRUSH CMessageBoxEx::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 {
 	HBRUSH hbr = CDialogEx::OnCtlColor(pDC, pWnd, nCtlColor);
@@ -300,8 +321,3 @@ HBRUSH CMessageBoxEx::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 	//}
 	return hbr;
 }
-int CMessageBoxEx::GetSelect()
-{
-	return m_select;
-}
-
