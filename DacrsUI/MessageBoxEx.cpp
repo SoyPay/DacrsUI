@@ -260,7 +260,7 @@ void CMessageBoxEx::OnBnClickedOk()
 	else if((m_uType & MFB_YES) == MFB_YES) {
 		EndDialog(IDYES);
 	}
-	CDialogBase::OnOK();
+	CDialogBase::OnClose();
 }
 
 void CMessageBoxEx::OnBnClickedQuit()
@@ -284,7 +284,7 @@ void CMessageBoxEx::OnBnClickedCancel()
 	else if((m_uType & MFB_NO) == MFB_NO) {
 		EndDialog(IDNO);
 	}
-	CDialogBase::OnCancel();
+	CDialogBase::OnClose();
 }
 
 BOOL CMessageBoxEx::OnEraseBkgnd(CDC* pDC)
