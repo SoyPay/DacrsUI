@@ -122,9 +122,9 @@ BOOL CMessageBoxEx::OnInitDialog()
 	}else {
 		nRow =  nFontSize.cx / nStaticWidth;
 	}
+	nStaticHeigh = nRow * (nFontSize.cy-3);
+	nDialogHight = nStaticHeigh + nBottomMargin + nIconTopMargin;
 	
-	nDialogHight = nRow * nFontSize.cy + nBottomMargin + nIconTopMargin;
-	nStaticHeigh = nRow * nFontSize.cy;
 
 	// TODO:  在此添加额外的初始化
 	UpdateData(FALSE);
