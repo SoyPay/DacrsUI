@@ -184,14 +184,14 @@ BOOL CDacrsUIApp::InitInstance()
 		::RemoveDirectory(strSeverPath.c_str());
 		if( (_access( strSeverPath.c_str(), 0 )) == -1 )
 		{
-			::MessageBox( NULL , _T("dacrs-d 文件不存在,请重新启动钱包\r\n") , "Error" , MB_ICONERROR) ;
+			UiFun::MessageBoxEx(_T("dacrs-d 文件不存在,请重新启动钱包\r\n") , _T("Error") ,MFB_OK|MFB_ERROR );
 			exit(1);
 		}
 	}
 	/// 判断文件是否存在
 	 if( (_access( strSeverPath.c_str(), 0 )) == -1 )
 	{
-		::MessageBox( NULL , _T("dacrs-d 文件不存在,请重新下载\r\n") , "Error" , MB_ICONERROR) ;
+		UiFun::MessageBoxEx(_T("dacrs-d 文件不存在,请重新下载\r\n") , _T("Error") ,MFB_OK|MFB_ERROR );
 		exit(1);
 	}
 	//启动服务程序
@@ -224,7 +224,8 @@ BOOL CDacrsUIApp::InitInstance()
 		{
 		case OutOfMemory :
 			{
-				::MessageBox( NULL , "OutOfMemory" , "Error" , MB_ICONERROR) ;
+
+				UiFun::MessageBoxEx(_T("OutOfMemory") , _T("Error") ,MFB_OK|MFB_ERROR );
 			}
 			break;
 		}
@@ -260,8 +261,7 @@ BOOL CDacrsUIApp::InitInstance()
 			*/
 			int errorCode = GetLastError();
 			TRACE("Error OpenProcess:%d " , errorCode );
-			::MessageBox( NULL , _T("区块链数据库损坏，请双击运行钱包下clear.bat文件，在重新打开钱包\r\n") , "Error" , MB_ICONERROR) ;
-			//AfxMessageBox(_T(errorCode));
+			UiFun::MessageBoxEx(_T("区块链数据库损坏，请双击运行钱包下clear.bat文件，在重新打开钱包\r\n") , _T("Error") ,MFB_OK|MFB_ERROR );
 			exit(1);
 		}
 		CloseHandle(processHandle);
@@ -362,7 +362,7 @@ BOOL CDacrsUIApp::CreateMaintainThrd()
 
 	hMtThrd = (HANDLE)_beginthreadex( NULL, 0, &MtProc, this, 0, &nMtThrdID ) ;
 	if( INVALID_HANDLE_VALUE == hMtThrd ) {
-		::MessageBox( NULL , "维护线程创建失败!" , "出错" , MB_ICONERROR ) ;
+		UiFun::MessageBoxEx(_T("维护线程创建失败!") , _T("出错") ,MFB_OK|MFB_ERROR );
 		CloseHandle( hMtStartEvent ) ;
 		hMtStartEvent = NULL ;
 		return  FALSE;
@@ -1615,7 +1615,7 @@ void CDacrsUIApp::CheckPathValid(const string& strDir)
 
 	if (bExist)
 	{
-		::MessageBox( NULL , _T("程序不可以放在含有空格的目录下\r\n") , "Error" , MB_ICONERROR) ;
+		UiFun::MessageBoxEx(_T("程序不可以放在含有空格的目录下\r\n!") , _T("Error") ,MFB_OK|MFB_ERROR );
 		exit(0);
 	}
 }

@@ -185,16 +185,12 @@ void CIpoDlg::OnBnClickedButtonDrawal()
 
 	string strShowData = "";
 
-	//if (m_mapAddrInfo.size() == 0)
-	//{
-	//	::MessageBox( this->GetSafeHwnd() ,_T("发送地址不存在") , _T("提示") , MB_ICONINFORMATION ) ;
-	//	return;
-	//}
+
 	CString addr;
 	GetDlgItem(IDC_EDIT_ADDR)->GetWindowText(addr);
 	if (addr == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("地址不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -211,7 +207,7 @@ void CIpoDlg::OnBnClickedButtonDrawal()
 	strTxFee.Format(_T("%.8f"),dnum);
 	//GetDlgItem(IDC_EDIT_GETFEE)->GetWindowText(strTxFee) ;
 	if (  (INT64)REAL_MONEY(strtod(strTxFee,NULL)) < 10000  ) {
-		::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("小费不足") , _T("提示") ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
@@ -244,7 +240,7 @@ void CIpoDlg::OnBnClickedButtonDrawal()
 	}else{
 		strTip = "提现失败!" ;
 	}
-	::MessageBox( this->GetSafeHwnd() ,strTip.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+	UiFun::MessageBoxEx(strTip.c_str() , _T("提示") ,MFB_OK|MFB_TIP );
 }
 
 
@@ -396,7 +392,7 @@ void CIpoDlg::OnBnClickedButtonQuery()
    GetDlgItem(IDC_EDIT_ADDR)->GetWindowText(addr);
    if (addr == _T(""))
    {
-	   ::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+	   UiFun::MessageBoxEx(_T("地址不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
 	   return;
    }
    OnShowListCtrol(addr);

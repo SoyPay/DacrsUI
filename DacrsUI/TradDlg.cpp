@@ -253,7 +253,7 @@ void CTradDlg::OnBnClickedButtonTxdetail()
 
 	}else{
 		StrShow.Format(_T("请选择地址!\n"));
-		::MessageBox( this->GetSafeHwnd() ,StrShow , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(StrShow , _T("Error") ,MFB_OK|MFB_ERROR );
 	}
 
 }
@@ -563,8 +563,7 @@ void CTradDlg::OnBnClickedExportExel()
 
 	{
 
-		MessageBox(_T("创建失败！"));
-
+		UiFun::MessageBoxEx(_T("创建失败！") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 
 	}

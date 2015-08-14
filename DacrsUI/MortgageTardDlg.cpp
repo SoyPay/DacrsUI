@@ -477,7 +477,7 @@ void CMortgageTardDlg::SendRedPacketComm(){
 
 	if (!theApp.IsSyncBlock )
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("同步未完成,不能发送交易") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -514,7 +514,7 @@ void CMortgageTardDlg::SendRedPacketComm(){
 
 	INT64 strTxFee = theApp.m_RedPacketCfg.SendRedPacketCommFee;
 	if (  strTxFee < 10000  ) {
-		::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("小费不足") , _T("提示") ,MFB_OK|MFB_TIP );
 		return ;
 	}
 	string strShowData = "";
@@ -569,7 +569,7 @@ void CMortgageTardDlg::SendRedPacketComm(){
 		postmsg.SetData(strTemp);
 		theApp.m_MsgQueue.push(postmsg);
 	}
-	::MessageBox( this->GetSafeHwnd() ,strTip.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+	UiFun::MessageBoxEx(strTip.c_str() , _T("提示") ,MFB_OK|MFB_TIP );
 }
 /// 发送普通红包
 void CMortgageTardDlg::OnBnClickedButtonCommred()
@@ -578,7 +578,7 @@ void CMortgageTardDlg::OnBnClickedButtonCommred()
 
 	if (strcmp(theApp.m_redPacketScriptid.c_str(),theApp.m_neststcriptid.strNewSrcriptRedPacektid.c_str()))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("红包已经升级,请到菜单栏中选择恢复默认设置") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("红包已经升级,请到菜单栏中选择恢复默认设置") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -595,19 +595,19 @@ void CMortgageTardDlg::OnBnClickedButtonCommred()
 	GetDlgItem(IDC_EDIT_MONEY)->GetWindowText(strTxMoney) ;
 	if (strTxMoney == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("金额不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("金额不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
 	if (strtod(strTxMoney,NULL) > balance)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("红包金额大于账户余额") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("红包金额大于账户余额") , _T("提示") ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
 	if (strtod(strTxMoney,NULL)<1)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("红包金额必须大于1") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("红包金额必须大于1") , _T("提示") ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
@@ -618,13 +618,13 @@ void CMortgageTardDlg::OnBnClickedButtonCommred()
 
 	if (redNum < 2 || redNum >100)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("请正确填写红包个数,红包的个数在2-100范围之内") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("请正确填写红包个数,红包的个数在2-100范围之内") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 	double minamout = strtod(strTxMoney,NULL)/redNum;
 	if (minamout < 1.0) /// 平均每个热你的红包吧不能少于1
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("平均每个红包的金额不能小于1") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("平均每个红包的金额不能小于1") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -632,14 +632,14 @@ void CMortgageTardDlg::OnBnClickedButtonCommred()
 	int sel = m_addrbook.GetCurSel();
 	if (sel < 0)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("请选择地址") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("请选择地址") , _T("提示") ,MFB_OK|MFB_TIP );
 		return ;
 	}
 	m_addrbook.GetLBText(sel,addr);
 
 	if (addr == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("地址不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -772,9 +772,9 @@ bool CMortgageTardDlg::CheckBalance(string strshow)
 	{
 		if (strshow == "")
 		{
-			::MessageBox( this->GetSafeHwnd() ,_T("账户金额为零,请先充值") , _T("提示") , MB_ICONINFORMATION ) ;
+			UiFun::MessageBoxEx(_T("账户金额为零,请先充值") , _T("提示") ,MFB_OK|MFB_TIP );
 		}else{
-			::MessageBox( this->GetSafeHwnd() ,strshow.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+			UiFun::MessageBoxEx(strshow.c_str() , _T("提示") ,MFB_OK|MFB_TIP );
 		}
 		
 		return false;
@@ -792,7 +792,7 @@ void CMortgageTardDlg::OnBnClickedButtonWithd()
 
 	if (!theApp.IsSyncBlock )
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("同步未完成,不能发送交易") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -819,7 +819,7 @@ void CMortgageTardDlg::OnBnClickedButtonWithd()
 
 	if (addr == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("地址不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -832,7 +832,7 @@ void CMortgageTardDlg::OnBnClickedButtonWithd()
 
 	INT64 strTxFee = theApp.m_P2PBetCfg.GetAppAmountnFee;
 	if (  strTxFee < 10000  ) {
-		::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("小费不足") , _T("提示") ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
@@ -867,7 +867,7 @@ void CMortgageTardDlg::OnBnClickedButtonWithd()
 	}else{
 		strTip = "提现失败!" ;
 	}
-	::MessageBox( this->GetSafeHwnd() ,strTip.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+	UiFun::MessageBoxEx(strTip.c_str() , _T("提示") ,MFB_OK|MFB_TIP );
 }
 
 
@@ -876,13 +876,13 @@ void CMortgageTardDlg::OnBnClickedButtonRech()
 	// TODO: 在此添加控件通知处理程序代码
 	if (strcmp(theApp.m_redPacketScriptid.c_str(),theApp.m_neststcriptid.strNewSrcriptRedPacektid.c_str()))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("红包已经升级,请到菜单栏中选择恢复默认设置") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("红包已经升级,请到菜单栏中选择恢复默认设置"), _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
 	if (!theApp.IsSyncBlock )
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("同步未完成,不能发送交易") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -895,7 +895,7 @@ void CMortgageTardDlg::OnBnClickedButtonRech()
 
 	if (theApp.m_strAddress == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("金额不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("金额不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
@@ -910,7 +910,7 @@ void CMortgageTardDlg::OnBnClickedButtonRech()
 
 	if (addr == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("地址不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -921,7 +921,7 @@ void CMortgageTardDlg::OnBnClickedButtonRech()
 	double sub = pAddr.fMoney - strtod(theApp.m_strAddress,NULL);
 	if (sub <1.0)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("系统账户最少余额1smc,作为后续合约交易小费") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("系统账户最少余额1smc,作为后续合约交易小费") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -930,7 +930,7 @@ void CMortgageTardDlg::OnBnClickedButtonRech()
 
 	INT64 strTxFee = theApp.m_P2PBetCfg.GetAppAmountnFee;
 	if (  strTxFee < 10000  ) {
-		::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("小费不足") , _T("提示") ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
@@ -964,7 +964,7 @@ void CMortgageTardDlg::OnBnClickedButtonRech()
 	}else{
 		strTip = "充值失败!" ;
 	}
-	::MessageBox( this->GetSafeHwnd() ,strTip.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+	UiFun::MessageBoxEx(strTip.c_str()  , _T("提示") ,MFB_OK|MFB_TIP );
 }
 
 void CMortgageTardDlg::OnSelectShowWin(int nCurSelTab)
@@ -1084,20 +1084,7 @@ BOOL CMortgageTardDlg::PreTranslateMessage(MSG* pMsg)
 	{   
 		if(pMsg->wParam == VK_RETURN)  
 		{  
-			/*if (GetDlgItem(IDC_EDIT_PAGE) == this->GetFocus())
-			{
-				CString num;
-				GetDlgItem(IDC_EDIT_PAGE)->GetWindowText(num);
-				if (IsAllDigtal(num))
-				{
-					OnShowPagePool(atoi(num));
-				}else
-				{
-					GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T(""));
-					::MessageBox( this->GetSafeHwnd() ,_T("输入有误,请输入数字") , _T("提示") , MB_ICONINFORMATION ) ;
-				}
-				return TRUE;
-			}*/
+	
 		}  
 	}  
 	return CDialogBar::PreTranslateMessage(pMsg);
@@ -1158,7 +1145,7 @@ void  CMortgageTardDlg::OnShowPagePool(int page)
 void   CMortgageTardDlg::SendRedPackeSpecail(){
 	if (!theApp.IsSyncBlock )
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("同步未完成,不能发送交易") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -1186,7 +1173,7 @@ void   CMortgageTardDlg::SendRedPackeSpecail(){
 
 	INT64 strTxFee = theApp.m_RedPacketCfg.SendRedPacketSpecailFee;
 	if (  strTxFee < 10000  ) {
-		::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("小费不足") , _T("提示") ,MFB_OK|MFB_TIP );
 		return ;
 	}
 	string strShowData =_T("");
@@ -1241,7 +1228,7 @@ void   CMortgageTardDlg::SendRedPackeSpecail(){
 		postmsg.SetData(strTemp);
 		theApp.m_MsgQueue.push(postmsg);
 	}
-	::MessageBox( this->GetSafeHwnd() ,strTip , _T("提示") , MB_ICONINFORMATION ) ;
+	UiFun::MessageBoxEx(strTip , _T("提示") ,MFB_OK|MFB_TIP );
 }
 void CMortgageTardDlg::OnBnClickedButtonSpecailred()
 {
@@ -1249,7 +1236,7 @@ void CMortgageTardDlg::OnBnClickedButtonSpecailred()
 
 	if (strcmp(theApp.m_redPacketScriptid.c_str(),theApp.m_neststcriptid.strNewSrcriptRedPacektid.c_str()))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("红包已经升级,请到菜单栏中选择恢复默认设置") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("红包已经升级,请到菜单栏中选择恢复默认设置") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -1266,19 +1253,20 @@ void CMortgageTardDlg::OnBnClickedButtonSpecailred()
 	GetDlgItem(IDC_EDIT_MONEY)->GetWindowText(strTxMoney) ;
 	if (strTxMoney == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("金额不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("金额不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
 	if (strtod(strTxMoney,NULL) > balance)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("红包金额大于账户余额") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("红包金额大于账户余额") , _T("提示") ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
 	if (strtod(strTxMoney,NULL)<10.0)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("接龙红包金额必须大于10.0") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("接龙红包金额必须大于10.0") , _T("提示") ,MFB_OK|MFB_TIP );
+
 		return ;
 	}
 
@@ -1289,14 +1277,14 @@ void CMortgageTardDlg::OnBnClickedButtonSpecailred()
 
 	if (redNum < 2 || redNum >20)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("请正确填写红包个数,接龙红包的个数在2-20范围之内") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("请正确填写红包个数,接龙红包的个数在2-20范围之内") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
 	double minamout = strtod(strTxMoney,NULL)/redNum;
 	if (minamout < 1.0) /// 平均每个热你的红包吧不能少于1
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("平均每个红包的金额不能小于1") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("平均每个红包的金额不能小于1") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -1304,14 +1292,14 @@ void CMortgageTardDlg::OnBnClickedButtonSpecailred()
 	int sel = m_addrbook.GetCurSel();
 	if (sel < 0)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("请选择地址") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("请选择地址") , _T("提示") ,MFB_OK|MFB_TIP );
 		return ;
 	}
 	m_addrbook.GetLBText(sel,addr);
 
 	if (addr == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("地址不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -1328,20 +1316,21 @@ void   CMortgageTardDlg::AcceptRedPacketComm(CString sendhash,uistruct::REDPACKE
 
 	if (!theApp.IsSyncBlock )
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("同步未完成,不能发送交易") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
 	if (!CheckRegIDValid( theApp.m_redPacketScriptid)) return ;
 
-	::MessageBox( this->GetSafeHwnd() ,pPoolList.message.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+	if(pPoolList.message != "")
+	UiFun::MessageBoxEx(pPoolList.message.c_str() , _T("提示") ,MFB_OK|MFB_TIP );
 
 	CString walletaddr;
 	((CStatic*)GetDlgItem(IDC_STATIC_MONEY4))->GetWindowText(walletaddr);
 	INT64 sub = (INT64)(strtod(walletaddr,NULL)*COIN) - theApp.m_RedPacketCfg.AcceptRedPacketCommFee;
 	if (sub < 0)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("此钱包账户金额不足付小费,请先充值") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("此钱包账户金额不足付小费,请先充值") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 	CString addr;
@@ -1354,17 +1343,17 @@ void   CMortgageTardDlg::AcceptRedPacketComm(CString sendhash,uistruct::REDPACKE
 
 	if (addr == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("地址不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 	if (strcmp(pPoolList.send_acc_id.c_str(),addr) == 0)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("发红包地址不能抢红包") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("发红包地址不能抢红包") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 	if (IsAcceptRedPacket(addr,pPoolList))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("此地址已经抢过红包") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("此地址已经抢过红包") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -1374,7 +1363,7 @@ void   CMortgageTardDlg::AcceptRedPacketComm(CString sendhash,uistruct::REDPACKE
 
 	INT64 strTxFee = theApp.m_RedPacketCfg.AcceptRedPacketCommFee;
 	if (  strTxFee < 10000  ) {
-		::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("小费不足") , _T("提示") ,MFB_OK|MFB_TIP );
 		return ;
 	}
 	string strShowData =_T("");
@@ -1428,14 +1417,15 @@ void   CMortgageTardDlg::AcceptRedPacketComm(CString sendhash,uistruct::REDPACKE
 		postmsg.SetData(strTemp);
 		theApp.m_MsgQueue.push(postmsg);
 	}
-	::MessageBox( this->GetSafeHwnd() ,strTip , _T("提示") , MB_ICONINFORMATION ) ;
+	UiFun::MessageBoxEx(strTip, _T("提示") ,MFB_OK|MFB_TIP );
 }
 void   CMortgageTardDlg::AcceptRedPackeSpecail(CString sendhash,uistruct::REDPACKETPOOL_t pPoolList)
 {
 
 	if (!theApp.IsSyncBlock )
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("同步未完成,不能发送交易") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -1446,14 +1436,16 @@ void   CMortgageTardDlg::AcceptRedPackeSpecail(CString sendhash,uistruct::REDPAC
 	INT64 sub = (INT64)(strtod(walletaddr,NULL)*COIN) - theApp.m_RedPacketCfg.AcceptRedPacketSpecailFee;
 	if (sub < 0)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("此钱包账户金额不足付小费,请先充值") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("此钱包账户金额不足付小费,请先充值") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 	((CStatic*)GetDlgItem(IDC_STATIC_BALANCE))->GetWindowText(walletaddr);
 
 	if (strtod(walletaddr,NULL) < pPoolList.total_amount)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("此钱包账户金额小于接龙红包金额,请先充值") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("此钱包账户金额小于接龙红包金额,请先充值") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 	CString addr;
@@ -1466,18 +1458,21 @@ void   CMortgageTardDlg::AcceptRedPackeSpecail(CString sendhash,uistruct::REDPAC
 
 	if (addr == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("地址不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
 	if (strcmp(pPoolList.send_acc_id.c_str(),addr) == 0)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("发红包地址不能抢红包") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("发红包地址不能抢红包") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 	if (IsAcceptRedPacket(addr,pPoolList))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("此地址已经抢过红包") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("此地址已经抢过红包") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 	string strContractData,strHash;
@@ -1486,7 +1481,8 @@ void   CMortgageTardDlg::AcceptRedPackeSpecail(CString sendhash,uistruct::REDPAC
 
 	INT64 strTxFee = theApp.m_RedPacketCfg.AcceptRedPacketSpecailFee;
 	if (  strTxFee < 10000  ) {
-		::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
+	
+		UiFun::MessageBoxEx(_T("小费不足") , _T("提示") ,MFB_OK|MFB_TIP );
 		return ;
 	}
 	string strShowData ="";
@@ -1540,7 +1536,8 @@ void   CMortgageTardDlg::AcceptRedPackeSpecail(CString sendhash,uistruct::REDPAC
 		postmsg.SetData(strTemp);
 		theApp.m_MsgQueue.push(postmsg);
 	}
-	::MessageBox( this->GetSafeHwnd() ,strTip , _T("提示") , MB_ICONINFORMATION ) ;
+	
+	UiFun::MessageBoxEx(strTip, _T("提示") ,MFB_OK|MFB_TIP );
 }
 LRESULT CMortgageTardDlg::onBnCLick( WPARAM wParam, LPARAM lParam )
 {
@@ -1729,13 +1726,15 @@ bool CMortgageTardDlg::CheckBalance(double dmoney)
 	double money =strtod(strMoney,NULL);
 	if (money == 0.0)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("账户金额为零,请先充值") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("账户金额为零,请先充值") , _T("提示") ,MFB_OK|MFB_TIP );
 		return false;
 	}
 
 	if (dmoney >money)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("提现金额大于账户中的金额") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("提现金额大于账户中的金额") , _T("提示") ,MFB_OK|MFB_TIP );
 		return false;
 	}
 	return true;
@@ -1745,7 +1744,8 @@ void  CMortgageTardDlg::GetAppAccountSomeMoney()
 
 	if (!theApp.IsSyncBlock )
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("同步未完成,不能发送交易") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -1766,7 +1766,8 @@ void  CMortgageTardDlg::GetAppAccountSomeMoney()
 
 	if (theApp.m_strAddress == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("提现金额不能为零") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("提现金额不能为零") , _T("提示") ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
@@ -1792,7 +1793,8 @@ void  CMortgageTardDlg::GetAppAccountSomeMoney()
 
 	if (addr == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("地址不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -1801,7 +1803,8 @@ void  CMortgageTardDlg::GetAppAccountSomeMoney()
 
 	INT64 strTxFee = theApp.m_P2PBetCfg.GetAppAmountnFee;
 	if (  strTxFee < 10000  ) {
-		::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("小费不足") , _T("提示") ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
@@ -1836,7 +1839,8 @@ void  CMortgageTardDlg::GetAppAccountSomeMoney()
 	}else{
 		strTip = "提现失败!" ;
 	}
-	::MessageBox( this->GetSafeHwnd() ,strTip.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+	
+	UiFun::MessageBoxEx(strTip.c_str() , _T("提示") ,MFB_OK|MFB_TIP );
 }
 void CMortgageTardDlg::ReadRedPacketPoolFromDB()
 {

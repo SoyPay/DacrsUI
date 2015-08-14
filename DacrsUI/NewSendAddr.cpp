@@ -51,7 +51,8 @@ void CNewSendAddr::OnBnClickedOk()
 	GetDlgItem(IDC_EDIT_ADDR)->GetWindowText(addr);
 	if (addr == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("地址不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
+		return;
 	}
 	uistruct::ADDRBOOK_t sAddrBookItem;
 	string strCond;
@@ -60,7 +61,7 @@ void CNewSendAddr::OnBnClickedOk()
 	int  item = theApp.m_SqliteDeal.GetAddressBookItem(strCond, &sAddrBookItem);
 	if (sAddrBookItem.address != _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("地址簿中已存在此地址") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("地址簿中已存在此地址") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 	m_selectAddr.label = label;
