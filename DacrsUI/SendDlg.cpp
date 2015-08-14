@@ -146,14 +146,12 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 
 		CString strDisplay;
 		strDisplay.Format(_T("转账%.4lfsmc至%s"), dSendMoney, strMaddress);
-		COut outdlg(NULL, strDisplay,100);
-		if ( IDOK != outdlg.DoModal()){
+
+		if (IDCANCEL == UiFun::MessageBoxEx(strDisplay , _T("提示") , MB_OKCANCEL|MFB_TIP ) )
+		{
 			return;
 		}
-		//if (UiFun::MessageBoxEx(strDisplay , _T("提示") ,MFB_OKCANCEL|MFB_TIP )!=IDOK)
-		//{
-		//	return;
-		//}
+
 		strShowData = _T("");
 		Json::Value root;
 		if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
