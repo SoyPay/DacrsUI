@@ -406,16 +406,14 @@ bool  CGrabCommRedPacket::IsAcceptRedPacket(CString account,uistruct::REDPACKETP
 	//{
 		string strCommand,strShowData;
 		strCommand = strprintf("%s %s",_T("gettxdetail") ,pPoolList.send_hash.c_str() );
-		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-		if (strShowData == "")
+		Json::Value root;
+		if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 		{
+			TRACE("IsAcceptRedPacket rpccmd gettxdetail error");
 			return false;
 		}
-		Json::Reader reader; 
-		Json::Value root;
-		if (!reader.parse(strShowData, root)) 
-			return false;
+		strShowData = root.toStyledString();
+		
 		int npos = strShowData.find("confirmHeight");
 		int confirHeight = 1440;
 		if ( npos >= 0 ) { //
@@ -439,13 +437,11 @@ bool  CGrabCommRedPacket::IsAcceptRedPacket(CString account,uistruct::REDPACKETP
 		string keyValue;
 		keyValue = strprintf("%s%s",strKeyHex.c_str(),SendHash.c_str());
 		strCommand = strprintf("%s %s %s",_T("getscriptdata") ,theApp.m_redPacketScriptid,keyValue.c_str() );
-		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-		if (strShowData == _T("") || strShowData.find("value") < 0)
+		if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
+		{
+			TRACE("IsAcceptRedPacket rpccmd getscriptdata error");
 			return false;
-
-		if (!reader.parse(strShowData, root)) 
-			return false;;
+		}
 
 		string nValue = root["value"].asString();
 		uistruct::RED_DATA redPacket;

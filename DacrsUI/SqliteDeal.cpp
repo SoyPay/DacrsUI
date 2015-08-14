@@ -636,34 +636,23 @@ BOOL CSqliteDeal::IsBlockTipInChain()
 		strCommand = strprintf("%s %d","getblock" ,-1 );
 	}else{
 		strCommand = strprintf("%s %s",_T("getblock") ,cTipBlockHash );
-	}					
-	CSoyPayHelp::getInstance()->SendRpc(strCommand, strShowData);
-	if (strShowData ==""){
-		return FALSE;
 	}
-	if(strShowData.find("hash") < 0){		
-		return FALSE;
-	}
-	Json::Reader reader;  
 	Json::Value root; 
-	if (!reader.parse(strShowData, root)) 
-	{		
-		return FALSE;
+	if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
+	{
+		TRACE("IsBlockTipInChain rpccmd listaddr error");
+		return false;
 	}
+
 
 	int height = root["height"].asInt();
 	strCommand = strprintf("%s %d","getblockhash" ,height );
-	CSoyPayHelp::getInstance()->SendRpc(strCommand, strShowData);
-	if (strShowData == ""){
-		return FALSE;
+	if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
+	{
+		TRACE("IsBlockTipInChain rpccmd getblockhash error");
+		return false;
 	}
-	if(strShowData.find("hash") < 0){		
-		return FALSE;
-	}
-	if (!reader.parse(strShowData, root)) 
-	{		
-		return FALSE;
-	}
+
 	string newblock =root["hash"].asString(); 
 	if (!strcmp(cTipBlockHash, newblock.c_str()))
 	{
