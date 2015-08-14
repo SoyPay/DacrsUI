@@ -753,7 +753,7 @@ namespace UiFun
 	time_t  SystemTimeToTimet(const SYSTEMTIME& st) ;
 	SYSTEMTIME Time_tToSystemTime(time_t t);
 	int     RandNumber();   //生成一个1-6的随机数
-	void    MessageBoxEx(CString strText , CString strCaption , UINT uType); //自制MessageBox对话框
+	int    MessageBoxEx(CString strText , CString strCaption , UINT uType); //自定义MessageBox对话框
 	CString UI_LoadString( CString secID , CString szID , UINT language ) ;  //根据字符串ID加载字符串
 
 	HBITMAP GlobalBkgndBMP(UINT nIDBitmap);
