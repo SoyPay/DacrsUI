@@ -37,6 +37,8 @@ private:
 
 public:
 	HBITMAP		     m_pBmp; 
+	HBITMAP		     m_pBkBmp; 
+	HBITMAP		     m_HeadBmp; 
 	void		     SetBkBmpNid( UINT nBitmapIn ) ;
 	void             SetBitmap(UINT uBmpResource)  ;
 public:

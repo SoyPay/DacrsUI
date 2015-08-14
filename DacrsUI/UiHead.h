@@ -57,8 +57,11 @@ enum {
 	MFB_YESNO     = 0x000CL,         //是 &　否
 
 	MFB_TIP       = 0x0010L,         //提示
-	MFB_ERROR,                       //错误
-	MFB_WARNING                      //警告
+	MFB_ERROR     = 0x0020L,         //错误
+	MFB_WARNING   = 0x0040L,         //警告
+
+	MFB_BK_RED    = 0x0100L          //红色背景
+
 } ;
 typedef enum tagDialogType{
 	DIALOG_MYWALLET     = 0x01,    //我的钱包 
