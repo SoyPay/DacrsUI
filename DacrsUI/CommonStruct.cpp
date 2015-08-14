@@ -515,6 +515,21 @@ int CSoyPayHelp::SendContacrRpc(string cmd,string &rev){
 	rev = strShowData;
 	return rev.length();
 }
+BOOL CSoyPayHelp::SendRpc(string cmd,Json::Value  &rev)
+{
+	string revtemp;
+	mRpcCmd.SendRpc(cmd,revtemp);
+	string strShowData = ParseRecvData(revtemp.c_str());
+	int pos = strShowData.find("error");
+	if (pos >=0)
+	{
+		return FALSE;
+	}
+	Json::Reader reader;  
+	if (!reader.parse(strShowData, rev)) 
+		return  FALSE;
+	return TRUE;
+}
 int CSoyPayHelp::SendRpc(string cmd,string &rev)
 {
 	string revtemp;
@@ -1240,22 +1255,15 @@ double CSoyPayHelp::GetAccountBalance(CString addr){
 
 	string strCommand,strShowData = "";
 	strCommand = strprintf("%s %s","getaccountinfo" ,addr );
-	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-	if (strShowData == "")
+	Json::Value root;
+	if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 	{
+		TRACE("GetAccountBalance rpccmd getaccountinfo error");
 		return 0.0;
 	}
-	Json::Reader reader; 
-	Json::Value root;
-	if (!reader.parse(strShowData, root)) 
-		return 0.0;
 
 	int64_t ret = 0;
-	if (strShowData.find("Balance") >= 0)
-	{
-		ret =  root["Balance"].asInt64();
-	}
+	ret =  root["Balance"].asInt64();
 	double nmoney = (ret*1.0/COIN);
 	return nmoney;
 }

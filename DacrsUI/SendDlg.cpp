@@ -153,22 +153,14 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 			return;
 		}
 		strShowData = _T("");
-		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-		if (strShowData == _T("") || strShowData.find("hash") <0)
+		Json::Value root;
+		if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 		{
+			TRACE("OnBnClickedSendtrnsfer rpccmd sendtoaddress error");
 			return;
 		}
-		Json::Reader reader;  
-		Json::Value root; 
-
-		if (!reader.parse(strShowData, root)) 
-		{
-			::MessageBox( this->GetSafeHwnd() ,strShowData.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
-			return  ;
-		}
 		BOOL bRes = FALSE ;
-
+		strShowData = root.toStyledString();
 		int pos = strShowData.find("hash");
 		if ( pos >=0 ) {
 			//插入到数据库

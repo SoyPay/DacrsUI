@@ -24,16 +24,13 @@ void CDacrsUIApp::UpdateQuizPoolData()
 	{
 		string strCommand;
 		strCommand = strprintf("%s %s %s %s",_T("getscriptvalidedata"),theApp.m_betScritptid,_T("100"),_T("1"));
-		string strShowData;
-		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-		//m_AppID
-		int pos = strShowData.find("key");
-		if (pos < 0)
+		
+		if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 		{
+			TRACE("UpdateQuizPoolData rpccmd getscriptvalidedata error");
 			return;
 		}
-		if (!reader.parse(strShowData, root)) 
-			return;
+
 		int size = root.size();
 		for ( int index =0; index < size; ++index )
 		{
@@ -68,25 +65,22 @@ void CDacrsUIApp::UpdateQuizPoolData()
 			}
 
 			strCommand = strprintf("%s %s",_T("gettxdetail"),strTemp.c_str());
-			string strShowData ="";
-			CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-			if (strShowData == "" && strShowData.find("hash") <0)
+			
+			if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root1))
 			{
+				TRACE("UpdateAddressData rpccmd gettxdetail error");
 				return;
 			}
-			if (!reader.parse(strShowData, root1)) 
-				return;
+		
 			int confirheight =root1["confirmHeight"].asInt();
 
 			strCommand= strprintf("%s",_T("getinfo"));
-			strShowData ="";
-			CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-			if (strShowData == _T(""))
+			if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root1))
 			{
+				TRACE("UpdateAddressData rpccmd getinfo error");
 				return;
 			}
-			if (!reader.parse(strShowData, root1)) 
-				return;
+	
 			int curheight =root1["blocks"].asInt();
 			if(curheight >=(confirheight+500))
 				continue;
@@ -115,17 +109,13 @@ void CDacrsUIApp::UpdateQuizPoolData()
 void CDacrsUIApp::UpdateAddressData(){
 	string strCommand;
 	strCommand =strprintf("%s","listaddr");
-	string strShowData =_T("");
 
-	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-	if (strShowData.find("addr") <0)
+	Json::Value root;
+	if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 	{
+		TRACE("UpdateAddressData rpccmd listaddr error");
 		return;
 	}
-	Json::Reader reader;  
-	Json::Value root; 
-	if (!reader.parse(strShowData, root)) 
-		return  ;
 
 	uistruct::LISTADDR_t listaddr;
 	for(unsigned int i = 0; i < root.size(); ++i){
@@ -193,35 +183,26 @@ void CDacrsUIApp::UpdateAddressData(){
 
 void CDacrsUIApp::UpdateTransaction(string hash){
 
-	string strCommand,strShowData;
+	string strCommand;
 	strCommand = strprintf("%s %s",_T("gettxdetail") ,hash.c_str());
-	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-	if (strShowData.find("hash") < 0){		
-		return;
-	}
-
-	//解析Json数据
-	Json::Reader reader;  
-	Json::Value root; 
-	if (!reader.parse(strShowData, root)) {		
-		return;
-	}
-
-	if (strShowData.find("blockhash") >= 0)
+	Json::Value root;
+	if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 	{
-		uistruct::REVTRANSACTION_t transcion;
-		if (transcion.JsonToStruct(root.toStyledString()))
-		{
-			string strSourceData,strWhere;
-			strSourceData = strprintf("confirm_height = %d , confirmed_time = %d ,block_hash ='%s'" ,transcion.confirmedHeight,transcion.confirmedtime,transcion.blockhash.c_str() ) ;
-			strWhere = strprintf("hash = '%s'" , hash.c_str()) ;
-			if ( !m_SqliteDeal.UpdateTableItem(_T("t_transaction") , strSourceData , strWhere ) ){
-				TRACE(_T("update t_transaction failed\n"));
-			}
-		}
-		PopupCommBalloonTip(hash);
+		TRACE("UpdateTransaction rpccmd gettxdetail error");
+		return;
 	}
+
+	uistruct::REVTRANSACTION_t transcion;
+	if (transcion.JsonToStruct(root.toStyledString()))
+	{
+		string strSourceData,strWhere;
+		strSourceData = strprintf("confirm_height = %d , confirmed_time = %d ,block_hash ='%s'" ,transcion.confirmedHeight,transcion.confirmedtime,transcion.blockhash.c_str() ) ;
+		strWhere = strprintf("hash = '%s'" , hash.c_str()) ;
+		if ( !m_SqliteDeal.UpdateTableItem(_T("t_transaction") , strSourceData , strWhere ) ){
+			TRACE(_T("update t_transaction failed\n"));
+		}
+	}
+	PopupCommBalloonTip(hash);
 }
 void CDacrsUIApp::OpenBetRecord(vector<unsigned char> openbet,uistruct::REVTRANSACTION_t transcion)
 {
@@ -403,7 +384,13 @@ void CDacrsUIApp::AcceptBetRecord(vector<unsigned char> acceptbet,uistruct::REVT
 			 string strCommand = _T("");
 			 strCommand = strprintf("%s %s",_T("gettxdetail"),SendTxhash.c_str());
 			 string strShowData =_T("");
-			 CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
+			 Json::Value root;
+			 if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
+			 {
+				 TRACE("AcceptBetRecord rpccmd gettxdetail error");
+				 return;
+			 }
+			 strShowData = root.toStyledString();
 			 if (strShowData == "")
 			 {
 				 return;
@@ -530,16 +517,10 @@ void CDacrsUIApp::UpdateAppRecord(string txdetail){
 void CDacrsUIApp::InsertTransaction(string hash){
 	string strCommand,strShowData;
 	strCommand = strprintf("%s %s",_T("gettxdetail") ,hash.c_str() );
-	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-	if (strShowData.find("hash") < 0){		
-		return;
-	}
-
-	//解析Json数据
-	Json::Reader reader;  
 	Json::Value root; 
-	if (!reader.parse(strShowData, root)) {		
+	if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
+	{
+		TRACE("InsertTransaction rpccmd gettxdetail error");
 		return;
 	}
 
@@ -656,15 +637,13 @@ void CDacrsUIApp::UpdateRedPacketPoolData()
 	{
 		string strCommand;
 		strCommand = strprintf("%s %s %s %s",_T("getscriptvalidedata"),theApp.m_redPacketScriptid,"100","1");
-		string strShowData;		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-		//m_AppID
-		int pos = strShowData.find("key");
-		if (pos < 0)
+		
+		if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 		{
+			TRACE("UpdateRedPacketPoolData rpccmd getscriptvalidedata error");
 			return;
 		}
-		if (!reader.parse(strShowData, root)) 
-			return;
+		
 		int size = root.size();
 		for ( int index =0; index < size; ++index )
 		{
@@ -686,14 +665,13 @@ void CDacrsUIApp::UpdateRedPacketPoolData()
 			string newTxhash =  CSoyPayHelp::getInstance()->HexStr(txTemp);
 
 			strCommand = strprintf("%s %s",_T("gettxdetail"),newTxhash.c_str());
-			string strShowData = "";
-			CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-			if (strShowData == _T(""))
+			
+			if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root1))
 			{
+				TRACE("UpdateAddressData rpccmd gettxdetail error");
 				return;
 			}
-			if (!reader.parse(strShowData, root1)) 
-				return;
+			
 			int confirheight =root1["confirmHeight"].asInt();
 
 			if(blocktipheight >=(confirheight+1440))
@@ -757,16 +735,14 @@ void CDacrsUIApp::AcceptRePacketCommtRecord(vector<unsigned char> acceptRedPacke
 
 		string strCommand,strShowData;
 		strCommand = strprintf("%s %s","gettxdetail" ,SendHash.c_str() );
-		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-		if (strShowData == "")
+		Json::Value root;
+		if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 		{
+			TRACE("AcceptRePacketCommtRecord rpccmd gettxdetail error");
 			return;
 		}
-		Json::Reader reader; 
-		Json::Value root;
-		if (!reader.parse(strShowData, root)) 
-			return;
+		strShowData = root.toStyledString();
+	
 		int npos = strShowData.find("confirmHeight");
 		int confirHeight = 1440;
 		if ( npos >= 0 ) { //
@@ -784,13 +760,11 @@ void CDacrsUIApp::AcceptRePacketCommtRecord(vector<unsigned char> acceptRedPacke
 		vHash.assign(key,key+sizeof(key));
 		string strKeyHex = CSoyPayHelp::getInstance()->HexStr(vHash);
 		strCommand = strprintf("%s %s %s","getscriptdata" ,m_redPacketScriptid,strKeyHex.c_str() );
-		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-		if (strShowData == "" || strShowData.find("value") < 0)
+		if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
+		{
+			TRACE("AcceptRePacketCommtRecord rpccmd getscriptdata error");
 			return;
-
-		if (!reader.parse(strShowData, root)) 
-			return;
+		}
 
 		string nValue = root["value"].asString();
 		uistruct::RED_DATA redPacket;
@@ -901,16 +875,14 @@ void CDacrsUIApp::AcceptRePacketSpecailRecord(vector<unsigned char> acceptRedPac
 
 		string strCommand,strShowData;
 		strCommand = strprintf("%s %s","gettxdetail",SendHash.c_str() );
-		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-		if (strShowData == "")
+		Json::Value root;
+		if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 		{
+			TRACE("AcceptRePacketSpecailRecord rpccmd gettxdetail error");
 			return;
 		}
-		Json::Reader reader; 
-		Json::Value root;
-		if (!reader.parse(strShowData, root)) 
-			return;
+		strShowData = root.toStyledString();
+		
 		int npos = strShowData.find("confirmHeight");
 		int confirHeight = 1440;
 		if ( npos >= 0 ) { //
@@ -928,13 +900,12 @@ void CDacrsUIApp::AcceptRePacketSpecailRecord(vector<unsigned char> acceptRedPac
 		vHash.assign(key,key+sizeof(key));
 		string strKeyHex = CSoyPayHelp::getInstance()->HexStr(vHash);
 		strCommand = strprintf("%s %s %s","getscriptdata" ,m_redPacketScriptid,strKeyHex.c_str() );
-		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-		if (strShowData == _T("") || strShowData.find("value") < 0)
+		if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
+		{
+			TRACE("AcceptRePacketSpecailRecord rpccmd getscriptdata error");
 			return;
+		}
 
-		if (!reader.parse(strShowData, root)) 
-			return;
 
 		string nValue = root["value"].asString();
 		uistruct::RED_DATA redPacket;
