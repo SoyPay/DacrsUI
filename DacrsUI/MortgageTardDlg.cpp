@@ -700,16 +700,13 @@ void CMortgageTardDlg::OnCbnSelchangeComboAddres()
 
 		string strCond;
 		strCommand =strprintf("%s %s %s",_T("getappaccinfo") , theApp.m_redPacketScriptid ,text);
-		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-		if (strShowData == _T(""))
+		Json::Value root; 
+		if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 		{
+			TRACE("UpdateAddressData rpccmd listaddr error");
 			return;
 		}
-		Json::Reader reader;  
-		Json::Value root; 
-		if (!reader.parse(strShowData, root)) 
-			return  ;
+		strShowData = root.toStyledString();
 
 		int pos = strShowData.find("FreeValues");
 		INT64 nMoney = 0;
@@ -1575,16 +1572,14 @@ bool  CMortgageTardDlg::IsAcceptRedPacket(CString account,uistruct::REDPACKETPOO
 	//{
 		string strCommand,strShowData;
 		strCommand = strprintf("%s %s","gettxdetail" ,pPoolList.send_hash );
-		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-		if (strShowData == "")
+		Json::Value root;
+		if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 		{
+			TRACE("IsAcceptRedPacket rpccmd gettxdetail error");
 			return false;
 		}
-		Json::Reader reader; 
-		Json::Value root;
-		if (!reader.parse(strShowData, root)) 
-			return false;
+		strShowData = root.toStyledString();
+		
 		int npos = strShowData.find("confirmHeight");
 		int confirHeight = 1440;
 		if ( npos >= 0 ) { //
@@ -1608,13 +1603,11 @@ bool  CMortgageTardDlg::IsAcceptRedPacket(CString account,uistruct::REDPACKETPOO
 		string keyValue;
 		keyValue = strprintf("%s%s",strKeyHex.c_str(),SendHash.c_str());
 		strCommand = strprintf("%s %s %s",_T("getscriptdata") ,theApp.m_redPacketScriptid,keyValue.c_str());
-		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-		if (strShowData == "" || strShowData.find("value") < 0)
+		if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
+		{
+			TRACE("IsAcceptRedPacket rpccmd getscriptdata error");
 			return false;
-
-		if (!reader.parse(strShowData, root)) 
-			return false;;
+		}
 
 		string nValue = root["value"].asString();
 		uistruct::RED_DATA redPacket;

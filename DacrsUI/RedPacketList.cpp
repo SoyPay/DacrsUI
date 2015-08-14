@@ -46,16 +46,14 @@ void CRedPacketList::ShowTxDetail(CString txhash)
 {
 	string strCommand,strShowData;
 	strCommand = strprintf("%s %s","gettxdetail" ,txhash );
-	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-	if (strShowData == _T(""))
-	{
-		return ;
-	}
-	Json::Reader reader; 
 	Json::Value root;
-	if (!reader.parse(strShowData, root)) 
-		return ;
+	if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
+	{
+		TRACE("UpdateAddressData rpccmd listaddr error");
+		return;
+	}
+	strShowData = root.toStyledString();
+	
 	int npos = strShowData.find("confirmHeight");
 	int confirHeight = 1440;
 	if ( npos >= 0 ) { //
@@ -79,13 +77,11 @@ void CRedPacketList::ShowTxDetail(CString txhash)
 	string keyValue;
 	keyValue = strprintf("%s%s",strKeyHex.c_str(),SendHash.c_str());
 	strCommand =strprintf("%s %s %s","getscriptdata" ,theApp.m_redPacketScriptid,keyValue );
-	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-	if (strShowData == _T("") || strShowData.find("value") < 0)
-		return ;
-
-	if (!reader.parse(strShowData, root)) 
-		return ;
+	if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
+	{
+		TRACE("UpdateAddressData rpccmd listaddr error");
+		return;
+	}
 
 	string nValue = root["value"].asString();
 	uistruct::RED_DATA redPacket;
