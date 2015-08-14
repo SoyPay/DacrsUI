@@ -94,34 +94,23 @@ void CChangPassWord::OnBnClickedOk()
 
 	string strCommand;
 	strCommand = strprintf("%s %s %s",_T("walletpassphrasechange"),inputOld,confiedNew);
-	string strShowData  = _T("");
 
-	CSoyPayHelp::getInstance()->SendRpc(strCommand.c_str(),strShowData);
-	if (strShowData == "")
+	Json::Value root; 
+	if (!CSoyPayHelp::getInstance()->SendRpc(strCommand.c_str(),root))
 	{
+		TRACE("rpccmd walletpassphrasechange error");
 		return;
 	}
-	Json::Reader reader;  
-	Json::Value root; 
-	if (!reader.parse(strShowData, root)) 
-		return  ;
 
-	if (strShowData.find("chgpwd") > 0)
+	bool isEntryp = root["chgpwd"].asBool();
+	if (!isEntryp)
 	{
-		bool isEntryp = root["chgpwd"].asBool();
-		if (!isEntryp)
-		{
-			MessageBox(_T("输入旧密码不正确,请重新输入"));
-			return;
-		}else{
-			MessageBox(_T("恭喜修改密码成功"));
-		}
-	}else{
 		MessageBox(_T("输入旧密码不正确,请重新输入"));
 		return;
+	}else{
+		MessageBox(_T("恭喜修改密码成功"));
 	}
 	
-
 	CDialogBase::OnOK();
 }
 

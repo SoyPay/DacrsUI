@@ -86,16 +86,13 @@ void CSignAccountsDlg::OnBnClickedButtonSend()
 		GetDlgItem(IDC_EDIT_FEE)->GetWindowText(strFee);
 		strCommand = strprintf("%s %s %lld","registaccounttx" ,address  , (INT64)REAL_MONEY(strtod(strFee,NULL)) );
 
-		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-		if (strShowData == _T(""))
+		if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 		{
-			::MessageBox( this->GetSafeHwnd() ,_T("服务器没有反应") , _T("提示") , MB_ICONINFORMATION ) ;
+			TRACE("OnBnClickedButtonSend rpccmd registaccounttx error");
+			return;
 		}
 
-		if (!reader.parse(strShowData, root)) 
-			return  ;
-
+		strShowData = root.toStyledString();
 		string strData;
 		int pos = strShowData.find("hash");
 
@@ -158,12 +155,18 @@ BOOL CSignAccountsDlg::OnInitDialog()
 	m_rBtnClose.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
 	m_rBtnClose.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
 	m_rBtnClose.SizeToContent();
-	m_rBtnClose.SetWindowPos(NULL ,476-26 , 0 , 0 , 0 , SWP_NOSIZE);
+	//m_rBtnClose.SetWindowPos(NULL ,476-26 , 0 , 0 , 0 , SWP_NOSIZE);
+	CRect rect ;
+	m_rBtnClose.GetClientRect(rect);
 
-	m_rBtnSend.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
+	RECT ret;
+	GetWindowRect(&ret);
+	m_rBtnClose.SetWindowPos(NULL ,(ret.right-ret.left)-rect.Width() , 2 , 0 , 0 , SWP_NOSIZE); 
+
+	m_rBtnSend.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
 	m_rBtnSend.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
 	m_rBtnSend.SetWindowText("激   活") ;
-	m_rBtnSend.SetFontEx(20 , _T("微软雅黑"));
+	//m_rBtnSend.SetFontEx(20 , _T("微软雅黑"));
 	m_rBtnSend.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 	m_rBtnSend.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 	m_rBtnSend.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));

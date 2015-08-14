@@ -130,30 +130,24 @@ void CEncryptWallet::OnBnClickedOk()
 	string strCommand;
 	strCommand = strprintf("%s %s",_T("encryptwallet"),inputE);
 	string strShowData ="";
-
-	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-	if (strShowData == "")
+	Json::Value root;
+	if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 	{
+		TRACE(" rpccmd encryptwallet error");
 		return;
 	}
-	Json::Reader reader;  
-	Json::Value root; 
-	if (!reader.parse(strShowData, root)) 
-		return  ;
+
 		
 	bool isClose = FALSE; 
-	if (strShowData.find("encrypt")>0)	{
-		bool isEntryp = root["encrypt"].asBool();
-		isClose = isEntryp;
-		if (isEntryp)
-		{
-			MessageBox(_T("钱包加密成功请重新启动钱包"));
+	bool isEntryp = root["encrypt"].asBool();
+	isClose = isEntryp;
+	if (isEntryp)
+	{
+		MessageBox(_T("钱包加密成功请重新启动钱包"));
 
-		}else
-		{
-			MessageBox(_T("钱包加密失败"));
-		}
+	}else
+	{
+		MessageBox(_T("钱包加密失败"));
 	}
 
 	CDialogBase::OnOK();

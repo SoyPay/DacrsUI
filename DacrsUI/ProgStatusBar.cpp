@@ -411,41 +411,33 @@ void CProgStatusBar::OnIniLockParam()
 	string strCommand;
 	strCommand = strprintf("%s",_T("islocked"));
 	string strShowData ="";
-
-	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-	if (strShowData == "")
+	Json::Value root; 
+	if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 	{
+		TRACE("OnIniLockParam rpccmd islocked error");
 		return;
 	}
-	Json::Reader reader;  
-	Json::Value root; 
-	if (!reader.parse(strShowData, root)) 
-		return ;
 
-	if (strShowData.find("islock") > 0)
+	int state = root["islock"].asInt();
+	if (state == 0)     /// 没有锁
 	{
-		int state = root["islock"].asInt();
-		if (state == 0)     /// 没有锁
-		{
-			theApp.HaveLocked = FALSE;
-			theApp.IsWalletLocked =FALSE;
-		}else if(state == 1){   /// 解锁
-			theApp.IsWalletLocked =FALSE;
-			m_nLockIndex = 1;
-			theApp.HaveLocked = TRUE;
-		}else if (state == 2)    /// 锁定状态
-		{
-			theApp.IsWalletLocked =TRUE;
-			m_nLockIndex = 0;
-			theApp.HaveLocked = TRUE;
-		}
+		theApp.HaveLocked = FALSE;
+		theApp.IsWalletLocked =FALSE;
+	}else if(state == 1){   /// 解锁
+		theApp.IsWalletLocked =FALSE;
+		m_nLockIndex = 1;
+		theApp.HaveLocked = TRUE;
+	}else if (state == 2)    /// 锁定状态
+	{
+		theApp.IsWalletLocked =TRUE;
+		m_nLockIndex = 0;
+		theApp.HaveLocked = TRUE;
+	}
 		//theApp.IsWalletLocked = root["islock"].asBool();
 		//if (!theApp.IsWalletLocked)
 		//{
 		//	m_nLockIndex = 1;
 		//}
-	}
 
 }
 

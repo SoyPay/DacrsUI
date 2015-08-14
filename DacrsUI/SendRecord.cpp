@@ -234,14 +234,12 @@ void CSendRecord::OpenBet(CString txhash)
 	strCommand1 = strprintf("%s %s","gethash" , pPoolItem.content );
 	string strShowData1 ;
 
-	CSoyPayHelp::getInstance()->SendRpc(strCommand1,strShowData1);
-	int pos1 = strShowData1.find("hash");
-	if ( pos1 < 0 ) return ;
-
-	Json::Reader reader1;  
 	Json::Value root1; 
-	if (!reader1.parse(strShowData1, root1)) 
-		return  ;
+	if(!CSoyPayHelp::getInstance()->SendRpc(strCommand1,root1))
+	{
+		TRACE("OpenBet rpccmd gethash error");
+		return;
+	}
 
 	string strHash1 =root1["hash"].asString();
 	
