@@ -4,6 +4,8 @@
 #include "StaticTrans.h"
 // CMessageBoxEx 对话框
 
+
+#define MAX_WIDTH 480 //最大宽度480个像素
 class CMessageBoxEx : public CDialogBase
 {
 	DECLARE_DYNAMIC(CMessageBoxEx)

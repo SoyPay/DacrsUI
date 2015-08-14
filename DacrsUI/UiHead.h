@@ -49,14 +49,16 @@ enum {
 	LANGUAGE_EN ,
 } ;
 enum {
-	MFB_OK = 0x00001L,   //确认
-	MFB_OKCANCEL ,         //确认 & 取消
-	MFB_YES      ,         //是
-	MFB_YESNO    ,         //是 &　否
+	MFB_OK        = 0x0001L,         //确认
+	MFB_CANCEL    = 0x0002L,         //取消
+	MFB_OKCANCEL  = 0x0003L,         //确认 & 取消
+	MFB_YES       = 0x0004L,         //是
+	MFB_NO        = 0x0008L,         //否
+	MFB_YESNO     = 0x000CL,         //是 &　否
 
-	MFB_TIP      ,         //提示
-	MFB_ERROR    ,         //错误
-	MFB_WARNING  ,         //警告
+	MFB_TIP       = 0x0010L,         //提示
+	MFB_ERROR,                       //错误
+	MFB_WARNING                      //警告
 } ;
 typedef enum tagDialogType{
 	DIALOG_MYWALLET     = 0x01,    //我的钱包 
