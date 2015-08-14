@@ -225,7 +225,5 @@ void CNewAddressDlg::OnBnClickedButtonScdz()
 	{
 		EndDialog(IDOK);
 	}
-	//if (IDYES == ::MessageBox( this->GetSafeHwnd() ,_T("恭喜生成新地址") , _T("提示") , MB_YESNO|MB_ICONINFORMATION ) ){
-	//	EndDialog(IDOK);
-	//}
+	
 }
