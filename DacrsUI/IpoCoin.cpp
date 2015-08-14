@@ -167,7 +167,7 @@ BOOL CIpoCoin::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 void CIpoCoin::OnBnClickedButtonDrawal()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	if ( IDNO == UiFun::MessageBoxEx(_T("是否确定要提现") , _T("提示") , MB_YESNO|MFB_TIP ) )
+	if ( IDNO == UiFun::MessageBoxEx(_T("是否确定要提现") , _T("提示") , MFB_YESNO|MFB_TIP ) )
 		return;
 
 	if (!CheckRegIDValid( theApp.m_ipoScritptid )) return ;
