@@ -480,16 +480,13 @@ void CP2PDlg::OnCbnSelchangeComboAddres()
 
 		string strCond;
 		strCommand = strprintf("%s %s %s","getappaccinfo" , theApp.m_betScritptid ,text);
-		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-		if (strShowData == _T(""))
+		Json::Value root;
+		if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 		{
+			TRACE("UpdateAddressData rpccmd listaddr error");
 			return;
 		}
-		Json::Reader reader;  
-		Json::Value root; 
-		if (!reader.parse(strShowData, root)) 
-			return  ;
+		strShowData = root.toStyledString();
 
 		int pos = strShowData.find("FreeValues");
 		INT64 nMoney = 0;
@@ -872,15 +869,12 @@ void CP2PDlg::SendBet(int rewardnum)
 	string strCommand;
 	strCommand = strprintf("%s %s","gethash" , strTemp );
 	string strShowData ;
-
-	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-	int pos = strShowData.find("hash");
-	if ( pos < 0 ) return ;
-
-	Json::Reader reader;  
 	Json::Value root; 
-	if (!reader.parse(strShowData, root)) 
-		return  ;
+	if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
+	{
+		TRACE("UpdateAddressData rpccmd listaddr error");
+		return;
+	}
 
 	string  strHash = root["hash"].asString() ;
 	//strHash.Format(_T("%s") ,  root["hash"].asCString() ) ;
@@ -909,11 +903,12 @@ void CP2PDlg::SendBet(int rewardnum)
 	{
 		return;
 	}
+	Json::Reader reader; 
 	if (!reader.parse(strShowData, root)) 
 		return  ;
 	BOOL bRes = FALSE ;
 	CString strTip;
-	pos = strShowData.find("hash");
+	int pos = strShowData.find("hash");
 
 	if ( pos >=0 ) {
 		//插入到交易记录数据库
@@ -1220,14 +1215,18 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 
 			 strData = strprintf("%s %s",_T("gettxdetail"),hash);
 			 string strShowData ="";
-			 CSoyPayHelp::getInstance()->SendRpc(strData,strShowData);
+			 if(!CSoyPayHelp::getInstance()->SendRpc(strData,root))
+			 {
+				 TRACE("AcceptBet rpccmd gettxdetail error");
+				 return;
+			 }
+			 strShowData = root.toStyledString();
 			 int pos = strShowData.find("confirmedtime");
 			 if (strShowData == "" && pos <0)
 			 {
 				 return;
 			 }
-			 if (!reader.parse(strShowData, root)) 
-				 return;
+
 			 int confirtime =root["confirmedtime"].asInt();
 
 			SYSTEMTIME curTime =UiFun::Time_tToSystemTime(confirtime);
@@ -1833,14 +1832,12 @@ void  CP2PDlg::AutoSendBet()
 		strCommand = strprintf("%s %s","gethash" , strTemp );
 		string strShowData ;
 
-		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-		int pos = strShowData.find("hash");
-		if ( pos < 0 ) return ;
-
-		Json::Reader reader;  
 		Json::Value root; 
-		if (!reader.parse(strShowData, root)) 
-			return  ;
+		if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
+		{
+			TRACE("AutoSendBet rpccmd gethash error");
+			return;
+		}
 
 		string  strHash = root["hash"].asString() ;
 
@@ -1865,11 +1862,12 @@ void  CP2PDlg::AutoSendBet()
 		{
 			return;
 		}
+		Json::Reader reader; 
 		if (!reader.parse(strShowData, root)) 
 			return  ;
 		BOOL bRes = FALSE ;
 		CString strTip;
-		pos = strShowData.find("hash");
+		int pos = strShowData.find("hash");
 
 		if ( pos >=0 ) {
 			//插入到交易记录数据库
@@ -1998,14 +1996,18 @@ BOOL CP2PDlg::AcceptBet(string hash,double dmoney,string sendaddr,int timeout,st
 
 			strData = strprintf("%s %s",_T("gettxdetail"),hash);
 			string strShowData ="";
-			CSoyPayHelp::getInstance()->SendRpc(strData,strShowData);
+			if(!CSoyPayHelp::getInstance()->SendRpc(strData,root))
+			{
+				TRACE("UpdateAddressData rpccmd listaddr error");
+				return false;
+			}
+			strShowData = root.toStyledString();
 			int pos = strShowData.find("confirmedtime");
 			if (strShowData == "" && pos <0)
 			{
 				return FALSE;
 			}
-			if (!reader.parse(strShowData, root)) 
-				return FALSE;
+
 			int confirtime =root["confirmedtime"].asInt();
 
 			SYSTEMTIME curTime =UiFun::Time_tToSystemTime(confirtime);
@@ -2098,16 +2100,17 @@ void CP2PDlg::AKeyCancelTheOrder()
 
 			string strCond;
 			strCommand = strprintf("%s %s %s 0","getappaccinfo" , theApp.m_betScritptid ,it->second.RegID);
-			CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
+			Json::Value root; 
+			if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
+			{
+				TRACE("UpdateAddressData rpccmd listaddr error");
+				return;
+			}
+			strShowData = root.toStyledString();
 			if (strShowData == "")
 			{
 				continue;;
 			}
-			Json::Reader reader;  
-			Json::Value root; 
-			if (!reader.parse(strShowData, root)) 
-				continue;;
 
 			int pos = strShowData.find("FreeValues");
 			INT64 nMoney = 0;
@@ -2218,24 +2221,21 @@ void CP2PDlg::ReadP2pPoolFromCmd(uistruct::P2PLIST &PoolList)
 
 			strCommand = strprintf("%s %s",_T("gettxdetail"),strTemp.c_str());
 			string strShowData ="";
-			CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-			if (strShowData == "" && strShowData.find("hash") <0)
+
+			if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root1))
 			{
+				TRACE("ReadP2pPoolFromCmd rpccmd gettxdetail error");
 				return;
 			}
-			if (!reader.parse(strShowData, root1)) 
-				return;
 			int confirheight =root1["confirmHeight"].asInt();
 
 			strCommand= strprintf("%s",_T("getinfo"));
 			strShowData ="";
-			CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-			if (strShowData == _T(""))
+			if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root1))
 			{
+				TRACE("ReadP2pPoolFromCmd rpccmd getinfo error");
 				return;
 			}
-			if (!reader.parse(strShowData, root1)) 
-				return;
 			int curheight =root1["blocks"].asInt();
 			if(curheight >=(confirheight+500))
 				continue;

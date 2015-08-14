@@ -305,23 +305,17 @@ double CIpoCoin::GetFreeMoney(CString addr)
 {
 	string strCommand,strShowData ="";
 	strCommand =strprintf("%s %s %s","getappaccinfo" , theApp.m_ipoScritptid ,addr);
-	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-	if (strShowData == "")
+	Json::Value root; 
+	if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 	{
+		TRACE("GetFreeMoney rpccmd getappaccinfo error");
 		return 0.0;
 	}
-	Json::Reader reader;  
-	Json::Value root; 
-	if (!reader.parse(strShowData, root)) 
-		return 0.0 ;
 
-	int pos = strShowData.find("FreeValues");
 	INT64 nMoney = 0;
-	if (pos >0)
-	{
-		nMoney = root["FreeValues"].asInt64() ;
-	}
+	
+	nMoney = root["FreeValues"].asInt64() ;
+
 	double money = (nMoney*1.0/COIN);
 	return money;
 }
@@ -329,16 +323,14 @@ void CIpoCoin::OnShowListCtrol(CString addr)
 {
 	string strCommand,strShowData ="";
 	strCommand =strprintf("%s %s %s","getappaccinfo" , theApp.m_ipoScritptid ,addr);
-	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-	if (strShowData == "")
+	Json::Value root; 
+	if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 	{
+		TRACE("OnShowListCtrol rpccmd getappaccinfo error");
 		return;
 	}
-	Json::Reader reader;  
-	Json::Value root; 
-	if (!reader.parse(strShowData, root)) 
-		return  ;
+	strShowData = root.toStyledString();
+	
 	m_listCtrl.DeleteAllItems();
 
 	int pos = strShowData.find("FreeValues");

@@ -327,16 +327,14 @@ void CIpoDlg::OnShowListCtrol(CString addr)
 	return;
 	string strCommand,strShowData ="";
 	strCommand = strprintf("%s %s %s","getappaccinfo" , theApp.m_ipoScritptid ,addr);
-	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-	if (strShowData == "")
+	Json::Value root;
+	if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 	{
+		TRACE("UpdateAddressData rpccmd listaddr error");
 		return;
 	}
-	Json::Reader reader;  
-	Json::Value root; 
-	if (!reader.parse(strShowData, root)) 
-		return  ;
+	strShowData = root.toStyledString();
+	
 	m_listCtrl.DeleteAllItems();
 
 	int pos = strShowData.find("FreeValues");

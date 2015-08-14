@@ -340,6 +340,7 @@ public:
 	}
 
 	int SendRpc(string cmd,string &rev);
+	BOOL SendRpc(string cmd,Json::Value  &rev);
 	int SendContacrRpc(string cmd,string &rev);
 	int SendRpcDlg(string cmd,string &rev);
 	void Jiexi(Json::Value &obj, HTREEITEM hItemRoot,CTreeCtrl&m_rpccommand);
