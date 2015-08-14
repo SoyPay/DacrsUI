@@ -34,13 +34,11 @@ private:
 	CStaticTrans   m_strTip   ;  //提示信息
 	CStaticTrans   m_strText ;//显示内容
 	CFont  m_fontGrid;//字体变量
-	int m_select;
 
 public:
 	HBITMAP		     m_pBmp; 
 	void		     SetBkBmpNid( UINT nBitmapIn ) ;
 	void             SetBitmap(UINT uBmpResource)  ;
-	int              GetSelect();
 public:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnBnClickedOk();
