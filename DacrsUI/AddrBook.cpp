@@ -239,7 +239,7 @@ void CAddrBook::OnBnClickedOk()
 		m_selectAddr.address = addr;
 		}else{
 			StrShow.Format(_T("请选择地址!\n"));
-			::MessageBox( this->GetSafeHwnd() ,StrShow , _T("提示") , MB_ICONINFORMATION ) ;
+			UiFun::MessageBoxEx(StrShow, _T("提示") ,MFB_OK|MFB_TIP );
 			return;
 		}
 	CDialogEx::OnOK();
@@ -273,7 +273,7 @@ void CAddrBook::OnBnClickedButtonDeleitem()
 		}else{
 			//StrShow.Format(_T("请选择地址!\n"));
 			StrShow = "请选择地址!\n";
-			::MessageBox( this->GetSafeHwnd() ,StrShow.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+			UiFun::MessageBoxEx(StrShow.c_str() , _T("提示") ,MFB_OK|MFB_TIP );
 			return;
 		}
 }

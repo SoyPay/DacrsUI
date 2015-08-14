@@ -309,7 +309,7 @@ BOOL CBetRecord::PreTranslateMessage(MSG* pMsg)
 				}else
 				{
 					GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T(""));
-					::MessageBox( this->GetSafeHwnd() ,_T("输入有误,请输入数字") , _T("提示") , MB_ICONINFORMATION ) ;
+					UiFun::MessageBoxEx(_T("输入有误,请输入数字") , _T("提示") ,MFB_OK|MFB_TIP );
 				}
 				return TRUE;
 			}
@@ -506,8 +506,7 @@ void CBetRecord::OExportAcceptBetToexel()
 
 	{
 
-		MessageBox(_T("创建失败！"));
-
+		UiFun::MessageBoxEx(_T("创建失败！") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 
 	}
