@@ -210,13 +210,15 @@ void CSendRecord::OpenBet(CString txhash)
 {
 	if (!theApp.IsSyncBlock )
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("同步未完成,不能发送交易") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
 	if (m_addr == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("请选择地址") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("请选择地址") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 	if (!CheckRegIDValid( theApp.m_betScritptid )) return ;
@@ -227,7 +229,8 @@ void CSendRecord::OpenBet(CString txhash)
 	int nItem =  theApp.m_SqliteDeal.GetP2PQuizRecordItem(conditon ,&pPoolItem ) ;
 	if (pPoolItem.tx_hash == "")
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("数据库中无此记录") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("数据库中无此记录") , _T("提示") ,MFB_OK|MFB_TIP );
 	}
 
 	string strCommand1;
@@ -318,7 +321,8 @@ void CSendRecord::OpenBet(CString txhash)
 
 		}
 	}
-	::MessageBox( this->GetSafeHwnd() ,strTip.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+
+	UiFun::MessageBoxEx(strTip.c_str() , _T("提示") ,MFB_OK|MFB_TIP );
 }
 ///开接赌了没有开奖的
 void  CSendRecord::OpenAcceptbet()
@@ -346,7 +350,8 @@ void  CSendRecord::OpenAcceptbet()
 				double minfee = (theApp.m_P2PBetCfg.OpenBetnFee*1.0)/COIN;
 				if (minfee > pAddr.fMoney)
 				{
-					::MessageBox(NULL ,_T("有些赌约未开奖,请先充值") , _T("提示") , MB_ICONINFORMATION ) ;
+				
+					UiFun::MessageBoxEx(_T("有些赌约未开奖,请先充值") , _T("提示") ,MFB_OK|MFB_TIP );
 				}
 				CString txhash;
 				txhash.Format(_T("%s"),const_it.tx_hash.c_str());
@@ -494,7 +499,8 @@ BOOL CSendRecord::PreTranslateMessage(MSG* pMsg)
 				}else
 				{
 					GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T(""));
-					::MessageBox( this->GetSafeHwnd() ,_T("输入有误,请输入数字") , _T("提示") , MB_ICONINFORMATION ) ;
+					
+					UiFun::MessageBoxEx(_T("输入有误,请输入数字") , _T("提示") ,MFB_OK|MFB_TIP );
 				}
 				return TRUE;
 			}
@@ -618,8 +624,8 @@ void CSendRecord::ExportSendBetRecordToexel()
 
 	{
 
-		MessageBox(_T("创建失败！"));
-
+		
+		UiFun::MessageBoxEx(_T("创建失败！") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 
 	}

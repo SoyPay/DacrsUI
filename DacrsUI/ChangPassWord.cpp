@@ -55,40 +55,40 @@ void CChangPassWord::OnBnClickedOk()
 	int pos = confiedNew.Find(_T(" "));
 	if (pos >=0)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("输入新密码中不能有空格") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("输入新密码中不能有空格") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
 	if (inputOld == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("请输入旧密码") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("请输入旧密码") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 	if (confiedNew == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("请输入新密码") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("请输入新密码") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 	if (confiedPassWord == _T(""))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("请输入确定新密码") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("请输入确定新密码") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 	if (IsAllDigtal(confiedNew))
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("密码不能全是数字") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("密码不能全是数字") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
 	if (confiedNew.GetLength()<6)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("密码个数最少六位") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("密码个数最少六位") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
 	if (strcmp(confiedPassWord,confiedNew) != 0)
 	{
-		::MessageBox( this->GetSafeHwnd() ,_T("确认密码和输入密码不一致") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("确认密码和输入密码不一致") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -105,10 +105,10 @@ void CChangPassWord::OnBnClickedOk()
 	bool isEntryp = root["chgpwd"].asBool();
 	if (!isEntryp)
 	{
-		MessageBox(_T("输入旧密码不正确,请重新输入"));
+		UiFun::MessageBoxEx(_T("输入旧密码不正确,请重新输入") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}else{
-		MessageBox(_T("恭喜修改密码成功"));
+		UiFun::MessageBoxEx(_T("恭喜修改密码成功") , _T("提示") ,MFB_OK|MFB_TIP );
 	}
 	
 	CDialogBase::OnOK();
