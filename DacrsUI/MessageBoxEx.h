@@ -32,7 +32,7 @@ private:
 	CShadeButtonST m_OK;      //确认
 	CShadeButtonST m_cancel;  //取消
 	CStaticTrans   m_strTip   ;  //提示信息
-	CStaticTrans   m_strText ;//显示内容
+	CEdit   m_strText ;//显示内容
 	CFont  m_fontGrid;//字体变量
 
 public:
@@ -49,4 +49,5 @@ public:
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 	afx_msg void OnStnClickedText();
+	void  ReplaceEditText();
 };

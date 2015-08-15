@@ -29,6 +29,8 @@ void CSignAccountsDlg::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_BUTTON_CLOSE, m_rBtnClose);
 	DDX_Control(pDX, IDC_BUTTON_SEND, m_rBtnSend);
+	DDX_Control(pDX, IDC_ADDR, m_addr);
+	DDX_Control(pDX, IDC_FEE, m_fee);
 }
 
 
@@ -210,8 +212,9 @@ HBRUSH CSignAccountsDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 	{
 		pDC->SetBkMode(TRANSPARENT);
 		pDC->SelectObject(&m_fontGrid);
-		hbr = (HBRUSH)CreateSolidBrush(RGB(249,249,249));
+		hbr = (HBRUSH)CreateSolidBrush(RGB(240,240,240));
 	}
+
 
 	// TODO:  如果默认的不是所需画笔，则返回另一个画笔
 	return hbr;

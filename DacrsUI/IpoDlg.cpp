@@ -75,7 +75,7 @@ int CIpoDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 
 	// TODO:  在此添加您专用的创建代码
-	//SetBkBmpNid(IDB_BITMAP_IPO_BJ);
+//	SetBkBmpNid(IDB_BITMAP_IPO_BJ);
 	return 0;
 }
 

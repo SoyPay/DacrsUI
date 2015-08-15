@@ -30,6 +30,8 @@ void CNewAddressDlg::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_BUTTON_CLOSE, m_rBtnClose);
 	DDX_Control(pDX, IDC_BUTTON_SCDZ, m_rBtnNewAdd);
+	DDX_Control(pDX, IDC_LABEL, m_label);
+	DDX_Control(pDX, IDC_CODE, m_code);
 }
 
 
