@@ -28,6 +28,8 @@ public:
 public:
 	CShadeButtonST   m_rBtnClose;
 	CShadeButtonST   m_rBtnSend;
+	CStaticTrans     m_addr   ;  //
+	CStaticTrans     m_fee   ;  //
 public:
 	afx_msg void OnBnClickedButtonSend();
 	void SetShowAddr(CString addr);
