@@ -646,7 +646,7 @@ void CMortgageTardDlg::OnBnClickedButtonCommred()
 	CString strDisplay;
 	strDisplay.Format(_T("确定要发红包--->金额:%s"), strTxMoney);
 
-	if (IDCANCEL == UiFun::MessageBoxEx(strDisplay , _T("提示") , MB_OKCANCEL|MFB_TIP ) )
+	if (IDCANCEL == UiFun::MessageBoxEx(strDisplay , _T("提示") , MFB_OKCANCEL|MFB_TIP ) )
 	{
 		return;
 	}
@@ -802,7 +802,7 @@ void CMortgageTardDlg::OnBnClickedButtonWithd()
 		return;
 	}
 
-	if ( IDNO == UiFun::MessageBoxEx(_T("是否确定要提现") , _T("提示") ,MB_YESNO|MFB_TIP ) )
+	if ( IDNO == UiFun::MessageBoxEx(_T("是否确定要提现") , _T("提示") ,MFB_YESNO|MFB_TIP ) )
 		return;
 
 	if (!CheckRegIDValid( theApp.m_redPacketScriptid)) return ;
@@ -1307,7 +1307,7 @@ void CMortgageTardDlg::OnBnClickedButtonSpecailred()
 	CString strDisplay;
 	strDisplay.Format(_T("确定要发红包--->金额:%s"), strTxMoney);
 
-	if (IDCANCEL == UiFun::MessageBoxEx(strDisplay , _T("提示") , MB_OKCANCEL|MFB_TIP ) )
+	if (IDCANCEL == UiFun::MessageBoxEx(strDisplay , _T("提示") , MFB_OKCANCEL|MFB_TIP ) )
 	{
 		return;
 	}
@@ -1779,7 +1779,7 @@ void  CMortgageTardDlg::GetAppAccountSomeMoney()
 		return;
 	}
 	string show = strprintf("是否确定要体现 金额为:%lf",money);
-	if ( IDNO == UiFun::MessageBoxEx(show.c_str() , _T("提示") , MB_YESNO|MFB_TIP ) )
+	if ( IDNO == UiFun::MessageBoxEx(show.c_str() , _T("提示") , MFB_YESNO|MFB_TIP ) )
 		return;
 
 	string strShowData ="";
