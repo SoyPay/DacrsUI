@@ -118,7 +118,7 @@ BOOL CIpoDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		UpdateData(0);
 		m_rBtnSend.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
 		m_rBtnSend.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		//m_rBtnAdd.SetWindowText("添加地址") ;
+		m_rBtnSend.SetWindowText("") ;
 		m_rBtnSend.SetFontEx(20 , _T("微软雅黑"));
 		m_rBtnSend.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		m_rBtnSend.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
@@ -136,6 +136,18 @@ BOOL CIpoDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_rQueryAmout.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
 		m_rQueryAmout.SizeToContent();
 		
+
+/*		
+		m_rBtnRefresh.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
+		m_rBtnRefresh.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+		m_rBtnRefresh.SetWindowText("刷  新") ;
+		m_rBtnRefresh.SetFontEx(20 , _T("微软雅黑"));
+		m_rBtnRefresh.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
+		m_rBtnRefresh.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+		m_rBtnRefresh.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
+		m_rBtnRefresh.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
+		m_rBtnRefresh.SizeToContent();
+		*/
 		m_strTx1.SetFont(120, _T("黑体"));				//设置显示字体和大小
 		m_strTx1.SetTextColor(RGB(0,0,0));	
 
@@ -277,7 +289,7 @@ void CIpoDlg::OnSize(UINT nType, int cx, int cy)
 
 		pst = GetDlgItem( IDC_BUTTON_QUERY ) ;
 		if ( NULL != pst ) {
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*70 ,(rc.Height()/100)*5  , (rc.Width()/100)*13-2, (rc.Height()/100)*9  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*60 ,(rc.Height()/100)*5  , (rc.Width()/100)*13-2, (rc.Height()/100)*9  ,SWP_SHOWWINDOW ) ; 
 		}
 
 		//
