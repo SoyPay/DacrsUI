@@ -321,6 +321,7 @@ BOOL CMessageBoxEx::OnEraseBkgnd(CDC* pDC)
 		dcMem.DeleteDC();
 	} else  
 		CWnd::OnEraseBkgnd(pDC); */
+	CDialogBase::OnEraseBkgnd(pDC);
 
 	return TRUE;
 }
