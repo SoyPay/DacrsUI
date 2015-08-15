@@ -37,7 +37,7 @@ void CMessageBoxEx::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_QUIT, m_quit);
 	DDX_Control(pDX, IDC_OK, m_OK);
 	DDX_Control(pDX, IDC_CANCEL, m_cancel);
-	DDX_Control(pDX, IDC_TEXT, m_strText);
+	DDX_Control(pDX, IDC_EDIT_TEXT, m_strText);
 	DDX_Control(pDX, IDC_TIP, m_strTip);
 }
 
@@ -84,11 +84,36 @@ void CMessageBoxEx::SetBitmap(UINT uBmpResource)
 	pStatic->ModifyStyle(0xF, SS_BITMAP|SS_CENTERIMAGE); 
 	pStatic->SetBitmap(hBitmap); 
 }
-
+void  CMessageBoxEx::ReplaceEditText()
+{
+	string retTemp ;
+	string textTemp = strprintf("%s",m_Text);
+	int nPosn =textTemp.find("\n");
+	int nPosr =textTemp.find("\r");
+	int row = 1;
+	while(nPosn >=0)
+	{
+		if ((nPosn-nPosr)==1 && nPosr >=0)
+		{
+			retTemp +=textTemp.substr(0,nPosn+1);
+			textTemp=textTemp.substr(nPosn+1);
+			row++;
+		}else{
+			if (nPosn >=0)
+			{
+				textTemp.replace (nPosn,1,"\r\n");
+			}
+		}
+		nPosn =textTemp.find("\n");
+		nPosr =textTemp.find("\r");
+	}
+	retTemp+=textTemp;
+	m_Text=retTemp.c_str();
+}
 BOOL CMessageBoxEx::OnInitDialog()
 {
 	CDialogBase::OnInitDialog();
-
+	ReplaceEditText();
 //	CDialogBase::SetBkBmpNid(IDB_BITMAP_RED_BK, CDialogBase::m_pBmp) ;
 //	CDialogBase::SetBkBmpNid(IDB_BITMAP_RED_TITLE, CDialogBase::m_HeadBmp);
 
@@ -139,10 +164,17 @@ BOOL CMessageBoxEx::OnInitDialog()
 	// TODO:  在此添加额外的初始化
 	UpdateData(FALSE);
 	
-	CRect rect;
-	theApp.m_pMainWnd->GetWindowRect(&rect);
-	theApp.m_pMainWnd->ClientToScreen(rect);
-	MoveWindow((rect.left + rect.right)/2 - nDialogWidth/2,(rect.top + rect.bottom)/2 - nDialogHight/2 ,nDialogWidth, nDialogHight, FALSE);
+	if (theApp.m_pMainWnd != NULL)
+	{
+		CRect rect;
+		theApp.m_pMainWnd->GetWindowRect(&rect);
+		theApp.m_pMainWnd->ClientToScreen(rect);
+		MoveWindow((rect.left + rect.right)/2 - nDialogWidth/2,(rect.top + rect.bottom)/2 - nDialogHight/2 ,nDialogWidth, nDialogHight, FALSE);
+	}else
+	{
+		MoveWindow(0,5 ,nDialogWidth, nDialogHight, FALSE);
+	}
+
 	CenterWindow();
 	
 	m_fontGrid.CreatePointFont(100,_T("新宋体"));
@@ -180,8 +212,8 @@ BOOL CMessageBoxEx::OnInitDialog()
 	m_strTip.SetWindowText(m_Tip);
 
 	//显示文本的位置
-	m_strText.SetFont(100, _T("宋体"));				//设置显示字体和大小
-	m_strText.SetTextColor(RGB(0,0,0));	
+	//m_strText.SetFont(100, _T("宋体"));				//设置显示字体和大小
+	//m_strText.SetTextColor(RGB(0,0,0));	
 	m_strText.MoveWindow(nLeftMargin, nIconTopMargin+10, nStaticWidth, nStaticHeigh);
 	m_strText.SetWindowText(m_Text);
 
@@ -281,6 +313,11 @@ void CMessageBoxEx::OnBnClickedQuit()
 	}
 	else if((m_uType & MFB_NO) == MFB_NO) {
 		EndDialog(IDNO);
+	}else if ((m_uType & MFB_YES) == MFB_YES)
+	{
+		EndDialog(IDYES);
+	}else if((m_uType & MFB_OK) == MFB_OK){
+		EndDialog(IDOK);
 	}
 	CDialogBase::OnClose();
 }
