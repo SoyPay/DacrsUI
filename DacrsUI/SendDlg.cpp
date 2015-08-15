@@ -527,7 +527,7 @@ void CSendDlg::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL , (rc.Width()/100)*24 , (rc.Height()/100)*12 , (rc.Width()/100)*37, rect.Height()  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL , (rc.Width()/100)*24 , (rc.Height()/100)*12 , (rc.Width()/100)*37, rc.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
 
 		pst = GetDlgItem( IDC_STATIC_XM ) ;
