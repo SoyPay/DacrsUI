@@ -30,7 +30,7 @@ void CDacrsUIApp::UpdateQuizPoolData()
 			TRACE("UpdateQuizPoolData rpccmd getscriptvalidedata error");
 			return;
 		}
-
+		string str = root.toStyledString();
 		int size = root.size();
 		for ( int index =0; index < size; ++index )
 		{
