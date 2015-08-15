@@ -177,7 +177,7 @@ BOOL CTradDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 
 		m_rBtnExportTx.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
 		m_rBtnExportTx.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		m_rBtnExportTx.SetWindowText("导出EXEL表") ;
+		m_rBtnExportTx.SetWindowText("导出EXEL") ;
 		m_rBtnExportTx.SetFontEx(20 , _T("微软雅黑"));
 		m_rBtnExportTx.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		m_rBtnExportTx.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
@@ -187,7 +187,7 @@ BOOL CTradDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 
 		m_rBtnRefresh.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
 		m_rBtnRefresh.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		m_rBtnRefresh.SetWindowText("刷新") ;
+		m_rBtnRefresh.SetWindowText("刷  新") ;
 		m_rBtnRefresh.SetFontEx(20 , _T("微软雅黑"));
 		m_rBtnRefresh.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		m_rBtnRefresh.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
@@ -476,7 +476,7 @@ void CTradDlg::OnSize(UINT nType, int cx, int cy)
 		if( NULL != pButton ) {	
 			CRect m_BtnRc ;
 			pButton->GetClientRect(&m_BtnRc);
-			pButton->SetWindowPos(NULL ,900 - 1*(103 + 5)- 23-m_BtnRc.Width()-10 , 600 - 72 - 32 - 46 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
+			pButton->SetWindowPos(NULL ,900 - 1*(103 + 5)- 23-m_BtnRc.Width()-18 , 600 - 72 - 32 - 46 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
 		}
 
 		pButton = (CButton*)GetDlgItem( IDC_BUTTON_REFRESH ) ;

@@ -407,20 +407,31 @@ void CP2PDlg::OnSize(UINT nType, int cx, int cy)
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
 			pst->SetWindowPos( NULL ,(rc.Width()/100)*12 , (rc.Height()/100)*20 ,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
+
+			CComboBox*   pCtl  = (CComboBox*)pst; 
+			CWnd *p_edit = pCtl->GetDlgItem (0x3E9);
+			p_edit->GetClientRect( rect );
+			p_edit->SetWindowPos( NULL, (rc.Width()/100)*25, (rc.Height()/100)*25-3, rect.Width(), rect.Height(), SWP_SHOWWINDOW );
+		    pCtl->SetFont (&theApp.m_fontBlackbody);
+			p_edit->SetFont (&theApp.m_fontBlackbody);
+
+			pCtl->SendMessage(CB_SETITEMHEIGHT,(WPARAM)-1,(LPARAM)20);   //改变控件本身的高度
+			pCtl->SetItemHeight(0,15);									 //改变下拉列表每个Item的高度
 		}
 		
 		pst = GetDlgItem( IDC_STATIC_MONEY ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*32, (rc.Height()/100)*20 ,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*32, (rc.Height()/100)*20 ,  rect.Width() , rect.Height() , SWP_SHOWWINDOW );
 		}
 
 		pst = GetDlgItem( IDC_EDIT_MONEY ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*14 , (rc.Height()/100)*42,  rect.Width() , rect.Height() + 5 , SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*14 , (rc.Height()/100)*42,  rect.Width() , rect.Height() + 5 , SWP_SHOWWINDOW ); 
+			pst->SetFont (&theApp.m_fontBlackbody);
 		}
 		
 		pst = GetDlgItem( IDC_STATIC_DW ) ;
@@ -456,7 +467,6 @@ void CP2PDlg::OnSize(UINT nType, int cx, int cy)
 			pst->GetClientRect( rect ) ;
 			pst->SetWindowPos( NULL ,440 , 270 ,rect.Width() ,rect.Height(), SWP_SHOWWINDOW ) ; 
 		}
-		
 
 	}
 }

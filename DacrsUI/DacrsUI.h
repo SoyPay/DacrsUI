@@ -198,6 +198,9 @@ public:
 	int m_reminder;    //是否要弹出提示框，关闭的时候 false不弹出 true弹出
 	BOOL m_passlock;    //是否要弹出提示框，关闭的时候 false不弹出，存在解锁框 true弹出,不存在解锁框
 	BOOL m_dlgCreatfinsh;   // 主对话框框的所有dlg是否创建完
+
+	CFont m_fontSong;         //宋体字体
+	CFont m_fontBlackbody;    //黑体字体
 };
 
 

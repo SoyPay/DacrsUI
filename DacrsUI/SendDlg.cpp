@@ -330,6 +330,8 @@ BOOL CSendDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_rBtnSend.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
 		m_rBtnSend.SizeToContent();
 
+
+
 		theApp.SubscribeMsg( theApp.GetMtHthrdId() , GetSafeHwnd() , MSG_USER_SEND_UI ) ;
 		((CComboBox*)GetDlgItem(IDC_COMBO2))->SetCurSel(0);
 		
@@ -522,55 +524,76 @@ void CSendDlg::OnSize(UINT nType, int cx, int cy)
 		CRect rc ;
 		GetClientRect( rc ) ;
 
-		
 		CWnd *pst = GetDlgItem( IDC_COMBO_ADDR_OUT ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL , (rc.Width()/100)*24 , (rc.Height()/100)*12 , (rc.Width()/100)*37, rc.Height()  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL , (rc.Width()/100)*24 , (rc.Height()/100)*12-3 , (rc.Width()/100)*45, rc.Height()  ,SWP_SHOWWINDOW ) ; 
+			CComboBox*   pCtl  = (CComboBox*)pst; 
+			CWnd *p_edit = pCtl->GetDlgItem (0x3E9);
+			p_edit->GetClientRect( rect );
+			p_edit->SetWindowPos( NULL, (rc.Width()/100)*25,(rc.Height()/100)*25-3, rect.Width(), rect.Height(), SWP_SHOWWINDOW );
+		    pCtl->SetFont (&theApp.m_fontBlackbody);
+			p_edit->SetFont (&theApp.m_fontBlackbody);
+			
+			pCtl->SendMessage(CB_SETITEMHEIGHT,(WPARAM)-1,(LPARAM)20);   //改变控件本身的高度
+			pCtl->SetItemHeight(0,15);									 //改变下拉列表每个Item的高度
 		}
 
 		pst = GetDlgItem( IDC_STATIC_XM ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL , (rc.Width()/100)*70 ,(rc.Height()/100)*12 , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL , (rc.Width()/100)*80 ,(rc.Height()/100)*12 , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
 		
 		pst = GetDlgItem( IDC_EDIT_DESADDRESS ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL , (rc.Width()/100)*24 ,(rc.Height()/100)*23, (rc.Width()/100)*37, (rc.Height()/100)*7 ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL , (rc.Width()/100)*24 ,(rc.Height()/100)*23, (rc.Width()/100)*45, (rc.Height()/100)*7 ,SWP_SHOWWINDOW );
+			pst->SetFont(&theApp.m_fontBlackbody);
 		}
 		
 		pst = GetDlgItem( IDC_BUTTON_ADDBOOK ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL , (rc.Width()/100)*62 ,(rc.Height()/100)*23-2 , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL , (rc.Width()/100)*70 ,(rc.Height()/100)*23-2 , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW);
 		}
 
 		pst = GetDlgItem( IDC_EDIT2) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL , (rc.Width()/100)*24 ,(rc.Height()/100)*34, rect.Width(), (rc.Height()/100)*7  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL , (rc.Width()/100)*24 ,(rc.Height()/100)*35, rect.Width(), (rc.Height()/100)*7  ,SWP_SHOWWINDOW ); 
+			pst->SetFont(&theApp.m_fontBlackbody);
 		}
 		int with = 0;
 		pst = GetDlgItem( IDC_EDIT_MONEY) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL , (rc.Width()/100)*24 ,(rc.Height()/100)*46, rect.Width(), (rc.Height()/100)*7  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL , (rc.Width()/100)*24 ,(rc.Height()/100)*47, rect.Width(), (rc.Height()/100)*7  ,SWP_SHOWWINDOW ) ; 
 			with = rect.Width();
+			pst->SetFont(&theApp.m_fontBlackbody);
 		}
 		
 		pst = GetDlgItem( IDC_COMBO2) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL , (rc.Width()/100)*25 +with,(rc.Height()/100)*47-3, rect.Width(), (rc.Height()/100)*7  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL , (rc.Width()/100)*25 +with,(rc.Height()/100)*47, rect.Width(), rect.Height(), SWP_SHOWWINDOW );
+		
+			CComboBox*   pCtl  = (CComboBox*)pst; 
+			CWnd *p_edit = pCtl->GetDlgItem (0x3E9);
+			p_edit->GetClientRect( rect );
+			p_edit->SetWindowPos( NULL, (rc.Width()/100)*25 +with,(rc.Height()/100)*25-3, rect.Width(), rect.Height(), SWP_SHOWWINDOW );
+		    pCtl->SetFont (&theApp.m_fontBlackbody);
+			p_edit->SetFont (&theApp.m_fontBlackbody);
+
+			pCtl->SendMessage(CB_SETITEMHEIGHT,(WPARAM)-1,(LPARAM)20);   //改变控件本身的高度
+			pCtl->SetItemHeight(0,15);									 //改变下拉列表每个Item的高度
 		}
 
 		pst = GetDlgItem( IDC_SENDTRNSFER) ;

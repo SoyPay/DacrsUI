@@ -109,6 +109,7 @@ BOOL CIpoCoin::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		UpdateData(0);
 		m_rBtnSend.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
 		m_rBtnSend.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+		m_rBtnSend.SetWindowText("Ìá  ÏÖ") ;
 		m_rBtnSend.SetFontEx(20 , _T("Î¢ÈíÑÅºÚ"));
 		m_rBtnSend.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		m_rBtnSend.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
@@ -269,7 +270,8 @@ void CIpoCoin::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*8+20 ,(rc.Height()/100)*5+6  , (rc.Width()/100)*35, (rc.Height()/100)*6 ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*8+20 ,(rc.Height()/100)*5+6  , (rc.Width()/100)*35, (rc.Height()/100)*6 ,SWP_SHOWWINDOW ); 
+			pst->SetFont(&theApp.m_fontBlackbody);
 		}
 
 		pst = GetDlgItem( IDC_STATIC_AMOUNT ) ;
@@ -281,7 +283,9 @@ void CIpoCoin::OnSize(UINT nType, int cx, int cy)
 
 		pst = GetDlgItem( IDC_BUTTON_QUERY ) ;
 		if ( NULL != pst ) {
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*70 ,(rc.Height()/100)*5  , (rc.Width()/100)*13-2, (rc.Height()/100)*9  ,SWP_SHOWWINDOW ) ; 
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*70 ,(rc.Height()/100)*5, rect.Width(), rect.Height(), SWP_SHOWWINDOW ) ; 
 		}
 
 		//
@@ -289,15 +293,15 @@ void CIpoCoin::OnSize(UINT nType, int cx, int cy)
 		pst = GetDlgItem( IDC_BUTTON_DRAWAL ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
-			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*85 ,(rc.Height()/100)*5  ,(rc.Width()/100)*13-2, (rc.Height()/100)*9   ,SWP_SHOWWINDOW ) ; 
+			pst->GetClientRect(rect) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*85 ,(rc.Height()/100)*5, rect.Width(), rect.Height(), SWP_SHOWWINDOW ) ; 
 		}
 
 		pst = GetDlgItem( IDC_LIST_SHOW ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*3 ,(rc.Height()/100)*16  , rc.Width()-(rc.Width()/100)*5+2, (rc.Height()/100)*97+2  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*3 ,(rc.Height()/100)*16, rc.Width()-(rc.Width()/100)*5+2, (rc.Height()/100)*97+2  ,SWP_SHOWWINDOW ) ; 
 		}
 	}
 }
