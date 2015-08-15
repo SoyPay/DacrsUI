@@ -1424,7 +1424,10 @@ int CDacrsUIApp::Update()
 	CString sMsg;
 	//sMsg.Format(CLanguage::TranLanguage("MAIN","%d updates found at the website,now to upgrade?"),lResult);
 	sMsg.Format(CLanguage::TranLanguage("MAIN","检查有%d文件需要更新,现在是否要更新?"),lResult);
-	if (AfxMessageBox(sMsg, MB_ICONQUESTION | MB_YESNO) != IDYES) return 0;
+	//if (AfxMessageBox(sMsg, MB_ICONQUESTION | MB_YESNO) != IDYES) return 0;
+	if ( IDYES != UiFun::MessageBoxEx(sMsg, _T("提示") , MFB_YESNO|MFB_TIP ) )
+		return 0;
+
 	ShRun.lpParameters = NULL; 
 	ShellExecuteEx(&ShRun); 
 	return 1;
@@ -1450,7 +1453,9 @@ DWORD WINAPI Update1(LPVOID lpParam){
 	if (lResult == 0) return false;
 	CString sMsg;
 	sMsg.Format(CLanguage::TranLanguage("MAIN","%d updates found at the website,now to upgrade?"),lResult);
-	if (AfxMessageBox(sMsg, MB_ICONQUESTION | MB_YESNO) != IDYES) return false;
+	//if (AfxMessageBox(sMsg, MB_ICONQUESTION | MB_YESNO) != IDYES) return false;
+	if ( IDYES != UiFun::MessageBoxEx(sMsg, _T("提示") , MFB_YESNO|MFB_TIP ) )
+		return false;
 	ShRun.lpParameters = NULL; 
 	ShellExecuteEx(&ShRun); 
 	return true;

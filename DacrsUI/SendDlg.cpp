@@ -65,6 +65,12 @@ void CSendDlg::SetBkBmpNid( UINT nBitmapIn )
 void CSendDlg::OnBnClickedSendtrnsfer()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	CString strDisplay1;
+	strDisplay1.Format(_T("猜你妹有些单还未接赌或开奖,关闭系统已接赌超时未开奖\r\n自动判输,是否关闭"));
+	if (IDYES == UiFun::MessageBoxEx(strDisplay1 , _T("提示") , MFB_YESNO|MFB_TIP ) )
+	{
+		int b =5;
+	}
 	if (theApp.IsLockWallet())
 	{
 		return ;
@@ -147,7 +153,7 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 		CString strDisplay;
 		strDisplay.Format(_T("转账%.4lfsmc至%s"), dSendMoney, strMaddress);
 
-		if (IDCANCEL == UiFun::MessageBoxEx(strDisplay , _T("提示") , MB_OKCANCEL|MFB_TIP ) )
+		if (IDCANCEL == UiFun::MessageBoxEx(strDisplay , _T("提示") , MFB_OKCANCEL|MFB_TIP ) )
 		{
 			return;
 		}

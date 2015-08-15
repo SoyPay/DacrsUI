@@ -270,7 +270,7 @@ void CMessageBoxEx::OnBnClickedOk()
 	else if((m_uType & MFB_YES) == MFB_YES) {
 		EndDialog(IDYES);
 	}
-	CDialogBase::OnOK();
+	CDialogBase::OnClose();
 }
 
 void CMessageBoxEx::OnBnClickedQuit()
@@ -294,7 +294,7 @@ void CMessageBoxEx::OnBnClickedCancel()
 	else if((m_uType & MFB_NO) == MFB_NO) {
 		EndDialog(IDNO);
 	}
-	CDialogBase::OnCancel();
+	CDialogBase::OnClose();
 }
 
 BOOL CMessageBoxEx::OnEraseBkgnd(CDC* pDC)
@@ -317,19 +317,10 @@ BOOL CMessageBoxEx::OnEraseBkgnd(CDC* pDC)
 			pDC->StretchBlt(rect.left,rect.top-1,rect.Width(),rect.Height(),   &dcMem,   0,   0,bm.bmWidth-1,bm.bmHeight-1,   SRCCOPY); 
 			dcMem.SelectObject(pOldhBitmap);
 
-			::GetObject(m_pBkBmp, sizeof(BITMAP),   (LPVOID)&bm); 
-			dcMem.CreateCompatibleDC(NULL); 
-			HBITMAP     pOldBitmap   =(HBITMAP   )   dcMem.SelectObject(m_pBmp); 
-			pDC->StretchBlt(rect.left,rect.top-1+height,rect.Width(),rect.Height(),   &dcMem,   0,   0,bm.bmWidth-1,bm.bmHeight-1,   SRCCOPY); 
-			dcMem.SelectObject(pOldBitmap);
-
-			dcMem.DeleteDC();	
-		} 
-	}
-	else {
-	*/
-
-	CDialogBase::OnEraseBkgnd(pDC);
+		dcMem.SelectObject(pOldBitmap);
+		dcMem.DeleteDC();
+	} else  
+		CWnd::OnEraseBkgnd(pDC); */
 
 	return TRUE;
 }
