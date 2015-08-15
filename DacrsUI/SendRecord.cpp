@@ -565,7 +565,16 @@ void   CSendRecord::GetCellName(int nRow, int nCol, CString &strName)
 void CSendRecord::ExportSendBetRecordToexel()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	// TODO: 在此添加控件通知处理程序代码
+	string conditon;
+	conditon = "actor = 0 or actor = 2 order by recv_time desc";
+
+	uistruct::P2PBETRECORDLIST PoolList;
+	int nItem =  theApp.m_SqliteDeal.GetP2PQuizRecordList(conditon.c_str() ,&PoolList ) ;
+	if (PoolList.size() == 0)
+	{
+		UiFun::MessageBoxEx(_T("没有记录可以导出！") , _T("提示") ,MFB_OK|MFB_TIP );
+		return;
+	}
 	CFileDialog dlg(FALSE,NULL,"猜你妹发起记录",OFN_HIDEREADONLY|OFN_FILEMUSTEXIST ,"文件 (*.xls)|*.xls||");
 
 	if (IDOK != dlg.DoModal())
@@ -658,7 +667,7 @@ void CSendRecord::ExportSendBetRecordToexel()
 
 	int   m_cols   =   10;
 
-	int   m_rows = m_PoolList.size();
+	int   m_rows = PoolList.size();
 
 	HDITEM   hdi;
 
@@ -731,12 +740,12 @@ void CSendRecord::ExportSendBetRecordToexel()
 	range   =   range.get_Resize(COleVariant((short)m_rows),COleVariant((short)m_cols));
 
 
-	SendButton_map::iterator iter;
 	int iLine = 0;
 	iRow   =   1;
 	iCol   =   1;
-	vector<uistruct::P2P_QUIZ_RECORD_t>::const_iterator pitem = m_PoolList.begin();
-	for(;pitem != m_PoolList.end();pitem++,iRow++)
+
+	vector<uistruct::P2P_QUIZ_RECORD_t>::const_iterator pitem = PoolList.begin();
+	for(;pitem != PoolList.end();pitem++,iRow++)
 	{
 		map<int,string> item;
 		GetExportCol(item,*pitem);

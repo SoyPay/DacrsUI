@@ -412,6 +412,15 @@ void CAcceptRedPacketRecord::GetExportCol(map<int,string> &item,uistruct::REDPAC
 void CAcceptRedPacketRecord::ExportAcceptRedPacektToexel()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	string conditon;
+	conditon ="where 1=1 order by grab_time desc";
+	uistruct::REDPACKETGRABLIST  AcceptRedPacketList;
+	int nItem =  theApp.m_SqliteDeal.GetRedPacketGrabRecordList(conditon.c_str() ,&AcceptRedPacketList ) ;
+	if (AcceptRedPacketList.size() == 0)
+	{
+		UiFun::MessageBoxEx(_T("没有记录可以导出！") , _T("提示") ,MFB_OK|MFB_TIP );
+		return;
+	}
 	CFileDialog dlg(FALSE,NULL,"抢到红包记录",OFN_HIDEREADONLY|OFN_FILEMUSTEXIST ,"文件 (*.xls)|*.xls||");
 	if (IDOK != dlg.DoModal())
 	{
@@ -500,7 +509,7 @@ void CAcceptRedPacketRecord::ExportAcceptRedPacektToexel()
 
 	int   m_cols   =   9;
 
-	int   m_rows = m_AcceptRedPacketList.size();
+	int   m_rows = AcceptRedPacketList.size();
 
 	HDITEM   hdi;
 
@@ -576,8 +585,9 @@ void CAcceptRedPacketRecord::ExportAcceptRedPacektToexel()
 	int iLine = 0;
 	iRow   =   1;
 	iCol   =   1;
-	vector<uistruct::REDPACKETGRAB_t>::const_iterator pitem = m_AcceptRedPacketList.begin();
-	for(;pitem != m_AcceptRedPacketList.end();pitem++,iRow++)
+
+	vector<uistruct::REDPACKETGRAB_t>::const_iterator pitem = AcceptRedPacketList.begin();
+	for(;pitem != AcceptRedPacketList.end();pitem++,iRow++)
 	{
 		map<int,string> item;
 		GetExportCol(item,*pitem);

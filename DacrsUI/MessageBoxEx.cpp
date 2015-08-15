@@ -118,7 +118,7 @@ BOOL CMessageBoxEx::OnInitDialog()
 		nRow = m_Text.Replace("\n", "\n");
 		CString substr = m_Text.Right(m_Text.GetLength()-nPos);
 		CSize nSubstrSize = dc.GetTextExtent(substr);
-		nRow +=  nSubstrSize.cx / nStaticWidth;
+		nRow +=  nSubstrSize.cx / nStaticWidth+1;
 	}else {
 		nRow =  nFontSize.cx / nStaticWidth;
 	}
