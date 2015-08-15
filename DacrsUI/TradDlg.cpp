@@ -213,7 +213,6 @@ BOOL CTradDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_time.InsertString(4,_T("上月"));
 		m_time.InsertString(5,_T("今年"));
 		m_time.InsertString(6,_T("昨天"));
-
 		m_edit.SetWindowText(_T("请输入地址进行搜索"));
 
 		m_condition.SetCurSel(0);
@@ -521,6 +520,11 @@ void   CTradDlg::GetCellName(int nRow, int nCol, CString &strName)
 void CTradDlg::OnBnClickedExportExel()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	if (m_listCtrl.GetItemCount() == 0)
+	{
+		UiFun::MessageBoxEx(_T("没有记录可以导出！") , _T("提示") ,MFB_OK|MFB_TIP );
+		return;
+	}
 		CFileDialog dlg(FALSE,NULL,NULL,OFN_HIDEREADONLY|OFN_FILEMUSTEXIST ,"文件 (*.xls)|*.xls||");
 		if (IDOK != dlg.DoModal())
 		{
