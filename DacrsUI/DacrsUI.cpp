@@ -95,6 +95,11 @@ BOOL CDacrsUIApp::InitInstance()
 		return FALSE;
 	}
 
+	//创建字体
+	m_fontSong.CreateFont (15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "宋体");
+	m_fontBlackbody.CreateFont(15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "黑体");
+		
+
 	AfxEnableControlContainer();
 
 	// 创建 shell 管理器，以防对话框包含
