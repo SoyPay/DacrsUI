@@ -520,6 +520,11 @@ void   CTradDlg::GetCellName(int nRow, int nCol, CString &strName)
 void CTradDlg::OnBnClickedExportExel()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	if (m_listCtrl.GetItemCount() == 0)
+	{
+		UiFun::MessageBoxEx(_T("没有记录可以导出！") , _T("提示") ,MFB_OK|MFB_TIP );
+		return;
+	}
 		CFileDialog dlg(FALSE,NULL,NULL,OFN_HIDEREADONLY|OFN_FILEMUSTEXIST ,"文件 (*.xls)|*.xls||");
 		if (IDOK != dlg.DoModal())
 		{
