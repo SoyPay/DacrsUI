@@ -7,6 +7,7 @@
 
 CRpcCmd::CRpcCmd(void)
 {
+	mIp = "127.0.0.1";
 	mPort = 18332;
 }
 
@@ -27,19 +28,19 @@ int CRpcCmd::SendContactRpc(string cmd,string &rev){
 	strSendData +=m_sendendHeadstr;
 	strSendData +=cmd;
 
-	string teprev;
-	if(CSynchronousSocket::GetRpcRes(mIp,mPort,strSendData,teprev,7000)>0)
+	std::shared_ptr<char> pChRev;
+	if(CSynchronousSocket::GetRpcRes(mIp,mPort,strSendData,pChRev,7000)>0)
 	{
-		int pos = teprev.find("Server:");
-		if (pos >=0)
+		char *cPos = strstr(pChRev.get(), "Server:");
+		if(NULL != cPos) 
 		{
-			pos = teprev.find('\n',pos);
-			if (pos >=0)
+			cPos = strchr(cPos, '\n');
+			if(NULL != cPos) 
 			{
-				rev = teprev.substr(pos);
+				rev = cPos;
 			}
-
 		}
+
 	}	
 	return rev.length();
 }
@@ -49,9 +50,19 @@ int CRpcCmd::SendRpc(string strCommand,string &rev)
 	string strSendData;
 	BuildSendString(strCommand,strSendData);
 	
-	string teprev;
-	if(CSynchronousSocket::GetRpcRes(mIp,mPort,strSendData,teprev,7000)>0)
+	std::shared_ptr<char> pChRev;
+	if(CSynchronousSocket::GetRpcRes(mIp,mPort,strSendData,pChRev,7000)>0)
 	{
+		char * cPos = strstr(pChRev.get(), "Server:");
+		if(NULL != cPos) 
+		{
+			cPos = strchr(cPos, '\n');
+			if(NULL != cPos) 
+			{
+				rev = cPos;
+			}
+		}
+		/*	
 		int pos = teprev.find("Server:");
 		if (pos >=0)
 		{
@@ -60,8 +71,8 @@ int CRpcCmd::SendRpc(string strCommand,string &rev)
 			{
 				rev = teprev.substr(pos);
 			}
-
 		}
+		*/
 	}	
 	return rev.length();
 }
