@@ -267,6 +267,12 @@ BOOL CDacrsUIApp::InitInstance()
 			int errorCode = GetLastError();
 			TRACE("Error OpenProcess:%d " , errorCode );
 			UiFun::MessageBoxEx(_T("区块链数据库损坏，请双击运行钱包下clear.bat文件，在重新打开钱包\r\n") , _T("Error") ,MFB_OK|MFB_ERROR );
+			if (IDYES==UiFun::MessageBoxEx(_T("是否清除区块链数据，重新同步") , _T("Error") ,MFB_YESNO|MFB_ERROR ))
+			{
+				string batpath =strprintf("%s\\clear.bat",str_InsPath);
+				ShellExecute(NULL, "open",batpath.c_str(), NULL, NULL, SW_SHOW);
+				//system(batpath.c_str());
+			}
 			exit(1);
 		}
 		CloseHandle(processHandle);
