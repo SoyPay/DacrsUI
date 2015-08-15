@@ -123,11 +123,16 @@ BOOL CMessageBoxEx::OnInitDialog()
 		nRow = m_Text.Replace("\n", "\n");
 		CString substr = m_Text.Right(m_Text.GetLength()-nPos);
 		CSize nSubstrSize = dc.GetTextExtent(substr);
-		nRow +=  nSubstrSize.cx / nStaticWidth;
+		if(nSubstrSize.cx % nStaticWidth == 0) {
+			nRow +=  nSubstrSize.cx / nStaticWidth;
+		}else {
+			nRow +=  nSubstrSize.cx / nStaticWidth + 1;
+		}
+		
 	}else {
 		nRow =  nFontSize.cx / nStaticWidth;
 	}
-	nStaticHeigh = nRow * (nFontSize.cy-3);
+	nStaticHeigh = nRow * (nFontSize.cy);
 	nDialogHight = nStaticHeigh + nBottomMargin + nIconTopMargin;
 	
 

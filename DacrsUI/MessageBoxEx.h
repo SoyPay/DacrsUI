@@ -48,4 +48,5 @@ public:
 	afx_msg void OnBnClickedCancel();
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
+	afx_msg void OnStnClickedText();
 };
