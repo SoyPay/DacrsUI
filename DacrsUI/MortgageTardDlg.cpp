@@ -646,7 +646,7 @@ void CMortgageTardDlg::OnBnClickedButtonCommred()
 	CString strDisplay;
 	strDisplay.Format(_T("确定要发红包--->金额:%s"), strTxMoney);
 
-	if (IDCANCEL == UiFun::MessageBoxEx(strDisplay , _T("提示") , MB_OKCANCEL|MFB_TIP ) )
+	if (IDCANCEL == UiFun::MessageBoxEx(strDisplay , _T("提示") , MFB_OKCANCEL|MFB_TIP ) )
 	{
 		return;
 	}
@@ -1307,7 +1307,7 @@ void CMortgageTardDlg::OnBnClickedButtonSpecailred()
 	CString strDisplay;
 	strDisplay.Format(_T("确定要发红包--->金额:%s"), strTxMoney);
 
-	if (IDCANCEL == UiFun::MessageBoxEx(strDisplay , _T("提示") , MB_OKCANCEL|MFB_TIP ) )
+	if (IDCANCEL == UiFun::MessageBoxEx(strDisplay , _T("提示") , MFB_OKCANCEL|MFB_TIP ) )
 	{
 		return;
 	}

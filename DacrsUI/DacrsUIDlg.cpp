@@ -737,9 +737,9 @@ void CDacrsUIDlg::OnBnClickedButtonClose()
 	if (!IsP2pBetFinsh())
 	{
 		CString strDisplay;
-		strDisplay.Format(_T("猜你妹有些单还未接赌或开奖,关闭系统已接赌超时未开奖,自动判输"));
-		COut outdlg(NULL, strDisplay,100,_T("继续"),_T("退出"));
-		if ( IDOK == outdlg.DoModal()){
+		strDisplay.Format(_T("猜你妹有些单还未接赌或开奖,关闭系统已接赌超时未开奖\r\n自动判输,是否关闭"));
+		if (IDYES == UiFun::MessageBoxEx(strDisplay , _T("提示") , MFB_YESNO|MFB_TIP ) )
+		{
 			ClosWallet();
 		}
 	}else{
@@ -863,7 +863,7 @@ bool CDacrsUIDlg::GetFileName(CString &fileName,CString strexe )
 	if(PathFileExistsA(fileName)){
 		CString strDisplay;
 		strDisplay.Format(_T("此文件已经存在是否要覆盖"));
-		if (IDOK == UiFun::MessageBoxEx(strDisplay , _T("提示") , MB_OKCANCEL|MFB_TIP ) )
+		if (IDOK == UiFun::MessageBoxEx(strDisplay , _T("提示") , MFB_OKCANCEL|MFB_TIP ) )
 		{
 			return TRUE;
 		}

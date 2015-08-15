@@ -1015,7 +1015,7 @@ void CP2PDlg::OnBnClickedButtonMale()
 
 	CString strDisplay;
 	strDisplay.Format(_T("确定要发送妹--->金额:%s"), strTxMoney);
-	if (IDCANCEL == UiFun::MessageBoxEx(strDisplay , _T("提示") , MB_OKCANCEL|MFB_TIP ) )
+	if (IDCANCEL == UiFun::MessageBoxEx(strDisplay , _T("提示") , MFB_OKCANCEL|MFB_TIP ) )
 	{
 		return;
 	}
@@ -1068,7 +1068,7 @@ void CP2PDlg::OnBnClickedButtonWoman()
 
 	CString strDisplay;
 	strDisplay.Format(_T("确定要发送哥--->金额:%s"), strTxMoney);
-	if (IDCANCEL == UiFun::MessageBoxEx(strDisplay , _T("提示") , MB_OKCANCEL|MFB_TIP ) )
+	if (IDCANCEL == UiFun::MessageBoxEx(strDisplay , _T("提示") , MFB_OKCANCEL|MFB_TIP ) )
 	{
 		return;
 	}
