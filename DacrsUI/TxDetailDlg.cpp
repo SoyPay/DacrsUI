@@ -372,7 +372,7 @@ BOOL CTxDetailDlg::OnInitDialog()
 {
 	CDialogBase::OnInitDialog();
 
-	m_headText.SetFont(90, _T("Î¢ÈíÑÅºÚ"));
+	m_headText.SetFont(100, _T("Î¢ÈíÑÅºÚ"));
 	m_headText.SetTextColor(RGB(255,255,255));	
 
 	m_rBtnClose.SetBitmaps( IDB_BITMAP_CLOSE , RGB(255, 255, 0) , IDB_BITMAP_CLOSE2 , RGB(255, 255, 255) );
