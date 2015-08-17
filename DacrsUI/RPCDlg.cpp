@@ -53,7 +53,7 @@ BOOL CRPCDlg::OnInitDialog()
 	GetWindowRect(&rc);
     MoveWindow(rcWindow.right,rcWindow.top-20,rc.Width(),rc.Height());
 	// TODO:  在此添加额外的初始化
-	m_headText.SetFont(90, _T("微软雅黑"));
+	m_headText.SetFont(100, _T("微软雅黑"));
 	m_headText.SetTextColor(RGB(255,255,255));	
 
 	m_rBtnClose.SetBitmaps( IDB_BITMAP_CLOSE , RGB(255, 255, 0) , IDB_BITMAP_CLOSE2 , RGB(255, 255, 255) );
