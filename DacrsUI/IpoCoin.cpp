@@ -270,7 +270,7 @@ void CIpoCoin::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*8+20 ,(rc.Height()/100)*5+6  , (rc.Width()/100)*35, (rc.Height()/100)*6 ,SWP_SHOWWINDOW ); 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*8+20 ,(rc.Height()/100)*5+6  , (rc.Width()/100)*40, (rc.Height()/100)*6+2 ,SWP_SHOWWINDOW ); 
 			pst->SetFont(&theApp.m_fontBlackbody);
 		}
 
@@ -278,14 +278,14 @@ void CIpoCoin::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*48 ,(rc.Height()/100)*6  , (rc.Width()/100)*15, (rc.Height()/100)*5  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*50+15 ,(rc.Height()/100)*5+8  , (rc.Width()/100)*30, (rc.Height()/100)*6  ,SWP_SHOWWINDOW ) ; 
 		}
 
 		pst = GetDlgItem( IDC_BUTTON_QUERY ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*70 ,(rc.Height()/100)*5, rect.Width(), rect.Height(), SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*80+10 ,(rc.Height()/100)*5, rect.Width(), rect.Height(), SWP_SHOWWINDOW ) ; 
 		}
 
 		//
@@ -294,7 +294,7 @@ void CIpoCoin::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect(rect) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*85 ,(rc.Height()/100)*5, rect.Width(), rect.Height(), SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*95 ,(rc.Height()/100)*5, rect.Width(), rect.Height(), SWP_SHOWWINDOW ) ; 
 		}
 
 		pst = GetDlgItem( IDC_LIST_SHOW ) ;
@@ -343,9 +343,14 @@ void CIpoCoin::OnShowListCtrol(CString addr)
 	{
 		nMoney = root["FreeValues"].asInt64() ;
 	}
-	double money = (nMoney*1.0/COIN);
-	strShowData = strprintf("提现金额:%.8f",money);
+	double money = (11111111111222222*1.0/COIN);
+    strShowData = strprintf("可用金额:%.8f",money);
 	((CStatic*)GetDlgItem(IDC_STATIC_AMOUNT))->SetWindowText(strShowData.c_str());
+	/*
+	double money = (nMoney*1.0/COIN);
+	strShowData = strprintf("可用金额:%.8f",money);
+	((CStatic*)GetDlgItem(IDC_STATIC_AMOUNT))->SetWindowText(strShowData.c_str());
+	*/
 	Invalidate();
 	Json::Value valuearray = root["vFreezedFund"]; 
 
