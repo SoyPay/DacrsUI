@@ -265,8 +265,7 @@ BOOL CDacrsUIApp::InitInstance()
 			if (IDYES==UiFun::MessageBoxEx(_T("是否清除区块链数据，重新同步") , _T("Error") ,MFB_YESNO|MFB_ERROR ))
 			{
 				string batpath =strprintf("%s\\clear.bat",str_InsPath);
-				ShellExecute(NULL, "open", "c:\windows\system32\cmd.exe",batpath.c_str(), NULL, SW_SHOW); 
-				//ShellExecute(NULL, "open","clear.bat", NULL, NULL, SW_SHOW);
+				ShellExecute(NULL, "open",batpath.c_str(), NULL, NULL, SW_SHOW);
 				//system(batpath.c_str());
 			}
 			exit(1);
