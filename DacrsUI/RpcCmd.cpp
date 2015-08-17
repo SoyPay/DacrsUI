@@ -234,7 +234,18 @@ void CRpcCmd::RPCCommandToJson(const string& strRPCCommand,string& strSendData)
 			}
 			else
 			{
-				root["params"].append(param);
+				if (param == "true" || param == "TRUE")
+				{
+					root["params"].append(true);
+				}
+				else if (param == "false" || param == "FALSE")
+				{
+					root["params"].append(false);
+				}
+				else
+				{
+					root["params"].append(param);
+				}
 			}
 			pos = rpcCommand.find(" ");
 		}
@@ -247,11 +258,11 @@ void CRpcCmd::RPCCommandToJson(const string& strRPCCommand,string& strSendData)
 		}
 		else
 		{
-			if (rpcCommand == "true")
+			if (rpcCommand == "true"|| param == "TRUE")
 			{
 				root["params"].append(true);
 			}
-			else if (rpcCommand == "false")
+			else if (rpcCommand == "false" || param == "FALSE")
 			{
 				root["params"].append(false);
 			}

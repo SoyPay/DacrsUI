@@ -251,7 +251,18 @@ void RPCCommandToJson(const string& strRPCCommand,string& strSendData)
 			}
 			else
 			{
-				root["params"].append(param);
+				if (param == "true"|| param == "TRUE")
+				{
+					root["params"].append(true);
+				}
+				else if (param == "false" || param == "FALSE")
+				{
+					root["params"].append(false);
+				}
+				else
+				{
+					root["params"].append(param);
+				}
 			}
 			pos = rpcCommand.find(" ");
 		}
@@ -264,11 +275,11 @@ void RPCCommandToJson(const string& strRPCCommand,string& strSendData)
 		}
 		else
 		{
-			if (rpcCommand == "true")
+			if (rpcCommand == "true"|| param == "TRUE")
 			{
 				root["params"].append(true);
 			}
-			else if (rpcCommand == "false")
+			else if (rpcCommand == "false" || param == "FALSE")
 			{
 				root["params"].append(false);
 			}
@@ -524,14 +535,16 @@ BOOL CSoyPayHelp::SendRpc(string cmd,Json::Value  &rev)
 	{
 		return FALSE;
 	}
-	int pos = strShowData.find("error");
-	if (pos >=0)
-	{
-		return FALSE;
-	}
 	Json::Reader reader;  
 	if (!reader.parse(strShowData, rev)) 
 		return  FALSE;
+	int pos = strShowData.find("error");
+	if (pos >=0)
+	{
+		string message = rev["error"].asString();
+		TRACE("error rpc comand :%s",message.c_str());
+		return FALSE;
+	}
 	pos = strShowData.find("code");
 	if (pos >= 0)
 	{
