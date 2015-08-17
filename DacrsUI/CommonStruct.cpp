@@ -520,6 +520,10 @@ BOOL CSoyPayHelp::SendRpc(string cmd,Json::Value  &rev)
 	string revtemp;
 	mRpcCmd.SendRpc(cmd,revtemp);
 	string strShowData = ParseRecvData(revtemp.c_str());
+	if (strShowData == "")
+	{
+		return FALSE;
+	}
 	int pos = strShowData.find("error");
 	if (pos >=0)
 	{
@@ -528,6 +532,14 @@ BOOL CSoyPayHelp::SendRpc(string cmd,Json::Value  &rev)
 	Json::Reader reader;  
 	if (!reader.parse(strShowData, rev)) 
 		return  FALSE;
+	pos = strShowData.find("code");
+	if (pos >= 0)
+	{
+		int code = rev["code"].asInt();
+		string message = rev["message"].asString();
+		TRACE("error rpc comand :%s",message.c_str());
+		return FALSE;
+	}
 	return TRUE;
 }
 int CSoyPayHelp::SendRpc(string cmd,string &rev)
