@@ -96,16 +96,8 @@ BOOL CIpoCoin::OnEraseBkgnd(CDC* pDC)
 BOOL CIpoCoin::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 {
 	// TODO: 在此添加专用代码和/或调用基类
-
-	LogPrint("INFO","CIpoCoin Create enter\n");
-	LogPrint("INFO","CIpoCoin Create enter:%0x\n",&pParentWnd);
-	LogPrint("INFO","CIpoCoin Create nIDTemplate:%d\n",nIDTemplate);
-	LogPrint("INFO","CIpoCoin Create nStyle:%d\n",nStyle);
-	LogPrint("INFO","CIpoCoin Create nID:%d\n",nID);
 	BOOL bRes = CDialogBar::Create(pParentWnd, nIDTemplate, nStyle, nID);
-	LogPrint("INFO", "CIpoCoin create ret:%d\n", bRes);
 	if ( bRes ) {
-		LogPrint("INFO","ipo Create start\n");
 		UpdateData(0);
 		m_rBtnSend.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
 		m_rBtnSend.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
