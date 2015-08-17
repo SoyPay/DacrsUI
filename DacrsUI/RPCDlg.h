@@ -4,9 +4,12 @@
 #include "afxwin.h"
 #include "AutoComplete.h"
 #include "afxcmn.h"
+#include "DialogBase.h"
+#include "ShadeButtonST.h"
+#include "StaticTrans.h"
 // CRPCDlg ¶Ô»°¿ò
 
-class CRPCDlg : public CDialogEx
+class CRPCDlg : public CDialogBase
 {
 	DECLARE_DYNAMIC(CRPCDlg)
 
@@ -39,6 +42,9 @@ public:
 
 	CTreeCtrl m_rpccommand;
 	CComboBox m_comboxinput;
-
-
+	CShadeButtonST   m_rBtnClose;
+	CShadeButtonST   m_rBtnClear;
+	CStaticTrans     m_headText;
+	afx_msg void OnBnClickedClose1();
+	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 };

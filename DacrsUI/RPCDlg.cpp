@@ -9,10 +9,10 @@
 
 // CRPCDlg 对话框
 
-IMPLEMENT_DYNAMIC(CRPCDlg, CDialogEx)
+IMPLEMENT_DYNAMIC(CRPCDlg, CDialogBase)
 
 CRPCDlg::CRPCDlg(CWnd* pParent /*=NULL*/)
-	: CDialogEx(CRPCDlg::IDD, pParent)
+	: CDialogBase(CRPCDlg::IDD, pParent)
 {
 
 }
@@ -23,26 +23,63 @@ CRPCDlg::~CRPCDlg()
 
 void CRPCDlg::DoDataExchange(CDataExchange* pDX)
 {
-	CDialogEx::DoDataExchange(pDX);
+	CDialogBase::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_TREE_RPC, m_rpccommand);
 	DDX_Control(pDX, IDC_COMBO_INPUT, m_comboxinput);
+	DDX_Control(pDX, IDC_CLOSE1, m_rBtnClose);
+	DDX_Control(pDX, IDC_BTN_CLEAR, m_rBtnClear);
+	DDX_Control(pDX, IDC_HEAD, m_headText);
 }
 
 
-BEGIN_MESSAGE_MAP(CRPCDlg, CDialogEx)
+BEGIN_MESSAGE_MAP(CRPCDlg, CDialogBase)
 	ON_MESSAGE(WM_SHOW_RECV_DATA,OnShowRecvData)
 	ON_MESSAGE(WM_SHOW_SEND_DATA,OnShowSendData)
 	ON_BN_CLICKED(IDC_BTN_CLEAR, &CRPCDlg::OnBnClickedBtnClear)
 	ON_WM_SIZE()
+	ON_BN_CLICKED(IDC_CLOSE1, &CRPCDlg::OnBnClickedClose1)
+	ON_WM_CTLCOLOR()
 END_MESSAGE_MAP()
 
 
 // CRPCDlg 消息处理程序
 BOOL CRPCDlg::OnInitDialog()
 {
-	CDialogEx::OnInitDialog();
+	CDialogBase::OnInitDialog();
 
+	CRect rcWindow;
+	theApp.m_pMainWnd->GetWindowRect(&rcWindow);
+	CRect rc;
+	GetWindowRect(&rc);
+    MoveWindow(rcWindow.right,rcWindow.top-20,rc.Width(),rc.Height());
 	// TODO:  在此添加额外的初始化
+	m_headText.SetFont(90, _T("微软雅黑"));
+	m_headText.SetTextColor(RGB(255,255,255));	
+
+	m_rBtnClose.SetBitmaps( IDB_BITMAP_CLOSE , RGB(255, 255, 0) , IDB_BITMAP_CLOSE2 , RGB(255, 255, 255) );
+	m_rBtnClose.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+	m_rBtnClose.SetWindowText("") ;
+	m_rBtnClose.SetFontEx(20 , _T("微软雅黑"));
+	m_rBtnClose.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
+	m_rBtnClose.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+	m_rBtnClose.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
+	m_rBtnClose.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
+	m_rBtnClose.SizeToContent();
+	CRect rect ;
+	m_rBtnClose.GetClientRect(rect);
+
+	RECT ret;
+	GetWindowRect(&ret);
+	m_rBtnClose.SetWindowPos(NULL ,(ret.right-ret.left)-rect.Width() , 2 , 0 , 0 , SWP_NOSIZE); 
+
+	m_rBtnClear.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
+	m_rBtnClear.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+	m_rBtnClear.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
+	m_rBtnClear.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+	m_rBtnClear.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
+	m_rBtnClear.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
+	m_rBtnClear.SizeToContent();
+
 	CRect rcClient;
 	GetClientRect(&rcClient);
 
@@ -51,21 +88,21 @@ BOOL CRPCDlg::OnInitDialog()
 	//ASSERT(pShowInfoEdit);
 	//pShowInfoEdit->MoveWindow(5,10,rcClient.Width()-60,rcClient.Height()-130);
 
-	CTreeCtrl* pShowInfoEdit = (CTreeCtrl*)GetDlgItem(IDC_TREE_RPC);
-	ASSERT(pShowInfoEdit);
-	pShowInfoEdit->MoveWindow(5,10,rcClient.Width()-60,rcClient.Height()-130);
+	//CTreeCtrl* pShowInfoEdit = (CTreeCtrl*)GetDlgItem(IDC_TREE_RPC);
+	//ASSERT(pShowInfoEdit);
+	//pShowInfoEdit->MoveWindow(5,27,rcClient.Width()-60,rcClient.Height()-130);
 
-	CStatic* pStaticInput = (CStatic*)GetDlgItem(IDC_STATIC_INPUT);
-	ASSERT(pStaticInput);
-	pStaticInput->MoveWindow(5,rcClient.Height()-110,40,20);
+	//CStatic* pStaticInput = (CStatic*)GetDlgItem(IDC_STATIC_INPUT);
+	//ASSERT(pStaticInput);
+	//pStaticInput->MoveWindow(5,rcClient.Height()-110,40,20);
 
-	CComboBox* pInputEdit = (CComboBox*)GetDlgItem(IDC_COMBO_INPUT);
-	ASSERT(pInputEdit);
-	pInputEdit->MoveWindow(50,rcClient.Height()-103,rcClient.Width()-160,25);
+	//CComboBox* pInputEdit = (CComboBox*)GetDlgItem(IDC_COMBO_INPUT);
+	//ASSERT(pInputEdit);
+	//pInputEdit->MoveWindow(50,rcClient.Height()-103,rcClient.Width()-160,25);
 
-	CButton* pBtnClear = (CButton*)GetDlgItem(IDC_BTN_CLEAR);
-	ASSERT(pBtnClear);
-	pBtnClear->MoveWindow(rcClient.Width()-95,rcClient.Height()-103,30,25);
+	//CButton* pBtnClear = (CButton*)GetDlgItem(IDC_BTN_CLEAR);
+	//ASSERT(pBtnClear);
+	//pBtnClear->MoveWindow(rcClient.Width()-95,rcClient.Height()-103,30,25);
 
 	AutoCombo.Init(&m_comboxinput);
 
@@ -148,31 +185,31 @@ void CRPCDlg::OnSize(UINT nType, int cx, int cy)
 
 	// TODO: 在此处添加消息处理程序代码
 	if( NULL != GetSafeHwnd() ) {
-		const int div = 100 ;
-		CRect rc ;
-		GetClientRect( rc ) ;
-		CWnd *pst = GetDlgItem( IDC_TREE_RPC ) ;
-		if ( NULL != pst ) {
-			pst->SetWindowPos( NULL , 0 , 0 , rc.Width(), 90*rc.Height()/div ,SWP_SHOWWINDOW ) ;
-		}
-		pst = GetDlgItem( IDC_STATIC_INPUT ) ;
-		if ( NULL != pst ) {
-			CRect rect ;
-			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL , 2 , 92*rc.Height()/div , rect.Width(), rect.Height() ,SWP_SHOWWINDOW ) ;
-		}
-		pst = GetDlgItem( IDC_COMBO_INPUT ) ;
-		if ( NULL != pst ) {
-			CRect rect ;
-			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL , (14*rc.Width()/div)+5  , 92*rc.Height()/div - 2 , 71*rc.Width()/div, 65*rc.Width()/div ,SWP_SHOWWINDOW ) ;
-		}
-		pst = GetDlgItem( IDC_BTN_CLEAR ) ;
-		if ( NULL != pst ) {
-			CRect rect ;
-			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL , 88*rc.Width()/div  , 92*rc.Height()/div - 5 , rect.Width(), rect.Height() ,SWP_SHOWWINDOW ) ;
-		}
+		//const int div = 100 ;
+		//CRect rc ;
+		//GetClientRect( rc ) ;
+		//CWnd *pst = GetDlgItem( IDC_TREE_RPC ) ;
+		//if ( NULL != pst ) {
+		//	pst->SetWindowPos( NULL , 0 , 0 , rc.Width(), 90*rc.Height()/div ,SWP_SHOWWINDOW ) ;
+		//}
+		//pst = GetDlgItem( IDC_STATIC_INPUT ) ;
+		//if ( NULL != pst ) {
+		//	CRect rect ;
+		//	pst->GetClientRect( rect ) ;
+		//	pst->SetWindowPos( NULL , 2 , 92*rc.Height()/div , rect.Width(), rect.Height() ,SWP_SHOWWINDOW ) ;
+		//}
+		//pst = GetDlgItem( IDC_COMBO_INPUT ) ;
+		//if ( NULL != pst ) {
+		//	CRect rect ;
+		//	pst->GetClientRect( rect ) ;
+		//	pst->SetWindowPos( NULL , (14*rc.Width()/div)+5  , 92*rc.Height()/div - 2 , 71*rc.Width()/div, 65*rc.Width()/div ,SWP_SHOWWINDOW ) ;
+		//}
+		//pst = GetDlgItem( IDC_BTN_CLEAR ) ;
+		//if ( NULL != pst ) {
+		//	CRect rect ;
+		//	pst->GetClientRect( rect ) ;
+		//	pst->SetWindowPos( NULL , 88*rc.Width()/div  , 92*rc.Height()/div - 5 , rect.Width(), rect.Height() ,SWP_SHOWWINDOW ) ;
+		//}
 	}
 }
 
@@ -189,4 +226,27 @@ void CRPCDlg::ShowJson(string rpcname,string jsomstr){
 	HTREEITEM hItemRoot = m_rpccommand.InsertItem(rpcname.c_str(),TVI_ROOT);
 	CSoyPayHelp::getInstance()->Jiexi(root,hItemRoot,m_rpccommand);
 	m_rpccommand.Expand(hItemRoot,TVE_EXPAND);
+}
+
+void CRPCDlg::OnBnClickedClose1()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CDialogBase::OnCancel();
+}
+
+
+HBRUSH CRPCDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
+{
+	HBRUSH hbr = CDialogBase::OnCtlColor(pDC, pWnd, nCtlColor);
+
+	// TODO:  在此更改 DC 的任何特性
+
+	// TODO:  如果默认的不是所需画笔，则返回另一个画笔
+//	if (nCtlColor == CTLCOLOR_STATIC)
+	//{
+	//	pDC->SetBkMode(TRANSPARENT);
+	//	pDC->SelectObject(&m_fontGrid);
+	//	hbr = (HBRUSH)CreateSolidBrush(RGB(240,240,240));
+	//}
+	return hbr;
 }
