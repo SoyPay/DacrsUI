@@ -1628,9 +1628,8 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 	 if (count <=(int)m_PoolList.size())
 	 {
 		 uistruct::LISTP2POOL_T const_it = m_PoolList.at(count);
-		 string temp = _T("竞猜交易ID: ");
+		 string temp = _T("竞猜交易ID:");
 	    temp +=const_it.hash ;
-		
 		 UiFun::MessageBoxEx(temp.c_str() , _T("提示") ,MFB_OK|MFB_TIP );
 	 }
  }

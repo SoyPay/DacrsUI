@@ -155,8 +155,15 @@ BOOL CMessageBoxEx::OnInitDialog()
 		}
 		
 	}else {
-		nRow =  nFontSize.cx / nStaticWidth;
+		//nRow =  nFontSize.cx / nStaticWidth;
+		if(nFontSize.cx  % nStaticWidth == 0) {
+			nRow +=  nFontSize.cx  / nStaticWidth;
+		}else {
+			nRow +=  nFontSize.cx  / nStaticWidth + 1;
+		}
 	}
+//	m_strText.SetWindowText(m_Text);
+	//nRow= m_strText.GetLineCount();
 	nStaticHeigh = nRow * (nFontSize.cy);
 	nDialogHight = nStaticHeigh + nBottomMargin + nIconTopMargin;
 	
