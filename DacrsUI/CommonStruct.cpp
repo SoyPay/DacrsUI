@@ -538,14 +538,29 @@ BOOL CSoyPayHelp::SendRpc(string cmd,Json::Value  &rev)
 	Json::Reader reader;  
 	if (!reader.parse(strShowData, rev)) 
 		return  FALSE;
-	int pos = strShowData.find("error");
-	if (pos >=0)
+	if (rev.type() == Json::objectValue)
 	{
-		string message = rev["error"].asString();
-		TRACE("error rpc comand :%s",message.c_str());
-		return FALSE;
+		Json::Value::Members member = rev.getMemberNames(); 
+		for(Json::Value::Members::iterator iter = member.begin(); iter != member.end(); ++iter) 
+		{  
+			const std::string &name = *iter;
+			if (strcmp(name.c_str(),"error") == 0)
+			{
+				string message = rev["error"].asString();
+				TRACE("error rpc comand :%s",message.c_str());
+				return FALSE;
+			}
+		}
 	}
-	pos = strShowData.find("code");
+	
+	//int pos = strShowData.find("error");
+	//if (pos >=0)
+	//{
+	//	string message = rev["error"].asString();
+	//	TRACE("error rpc comand :%s",message.c_str());
+	//	return FALSE;
+	//}
+	int pos = strShowData.find("code");
 	if (pos >= 0)
 	{
 		int code = rev["code"].asInt();
