@@ -93,7 +93,7 @@ BOOL CReCharge::OnInitDialog()
 	CDialogEx::OnInitDialog();
 
 	// TODO:  在此添加额外的初始化
-	m_Text.SetFont(110, _T("微软雅黑"));				//设置显示字体和大小
+	m_Text.SetFont(100, _T("微软雅黑"));				//设置显示字体和大小
 	m_Text.SetTextColor(RGB(255,255,255));	    //字体颜色
 	if (m_strText == _T(""))
 	{
@@ -129,20 +129,20 @@ BOOL CReCharge::OnInitDialog()
 	m_rBtnClose.SizeToContent();
 	m_rBtnClose.SetWindowPos(NULL ,320 , 0 , 0 , 0 , SWP_NOSIZE); 
 
-	m_rBtnOk.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
+	m_rBtnOk.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
 	m_rBtnOk.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
 	m_rBtnOk.SetWindowText("确 定") ;
-	m_rBtnOk.SetFontEx(20 , _T("微软雅黑"));
+	//m_rBtnOk.SetFontEx(20 , _T("微软雅黑"));
 	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
 	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
 	m_rBtnOk.SizeToContent();
 
-	m_rBtnCancel.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
+	m_rBtnCancel.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255));
 	m_rBtnCancel.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
 	m_rBtnCancel.SetWindowText("取 消") ;
-	m_rBtnCancel.SetFontEx(20 , _T("微软雅黑"));
+	//m_rBtnCancel.SetFontEx(20 , _T("微软雅黑"));
 	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));

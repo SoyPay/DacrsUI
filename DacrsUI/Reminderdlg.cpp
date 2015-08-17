@@ -52,7 +52,7 @@ BOOL CReminderdlg::OnInitDialog()
 	CDialogEx::OnInitDialog();
 
 	// TODO:  在此添加额外的初始化
-	m_Text.SetFont(110, _T("微软雅黑"));				//设置显示字体和大小
+	m_Text.SetFont(100, _T("微软雅黑"));				//设置显示字体和大小
 	m_Text.SetTextColor(RGB(255,255,255));	    //字体颜色
 	m_Text.SetWindowPos( NULL , 3 , 3 , 200, 20  ,SWP_SHOWWINDOW ) ; 
 
