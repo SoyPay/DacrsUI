@@ -29,7 +29,7 @@ int CRpcCmd::SendContactRpc(string cmd,string &rev){
 	strSendData +=cmd;
 
 	std::shared_ptr<char> pChRev;
-	if(CSynchronousSocket::GetRpcRes(mIp,mPort,strSendData,pChRev,7000)>0)
+	if(CSynchronousSocket::GetRpcRes(mIp,mPort,strSendData,pChRev,10000)>0)
 	{
 		char *cPos = strstr(pChRev.get(), "Server:");
 		if(NULL != cPos) 

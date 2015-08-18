@@ -22,82 +22,70 @@ void CDacrsUIApp::UpdateQuizPoolData()
 	m_SqliteDeal.ClearTableData(_T("t_quiz_pool"));
 	if(theApp.m_betScritptid != _T(""))
 	{
-		string strCommand;
-		strCommand = strprintf("%s %s %s %s",_T("getscriptvalidedata"),theApp.m_betScritptid,_T("100"),_T("1"));
-		
-		if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
+		int requiredCount = 100;
+		while(TRUE)
 		{
-			TRACE("UpdateQuizPoolData rpccmd getscriptvalidedata error");
-			return;
-		}
-		string str = root.toStyledString();
-		int size = root.size();
-		for ( int index =0; index < size; ++index )
-		{
-			string txhash = root[index]["key"].asString();
-			txhash = txhash.substr(txhash.length()-64);
-			string nValue = root[index]["value"].asString();
-			uistruct::DBBET_DATA DBbet;
-			memset(&DBbet , 0 , sizeof(uistruct::DBBET_DATA));
-			std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue);
+			string strCommand;
+			strCommand = strprintf("%s %s %d %s",_T("getscriptvalidedata"),theApp.m_betScritptid,requiredCount,_T("1"));
 
-			if (vTemp.size() <=0)
+			if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 			{
-				continue;
-			}
-			
-			memcpy(&DBbet, &vTemp[0], sizeof(DBbet));
-
-			std::vector<unsigned char> vnTemp = CSoyPayHelp::getInstance()->ParseHex(txhash);
-			reverse(vnTemp.begin(),vnTemp.end());
-			string strTemp = CSoyPayHelp::getInstance()->HexStr(vnTemp);
-
-			/// 查找数据库中此赌约是否正在接赌
-			uistruct::P2P_QUIZ_RECORD_t  betrecord;
-			string strCond;
-			strCond =strprintf(" tx_hash = '%s' ", strTemp.c_str());
-
-			int nItem =  theApp.m_SqliteDeal.GetP2PQuizRecordItem(strCond, &betrecord );
-
-			if (nItem != 0 && betrecord.state == 4) ////此赌约正在接赌，只是在block中没有确认
-			{
-				continue;
-			}
-
-			strCommand = strprintf("%s %s",_T("gettxdetail"),strTemp.c_str());
-			
-			if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root1))
-			{
-				TRACE("UpdateAddressData rpccmd gettxdetail error");
+				TRACE("UpdateQuizPoolData rpccmd getscriptvalidedata error");
 				return;
 			}
-		
-			int confirheight =root1["confirmHeight"].asInt();
-
-			strCommand= strprintf("%s",_T("getinfo"));
-			if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root1))
+			string str = root.toStyledString();
+			int size = root.size();
+			for ( int index =0; index < size; ++index )
 			{
-				TRACE("UpdateAddressData rpccmd getinfo error");
-				return;
+				string txhash = root[index]["key"].asString();
+				txhash = txhash.substr(txhash.length()-64);
+				string nValue = root[index]["value"].asString();
+				uistruct::DBBET_DATA DBbet;
+				memset(&DBbet , 0 , sizeof(uistruct::DBBET_DATA));
+				std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue);
+
+				if (vTemp.size() <=0)
+				{
+					continue;
+				}
+
+				memcpy(&DBbet, &vTemp[0], sizeof(DBbet));
+
+				std::vector<unsigned char> vnTemp = CSoyPayHelp::getInstance()->ParseHex(txhash);
+				reverse(vnTemp.begin(),vnTemp.end());
+				string strTemp = CSoyPayHelp::getInstance()->HexStr(vnTemp);
+
+				/// 查找数据库中此赌约是否正在接赌
+				uistruct::P2P_QUIZ_RECORD_t  betrecord;
+				string strCond;
+				strCond =strprintf(" tx_hash = '%s' ", strTemp.c_str());
+
+				int nItem =  theApp.m_SqliteDeal.GetP2PQuizRecordItem(strCond, &betrecord );
+
+				if (nItem != 0 && betrecord.state == 4) ////此赌约正在接赌，只是在block中没有确认
+				{
+					continue;
+				}
+
+				if (DBbet.betstate == 0x00)
+				{
+					std::vector<unsigned char> txTemp = CSoyPayHelp::getInstance()->ParseHex(txhash);
+					reverse(txTemp.begin(),txTemp.end());
+					string newTxhash =  CSoyPayHelp::getInstance()->HexStr(txTemp);
+
+					std::vector<unsigned char> vSendid;
+					vSendid.assign(DBbet.sendbetid,DBbet.sendbetid+sizeof(DBbet.sendbetid));
+					string regid = CSoyPayHelp::getInstance()->GetNotFullRegID(vSendid);
+
+					string strSourceData;
+					strSourceData=strprintf("'%s' , '%s',%ld,%d" , newTxhash.c_str(), regid.c_str(),DBbet.money,DBbet.hight);
+					m_SqliteDeal.InsertTableItem(_T("t_quiz_pool") ,strSourceData);
+				}
 			}
-	
-			int curheight =root1["blocks"].asInt();
-			if(curheight >=(confirheight+500))
-				continue;
 
-			if (DBbet.betstate == 0x00)
+			if (root.size() < requiredCount ||root.size()>requiredCount )
 			{
-				std::vector<unsigned char> txTemp = CSoyPayHelp::getInstance()->ParseHex(txhash);
-				reverse(txTemp.begin(),txTemp.end());
-				string newTxhash =  CSoyPayHelp::getInstance()->HexStr(txTemp);
-
-				std::vector<unsigned char> vSendid;
-				vSendid.assign(DBbet.sendbetid,DBbet.sendbetid+sizeof(DBbet.sendbetid));
-				string regid = CSoyPayHelp::getInstance()->GetNotFullRegID(vSendid);
-
-				string strSourceData;
-				strSourceData=strprintf("'%s' , '%s',%ld,%d" , newTxhash.c_str(), regid.c_str(),DBbet.money,DBbet.hight);
-				m_SqliteDeal.InsertTableItem(_T("t_quiz_pool") ,strSourceData);
+				break;
 			}
 		}
 	}
