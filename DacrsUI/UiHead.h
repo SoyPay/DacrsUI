@@ -10,7 +10,8 @@
 #include <math.h>
 #include <string>
 #include "json\json.h"
-
+#include "resource.h"		// 主符号
+#include "MessageBoxEx.h"
 using namespace std;
 //#define
 #define LANGUAGE_FILE			"\\Config\\Language.ini"
@@ -32,10 +33,13 @@ using namespace std;
 #define MSG_USER_REDPACKET_UI			    WM_USER+117	    //更新到P2P界面
 
 #define WM_SHOWTASK                        (WM_USER +118) 
+#define WM_POPUPBAR                       (WM_USER +119) 
 
 #define MSG_USER_QUITTHREAD			        WM_USER+200	    //退出线程
 #define MSG_USER_OUT                        WM_USER+201     //退出软件
 
+#define WM_REFRESHP2PUI                      (WM_USER +202) 
+#define WM_REFRESHREDPACKET                  (WM_USER +203) 
 
 #define MSG_USER_END			        WM_USER+800	    //退出线程
 #define WM_BN_CLICK						WM_USER+801
@@ -43,6 +47,21 @@ using namespace std;
 enum {
 	LANGUAGE_CN = 0x01,
 	LANGUAGE_EN ,
+} ;
+enum {
+	MFB_OK        = 0x0001L,         //确认
+	MFB_CANCEL    = 0x0002L,         //取消
+	MFB_OKCANCEL  = 0x0003L,         //确认 & 取消
+	MFB_YES       = 0x0004L,         //是
+	MFB_NO        = 0x0008L,         //否
+	MFB_YESNO     = 0x000CL,         //是 &　否
+
+	MFB_TIP       = 0x0010L,         //提示
+	MFB_ERROR     = 0x0020L,         //错误
+	MFB_WARNING   = 0x0040L,         //警告
+
+	MFB_BK_RED    = 0x0100L          //红色背景
+
 } ;
 typedef enum tagDialogType{
 	DIALOG_MYWALLET     = 0x01,    //我的钱包 
@@ -260,7 +279,7 @@ namespace uistruct {
 		int      confirmedHeight ; //确认时间
 		int      confirmedtime ; //确认时间
 		string     blockhash      ;  //1:为确认状态   0:为未为确认状态
-		int       state;
+		int       state;      ///3 平账 1 扣钱 2加钱
 		string   regid;
 		string   desregid;
 		string ToJson(){
@@ -399,6 +418,7 @@ namespace uistruct {
 		INT64  high  ;
 		string   hash;
 		int connections;
+		int fuelrate;
 		string ToJson(){
 			Json::Value root;
 			root["type"] = type;
@@ -406,6 +426,7 @@ namespace uistruct {
 			root["high"] = high;
 			root["hash"] = hash;
 			root["connections"] = connections;
+			root["fuelrate"] = fuelrate;
 			return root.toStyledString();
 		}
 	bool JsonToStruct(string json){
@@ -419,6 +440,7 @@ namespace uistruct {
 		this->high = root["high"].asInt64();
 		this->hash = root["hash"].asString();
 		this->connections = root["connections"].asInt();
+		this->fuelrate = root["fuelrate"].asInt();
 		return true;
 	}
 	}BLOCKCHANGED_t;
@@ -454,11 +476,15 @@ namespace uistruct {
 
 	typedef struct LISTP2POOL{   
 		string   hash ;   //address
-		string   data ;   //RegID
+		string   sendbetid ;   //RegID
+		INT64   nPayMoney;
+		int     outheight;
 		string ToJson(){
 			Json::Value root;
 			root["hash"] = hash;
-			root["data"] = data;
+			root["sendbetid"] = sendbetid;
+			root["money"] = nPayMoney;
+			root["height"] = outheight;
 			return root.toStyledString();
 		}
 		bool JsonToStruct(string json){
@@ -468,7 +494,9 @@ namespace uistruct {
 				return false ;
 
 			this->hash = root["hash"].asString();
-			this->data = root["data"].asString();
+			this->sendbetid = root["data"].asString();
+			this->nPayMoney = root["money"].asInt64();
+			this->outheight=root["height"].asInt();
 			return true;
 		}
 	}LISTP2POOL_T;
@@ -728,7 +756,7 @@ namespace UiFun
 	time_t  SystemTimeToTimet(const SYSTEMTIME& st) ;
 	SYSTEMTIME Time_tToSystemTime(time_t t);
 	int     RandNumber();   //生成一个1-6的随机数
-
+	int    MessageBoxEx(CString strText , CString strCaption , UINT uType); //自定义MessageBox对话框
 	CString UI_LoadString( CString secID , CString szID , UINT language ) ;  //根据字符串ID加载字符串
 
 	HBITMAP GlobalBkgndBMP(UINT nIDBitmap);
@@ -736,5 +764,8 @@ namespace UiFun
 	CString MbcsToUtf8(const char *file) ;
 
 
+	std::string& trimleft(std::string &s) ;
+
+	std::string& trimright(std::string &s) ;
 }
 #endif

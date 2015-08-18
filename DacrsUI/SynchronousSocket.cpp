@@ -1,21 +1,21 @@
 #include "StdAfx.h"
+#include "Log.h"
 #include "SynchronousSocket.h"
 
 CSynchronousSocket::CSynchronousSocket(void)
 {
 	m_Socket = INVALID_SOCKET ;
-	IsEnd = true;
 }
 
 CSynchronousSocket::~CSynchronousSocket(void)
 {
-	IsEnd = true;
+	vector<unsigned char> vTemp;
+	buffer.swap(vTemp);
 	OnClose();
 }
 BOOL CSynchronousSocket::OnInitSocket()
 {
 	buffer.clear();
-	RecvDataThread();
 	return TRUE ;
 }
 SOCKET CSynchronousSocket::OnConnnect(const char *pIpAddr, WORD nPort)
@@ -33,7 +33,6 @@ SOCKET CSynchronousSocket::OnConnnect(const char *pIpAddr, WORD nPort)
 			}else{
 				int error;
 				error = WSAGetLastError();
-
 				hSocket = INVALID_SOCKET;
 				closesocket(hSocket);
 			}
@@ -41,6 +40,7 @@ SOCKET CSynchronousSocket::OnConnnect(const char *pIpAddr, WORD nPort)
 	}
 	return hSocket ;
 }
+
 SOCKET CSynchronousSocket::OnblockConnnect(const char *pIpAddr, WORD nPort)
 {
 	struct sockaddr_in servAddr;
@@ -57,8 +57,9 @@ SOCKET CSynchronousSocket::OnblockConnnect(const char *pIpAddr, WORD nPort)
 				int error;
 				error = WSAGetLastError();
 
-				hSocket = INVALID_SOCKET;
 				closesocket(hSocket);
+				hSocket = INVALID_SOCKET;
+				
 			}
 		}
 	}
@@ -68,84 +69,52 @@ BOOL CSynchronousSocket::OnSend(const char* sCmdBuff , int nLen)
 {
 	if ( INVALID_SOCKET == m_Socket ||  NULL == sCmdBuff || 0 == nLen ) return FALSE ;
 
-	if (send(m_Socket, sCmdBuff, nLen, 0) == -1){
-		return FALSE ;
-	}
-	return TRUE ;
+	if (-1 == send(m_Socket, sCmdBuff, nLen, 0))
+			return FALSE;
+
+	return TRUE;
 }
-void CSynchronousSocket::RecvDataThread()
-{
-	HANDLE hRecvThread;
-	UINT uRecvThreadId = 0;
-	hRecvThread = (HANDLE)_beginthreadex(NULL,	0,	RecvDataProc,this,CREATE_SUSPENDED, &uRecvThreadId);
-	if ( hRecvThread != INVALID_HANDLE_VALUE)
-	{
-		SetThreadPriority(hRecvThread, THREAD_PRIORITY_NORMAL);
-		ResumeThread( hRecvThread );
-	}
-}
-//int CSynchronousSocket::GetRpcRes(const string ip,int port,string cmd,string & rev,int timerout)
-int CSynchronousSocket::GetRpcRes(const string ip,int port,const string cmd,string & rev,int timerout)
+
+int CSynchronousSocket::GetRpcRes(const string &ip,int port,const string &cmd, std::shared_ptr<char> &pRecvStr,int timeout)
 {
 	CSynchronousSocket te;
-	if(te.OnInitSocket())
-		if (te.OnConnnect(ip.c_str(),port))
-			if(te.OnSend(cmd.c_str(),cmd.length()))
-			{
-				do 
-				{
-					if(timerout < 0)
-					{
-						//closesocket(te.m_Socket);
-						return -1;
-					}
-					timerout -= 100;
-					Sleep(100);
-				} while (te.IsEnd==false);
-			}		
-			//string tep(te.buffer.begin(),te.buffer.end());
-			string tep = "";
-			tep.assign(te.buffer.begin(),te.buffer.end());
-			rev =tep;
-			//closesocket(te.m_Socket);
-			return rev.length();
-}
-UINT WINAPI CSynchronousSocket::RecvDataProc(LPVOID pParam)
-{
-	unsigned char tempbuffer[10*1024];
-	CSynchronousSocket * pRecv  = (CSynchronousSocket*)pParam ;
-	bool isSartRev = false;
-	pRecv -> IsEnd = false;
-	if ( NULL != pRecv ) {
-		while (true)
-		{
-			if ( INVALID_SOCKET != pRecv->m_Socket) {
-				isSartRev = true;
-				memset(tempbuffer,0,sizeof(tempbuffer));
-				int bufferSize = sizeof(tempbuffer) - 1;
-				int nRes = recv( pRecv->m_Socket , (char*)tempbuffer , bufferSize , 0);
-				if ( nRes > 0) {
-					pRecv->buffer.insert(pRecv->buffer.end(),tempbuffer,tempbuffer+nRes);
-					continue;
-				}
-				else
-				{
-					break;
-				}
-			}
-			else if(isSartRev == true)
-			{
-				break;
-			}
-		}
+	if(!te.OnInitSocket())
+		return -1;
+	if (INVALID_SOCKET == te.OnConnnect(ip.c_str(),port)) 
+	{
+		TRACE("Connect destisnation %s:%d failed!\n", ip.c_str(), port);
+		return -1;
 	}
-	pRecv -> IsEnd = true;
-	return 0;
+	if(!te.OnSend(cmd.c_str(),cmd.length()))
+	{
+		TRACE("Send RPC Command failed!\n");
+		return -1;
+	}
+	int ret = setsockopt(te.m_Socket,SOL_SOCKET,SO_RCVTIMEO, (char*) &timeout,sizeof(timeout));
+//	TRACE("setsockopt rec timeout result:%d\n", ret);
+
+	unsigned char tempbuffer[2048];
+	int bufferSize = sizeof(tempbuffer) - 1;
+	int nRes(0);
+	do 
+	{
+		memset(tempbuffer,0,sizeof(tempbuffer));
+		nRes = recv( te.m_Socket , (char*)tempbuffer , bufferSize , 0);
+		if(nRes > 0) {
+			te.buffer.insert(te.buffer.end(),tempbuffer,tempbuffer+nRes);
+		}
+		else {
+			int error;
+			error = WSAGetLastError();
+			TRACE("recv error code:%d\n", error);
+			return -1;
+		}					
+	} while (nRes == bufferSize);
+	pRecvStr.reset(new char[te.buffer.size()+1]);
+	memcpy(pRecvStr.get(), &te.buffer[0], te.buffer.size());
+//	TRACE("recv:%s\n", pRecvStr.get());
+	return te.buffer.size()+1;
 }
-
-
-
-
 
 void CSynchronousSocket::OnClose()
 {

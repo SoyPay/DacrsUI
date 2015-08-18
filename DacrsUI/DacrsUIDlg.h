@@ -16,6 +16,7 @@
 #include "OutGifDlg.h"
 #include "RPCDlg.h"
 #include "IpoCoin.h"
+#include "BalloonTip.h"
 // CDacrsUIDlg 对话框
 class CDacrsUIDlg : public CDialogEx
 {
@@ -95,6 +96,9 @@ public:
 	afx_msg void BakWallet();
 	afx_msg void SetAppFee();
 	afx_msg LRESULT OnShowTask(WPARAM wParam,LPARAM lParam) ; 
+	afx_msg LRESULT OnPopupBar(WPARAM wParam,LPARAM lParam) ; 
+	afx_msg LRESULT OnRefreshP2Pool(WPARAM wParam,LPARAM lParam) ; 
+	afx_msg LRESULT OnRefreshRedPacketPool(WPARAM wParam,LPARAM lParam) ; 
 	void ToTray();
 	void DeleteTray();
 	afx_msg void SetAppID();
@@ -111,4 +115,14 @@ public:
 	void WriteExportWalletAndBookAddr(CString fileName);
     /// 自定义关闭程序消息
 	afx_msg void OnCloseApp() ; 
+	void OnCloseWriteAppFee();
+
+	afx_msg void OnSendBetExportHistory();
+	afx_msg void OnAcceptBetExportHistory();
+	afx_msg void OnSendRedPacketExportHistory();
+	afx_msg void OnGrabRedPacketExportHistory();
+public:
+	CBalloonTip*  m_BalloonTip;
+	afx_msg void OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized);
+	CMyQueue m_barpoomesg;
 };

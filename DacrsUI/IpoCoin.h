@@ -36,6 +36,7 @@ public:
 	CShadeButtonST         m_rBtnSend;
 	CShadeButtonST         m_rQueryAmout;
 	void OnShowListCtrol(CString addr);
+	double GetFreeMoney(CString addr);
 private:
 	CListCtrlCl                          m_listCtrl;
 	CP2PBetHelp		                    m_P2PBetHelp;

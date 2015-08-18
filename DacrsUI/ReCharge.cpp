@@ -11,13 +11,14 @@
 
 IMPLEMENT_DYNAMIC(CReCharge, CDialogEx)
 
-CReCharge::CReCharge(CWnd* pParent /*=NULL*/,CString text,CString strsms,CString strhead)
+CReCharge::CReCharge(CWnd* pParent /*=NULL*/,CString text,CString strsms,CString strhead,CString amount)
 	: CDialogEx(CReCharge::IDD, pParent)
 {
 	m_pBmp = NULL ;
 	m_strText = text;
 	m_strSms = strsms;
 	m_strHead = strhead;
+	m_edit = amount;
 }
 
 CReCharge::~CReCharge()
@@ -59,9 +60,8 @@ void CReCharge::OnBnClickedOk()
 		GetDlgItem(IDC_EDIT_MONEY)->GetWindowText(strTxMoney) ;
 		if (strTxMoney == _T(""))
 		{
-			CMessageBoxEx message(_T("\n金额不能为空!") , 0 );
-	        message.DoModal();
-			//::MessageBox( this->GetSafeHwnd() ,_T("金额不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+			
+			UiFun::MessageBoxEx(_T("金额不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
 			return ;
 		}
 		theApp.m_strAddress = strTxMoney;
@@ -70,9 +70,8 @@ void CReCharge::OnBnClickedOk()
 		GetDlgItem(IDC_EDIT_MONEY)->GetWindowText(strTxmessage) ;
 		if (strTxmessage.GetLength() >200)
 		{
-			CMessageBoxEx message(_T("\n广告语不能超过两百个字节!") , 0 );
-	        message.DoModal();
-			//::MessageBox( this->GetSafeHwnd() ,_T("广告语不能超过两百个字节") , _T("提示") , MB_ICONINFORMATION ) ;
+			
+			UiFun::MessageBoxEx(_T("广告语不能超过两百个字节") , _T("提示") ,MFB_OK|MFB_TIP );
 			return ;
 		}
 		theApp.m_strAddress = strTxmessage;
@@ -94,7 +93,7 @@ BOOL CReCharge::OnInitDialog()
 	CDialogEx::OnInitDialog();
 
 	// TODO:  在此添加额外的初始化
-	m_Text.SetFont(110, _T("微软雅黑"));				//设置显示字体和大小
+	m_Text.SetFont(100, _T("微软雅黑"));				//设置显示字体和大小
 	m_Text.SetTextColor(RGB(255,255,255));	    //字体颜色
 	if (m_strText == _T(""))
 	{
@@ -115,6 +114,10 @@ BOOL CReCharge::OnInitDialog()
 		((CStatic*)GetDlgItem(IDC_STATIC))->SetWindowText(m_strSms);
 	}
 
+	if (m_edit != _T(""))
+	{
+		((CEdit*)GetDlgItem(IDC_EDIT_MONEY))->SetWindowText(m_edit);
+	}
 	m_rBtnClose.SetBitmaps( IDB_BITMAP_CLOSE , RGB(255, 255, 0) , IDB_BITMAP_CLOSE2 , RGB(255, 255, 255) );
 	m_rBtnClose.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
 	m_rBtnClose.SetWindowText("") ;
@@ -126,20 +129,20 @@ BOOL CReCharge::OnInitDialog()
 	m_rBtnClose.SizeToContent();
 	m_rBtnClose.SetWindowPos(NULL ,320 , 0 , 0 , 0 , SWP_NOSIZE); 
 
-	m_rBtnOk.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
+	m_rBtnOk.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
 	m_rBtnOk.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
 	m_rBtnOk.SetWindowText("确 定") ;
-	m_rBtnOk.SetFontEx(20 , _T("微软雅黑"));
+	//m_rBtnOk.SetFontEx(20 , _T("微软雅黑"));
 	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
 	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
 	m_rBtnOk.SizeToContent();
 
-	m_rBtnCancel.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
+	m_rBtnCancel.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255));
 	m_rBtnCancel.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
 	m_rBtnCancel.SetWindowText("取 消") ;
-	m_rBtnCancel.SetFontEx(20 , _T("微软雅黑"));
+	//m_rBtnCancel.SetFontEx(20 , _T("微软雅黑"));
 	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));

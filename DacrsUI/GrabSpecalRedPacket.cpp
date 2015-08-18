@@ -174,9 +174,9 @@ void CGrabSpecalRedPacket::Showlistbox()
 {
 	//// 查找数据库中是否存在此记录
 	m_BonusListBox.DeleteAllIndex();
-	m_PoolList.clear();
+	//m_PoolList.clear();
 	m_curpage = 0;
-	theApp.m_SqliteDeal.GetRedPacketPoolRecordList(_T(" packet_type = 2 "), &m_PoolList);
+//	theApp.m_SqliteDeal.GetRedPacketPoolRecordList(_T(" packet_type = 2 "), &m_PoolList);
 	m_pagecount = (m_PoolList.size()%m_pagesize)==0?(m_PoolList.size()/m_pagesize):(m_PoolList.size()/m_pagesize)+1;
 
 	string temp;
@@ -251,9 +251,7 @@ BOOL CGrabSpecalRedPacket::PreTranslateMessage(MSG* pMsg)
 				}else
 				{
 					GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T(""));
-					CMessageBoxEx message(_T("\n输入有误,请输入数字!") , 0 );
-	        message.DoModal();
-					//::MessageBox( this->GetSafeHwnd() ,_T("输入有误,请输入数字") , _T("提示") , MB_ICONINFORMATION ) ;
+					UiFun::MessageBoxEx(_T("输入有误,请输入数字") , _T("提示") ,MFB_OK|MFB_TIP );
 				}
 				return TRUE;
 			}
@@ -298,11 +296,15 @@ LRESULT CGrabSpecalRedPacket::onBnCLick( WPARAM wParam, LPARAM lParam )
 
 void   CGrabSpecalRedPacket::AcceptRedPackeSpecail(CString sendhash,uistruct::REDPACKETPOOL_t pPoolList)
 {
+	if (strcmp(theApp.m_redPacketScriptid.c_str(),theApp.m_neststcriptid.strNewSrcriptRedPacektid.c_str()))
+	{
+		UiFun::MessageBoxEx(_T("红包已经升级,请到菜单栏中选择恢复默认设置") , _T("提示") ,MFB_OK|MFB_TIP );
+		return;
+	}
+
 	if (!theApp.IsSyncBlock )
 	{
-		CMessageBoxEx message(_T("\n同步未完成,不能发送交易!") , 0 );
-	        message.DoModal();
-	//	::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("同步未完成,不能发送交易") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -310,44 +312,34 @@ void   CGrabSpecalRedPacket::AcceptRedPackeSpecail(CString sendhash,uistruct::RE
 
 
 	CString walletaddr = m_walletmoney;
-	INT64 sub = (INT64)(atof(walletaddr)*COIN) - theApp.m_RedPacketCfg.AcceptRedPacketSpecailFee;
+	INT64 sub = (INT64)(strtod(walletaddr,NULL)*COIN) - theApp.m_RedPacketCfg.AcceptRedPacketSpecailFee;
 	if (sub < 0)
 	{
-			CMessageBoxEx message(_T("\n此钱包账户金额不足付小费,请先充值!") , 0 );
-	        message.DoModal();
-		//::MessageBox( this->GetSafeHwnd() ,_T("此钱包账户金额不足付小费,请先充值") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("此钱包账户金额不足付小费,请先充值") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
-	if (atof(m_balance) < pPoolList.total_amount)
+	if (strtod(m_balance,NULL) < pPoolList.total_amount)
 	{
-		CMessageBoxEx message(_T("\n此钱包账户金额小于接龙红包金额,请先充值!") , 0 );
-	        message.DoModal();
-		//::MessageBox( this->GetSafeHwnd() ,_T("此钱包账户金额小于接龙红包金额,请先充值") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("此钱包账户金额小于接龙红包金额,请先充值") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 	CString addr = m_addr;
 
 	if (addr == _T(""))
 	{
-		CMessageBoxEx message(_T("\n地址不能为空!") , 0 );
-	        message.DoModal();
-	//	::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("地址不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
 	if (strcmp(pPoolList.send_acc_id.c_str(),addr) == 0)
 	{
-		CMessageBoxEx message(_T("\n发红包地址不能抢红包!") , 0 );
-	        message.DoModal();
-		//::MessageBox( this->GetSafeHwnd() ,_T("发红包地址不能抢红包") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("发红包地址不能抢红包") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 	if (IsAcceptRedPacket(addr,pPoolList))
 	{
-		CMessageBoxEx message(_T("\n此地址已经抢过红包!") , 0 );
-	        message.DoModal();
-	//	::MessageBox( this->GetSafeHwnd() ,_T("此地址已经抢过红包") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("此地址已经抢过红包") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 	string strContractData,strHash;
@@ -356,9 +348,7 @@ void   CGrabSpecalRedPacket::AcceptRedPackeSpecail(CString sendhash,uistruct::RE
 
 	INT64 strTxFee = theApp.m_RedPacketCfg.AcceptRedPacketSpecailFee;
 	if (  strTxFee < 10000  ) {
-		CMessageBoxEx message(_T("\n小费不足!") , 0 );
-	        message.DoModal();
-	//	::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("小费不足") , _T("提示") ,MFB_OK|MFB_TIP );
 		return ;
 	}
 	string strShowData ="";
@@ -412,9 +402,7 @@ void   CGrabSpecalRedPacket::AcceptRedPackeSpecail(CString sendhash,uistruct::RE
 		postmsg.SetData(strTemp);
 		theApp.m_MsgQueue.push(postmsg);
 	}
-	CMessageBoxEx message(strTip.c_str() , 0 );
-	        message.DoModal();
-	//::MessageBox( this->GetSafeHwnd() ,strTip.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+	UiFun::MessageBoxEx(strTip.c_str() , _T("提示") ,MFB_OK|MFB_TIP );
 }
 
 bool  CGrabSpecalRedPacket::IsAcceptRedPacket(CString account,uistruct::REDPACKETPOOL_t pPoolList)
@@ -423,16 +411,16 @@ bool  CGrabSpecalRedPacket::IsAcceptRedPacket(CString account,uistruct::REDPACKE
 	//{
 		string strCommand,strShowData;
 		strCommand =strprintf("%s %s","gettxdetail" ,pPoolList.send_hash.c_str() );
-		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-		if (strShowData =="")
+		Json::Value root;
+		if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 		{
+			TRACE("IsAcceptRedPacket rpccmd gettxdetail error");
 			return false;
 		}
-		Json::Reader reader; 
-		Json::Value root;
-		if (!reader.parse(strShowData, root)) 
-			return false;
+
+		strShowData = root.toStyledString();
+
+
 		int npos = strShowData.find("confirmHeight");
 		int confirHeight = 1440;
 		if ( npos >= 0 ) { //
@@ -456,13 +444,11 @@ bool  CGrabSpecalRedPacket::IsAcceptRedPacket(CString account,uistruct::REDPACKE
 		string keyValue;
 		keyValue = strprintf("%s%s",strKeyHex.c_str(),SendHash.c_str());
 		strCommand= strprintf("%s %s %s","getscriptdata" ,theApp.m_redPacketScriptid,keyValue.c_str() );
-		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-		if (strShowData == _T("") || strShowData.find("value") < 0)
+		if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
+		{
+			TRACE("IsAcceptRedPacket rpccmd getscriptdata error");
 			return false;
-
-		if (!reader.parse(strShowData, root)) 
-			return false;;
+		}
 
 		string nValue = root["value"].asString();
 		uistruct::RED_DATA redPacket;
@@ -524,8 +510,12 @@ void CGrabSpecalRedPacket::OnLbnDblclkListBox()
 		string temp = "接龙红包ID: ";
 		string strShowid = const_it.send_hash.substr(0,30); 
 		temp +=strprintf("%s" ,strShowid.c_str()) ;
-		CMessageBoxEx message(temp.c_str() , 0 );
-	        message.DoModal();
-		//::MessageBox( this->GetSafeHwnd() ,temp.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(temp.c_str() , _T("提示") ,MFB_OK|MFB_TIP );
 	}
+}
+void CGrabSpecalRedPacket::ReadSpecailRedPacketPool()
+{
+	m_PoolList.clear();
+	theApp.m_SqliteDeal.GetRedPacketPoolRecordList(_T(" packet_type = 2 "), &m_PoolList);
+	Showlistbox();
 }

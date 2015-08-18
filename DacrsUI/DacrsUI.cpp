@@ -11,6 +11,10 @@
 #include "StartProgress.h"
 #include "WalletPassPhrase.h"
 
+#include  <io.h>
+#include  <stdio.h>
+#include  <stdlib.h>
+
 #include <afxsock.h>
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -91,6 +95,11 @@ BOOL CDacrsUIApp::InitInstance()
 		return FALSE;
 	}
 
+	//创建字体
+	m_fontSong.CreateFont (15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "宋体");
+	m_fontBlackbody.CreateFont(15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "黑体");
+		
+
 	AfxEnableControlContainer();
 
 	// 创建 shell 管理器，以防对话框包含
@@ -154,7 +163,11 @@ BOOL CDacrsUIApp::InitInstance()
 	string tempuiport = m_uirpcport;
 	ProductHttpHead(str_InsPath ,m_strServerCfgFileName,m_rpcport,m_sendPreHeadstr,m_sendendHeadstr,m_uirpcport,netWork);
 
-
+	string dbpath = strprintf("%s\\db",str_InsPath);
+	if (!PathIsDirectory(dbpath.c_str()))
+	{
+		::CreateDirectory(dbpath.c_str(), NULL);
+	}
 	//打开sqlite3数据库
 	m_SqliteDeal.InitializationDB();
 
@@ -168,6 +181,24 @@ BOOL CDacrsUIApp::InitInstance()
 		m_uirpcport = tempuiport;
 	}
 
+	string strSeverPath = strprintf("%s\\dacrs-d.exe",str_InsPath);
+
+	if (PathIsDirectory(strSeverPath.c_str()))
+	{
+		::CreateDirectory(strSeverPath.c_str(), NULL);
+		::RemoveDirectory(strSeverPath.c_str());
+		if( (_access( strSeverPath.c_str(), 0 )) == -1 )
+		{
+			UiFun::MessageBoxEx(_T("dacrs-d 文件不存在,请重新启动钱包\r\n") , _T("Error") ,MFB_OK|MFB_ERROR );
+			exit(1);
+		}
+	}
+	/// 判断文件是否存在
+	 if( (_access( strSeverPath.c_str(), 0 )) == -1 )
+	{
+		UiFun::MessageBoxEx(_T("dacrs-d 文件不存在,请重新下载\r\n") , _T("Error") ,MFB_OK|MFB_ERROR );
+		exit(1);
+	}
 	//启动服务程序
 	StartSeverProcess(str_InsPath);
 	m_bServerState = true;
@@ -198,9 +229,8 @@ BOOL CDacrsUIApp::InitInstance()
 		{
 		case OutOfMemory :
 			{
-				CMessageBoxEx message(_T("\n OutOfMemory!") , 0 );
-	            message.DoModal();
-				//::MessageBox( NULL , "OutOfMemory" , "Error" , MB_ICONERROR) ;
+
+				UiFun::MessageBoxEx(_T("OutOfMemory") , _T("Error") ,MFB_OK|MFB_ERROR );
 			}
 			break;
 		}
@@ -236,9 +266,13 @@ BOOL CDacrsUIApp::InitInstance()
 			*/
 			int errorCode = GetLastError();
 			TRACE("Error OpenProcess:%d " , errorCode );
-			CMessageBoxEx message(_T("\n区块链数据库损坏，请双击运行钱包下clear.bat文件，在重新打开钱包\r\n!") , 0 );
-	        message.DoModal();
-			//::MessageBox( NULL , _T("区块链数据库损坏，请双击运行钱包下clear.bat文件，在重新打开钱包\r\n") , "Error" , MB_ICONERROR) ;
+			UiFun::MessageBoxEx(_T("区块链数据库损坏，请双击运行钱包下clear.bat文件，在重新打开钱包\r\n") , _T("Error") ,MFB_OK|MFB_ERROR );
+			if (IDYES==UiFun::MessageBoxEx(_T("是否清除区块链数据，重新同步") , _T("Error") ,MFB_YESNO|MFB_ERROR ))
+			{
+				string batpath =strprintf("%s\\clear.bat",str_InsPath);
+				ShellExecute(NULL, "open",batpath.c_str(), NULL, NULL, SW_SHOW);
+				//system(batpath.c_str());
+			}
 			exit(1);
 		}
 		CloseHandle(processHandle);
@@ -339,9 +373,7 @@ BOOL CDacrsUIApp::CreateMaintainThrd()
 
 	hMtThrd = (HANDLE)_beginthreadex( NULL, 0, &MtProc, this, 0, &nMtThrdID ) ;
 	if( INVALID_HANDLE_VALUE == hMtThrd ) {
-		CMessageBoxEx message(_T("\n维护线程创建失败!") , 0 );
-	    message.DoModal();
-		//::MessageBox( NULL , "维护线程创建失败!" , "出错" , MB_ICONERROR ) ;
+		UiFun::MessageBoxEx(_T("维护线程创建失败!") , _T("出错") ,MFB_OK|MFB_ERROR );
 		CloseHandle( hMtStartEvent ) ;
 		hMtStartEvent = NULL ;
 		return  FALSE;
@@ -815,8 +847,9 @@ int GetMsgType(string const strData,Json::Value &root)
 	return  -1;
 }
 bool JsonCheck(string strjson){
-	//strjson.TrimLeft(" ");
-	//strjson.TrimRight(" ");
+
+	strjson =  UiFun::trimleft(strjson);
+	strjson =  UiFun::trimright(strjson);
 	if (strjson.at(0) != '{')
 	{
 		return false;
@@ -949,6 +982,7 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 			m_Blockchanged.high = msgValue["high"].asInt64() ;
 			m_Blockchanged.hash = msgValue["hash"].asString();
 			m_Blockchanged.connections = msgValue["connections"].asInt();
+			m_Blockchanged.fuelrate = msgValue["fuelrate"].asInt();
 
 			string strJson = m_Blockchanged.ToJson();
 			CPostMsg postmsg(MSG_USER_UP_PROGRESS,0);
@@ -1275,6 +1309,10 @@ void  CDacrsUIApp::ParseUIConfigFile(const string& strExeDir){
 		CJsonConfigHelp::getInstance()->GetP2PBetCfgData(m_P2PBetCfg);
 		CJsonConfigHelp::getInstance()->GetRedPacketCfgData(m_RedPacketCfg);
 		CJsonConfigHelp::getInstance()->GetClosConfig(m_reminder);
+		CJsonConfigHelp::getInstance()->GetNewestScriptData(m_neststcriptid);
+		CJsonConfigHelp::getInstance()->GetP2pBetStep(m_p2pbetstep);
+		CJsonConfigHelp::getInstance()->GetRedPacketStep(m_redPackestep);
+
 		CNetParamCfg netParm;
 		CJsonConfigHelp::getInstance()->GetNetParamCfgData(netParm);
 		m_severip = netParm.server_ip;
@@ -1397,7 +1435,10 @@ int CDacrsUIApp::Update()
 	CString sMsg;
 	//sMsg.Format(CLanguage::TranLanguage("MAIN","%d updates found at the website,now to upgrade?"),lResult);
 	sMsg.Format(CLanguage::TranLanguage("MAIN","检查有%d文件需要更新,现在是否要更新?"),lResult);
-	if (AfxMessageBox(sMsg, MB_ICONQUESTION | MB_YESNO) != IDYES) return 0;
+	//if (AfxMessageBox(sMsg, MB_ICONQUESTION | MB_YESNO) != IDYES) return 0;
+	if ( IDYES != UiFun::MessageBoxEx(sMsg, _T("提示") , MFB_YESNO|MFB_TIP ) )
+		return 0;
+
 	ShRun.lpParameters = NULL; 
 	ShellExecuteEx(&ShRun); 
 	return 1;
@@ -1423,7 +1464,9 @@ DWORD WINAPI Update1(LPVOID lpParam){
 	if (lResult == 0) return false;
 	CString sMsg;
 	sMsg.Format(CLanguage::TranLanguage("MAIN","%d updates found at the website,now to upgrade?"),lResult);
-	if (AfxMessageBox(sMsg, MB_ICONQUESTION | MB_YESNO) != IDYES) return false;
+	//if (AfxMessageBox(sMsg, MB_ICONQUESTION | MB_YESNO) != IDYES) return false;
+	if ( IDYES != UiFun::MessageBoxEx(sMsg, _T("提示") , MFB_YESNO|MFB_TIP ) )
+		return false;
 	ShRun.lpParameters = NULL; 
 	ShellExecuteEx(&ShRun); 
 	return true;
@@ -1588,9 +1631,7 @@ void CDacrsUIApp::CheckPathValid(const string& strDir)
 
 	if (bExist)
 	{
-		CMessageBoxEx message(_T("\n程序不可以放在含有空格的目录下!") , 0 );
-	    message.DoModal();
-		//::MessageBox( NULL , _T("程序不可以放在含有空格的目录下\r\n") , "Error" , MB_ICONERROR) ;
+		UiFun::MessageBoxEx(_T("程序不可以放在含有空格的目录下\r\n!") , _T("Error") ,MFB_OK|MFB_ERROR );
 		exit(0);
 	}
 }
