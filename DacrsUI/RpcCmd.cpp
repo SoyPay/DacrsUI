@@ -28,10 +28,11 @@ int CRpcCmd::SendContactRpc(string cmd,string &rev){
 	strSendData +=m_sendendHeadstr;
 	strSendData +=cmd;
 
-	std::shared_ptr<char> pChRev;
-	if(CSynchronousSocket::GetRpcRes(mIp,mPort,strSendData,pChRev,7000)>0)
+//	std::shared_ptr<char> pChRev;
+	std::string strRecv;
+	if(CSynchronousSocket::GetRpcRes(mIp, mPort, strSendData, strRecv,7000)>0)
 	{
-		char *cPos = strstr(pChRev.get(), "Server:");
+		const char *cPos = strstr(strRecv.c_str(), "Server:");
 		if(NULL != cPos) 
 		{
 			cPos = strchr(cPos, '\n');
@@ -50,10 +51,11 @@ int CRpcCmd::SendRpc(string strCommand,string &rev)
 	string strSendData;
 	BuildSendString(strCommand,strSendData);
 	
-	std::shared_ptr<char> pChRev;
-	if(CSynchronousSocket::GetRpcRes(mIp,mPort,strSendData,pChRev,7000)>0)
+//	std::shared_ptr<char> pChRev;
+	std::string strRecv;
+	if(CSynchronousSocket::GetRpcRes(mIp,mPort,strSendData,strRecv,7000)>0)
 	{
-		char * cPos = strstr(pChRev.get(), "Server:");
+		const char * cPos = strstr(strRecv.c_str(), "Server:");
 		if(NULL != cPos) 
 		{
 			cPos = strchr(cPos, '\n');
