@@ -1773,6 +1773,16 @@ void  CP2PDlg::AutoSendBet()
 	//{
 	//	return;
 	//}
+	static int hght = 0 ;
+	static int lastrandom = 0 ;
+
+	if(hght==theApp.blocktipheight)
+	{
+		return ;
+	}
+
+	hght = theApp.blocktipheight;
+
 	uistruct::P2PLIST PoolList;
 	ReadP2pPoolFromCmd(PoolList);
 	BOOL bsend1 = TRUE;
@@ -1798,14 +1808,28 @@ void  CP2PDlg::AutoSendBet()
 		}
 	}
 
+	CTime t1( 1980, 3, 19, 22, 15, 0 );
 
-	SYSTEMTIME curTime ;
-	memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
-	GetLocalTime( &curTime ) ;
-	unsigned int seed =UiFun::SystemTimeToTimet(curTime);
+	CTime t = CTime::GetCurrentTime();
 
-	srand(seed);
-	CString addr ="39412-1";
+	CTimeSpan span=t-t1; //计算当前系统时间与时间t1的间隔
+
+	srand(span.GetTotalSeconds()+hght+lastrandom);
+
+     lastrandom = rand();
+	// 	SYSTEMTIME curTime ;
+	// 	memset( &curTime , 0 , sizeof(curTime) ) ;
+	// 	GetLocalTime( &curTime ) ;
+	// 
+	// 	srand(curTime.wMilliseconds);
+
+	CString addraray[]={"39412-1","41949-8"};
+	CString addr =addraray[(rand()%2)];
+
+	CString MaxMongy[3]={"25000","18000","10000"};
+	CString Max2Mongy[3]={"2400","1800","1100"};
+	CString Max3Mongy[3]={"888","600","500"};
+
 	for (int i =0;i<3;i++)
 	{
 		CString strTxMoney;
@@ -1815,7 +1839,7 @@ void  CP2PDlg::AutoSendBet()
 			{
 				continue;
 			}
-			strTxMoney = "10000";
+			strTxMoney = MaxMongy[(rand()%3)];
 		}
 		if (i == 1)
 		{
@@ -1823,7 +1847,7 @@ void  CP2PDlg::AutoSendBet()
 			{
 				continue;
 			}
-			strTxMoney = "1000";
+			strTxMoney =  Max2Mongy[(rand()%3)];
 		}
 		if (i == 2)
 		{
@@ -1831,7 +1855,7 @@ void  CP2PDlg::AutoSendBet()
 			{
 				continue;
 			}
-			strTxMoney = "500";
+			strTxMoney =  Max3Mongy[(rand()%3)];
 		}
 		CString strMoney;
 		((CStatic*)GetDlgItem(IDC_STATIC_BALANCE))->GetWindowText(strMoney);
@@ -1839,7 +1863,7 @@ void  CP2PDlg::AutoSendBet()
 
 		if (strtod(strTxMoney,NULL) > balance)
 		{
-			
+			//::MessageBox( this->GetSafeHwnd() ,_T("投注金额大于账户余额") , _T("提示") , MB_ICONINFORMATION ) ;
 			continue ;
 		}
 		
@@ -1859,12 +1883,14 @@ void  CP2PDlg::AutoSendBet()
 		strCommand = strprintf("%s %s","gethash" , strTemp );
 		string strShowData ;
 
+		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
+		int pos = strShowData.find("hash");
+		if ( pos < 0 ) return ;
+
+		Json::Reader reader;  
 		Json::Value root; 
-		if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
-		{
-			TRACE("AutoSendBet rpccmd gethash error");
-			return;
-		}
+		if (!reader.parse(strShowData, root)) 
+			return  ;
 
 		string  strHash = root["hash"].asString() ;
 
@@ -1878,8 +1904,7 @@ void  CP2PDlg::AutoSendBet()
 
 		INT64 strTxFee = theApp.m_P2PBetCfg.SendBetFee;
 		if (  strTxFee < 10000  ) {
-			
-			UiFun::MessageBoxEx(_T("小费不足") , _T("提示") ,MFB_OK|MFB_TIP );
+			::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
 			return ;
 		}
 
@@ -1890,12 +1915,11 @@ void  CP2PDlg::AutoSendBet()
 		{
 			return;
 		}
-		Json::Reader reader; 
 		if (!reader.parse(strShowData, root)) 
 			return  ;
 		BOOL bRes = FALSE ;
 		CString strTip;
-		int pos = strShowData.find("hash");
+		pos = strShowData.find("hash");
 
 		if ( pos >=0 ) {
 			//插入到交易记录数据库
