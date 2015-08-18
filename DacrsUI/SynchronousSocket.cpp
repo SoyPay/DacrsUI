@@ -101,6 +101,14 @@ int CSynchronousSocket::GetRpcRes(const string &ip,int port,const string &cmd, s
 		memset(tempbuffer,0,sizeof(tempbuffer));
 		nRes = recv( te.m_Socket , (char*)tempbuffer , bufferSize , 0);
 		if(nRes > 0) {
+			static bool bTemp(false);
+			string strTemp(tempbuffer,tempbuffer+nRes);
+			if(!bTemp) {
+				TRACE("tempbuffer:%s\r\n", strTemp.c_str());
+				bTemp = true;
+			}else {
+				TRACE("%s", strTemp.c_str());
+			}
 			te.buffer.insert(te.buffer.end(),tempbuffer,tempbuffer+nRes);
 		}
 		else {
@@ -112,7 +120,13 @@ int CSynchronousSocket::GetRpcRes(const string &ip,int port,const string &cmd, s
 	} while (nRes == bufferSize);
 	pRecvStr.reset(new char[te.buffer.size()+1]);
 	memcpy(pRecvStr.get(), &te.buffer[0], te.buffer.size());
-//	TRACE("recv:%s\n", pRecvStr.get());
+	string strRcv(te.buffer.begin(), te.buffer.end());
+	//string strTemp(tempbuffer,tempbuffer+bufferSize);
+	//TRACE("tempbuffer:%s\n", strTemp.c_str());
+	
+	TRACE("cmd:%s\r\n", cmd.c_str());
+	//TRACE("strRcv:%s\r\n", strRcv.c_str());
+	TRACE("recv:%s\r\n", pRecvStr.get());
 	return te.buffer.size()+1;
 }
 
