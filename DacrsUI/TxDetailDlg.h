@@ -1,9 +1,12 @@
 #pragma once
-
+#include "DialogBase.h"
+#include "StaticTrans.h"
+#include "BmpBtn.h"
+#include "ShadeButtonST.h"
 
 // CTxDetailDlg ¶Ô»°¿ò
 
-class CTxDetailDlg : public CDialogEx
+class CTxDetailDlg : public CDialogBase
 {
 	DECLARE_DYNAMIC(CTxDetailDlg)
 
@@ -22,4 +25,9 @@ public:
 	void ShowTxDetail(CString jsontx);
 	string GetContacrDetail(uistruct::REVTRANSACTION_t tx);
 	virtual BOOL OnInitDialog();
+	afx_msg void OnBnClickedClose();
+public:
+	CStaticTrans     m_headText;
+	CShadeButtonST   m_rBtnClose;
+	CShadeButtonST   m_rBtnOk;
 };

@@ -112,6 +112,11 @@ public:
 	CDarkTxCfg		m_DarkCfg;
 	CP2PBetCfg		m_P2PBetCfg;
 	CRedPacketCfg   m_RedPacketCfg;
+	CNewestScriptCfg m_neststcriptid;
+
+	CRedPacketStepCfg m_redPackestep;
+	CP2PBetStepCfg m_p2pbetstep;
+	
 public:
 	void         OnInitList();   //初始化list
 	int          SendPostThread(DWORD msgtype);
@@ -174,7 +179,8 @@ public:
 	INT64 GetRedPacketAmount(CString acceptregid,uistruct::RED_DATA redPacket);
 	bool  isMine(CString addr);
 	bool IsLockWallet();
-	
+	void PopupCommBalloonTip(string hash);
+	void PopupContactBalloonTip(uistruct::REVTRANSACTION_t,int apptype,int txtype);
 public:
 	bool isStartMainDlg;
 	CNoUiMsgBuffer m_noUiMsgBuffer;
@@ -192,6 +198,9 @@ public:
 	int m_reminder;    //是否要弹出提示框，关闭的时候 false不弹出 true弹出
 	BOOL m_passlock;    //是否要弹出提示框，关闭的时候 false不弹出，存在解锁框 true弹出,不存在解锁框
 	BOOL m_dlgCreatfinsh;   // 主对话框框的所有dlg是否创建完
+
+	CFont m_fontSong;         //宋体字体
+	CFont m_fontBlackbody;    //黑体字体
 };
 
 

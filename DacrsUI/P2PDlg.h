@@ -5,6 +5,8 @@
 #include "TabCtrl.h"
 #include "BetRecord.h"
 #include "SendRecord.h"
+
+#include "BalloonTip.h"
 // CP2PDlg ¶Ô»°¿ò
 
 class CP2PDlg : public CDialogBar
@@ -44,6 +46,7 @@ public:
 	CStaticTrans           m_sCountpage  ;
 	CShadeButtonST         m_rBtnUp;
 	CShadeButtonST         m_rBtnNext;
+	CShadeButtonST         m_rbCancelOrder;
 
 	CUseListBox            m_BonusListBox;
 	//CRecordListBox         m_RecordListBox;
@@ -77,7 +80,7 @@ public:
 	afx_msg void OnBnClickedButtonWoman();
 	void OnListPool();
 	void AcceptBet(CString hash,CString money,CString sendaddr,int timeout);
-	bool CheckBalance();
+	bool CheckBalance(string strshow = "");
 	bool CheckBalance(double dmoney);
 	CCTabCtrl m_tab;
 	afx_msg void OnTcnSelchangeTab(NMHDR *pNMHDR, LRESULT *pResult);
@@ -90,6 +93,11 @@ public:
 	void   ShowAllBetWinAndLoss();
 	void   ShowAddressBetWinAndLoss(CString addr);
 	void  GetAppAccountSomeMoney();
+	void AutoSendBet();
+	BOOL AcceptBet(string hash,double dmoney,string sendaddr,int timeout,string addr);
+	void AKeyCancelTheOrder();
+	void ReadP2pPoolFromDB();
+	void ReadP2pPoolFromCmd(uistruct::P2PLIST &m_PoolList);
 private:
 	int                   m_pagecount;
 	int                   m_curpage;
@@ -104,4 +112,6 @@ public:
 	void       onShowLink();
 	CMFCLinkCtrl v_linkCtrl;
 	afx_msg void OnLbnDblclkListBonus();
+
+	afx_msg void OnBnClickedCancelorde();
 };

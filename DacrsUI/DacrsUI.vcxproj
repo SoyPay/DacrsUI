@@ -82,6 +82,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerOutput>All</AssemblerOutput>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -90,6 +91,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <OutputFile>..\bin\DacrsUI.exe</OutputFile>
+      <GenerateMapFile>true</GenerateMapFile>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -133,6 +135,9 @@
     <None Include="res\bother_1.bmp" />
     <None Include="res\bother_2.bmp" />
     <None Include="res\bother_3.bmp" />
+    <None Include="res\btn1.bmp" />
+    <None Include="res\btn2.bmp" />
+    <None Include="res\btn3.bmp" />
     <None Include="res\button_bar.bmp" />
     <None Include="res\button_bar_3.bmp" />
     <None Include="res\button_black_ground.bmp" />
@@ -145,6 +150,8 @@
     <None Include="res\close.bmp" />
     <None Include="res\close2.bmp" />
     <None Include="res\close3.bmp" />
+    <None Include="res\CLOSE_BUTTON.BMP" />
+    <None Include="res\contentbk.bmp" />
     <None Include="res\copy_addr_1.bmp" />
     <None Include="res\copy_addr_2.bmp" />
     <None Include="res\copy_addr_3.bmp" />
@@ -157,6 +164,7 @@
     <None Include="res\diya_logo_4.bmp" />
     <None Include="res\dlg_balck_ground.bmp" />
     <None Include="res\dlg_bj.bmp" />
+    <None Include="res\error_icon.bmp" />
     <None Include="res\exit_bj.bmp" />
     <None Include="res\grab_bt.bmp" />
     <None Include="res\grab_red_packet.bmp" />
@@ -184,6 +192,7 @@
     <None Include="res\main_log_3.bmp" />
     <None Include="res\main_log_4.bmp" />
     <None Include="res\main_ui_background.bmp" />
+    <None Include="res\message.bmp" />
     <None Include="res\min1.bmp" />
     <None Include="res\min2.bmp" />
     <None Include="res\min3.bmp" />
@@ -210,6 +219,7 @@
     <None Include="res\progress3.bmp" />
     <None Include="res\progress4.bmp" />
     <None Include="res\Receive.bmp" />
+    <None Include="res\red.bmp" />
     <None Include="res\redpacket_type.bmp" />
     <None Include="res\red_fresh.bmp" />
     <None Include="res\red_long_button .bmp" />
@@ -240,6 +250,8 @@
     <None Include="res\sister_3.bmp" />
     <None Include="res\target.bmp" />
     <None Include="res\Tip.bmp" />
+    <None Include="res\tip_icon.bmp" />
+    <None Include="res\title.bmp" />
     <None Include="res\tradedetail_logo_1.bmp" />
     <None Include="res\tradedetail_logo_2.bmp" />
     <None Include="res\tradedetail_logo_3.bmp" />
@@ -247,6 +259,7 @@
     <None Include="res\Trad_dlg.bmp" />
     <None Include="res\unlock.bmp" />
     <None Include="res\wallet_uipro.bmp" />
+    <None Include="res\warning_icon.bmp" />
     <None Include="res\wndtitlebk.bmp" />
     <None Include="res\xh_2.bmp" />
     <None Include="res\xh_3.bmp" />
@@ -260,6 +273,7 @@
     <ClInclude Include="AddApp.h" />
     <ClInclude Include="AddrBook.h" />
     <ClInclude Include="AutoComplete.h" />
+    <ClInclude Include="BalloonTip.h" />
     <ClInclude Include="BetInformation.h" />
     <ClInclude Include="BetRecord.h" />
     <ClInclude Include="BmpBtn.h" />
@@ -276,6 +290,7 @@
     <ClInclude Include="CWorkbooks.h" />
     <ClInclude Include="CWorksheet.h" />
     <ClInclude Include="CWorksheets.h" />
+    <ClInclude Include="DialogBase.h" />
     <ClInclude Include="EncryptWallet.h" />
     <ClInclude Include="GrabCommRedPacket.h" />
     <ClInclude Include="GrabSpecalRedPacket.h" />
@@ -283,6 +298,7 @@
     <ClInclude Include="IpoCoin.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="MessageBoxEx.h" />
+    <ClInclude Include="msjexhnd.h" />
     <ClInclude Include="NewMenu.h" />
     <ClInclude Include="NewSendAddr.h" />
     <ClInclude Include="Out.h" />
@@ -358,6 +374,7 @@
     <ClCompile Include="AddApp.cpp" />
     <ClCompile Include="AddrBook.cpp" />
     <ClCompile Include="AutoComplete.cpp" />
+    <ClCompile Include="BalloonTip.cpp" />
     <ClCompile Include="BetInformation.cpp" />
     <ClCompile Include="BetRecord.cpp" />
     <ClCompile Include="BmpBtn.cpp" />
@@ -370,6 +387,7 @@
     <ClCompile Include="DacrsUI.cpp" />
     <ClCompile Include="DacrsUIDB.cpp" />
     <ClCompile Include="DacrsUIDlg.cpp" />
+    <ClCompile Include="DialogBase.cpp" />
     <ClCompile Include="EncryptWallet.cpp" />
     <ClCompile Include="GIFControl.cpp" />
     <ClCompile Include="GrabCommRedPacket.cpp" />
@@ -389,6 +407,10 @@
     <ClCompile Include="MainDlg.cpp" />
     <ClCompile Include="MessageBoxEx.cpp" />
     <ClCompile Include="MortgageTardDlg.cpp" />
+    <ClCompile Include="msjexhnd.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="MyMutex.cpp" />
     <ClCompile Include="MyQueue.cpp" />
     <ClCompile Include="NewAddressDlg.cpp" />

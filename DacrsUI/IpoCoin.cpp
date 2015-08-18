@@ -96,19 +96,12 @@ BOOL CIpoCoin::OnEraseBkgnd(CDC* pDC)
 BOOL CIpoCoin::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 {
 	// TODO: 在此添加专用代码和/或调用基类
-
-	LogPrint("INFO","CIpoCoin Create enter\n");
-	LogPrint("INFO","CIpoCoin Create enter:%0x\n",&pParentWnd);
-	LogPrint("INFO","CIpoCoin Create nIDTemplate:%d\n",nIDTemplate);
-	LogPrint("INFO","CIpoCoin Create nStyle:%d\n",nStyle);
-	LogPrint("INFO","CIpoCoin Create nID:%d\n",nID);
 	BOOL bRes = CDialogBar::Create(pParentWnd, nIDTemplate, nStyle, nID);
-	LogPrint("INFO", "CIpoCoin create ret:%d\n", bRes);
 	if ( bRes ) {
-		LogPrint("INFO","ipo Create start\n");
 		UpdateData(0);
 		m_rBtnSend.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
 		m_rBtnSend.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+		m_rBtnSend.SetWindowText("提  现") ;
 		m_rBtnSend.SetFontEx(20 , _T("微软雅黑"));
 		m_rBtnSend.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		m_rBtnSend.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
@@ -167,48 +160,55 @@ BOOL CIpoCoin::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 void CIpoCoin::OnBnClickedButtonDrawal()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	CMessageBoxEx message(_T("\n是否确定要体现!") , 1 );
-	if ( IDNO == message.DoModal() )
+	if ( IDNO == UiFun::MessageBoxEx(_T("是否确定要提现") , _T("提示") , MFB_YESNO|MFB_TIP ) )
 		return;
 
 	if (!CheckRegIDValid( theApp.m_ipoScritptid )) return ;
 
 	string  strShowData = _T("");
 
-	//if (m_mapAddrInfo.size() == 0)
-	//{
-	//	::MessageBox( this->GetSafeHwnd() ,_T("发送地址不存在") , _T("提示") , MB_ICONINFORMATION ) ;
-	//	return;
-	//}
 	CString addr;
 	GetDlgItem(IDC_EDIT_ADDR)->GetWindowText(addr);
 	if (addr == _T(""))
 	{
-		CMessageBoxEx message(_T("\n地址不能为空!") , 0 );
-	        message.DoModal();
-	//	::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("地址不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
-	CString Money = _T("");
-	GetDlgItem(IDC_STATIC_AMOUNT)->GetWindowText(Money);
-	
-	double dmoney = strtod(Money,NULL);
+	string strCond;
+	strCond = strprintf(" address='%s' ", addr);
+	uistruct::LISTADDR_t pAddr;
+	int nItem =  theApp.m_SqliteDeal.GetWalletAddressItem(strCond, &pAddr) ;
+	if (pAddr.address == "")
+	{
+		UiFun::MessageBoxEx(_T("此地址不是钱包地址,不能提现") , _T("提示") ,MFB_OK|MFB_TIP );
+		return;
+	}
+
+	if (pAddr.bSign == 0 )
+	{
+		UiFun::MessageBoxEx(_T("此地址没有注册,不能提现") , _T("提示") ,MFB_OK|MFB_TIP );
+		return;
+	}
+	double dmoney = GetFreeMoney(addr);
+	if (dmoney <=0.0)
+	{
+		UiFun::MessageBoxEx(_T("此地址没有可提现的金额") , _T("提示") ,MFB_OK|MFB_TIP );
+		return;
+	}
 	string strContractData = m_P2PBetHelp.GetAppAccountMoneyContract(addr.GetString(),1,2,REAL_MONEY(dmoney));
 
 	CString strTxFee;
 	INT64 minFee = theApp.m_P2PBetCfg.GetAppAmountnFee; //45266;theApp.m_P2PBetCfg.GetAppAmountnFee
 	double dnum = (minFee*1.0/COIN);
 	strTxFee.Format(_T("%.8f"),dnum);
-	//GetDlgItem(IDC_EDIT_GETFEE)->GetWindowText(strTxFee) ;
-	if (  (INT64)REAL_MONEY(atof(strTxFee)) < 10000  ) {
-		CMessageBoxEx message(_T("\n小费不足!") , 0 );
-	        message.DoModal();
-		//::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
+
+	if (  (INT64)REAL_MONEY(strtod(strTxFee,NULL)) < 10000  ) {
+		UiFun::MessageBoxEx(_T("小费不足") , _T("提示") ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
-	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_ipoScritptid,addr.GetString(),strContractData,0,(INT64)REAL_MONEY((atof(strTxFee))),0);
+	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_ipoScritptid,addr.GetString(),strContractData,0,(INT64)REAL_MONEY((strtod(strTxFee,NULL))),0);
 	CSoyPayHelp::getInstance()->SendContacrRpc(strData,strShowData);
 
 	if (strShowData =="")
@@ -237,9 +237,7 @@ void CIpoCoin::OnBnClickedButtonDrawal()
 	}else{
 		strTip = "提现失败!" ;
 	}
-	CMessageBoxEx message1(strTip.c_str() , 0 );
-	        message1.DoModal();
-	//::MessageBox( this->GetSafeHwnd() ,strTip.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+	UiFun::MessageBoxEx(strTip.c_str() , _T("提示") ,MFB_OK|MFB_TIP );
 }
 
 
@@ -258,25 +256,28 @@ void CIpoCoin::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL , (rc.Width()/100)*3, (rc.Height()/100)*5+4 , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL , (rc.Width()/100)*3+10, (rc.Height()/100)*5+8 , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
 		pst = GetDlgItem( IDC_EDIT_ADDR ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*8 ,(rc.Height()/100)*5  , (rc.Width()/100)*40, (rc.Height()/100)*7 ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*8+20 ,(rc.Height()/100)*5+6  , (rc.Width()/100)*40, (rc.Height()/100)*6+2 ,SWP_SHOWWINDOW ); 
+			pst->SetFont(&theApp.m_fontBlackbody);
 		}
 
 		pst = GetDlgItem( IDC_STATIC_AMOUNT ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*48 ,(rc.Height()/100)*6  , (rc.Width()/100)*20, (rc.Height()/100)*5  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*50+15 ,(rc.Height()/100)*5+8  , (rc.Width()/100)*30, (rc.Height()/100)*6  ,SWP_SHOWWINDOW ) ; 
 		}
 
 		pst = GetDlgItem( IDC_BUTTON_QUERY ) ;
 		if ( NULL != pst ) {
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*70 ,(rc.Height()/100)*5  , (rc.Width()/100)*13-2, (rc.Height()/100)*9  ,SWP_SHOWWINDOW ) ; 
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*80+10 ,(rc.Height()/100)*5, rect.Width(), rect.Height(), SWP_SHOWWINDOW ) ; 
 		}
 
 		//
@@ -284,33 +285,48 @@ void CIpoCoin::OnSize(UINT nType, int cx, int cy)
 		pst = GetDlgItem( IDC_BUTTON_DRAWAL ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
-			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*85 ,(rc.Height()/100)*5  ,(rc.Width()/100)*13-2, (rc.Height()/100)*9   ,SWP_SHOWWINDOW ) ; 
+			pst->GetClientRect(rect) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*95 ,(rc.Height()/100)*5, rect.Width(), rect.Height(), SWP_SHOWWINDOW ) ; 
 		}
 
 		pst = GetDlgItem( IDC_LIST_SHOW ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*3 ,(rc.Height()/100)*16  , rc.Width()-(rc.Width()/100)*5+2, (rc.Height()/100)*97+2  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*3 ,(rc.Height()/100)*16, rc.Width()-(rc.Width()/100)*5+2, (rc.Height()/100)*97+2  ,SWP_SHOWWINDOW ) ; 
 		}
 	}
 }
+double CIpoCoin::GetFreeMoney(CString addr)
+{
+	string strCommand,strShowData ="";
+	strCommand =strprintf("%s %s %s","getappaccinfo" , theApp.m_ipoScritptid ,addr);
+	Json::Value root; 
+	if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
+	{
+		TRACE("GetFreeMoney rpccmd getappaccinfo error");
+		return 0.0;
+	}
 
+	INT64 nMoney = 0;
+	
+	nMoney = root["FreeValues"].asInt64() ;
+
+	double money = (nMoney*1.0/COIN);
+	return money;
+}
 void CIpoCoin::OnShowListCtrol(CString addr)
 {
 	string strCommand,strShowData ="";
 	strCommand =strprintf("%s %s %s","getappaccinfo" , theApp.m_ipoScritptid ,addr);
-	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-	if (strShowData == "")
+	Json::Value root; 
+	if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 	{
+		TRACE("OnShowListCtrol rpccmd getappaccinfo error");
 		return;
 	}
-	Json::Reader reader;  
-	Json::Value root; 
-	if (!reader.parse(strShowData, root)) 
-		return  ;
+	strShowData = root.toStyledString();
+	
 	m_listCtrl.DeleteAllItems();
 
 	int pos = strShowData.find("FreeValues");
@@ -319,9 +335,11 @@ void CIpoCoin::OnShowListCtrol(CString addr)
 	{
 		nMoney = root["FreeValues"].asInt64() ;
 	}
+	
 	double money = (nMoney*1.0/COIN);
-	strShowData = strprintf("可提现金额:%.8f",money);
+	strShowData = strprintf("可用金额:%.8f",money);
 	((CStatic*)GetDlgItem(IDC_STATIC_AMOUNT))->SetWindowText(strShowData.c_str());
+	
 	Invalidate();
 	Json::Value valuearray = root["vFreezedFund"]; 
 
@@ -352,9 +370,7 @@ void CIpoCoin::OnBnClickedButtonQuery()
 	GetDlgItem(IDC_EDIT_ADDR)->GetWindowText(addr);
 	if (addr == _T(""))
 	{
-		CMessageBoxEx message(_T("\n地址不能为空!") , 0 );
-	        message.DoModal();
-		//::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("地址不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 	OnShowListCtrol(addr);

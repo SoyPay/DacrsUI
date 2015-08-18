@@ -75,7 +75,7 @@ int CIpoDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 
 	// TODO:  在此添加您专用的创建代码
-	//SetBkBmpNid(IDB_BITMAP_IPO_BJ);
+//	SetBkBmpNid(IDB_BITMAP_IPO_BJ);
 	return 0;
 }
 
@@ -118,7 +118,7 @@ BOOL CIpoDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		UpdateData(0);
 		m_rBtnSend.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
 		m_rBtnSend.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		//m_rBtnAdd.SetWindowText("添加地址") ;
+		m_rBtnSend.SetWindowText("") ;
 		m_rBtnSend.SetFontEx(20 , _T("微软雅黑"));
 		m_rBtnSend.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		m_rBtnSend.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
@@ -136,6 +136,18 @@ BOOL CIpoDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_rQueryAmout.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
 		m_rQueryAmout.SizeToContent();
 		
+
+/*		
+		m_rBtnRefresh.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
+		m_rBtnRefresh.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+		m_rBtnRefresh.SetWindowText("刷  新") ;
+		m_rBtnRefresh.SetFontEx(20 , _T("微软雅黑"));
+		m_rBtnRefresh.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
+		m_rBtnRefresh.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+		m_rBtnRefresh.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
+		m_rBtnRefresh.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
+		m_rBtnRefresh.SizeToContent();
+		*/
 		m_strTx1.SetFont(120, _T("黑体"));				//设置显示字体和大小
 		m_strTx1.SetTextColor(RGB(0,0,0));	
 
@@ -185,18 +197,12 @@ void CIpoDlg::OnBnClickedButtonDrawal()
 
 	string strShowData = "";
 
-	//if (m_mapAddrInfo.size() == 0)
-	//{
-	//	::MessageBox( this->GetSafeHwnd() ,_T("发送地址不存在") , _T("提示") , MB_ICONINFORMATION ) ;
-	//	return;
-	//}
+
 	CString addr;
 	GetDlgItem(IDC_EDIT_ADDR)->GetWindowText(addr);
 	if (addr == _T(""))
 	{
-		CMessageBoxEx message(_T("\n地址不能为空!") , 0 );
-	        message.DoModal();
-	//	::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("地址不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -212,14 +218,12 @@ void CIpoDlg::OnBnClickedButtonDrawal()
 	double dnum = (minFee*1.0/COIN);
 	strTxFee.Format(_T("%.8f"),dnum);
 	//GetDlgItem(IDC_EDIT_GETFEE)->GetWindowText(strTxFee) ;
-	if (  (INT64)REAL_MONEY(atof(strTxFee)) < 10000  ) {
-		CMessageBoxEx message(_T("\n小费不足!") , 0 );
-	        message.DoModal();
-		//::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
+	if (  (INT64)REAL_MONEY(strtod(strTxFee,NULL)) < 10000  ) {
+		UiFun::MessageBoxEx(_T("小费不足") , _T("提示") ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
-	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_ipoScritptid,addr.GetString(),strContractData,0,(INT64)REAL_MONEY((atof(strTxFee))),0);
+	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_ipoScritptid,addr.GetString(),strContractData,0,(INT64)REAL_MONEY((strtod(strTxFee,NULL))),0);
 	CSoyPayHelp::getInstance()->SendContacrRpc(strData,strShowData);
 
 	if (strShowData == "")
@@ -248,9 +252,7 @@ void CIpoDlg::OnBnClickedButtonDrawal()
 	}else{
 		strTip = "提现失败!" ;
 	}
-	CMessageBoxEx message(strTip.c_str() , 0 );
-	        message.DoModal();
-	//::MessageBox( this->GetSafeHwnd() ,strTip.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+	UiFun::MessageBoxEx(strTip.c_str() , _T("提示") ,MFB_OK|MFB_TIP );
 }
 
 
@@ -287,7 +289,7 @@ void CIpoDlg::OnSize(UINT nType, int cx, int cy)
 
 		pst = GetDlgItem( IDC_BUTTON_QUERY ) ;
 		if ( NULL != pst ) {
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*70 ,(rc.Height()/100)*5  , (rc.Width()/100)*13-2, (rc.Height()/100)*9  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*60 ,(rc.Height()/100)*5  , (rc.Width()/100)*13-2, (rc.Height()/100)*9  ,SWP_SHOWWINDOW ) ; 
 		}
 
 		//
@@ -333,16 +335,14 @@ void CIpoDlg::OnShowListCtrol(CString addr)
 	return;
 	string strCommand,strShowData ="";
 	strCommand = strprintf("%s %s %s","getappaccinfo" , theApp.m_ipoScritptid ,addr);
-	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-	if (strShowData == "")
+	Json::Value root;
+	if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 	{
+		TRACE("UpdateAddressData rpccmd listaddr error");
 		return;
 	}
-	Json::Reader reader;  
-	Json::Value root; 
-	if (!reader.parse(strShowData, root)) 
-		return  ;
+	strShowData = root.toStyledString();
+	
 	m_listCtrl.DeleteAllItems();
 
 	int pos = strShowData.find("FreeValues");
@@ -404,9 +404,7 @@ void CIpoDlg::OnBnClickedButtonQuery()
    GetDlgItem(IDC_EDIT_ADDR)->GetWindowText(addr);
    if (addr == _T(""))
    {
-	   CMessageBoxEx message(_T("\n地址不能为空!") , 0 );
-	        message.DoModal();
-	  // ::MessageBox( this->GetSafeHwnd() ,_T("地址不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+	   UiFun::MessageBoxEx(_T("地址不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
 	   return;
    }
    OnShowListCtrol(addr);

@@ -47,6 +47,11 @@ CMainDlg::~CMainDlg()
 	v_linkCtrl3.ExternalRelease();
 	v_linkCtrl3.OnFinalRelease();
 	v_linkCtrl3.DestroyWindow();
+
+	v_linkCtrlQQ.InternalRelease();
+	v_linkCtrlQQ.ExternalRelease();
+	v_linkCtrlQQ.OnFinalRelease();
+	v_linkCtrlQQ.DestroyWindow();
 }
 
 void CMainDlg::DoDataExchange(CDataExchange* pDX)
@@ -73,6 +78,7 @@ void CMainDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_MFCLINK3, v_linkCtrl1);
 	DDX_Control(pDX, IDC_MFCLINK4, v_linkCtrl2);
 	DDX_Control(pDX, IDC_MFCLINK5, v_linkCtrl3);
+	DDX_Control(pDX, IDC_MFCLINK_QQ, v_linkCtrlQQ);
 
 	//DDX_Control(pDX, IDC_BUTTON_IMPORTWALLET, m_rBtnImportWallet);
 	//DDX_Control(pDX, IDC_BUTTON_DUMPWALLET, m_rBtnDumpWallet);
@@ -535,6 +541,8 @@ void CMainDlg::onnitLinkText()
    v_linkCtrl1.SetWindowText(_T(""));
    v_linkCtrl2.SetWindowText(_T(""));
    v_linkCtrl3.SetWindowText(_T(""));
+   v_linkCtrlQQ.SetWindowText(_T("¹Ù·½¿Í·þQQ"));
+   v_linkCtrlQQ.SetURL("http://wpa.qq.com/msgrd?v=3&uin=1578215488&site=qq&menu=yes");
    int i = 1;
 	map<CString,CString>::iterator it;
 	for(it=m_url.begin();it!=m_url.end();++it)
@@ -787,12 +795,21 @@ void CMainDlg::OnSize(UINT nType, int cx, int cy)
 			pst->GetClientRect( rect ) ;
 			pst->SetWindowPos( NULL ,(rc.Width()/100)*66 ,(rc.Height()/100)*97 ,  (rc.Width()/100)*30, rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
+
+		pst = GetDlgItem( IDC_MFCLINK_QQ ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,rc.Width()-rect.Width() ,rc.Height()-rect.Height()-10   , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
+
 		pst = GetDlgItem( IDC_ALLTXDETAIL ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
 			pst->SetWindowPos( NULL ,(rc.Width()/100)*63 ,rc.Height()*9/10  , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
+
 	}
 }
 void CMainDlg::SetShowCtrol()

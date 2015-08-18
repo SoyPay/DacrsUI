@@ -62,7 +62,7 @@ public:
 	CShadeButtonST         m_rBtnAddrWinerloser;
 public:
 	BOOL AddListaddrDataBox();
-	bool CheckBalance();
+	bool CheckBalance(string strshow = "");
 	bool CheckBalance(double dmoney);
 	afx_msg void OnBnClickedButtonWithd();
 	afx_msg void OnBnClickedButtonRech();
@@ -115,5 +115,5 @@ public:
 	void       onShowLink();
 	CMFCLinkCtrl v_linkCtrl;
 	void GetAppAccountSomeMoney();
-
+	void ReadRedPacketPoolFromDB();
 };

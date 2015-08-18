@@ -61,10 +61,16 @@ void CSendDlg::SetBkBmpNid( UINT nBitmapIn )
 	}
 }
 
+
 void CSendDlg::OnBnClickedSendtrnsfer()
 {
 	// TODO: 在此添加控件通知处理程序代码
-
+	/*CString strDisplay1;
+	strDisplay1.Format(_T(" 转账交易发送成功\n\n源地址:DV9u9jgtyJoDsZ4m2MmrtQwLfNDZs952qx\r\n\r\n目的地址:DhxrQ9hsvo3fVVSy6By8bePt8cmPtts88R4eac46f7718ae7175d67b58a4886f2f91746cbdb30b4f2ee0dd96c70168f4fae \r\n\r\n金额：1.0000\r\n\r\nhash:4eac46f7718ae7175d67b58a4886f2f91746cbdb30b4f2ee0dd96c70168f4fae"));
+	if (IDYES == UiFun::MessageBoxEx(strDisplay1 , _T("提示") , MFB_YESNO|MFB_TIP ) )
+	{
+		int b =5;
+	}*/
 	if (theApp.IsLockWallet())
 	{
 		return ;
@@ -72,9 +78,7 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 
 	if (m_mapAddrInfo.size() == 0)
 	{
-		CMessageBoxEx message(_T("\n发送地址不存在!") , 0 );
-	        message.DoModal();
-		//::MessageBox( this->GetSafeHwnd() ,_T("发送地址不存在") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("发送地址不存在") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 	CString text =_T("");
@@ -94,9 +98,11 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 	if(text!=_T(""))
 	{
 		string strAddr =strprintf("%s",text);
+		strAddr =UiFun::trimleft(strAddr);
+		strAddr =UiFun::trimright(strAddr);
 		if(m_mapAddrInfo.count(strAddr)<=0)
 		{
-			//::MessageBox( this->GetSafeHwnd() ,_T("发送地址不存在") , _T("提示") , MB_ICONINFORMATION ) ;
+			UiFun::MessageBoxEx(_T("发送地址不是钱包地址") , _T("提示") ,MFB_OK|MFB_TIP );
 			return;
 		}
 		//uistruct::LISTADDR_t te = m_pListaddrInfo[text];
@@ -106,51 +112,39 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 
 		if(!data.bSign) 
 		{
-			CMessageBoxEx message(_T("\n发送地址未激活!") , 0 );
-	        message.DoModal();
-			//::MessageBox( this->GetSafeHwnd() ,_T("发送地址未激活") , _T("提示") , MB_ICONINFORMATION ) ;
+			UiFun::MessageBoxEx(_T("发送地址未激活") , _T("提示") ,MFB_OK|MFB_TIP );
 			return;
 		}
 
 		GetDlgItem(IDC_EDIT_DESADDRESS)->GetWindowTextA(strMaddress);
 		if (strMaddress == _T(""))
 		{
-			CMessageBoxEx message(_T("\n接受地址不能未空!") , 0 );
-	        message.DoModal();
-			//::MessageBox( this->GetSafeHwnd() ,_T("接受地址不能未空") , _T("提示") , MB_ICONINFORMATION ) ;
+			UiFun::MessageBoxEx(_T("接受地址不能未空") , _T("提示") ,MFB_OK|MFB_TIP );
 			return;
 		}
 		if(!strcmp(strMaddress.GetString(), data.address.c_str()))
 		{
-			CMessageBoxEx message(_T("\n发送地址和目的地址不能相同!") , 0 );
-	        message.DoModal();
-			//::MessageBox( this->GetSafeHwnd() ,_T("发送地址和目的地址不能相同") , _T("提示") , MB_ICONINFORMATION ) ;
+			UiFun::MessageBoxEx(_T("发送地址和目的地址不能相同") , _T("提示") ,MFB_OK|MFB_TIP );
 			return;
 		}
 		
 		GetDlgItem(IDC_EDIT_MONEY)->GetWindowTextA(strMoney);
-		double dSendMoney = atof(strMoney);
+		double dSendMoney = strtod(strMoney,NULL);
 		if(dSendMoney > data.fMoney || ( data.fMoney>-0.0000001 && data.fMoney< 0.000001 )) 
 		{
-			CMessageBoxEx message(_T("\n账户余额不足!") , 0 );
-	        message.DoModal();
-		//	::MessageBox( this->GetSafeHwnd() ,_T("账户余额不足") , _T("提示") , MB_ICONINFORMATION ) ;
+			UiFun::MessageBoxEx(_T("账户余额不足") , _T("提示") ,MFB_OK|MFB_TIP );
 			return;
 		}
 
 		if(_T("") == strMoney.GetString() || (dSendMoney >-0.0000001 && dSendMoney< 0.000001))
 		{
-			CMessageBoxEx message(_T("\n发送金额不能为0!") , 0 );
-	        message.DoModal();
-			//::MessageBox( this->GetSafeHwnd() ,_T("发送金额不能为0") , _T("提示") , MB_ICONINFORMATION ) ;
+			UiFun::MessageBoxEx(_T("发送金额不能为0") , _T("提示") ,MFB_OK|MFB_TIP );
 			return;
 		}
 
 		if (!theApp.IsSyncBlock )
 		{
-			CMessageBoxEx message(_T("\n同步未完成,不能发送交易!") , 0 );
-	        message.DoModal();
-			//::MessageBox( this->GetSafeHwnd() ,_T("同步未完成,不能发送交易") , _T("提示") , MB_ICONINFORMATION ) ;
+			UiFun::MessageBoxEx(_T("同步未完成,不能发送交易") , _T("提示") ,MFB_OK|MFB_TIP );
 			return;
 		}
 		strCommand = strprintf("%s %s %s %lld","sendtoaddress" ,data.address.c_str() ,strMaddress ,REAL_MONEY(dSendMoney));
@@ -158,29 +152,21 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 
 		CString strDisplay;
 		strDisplay.Format(_T("转账%.4lfsmc至%s"), dSendMoney, strMaddress);
-		COut outdlg(NULL, strDisplay,100);
-		if ( IDOK != outdlg.DoModal()){
+
+		if (IDCANCEL == UiFun::MessageBoxEx(strDisplay , _T("提示") , MFB_OKCANCEL|MFB_TIP ) )
+		{
 			return;
 		}
+
 		strShowData = _T("");
-		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-		if (strShowData == _T("") || strShowData.find("hash") <0)
+		Json::Value root;
+		if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 		{
+			TRACE("OnBnClickedSendtrnsfer rpccmd sendtoaddress error");
 			return;
-		}
-		Json::Reader reader;  
-		Json::Value root; 
-
-		if (!reader.parse(strShowData, root)) 
-		{
-			CMessageBoxEx message(strShowData.c_str() , 0 );
-	        message.DoModal();
-			//::MessageBox( this->GetSafeHwnd() ,strShowData.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
-			return  ;
 		}
 		BOOL bRes = FALSE ;
-
+		strShowData = root.toStyledString();
 		int pos = strShowData.find("hash");
 		if ( pos >=0 ) {
 			//插入到数据库
@@ -199,13 +185,12 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 
 		string strData;
 		if ( pos >=0 ) {
-			strData = strprintf(" 转账交易发送成功\n\n 源地址:%s\n\n 目的地址:%s\n\n 金额：%.4lf\n  hash:%s", data.address.c_str(),strMaddress, dSendMoney,root["hash"].asCString() ) ;
+			strData = strprintf(" 转账交易发送成功\n\n 源地址:%s\n\n 目的地址:%s\n\n 金额：%.4lf\n  hash:%s", data.address.c_str(),strMaddress, dSendMoney,root["hash"].asCString()) ;
 		}else{
 			strData = "转账失败!";
 		}
-		CMessageBoxEx message(strData.c_str() , 0 );
-	        message.DoModal();
-		//::MessageBox( this->GetSafeHwnd() ,strData.c_str() , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(strData.c_str() , _T("提示") ,MFB_OK|MFB_TIP );
+		
 
 		//// 插入数据库,将收款人添加到地址簿
 		CString label;
@@ -345,6 +330,8 @@ BOOL CSendDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_rBtnSend.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
 		m_rBtnSend.SizeToContent();
 
+
+
 		theApp.SubscribeMsg( theApp.GetMtHthrdId() , GetSafeHwnd() , MSG_USER_SEND_UI ) ;
 		((CComboBox*)GetDlgItem(IDC_COMBO2))->SetCurSel(0);
 		
@@ -449,6 +436,10 @@ void CSendDlg::InsertComboxIitem()
 BOOL CSendDlg::PreTranslateMessage(MSG* pMsg)
 {
 	// TODO: 在此添加专用代码和/或调用基类
+	if (pMsg->message==WM_PASTE)
+	{
+		int b =5;
+	}
 	if (pMsg->message==WM_KEYDOWN)
 	{
 		BOOL bCtrl=::GetKeyState(VK_CONTROL)&0x8000;
@@ -458,6 +449,10 @@ BOOL CSendDlg::PreTranslateMessage(MSG* pMsg)
 		BOOL bAlt=::GetKeyState(VK_MENU)&0x8000;
 		switch( pMsg->wParam )
 		{
+			if (GetDlgItem(IDC_COMBO_ADDR_OUT)->SetFocus() == this->GetFocus())
+			{
+				int b = 6;
+			}
 		case 'V':
 			{
 				if (GetDlgItem(IDC_EDIT_DESADDRESS) == this->GetFocus())
@@ -499,9 +494,8 @@ BOOL CSendDlg::PreTranslateMessage(MSG* pMsg)
 						if(m_mapAddrInfo.count(addr)<=0)
 						{
 							//TRACE("map OnCbnSelchangeCombo1 error");
-							CMessageBoxEx message(_T("\n复制的地址有误!")  , 0 );
-	                        message.DoModal();
-							//::MessageBox( this->GetSafeHwnd() ,_T("复制的地址有误") , _T("提示") , MB_ICONINFORMATION ) ;
+							
+							UiFun::MessageBoxEx(_T("复制的地址有误") , _T("提示") ,MFB_OK|MFB_TIP );
 						}else{
 							//uistruct::LISTADDR_t te = m_pListaddrInfo[text];
 							CString strshow;
@@ -530,55 +524,76 @@ void CSendDlg::OnSize(UINT nType, int cx, int cy)
 		CRect rc ;
 		GetClientRect( rc ) ;
 
-		
 		CWnd *pst = GetDlgItem( IDC_COMBO_ADDR_OUT ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL , (rc.Width()/100)*24 , (rc.Height()/100)*12 , (rc.Width()/100)*37, rect.Height()  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL , (rc.Width()/100)*24 , (rc.Height()/100)*12-3 , (rc.Width()/100)*45, rc.Height()  ,SWP_SHOWWINDOW ) ; 
+			CComboBox*   pCtl  = (CComboBox*)pst; 
+			CWnd *p_edit = pCtl->GetDlgItem (0x3E9);
+			p_edit->GetClientRect( rect );
+			p_edit->SetWindowPos( NULL, (rc.Width()/100)*25,(rc.Height()/100)*25-3, rect.Width(), rect.Height(), SWP_SHOWWINDOW );
+		    pCtl->SetFont (&theApp.m_fontBlackbody);
+			p_edit->SetFont (&theApp.m_fontBlackbody);
+			
+			pCtl->SendMessage(CB_SETITEMHEIGHT,(WPARAM)-1,(LPARAM)20);   //改变控件本身的高度
+			pCtl->SetItemHeight(0,15);									 //改变下拉列表每个Item的高度
 		}
 
 		pst = GetDlgItem( IDC_STATIC_XM ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL , (rc.Width()/100)*70 ,(rc.Height()/100)*12 , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL , (rc.Width()/100)*80 ,(rc.Height()/100)*12 , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
 		
 		pst = GetDlgItem( IDC_EDIT_DESADDRESS ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL , (rc.Width()/100)*24 ,(rc.Height()/100)*23, (rc.Width()/100)*37, (rc.Height()/100)*7 ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL , (rc.Width()/100)*24 ,(rc.Height()/100)*23, (rc.Width()/100)*45, (rc.Height()/100)*7 ,SWP_SHOWWINDOW );
+			pst->SetFont(&theApp.m_fontBlackbody);
 		}
 		
 		pst = GetDlgItem( IDC_BUTTON_ADDBOOK ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL , (rc.Width()/100)*62 ,(rc.Height()/100)*23-2 , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL , (rc.Width()/100)*70 ,(rc.Height()/100)*23-2 , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW);
 		}
 
 		pst = GetDlgItem( IDC_EDIT2) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL , (rc.Width()/100)*24 ,(rc.Height()/100)*34, rect.Width(), (rc.Height()/100)*7  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL , (rc.Width()/100)*24 ,(rc.Height()/100)*35, rect.Width(), (rc.Height()/100)*7  ,SWP_SHOWWINDOW ); 
+			pst->SetFont(&theApp.m_fontBlackbody);
 		}
 		int with = 0;
 		pst = GetDlgItem( IDC_EDIT_MONEY) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL , (rc.Width()/100)*24 ,(rc.Height()/100)*46, rect.Width(), (rc.Height()/100)*7  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL , (rc.Width()/100)*24 ,(rc.Height()/100)*47, rect.Width(), (rc.Height()/100)*7  ,SWP_SHOWWINDOW ) ; 
 			with = rect.Width();
+			pst->SetFont(&theApp.m_fontBlackbody);
 		}
 		
 		pst = GetDlgItem( IDC_COMBO2) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL , (rc.Width()/100)*25 +with,(rc.Height()/100)*47-3, rect.Width(), (rc.Height()/100)*7  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL , (rc.Width()/100)*25 +with,(rc.Height()/100)*47, rect.Width(), rect.Height(), SWP_SHOWWINDOW );
+		
+			CComboBox*   pCtl  = (CComboBox*)pst; 
+			CWnd *p_edit = pCtl->GetDlgItem (0x3E9);
+			p_edit->GetClientRect( rect );
+			p_edit->SetWindowPos( NULL, (rc.Width()/100)*25 +with,(rc.Height()/100)*25-3, rect.Width(), rect.Height(), SWP_SHOWWINDOW );
+		    pCtl->SetFont (&theApp.m_fontBlackbody);
+			p_edit->SetFont (&theApp.m_fontBlackbody);
+
+			pCtl->SendMessage(CB_SETITEMHEIGHT,(WPARAM)-1,(LPARAM)20);   //改变控件本身的高度
+			pCtl->SetItemHeight(0,15);									 //改变下拉列表每个Item的高度
 		}
 
 		pst = GetDlgItem( IDC_SENDTRNSFER) ;

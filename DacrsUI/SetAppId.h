@@ -1,9 +1,12 @@
 #pragma once
-
+#include "DialogBase.h"
+#include "StaticTrans.h"
+#include "BmpBtn.h"
+#include "ShadeButtonST.h"
 
 // CSetAppId ¶Ô»°¿ò
 
-class CSetAppId : public CDialogEx
+class CSetAppId : public CDialogBase
 {
 	DECLARE_DYNAMIC(CSetAppId)
 
@@ -23,4 +26,13 @@ public:
 	void SetDaluft();
 	virtual BOOL OnInitDialog();
 	bool IsRegId(const char* pData);
+public:
+	CStaticTrans     m_P2Pid;
+	CStaticTrans     m_redpackeid;
+	CStaticTrans     m_ipoid;
+	CStaticTrans     m_headText;
+	CShadeButtonST   m_rBtnClose;
+	CShadeButtonST   m_rBtnCancel;
+	CShadeButtonST   m_rBtnOk;
+	afx_msg void OnBnClickedClose();
 };

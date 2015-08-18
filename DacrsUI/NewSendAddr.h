@@ -1,9 +1,12 @@
 #pragma once
-
+#include "DialogBase.h"
+#include "StaticTrans.h"
+#include "BmpBtn.h"
+#include "ShadeButtonST.h"
 
 // CNewSendAddr ¶Ô»°¿ò
 
-class CNewSendAddr : public CDialogEx
+class CNewSendAddr : public CDialogBase
 {
 	DECLARE_DYNAMIC(CNewSendAddr)
 
@@ -24,4 +27,13 @@ private:
 	uistruct::ADDRBOOK_t m_selectAddr;
 public:
 	void GetAddrbook(uistruct::ADDRBOOK_t &addr);
+	virtual BOOL OnInitDialog();
+public:
+	CStaticTrans     m_label;
+	CStaticTrans     m_addr;
+	CStaticTrans     m_headText;
+	CShadeButtonST   m_rBtnClose;
+	CShadeButtonST   m_rBtnCancel;
+	CShadeButtonST   m_rBtnOk;
+	afx_msg void OnBnClickedClose();
 };

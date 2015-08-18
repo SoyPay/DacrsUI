@@ -13,6 +13,7 @@
 #include "ChangPassWord.h"
 #include "Reminderdlg.h"
 #include "SetAppId.h"
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -72,6 +73,7 @@ CDacrsUIDlg::CDacrsUIDlg(CWnd* pParent /*=NULL*/)
 	m_pOutGifDlg =  NULL ;
 	m_pRPCDlg = NULL;
 	m_pIpoCoinDlg = NULL;
+	m_BalloonTip = NULL;
 }
 
 void CDacrsUIDlg::DoDataExchange(CDataExchange* pDX)
@@ -106,9 +108,18 @@ BEGIN_MESSAGE_MAP(CDacrsUIDlg, CDialogEx)
 	ON_COMMAND(ID__IMPORTPRIVEKEY, &CDacrsUIDlg::ImportPrvieKey)
 	ON_COMMAND(ID__SETAPPID, &CDacrsUIDlg::SetAppID)
 	ON_COMMAND(ID__SETDEFAULT, &CDacrsUIDlg::RestoreDefault)
-	
 	ON_UPDATE_COMMAND_UI(ID__SET, &CDacrsUIDlg::OnUpdataState)
 	ON_COMMAND(WM_CLOSEAPP,&CDacrsUIDlg::OnCloseApp)
+
+	ON_COMMAND(ID_SENDBET,&CDacrsUIDlg::OnSendBetExportHistory)
+	ON_COMMAND(ID_ACCEPTBET,&CDacrsUIDlg::OnAcceptBetExportHistory)
+	ON_COMMAND(ID_SENDREDPAKET,&CDacrsUIDlg::OnSendRedPacketExportHistory)
+	ON_COMMAND(ID_GRABREDPACKE,&CDacrsUIDlg::OnGrabRedPacketExportHistory)
+
+	ON_MESSAGE(WM_POPUPBAR,OnPopupBar)
+	ON_MESSAGE(WM_REFRESHP2PUI,OnRefreshP2Pool)
+	ON_MESSAGE(WM_REFRESHREDPACKET,OnRefreshRedPacketPool)
+	ON_WM_ACTIVATE()
 END_MESSAGE_MAP()
 
 
@@ -340,6 +351,9 @@ int CDacrsUIDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	//显示主界面
 	ShowDialog(CMainDlg::IDD) ;
 	theApp.m_dlgCreatfinsh = TRUE;
+
+	//SetTimer( 0x11 , 30000 , NULL);   //半分钟
+	SetTimer( 0x11 , 15000 , NULL); 
 	return 0;
 }
 void CDacrsUIDlg::ShowDialog(UINT dlgid) 
@@ -481,16 +495,13 @@ void    CDacrsUIDlg::SyncAddrInfo()
 	strCommand = strprintf("%s","listaddr");
 	string strShowData ="";
 
-	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-	if (strShowData.find("addr") <0)
+	Json::Value root; 
+	if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 	{
+		TRACE("SyncAddrInfo rpccmd listaddr error");
 		return;
 	}
-	Json::Reader reader;  
-	Json::Value root; 
-	if (!reader.parse(strShowData, root)) 
-		return  ;
+
 	map<string,uistruct::LISTADDR_t> pListInfo;
 	theApp.m_SqliteDeal.GetWalletAddressList(_T(" 1=1 "), (&pListInfo));
 
@@ -676,7 +687,7 @@ bool  CDacrsUIDlg::IsP2pBetFinsh()
 	uistruct::P2PBETRECORDLIST pPoolList1;
 	strCond= strprintf("(height +time_out)> %d and (state = 1 or state = 5)  and (actor = 0 or actor =2)",theApp.blocktipheight);
 	theApp.m_SqliteDeal.GetP2PQuizRecordList(strCond,&pPoolList1);
-	if (pPoolList.size() != 0 && pPoolList1.size() != 0)
+	if (pPoolList.size() != 0 || pPoolList1.size() != 0)
 	{
 		return false;
 	}
@@ -691,7 +702,8 @@ void  CDacrsUIDlg::ClosWallet()
 	}else if (theApp.m_reminder == 1)
 	{
 		ToTray();                              /// 最小化
-	}else if (theApp.m_reminder == 2){
+	}else if (theApp.m_reminder == 2){        /// 关闭程序
+		OnCloseWriteAppFee();
 		BeginWaitCursor();
 		if ( NULL != m_pOutGifDlg ) {
 			CRect rc;
@@ -725,9 +737,9 @@ void CDacrsUIDlg::OnBnClickedButtonClose()
 	if (!IsP2pBetFinsh())
 	{
 		CString strDisplay;
-		strDisplay.Format(_T("猜你妹有些单还未接赌或开奖,关闭系统已接赌超时未开奖,自动判输"));
-		COut outdlg(NULL, strDisplay,100,_T("继续"),_T("退出"));
-		if ( IDOK == outdlg.DoModal()){
+		strDisplay.Format(_T("猜你妹有些单还未接赌或开奖,关闭系统已接赌超时未开奖\r\n自动判输,是否关闭"));
+		if (IDYES == UiFun::MessageBoxEx(strDisplay , _T("提示") , MFB_YESNO|MFB_TIP ) )
+		{
 			ClosWallet();
 		}
 	}else{
@@ -773,6 +785,14 @@ void CDacrsUIDlg::OnTimer(UINT_PTR nIDEvent)
 		theApp.m_bOutApp = TRUE ;
 		CloseThread();
 		CloseApp();
+	}else if (0x11  == nIDEvent)
+	{
+		CPostMsg Postmsg ;
+		if (m_BalloonTip!= NULL && CBalloonTip::nBalloonInstances == 0 && m_barpoomesg.pop(Postmsg))
+		{
+			string message = Postmsg.GetData();
+			 ::SendMessage(theApp.m_pMainWnd->m_hWnd,WM_POPUPBAR,0,(LPARAM)message.c_str());	
+		}
 	}
 	CDialogEx::OnTimer(nIDEvent);
 }
@@ -829,9 +849,7 @@ bool CDacrsUIDlg::GetFileName(CString &fileName,CString strexe )
 	int spcace = fileName.Find(" ");
 	if (spcace >=0)
 	{
-		CMessageBoxEx message(_T("\n路径不能为空!") , 0 );
-	    message.DoModal();
-		//::MessageBox( this->GetSafeHwnd() ,_T("路径不能为空") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("路径不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
 		return false;
 	}
 	int pos = fileName.Find(".",0);
@@ -845,9 +863,9 @@ bool CDacrsUIDlg::GetFileName(CString &fileName,CString strexe )
 	if(PathFileExistsA(fileName)){
 		CString strDisplay;
 		strDisplay.Format(_T("此文件已经存在是否要覆盖"));
-		COut outdlg(NULL, strDisplay,100);
-		if ( IDOK != outdlg.DoModal()){
-			return false;
+		if (IDOK == UiFun::MessageBoxEx(strDisplay , _T("提示") , MFB_OKCANCEL|MFB_TIP ) )
+		{
+			return TRUE;
 		}
 	}
 	
@@ -874,15 +892,18 @@ void CDacrsUIDlg::BakWallet()
 
 		CString strShowData;
 		strShowData.Format(_T("钱包备份成功:%s"),strPath);
-		CMessageBoxEx message(strShowData , 0 );
-	    message.DoModal();
-		//::MessageBox( this->GetSafeHwnd() ,strShowData , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(strShowData, _T("提示") ,MFB_OK|MFB_TIP );
 	}
 
 }
 
 void CDacrsUIDlg::ToTray() 
 { 
+	
+	if(m_BalloonTip != NULL&& m_BalloonTip->nBalloonInstances==1)
+	{
+		CBalloonTip::Hide(m_BalloonTip);
+	}
 	NOTIFYICONDATA nid; 
 	nid.cbSize=(DWORD)sizeof(NOTIFYICONDATA); 
 	nid.hWnd=this->m_hWnd; 
@@ -939,6 +960,12 @@ LRESULT CDacrsUIDlg::OnShowTask(WPARAM wParam,LPARAM lParam)
 			}else{
 				SetWindowPos(&this->wndTopMost, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);  
 				this->ShowWindow(SW_SHOW);//简单的显示主窗口完事儿 
+				SetWindowPos(&this->wndNoTopMost,0,0,0,0, SWP_NOMOVE | SWP_NOSIZE);
+
+				if(m_BalloonTip != NULL&& m_BalloonTip->nBalloonInstances==1)
+				{
+					CBalloonTip::Hide(m_BalloonTip);
+				}
 			}
 			 
 		}
@@ -975,9 +1002,7 @@ void CDacrsUIDlg::encryptwallet()
 {
 	if (theApp.HaveLocked)
 	{
-		CMessageBoxEx message(_T("\n已经加过密!") , 0 );
-	    message.DoModal();
-		//::MessageBox( this->GetSafeHwnd() ,_T("已经加过密") , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(_T("已经加过密") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 	CEncryptWallet enwalletdlg;
@@ -1000,41 +1025,25 @@ void CDacrsUIDlg:: LockWallet()
 {
 	if (!theApp.HaveLocked)
 	{
-		CMessageBoxEx message(_T("\n钱包没有加锁!") , 0 );
-	    message.DoModal();
-	//	MessageBox(_T("钱包没有加锁"));
+		UiFun::MessageBoxEx(_T("钱包没有加锁") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 	string strCommand;
 	strCommand = strprintf("%s",_T("walletlock"));
-	string strShowData ="";
 
-	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-	if (strShowData ==_T(""))
+	Json::Value root;
+	if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 	{
+		TRACE("UpdateAddressData rpccmd listaddr error");
 		return;
 	}
-	Json::Reader reader;  
-	Json::Value root; 
-	if (!reader.parse(strShowData, root)) 
-		return  ;
 
-	if (strShowData.find("walletlock") > 0)
+
+	bool isEntryp = root["walletlock"].asBool();
+	if (!isEntryp)
 	{
-		bool isEntryp = root["walletlock"].asBool();
-		if (!isEntryp)
-		{
-			CMessageBoxEx message(_T("\n钱包锁定失败!") , 0 );
-	        message.DoModal();
-			//MessageBox(_T("钱包锁定失败"));
-			return;
-		}
-	}else
-	{
-		CMessageBoxEx message(_T("\n钱包锁定失败!") , 0 );
-	    message.DoModal();
-		//MessageBox(_T("钱包锁定失败"));
+		UiFun::MessageBoxEx(_T("钱包锁定失败") , _T("提示") ,MFB_OK|MFB_TIP );
+		return;
 	}
 
 }
@@ -1211,9 +1220,7 @@ void CDacrsUIDlg:: ExportPriveKey()
 		CString strShowData;
 		strShowData.Format(_T("导出私钥成功:%s"),strPath);
 		AddImportWalletAndBookAddr(strPath);
-		CMessageBoxEx message(strShowData , 0 );
-	    message.DoModal();
-		//::MessageBox( this->GetSafeHwnd() ,strShowData , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(strShowData , _T("提示") ,MFB_OK|MFB_TIP );
 	}
 }
 void CDacrsUIDlg:: ImportPrvieKey()
@@ -1242,40 +1249,24 @@ void CDacrsUIDlg:: ImportPrvieKey()
 			CString strPath = ofn.lpstrFile;
 			string strCommand;
 			strCommand = strprintf("%s %s",_T("importwallet"),strPath);
-			string strSendData;
+			Json::Value root;
 	
-			CSoyPayHelp::getInstance()->SendRpc(strCommand,strSendData);	
-			if (strSendData == "")
+			if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 			{
+				TRACE("UpdateAddressData rpccmd listaddr error");
 				return;
 			}
-			Json::Reader reader;  
-			Json::Value root; 
-			if (!reader.parse(strSendData, root)) 
-				return  ;
-			if (strSendData.find(_T("imorpt key size")) >=0)
+			
+			int size = root["imorpt key size"].asInt();
+			if (size > 0)
 			{
-				int size = root["imorpt key size"].asInt();
-				if (size > 0)
-				{
-					WriteExportWalletAndBookAddr(strPath);
-					CMessageBoxEx message(_T("\n导入钱包成功请重新启动钱包!") , 0 );
-	                message.DoModal();
-					//MessageBox(_T("导入钱包成功请重新启动钱包"));
-					//ClosWallet();
-					//((CDacrsUIDlg*)(this->GetParent()))->Close();
-					ClosWalletWind();
-				}else{
-					CMessageBoxEx message(_T("\n导入钱包失败!") , 0 );
-	                message.DoModal();
-					//MessageBox(_T("导入钱包失败"));
-				}
-				
-			}else
-			{
-				CMessageBoxEx message(_T("\n导入钱包失败!") , 0 );
-	            message.DoModal();
-				//MessageBox(_T("导入钱包失败"));
+				WriteExportWalletAndBookAddr(strPath);
+				UiFun::MessageBoxEx(_T("导入钱包成功请重新启动钱包") , _T("提示") ,MFB_OK|MFB_TIP );
+				//ClosWallet();
+				//((CDacrsUIDlg*)(this->GetParent()))->Close();
+				ClosWalletWind();
+			}else{
+				UiFun::MessageBoxEx(_T("导入钱包失败") , _T("提示") ,MFB_OK|MFB_TIP );
 			}
 	}
 }
@@ -1288,6 +1279,7 @@ void CDacrsUIDlg::OnUpdataState(CCmdUI *pCmdUI)
 
 void  CDacrsUIDlg::ClosWalletWind()
 {
+	   OnCloseWriteAppFee();
 		BeginWaitCursor();
 		if ( NULL != m_pOutGifDlg ) {
 			CRect rc;
@@ -1304,6 +1296,11 @@ void CDacrsUIDlg::SetAppID()
 	CSetAppId dlg;
 	if (dlg.DoModal() == IDOK)
 	{
+		CPostMsg p2ppmsg(MSG_USER_P2P_UI,WM_UP_ADDRESS);
+		theApp.m_MsgQueue.push(p2ppmsg);
+
+		CPostMsg redmsg(MSG_USER_REDPACKET_UI,WM_UP_ADDRESS);
+		theApp.m_MsgQueue.push(redmsg);
 		return;
 	}
 	return;
@@ -1380,4 +1377,200 @@ void CDacrsUIDlg::RestoreDefault()
 	}
 
 	theApp.ParseUIConfigFile(theApp.str_InsPath);
+
+	CPostMsg p2ppmsg(MSG_USER_P2P_UI,WM_UP_ADDRESS);
+	theApp.m_MsgQueue.push(p2ppmsg);
+
+	CPostMsg redmsg(MSG_USER_REDPACKET_UI,WM_UP_ADDRESS);
+	theApp.m_MsgQueue.push(redmsg);
+	UiFun::MessageBoxEx(_T("恢复默认设置成功") , _T("提示") ,MFB_OK|MFB_TIP );
+}
+
+LRESULT CDacrsUIDlg::OnPopupBar(WPARAM wParam,LPARAM lParam) 
+{
+	char* message = (char*)(lParam);
+	string strmessage =strprintf("%s",message);
+
+	if (m_BalloonTip!= NULL && CBalloonTip::nBalloonInstances != 0)
+	{
+		CPostMsg Postmsg ;
+		Postmsg.SetData(strmessage);
+		m_barpoomesg.push(Postmsg);
+		return 0;
+	}
+
+
+	RECT ret;
+	GetWindowRect(&ret);
+
+
+	LOGFONT lf;
+	::ZeroMemory (&lf, sizeof (lf));
+	lf.lfHeight = 11;
+	lf.lfWeight = FW_BOLD;
+	lf.lfUnderline = FALSE;
+	strcpy((char*)lf.lfFaceName, "宋体");
+
+	//// 对话框没有被隐藏并且要处于前端
+	if (IsWindowVisible() && this->IsTopParentActive())
+	{
+		m_BalloonTip =CBalloonTip::Show(
+			CPoint(ret.right -90, ret.bottom-10),         // Point on the screen where the tip will be shown
+			CSize(270, 150),          // Size of the total rectangle encompassing the balloon 
+			_T(message), // Message to be shown in the balloon
+			lf,                               // LOGFONT structure for font properties 
+			15,                 // Time in seconds to show the balloon
+			TRUE              // TRUE  == Balloon is up(Balloon Tip is down) 
+			// FALSE ==  Balloon is down(Balloon Tip is up)
+			);
+	}else{
+		int x=GetSystemMetrics(SM_CXSCREEN); //得到x坐标
+			int y=GetSystemMetrics(SM_CYSCREEN);//得到y坐标
+		m_BalloonTip =CBalloonTip::Show(
+			CPoint(x-90, y-10),         // Point on the screen where the tip will be shown
+			CSize(270, 150),          // Size of the total rectangle encompassing the balloon 
+			_T(message), // Message to be shown in the balloon
+			lf,                               // LOGFONT structure for font properties 
+			15,                 // Time in seconds to show the balloon
+			TRUE              // TRUE  == Balloon is up(Balloon Tip is down) 
+			// FALSE ==  Balloon is down(Balloon Tip is up)
+			);
+	}
+
+	return 0;
+}
+
+
+void CDacrsUIDlg::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
+{
+
+	CDialogEx::OnActivate(nState, pWndOther, bMinimized);
+	if (nState == WA_INACTIVE )
+	{
+		if (m_BalloonTip != NULL && m_BalloonTip->nBalloonInstances==1)
+		{
+			CBalloonTip::Hide(m_BalloonTip);
+		}
+	}
+	
+
+	// TODO: 在此处添加消息处理程序代码
+}
+
+/// 程序关闭的时候将费用保留到配置文件中
+void CDacrsUIDlg::OnCloseWriteAppFee()
+{
+	if (PathFileExistsA(theApp.str_InsPath.c_str()))
+	{
+		string configpath = "";
+		configpath = strprintf("%s",theApp.str_InsPath);
+		configpath+= strprintf("\\%s","dacrsclient.conf");
+		string strFile = CJsonConfigHelp::getInstance()->GetConfigRootStr(configpath);
+		if (strFile == _T(""))
+		{
+			return;
+		}
+		Json::Reader reader;  
+		Json::Value root; 
+
+		if (!reader.parse(strFile, root)) 
+			return;
+
+		int pos =strFile.find("p2pbet");
+		if (pos>=0)
+		{
+			Json::Value setbet = root["p2pbet"];
+			ASSERT(!setbet.isNull());
+			setbet["SendBetFee"]= theApp.m_P2PBetCfg.SendBetFee;
+			setbet["AcceptBetnFee"]= theApp.m_P2PBetCfg.AcceptBetnFee;
+			setbet["OpenBetnFee"]= theApp.m_P2PBetCfg.OpenBetnFee;
+			setbet["GetAppAmountnFee"]= theApp.m_P2PBetCfg.GetAppAmountnFee;
+			setbet["GetRechangeFee"]= theApp.m_P2PBetCfg.GetRechangeFee;
+			root["p2pbet"]=setbet;
+		}else{
+			Json::Value setbet ;
+			setbet["SendBetFee"]= theApp.m_P2PBetCfg.SendBetFee;
+			setbet["AcceptBetnFee"]= theApp.m_P2PBetCfg.AcceptBetnFee;
+			setbet["OpenBetnFee"]= theApp.m_P2PBetCfg.OpenBetnFee;
+			setbet["GetAppAmountnFee"]= theApp.m_P2PBetCfg.GetAppAmountnFee;
+			setbet["GetRechangeFee"]= theApp.m_P2PBetCfg.GetRechangeFee;
+			root["p2pbet"]=setbet;
+		}
+
+		pos =strFile.find("redpacket");
+		if (pos>=0)
+		{
+			Json::Value setred = root["redpacket"];
+			ASSERT(!setred.isNull());
+			setred["sendredcommFee"]= theApp.m_RedPacketCfg.SendRedPacketCommFee;
+			setred["acceptredcommFee"]= theApp.m_RedPacketCfg.AcceptRedPacketCommFee;
+			setred["sendredspecalFee"]= theApp.m_RedPacketCfg.SendRedPacketSpecailFee;
+			setred["acceptredspecalFee"]= theApp.m_RedPacketCfg.AcceptRedPacketSpecailFee;
+			root["redpacket"]=setred;
+		}else{
+			Json::Value setred ;
+			setred["sendredcommFee"]= theApp.m_RedPacketCfg.SendRedPacketCommFee;
+			setred["acceptredcommFee"]= theApp.m_RedPacketCfg.AcceptRedPacketCommFee;
+			setred["sendredspecalFee"]= theApp.m_RedPacketCfg.SendRedPacketSpecailFee;
+			setred["acceptredspecalFee"]= theApp.m_RedPacketCfg.AcceptRedPacketSpecailFee;
+			root["redpacket"]=setred;
+		}
+
+		CStdioFile  File;
+		string strpath = theApp.str_InsPath;
+		strpath+="\\dacrsclient.conf";
+		File.Open((LPCTSTR)(LPSTR)strpath.c_str(),CFile::modeWrite | CFile::modeCreate); 
+		string strfile = root.toStyledString();
+		File.WriteString(strfile.c_str());
+		File.Close();
+	}
+}
+
+LRESULT CDacrsUIDlg::OnRefreshP2Pool(WPARAM wParam,LPARAM lParam) 
+{
+	if (m_pP2PDlg !=NULL)
+	{
+		m_pP2PDlg->ReadP2pPoolFromDB();
+	}
+	return 0;
+}
+LRESULT CDacrsUIDlg::OnRefreshRedPacketPool(WPARAM wParam,LPARAM lParam) 
+{
+	if (m_pMortgageTardDlg != NULL)
+	{
+		m_pMortgageTardDlg->ReadRedPacketPoolFromDB();
+	}
+	return 0;
+}
+
+void CDacrsUIDlg::OnSendBetExportHistory()
+{
+	if (m_pP2PDlg != NULL)
+	{
+		m_pP2PDlg->m_SendRecord.ExportSendBetRecordToexel();
+	}
+	
+}
+void CDacrsUIDlg::OnAcceptBetExportHistory(){
+	if (m_pP2PDlg != NULL)
+	{
+		m_pP2PDlg->m_BetRecord.OExportAcceptBetToexel();
+	}
+	
+}
+void CDacrsUIDlg::OnSendRedPacketExportHistory()
+{
+	if (m_pMortgageTardDlg != NULL)
+	{
+		m_pMortgageTardDlg->m_SendRecord.ExportSendRedPacketToexel();
+	}
+	
+}
+void CDacrsUIDlg::OnGrabRedPacketExportHistory()
+{
+	if (m_pMortgageTardDlg != NULL)
+	{
+		m_pMortgageTardDlg->m_BetRecord.ExportAcceptRedPacektToexel();
+	}
+
 }
