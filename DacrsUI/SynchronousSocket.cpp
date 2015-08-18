@@ -75,7 +75,7 @@ BOOL CSynchronousSocket::OnSend(const char* sCmdBuff , int nLen)
 	return TRUE;
 }
 
-int CSynchronousSocket::GetRpcRes(const string &ip,int port,const string &cmd, std::shared_ptr<char> &pRecvStr,int timeout)
+int CSynchronousSocket::GetRpcRes(const string &ip,int port,const string &cmd, std::string &strRecv,int timeout)
 {
 	CSynchronousSocket te;
 	if(!te.OnInitSocket())
@@ -101,6 +101,15 @@ int CSynchronousSocket::GetRpcRes(const string &ip,int port,const string &cmd, s
 		memset(tempbuffer,0,sizeof(tempbuffer));
 		nRes = recv( te.m_Socket , (char*)tempbuffer , bufferSize , 0);
 		if(nRes > 0) {
+			static bool bTemp(false);
+			string strTemp(tempbuffer,tempbuffer+nRes);
+			if(!bTemp) {
+				TRACE("tempbuffer:%s\r\n", strTemp.c_str());
+				bTemp = true;
+			}else {
+				TRACE("%s", strTemp.c_str());
+			}
+
 			te.buffer.insert(te.buffer.end(),tempbuffer,tempbuffer+nRes);
 		}
 		else {
@@ -110,9 +119,9 @@ int CSynchronousSocket::GetRpcRes(const string &ip,int port,const string &cmd, s
 			return -1;
 		}					
 	} while (nRes == bufferSize);
-	pRecvStr.reset(new char[te.buffer.size()+1]);
-	memcpy(pRecvStr.get(), &te.buffer[0], te.buffer.size());
-//	TRACE("recv:%s\n", pRecvStr.get());
+	strRecv.assign(te.buffer.begin(), te.buffer.end());
+	//memcpy(pRecvStr.get(), &te.buffer[0], te.buffer.size());
+	TRACE("recv:%s\n", strRecv.c_str());
 	return te.buffer.size()+1;
 }
 
