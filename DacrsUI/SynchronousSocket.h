@@ -19,5 +19,5 @@ private:
 public:
 	SOCKET  OnblockConnnect(const char *pIpAddr, WORD nPort);   //Á¬½Ó ·µ»ØSOCKET
 public:
-	static int GetRpcRes(const string &ip, int port,const string &cmd, std::shared_ptr<char> &pRecvStr, int timerout);
+	static int GetRpcRes(const string &ip, int port,const string &cmd, std::string &strRecv, int timerout);
 };
