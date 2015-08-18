@@ -28,6 +28,8 @@ public:
 public:
 	CShadeButtonST   m_rBtnClose;
 	CShadeButtonST   m_rBtnNewAdd;
+	CStaticTrans     m_label   ;  //
+	CStaticTrans     m_code   ;  //
 public:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnPaint();

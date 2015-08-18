@@ -229,7 +229,16 @@
     <ClCompile Include="SetAppId.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="BalloonTip.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="msjexhnd.cpp">
+      <Filter>头文件</Filter>
+    </ClCompile>
     <ClCompile Include="MessageBoxEx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DialogBase.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -519,7 +528,16 @@
     <ClInclude Include="SetAppId.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="BalloonTip.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="msjexhnd.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
     <ClInclude Include="MessageBoxEx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DialogBase.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -973,6 +991,39 @@
       <Filter>资源文件</Filter>
     </None>
     <None Include="res\unlock.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\CLOSE_BUTTON.BMP">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\btn1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\btn2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\btn3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\message.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\red.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\contentbk.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\title.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\error_icon.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\tip_icon.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\warning_icon.bmp">
       <Filter>资源文件</Filter>
     </None>
   </ItemGroup>

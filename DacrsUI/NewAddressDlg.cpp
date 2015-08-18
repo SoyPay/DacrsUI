@@ -30,6 +30,8 @@ void CNewAddressDlg::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_BUTTON_CLOSE, m_rBtnClose);
 	DDX_Control(pDX, IDC_BUTTON_SCDZ, m_rBtnNewAdd);
+	DDX_Control(pDX, IDC_LABEL, m_label);
+	DDX_Control(pDX, IDC_CODE, m_code);
 }
 
 
@@ -60,12 +62,17 @@ BOOL CNewAddressDlg::OnInitDialog()
 	m_rBtnClose.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
 	m_rBtnClose.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
 	m_rBtnClose.SizeToContent();
-	m_rBtnClose.SetWindowPos(NULL ,476-26 , 0 , 0 , 0 , SWP_NOSIZE);
+	CRect rect ;
+	m_rBtnClose.GetClientRect(rect);
 
-	m_rBtnNewAdd.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
+	RECT ret;
+	GetWindowRect(&ret);
+	m_rBtnClose.SetWindowPos(NULL ,(ret.right-ret.left)-rect.Width() , 2 , 0 , 0 , SWP_NOSIZE); 
+
+	m_rBtnNewAdd.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255));
 	m_rBtnNewAdd.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
 	m_rBtnNewAdd.SetWindowText("生成地址") ;
-	m_rBtnNewAdd.SetFontEx(20 , _T("微软雅黑"));
+	//m_rBtnNewAdd.SetFontEx(20 , _T("微软雅黑"));
 	m_rBtnNewAdd.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 	m_rBtnNewAdd.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 	m_rBtnNewAdd.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
@@ -183,15 +190,13 @@ void CNewAddressDlg::OnBnClickedButtonScdz()
 		strCommand = strprintf("%s",_T("getnewaddress"));
 	}
 	string strShowData ;
-	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-	int pos = strShowData.find("addr");
-	if ( pos < 0 ) return ;
-
-	Json::Reader reader;  
 	Json::Value root; 
-	if (!reader.parse(strShowData, root)) 
-		return  ;
+	if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
+	{
+		TRACE("OnBnClickedButtonScdz rpccmd getnewaddress error");
+		return;
+	}
+
 	string addr = root["addr"].asString();
 
 	CString Lable;
@@ -218,12 +223,9 @@ void CNewAddressDlg::OnBnClickedButtonScdz()
 
 	strCommand = strprintf("恭喜生成新地址:\n%s\n重新备份钱包或者重新导出私钥",addr);
 
-	CMessageBoxEx message(strCommand.c_str() , 1 );
-	if(IDOK == message.DoModal())
+	if(IDOK == UiFun::MessageBoxEx( strCommand.c_str() , _T("提示") , MFB_OK|MFB_TIP ))
 	{
 		EndDialog(IDOK);
 	}
-	//if (IDYES == ::MessageBox( this->GetSafeHwnd() ,_T("恭喜生成新地址") , _T("提示") , MB_YESNO|MB_ICONINFORMATION ) ){
-	//	EndDialog(IDOK);
-	//}
+	
 }

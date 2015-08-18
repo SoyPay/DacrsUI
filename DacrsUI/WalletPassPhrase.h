@@ -1,9 +1,12 @@
 #pragma once
-
+#include "DialogBase.h"
+#include "StaticTrans.h"
+#include "BmpBtn.h"
+#include "ShadeButtonST.h"
 
 // CWalletPassPhrase ¶Ô»°¿ò
 
-class CWalletPassPhrase : public CDialogEx
+class CWalletPassPhrase : public CDialogBase
 {
 	DECLARE_DYNAMIC(CWalletPassPhrase)
 
@@ -22,4 +25,13 @@ public:
 	afx_msg void OnBnClickedOk();
 	virtual BOOL OnInitDialog();
 	afx_msg void OnBnClickedCancel();
+public:
+	CStaticTrans     m_password;
+	CStaticTrans     m_timeout;
+	CStaticTrans     m_minue;
+	CStaticTrans     m_headText;
+	CShadeButtonST   m_rBtnClose;
+	CShadeButtonST   m_rBtnCancel;
+	CShadeButtonST   m_rBtnOk;
+	afx_msg void OnBnClickedClose();
 };

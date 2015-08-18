@@ -5,8 +5,8 @@
 #include "DacrsUI.h"
 #include "ProgStatusBar.h"
 #include "afxdialogex.h"
-
-
+#include "DacrsUIDlg.h"
+#include  "BalloonTip.h"
 // CProgStatusBar 对话框
 
 IMPLEMENT_DYNAMIC(CProgStatusBar, CDialogBar)
@@ -25,6 +25,7 @@ IMPLEMENT_DYNAMIC(CProgStatusBar, CDialogBar)
 	memset(m_bmplock , 0 , sizeof(CRect));
 	m_progress.ShowPercent(FALSE);
 	m_progress.ShowDefineText(TRUE);
+	m_connectCount = 0;
 }
 
 CProgStatusBar::~CProgStatusBar()
@@ -55,6 +56,7 @@ BEGIN_MESSAGE_MAP(CProgStatusBar, CDialogBar)
 	ON_WM_SIZE()
 	ON_MESSAGE(MSG_USER_UP_PROGRESS , &CProgStatusBar::OnShowProgressCtrl  )
 	ON_WM_PAINT()
+	ON_WM_MOUSEMOVE()
 END_MESSAGE_MAP()
 
 
@@ -170,7 +172,7 @@ BOOL CProgStatusBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UIN
 		
 		m_strVersion.SetFont(90, _T("宋体"));				//设置显示字体和大小
 		m_strVersion.SetTextColor(RGB(255,255,255));	    //字体颜色
-		m_strVersion.SetWindowText(_T("版本:v1.0.1.6 RC")) ;
+		m_strVersion.SetWindowText(_T("版本:v1.0.2.0 RC")) ;
 
 		if ( NULL == m_ProgressWnd ) {
 			m_ProgressWnd = new CGIFControl ;
@@ -234,6 +236,8 @@ int CProgStatusBar::ShowProgressCtrl(){
 		m_progress.SetDefinedStr(strText);
 		m_bProgressType = TRUE;
 		m_nSigIndex =pBlockchanged.connections>3?3:pBlockchanged.connections;
+
+		m_connectCount = pBlockchanged.connections;
 
 		if (pBlockchanged.tips==pBlockchanged.high)
 		{
@@ -302,6 +306,8 @@ int CProgStatusBar::ShowProgressCtrl(){
 		m_strHeight.ShowWindow(SW_SHOW);
 	}
 	InvalidateRect(m_bmpsig);
+
+	SetAppStepfee(pBlockchanged.fuelrate);
 	return 1;
 }
 void CProgStatusBar::ShowLockCtrl()
@@ -337,11 +343,13 @@ void CProgStatusBar::ShowNetCount()
 		if (pos >=0)
 		{
 			strTemp = strTemp.substr(pos+1,strTemp.length());
-			//strTemp.TrimLeft();
-			//strTemp.TrimRight();
+			strTemp =  UiFun::trimleft(strTemp);
+			strTemp =  UiFun::trimright(strTemp);
 			int netCount = atoi(strTemp.c_str());
 			m_nSigIndex = netCount>3?3:netCount;
 			InvalidateRect(m_bmpsig);
+
+			m_connectCount = netCount;
 			if (netCount == 0 )
 			{
 				string strTemp ="";
@@ -376,9 +384,15 @@ void CProgStatusBar::OnPaint()
 	CRect rc;  
 	GetClientRect(&rc);  
 
+	BITMAP bm1;
+	m_Sigbmp[m_nSigIndex].GetObject(sizeof(BITMAP),&bm1);
+
+	int width = bm1.bmWidth; //图片的宽度（逻辑单位）。 
+	int height=	bm1.bmHeight; ////图片的高度（逻辑单位）。
+
 	HBITMAP hOldbmp = (HBITMAP)memDC.SelectObject(m_Sigbmp[m_nSigIndex]); 
 	dc.BitBlt(900-60, 0, rc.Width(), rc.Height(), &memDC, 0, 0, SRCCOPY);  
-	CRect rc1(900-60, 0, rc.Width(), rc.Height());
+	CRect rc1(900-60, rc.Height()-height, 900-60+width, rc.Height());
 	m_bmpsig = rc1;
 	memDC.SelectObject(hOldbmp);  
 //	memDC.DeleteDC();  
@@ -397,40 +411,93 @@ void CProgStatusBar::OnIniLockParam()
 	string strCommand;
 	strCommand = strprintf("%s",_T("islocked"));
 	string strShowData ="";
-
-	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-	if (strShowData == "")
+	Json::Value root; 
+	if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 	{
+		TRACE("OnIniLockParam rpccmd islocked error");
 		return;
 	}
-	Json::Reader reader;  
-	Json::Value root; 
-	if (!reader.parse(strShowData, root)) 
-		return ;
 
-	if (strShowData.find("islock") > 0)
+	int state = root["islock"].asInt();
+	if (state == 0)     /// 没有锁
 	{
-		int state = root["islock"].asInt();
-		if (state == 0)     /// 没有锁
-		{
-			theApp.HaveLocked = FALSE;
-			theApp.IsWalletLocked =FALSE;
-		}else if(state == 1){   /// 解锁
-			theApp.IsWalletLocked =FALSE;
-			m_nLockIndex = 1;
-			theApp.HaveLocked = TRUE;
-		}else if (state == 2)    /// 锁定状态
-		{
-			theApp.IsWalletLocked =TRUE;
-			m_nLockIndex = 0;
-			theApp.HaveLocked = TRUE;
-		}
+		theApp.HaveLocked = FALSE;
+		theApp.IsWalletLocked =FALSE;
+	}else if(state == 1){   /// 解锁
+		theApp.IsWalletLocked =FALSE;
+		m_nLockIndex = 1;
+		theApp.HaveLocked = TRUE;
+	}else if (state == 2)    /// 锁定状态
+	{
+		theApp.IsWalletLocked =TRUE;
+		m_nLockIndex = 0;
+		theApp.HaveLocked = TRUE;
+	}
 		//theApp.IsWalletLocked = root["islock"].asBool();
 		//if (!theApp.IsWalletLocked)
 		//{
 		//	m_nLockIndex = 1;
 		//}
+
+}
+
+void CProgStatusBar::SetAppStepfee(int fuelrate)
+{
+	if (fuelrate == 0)
+	{
+		return;
+	}
+	theApp.m_P2PBetCfg.SendBetFee = (theApp.m_p2pbetstep.SendBetStep/100+1)*fuelrate + 10000;
+	theApp.m_P2PBetCfg.AcceptBetnFee = (theApp.m_p2pbetstep.AcceptBetnStep/100+1)*fuelrate+ 10000;
+	theApp.m_P2PBetCfg.OpenBetnFee = (theApp.m_p2pbetstep.OpenBetnStep/100+1)*fuelrate+ 10000;
+	theApp.m_P2PBetCfg.GetAppAmountnFee = (theApp.m_p2pbetstep.GetAppAmountnStep/100+1)*fuelrate+ 10000;
+	theApp.m_P2PBetCfg.GetRechangeFee = (theApp.m_p2pbetstep.GetRechangeStep/100+1)*fuelrate+ 10000;
+
+	theApp.m_RedPacketCfg.SendRedPacketCommFee =  (theApp.m_redPackestep.SendRedPacketCommStep/100+1)*fuelrate+ 10000;
+	theApp.m_RedPacketCfg.AcceptRedPacketCommFee =  (theApp.m_redPackestep.AcceptRedPacketCommStep/100+1)*fuelrate+ 10000;
+	theApp.m_RedPacketCfg.SendRedPacketSpecailFee =  (theApp.m_redPackestep.SendRedPacketSpecailStep/100+1)*fuelrate+ 10000;
+	theApp.m_RedPacketCfg.AcceptRedPacketSpecailFee =  (theApp.m_redPackestep.AcceptRedPacketSpecailStep/100+1)*fuelrate+ 10000;
+}
+
+void CProgStatusBar::OnMouseMove(UINT nFlags, CPoint point)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	CRect temp = m_bmpsig;
+	//ClientToScreen(&temp);
+	CDacrsUIDlg *pDlg = (CDacrsUIDlg*)(theApp.m_pMainWnd);
+	if (temp.PtInRect(point))
+	{
+		RECT ret;
+		GetWindowRect(&ret);
+
+
+		LOGFONT lf;
+		::ZeroMemory (&lf, sizeof (lf));
+		lf.lfHeight = 11;
+		lf.lfWeight = FW_BOLD;
+		lf.lfUnderline = FALSE;
+		strcpy((char*)lf.lfFaceName, "宋体");
+
+		string strShow = strprintf("当前网络连接数:%d",m_connectCount);
+		if (IsWindowVisible()&& pDlg->m_BalloonTip->nBalloonInstances !=1)
+		{
+			pDlg->m_BalloonTip=CBalloonTip::Show(
+				CPoint(ret.right -50, ret.bottom),         // Point on the screen where the tip will be shown
+				CSize(85, 60),          // Size of the total rectangle encompassing the balloon 
+				_T(strShow.c_str()), // Message to be shown in the balloon
+				lf,                               // LOGFONT structure for font properties 
+				30,                 // Time in seconds to show the balloon
+				FALSE ,             // TRUE  == Balloon is up(Balloon Tip is down) 
+				 FALSE // ==  Balloon is down(Balloon Tip is up)
+				);
+		 }
+	}else if (pDlg->m_BalloonTip != NULL && pDlg->m_BalloonTip->nBalloonInstances ==1){
+		int pos = pDlg->m_BalloonTip->m_strMessage.Find("网络连接");
+		if (pos >=0)
+		{
+			CBalloonTip::Hide(pDlg->m_BalloonTip);
+		}
 	}
 
+	CDialogBar::OnMouseMove(nFlags, point);
 }

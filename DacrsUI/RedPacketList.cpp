@@ -9,10 +9,10 @@
 
 // CRedPacketList 对话框
 
-IMPLEMENT_DYNAMIC(CRedPacketList, CDialogEx)
+IMPLEMENT_DYNAMIC(CRedPacketList, CDialogBase)
 
 CRedPacketList::CRedPacketList(CWnd* pParent /*=NULL*/)
-	: CDialogEx(CRedPacketList::IDD, pParent)
+	: CDialogBase(CRedPacketList::IDD, pParent)
 {
 }
 
@@ -24,11 +24,19 @@ void CRedPacketList::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LIST2, m_listCtrl);
+
+	DDX_Control(pDX, IDC_REDID, m_strTx1);
+	DDX_Control(pDX, IDC_TXHASH, m_strTx2);	
+	DDX_Control(pDX, IDC_HEAD, m_headText);	
+	DDX_Control(pDX, IDC_CLOSE, m_rBtnClose);
+	DDX_Control(pDX, IDOK, m_rBtnOk);
 }
 
 
-BEGIN_MESSAGE_MAP(CRedPacketList, CDialogEx)
+BEGIN_MESSAGE_MAP(CRedPacketList, CDialogBase)
 	ON_NOTIFY(LVN_COLUMNCLICK, IDC_LIST2, &CRedPacketList::OnLvnColumnclickList2)
+	ON_BN_CLICKED(IDOK, &CRedPacketList::OnBnClickedOk)
+	ON_BN_CLICKED(IDC_CLOSE, &CRedPacketList::OnBnClickedClose)
 END_MESSAGE_MAP()
 
 
@@ -38,16 +46,14 @@ void CRedPacketList::ShowTxDetail(CString txhash)
 {
 	string strCommand,strShowData;
 	strCommand = strprintf("%s %s","gettxdetail" ,txhash );
-	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-	if (strShowData == _T(""))
-	{
-		return ;
-	}
-	Json::Reader reader; 
 	Json::Value root;
-	if (!reader.parse(strShowData, root)) 
-		return ;
+	if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
+	{
+		TRACE("UpdateAddressData rpccmd listaddr error");
+		return;
+	}
+	strShowData = root.toStyledString();
+	
 	int npos = strShowData.find("confirmHeight");
 	int confirHeight = 1440;
 	if ( npos >= 0 ) { //
@@ -71,13 +77,11 @@ void CRedPacketList::ShowTxDetail(CString txhash)
 	string keyValue;
 	keyValue = strprintf("%s%s",strKeyHex.c_str(),SendHash.c_str());
 	strCommand =strprintf("%s %s %s","getscriptdata" ,theApp.m_redPacketScriptid,keyValue );
-	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-	if (strShowData == _T("") || strShowData.find("value") < 0)
-		return ;
-
-	if (!reader.parse(strShowData, root)) 
-		return ;
+	if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
+	{
+		TRACE("UpdateAddressData rpccmd listaddr error");
+		return;
+	}
 
 	string nValue = root["value"].asString();
 	uistruct::RED_DATA redPacket;
@@ -94,9 +98,8 @@ void CRedPacketList::ShowTxDetail(CString txhash)
 	 if (redPacket.dbdata.type == 3 && !redPacket.dbdata.fover)
 	{
 		//showdata.Format(_T("接龙红包还未抢完"));
-		CMessageBoxEx message(_T("\n接龙红包还未抢完!") , 0 );
-	        message.DoModal();
-		//::MessageBox( this->GetSafeHwnd() ,_T("接龙红包还未抢完"), _T("提示") , MB_ICONINFORMATION );
+		
+		UiFun::MessageBoxEx(_T("接龙红包还未抢完") , _T("提示") ,MFB_OK|MFB_TIP );
 		CDialog::OnOK();
 	}else{
 		 //map<INT64,CString > mapindex;
@@ -156,7 +159,32 @@ void CRedPacketList::ShowTxDetail(CString txhash)
 }
 BOOL CRedPacketList::OnInitDialog()
 {
-	CDialogEx::OnInitDialog();
+	CDialogBase::OnInitDialog();
+
+	m_headText.SetFont(90, _T("微软雅黑"));
+	m_headText.SetTextColor(RGB(255,255,255));	
+
+	m_rBtnClose.SetBitmaps( IDB_BITMAP_CLOSE , RGB(255, 255, 0) , IDB_BITMAP_CLOSE2 , RGB(255, 255, 255) );
+	m_rBtnClose.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+	m_rBtnClose.SetWindowText("") ;
+	m_rBtnClose.SetFontEx(20 , _T("微软雅黑"));
+	m_rBtnClose.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
+	m_rBtnClose.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+	m_rBtnClose.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
+	m_rBtnClose.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
+	m_rBtnClose.SizeToContent();
+	//m_rBtnClose.SetWindowPos(NULL ,320 , 0 , 0 , 0 , SWP_NOSIZE); 
+
+	m_rBtnOk.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
+	m_rBtnOk.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+	m_rBtnOk.SetWindowText("确 定") ;
+	//m_rBtnOk.SetFontEx(20 , _T("微软雅黑"));
+	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
+	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
+	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
+	m_rBtnOk.SizeToContent();
+
 
 	struct LISTCol {
 		CString		name ;
@@ -164,7 +192,7 @@ BOOL CRedPacketList::OnInitDialog()
 	} listcol[3]  = {
 		{"序号",          70},
 		{"账户ID",          85},
-		{"金额" ,      150}
+		{"金额" ,      180}
 	};
 
 	for( int i = 0 ; i < 3 ; i++  ) {
@@ -199,8 +227,8 @@ static int CALLBACK MyCompareProc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamS
  
 	if (sort_column==2)
 	{
-		INT64 p1 = (INT64)(atof(lp1)*COIN);
-		INT64 p2 = (INT64)(atof(lp2)*COIN);
+		INT64 p1 = (INT64)(strtod(lp1,NULL)*COIN);
+		INT64 p2 = (INT64)(strtod(lp2,NULL)*COIN);
 	// int型比较
 		if (!method)
 		return (int)(p1-p2);
@@ -243,4 +271,18 @@ void CRedPacketList::OnLvnColumnclickList2(NMHDR *pNMHDR, LRESULT *pResult)
 	m_listCtrl.SortItems(MyCompareProc,(DWORD_PTR)&m_listCtrl);//排序 第二个参数是比较函数的第三个参数
 	method =!method;
 	*pResult =0;
+}
+
+
+void CRedPacketList::OnBnClickedOk()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CDialogBase::OnOK();
+}
+
+
+void CRedPacketList::OnBnClickedClose()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CDialogBase::OnCancel();
 }

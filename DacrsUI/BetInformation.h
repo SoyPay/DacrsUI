@@ -1,9 +1,12 @@
 #pragma once
-
+#include "DialogBase.h"
+#include "StaticTrans.h"
+#include "BmpBtn.h"
+#include "ShadeButtonST.h"
 
 // CBetInformation ¶Ô»°¿ò
 
-class CBetInformation : public CDialogEx
+class CBetInformation : public CDialogBase
 {
 	DECLARE_DYNAMIC(CBetInformation)
 
@@ -20,4 +23,10 @@ protected:
 	DECLARE_MESSAGE_MAP()
 	virtual BOOL OnInitDialog();
 	void ShowBetRecordDetail(CString jsontx);
+public:
+	afx_msg void OnBnClickedClose();
+public:
+	CStaticTrans     m_headText;
+	CShadeButtonST   m_rBtnClose;
+	CShadeButtonST   m_rBtnOk;
 };

@@ -35,7 +35,7 @@ void CJsonConfigHelp::ReadJsonConfig(const string& strFilePath)
 		{
 			ReadScriptCfgData(root);
 		}else{
-			::MessageBox( NULL , _T("script Œ¥≈‰÷√") , "Error" , MB_ICONERROR) ;
+			UiFun::MessageBoxEx(_T("script Œ¥≈‰÷√") , _T("Error") ,MFB_OK|MFB_ERROR );
 			exit(0);
 		}
 
@@ -44,7 +44,7 @@ void CJsonConfigHelp::ReadJsonConfig(const string& strFilePath)
 		{
 			ReadDarkCoinCfgData(root);
 		}else{
-			::MessageBox( NULL , _T("darkcoin Œ¥≈‰÷√") , "Error" , MB_ICONERROR) ;
+			UiFun::MessageBoxEx(_T("darkcoin Œ¥≈‰÷√") , _T("Error") ,MFB_OK|MFB_ERROR );
 			exit(0);
 		}
 		pos = strTemp.find("p2pbet");
@@ -52,7 +52,7 @@ void CJsonConfigHelp::ReadJsonConfig(const string& strFilePath)
 		{
 			ReadP2PCfgData(root);
 		}else{
-			::MessageBox( NULL , _T("p2pbet Œ¥≈‰÷√") , "Error" , MB_ICONERROR) ;
+			UiFun::MessageBoxEx(_T("p2pbet Œ¥≈‰÷√") , _T("Error") ,MFB_OK|MFB_ERROR );
 			exit(0);
 		}
 		
@@ -61,7 +61,7 @@ void CJsonConfigHelp::ReadJsonConfig(const string& strFilePath)
 		{
 			ReadNetParmCfgData(root);
 		}else{
-			::MessageBox( NULL , _T("netparam Œ¥≈‰÷√") , "Error" , MB_ICONERROR) ;
+			UiFun::MessageBoxEx(_T("netparam Œ¥≈‰÷√") , _T("Error") ,MFB_OK|MFB_ERROR );
 			exit(0);
 		}
 
@@ -70,7 +70,7 @@ void CJsonConfigHelp::ReadJsonConfig(const string& strFilePath)
 		{
 			ReadLogParamCfg(root);
 		}else{
-			::MessageBox( NULL , _T("logcfg Œ¥≈‰÷√") , "Error" , MB_ICONERROR) ;
+			UiFun::MessageBoxEx(_T("logcfg Œ¥≈‰÷√") , _T("Error") ,MFB_OK|MFB_ERROR );
 			exit(0);
 		}
 
@@ -79,13 +79,30 @@ void CJsonConfigHelp::ReadJsonConfig(const string& strFilePath)
 		{
 			ReadRedPacketCfgData(root);
 		}else{
-			::MessageBox( NULL , _T("redpacket Œ¥≈‰÷√") , "Error" , MB_ICONERROR) ;
+			UiFun::MessageBoxEx(_T("redpacket Œ¥≈‰÷√") , _T("Error") ,MFB_OK|MFB_ERROR );
 			exit(0);
 		}
 		pos = strTemp.find("closeconf");
 		if (pos >0)
 		{
 			ReadCloseCfgData(root);
+		}
+		pos = strTemp.find("newestscript");
+		if (pos > 0)
+		{
+			ReadNewestCfgData(root);
+		}
+
+		pos = strTemp.find("p2pbetstep");
+		if (pos >0)
+		{
+			ReadP2pBetStep(root);
+		}
+
+		pos = strTemp.find("redpacketstep");
+		if (pos >0)
+		{
+			ReadRedPacketStep(root);
 		}
 	}
 	ifs.close();
@@ -349,11 +366,50 @@ void CJsonConfigHelp::ModifyAppFeeCfgData( Json::Value& root,const CString &Lead
 	{
 		Json::Value p2pbet = root[LeaderKey];
 		ASSERT(!p2pbet.isNull());
-		p2pbet[Key]= (INT64)(atof(KeyValue)*COIN);
+		p2pbet[Key]= (INT64)(strtod(KeyValue,NULL)*COIN);
 		root[LeaderKey]=p2pbet;
 	}else{
 		CString strTemp =_T("");
 		strTemp.Format(_T("%s %s  Œ¥≈‰÷√"),LeaderKey,Key);
-		::MessageBox( NULL , strTemp , "Error" , MB_ICONERROR) ;
+		UiFun::MessageBoxEx(strTemp , _T("Error") ,MFB_OK|MFB_ERROR );
 	}
+}
+void CJsonConfigHelp::GetNewestScriptData(CNewestScriptCfg &newScript)
+{
+	newScript = m_newScript;
+}
+void  CJsonConfigHelp::ReadNewestCfgData(const Json::Value &root)
+{
+	Json::Value script = root["newestscript"];
+	ASSERT(!script.isNull());
+	m_newScript.strNewipoScritptid = script["iposcript"].asString();
+	m_newScript.strNewScriptBetid = script["betscript"].asString();
+    m_newScript.strNewSrcriptRedPacektid = script["redpacketscript"].asString();
+}
+void CJsonConfigHelp::ReadRedPacketStep(const Json::Value &root)
+{
+	Json::Value redpacketparam = root["redpacketstep"];
+	ASSERT(!redpacketparam.isNull());
+	m_redPackestep.AcceptRedPacketCommStep = redpacketparam["acceptredcommstep"].asInt64();
+	m_redPackestep.AcceptRedPacketSpecailStep= redpacketparam["acceptredspecalstep"].asInt64();
+	m_redPackestep.SendRedPacketCommStep =redpacketparam["sendredcommstep"].asInt64();
+	m_redPackestep.SendRedPacketSpecailStep =  redpacketparam["sendredspecalstep"].asInt64();
+}
+void CJsonConfigHelp::ReadP2pBetStep(const Json::Value &root)
+{
+	Json::Value p2pbet = root["p2pbetstep"];
+	ASSERT(!p2pbet.isNull());
+	m_p2pbetstep.AcceptBetnStep = p2pbet["Acceptstep"].asInt64();
+	m_p2pbetstep.GetAppAmountnStep = p2pbet["GetAppAmountnstep"].asInt64();
+	m_p2pbetstep.GetRechangeStep = p2pbet["GetRechangestep"].asInt64();
+	m_p2pbetstep.OpenBetnStep= p2pbet["OpenBetnstep"].asInt64();
+	m_p2pbetstep.SendBetStep = p2pbet["SendBetstep"].asInt64();
+}
+void CJsonConfigHelp::GetRedPacketStep(CRedPacketStepCfg &redPackestep)
+{
+	redPackestep = m_redPackestep;
+}
+void CJsonConfigHelp::GetP2pBetStep(CP2PBetStepCfg &p2pbetstep)
+{
+	p2pbetstep = m_p2pbetstep;
 }

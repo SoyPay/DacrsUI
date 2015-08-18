@@ -6,7 +6,14 @@
 #include "BetRecord.h"
 #include "afxdialogex.h"
 #include "BetInformation.h"
-
+#include "DacrsUIDlg.h"
+#include "CApplication.h"
+#include "CFont0.h"
+#include "CRange.h"
+#include "CWorkbook.h"
+#include "CWorksheet.h"
+#include "CWorkbooks.h"
+#include "CWorksheets.h"
 // CBetRecord 对话框
 
 IMPLEMENT_DYNAMIC(CBetRecord, CDialogEx)
@@ -159,7 +166,7 @@ void CBetRecord::OnSize(UINT nType, int cx, int cy)
 		pst = GetDlgItem( IDC_STATIC_COUNT_PAGE ) ;
 		if ( NULL != pst ) {
 			pst->SetWindowPos( NULL ,875-50 ,130+36 , 50, 20  ,SWP_SHOWWINDOW ) ; 
-		}
+		}		
 	}
 }
 void CBetRecord::Showlistbox(CString address)
@@ -213,26 +220,13 @@ void  CBetRecord::OnShowPagePool(int page)
 	{
 		uistruct::P2P_QUIZ_RECORD_t const_it = m_PoolList.at(k);
 		
-		sprintf_s(buffer,"%s",const_it.left_addr.c_str());
-		Sendaddr=buffer;
-		memset(buffer,0,1024);
-		sprintf_s(buffer,"%s",const_it.right_addr.c_str());
-		address =buffer;
-		memset(buffer,0,1024);
-		sprintf_s(buffer,"%.4f",const_it.amount);
-		dmoney=buffer;
-		memset(buffer,0,1024);
-		//Sendaddr.Format(_T("%s"),const_it.left_addr);
-		//address.Format(_T("%s"),const_it.right_addr);
-		//dmoney.Format(_T("%.4f"),const_it.amount);
+		dmoney =strprintf("%.4f",const_it.amount);
 
 		if (const_it.guess_num == 1)
 		{
-			//guess.Format(_T("%s"),"妹");
 			guess = "妹";
 		}else
 		{
-			//guess.Format(_T("%s"),"哥");
 			guess = "哥";
 		}
 		m_ListBox.InsertStr(i,this->GetSafeHwnd());
@@ -243,31 +237,21 @@ void  CBetRecord::OnShowPagePool(int page)
 
 		if (const_it.send_time == 0)
 		{
-			//sendTime = _T("--");
 			sendTime = "--";
 		}else{
 			SYSTEMTIME curTime =UiFun::Time_tToSystemTime(const_it.send_time);
-			sprintf_s(buffer,"%02d-%02d %02d:%02d:%02d", curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
-			sendTime = buffer;
-			memset(buffer,0,1024);
-			//sendTime.Format("%02d-%02d %02d:%02d:%02d", curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+			sendTime =strprintf("%02d-%02d %02d:%02d:%02d", curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
 		}
 		if (const_it.recv_time == 0)
 		{
-			//reciveTime =_T("--");
 			reciveTime = "--";
 		}else{
 			SYSTEMTIME rTime =UiFun::Time_tToSystemTime(const_it.recv_time);
-			sprintf_s(buffer,"%02d-%02d %02d:%02d:%02d", rTime.wMonth, rTime.wDay, rTime.wHour, rTime.wMinute, rTime.wSecond);
-			reciveTime = buffer;
-			memset(buffer,0,1024);
-			//reciveTime.Format("%02d-%02d %02d:%02d:%02d",rTime.wMonth, rTime.wDay, rTime.wHour, rTime.wMinute, rTime.wSecond);
+			reciveTime =strprintf("%02d-%02d %02d:%02d:%02d", rTime.wMonth, rTime.wDay, rTime.wHour, rTime.wMinute, rTime.wSecond);
 		}
 
-		sprintf_s(buffer,"%.4f", const_it.amount);
-		reward = buffer;
-		memset(buffer,0,1024);
-		//reward.Format(_T("%.4f"),const_it.amount);
+		reward =strprintf("%.4f", const_it.amount);
+		
 		///说明开奖了
 		if (const_it.state == 2)
 		{
@@ -276,42 +260,33 @@ void  CBetRecord::OnShowPagePool(int page)
 			{
 				m_ListBox.SetIndexBackCol(i , 6 , RGB(242,32,32));
 
-				sprintf_s(buffer,"+%.4f", const_it.amount);
-				reward = buffer;
-				//reward.Format(_T("+%.4f"),const_it.amount);
+				reward =strprintf("+%.4f", const_it.amount);
 			}else
 			{
 				m_ListBox.SetIndexBackCol(i , 6 , RGB(1,127,1));
-				sprintf_s(buffer,"-%.4f", const_it.amount);
-				reward = buffer;
-				//reward.Format(_T("-%.4f"),const_it.amount);
+				reward =strprintf("-%.4f", const_it.amount);
 			}
 
-			memset(buffer,0,1024);
 
 			if (const_it.content[32] == 1)
 			{
-				//result.Format(_T("%s"),"妹");
 				result = "妹";
 			}else
 			{
-				//result.Format(_T("%s"),"哥");
 				result = "哥";
 			}
-			m_ListBox.SetIndexString(i , Sendaddr.c_str(),address.c_str(),sendTime.c_str(),reciveTime.c_str(), result.c_str(),guess.c_str(), reward.c_str());
+			m_ListBox.SetIndexString(i , const_it.left_addr.c_str(),const_it.right_addr.c_str(),sendTime.c_str(),reciveTime.c_str(), result.c_str(),guess.c_str(), reward.c_str());
 
 		}else{
 			if (const_it.height>0 &&(const_it.time_out + const_it.height)> theApp.blocktipheight&& theApp.IsSyncBlock)
 			{
-				m_ListBox.SetIndexString(i , Sendaddr.c_str(),address.c_str(),sendTime.c_str(),reciveTime.c_str(), _T("未开奖"),guess.c_str(),reward.c_str());
+				m_ListBox.SetIndexString(i , const_it.left_addr.c_str(),const_it.right_addr.c_str(),sendTime.c_str(),reciveTime.c_str(), _T("未开奖"),guess.c_str(),reward.c_str());
 			}else if(theApp.IsSyncBlock && const_it.height != 0){
 				m_ListBox.SetIndexBackCol(i , 6 , RGB(242,32,32));
-				//reward.Format(_T("+%.4f"),const_it.amount);
-				sprintf_s(buffer,"+%.4f", const_it.amount);
-				reward = buffer;
-				m_ListBox.SetIndexString(i , Sendaddr.c_str(),address.c_str(),sendTime.c_str(),reciveTime.c_str(), _T("超时"),guess.c_str(),reward.c_str());
+				reward =strprintf("+%.4f", const_it.amount);
+				m_ListBox.SetIndexString(i , const_it.left_addr.c_str(),const_it.right_addr.c_str(),sendTime.c_str(),reciveTime.c_str(), _T("超时"),guess.c_str(),reward.c_str());
 			}else{
-				m_ListBox.SetIndexString(i , Sendaddr.c_str(),address.c_str(),sendTime.c_str(),reciveTime.c_str(), _T("未开奖"),guess.c_str(),reward.c_str());
+				m_ListBox.SetIndexString(i , const_it.left_addr.c_str(),const_it.right_addr.c_str(),sendTime.c_str(),reciveTime.c_str(), _T("未开奖"),guess.c_str(),reward.c_str());
 			}
 		}
 		i++;
@@ -334,9 +309,7 @@ BOOL CBetRecord::PreTranslateMessage(MSG* pMsg)
 				}else
 				{
 					GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T(""));
-					CMessageBoxEx message(_T("\n输入有误,请输入数字!") , 0 );
-	                message.DoModal();
-				//	::MessageBox( this->GetSafeHwnd() ,_T("输入有误,请输入数字") , _T("提示") , MB_ICONINFORMATION ) ;
+					UiFun::MessageBoxEx(_T("输入有误,请输入数字") , _T("提示") ,MFB_OK|MFB_TIP );
 				}
 				return TRUE;
 			}
@@ -373,4 +346,328 @@ void CBetRecord::OnLbnDblclkListBox()
 		dlg.DoModal();	
 	}
 	
+}
+
+void CBetRecord::GetExportCol(map<int,string> &item,uistruct::P2P_QUIZ_RECORD_t pitem)
+{
+	int i = 0;
+	item[i++] = pitem.relate_hash;
+	item[i++] = pitem.left_addr;
+	item[i++] = pitem.right_addr;
+	
+	string amount;
+	amount =strprintf("%.4f",pitem.amount);
+
+	string guess;
+	if (pitem.guess_num == 1)
+	{
+		guess = "妹";
+	}else
+	{
+		guess = "哥";
+	}
+
+
+	string sendTime,reciveTime;
+	if (pitem.send_time == 0)
+	{
+		sendTime = "--";
+	}else{
+		SYSTEMTIME curTime =UiFun::Time_tToSystemTime(pitem.send_time);
+		sendTime = strprintf("%02d-%02d %02d:%02d:%02d", curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+	}
+	if (pitem.recv_time == 0)
+	{
+		reciveTime = "--";
+	}else{
+		SYSTEMTIME rTime =UiFun::Time_tToSystemTime(pitem.recv_time);
+		reciveTime = strprintf("%02d-%02d %02d:%02d:%02d", rTime.wMonth, rTime.wDay, rTime.wHour, rTime.wMinute, rTime.wSecond);
+	}
+	item[i++] = sendTime;
+	item[i++] = reciveTime;
+
+	string reward,result;
+	if (pitem.state == 2)
+	{
+		int rewardnum = (int)pitem.content[32];
+		if (pitem.guess_num == pitem.content[32])
+		{
+			reward =strprintf("+%.4f", pitem.amount);
+		}else
+		{
+			reward =strprintf("-%.4f", pitem.amount);
+		}
+
+		if (pitem.content[32] == 1)
+		{
+			result = "妹";
+		}else
+		{
+			result = "哥";
+		}
+		item[i++] = result;
+		item[i++] = guess;
+		item[i++] = reward;
+
+	}else{
+		if (pitem.height>0 &&(pitem.time_out + pitem.height)> theApp.blocktipheight&& theApp.IsSyncBlock)
+		{
+			item[i++] = "未开奖";
+			item[i++] = guess;
+			item[i++] = amount;
+		}else if(theApp.IsSyncBlock && pitem.height != 0){
+			amount= strprintf("+%.4f", pitem.amount);
+			item[i++] = "超时";
+			item[i++] = guess;
+			item[i++] = amount;
+		}else{
+			item[i++] = "未开奖";
+			item[i++] = guess;
+			item[i++] = amount;
+		}
+	}
+}
+void   CBetRecord::GetCellName(int nRow, int nCol, CString &strName)
+
+{
+
+	int nSeed = nCol;
+
+	CString strRow;
+
+	char cCell = 'A' + nCol - 1;
+
+
+
+	strName.Format(_T("%c"), cCell);
+
+
+
+	strRow.Format(_T( "%d "), nRow);
+
+	strName += strRow;
+
+}
+void CBetRecord::OExportAcceptBetToexel()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	string conditon;
+	conditon = "actor = 1 or actor = 2 order by recv_time desc";
+	uistruct::P2PBETRECORDLIST PoolList;
+	int nItem =  theApp.m_SqliteDeal.GetP2PQuizRecordList(conditon.c_str() ,&PoolList ) ;
+	if (PoolList.size() == 0)
+	{
+		UiFun::MessageBoxEx(_T("没有记录可以导出！") , _T("提示") ,MFB_OK|MFB_TIP );
+		return;
+	}
+	CFileDialog dlg(FALSE,NULL,"猜你妹接单记录",OFN_HIDEREADONLY|OFN_FILEMUSTEXIST ,"文件 (*.xls)|*.xls||");
+	if (IDOK != dlg.DoModal())
+	{
+		return;
+	}
+
+	CString strFile = dlg.GetPathName();
+	if (!((CDacrsUIDlg*)(theApp.m_pMainWnd))->GetFileName(strFile,_T(".xls")))
+	{
+		return;
+	}
+
+	struct LISTCol {
+		string		name ;
+		UINT		size ;
+	} listheadr[8]  = {
+		{"接单hash" ,  70},
+		{"发起人" ,    30},
+		{"接单人" ,    30},
+		{"发起时间" ,  20}, 
+		{"接单时间" ,  20}, 
+		{"底牌" ,10},
+		{"猜测" ,10},
+		{"金额" , 50}
+
+	};
+
+	COleVariant
+
+		covTrue((short)TRUE),
+
+		covFalse((short)FALSE),
+
+		covOptional((long)DISP_E_PARAMNOTFOUND,   VT_ERROR);
+
+	CApplication   app;
+
+	CWorkbooks   books;
+
+	CWorkbook   book;
+
+	CWorksheets   sheets;
+
+	CWorksheet   sheet;
+
+	CRange   range;
+
+	CFont0   font;
+
+
+
+	if (!app.CreateDispatch(_T("Excel.Application")))
+
+	{
+
+		UiFun::MessageBoxEx(_T("创建失败！") , _T("提示") ,MFB_OK|MFB_TIP );
+		return;
+
+	}
+
+
+
+	//Get   a   new   workbook.
+
+	books = app.get_Workbooks();
+
+	book = books.Add(covOptional);
+
+
+
+	sheets = book.get_Worksheets();
+
+	sheet = sheets.get_Item(COleVariant((short)1));
+
+
+
+	////////////////////////////////////CListCtrl控件report风格//////////////////////////////////////////////////////////
+
+	//CHeaderCtrl   *pmyHeaderCtrl;
+
+	//pmyHeaderCtrl = m_listCtrl.GetHeaderCtrl();//此句取得CListCtrl控件的列表頭
+
+
+
+	int   iRow,iCol;
+
+	int   m_cols   =   8;
+
+	int   m_rows = PoolList.size();
+
+	HDITEM   hdi;
+
+	TCHAR     lpBuffer[256];
+
+	bool       fFound   =   false;
+
+
+
+	hdi.mask   =   HDI_TEXT;
+
+	hdi.pszText   =   lpBuffer;
+
+	hdi.cchTextMax   =   256;
+
+	CString   colname;
+
+	CString strTemp;
+
+	for(iCol=0;   iCol <m_cols;   iCol++)//将列表的标题头写入EXCEL
+
+	{
+
+		GetCellName(1 ,iCol + 1, colname);
+
+		range   =   sheet.get_Range(COleVariant(colname),COleVariant(colname));
+
+		//pmyHeaderCtrl-> GetItem(iCol,   &hdi);
+
+		range.put_Value2(COleVariant(listheadr[iCol].name.c_str()));
+
+		int   nWidth   = listheadr[iCol].size;  //m_listCtrl.GetColumnWidth(iCol)/6;
+
+		//得到第iCol+1列  
+
+		range.AttachDispatch(range.get_Item(_variant_t((long)(iCol+1)),vtMissing).pdispVal,true);  
+
+		//设置列宽 
+
+		range.put_ColumnWidth(_variant_t((long)nWidth));
+
+	}
+
+	range   =   sheet.get_Range(COleVariant( _T("A1 ")),   COleVariant(colname));
+
+	range.put_RowHeight(_variant_t((long)50));//设置行的高度
+
+	font = range.get_Font();
+
+	font.put_Bold(covTrue);
+
+	range.put_VerticalAlignment(COleVariant((short)-4108));//xlVAlignCenter   =   -4108
+
+
+
+	COleSafeArray   saRet;
+
+	DWORD   numElements[]={m_rows,m_cols};       //5x2   element   array
+
+	saRet.Create(VT_BSTR,   2,   numElements);
+
+	range   =   sheet.get_Range(COleVariant( _T("A2 ")),covOptional);
+
+	range = range.get_Resize(COleVariant((short)m_rows),COleVariant((short)m_cols));
+
+	long   index[2];
+
+	range   =   sheet.get_Range(COleVariant( _T("A2 ")),covOptional);
+
+	range   =   range.get_Resize(COleVariant((short)m_rows),COleVariant((short)m_cols));
+
+	int iLine = 0;
+	iRow   =   1;
+	iCol   =   1;
+
+
+	vector<uistruct::P2P_QUIZ_RECORD_t>::const_iterator pitem = PoolList.begin();
+	for(;pitem != PoolList.end();pitem++,iRow++)
+	{
+		map<int,string> item;
+		GetExportCol(item,*pitem);
+		for   (   iCol   =   1;   iCol   <=   m_cols;   iCol++)  
+
+		{
+
+			index[0]=iRow-1;
+
+			index[1]=iCol-1;
+			string strTemp =  item[iCol-1];
+			CString   szTemp = strTemp.c_str();
+
+			BSTR   bstr   =   szTemp.AllocSysString();
+
+			saRet.PutElement(index,bstr);
+
+			SysFreeString(bstr);
+
+		}
+	}
+
+
+	range.put_Value2(COleVariant(saRet));
+
+
+	saRet.Detach();
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	book.SaveCopyAs(COleVariant(strFile));
+
+	//       cellinterior.ReleaseDispatch();
+
+	book.put_Saved(true);
+
+	book.ReleaseDispatch();  
+
+	books.ReleaseDispatch();  
+
+	app.Quit();
+
+	app.ReleaseDispatch();
 }

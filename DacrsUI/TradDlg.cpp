@@ -177,7 +177,7 @@ BOOL CTradDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 
 		m_rBtnExportTx.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
 		m_rBtnExportTx.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		m_rBtnExportTx.SetWindowText("导出EXEL表") ;
+		m_rBtnExportTx.SetWindowText("导出EXEL") ;
 		m_rBtnExportTx.SetFontEx(20 , _T("微软雅黑"));
 		m_rBtnExportTx.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		m_rBtnExportTx.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
@@ -187,7 +187,7 @@ BOOL CTradDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 
 		m_rBtnRefresh.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
 		m_rBtnRefresh.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		m_rBtnRefresh.SetWindowText("刷新") ;
+		m_rBtnRefresh.SetWindowText("刷  新") ;
 		m_rBtnRefresh.SetFontEx(20 , _T("微软雅黑"));
 		m_rBtnRefresh.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		m_rBtnRefresh.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
@@ -213,7 +213,6 @@ BOOL CTradDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_time.InsertString(4,_T("上月"));
 		m_time.InsertString(5,_T("今年"));
 		m_time.InsertString(6,_T("昨天"));
-
 		m_edit.SetWindowText(_T("请输入地址进行搜索"));
 
 		m_condition.SetCurSel(0);
@@ -253,9 +252,7 @@ void CTradDlg::OnBnClickedButtonTxdetail()
 
 	}else{
 		StrShow.Format(_T("请选择地址!\n"));
-		CMessageBoxEx message(_T("\n 请选择地址!")  , 0 );
-	            message.DoModal();
-		//::MessageBox( this->GetSafeHwnd() ,StrShow , _T("提示") , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(StrShow , _T("Error") ,MFB_OK|MFB_ERROR );
 	}
 
 }
@@ -479,7 +476,7 @@ void CTradDlg::OnSize(UINT nType, int cx, int cy)
 		if( NULL != pButton ) {	
 			CRect m_BtnRc ;
 			pButton->GetClientRect(&m_BtnRc);
-			pButton->SetWindowPos(NULL ,900 - 1*(103 + 5)- 23-m_BtnRc.Width()-10 , 600 - 72 - 32 - 46 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
+			pButton->SetWindowPos(NULL ,900 - 1*(103 + 5)- 23-m_BtnRc.Width()-18 , 600 - 72 - 32 - 46 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
 		}
 
 		pButton = (CButton*)GetDlgItem( IDC_BUTTON_REFRESH ) ;
@@ -523,6 +520,11 @@ void   CTradDlg::GetCellName(int nRow, int nCol, CString &strName)
 void CTradDlg::OnBnClickedExportExel()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	if (m_listCtrl.GetItemCount() == 0)
+	{
+		UiFun::MessageBoxEx(_T("没有记录可以导出！") , _T("提示") ,MFB_OK|MFB_TIP );
+		return;
+	}
 		CFileDialog dlg(FALSE,NULL,NULL,OFN_HIDEREADONLY|OFN_FILEMUSTEXIST ,"文件 (*.xls)|*.xls||");
 		if (IDOK != dlg.DoModal())
 		{
@@ -564,10 +566,8 @@ void CTradDlg::OnBnClickedExportExel()
 	if (!app.CreateDispatch(_T("Excel.Application")))
 
 	{
-		CMessageBoxEx message(_T("\n 创建失败!")  , 0 );
-	            message.DoModal();
-		//MessageBox(_T("创建失败！"));
 
+		UiFun::MessageBoxEx(_T("创建失败！") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 
 	}

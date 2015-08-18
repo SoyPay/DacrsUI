@@ -64,8 +64,9 @@ void ProductHttpHead(const string& configdir,const string& strCfgFileName,string
 			{
 				regpos = strTemp.find("=",regpos);
 				regtest= strTemp.substr(regpos+1,strTemp.length());
-				//regtest.TrimLeft();
-				//regtest.TrimRight();
+				regtest = UiFun::trimleft(regtest);
+				regtest = UiFun::trimright(regtest);
+	
 				if (strTemp.at(0) == '#')
 				{
 					regtest = "";
@@ -75,8 +76,8 @@ void ProductHttpHead(const string& configdir,const string& strCfgFileName,string
 			{
 				netpos = strTemp.find("=",netpos);
 				testnet= strTemp.substr(netpos+1,strTemp.length());
-				//testnet.TrimLeft();
-				//testnet.TrimRight();
+				testnet = UiFun::trimleft(testnet);
+				testnet = UiFun::trimright(testnet);
 				if (strTemp.at(0) == '#')
 				{
 					testnet = "";
@@ -86,15 +87,15 @@ void ProductHttpHead(const string& configdir,const string& strCfgFileName,string
 			{
 				rpcpos = strTemp.find("=",rpcpos);
 				strPort= strTemp.substr(rpcpos+1,strTemp.length());
-				//strPort.TrimLeft();
-				//strPort.TrimRight();
+				strPort = UiFun::trimleft(strPort);
+				strPort = UiFun::trimright(strPort);
 			}
 			if (uirpcpos>=0)
 			{
 				uirpcpos = strTemp.find("=",uirpcpos);
 				struiport= strTemp.substr(uirpcpos+1,strTemp.length());
-				//struiport.TrimLeft();
-				//struiport.TrimRight();
+				struiport = UiFun::trimleft(struiport);
+				struiport = UiFun::trimright(struiport);
 			}
 		}
 	}
@@ -168,11 +169,11 @@ void ProductHttpHead(const string& configdir,const string& strCfgFileName,string
 	if (rpcuser!= "" && rpcpassword!="")
 	{
 		UserPass = rpcuser;
-		//UserPass.TrimLeft();
-	//	UserPass.TrimRight();
+		UserPass = UiFun::trimleft(UserPass);
+		UserPass = UiFun::trimright(UserPass);
 		string temp = rpcpassword;
-		//temp.TrimLeft();
-		//temp.TrimRight();
+		temp = UiFun::trimleft(temp);
+		temp = UiFun::trimright(temp);
 		UserPass += strprintf(":%s",temp);
 		string strUserPass64 = CSoyPayHelp::getInstance()->EncodeBase64(UserPass);
 
@@ -237,10 +238,10 @@ void RPCCommandToJson(const string& strRPCCommand,string& strSendData)
 		while(pos >=0)
 		{
 			param = rpcCommand.substr(0,pos);
-			//param.TrimLeft();
-			//param.TrimRight();
+			param = UiFun::trimleft(param);
+			param = UiFun::trimright(param);
 			rpcCommand = rpcCommand.substr(pos+1);
-			//rpcCommand = rpcCommand.TrimLeft();
+			rpcCommand =  UiFun::trimleft(rpcCommand);
 			//if (param.GetLength()<10&&IsAllDigtal(param))
 			if (IsAllDigtal(param.c_str()))
 			{
@@ -250,7 +251,18 @@ void RPCCommandToJson(const string& strRPCCommand,string& strSendData)
 			}
 			else
 			{
-				root["params"].append(param);
+				if (param == "true"|| param == "TRUE")
+				{
+					root["params"].append(true);
+				}
+				else if (param == "false" || param == "FALSE")
+				{
+					root["params"].append(false);
+				}
+				else
+				{
+					root["params"].append(param);
+				}
 			}
 			pos = rpcCommand.find(" ");
 		}
@@ -263,11 +275,11 @@ void RPCCommandToJson(const string& strRPCCommand,string& strSendData)
 		}
 		else
 		{
-			if (rpcCommand == "true")
+			if (rpcCommand == "true"|| param == "TRUE")
 			{
 				root["params"].append(true);
 			}
-			else if (rpcCommand == "false")
+			else if (rpcCommand == "false" || param == "FALSE")
 			{
 				root["params"].append(false);
 			}
@@ -513,6 +525,50 @@ int CSoyPayHelp::SendContacrRpc(string cmd,string &rev){
 	}*/
 	rev = strShowData;
 	return rev.length();
+}
+BOOL CSoyPayHelp::SendRpc(string cmd,Json::Value  &rev)
+{
+	string revtemp;
+	mRpcCmd.SendRpc(cmd,revtemp);
+	string strShowData = ParseRecvData(revtemp.c_str());
+	if (strShowData == "")
+	{
+		return FALSE;
+	}
+	Json::Reader reader;  
+	if (!reader.parse(strShowData, rev)) 
+		return  FALSE;
+	if (rev.type() == Json::objectValue)
+	{
+		Json::Value::Members member = rev.getMemberNames(); 
+		for(Json::Value::Members::iterator iter = member.begin(); iter != member.end(); ++iter) 
+		{  
+			const std::string &name = *iter;
+			if (strcmp(name.c_str(),"error") == 0)
+			{
+				string message = rev["error"].asString();
+				TRACE("error rpc comand :%s",message.c_str());
+				return FALSE;
+			}
+		}
+	}
+	
+	//int pos = strShowData.find("error");
+	//if (pos >=0)
+	//{
+	//	string message = rev["error"].asString();
+	//	TRACE("error rpc comand :%s",message.c_str());
+	//	return FALSE;
+	//}
+	int pos = strShowData.find("code");
+	if (pos >= 0)
+	{
+		int code = rev["code"].asInt();
+		string message = rev["message"].asString();
+		TRACE("error rpc comand :%s",message.c_str());
+		return FALSE;
+	}
+	return TRUE;
 }
 int CSoyPayHelp::SendRpc(string cmd,string &rev)
 {
@@ -1239,22 +1295,15 @@ double CSoyPayHelp::GetAccountBalance(CString addr){
 
 	string strCommand,strShowData = "";
 	strCommand = strprintf("%s %s","getaccountinfo" ,addr );
-	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-	if (strShowData == "")
+	Json::Value root;
+	if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 	{
+		TRACE("GetAccountBalance rpccmd getaccountinfo error");
 		return 0.0;
 	}
-	Json::Reader reader; 
-	Json::Value root;
-	if (!reader.parse(strShowData, root)) 
-		return 0.0;
 
 	int64_t ret = 0;
-	if (strShowData.find("Balance") >= 0)
-	{
-		ret =  root["Balance"].asInt64();
-	}
+	ret =  root["Balance"].asInt64();
 	double nmoney = (ret*1.0/COIN);
 	return nmoney;
 }

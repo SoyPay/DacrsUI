@@ -9,10 +9,10 @@
 
 // CWalletPassPhrase 对话框
 
-IMPLEMENT_DYNAMIC(CWalletPassPhrase, CDialogEx)
+IMPLEMENT_DYNAMIC(CWalletPassPhrase, CDialogBase)
 
 CWalletPassPhrase::CWalletPassPhrase(CWnd* pParent /*=NULL*/)
-	: CDialogEx(CWalletPassPhrase::IDD, pParent)
+	: CDialogBase(CWalletPassPhrase::IDD, pParent)
 {
 
 }
@@ -23,13 +23,22 @@ CWalletPassPhrase::~CWalletPassPhrase()
 
 void CWalletPassPhrase::DoDataExchange(CDataExchange* pDX)
 {
-	CDialogEx::DoDataExchange(pDX);
+	CDialogBase::DoDataExchange(pDX);
+
+	DDX_Control(pDX, IDC_PASSWORD, m_password);
+	DDX_Control(pDX, IDC_TIMEOUT, m_timeout);	
+	DDX_Control(pDX, IDC_MINUE, m_minue);	
+	DDX_Control(pDX, IDC_HEAD, m_headText);	
+	DDX_Control(pDX, IDC_CLOSE, m_rBtnClose);
+	DDX_Control(pDX, IDCANCEL, m_rBtnCancel);
+	DDX_Control(pDX, IDOK, m_rBtnOk);
 }
 
 
-BEGIN_MESSAGE_MAP(CWalletPassPhrase, CDialogEx)
+BEGIN_MESSAGE_MAP(CWalletPassPhrase, CDialogBase)
 	ON_BN_CLICKED(IDOK, &CWalletPassPhrase::OnBnClickedOk)
 	ON_BN_CLICKED(IDCANCEL, &CWalletPassPhrase::OnBnClickedCancel)
+	ON_BN_CLICKED(IDC_CLOSE, &CWalletPassPhrase::OnBnClickedClose)
 END_MESSAGE_MAP()
 
 
@@ -45,70 +54,90 @@ void CWalletPassPhrase::OnBnClickedOk()
 	GetDlgItem(IDC_EDIT_TIEM)->GetWindowText(passtime);
 	if (PassWord == _T(""))
 	{
-		CMessageBoxEx message(_T("\n请输入密码!")  , 0 );
-	            message.DoModal();
-		//::MessageBox( this->GetSafeHwnd() ,_T("请输入密码") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("请输入密码") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 	if (passtime == _T(""))
 	{
-		CMessageBoxEx message(_T("\n请输入时间!")  , 0 );
-	            message.DoModal();
-		//::MessageBox( this->GetSafeHwnd() ,_T("请输入时间") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("请输入时间") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 	if (!IsAllDigtal(passtime))
 	{
-		CMessageBoxEx message(_T("\n时间必须数字!")  , 0 );
-	            message.DoModal();
-		//::MessageBox( this->GetSafeHwnd() ,_T("时间必须数字") , _T("提示") , MB_ICONINFORMATION ) ;
+		
+		UiFun::MessageBoxEx(_T("时间必须数字") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 	
 	string strCommand;
 	strCommand = strprintf("%s %s %d","walletpassphrase",PassWord,(atoi(passtime)*60));
 	string strShowData =_T("");
-
-	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-
-	if (strShowData == "")
-	{
-		return;
-	}
-	Json::Reader reader;  
 	Json::Value root; 
-	if (!reader.parse(strShowData, root)) 
-		return  ;
-
-	if (strShowData.find("passphrase") > 0)
+	if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 	{
-		bool isEntryp = root["passphrase"].asBool();
-		if (!isEntryp)
-		{
-			CMessageBoxEx message(_T("\n输入就密码不正确,请重新输入!")  , 0 );
-	            message.DoModal();
-			//MessageBox(_T("输入就密码不正确,请重新输入"));
-			return;
-		}else{
-			CMessageBoxEx message(_T("\n恭喜钱包解锁成功!")  , 0 );
-	            message.DoModal();
-			//MessageBox(_T("恭喜钱包解锁成功"));
-		}
-	}else{
-		CMessageBoxEx message(_T("\n输入就密码不正确,请重新输入!")  , 0 );
-	            message.DoModal();
-		//MessageBox(_T("输入就密码不正确,请重新输入"));
+		TRACE(" rpccmd walletpassphrase error");
 		return;
 	}
+
+
+	bool isEntryp = root["passphrase"].asBool();
+	if (!isEntryp)
+	{
+		UiFun::MessageBoxEx(_T("输入就密码不正确,请重新输入") , _T("提示") ,MFB_OK|MFB_TIP );
+		return;
+	}else{
+		UiFun::MessageBoxEx(_T("恭喜钱包解锁成功") , _T("提示") ,MFB_OK|MFB_TIP );
+	}
+
 	theApp.m_passlock = TRUE;
-	CDialogEx::OnOK();
+	CDialogBase::OnOK();
 }
 
 
 BOOL CWalletPassPhrase::OnInitDialog()
 {
-	CDialogEx::OnInitDialog();
+	CDialogBase::OnInitDialog();
 
+	m_headText.SetFont(100, _T("微软雅黑"));
+	m_headText.SetTextColor(RGB(255,255,255));	
+
+	m_rBtnClose.SetBitmaps( IDB_BITMAP_CLOSE , RGB(255, 255, 0) , IDB_BITMAP_CLOSE2 , RGB(255, 255, 255) );
+	m_rBtnClose.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+	m_rBtnClose.SetWindowText("") ;
+	m_rBtnClose.SetFontEx(20 , _T("微软雅黑"));
+	m_rBtnClose.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
+	m_rBtnClose.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+	m_rBtnClose.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
+	m_rBtnClose.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
+	m_rBtnClose.SizeToContent();
+	CRect rect ;
+	m_rBtnClose.GetClientRect(rect);
+
+	RECT ret;
+	GetWindowRect(&ret);
+	m_rBtnClose.SetWindowPos(NULL ,(ret.right-ret.left)-rect.Width() , 2 , 0 , 0 , SWP_NOSIZE); 
+
+	m_rBtnOk.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
+	m_rBtnOk.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+	m_rBtnOk.SetWindowText("确 定") ;
+	//m_rBtnOk.SetFontEx(20 , _T("微软雅黑"));
+	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
+	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
+	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
+	m_rBtnOk.SizeToContent();
+
+	m_rBtnCancel.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
+	m_rBtnCancel.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+	m_rBtnCancel.SetWindowText("取 消") ;
+	//m_rBtnCancel.SetFontEx(20 , _T("微软雅黑"));
+	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
+	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
+	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
+	m_rBtnCancel.SizeToContent();
 	// TODO:  在此添加额外的初始化
 	theApp.m_passlock = FALSE;
 	GetDlgItem(IDC_EDIT_TIEM)->SetWindowText(_T("60"));
@@ -121,5 +150,13 @@ void CWalletPassPhrase::OnBnClickedCancel()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	theApp.m_passlock = TRUE;
-	CDialogEx::OnCancel();
+	CDialogBase::OnCancel();
+}
+
+
+void CWalletPassPhrase::OnBnClickedClose()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	theApp.m_passlock = TRUE;
+	CDialogBase::OnCancel();
 }
