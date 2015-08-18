@@ -78,7 +78,7 @@ BOOL CDialogBase::OnEraseBkgnd(CDC* pDC)
 		dcMem.SelectObject(pOldhBitmap);
 
 		::GetObject(m_pBmp,sizeof(BITMAP),   (LPVOID)&bm); 
-		dcMem.CreateCompatibleDC(NULL); 
+		//dcMem.CreateCompatibleDC(NULL); 
 		HBITMAP     pOldBitmap   =(HBITMAP   )   dcMem.SelectObject(m_pBmp); 
 		pDC->StretchBlt(rect.left,rect.top-1+height,rect.Width(),rect.Height(),   &dcMem,   0,   0,bm.bmWidth-1,bm.bmHeight-1,   SRCCOPY); 
 		dcMem.SelectObject(pOldBitmap);
