@@ -429,6 +429,11 @@ string ParseJsonToList(const string& strValue)
 	Json::Value value;
 	if(reader.parse(strData,value))
 	{
+		int pos = strValue.find("result");
+		if (pos < 0)
+		{
+			return strData;
+		}
 		Json::Value obj = value["result"];
 		if(obj.isString())
 		{
