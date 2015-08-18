@@ -90,7 +90,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <OutputFile>..\bin\DacrsUI.exe</OutputFile>
+      <OutputFile>C:\dacrs_main_net_rc\DacrsUI.exe</OutputFile>
       <GenerateMapFile>true</GenerateMapFile>
     </Link>
     <Midl>

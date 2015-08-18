@@ -2275,7 +2275,7 @@ void CP2PDlg::ReadP2pPoolFromCmd(uistruct::P2PLIST &PoolList)
 				continue;
 			}
 
-			strCommand = strprintf("%s %s",_T("gettxdetail"),strTemp.c_str());
+			/*strCommand = strprintf("%s %s",_T("gettxdetail"),strTemp.c_str());
 			string strShowData ="";
 
 			if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root1))
@@ -2294,7 +2294,7 @@ void CP2PDlg::ReadP2pPoolFromCmd(uistruct::P2PLIST &PoolList)
 			}
 			int curheight =root1["blocks"].asInt();
 			if(curheight >=(confirheight+500))
-				continue;
+				continue;*/
 
 			if (DBbet.betstate == 0x00)
 			{
