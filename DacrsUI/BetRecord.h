@@ -44,6 +44,5 @@ public:
 	afx_msg void OnBnClickedButtonNext();
 	afx_msg void OnLbnDblclkListBox();
 	void OExportAcceptBetToexel();
-	void GetCellName(int nRow, int nCol, CString &strName);
 	void GetExportCol(map<int,string> &item,uistruct::P2P_QUIZ_RECORD_t pitem);
 };
