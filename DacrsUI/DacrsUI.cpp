@@ -469,7 +469,7 @@ UINT __stdcall CDacrsUIApp::ProcessAppTx(LPVOID pParam)
 		/// 同步以后更新数据库表
 		if (theApp.IsSyncAppTx )
 		{
-			LogPrint("INFO","ProcessAppTx");
+			LogPrint("INFO","ProcessAppTx\r\n");
 			theApp.m_SqliteDeal.UpdataAllTableData();
 			return 1;
 		}
@@ -503,7 +503,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 		{
 		case MSG_USER_STARTPROCESS_UI:
 			{
-				LogPrint("PROCESSMSG", "MSG_USER_STARTPROCESS_UI 第:%d\n",Postmsg.GetDatatype());
+				LogPrint("PROCESSMSG", "MSG_USER_STARTPROCESS_UI 第:%d\r\n",Postmsg.GetDatatype());
 				theApp.DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_STARTPROCESS_UI ,Postmsg.GetDatatype(),0);
 				if (Postmsg.GetDatatype() == 4)
 				{
@@ -512,8 +512,8 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 				if(theApp.IsSyncTx){
 					theApp.IsSyncTx = FALSE;
 					theApp.m_SqliteDeal.CommitDbTransaction();
-					TRACE("Sync Tx commit transaction\n");
-					LogPrint("INFO", "Sync Tx commit transaction\n");
+					TRACE("Sync Tx commit transaction\r\n");
+					LogPrint("INFO", "Sync Tx commit transaction\r\n");
 				}
 			}
 			break;
@@ -524,7 +524,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 				{
 				case WM_UP_ADDRESS:
 					{
-						LogPrint("PROCESSMSG", "WM_UP_ADDRESS\n");
+						LogPrint("PROCESSMSG", "WM_UP_ADDRESS\r\n");
 						//更新钱包地址数据库
 						((CDacrsUIApp*)pParam)->UpdateAddressData();
 					}
@@ -540,7 +540,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 						if ( "" != txData ) {
 							((CDacrsUIApp*)pParam)->SyncTransaction(txData) ;
 						}
-						LogPrint("PROCESSMSG", "WM_SYNC_TRANSACTION 启动同步交易:%s\n",txData.c_str());
+						LogPrint("PROCESSMSG", "WM_SYNC_TRANSACTION 启动同步交易:%s\r\n",txData.c_str());
 					}
 					break;
 				case WM_REVTRANSACTION:
@@ -658,7 +658,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 							int nItem =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.GetTableCountItem(_T("t_transaction") ,strCondition);
 							if (nItem != 0)
 							{
-								LogPrint("INFO","WM_RELEASETX:%s",pHash.c_str());
+								LogPrint("INFO","WM_RELEASETX:%s\r\n",pHash.c_str());
 								((CDacrsUIApp*)pParam)->InsertTransaction(pHash ) ;
 								theApp.m_SqliteDeal.UpdataAllTableData();   /// 更新应用表格
 							}
@@ -675,7 +675,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 							int nItem =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.GetTableCountItem(_T("t_transaction") ,strCondition);
 							if (nItem != 0)
 							{
-								LogPrint("INFO","WM_REMOVETX:%s",pHash.c_str());
+								LogPrint("INFO","WM_REMOVETX:%s\r\n",pHash.c_str());
 								((CDacrsUIApp*)pParam)->m_SqliteDeal.DeleteTableItem(_T("t_transaction"),strCondition);
 								theApp.m_SqliteDeal.UpdataAllTableData();   /// 更新应用表格
 							}

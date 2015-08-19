@@ -49,7 +49,7 @@ public:
 	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 	afx_msg void OnBnClickedExportExel();
 	afx_msg void OnCbnSelchangeCombo1();
-	void OnShowListCtrl(uistruct::TRANSRECORDLIST pListInfo,int flag =0);
+	void OnShowListCtrl(uistruct::TRANSRECORDLIST pListInfo);
 	bool  isMine(CString addr);
 	afx_msg void OnCbnSelchangeComboTime();
 	string GetConditonTime();
@@ -60,7 +60,6 @@ public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	string GetConditonStr(int &operate);
 	BOOL IsInsertTx(uistruct::REVTRANSACTION_t txdetail);
-	BOOL FindDesTx(uistruct::TRANSRECORDLIST pListInfo,int flag,uistruct::REVTRANSACTION_t txdetail);
 	
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 	afx_msg void OnBnClickedButtonRefresh();

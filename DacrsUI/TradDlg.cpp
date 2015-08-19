@@ -747,7 +747,7 @@ void CTradDlg::OnBnClickedExportExel()
 	app.ReleaseDispatch();
 }
 
-void CTradDlg::OnShowListCtrl(uistruct::TRANSRECORDLIST pListInfo,int flag){
+void CTradDlg::OnShowListCtrl(uistruct::TRANSRECORDLIST pListInfo){
 
 	m_listCtrl.DeleteAllItems();
 	if (pListInfo.size() == 0)
@@ -759,14 +759,7 @@ void CTradDlg::OnShowListCtrl(uistruct::TRANSRECORDLIST pListInfo,int flag){
 	string strShowData = "";
 	std::vector<uistruct::REVTRANSACTION_t>::const_iterator const_it;
 	for ( const_it = pListInfo.begin() ; const_it != pListInfo.end() ; const_it++ ) {
-		if (flag == 1 && !isMine(const_it->desaddr.c_str()))
-		{
-			continue;
-		}
-		if (flag == 2 && !isMine(const_it->addr.c_str()))
-		{
-			continue;
-		}
+
 		nSubIdx = 0;
 		strShowData = strprintf("%d", i+1);
 		m_listCtrl.InsertItem(i, strShowData.c_str());					//ÐòºÅ
@@ -838,7 +831,7 @@ void CTradDlg::OnCbnSelchangeCombo1()
 
 	uistruct::TRANSRECORDLIST pListInfo;
 	theApp.m_SqliteDeal.GetTransactionList(condtion, &pListInfo); 
-	OnShowListCtrl(pListInfo,operate);
+	OnShowListCtrl(pListInfo);
 }
 
 void CTradDlg::OnCbnSelchangeComboTime()
@@ -848,7 +841,7 @@ void CTradDlg::OnCbnSelchangeComboTime()
 	string condtion = GetConditonStr(operate);
 	uistruct::TRANSRECORDLIST pListInfo;
 	theApp.m_SqliteDeal.GetTransactionList(condtion, &pListInfo); 
-	OnShowListCtrl(pListInfo,operate);
+	OnShowListCtrl(pListInfo);
 }
 string CTradDlg::GetConditonTime(){
 	SYSTEMTIME curTime ;
@@ -990,14 +983,14 @@ string CTradDlg::GetConditonTxType(int &operate){
 	{
 		operate = 1;
 		
-		conditon=" tx_type='COMMON_TX'";
+		conditon=" tx_type='COMMON_TX' and (state =2 or state =3)";
 		return conditon;
 		//theApp.m_SqliteDeal.GetTransactionList(_T(" tx_type='COMMON_TX' order by confirmed_time"), &pListInfo); 
 		//OnShowListCtrl(pListInfo,1);
 	}else if (strcmp(text,_T("·¢ËÍ")) == 0)
 	{
 		operate = 2;
-		conditon=" tx_type='COMMON_TX'";
+		conditon=" tx_type='COMMON_TX' and (state =1 or state =3)";
 		return conditon;
 		//theApp.m_SqliteDeal.GetTransactionList(_T(" tx_type='COMMON_TX' order by confirmed_time"), &pListInfo); 
 		//OnShowListCtrl(pListInfo,2);
@@ -1037,7 +1030,7 @@ void CTradDlg::ShowAddrConditon()
 
 	uistruct::TRANSRECORDLIST pListInfo;
 	theApp.m_SqliteDeal.GetTransactionList(condtion, &pListInfo); 
-	OnShowListCtrl(pListInfo,operate);
+	OnShowListCtrl(pListInfo);
 }
 
 BOOL CTradDlg::PreTranslateMessage(MSG* pMsg)
@@ -1185,28 +1178,7 @@ HBRUSH CTradDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 	}
 	return hbr;
 }
-BOOL CTradDlg::FindDesTx(uistruct::TRANSRECORDLIST pListInfo,int flag,uistruct::REVTRANSACTION_t txdetail)
-{
-	if (pListInfo.size() == 0)
-	{
-		return FALSE;
-	}
-	CString strShowData = _T("");
-	std::vector<uistruct::REVTRANSACTION_t>::const_iterator const_it;
-	for ( const_it = pListInfo.begin() ; const_it != pListInfo.end() ; const_it++ ) {
-		if (flag == 1 && !isMine(const_it->desaddr.c_str()))
-		{
-			continue;
-		}
-		if (flag == 2 && !isMine(const_it->addr.c_str()))
-		{
-			continue;
-		}
-		if(strcmp(const_it->txhash.c_str(),txdetail.txhash.c_str()) == 0)
-			return TRUE;
-	}
-	return FALSE;
-}
+
 string CTradDlg::GetConditonTime(INT64 &maxtime,INT64 &mintime)
 {
 	SYSTEMTIME curTime ;
@@ -1404,12 +1376,7 @@ BOOL CTradDlg::IsInsertTx(uistruct::REVTRANSACTION_t txdetail)
 	}
 
 	return TRUE;
-	//CString condtion = GetConditonStr(operate);
 
-	//uistruct::TRANSRECORDLIST pListInfo;
-	//theApp.m_SqliteDeal.GetTransactionList(condtion, &pListInfo); 
-
-	//return FindDesTx(pListInfo,operate,txdetail);
 }
 
 void CTradDlg::OnBnClickedButtonRefresh()
@@ -1421,5 +1388,5 @@ void CTradDlg::OnBnClickedButtonRefresh()
 	uistruct::TRANSRECORDLIST pListInfo;
 	theApp.m_SqliteDeal.GetTransactionList(condtion, &pListInfo); 
 
-	OnShowListCtrl(pListInfo,operate);
+	OnShowListCtrl(pListInfo);
 }

@@ -144,16 +144,15 @@ BOOL CIpoCoin::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 			m_listCtrl.InsertColumn(i,listcol[i].name,LVCFMT_CENTER,listcol[i].size);
 		}
 		m_listCtrl.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_HEADERDRAGDROP );// |LVS_SINGLESEL  );
-		LogPrint("INFO","ipo AddListaddrDataBox before\n");
+	
 
 		CString strTxFee;
 		INT64 minFee = 45266;
 		double dnum = (minFee*1.0/COIN);
 		strTxFee.Format(_T("%.8f"),dnum);
 
-		LogPrint("INFO","ipo Create end\n");
+		
 	}
-	LogPrint("INFO","ipo Create toenter\n");
 	return bRes ;
 }
 
