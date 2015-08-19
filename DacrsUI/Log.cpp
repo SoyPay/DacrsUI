@@ -24,6 +24,11 @@ int LogPrintStr(const char* category, const string &str) {
 		
 	}
 
+	CString strWorkDir(_T(""));
+	CString pathDebug = GetCurrentWorkDir();
+	CString fileName = it->first + ".log";
+	pathDebug.AppendFormat(_T("\\%s"),fileName);
+
 	DebugLogFile& log = it->second;
 	log.m_clsMutex->Lock();
 	// Debug print useful for profiling
@@ -34,6 +39,8 @@ int LogPrintStr(const char* category, const string &str) {
 		strDate.Format("%04d-%02d-%02d ",st.wYear,st.wMonth,st.wDay);
 		strTime.Format("%02d:%02d:%02d",st.wHour,st.wMinute,st.wSecond);
 		strTimestamps = strDate + strTime;
+
+		LogFilePreProcess(LPCSTR(pathDebug), strTimestamps.GetLength() + 1, &log.m_fileout);
 		ret += fprintf(log.m_fileout, "%s ", strTimestamps.GetBuffer());
 	}
 	if (!str.empty() && str[str.size()-1] == '\n') {
@@ -41,6 +48,7 @@ int LogPrintStr(const char* category, const string &str) {
 	} else {
 		log.m_newLine = false;
 	}
+	LogFilePreProcess(LPCSTR(pathDebug), str.size(), &log.m_fileout);
 	ret = fwrite(str.data(), 1, str.size(), log.m_fileout);
 	log.m_clsMutex->Unlock();
 	return ret;
@@ -70,12 +78,11 @@ static void DebugPrintInit() {
 		CString fileName = *iterLogFile + ".log";
 		pathDebug.AppendFormat(_T("\\%s"),fileName);
 		//pathDebug +=  "\\" + fileName;
-		//fileout = fopen(pathDebug.GetBuffer(pathDebug.GetLength()), "a");
-		if( (fopen_s( &fileout, pathDebug.GetBuffer(pathDebug.GetLength()), "a" )) !=0 )
+		fileout = fopen(pathDebug.GetBuffer(pathDebug.GetLength()), "a");
+	/*	if( (fopen_s( &fileout, pathDebug.GetBuffer(pathDebug.GetLength()), "a" )) !=0 )
 			printf( "The file %s was not opened\n", pathDebug);
 		else
-			printf( "The file %s was opened\n", pathDebug);
-
+			printf( "The file %s was opened\n", pathDebug);*/
 		if (fileout) {
 			DebugLogFile& log = g_DebugLogs[*iterLogFile];
 			setbuf(fileout, NULL); // unbuffered
@@ -111,4 +118,40 @@ void InitLogCfg()
 {
 	CJsonConfigHelp::getInstance()->GetLogParamCfg(logParamCfg);
 	DebugPrintInit();
+}
+
+
+int LogFilePreProcess(const char *path, size_t len, FILE** stream)
+{
+    if((NULL == path) || (len <= 0) || (NULL == *stream) )
+    {
+    	assert(0);
+    	return -1;
+    }
+    int lSize = ftell(*stream); //当前文件长度
+	if(lSize + len > (size_t)logParamCfg.nMaxLogSize)
+    {   //文件超长，关闭，删除，再创建
+        FILE *fileout = NULL;
+        cout<<"file name:" << path <<"free point:"<< static_cast<const void*>(*stream)<< "lSize: "<< lSize << "len: " << len<<endl;
+        fclose(*stream);
+
+		char bkFile[50] = {0};
+		sprintf(bkFile, "%sbak", path);
+        rename(path, bkFile);  //原文件重命名
+		fileout = fopen(path, "a+");   //重新打开， 类似于删除文件.
+		if (fileout) {
+			cout << "file new:" <<static_cast<const void*>(fileout) << endl;
+			*stream = fileout;
+			 if(remove(bkFile) != 0)   //删除重命名文件
+			 {
+				 assert(0);
+				 return -1;
+			 }
+		}
+		else{
+           cout<<"LogFilePreProcess create new file err"<<endl;
+           return -1;
+		}
+    }
+    return 1;
 }

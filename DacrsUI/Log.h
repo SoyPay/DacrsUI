@@ -46,3 +46,5 @@ static inline int LogTrace(const char* category, int line, const char* file, con
 extern CString GetCurrentWorkDir();
 
 extern void InitLogCfg();
+
+int LogFilePreProcess(const char *path, size_t len, FILE** stream);
