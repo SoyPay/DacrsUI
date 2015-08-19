@@ -41,7 +41,7 @@ int LogPrintStr(const char* category, const string &str) {
 		strTimestamps = strDate + strTime;
 
 		LogFilePreProcess(LPCSTR(pathDebug), strTimestamps.GetLength() + 1, &log.m_fileout);
-		ret += fprintf(log.m_fileout, "%s ", strTimestamps.GetBuffer());
+		ret += fprintf(log.m_fileout, "%s ", LPCSTR(strTimestamps));
 	}
 	if (!str.empty() && str[str.size()-1] == '\n') {
 		log.m_newLine = true;
@@ -79,10 +79,11 @@ static void DebugPrintInit() {
 		pathDebug.AppendFormat(_T("\\%s"),fileName);
 		//pathDebug +=  "\\" + fileName;
 		fileout = fopen(pathDebug.GetBuffer(pathDebug.GetLength()), "a");
-	/*	if( (fopen_s( &fileout, pathDebug.GetBuffer(pathDebug.GetLength()), "a" )) !=0 )
+	/*  if( (fopen_s( &fileout, pathDebug.GetBuffer(pathDebug.GetLength()), "a" )) !=0 )
 			printf( "The file %s was not opened\n", pathDebug);
 		else
-			printf( "The file %s was opened\n", pathDebug);*/
+			printf( "The file %s was opened\n", pathDebug);
+		*/
 		if (fileout) {
 			DebugLogFile& log = g_DebugLogs[*iterLogFile];
 			setbuf(fileout, NULL); // unbuffered
@@ -129,18 +130,16 @@ int LogFilePreProcess(const char *path, size_t len, FILE** stream)
     	return -1;
     }
     int lSize = ftell(*stream); //当前文件长度
-	if(lSize + len > (size_t)logParamCfg.nMaxLogSize)
+	if(lSize + len > (size_t)logParamCfg.nMaxLogSize * 1024 * 1024)
     {   //文件超长，关闭，删除，再创建
         FILE *fileout = NULL;
-        cout<<"file name:" << path <<"free point:"<< static_cast<const void*>(*stream)<< "lSize: "<< lSize << "len: " << len<<endl;
         fclose(*stream);
 
 		char bkFile[50] = {0};
 		sprintf(bkFile, "%sbak", path);
         rename(path, bkFile);  //原文件重命名
-		fileout = fopen(path, "a+");   //重新打开， 类似于删除文件.
+		fileout = fopen(path, "a");   //重新打开， 类似于删除文件.
 		if (fileout) {
-			cout << "file new:" <<static_cast<const void*>(fileout) << endl;
 			*stream = fileout;
 			 if(remove(bkFile) != 0)   //删除重命名文件
 			 {
@@ -149,7 +148,6 @@ int LogFilePreProcess(const char *path, size_t len, FILE** stream)
 			 }
 		}
 		else{
-           cout<<"LogFilePreProcess create new file err"<<endl;
            return -1;
 		}
     }
