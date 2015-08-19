@@ -133,6 +133,8 @@ BOOL CDacrsUIApp::InitInstance()
 	ParseUIConfigFile(str_InsPath);
 	//初始化日志配置参数
 	InitLogCfg();
+
+	LogPrint("INFO", "启动DacrsUI程序\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 	//检测自动升级
 	int nResult = Update();
 	if(-1 == nResult) {
@@ -469,7 +471,6 @@ UINT __stdcall CDacrsUIApp::ProcessAppTx(LPVOID pParam)
 		/// 同步以后更新数据库表
 		if (theApp.IsSyncAppTx )
 		{
-			LogPrint("INFO","ProcessAppTx");
 			theApp.m_SqliteDeal.UpdataAllTableData();
 			return 1;
 		}
@@ -1409,12 +1410,12 @@ int CDacrsUIApp::Update()
 {
 	CString sPath;//=str_InsPath+"\\qupdater.exe";
 	sPath.Format(_T("%s\\qupdater.exe"),str_InsPath.c_str());
-	LogPrint("INFO","Updata:%s\r\n",sPath);
+	LogPrint("INFO","Updata:%s\n",sPath);
 	sPath.Replace("\\\\","\\");
-	LogPrint("INFO","Updata:%s\r\n",sPath);
+	LogPrint("INFO","Updata:%s\n",sPath);
 	CFileFind find;
 	if(!find.FindFile(sPath)) return false;
-	LogPrint("INFO","Updata start:%s\r\n",sPath);
+	LogPrint("INFO","Updata start:%s\n",sPath);
 	SHELLEXECUTEINFO ShRun = {0}; 
 	ShRun.cbSize = sizeof(SHELLEXECUTEINFO); 
 	ShRun.fMask = SEE_MASK_NOCLOSEPROCESS; 
@@ -1427,11 +1428,11 @@ int CDacrsUIApp::Update()
 	ShellExecuteEx(&ShRun); 
 	WaitForSingleObject(ShRun.hProcess, 120000); 
 	ULONG lResult = 0; 
-	LogPrint("INFO","Updata OpenProcess:%0x\r\n",ShRun.hProcess);
+	LogPrint("INFO","Updata OpenProcess:%0x\n",ShRun.hProcess);
 	if (!GetExitCodeProcess(ShRun.hProcess, &lResult)) return false;
-	LogPrint("INFO","Updata GetExitCodeProcess:%s\r\n",sPath);
+	LogPrint("INFO","Updata GetExitCodeProcess:%s\n",sPath);
 	if (lResult == 0) return -1;
-	LogPrint("INFO","Updata lResult:%s\r\n",sPath);
+	LogPrint("INFO","Updata lResult:%s\n",sPath);
 	CString sMsg;
 	//sMsg.Format(CLanguage::TranLanguage("MAIN","%d updates found at the website,now to upgrade?"),lResult);
 	sMsg.Format(CLanguage::TranLanguage("MAIN","检查有%d文件需要更新,现在是否要更新?"),lResult);
