@@ -313,7 +313,10 @@ void CJsonConfigHelp::ReadLogParamCfg(const Json::Value &root)
 	}
 	m_LogParamCfg.bPrintFileLine = (logParam["print_fileline"].asInt()>0);
 	m_LogParamCfg.bPrinttimestamps = (logParam["print_timestamps"].asInt()>0);
-	
+	m_LogParamCfg.nMaxLogSize = logParam["max_size"].asInt();
+	if(0 == m_LogParamCfg.nMaxLogSize) {
+		m_LogParamCfg.nMaxLogSize = 100;
+	}
 }
 
 void CJsonConfigHelp::GetLogParamCfg(CLogParamCfg &logCfg)
