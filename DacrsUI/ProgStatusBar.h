@@ -43,6 +43,7 @@ public:
 	void ShowLockCtrl();
 	void OnIniLockParam();
 	void ShowNetCount();
+	string GetUIVersion();
 public:
 	BOOL        m_bProgressType;
 	int         m_ProgressMax  ;
