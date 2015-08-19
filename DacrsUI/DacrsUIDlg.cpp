@@ -253,7 +253,6 @@ int CDacrsUIDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		m_pRPCDlg->Create(CRPCDlg::IDD,this);
 		m_pRPCDlg->ShowWindow(SW_HIDE);
 	}
-	LogPrint("INFO","Create RpdDlg end\n");
 	//TOP
 	if( NULL == m_pTitleBar ){
 		m_pTitleBar = new CIndTitleBar ;
@@ -261,7 +260,6 @@ int CDacrsUIDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		m_pTitleBar->SetWindowPos(NULL , 0 , 0  , rect.Width() ,72 , SWP_SHOWWINDOW) ;
 		m_pTitleBar->ShowWindow(SW_SHOW) ;
 	}
-		LogPrint("INFO","Create m_pTitleBar end\n");
 	//TRACE("wwwwwCIndTitleBar\r\n");
 	//BOTTOM
 	if( NULL == m_pStatusBar ){
@@ -270,21 +268,18 @@ int CDacrsUIDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		m_pStatusBar->SetWindowPos(NULL , 0 , rect.Height() - 32  , rect.Width() ,32 , SWP_SHOWWINDOW) ;
 		m_pStatusBar->ShowWindow(SW_SHOW) ;
 	}
-	LogPrint("INFO","Create m_pStatusBar end\n");
 	//TRACE("wwwwwCProgStatusBar\r\n");
 	if( NULL == m_pMainDlg ){
 		m_pMainDlg = new CMainDlg ;
 		m_pMainDlg->Create(this, CMainDlg::IDD, CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_HIDE_INPLACE,3) ;
 		m_pMainDlg->ShowWindow(SW_HIDE) ;
 	}
-		LogPrint("INFO","Create m_pMainDlg end\n");
 	//TRACE("wwwwwCMainDlg\r\n");
 	if( NULL == m_pSendDlg ){
 		m_pSendDlg = new CSendDlg ;
 		m_pSendDlg->Create(this, CSendDlg::IDD, CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_HIDE_INPLACE,4) ;
 		m_pSendDlg->ShowWindow(SW_HIDE) ;
 	}
-		LogPrint("INFO","Create m_pSendDlg end\n");
 	//TRACE("wwwwwCSendDlg\r\n");
 	//
 	if( NULL == m_pReceiveDlg ){
@@ -292,26 +287,22 @@ int CDacrsUIDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		m_pReceiveDlg->Create(this, CReceiveDlg::IDD, CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_HIDE_INPLACE,5) ;
 		m_pReceiveDlg->ShowWindow(SW_HIDE) ;
 	}
-	LogPrint("INFO","Create m_pReceiveDlg end\n");
 	//TRACE("wwwwwCReceiveDlg\r\n");
 	if( NULL == m_pTradDlg ){
 		m_pTradDlg = new CTradDlg ;
 		m_pTradDlg->Create(this, CTradDlg::IDD, CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_HIDE_INPLACE,6) ;
 		m_pTradDlg->ShowWindow(SW_HIDE) ;
 	}
-	LogPrint("INFO","Create m_pTradDlg end\n");
 	if( NULL == m_pP2PDlg ){
 		m_pP2PDlg = new CP2PDlg ;
 		m_pP2PDlg->Create(this, CP2PDlg::IDD, CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_HIDE_INPLACE,7) ;
 		m_pP2PDlg->ShowWindow(SW_HIDE) ;
 	}
-	LogPrint("INFO","Create m_pP2PDlg end\n");
 	if( NULL == m_pMortgageTardDlg ){
 		m_pMortgageTardDlg = new CMortgageTardDlg ;
 		m_pMortgageTardDlg->Create(this, CMortgageTardDlg::IDD, CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_HIDE_INPLACE,8) ;
 		m_pMortgageTardDlg->ShowWindow(SW_HIDE) ;
 	}
-	LogPrint("INFO","Create m_pMortgageTardDlg end\n");
 	//if( NULL == m_pIpoDlg ){
 	//	m_pIpoDlg = new CIpoDlg ;
 	//	m_pIpoDlg->Create(this, CIpoDlg::IDD, CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_HIDE_INPLACE,9) ;
@@ -323,21 +314,16 @@ int CDacrsUIDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		m_pIpoCoinDlg->Create(this, CIpoCoin::IDD, CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_HIDE_INPLACE,11) ;
 		m_pIpoCoinDlg->ShowWindow(SW_HIDE) ;
 	}
-
-	LogPrint("INFO","Create m_pIpoCoinDlg end\n");
 	if( NULL == m_pAddApp ){
 		m_pAddApp = new CAddApp ;
 		m_pAddApp->Create(this, CAddApp::IDD, CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_HIDE_INPLACE,10) ;
 		m_pAddApp->ShowWindow(SW_HIDE) ;
 	}
-	LogPrint("INFO","Create m_pAddApp end \n");
 	if( NULL == m_pOutGifDlg ){
 		m_pOutGifDlg = new COutGifDlg ;
 		m_pOutGifDlg->Create(COutGifDlg::IDD , this) ;
 		m_pOutGifDlg->ShowWindow(SW_HIDE) ;
 	}
-	LogPrint("INFO","Create m_pOutGifDlg end\n");
-
 	//º”»ÎµΩm_dlgMap
 	m_dlgMap.insert( std::map<UINT , CDialogBar *>::value_type( CMainDlg::IDD , m_pMainDlg)) ; 
 	m_dlgMap.insert( std::map<UINT , CDialogBar *>::value_type( CSendDlg::IDD , m_pSendDlg)) ; 

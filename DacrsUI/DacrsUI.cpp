@@ -133,6 +133,8 @@ BOOL CDacrsUIApp::InitInstance()
 	ParseUIConfigFile(str_InsPath);
 	//初始化日志配置参数
 	InitLogCfg();
+
+	LogPrint("INFO", "启动DacrsUI程序\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 	//检测自动升级
 	int nResult = Update();
 	if(-1 == nResult) {
@@ -469,7 +471,6 @@ UINT __stdcall CDacrsUIApp::ProcessAppTx(LPVOID pParam)
 		/// 同步以后更新数据库表
 		if (theApp.IsSyncAppTx )
 		{
-			LogPrint("INFO","ProcessAppTx\r\n");
 			theApp.m_SqliteDeal.UpdataAllTableData();
 			return 1;
 		}
@@ -503,7 +504,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 		{
 		case MSG_USER_STARTPROCESS_UI:
 			{
-				LogPrint("PROCESSMSG", "MSG_USER_STARTPROCESS_UI 第:%d\r\n",Postmsg.GetDatatype());
+				LogPrint("PROCESSMSG", "MSG_USER_STARTPROCESS_UI 第:%d\n",Postmsg.GetDatatype());
 				theApp.DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_STARTPROCESS_UI ,Postmsg.GetDatatype(),0);
 				if (Postmsg.GetDatatype() == 4)
 				{
@@ -512,8 +513,8 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 				if(theApp.IsSyncTx){
 					theApp.IsSyncTx = FALSE;
 					theApp.m_SqliteDeal.CommitDbTransaction();
-					TRACE("Sync Tx commit transaction\r\n");
-					LogPrint("INFO", "Sync Tx commit transaction\r\n");
+					TRACE("Sync Tx commit transaction\n");
+					LogPrint("INFO", "Sync Tx commit transaction\n");
 				}
 			}
 			break;
@@ -524,7 +525,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 				{
 				case WM_UP_ADDRESS:
 					{
-						LogPrint("PROCESSMSG", "WM_UP_ADDRESS\r\n");
+						LogPrint("PROCESSMSG", "WM_UP_ADDRESS\n");
 						//更新钱包地址数据库
 						((CDacrsUIApp*)pParam)->UpdateAddressData();
 					}
@@ -540,7 +541,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 						if ( "" != txData ) {
 							((CDacrsUIApp*)pParam)->SyncTransaction(txData) ;
 						}
-						LogPrint("PROCESSMSG", "WM_SYNC_TRANSACTION 启动同步交易:%s\r\n",txData.c_str());
+						LogPrint("PROCESSMSG", "WM_SYNC_TRANSACTION 启动同步交易:%s\n",txData.c_str());
 					}
 					break;
 				case WM_REVTRANSACTION:
@@ -658,7 +659,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 							int nItem =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.GetTableCountItem(_T("t_transaction") ,strCondition);
 							if (nItem != 0)
 							{
-								LogPrint("INFO","WM_RELEASETX:%s\r\n",pHash.c_str());
+								LogPrint("INFO","WM_RELEASETX:%s",pHash.c_str());
 								((CDacrsUIApp*)pParam)->InsertTransaction(pHash ) ;
 								theApp.m_SqliteDeal.UpdataAllTableData();   /// 更新应用表格
 							}
@@ -675,7 +676,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 							int nItem =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.GetTableCountItem(_T("t_transaction") ,strCondition);
 							if (nItem != 0)
 							{
-								LogPrint("INFO","WM_REMOVETX:%s\r\n",pHash.c_str());
+								LogPrint("INFO","WM_REMOVETX:%s",pHash.c_str());
 								((CDacrsUIApp*)pParam)->m_SqliteDeal.DeleteTableItem(_T("t_transaction"),strCondition);
 								theApp.m_SqliteDeal.UpdataAllTableData();   /// 更新应用表格
 							}
@@ -1409,12 +1410,12 @@ int CDacrsUIApp::Update()
 {
 	CString sPath;//=str_InsPath+"\\qupdater.exe";
 	sPath.Format(_T("%s\\qupdater.exe"),str_InsPath.c_str());
-	LogPrint("INFO","Updata:%s\r\n",sPath);
+	LogPrint("INFO","Updata:%s\n",sPath);
 	sPath.Replace("\\\\","\\");
-	LogPrint("INFO","Updata:%s\r\n",sPath);
+	LogPrint("INFO","Updata:%s\n",sPath);
 	CFileFind find;
 	if(!find.FindFile(sPath)) return false;
-	LogPrint("INFO","Updata start:%s\r\n",sPath);
+	LogPrint("INFO","Updata start:%s\n",sPath);
 	SHELLEXECUTEINFO ShRun = {0}; 
 	ShRun.cbSize = sizeof(SHELLEXECUTEINFO); 
 	ShRun.fMask = SEE_MASK_NOCLOSEPROCESS; 
@@ -1427,11 +1428,11 @@ int CDacrsUIApp::Update()
 	ShellExecuteEx(&ShRun); 
 	WaitForSingleObject(ShRun.hProcess, 120000); 
 	ULONG lResult = 0; 
-	LogPrint("INFO","Updata OpenProcess:%0x\r\n",ShRun.hProcess);
+	LogPrint("INFO","Updata OpenProcess:%0x\n",ShRun.hProcess);
 	if (!GetExitCodeProcess(ShRun.hProcess, &lResult)) return false;
-	LogPrint("INFO","Updata GetExitCodeProcess:%s\r\n",sPath);
+	LogPrint("INFO","Updata GetExitCodeProcess:%s\n",sPath);
 	if (lResult == 0) return -1;
-	LogPrint("INFO","Updata lResult:%s\r\n",sPath);
+	LogPrint("INFO","Updata lResult:%s\n",sPath);
 	CString sMsg;
 	//sMsg.Format(CLanguage::TranLanguage("MAIN","%d updates found at the website,now to upgrade?"),lResult);
 	sMsg.Format(CLanguage::TranLanguage("MAIN","检查有%d文件需要更新,现在是否要更新?"),lResult);
