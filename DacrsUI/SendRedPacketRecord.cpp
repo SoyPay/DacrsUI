@@ -358,27 +358,7 @@ void CSendRedPacketRecord::GetExportCol(map<int,string> &item,uistruct::REDPACKE
 	item[i++]=number;
 	item[i++]=state;
 }
-void   CSendRedPacketRecord::GetCellName(int nRow, int nCol, CString &strName)
 
-{
-
-	int nSeed = nCol;
-
-	CString strRow;
-
-	char cCell = 'A' + nCol - 1;
-
-
-
-	strName.Format(_T("%c"), cCell);
-
-
-
-	strRow.Format(_T( "%d "), nRow);
-
-	strName += strRow;
-
-}
 void CSendRedPacketRecord::ExportSendRedPacketToexel()
 {
 	// TODO: 在此添加控件通知处理程序代码
@@ -446,7 +426,7 @@ void CSendRedPacketRecord::ExportSendRedPacketToexel()
 	{
 
 		
-		UiFun::MessageBoxEx(_T("创建失败！") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(_T("可能是没有装office 导致创建失败！") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 
 	}
@@ -503,7 +483,7 @@ void CSendRedPacketRecord::ExportSendRedPacketToexel()
 
 	{
 
-		GetCellName(1 ,iCol + 1, colname);
+		UiFun::GetCellName(1 ,iCol + 1, colname);
 
 		range   =   sheet.get_Range(COleVariant(colname),COleVariant(colname));
 

@@ -48,6 +48,7 @@ void CSetAppId::SetDaluft()
 
 	GetDlgItem(IDC_BETID)->SetWindowText(theApp.m_betScritptid.c_str());
 	GetDlgItem(IDC_GRBID)->SetWindowText(theApp.m_redPacketScriptid.c_str());
+	GetDlgItem(IDC_IPOID)->SetWindowText(theApp.m_ipoScritptid.c_str());
 }
 bool CSetAppId::IsRegId(const char* pData)
 {

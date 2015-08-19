@@ -529,7 +529,7 @@ void CSendRecord::OnLbnDblclkListBox()
 	// TODO: 在此添加控件通知处理程序代码
 	int nSel=m_listBox.GetCurSel(); 
 	int count = ((m_curpage -1)*m_pagesize) + nSel;
-	if (count <=m_PoolList.size())
+	if (count <=(int)m_PoolList.size())
 	{
 		uistruct::P2P_QUIZ_RECORD_t const_it = m_PoolList.at(count);
 		string temp = const_it.ToJson();
@@ -540,27 +540,6 @@ void CSendRecord::OnLbnDblclkListBox()
 }
 
 
-void   CSendRecord::GetCellName(int nRow, int nCol, CString &strName)
-
-{
-
-	int nSeed = nCol;
-
-	CString strRow;
-
-	char cCell = 'A' + nCol - 1;
-
-
-
-	strName.Format(_T("%c"), cCell);
-
-
-
-	strRow.Format(_T( "%d "), nRow);
-
-	strName += strRow;
-
-}
 
 void CSendRecord::ExportSendBetRecordToexel()
 {
@@ -634,7 +613,7 @@ void CSendRecord::ExportSendBetRecordToexel()
 	{
 
 		
-		UiFun::MessageBoxEx(_T("创建失败！") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(_T("可能是没有装office 导致创建失败！") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 
 	}
@@ -691,7 +670,7 @@ void CSendRecord::ExportSendBetRecordToexel()
 
 	{
 
-		GetCellName(1 ,iCol + 1, colname);
+		UiFun::GetCellName(1 ,iCol + 1, colname);
 
 		range   =   sheet.get_Range(COleVariant(colname),COleVariant(colname));
 

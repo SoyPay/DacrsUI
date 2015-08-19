@@ -69,16 +69,12 @@ void CDacrsUIApp::UpdateQuizPoolData()
 
 				if (DBbet.betstate == 0x00)
 				{
-					std::vector<unsigned char> txTemp = CSoyPayHelp::getInstance()->ParseHex(txhash);
-					reverse(txTemp.begin(),txTemp.end());
-					string newTxhash =  CSoyPayHelp::getInstance()->HexStr(txTemp);
-
 					std::vector<unsigned char> vSendid;
 					vSendid.assign(DBbet.sendbetid,DBbet.sendbetid+sizeof(DBbet.sendbetid));
 					string regid = CSoyPayHelp::getInstance()->GetNotFullRegID(vSendid);
 
 					string strSourceData;
-					strSourceData=strprintf("'%s' , '%s',%ld,%d" , newTxhash.c_str(), regid.c_str(),DBbet.money,DBbet.hight);
+					strSourceData=strprintf("'%s' , '%s',%ld,%d" , strTemp.c_str(), regid.c_str(),DBbet.money,DBbet.hight);
 					m_SqliteDeal.InsertTableItem(_T("t_quiz_pool") ,strSourceData);
 				}
 			}
@@ -214,9 +210,9 @@ void CDacrsUIApp::OpenBetRecord(vector<unsigned char> openbet,uistruct::REVTRANS
 		strWhere = strprintf("tx_hash = '%s'" , hexHash.c_str() ) ;
 		if ( !m_SqliteDeal.UpdateTableItem("t_p2p_quiz" , strSourceData , strWhere)){
 			TRACE(_T("t_p2p_quiz数据更新失败!") );
-			LogPrint("INFO","OpenBetRecord 更新失败:%s",hexHash.c_str() );
+			LogPrint("INFO","OpenBetRecord 更新失败:%s\r\n",hexHash.c_str() );
 		}
-		LogPrint("OPENBET","发赌约hash:%s  开奖hash:%s",hexHash.c_str(),transcion.txhash);
+		LogPrint("OPENBET","发赌约hash:%s  开奖hash:%s\r\n",hexHash.c_str(),transcion.txhash);
 		PopupContactBalloonTip(transcion,0,1);
 	}
 }
@@ -285,7 +281,7 @@ void CDacrsUIApp::OpenBet(CString txhash,BOOL Flag)
 		postmsg.SetData(strHash);
 		theApp.m_MsgQueue.push(postmsg);
 	}else{
-		LogPrint("INFO","发赌约hash:%s  开奖失败:%s",txhash,strShowData);
+		LogPrint("INFO","发赌约hash:%s  开奖失败:%s\r\n",txhash,strShowData);
 	}
 
 	if ( pos >=0 ) {
@@ -357,7 +353,7 @@ void CDacrsUIApp::AcceptBetRecord(vector<unsigned char> acceptbet,uistruct::REVT
 		//更新数据
 		if ( !m_SqliteDeal.UpdateTableItem(_T("t_p2p_quiz") ,strField,strCond )) {
 			TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , SendTxhash.c_str() );
-			LogPrint("INFO","AcceptBetRecord 更新失败:%s",SendTxhash.c_str());
+			LogPrint("INFO","AcceptBetRecord 更新失败:%s\r\n",SendTxhash.c_str());
 		}
 	}else
 	{
@@ -405,7 +401,7 @@ void CDacrsUIApp::AcceptBetRecord(vector<unsigned char> acceptbet,uistruct::REVT
 				 transcion.txhash ,(int)acceptcbet.data ) ;
 			 if ( !m_SqliteDeal.InsertTableItem(_T("t_p2p_quiz") ,strSourceData)) {
 				 TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , SendTxhash.c_str() );
-				 LogPrint("INFO","AcceptBetRecord 插入失败:%s",SendTxhash.c_str());
+				 LogPrint("INFO","AcceptBetRecord 插入失败:%s\r\n",SendTxhash.c_str());
 			 }
 		 }
 	}
@@ -437,7 +433,7 @@ void CDacrsUIApp::SendBetRecord(vector<unsigned char> sendbet,uistruct::REVTRANS
 		//更新数据
 		if ( !m_SqliteDeal.UpdateTableItem(_T("t_p2p_quiz") ,strField,strCond )) {
 			TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , transcion.txhash.c_str() );
-			LogPrint("INFO","SendBetRecord 更新失败:%s",transcion.txhash.c_str() );
+			LogPrint("INFO","SendBetRecord 更新失败:%s\r\n",transcion.txhash.c_str() );
 		}
 	}
 	
@@ -620,65 +616,60 @@ void CDacrsUIApp::UpdateRedPacketPoolData()
 	m_SqliteDeal.ClearTableData(_T("t_red_packets_pool"));
 	if(theApp.m_redPacketScriptid != _T(""))
 	{
-		string strCommand;
-		strCommand = strprintf("%s %s %s %s",_T("getscriptvalidedata"),theApp.m_redPacketScriptid,"100","1");
-		
-		if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
+		int requiredCount = 100;
+		while(TRUE)
 		{
-			TRACE("UpdateRedPacketPoolData rpccmd getscriptvalidedata error");
-			return;
-		}
+			string strCommand;
+			strCommand = strprintf("%s %s %s %s",_T("getscriptvalidedata"),theApp.m_redPacketScriptid,requiredCount,"1");
 		
-		int size = root.size();
-		for ( int index =0; index < size; ++index )
-		{
-			string txhash = root[index]["key"].asString();
-			txhash = txhash.substr(txhash.length()-64);
-			string nValue = root[index]["value"].asString();
-			uistruct::RED_DATA redPacket;
-			memset(&redPacket , 0 , sizeof(uistruct::RED_DATA));
-			std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue);
-
-			if (vTemp.size() <0)
+			if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 			{
-				continue;
-			}
-			memcpy(&redPacket, &vTemp[0], sizeof(uistruct::RED_DATA));
-
-			std::vector<unsigned char> txTemp = CSoyPayHelp::getInstance()->ParseHex(txhash);
-			reverse(txTemp.begin(),txTemp.end());
-			string newTxhash =  CSoyPayHelp::getInstance()->HexStr(txTemp);
-
-			strCommand = strprintf("%s %s",_T("gettxdetail"),newTxhash.c_str());
-			
-			if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root1))
-			{
-				TRACE("UpdateAddressData rpccmd gettxdetail error");
+				TRACE("UpdateRedPacketPoolData rpccmd getscriptvalidedata error");
 				return;
 			}
-			
-			int confirheight =root1["confirmHeight"].asInt();
-
-			if(blocktipheight >=(confirheight+1440))
-				continue;
-
-			if (redPacket.dbdata.fover== 0x00)
+		
+			int size = root.size();
+			for ( int index =0; index < size; ++index )
 			{
-				std::vector<unsigned char> vSendid;
-				vSendid.assign(redPacket.dbdata.sendRedid,redPacket.dbdata.sendRedid+sizeof(redPacket.dbdata.sendRedid));
-				string regid = CSoyPayHelp::getInstance()->GetNotFullRegID(vSendid);
+				string txhash = root[index]["key"].asString();
+				txhash = txhash.substr(txhash.length()-64);
+				string nValue = root[index]["value"].asString();
+				uistruct::RED_DATA redPacket;
+				memset(&redPacket , 0 , sizeof(uistruct::RED_DATA));
+				std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue);
 
-				double money = (redPacket.dbdata.amount*1.0)/COIN;
-
-				double ava_money = money/redPacket.dbdata.number;
-				int packetype = redPacket.dbdata.type;
-				if (packetype == 3)
+				if (vTemp.size() <0)
 				{
-					packetype = 2;
+					continue;
 				}
-				string strSourceData;
-				strSourceData =strprintf("'%s' , '%s','%lf','%d','%d','%s','%lf'" , newTxhash.c_str(),regid, money,redPacket.dbdata.number,packetype,redPacket.dbdata.message,ava_money);
-				m_SqliteDeal.InsertTableItem(_T("t_red_packets_pool") ,strSourceData);
+				memcpy(&redPacket, &vTemp[0], sizeof(uistruct::RED_DATA));
+
+				if (redPacket.dbdata.fover== 0x00)
+				{
+					std::vector<unsigned char> txTemp = CSoyPayHelp::getInstance()->ParseHex(txhash);
+					reverse(txTemp.begin(),txTemp.end());
+					string newTxhash =  CSoyPayHelp::getInstance()->HexStr(txTemp);
+
+					std::vector<unsigned char> vSendid;
+					vSendid.assign(redPacket.dbdata.sendRedid,redPacket.dbdata.sendRedid+sizeof(redPacket.dbdata.sendRedid));
+					string regid = CSoyPayHelp::getInstance()->GetNotFullRegID(vSendid);
+
+					double money = (redPacket.dbdata.amount*1.0)/COIN;
+
+					double ava_money = money/redPacket.dbdata.number;
+					int packetype = redPacket.dbdata.type;
+					if (packetype == 3)
+					{
+						packetype = 2;
+					}
+					string strSourceData;
+					strSourceData =strprintf("'%s' , '%s','%lf','%d','%d','%s','%lf'" , newTxhash.c_str(),regid, money,redPacket.dbdata.number,packetype,redPacket.dbdata.message,ava_money);
+					m_SqliteDeal.InsertTableItem(_T("t_red_packets_pool") ,strSourceData);
+				}
+			}
+			if (root.size() < requiredCount ||root.size()>requiredCount )
+			{
+				break;
 			}
 		}
 	}
@@ -779,7 +770,7 @@ void CDacrsUIApp::AcceptRePacketCommtRecord(vector<unsigned char> acceptRedPacke
 		strCond =strprintf(" grab_hash='%s' ", transcion.txhash.c_str());
 		if ( !m_SqliteDeal.UpdateTableItem(_T("t_red_packets_grab") ,strField,strCond )) {
 			TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , transcion.txhash.c_str() );
-			LogPrint("INFO","AcceptRePacketCommtRecord 更新失败:%s",transcion.txhash.c_str());
+			LogPrint("INFO","AcceptRePacketCommtRecord 更新失败:%s\r\n",transcion.txhash.c_str());
 		}
 	}
 }
@@ -798,7 +789,7 @@ void CDacrsUIApp::SendRePacketCommtRecord(vector<unsigned char> sendRedPacket,ui
 		//更新数据
 		if ( !m_SqliteDeal.UpdateTableItem(_T("t_red_packets_send") ,strField,strCond )) {
 			TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , transcion.txhash.c_str() );
-			LogPrint("INFO","SendRePacketCommtRecord 更新失败:%s",transcion.txhash.c_str());
+			LogPrint("INFO","SendRePacketCommtRecord 更新失败:%s\r\n",transcion.txhash.c_str());
 		}
 	}
 }
@@ -920,7 +911,7 @@ void CDacrsUIApp::AcceptRePacketSpecailRecord(vector<unsigned char> acceptRedPac
 			strField = strprintf("grab_time=%d,confirm_height = %d,lucky_fortune = 2,lucky_amount=%lf" ,transcion.confirmedtime ,transcion.confirmedHeight, money) ;
 			if ( !m_SqliteDeal.UpdateTableItem(_T("t_red_packets_grab") ,strField,strCond )) {
 				TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , transcion.txhash.c_str() );
-				LogPrint("INFO","AcceptRePacketSpecailRecord 更新失败:%s",transcion.txhash.c_str());
+				LogPrint("INFO","AcceptRePacketSpecailRecord 更新失败:%s\r\n",transcion.txhash.c_str());
 			}
 		}
 		else{
@@ -929,7 +920,7 @@ void CDacrsUIApp::AcceptRePacketSpecailRecord(vector<unsigned char> acceptRedPac
 			strCond = strprintf(" grab_hash='%s' ", transcion.txhash.c_str());
 			if ( !m_SqliteDeal.UpdateTableItem(_T("t_red_packets_grab") ,strField,strCond )) {
 				TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , transcion.txhash.c_str() );
-					LogPrint("INFO","AcceptRePacketSpecailRecord 更新失败:%s",transcion.txhash.c_str());
+					LogPrint("INFO","AcceptRePacketSpecailRecord 更新失败:%s\r\n",transcion.txhash.c_str());
 			}
 		}
 	}
@@ -949,7 +940,7 @@ void CDacrsUIApp::SendRePacketSpecailRecord(vector<unsigned char> sendRedPacket,
 		//更新数据
 		if ( !m_SqliteDeal.UpdateTableItem(_T("t_red_packets_send") ,strField,strCond )) {
 			TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , transcion.txhash.c_str() );
-				LogPrint("INFO","SendRePacketSpecailRecord 更新失败:%s",transcion.txhash.c_str());
+				LogPrint("INFO","SendRePacketSpecailRecord 更新失败:%s\r\n",transcion.txhash.c_str());
 		}
 	}
 }

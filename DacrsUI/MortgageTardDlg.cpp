@@ -48,15 +48,11 @@ void CMortgageTardDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BUTTON_COMMRED, m_rBtnMale);
 	DDX_Control(pDX, IDC_BUTTON_SPECAILRED , m_rBtnWoman); 
 	DDX_Control(pDX, IDC_COMBO_ADDRES, m_addrbook);
-//	DDX_Control(pDX, IDC_LIST_BONUS, m_BonusListBox);
 	DDX_Control(pDX, IDC_BUTTON_REFRESH_1, m_rBtnRefresh1);
 	DDX_Control(pDX, IDC_BUTTON_REFRESH_2, m_rBtnRefresh2);
 	DDX_Control(pDX, IDC_TAB, m_tab);
 	DDX_Control(pDX, IDC_TAB1, m_tabpool);
 
-	//DDX_Control(pDX, IDC_BUTTON_UP, m_rBtnUp);
-	//DDX_Control(pDX, IDC_BUTTON_NEXT, m_rBtnNext);
-	//DDX_Control(pDX ,IDC_STATIC_COUNT_PAGE ,m_sCountpage ) ;
 	DDX_Control(pDX ,IDC_STATIC_MONEY4 ,m_money ) ;
 	DDX_Control(pDX, IDC_MFCLINK1, v_linkCtrl);
 	
@@ -70,20 +66,17 @@ BEGIN_MESSAGE_MAP(CMortgageTardDlg, CDialogBar)
 	ON_WM_CREATE()
 	ON_WM_ERASEBKGND()
 	ON_WM_SIZE()
-	ON_MESSAGE( WM_BN_CLICK, &CMortgageTardDlg::onBnCLick)
 	ON_BN_CLICKED(IDC_BUTTON_COMMRED, &CMortgageTardDlg::OnBnClickedButtonCommred)
 	ON_CBN_SELCHANGE(IDC_COMBO_ADDRES, &CMortgageTardDlg::OnCbnSelchangeComboAddres)
 	ON_BN_CLICKED(IDC_BUTTON_WITHD, &CMortgageTardDlg::OnBnClickedButtonWithd)
 	ON_BN_CLICKED(IDC_BUTTON_RECH, &CMortgageTardDlg::OnBnClickedButtonRech)
 	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB, &CMortgageTardDlg::OnTcnSelchangeTab)
 	ON_MESSAGE(MSG_USER_REDPACKET_UI , &CMortgageTardDlg::OnShowListCtrol )
-	//ON_BN_CLICKED(IDC_BUTTON_UP, &CMortgageTardDlg::OnBnClickedButtonUp)
-	//ON_BN_CLICKED(IDC_BUTTON_NEXT, &CMortgageTardDlg::OnBnClickedButtonNext)
+
 	ON_BN_CLICKED(IDC_BUTTON_REFRESH_1, &CMortgageTardDlg::OnBnClickedButtonRefresh1)
 	ON_BN_CLICKED(IDC_BUTTON_REFRESH_2, &CMortgageTardDlg::OnBnClickedButtonRefresh2)
 	ON_BN_CLICKED(IDC_BUTTON_SPECAILRED, &CMortgageTardDlg::OnBnClickedButtonSpecailred)
 	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB1, &CMortgageTardDlg::OnTcnSelchangeTab1)
-	ON_WM_CTLCOLOR()
 END_MESSAGE_MAP()
 
 
@@ -325,7 +318,6 @@ BOOL CMortgageTardDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, U
 		AddListaddrDataBox();
 
 		onShowLink();
-		//OnListPool();
 		theApp.SubscribeMsg( theApp.GetMtHthrdId() , GetSafeHwnd() , MSG_USER_REDPACKET_UI ) ;
 	}
 	return bRes ;
@@ -588,9 +580,9 @@ void CMortgageTardDlg::OnBnClickedButtonCommred()
 {
 	// TODO: 在此添加控件通知处理程序代码
 
-	if (strcmp(theApp.m_redPacketScriptid.c_str(),theApp.m_neststcriptid.strNewSrcriptRedPacektid.c_str()))
+	string strshow= "红包已经升级,请到菜单栏中选择恢复默认设置";
+	if (!UiFun::IsCurrentAppId(theApp.m_redPacketScriptid.c_str(),theApp.m_neststcriptid.strNewSrcriptRedPacektid.c_str(),strshow))
 	{
-		UiFun::MessageBoxEx(_T("红包已经升级,请到菜单栏中选择恢复默认设置") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -887,9 +879,9 @@ void CMortgageTardDlg::OnBnClickedButtonWithd()
 void CMortgageTardDlg::OnBnClickedButtonRech()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	if (strcmp(theApp.m_redPacketScriptid.c_str(),theApp.m_neststcriptid.strNewSrcriptRedPacektid.c_str()))
+	string strshow= "红包已经升级,请到菜单栏中选择恢复默认设置";
+	if (!UiFun::IsCurrentAppId(theApp.m_redPacketScriptid.c_str(),theApp.m_neststcriptid.strNewSrcriptRedPacektid.c_str(),strshow))
 	{
-		UiFun::MessageBoxEx(_T("红包已经升级,请到菜单栏中选择恢复默认设置"), _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -1104,24 +1096,9 @@ BOOL CMortgageTardDlg::PreTranslateMessage(MSG* pMsg)
 }
 
 
-//void CMortgageTardDlg::OnBnClickedButtonUp()
-//{
-//	// TODO: 在此添加控件通知处理程序代码
-//		 OnShowPagePool((m_curpage-1));
-//}
-
-
-//void CMortgageTardDlg::OnBnClickedButtonNext()
-//{
-//	// TODO: 在此添加控件通知处理程序代码
-//		 OnShowPagePool((m_curpage+1));
-//}
-
-
 void CMortgageTardDlg::OnBnClickedButtonRefresh1()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	//OnListPool();
 	ShowListPoolItem(m_selPooltab);
 }
 
@@ -1132,29 +1109,7 @@ void CMortgageTardDlg::OnBnClickedButtonRefresh2()
 	 ShowListItem(m_seltab);
 	 ShowAllSpecailWinAndLoss();
 }
-void CMortgageTardDlg::OnListPool()
-{
-	//m_PoolList.clear();
-	//m_curpage = 0;
-	//theApp.m_SqliteDeal.GetRedPacketPoolRecordList(_T(" 1=1 "), &m_PoolList);
-	//m_pagecount = (m_PoolList.size()%m_pagesize)==0?(m_PoolList.size()/m_pagesize):(m_PoolList.size()/m_pagesize)+1;
 
-	//CString temp;
-	//temp.Format(_T("共:%d"),m_pagecount);
-	//GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(temp);
-	//GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T(""));
-	//Invalidate();
-	//m_BonusListBox.DeleteAllIndex();
-	//OnShowPagePool(1);
-}
-void  CMortgageTardDlg::OnShowPagePool(int page)
-{
-	if (page >m_pagecount || page == m_curpage || page <= 0)
-	{
-		return;
-	}
-
-}
 void   CMortgageTardDlg::SendRedPackeSpecail(){
 	if (!theApp.IsSyncBlock )
 	{
@@ -1247,9 +1202,9 @@ void CMortgageTardDlg::OnBnClickedButtonSpecailred()
 {
 	// TODO: 在此添加控件通知处理程序代码
 
-	if (strcmp(theApp.m_redPacketScriptid.c_str(),theApp.m_neststcriptid.strNewSrcriptRedPacektid.c_str()))
+	string strshow= "红包已经升级,请到菜单栏中选择恢复默认设置";
+	if (!UiFun::IsCurrentAppId(theApp.m_redPacketScriptid.c_str(),theApp.m_neststcriptid.strNewSrcriptRedPacektid.c_str(),strshow))
 	{
-		UiFun::MessageBoxEx(_T("红包已经升级,请到菜单栏中选择恢复默认设置") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -1325,327 +1280,7 @@ void CMortgageTardDlg::OnBnClickedButtonSpecailred()
 	}
 	SendRedPackeSpecail();
 }
-void   CMortgageTardDlg::AcceptRedPacketComm(CString sendhash,uistruct::REDPACKETPOOL_t pPoolList)
-{
 
-	if (!theApp.IsSyncBlock )
-	{
-		UiFun::MessageBoxEx(_T("同步未完成,不能发送交易") , _T("提示") ,MFB_OK|MFB_TIP );
-		return;
-	}
-
-	if (!CheckRegIDValid( theApp.m_redPacketScriptid)) return ;
-
-	if(pPoolList.message != "")
-	UiFun::MessageBoxEx(pPoolList.message.c_str() , _T("提示") ,MFB_OK|MFB_TIP );
-
-	CString walletaddr;
-	((CStatic*)GetDlgItem(IDC_STATIC_MONEY4))->GetWindowText(walletaddr);
-	INT64 sub = (INT64)(strtod(walletaddr,NULL)*COIN) - theApp.m_RedPacketCfg.AcceptRedPacketCommFee;
-	if (sub < 0)
-	{
-		UiFun::MessageBoxEx(_T("此钱包账户金额不足付小费,请先充值") , _T("提示") ,MFB_OK|MFB_TIP );
-		return;
-	}
-	CString addr;
-	int sel = m_addrbook.GetCurSel();
-	if (sel < 0)
-	{
-		return ;
-	}
-	m_addrbook.GetLBText(sel,addr);
-
-	if (addr == _T(""))
-	{
-		UiFun::MessageBoxEx(_T("地址不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
-		return;
-	}
-	if (strcmp(pPoolList.send_acc_id.c_str(),addr) == 0)
-	{
-		UiFun::MessageBoxEx(_T("发红包地址不能抢红包") , _T("提示") ,MFB_OK|MFB_TIP );
-		return;
-	}
-	if (IsAcceptRedPacket(addr,pPoolList))
-	{
-		UiFun::MessageBoxEx(_T("此地址已经抢过红包") , _T("提示") ,MFB_OK|MFB_TIP );
-		return;
-	}
-
-	string strContractData,strHash;
-	strHash= CSoyPayHelp::getInstance()->GetReverseHash(sendhash.GetString());
-	strContractData = m_RedPacketHelp.PacketAcceptCommContract(strHash);
-
-	INT64 strTxFee = theApp.m_RedPacketCfg.AcceptRedPacketCommFee;
-	if (  strTxFee < 10000  ) {
-		UiFun::MessageBoxEx(_T("小费不足") , _T("提示") ,MFB_OK|MFB_TIP );
-		return ;
-	}
-	string strShowData =_T("");
-	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_redPacketScriptid,addr.GetString(),strContractData,0,strTxFee,0);
-	CSoyPayHelp::getInstance()->SendContacrRpc(strData.c_str(),strShowData);
-
-	if (strShowData == "")
-	{
-		return;
-	}
-
-	Json::Reader reader;  
-	Json::Value root; 
-	if (!reader.parse(strShowData, root)) 
-		return  ;
-	BOOL bRes = FALSE ;
-	CString strTip;
-	int pos = strShowData.find("hash");
-
-	if ( pos >=0 ) {
-		//插入到交易记录数据库
-		string strHash =  root["hash"].asString();
-		CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_REVTRANSACTION);
-		postmsg.SetData(strHash);
-		theApp.m_MsgQueue.push(postmsg);
-	}
-
-	if ( pos >=0 ) {
-		bRes = TRUE ;
-		//strTip.Format( _T("恭喜发送赌约成功!\n%s") , root["hash"].asCString() ) ;
-		strTip.Format( _T("抢红包成功，请等待1-2分钟确认交易\n")) ;
-	}else{
-		strTip.Format( _T("红包已被抢!") ) ;
-	}
-
-	//保存到数据库
-	if ( bRes ) {
-
-		string txhash = root["hash"].asString();
-		//插入到数据库
-		string strSourceData;
-		strSourceData = strprintf("'%s','%s','%d','%lf' , '%s' ,'%s' , '%d' , '%d','%d','%lf'" , \
-			pPoolList.send_hash ,txhash , 0 ,0.0 ,  pPoolList.send_acc_id ,addr ,0,1,0,pPoolList.total_amount);
-
-		uistruct::DATABASEINFO_t   pDatabase;
-		pDatabase.strSource = strSourceData;
-		pDatabase.strTabName =  _T("t_red_packets_grab");
-		CPostMsg postmsg(MSG_USER_INSERT_DATA,0);
-		string strTemp = pDatabase.ToJson();
-
-		postmsg.SetData(strTemp);
-		theApp.m_MsgQueue.push(postmsg);
-	}
-	UiFun::MessageBoxEx(strTip, _T("提示") ,MFB_OK|MFB_TIP );
-}
-void   CMortgageTardDlg::AcceptRedPackeSpecail(CString sendhash,uistruct::REDPACKETPOOL_t pPoolList)
-{
-
-	if (!theApp.IsSyncBlock )
-	{
-		
-		UiFun::MessageBoxEx(_T("同步未完成,不能发送交易") , _T("提示") ,MFB_OK|MFB_TIP );
-		return;
-	}
-
-	if (!CheckRegIDValid( theApp.m_redPacketScriptid)) return ;
-
-
-	CString walletaddr;
-	INT64 sub = (INT64)(strtod(walletaddr,NULL)*COIN) - theApp.m_RedPacketCfg.AcceptRedPacketSpecailFee;
-	if (sub < 0)
-	{
-		
-		UiFun::MessageBoxEx(_T("此钱包账户金额不足付小费,请先充值") , _T("提示") ,MFB_OK|MFB_TIP );
-		return;
-	}
-	((CStatic*)GetDlgItem(IDC_STATIC_BALANCE))->GetWindowText(walletaddr);
-
-	if (strtod(walletaddr,NULL) < pPoolList.total_amount)
-	{
-		
-		UiFun::MessageBoxEx(_T("此钱包账户金额小于接龙红包金额,请先充值") , _T("提示") ,MFB_OK|MFB_TIP );
-		return;
-	}
-	CString addr;
-	int sel = m_addrbook.GetCurSel();
-	if (sel < 0)
-	{
-		return ;
-	}
-	m_addrbook.GetLBText(sel,addr);
-
-	if (addr == _T(""))
-	{
-		
-		UiFun::MessageBoxEx(_T("地址不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
-		return;
-	}
-
-	if (strcmp(pPoolList.send_acc_id.c_str(),addr) == 0)
-	{
-		
-		UiFun::MessageBoxEx(_T("发红包地址不能抢红包") , _T("提示") ,MFB_OK|MFB_TIP );
-		return;
-	}
-	if (IsAcceptRedPacket(addr,pPoolList))
-	{
-		
-		UiFun::MessageBoxEx(_T("此地址已经抢过红包") , _T("提示") ,MFB_OK|MFB_TIP );
-		return;
-	}
-	string strContractData,strHash;
-	strHash= CSoyPayHelp::getInstance()->GetReverseHash(sendhash.GetString());
-	strContractData = m_RedPacketHelp.PacketAcceptSecpailContract(strHash);
-
-	INT64 strTxFee = theApp.m_RedPacketCfg.AcceptRedPacketSpecailFee;
-	if (  strTxFee < 10000  ) {
-	
-		UiFun::MessageBoxEx(_T("小费不足") , _T("提示") ,MFB_OK|MFB_TIP );
-		return ;
-	}
-	string strShowData ="";
-	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_redPacketScriptid,addr.GetString(),strContractData,0,strTxFee,0);
-	CSoyPayHelp::getInstance()->SendContacrRpc(strData,strShowData);
-
-	if (strShowData == "")
-	{
-		return;
-	}
-
-	Json::Reader reader;  
-	Json::Value root; 
-	if (!reader.parse(strShowData, root)) 
-		return  ;
-	BOOL bRes = FALSE ;
-	CString strTip;
-	int pos = strShowData.find("hash");
-
-	if ( pos >=0 ) {
-		//插入到交易记录数据库
-		string strHash =  root["hash"].asString();
-		CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_REVTRANSACTION);
-		postmsg.SetData(strHash);
-		theApp.m_MsgQueue.push(postmsg);
-	}
-
-	if ( pos >=0 ) {
-		bRes = TRUE ;
-		//strTip.Format( _T("恭喜发送赌约成功!\n%s") , root["hash"].asCString() ) ;
-		strTip.Format( _T("抢红包成功，请等待1-2分钟确认交易\n")) ;
-	}else{
-		strTip.Format( _T("红包已被抢!") ) ;
-	}
-
-	//保存到数据库
-	if ( bRes ) {
-
-		string txhash = root["hash"].asString();
-		//插入到数据库
-		string strSourceData;
-		strSourceData = strprintf("'%s','%s','%d','%lf' , '%s' ,'%s' , '%d' , '%d','%d','%lf'" , \
-			pPoolList.send_hash ,txhash , 0 ,0.0 ,pPoolList.send_acc_id , addr ,0,1,0,pPoolList.total_amount);
-
-		uistruct::DATABASEINFO_t   pDatabase;
-		pDatabase.strSource = strSourceData;
-		pDatabase.strTabName =  _T("t_red_packets_grab");
-		CPostMsg postmsg(MSG_USER_INSERT_DATA,0);
-		string strTemp = pDatabase.ToJson();
-
-		postmsg.SetData(strTemp);
-		theApp.m_MsgQueue.push(postmsg);
-	}
-	
-	UiFun::MessageBoxEx(strTip, _T("提示") ,MFB_OK|MFB_TIP );
-}
-LRESULT CMortgageTardDlg::onBnCLick( WPARAM wParam, LPARAM lParam )
-{
-	//List_RedAppendData* pinf = m_BonusListBox.GetAppendDataInfo((int)wParam);
-	//if ( NULL != pinf ) { 
-	//	CString hash = pinf->pstr;
-	//	CString conditon;
-	//	conditon.Format(_T("send_hash='%s'"),hash);
-	//	uistruct::REDPACKETPOOL_t pPoolList;
-	//	theApp.m_SqliteDeal.GetRedPacketPoolItem(conditon, &pPoolList);
-	//	if (pPoolList.send_hash.GetLength() != 0)
-	//	{
-	//		if (pPoolList.packet_type == 1)
-	//		{
-	//			AcceptRedPacketComm(pPoolList.send_hash,pPoolList);
-	//		}else if (pPoolList.packet_type == 2)
-	//		{
-	//			AcceptRedPackeSpecail(pPoolList.send_hash,pPoolList);
-	//		}
-	//	}
-
-	//}
-	return 0;
-
-}
-bool  CMortgageTardDlg::IsAcceptRedPacket(CString account,uistruct::REDPACKETPOOL_t pPoolList)
-{
-	//for (int i =0;i < pPoolList.packets_num;i++)
-	//{
-		string strCommand,strShowData;
-		strCommand = strprintf("%s %s","gettxdetail" ,pPoolList.send_hash );
-		Json::Value root;
-		if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
-		{
-			TRACE("IsAcceptRedPacket rpccmd gettxdetail error");
-			return false;
-		}
-		strShowData = root.toStyledString();
-		
-		int npos = strShowData.find("confirmHeight");
-		int confirHeight = 1440;
-		if ( npos >= 0 ) { //
-			confirHeight += root["confirmHeight"].asInt() ;    //交易被确认的高度
-		}
-
-		vector<unsigned char>vHash;
-		CSoyPayHelp::getInstance()->revert((char*)&confirHeight);
-
-		char key[4];
-		memset(key,0,4);
-
-		memcpy(key,&confirHeight,sizeof(confirHeight));
-		vHash.assign(key,key+sizeof(key));
-		string strKeyHex = CSoyPayHelp::getInstance()->HexStr(vHash);
-
-		vHash =CSoyPayHelp::getInstance()->ParseHex(pPoolList.send_hash);
-		reverse(vHash.begin(),vHash.end());
-		string SendHash = CSoyPayHelp::getInstance()->HexStr(vHash);
-
-		string keyValue;
-		keyValue = strprintf("%s%s",strKeyHex.c_str(),SendHash.c_str());
-		strCommand = strprintf("%s %s %s",_T("getscriptdata") ,theApp.m_redPacketScriptid,keyValue.c_str());
-		if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
-		{
-			TRACE("IsAcceptRedPacket rpccmd getscriptdata error");
-			return false;
-		}
-
-		string nValue = root["value"].asString();
-		uistruct::RED_DATA redPacket;
-		memset(&redPacket , 0 , sizeof(uistruct::RED_DATA));
-		std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue);
-		if (vTemp.size() <=0)
-		{
-			return false;
-		}
-		memcpy(&redPacket, &vTemp[0], sizeof(uistruct::RED_DATA));
-
-		for (int i =0;i <redPacket.dbdata.takennum;i++)
-		{
-			uistruct::USER_INFO userinfo = redPacket.userinfo[0];
-			std::vector<unsigned char> vSendid;
-			vSendid.assign(userinfo.regid,userinfo.regid+sizeof(userinfo.regid));
-			string regid  =CSoyPayHelp::getInstance()->GetNotFullRegID(vSendid);
-			if (strcmp(account,regid.c_str()) == 0)
-			{
-				return true;
-			}
-		}
-
-	//}
-
-	return false;
-}
 void CMortgageTardDlg::SetGrabParam()
 {
 	CString walletaddr,balance;
@@ -1671,16 +1306,6 @@ void CMortgageTardDlg::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult)
 	*pResult = 0;
 }
 
-
-HBRUSH CMortgageTardDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
-{
-	HBRUSH hbr = CDialogBar::OnCtlColor(pDC, pWnd, nCtlColor);
-
-	// TODO:  在此更改 DC 的任何特性
-
-	// TODO:  如果默认的不是所需画笔，则返回另一个画笔
-	return hbr;
-}
 void  CMortgageTardDlg::onShowLink()
 {
 	v_linkCtrl.SetWindowText(_T("帮助"));

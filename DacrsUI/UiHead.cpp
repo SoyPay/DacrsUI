@@ -179,3 +179,32 @@ std::string& UiFun::trimright(std::string &s)
 	s.erase(s.find_last_not_of(" ") + 1);
 	return s;
 }
+bool UiFun::IsCurrentAppId(string Curappid,string useAppid,string strShow)
+{
+	if (strcmp(Curappid.c_str(),useAppid.c_str()))
+	{
+		UiFun::MessageBoxEx(strShow.c_str() , _T("ÌבÊ¾") ,MFB_OK|MFB_TIP );
+		return false;
+	}
+	return true;
+}
+void UiFun::GetCellName(int nRow, int nCol, CString &strName)
+{
+
+	int nSeed = nCol;
+
+	CString strRow;
+
+	char cCell = 'A' + nCol - 1;
+
+
+
+	strName.Format(_T("%c"), cCell);
+
+
+
+	strRow.Format(_T( "%d "), nRow);
+
+	strName += strRow;
+
+}
