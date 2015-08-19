@@ -1337,7 +1337,7 @@ void CDacrsUIDlg::RestoreDefault()
 			Json::Value setscriptid = root["script"];
 			ASSERT(!setscriptid.isNull());
 			setscriptid["betscript"]= "29283-1";
-			setscriptid["iposcript"]= "10-1";
+			setscriptid["iposcript"]= "50725-1";
 			setscriptid["redpacketscript"]= "29282-1";
 			root["script"]=setscriptid;
 		}
