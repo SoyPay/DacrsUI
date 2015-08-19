@@ -698,7 +698,7 @@ void  CDacrsUIDlg::ClosWallet()
 			m_pOutGifDlg->SetWindowPos(NULL , (rc.left + rc.right)/2 - 300/2 , (rc.top + rc.bottom)/2 - 100/2  , 300 ,100 , SWP_SHOWWINDOW);
 			m_pOutGifDlg->ShowWindow(SW_SHOW) ;
 		}
-		::PostThreadMessage( theApp.GetMtHthrdId() , MSG_USER_OUT , 0 , 0 ) ;
+		//::PostThreadMessage( theApp.GetMtHthrdId() , MSG_USER_OUT , 0 , 0 ) ;
 		SetTimer( 0x10 , 2000 , NULL ) ; 
 	}
 	//COut outdlg;
@@ -750,7 +750,7 @@ void CDacrsUIDlg::OnBnClickedButtonClose()
 
 void CDacrsUIDlg::Close() 
 {
-	::PostThreadMessage( theApp.GetMtHthrdId() , MSG_USER_OUT , 0 , 0 );
+	//::PostThreadMessage( theApp.GetMtHthrdId() , MSG_USER_OUT , 0 , 0 );
 	SetTimer( 0x10 , 3000 , NULL); 
 }
 void CDacrsUIDlg::OnTimer(UINT_PTR nIDEvent)
@@ -770,7 +770,6 @@ void CDacrsUIDlg::OnTimer(UINT_PTR nIDEvent)
 		}
 		theApp.m_bOutApp = TRUE ;
 		CloseThread();
-		Sleep(100);
 		CloseApp();
 	}else if (0x11  == nIDEvent)
 	{
