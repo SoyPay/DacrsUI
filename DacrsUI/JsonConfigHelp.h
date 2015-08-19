@@ -126,8 +126,9 @@ public:
 	BOOL   bPrintFileLine;
 	BOOL   bPrinttimestamps;	
 	BOOL   bLogFlag;
+	int    nMaxLogSize;         //日志文件最大值（单位M）
 public:
-	CLogParamCfg():bPrintFileLine(TRUE), bPrinttimestamps(TRUE), bLogFlag(TRUE){
+	CLogParamCfg():bPrintFileLine(TRUE), bPrinttimestamps(TRUE), bLogFlag(TRUE), nMaxLogSize(100){
 		vTag.clear();
 	}
 	~CLogParamCfg(){};
