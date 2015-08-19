@@ -338,26 +338,6 @@ HBRUSH CAcceptRedPacketRecord::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 	}
 }
 
-void CAcceptRedPacketRecord::GetCellName(int nRow, int nCol, CString &strName)
-{
-
-	int nSeed = nCol;
-
-	CString strRow;
-
-	char cCell = 'A' + nCol - 1;
-
-
-
-	strName.Format(_T("%c"), cCell);
-
-
-
-	strRow.Format(_T( "%d "), nRow);
-
-	strName += strRow;
-
-}
 void CAcceptRedPacketRecord::GetExportCol(map<int,string> &item,uistruct::REDPACKETGRAB_t const_it)
 {
 	string sendTime,amount,Sendaddr,address,luckeMoney,strnum,type,luckeValue,operate;
@@ -476,7 +456,7 @@ void CAcceptRedPacketRecord::ExportAcceptRedPacektToexel()
 
 	{
 
-		UiFun::MessageBoxEx(_T("创建失败！") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(_T("可能是没有装office 导致创建失败！") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 
 	}
@@ -533,7 +513,7 @@ void CAcceptRedPacketRecord::ExportAcceptRedPacektToexel()
 
 	{
 
-		GetCellName(1 ,iCol + 1, colname);
+		UiFun::GetCellName(1 ,iCol + 1, colname);
 
 		range   =   sheet.get_Range(COleVariant(colname),COleVariant(colname));
 

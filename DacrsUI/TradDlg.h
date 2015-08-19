@@ -48,7 +48,6 @@ public:
 	void InsertItemData();
 	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 	afx_msg void OnBnClickedExportExel();
-	void  GetCellName(int nRow, int nCol, CString &strName);
 	afx_msg void OnCbnSelchangeCombo1();
 	void OnShowListCtrl(uistruct::TRANSRECORDLIST pListInfo,int flag =0);
 	bool  isMine(CString addr);

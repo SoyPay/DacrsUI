@@ -69,16 +69,12 @@ void CDacrsUIApp::UpdateQuizPoolData()
 
 				if (DBbet.betstate == 0x00)
 				{
-					std::vector<unsigned char> txTemp = CSoyPayHelp::getInstance()->ParseHex(txhash);
-					reverse(txTemp.begin(),txTemp.end());
-					string newTxhash =  CSoyPayHelp::getInstance()->HexStr(txTemp);
-
 					std::vector<unsigned char> vSendid;
 					vSendid.assign(DBbet.sendbetid,DBbet.sendbetid+sizeof(DBbet.sendbetid));
 					string regid = CSoyPayHelp::getInstance()->GetNotFullRegID(vSendid);
 
 					string strSourceData;
-					strSourceData=strprintf("'%s' , '%s',%ld,%d" , newTxhash.c_str(), regid.c_str(),DBbet.money,DBbet.hight);
+					strSourceData=strprintf("'%s' , '%s',%ld,%d" , strTemp.c_str(), regid.c_str(),DBbet.money,DBbet.hight);
 					m_SqliteDeal.InsertTableItem(_T("t_quiz_pool") ,strSourceData);
 				}
 			}
@@ -620,65 +616,60 @@ void CDacrsUIApp::UpdateRedPacketPoolData()
 	m_SqliteDeal.ClearTableData(_T("t_red_packets_pool"));
 	if(theApp.m_redPacketScriptid != _T(""))
 	{
-		string strCommand;
-		strCommand = strprintf("%s %s %s %s",_T("getscriptvalidedata"),theApp.m_redPacketScriptid,"100","1");
-		
-		if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
+		int requiredCount = 100;
+		while(TRUE)
 		{
-			TRACE("UpdateRedPacketPoolData rpccmd getscriptvalidedata error");
-			return;
-		}
+			string strCommand;
+			strCommand = strprintf("%s %s %s %s",_T("getscriptvalidedata"),theApp.m_redPacketScriptid,requiredCount,"1");
 		
-		int size = root.size();
-		for ( int index =0; index < size; ++index )
-		{
-			string txhash = root[index]["key"].asString();
-			txhash = txhash.substr(txhash.length()-64);
-			string nValue = root[index]["value"].asString();
-			uistruct::RED_DATA redPacket;
-			memset(&redPacket , 0 , sizeof(uistruct::RED_DATA));
-			std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue);
-
-			if (vTemp.size() <0)
+			if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 			{
-				continue;
-			}
-			memcpy(&redPacket, &vTemp[0], sizeof(uistruct::RED_DATA));
-
-			std::vector<unsigned char> txTemp = CSoyPayHelp::getInstance()->ParseHex(txhash);
-			reverse(txTemp.begin(),txTemp.end());
-			string newTxhash =  CSoyPayHelp::getInstance()->HexStr(txTemp);
-
-			strCommand = strprintf("%s %s",_T("gettxdetail"),newTxhash.c_str());
-			
-			if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root1))
-			{
-				TRACE("UpdateAddressData rpccmd gettxdetail error");
+				TRACE("UpdateRedPacketPoolData rpccmd getscriptvalidedata error");
 				return;
 			}
-			
-			int confirheight =root1["confirmHeight"].asInt();
-
-			if(blocktipheight >=(confirheight+1440))
-				continue;
-
-			if (redPacket.dbdata.fover== 0x00)
+		
+			int size = root.size();
+			for ( int index =0; index < size; ++index )
 			{
-				std::vector<unsigned char> vSendid;
-				vSendid.assign(redPacket.dbdata.sendRedid,redPacket.dbdata.sendRedid+sizeof(redPacket.dbdata.sendRedid));
-				string regid = CSoyPayHelp::getInstance()->GetNotFullRegID(vSendid);
+				string txhash = root[index]["key"].asString();
+				txhash = txhash.substr(txhash.length()-64);
+				string nValue = root[index]["value"].asString();
+				uistruct::RED_DATA redPacket;
+				memset(&redPacket , 0 , sizeof(uistruct::RED_DATA));
+				std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue);
 
-				double money = (redPacket.dbdata.amount*1.0)/COIN;
-
-				double ava_money = money/redPacket.dbdata.number;
-				int packetype = redPacket.dbdata.type;
-				if (packetype == 3)
+				if (vTemp.size() <0)
 				{
-					packetype = 2;
+					continue;
 				}
-				string strSourceData;
-				strSourceData =strprintf("'%s' , '%s','%lf','%d','%d','%s','%lf'" , newTxhash.c_str(),regid, money,redPacket.dbdata.number,packetype,redPacket.dbdata.message,ava_money);
-				m_SqliteDeal.InsertTableItem(_T("t_red_packets_pool") ,strSourceData);
+				memcpy(&redPacket, &vTemp[0], sizeof(uistruct::RED_DATA));
+
+				if (redPacket.dbdata.fover== 0x00)
+				{
+					std::vector<unsigned char> txTemp = CSoyPayHelp::getInstance()->ParseHex(txhash);
+					reverse(txTemp.begin(),txTemp.end());
+					string newTxhash =  CSoyPayHelp::getInstance()->HexStr(txTemp);
+
+					std::vector<unsigned char> vSendid;
+					vSendid.assign(redPacket.dbdata.sendRedid,redPacket.dbdata.sendRedid+sizeof(redPacket.dbdata.sendRedid));
+					string regid = CSoyPayHelp::getInstance()->GetNotFullRegID(vSendid);
+
+					double money = (redPacket.dbdata.amount*1.0)/COIN;
+
+					double ava_money = money/redPacket.dbdata.number;
+					int packetype = redPacket.dbdata.type;
+					if (packetype == 3)
+					{
+						packetype = 2;
+					}
+					string strSourceData;
+					strSourceData =strprintf("'%s' , '%s','%lf','%d','%d','%s','%lf'" , newTxhash.c_str(),regid, money,redPacket.dbdata.number,packetype,redPacket.dbdata.message,ava_money);
+					m_SqliteDeal.InsertTableItem(_T("t_red_packets_pool") ,strSourceData);
+				}
+			}
+			if (root.size() < requiredCount ||root.size()>requiredCount )
+			{
+				break;
 			}
 		}
 	}
