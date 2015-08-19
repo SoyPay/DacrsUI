@@ -588,9 +588,9 @@ void CMortgageTardDlg::OnBnClickedButtonCommred()
 {
 	// TODO: 在此添加控件通知处理程序代码
 
-	if (strcmp(theApp.m_redPacketScriptid.c_str(),theApp.m_neststcriptid.strNewSrcriptRedPacektid.c_str()))
+	string strshow= "红包已经升级,请到菜单栏中选择恢复默认设置";
+	if (!UiFun::IsCurrentAppId(theApp.m_redPacketScriptid.c_str(),theApp.m_neststcriptid.strNewSrcriptRedPacektid.c_str(),strshow))
 	{
-		UiFun::MessageBoxEx(_T("红包已经升级,请到菜单栏中选择恢复默认设置") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -887,9 +887,9 @@ void CMortgageTardDlg::OnBnClickedButtonWithd()
 void CMortgageTardDlg::OnBnClickedButtonRech()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	if (strcmp(theApp.m_redPacketScriptid.c_str(),theApp.m_neststcriptid.strNewSrcriptRedPacektid.c_str()))
+	string strshow= "红包已经升级,请到菜单栏中选择恢复默认设置";
+	if (!UiFun::IsCurrentAppId(theApp.m_redPacketScriptid.c_str(),theApp.m_neststcriptid.strNewSrcriptRedPacektid.c_str(),strshow))
 	{
-		UiFun::MessageBoxEx(_T("红包已经升级,请到菜单栏中选择恢复默认设置"), _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -1247,9 +1247,9 @@ void CMortgageTardDlg::OnBnClickedButtonSpecailred()
 {
 	// TODO: 在此添加控件通知处理程序代码
 
-	if (strcmp(theApp.m_redPacketScriptid.c_str(),theApp.m_neststcriptid.strNewSrcriptRedPacektid.c_str()))
+	string strshow= "红包已经升级,请到菜单栏中选择恢复默认设置";
+	if (!UiFun::IsCurrentAppId(theApp.m_redPacketScriptid.c_str(),theApp.m_neststcriptid.strNewSrcriptRedPacektid.c_str(),strshow))
 	{
-		UiFun::MessageBoxEx(_T("红包已经升级,请到菜单栏中选择恢复默认设置") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
