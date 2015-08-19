@@ -120,8 +120,21 @@ int CSynchronousSocket::GetRpcRes(const string &ip,int port,const string &cmd, s
 		}					
 	} while (nRes == bufferSize);
 	strRecv.assign(te.buffer.begin(), te.buffer.end());
+	size_t BeginPos = strRecv.find("Content-Length: ");
+	if( BeginPos != string::npos) {
+		size_t EndPos = strRecv.find("Content-Type: ");
+		BeginPos += sizeof("Content-Length: ");
+		string temp = strRecv.substr(BeginPos-1, EndPos-BeginPos-1);
+		int length = atoi(temp.c_str());
+		size_t subPos = strRecv.find("{\"result\":");
+		string strContent = strRecv.substr(subPos, -1);
+		if(length != strContent.length()) {
+			LogPrint("INFO", "Call RPC Command : %s recevice data error!\n", cmd.c_str());
+			LogPrint("INFO", "Receive Data %d: %s \n", strRecv.length(), strRecv.c_str());
+		}
+	}
 	//memcpy(pRecvStr.get(), &te.buffer[0], te.buffer.size());
-	TRACE("recv:%s\n", strRecv.c_str());
+	//TRACE("recv:%s\n", strRecv.c_str());
 	return te.buffer.size()+1;
 }
 
