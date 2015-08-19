@@ -784,6 +784,7 @@ void CDacrsUIDlg::OnTimer(UINT_PTR nIDEvent)
 		}
 		theApp.m_bOutApp = TRUE ;
 		CloseThread();
+		Sleep(100);
 		CloseApp();
 	}else if (0x11  == nIDEvent)
 	{
