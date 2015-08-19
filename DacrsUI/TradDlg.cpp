@@ -495,27 +495,7 @@ BOOL CTradDlg::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 	return CDialogBar::OnMouseWheel(nFlags, zDelta, pt);
 }
 
-void   CTradDlg::GetCellName(int nRow, int nCol, CString &strName)
 
-{
-
-	int nSeed = nCol;
-
-	CString strRow;
-
-	char cCell = 'A' + nCol - 1;
-
-
-
-	strName.Format(_T("%c"), cCell);
-
-
-
-	strRow.Format(_T( "%d "), nRow);
-
-	strName += strRow;
-
-}
 
 void CTradDlg::OnBnClickedExportExel()
 {
@@ -567,7 +547,7 @@ void CTradDlg::OnBnClickedExportExel()
 
 	{
 
-		UiFun::MessageBoxEx(_T("创建失败！") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(_T("可能是没有装office 导致创建失败！") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 
 	}
@@ -624,7 +604,7 @@ void CTradDlg::OnBnClickedExportExel()
 
 	{
 
-		GetCellName(1 ,iCol + 1, colname);
+		UiFun::GetCellName(1 ,iCol + 1, colname);
 
 		range   =   sheet.get_Range(COleVariant(colname),COleVariant(colname));
 
@@ -767,7 +747,7 @@ void CTradDlg::OnBnClickedExportExel()
 	app.ReleaseDispatch();
 }
 
-void CTradDlg::OnShowListCtrl(uistruct::TRANSRECORDLIST pListInfo,int flag){
+void CTradDlg::OnShowListCtrl(uistruct::TRANSRECORDLIST pListInfo){
 
 	m_listCtrl.DeleteAllItems();
 	if (pListInfo.size() == 0)
@@ -779,14 +759,7 @@ void CTradDlg::OnShowListCtrl(uistruct::TRANSRECORDLIST pListInfo,int flag){
 	string strShowData = "";
 	std::vector<uistruct::REVTRANSACTION_t>::const_iterator const_it;
 	for ( const_it = pListInfo.begin() ; const_it != pListInfo.end() ; const_it++ ) {
-		if (flag == 1 && !isMine(const_it->desaddr.c_str()))
-		{
-			continue;
-		}
-		if (flag == 2 && !isMine(const_it->addr.c_str()))
-		{
-			continue;
-		}
+
 		nSubIdx = 0;
 		strShowData = strprintf("%d", i+1);
 		m_listCtrl.InsertItem(i, strShowData.c_str());					//序号
@@ -858,7 +831,7 @@ void CTradDlg::OnCbnSelchangeCombo1()
 
 	uistruct::TRANSRECORDLIST pListInfo;
 	theApp.m_SqliteDeal.GetTransactionList(condtion, &pListInfo); 
-	OnShowListCtrl(pListInfo,operate);
+	OnShowListCtrl(pListInfo);
 }
 
 void CTradDlg::OnCbnSelchangeComboTime()
@@ -868,7 +841,7 @@ void CTradDlg::OnCbnSelchangeComboTime()
 	string condtion = GetConditonStr(operate);
 	uistruct::TRANSRECORDLIST pListInfo;
 	theApp.m_SqliteDeal.GetTransactionList(condtion, &pListInfo); 
-	OnShowListCtrl(pListInfo,operate);
+	OnShowListCtrl(pListInfo);
 }
 string CTradDlg::GetConditonTime(){
 	SYSTEMTIME curTime ;
@@ -1010,14 +983,14 @@ string CTradDlg::GetConditonTxType(int &operate){
 	{
 		operate = 1;
 		
-		conditon=" tx_type='COMMON_TX'";
+		conditon=" tx_type='COMMON_TX' and (state =2 or state =3)";
 		return conditon;
 		//theApp.m_SqliteDeal.GetTransactionList(_T(" tx_type='COMMON_TX' order by confirmed_time"), &pListInfo); 
 		//OnShowListCtrl(pListInfo,1);
 	}else if (strcmp(text,_T("发送")) == 0)
 	{
 		operate = 2;
-		conditon=" tx_type='COMMON_TX'";
+		conditon=" tx_type='COMMON_TX' and (state =1 or state =3)";
 		return conditon;
 		//theApp.m_SqliteDeal.GetTransactionList(_T(" tx_type='COMMON_TX' order by confirmed_time"), &pListInfo); 
 		//OnShowListCtrl(pListInfo,2);
@@ -1057,7 +1030,7 @@ void CTradDlg::ShowAddrConditon()
 
 	uistruct::TRANSRECORDLIST pListInfo;
 	theApp.m_SqliteDeal.GetTransactionList(condtion, &pListInfo); 
-	OnShowListCtrl(pListInfo,operate);
+	OnShowListCtrl(pListInfo);
 }
 
 BOOL CTradDlg::PreTranslateMessage(MSG* pMsg)
@@ -1205,28 +1178,7 @@ HBRUSH CTradDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 	}
 	return hbr;
 }
-BOOL CTradDlg::FindDesTx(uistruct::TRANSRECORDLIST pListInfo,int flag,uistruct::REVTRANSACTION_t txdetail)
-{
-	if (pListInfo.size() == 0)
-	{
-		return FALSE;
-	}
-	CString strShowData = _T("");
-	std::vector<uistruct::REVTRANSACTION_t>::const_iterator const_it;
-	for ( const_it = pListInfo.begin() ; const_it != pListInfo.end() ; const_it++ ) {
-		if (flag == 1 && !isMine(const_it->desaddr.c_str()))
-		{
-			continue;
-		}
-		if (flag == 2 && !isMine(const_it->addr.c_str()))
-		{
-			continue;
-		}
-		if(strcmp(const_it->txhash.c_str(),txdetail.txhash.c_str()) == 0)
-			return TRUE;
-	}
-	return FALSE;
-}
+
 string CTradDlg::GetConditonTime(INT64 &maxtime,INT64 &mintime)
 {
 	SYSTEMTIME curTime ;
@@ -1424,12 +1376,7 @@ BOOL CTradDlg::IsInsertTx(uistruct::REVTRANSACTION_t txdetail)
 	}
 
 	return TRUE;
-	//CString condtion = GetConditonStr(operate);
 
-	//uistruct::TRANSRECORDLIST pListInfo;
-	//theApp.m_SqliteDeal.GetTransactionList(condtion, &pListInfo); 
-
-	//return FindDesTx(pListInfo,operate,txdetail);
 }
 
 void CTradDlg::OnBnClickedButtonRefresh()
@@ -1441,5 +1388,5 @@ void CTradDlg::OnBnClickedButtonRefresh()
 	uistruct::TRANSRECORDLIST pListInfo;
 	theApp.m_SqliteDeal.GetTransactionList(condtion, &pListInfo); 
 
-	OnShowListCtrl(pListInfo,operate);
+	OnShowListCtrl(pListInfo);
 }

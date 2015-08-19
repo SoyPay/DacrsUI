@@ -7,8 +7,9 @@
 #include "afxdialogex.h"
 #include "DacrsUIDlg.h"
 #include  "BalloonTip.h"
+#include <WinVer.h>
 // CProgStatusBar 对话框
-
+#pragma comment(lib, "Version.lib ")
 IMPLEMENT_DYNAMIC(CProgStatusBar, CDialogBar)
 
 	CProgStatusBar::CProgStatusBar()
@@ -172,7 +173,10 @@ BOOL CProgStatusBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UIN
 		
 		m_strVersion.SetFont(90, _T("宋体"));				//设置显示字体和大小
 		m_strVersion.SetTextColor(RGB(255,255,255));	    //字体颜色
-		m_strVersion.SetWindowText(_T("版本:v1.0.2.0 RC")) ;
+
+		string ver = strprintf("版本:v%s RC",GetUIVersion());
+		m_strVersion.SetWindowText(ver.c_str()) ;
+		//m_strVersion.SetWindowText(_T("版本:v1.0.2.0 RC")) ;
 
 		if ( NULL == m_ProgressWnd ) {
 			m_ProgressWnd = new CGIFControl ;
@@ -500,4 +504,34 @@ void CProgStatusBar::OnMouseMove(UINT nFlags, CPoint point)
 	}
 
 	CDialogBar::OnMouseMove(nFlags, point);
+}
+string CProgStatusBar::GetUIVersion()
+{
+	string strRet = "";
+	char szAppFullPath[_MAX_PATH] = {0};
+
+	GetModuleFileName(NULL,szAppFullPath,MAX_PATH);//得到程序模块名称，全路径
+
+	//获取当前文件的版本信息
+	DWORD dwLen = GetFileVersionInfoSize(szAppFullPath,NULL); 
+	char *pszAppVersion = new char[dwLen+1];
+	if(pszAppVersion)
+	{
+		memset(pszAppVersion,0,sizeof(char)*(dwLen+1));
+		GetFileVersionInfo(szAppFullPath,NULL,dwLen,pszAppVersion);
+		CString strVersion;
+		UINT nLen(0);
+		VS_FIXEDFILEINFO *pFileInfo(NULL);
+		VerQueryValue(pszAppVersion,"\\",(LPVOID*)&pFileInfo,&nLen);
+		if(pFileInfo)
+		{
+			//获取版本号
+			strRet = strprintf("%d.%d.%d.%d",HIWORD(pFileInfo->dwFileVersionMS),
+				LOWORD(pFileInfo->dwFileVersionMS),
+				HIWORD(pFileInfo->dwFileVersionLS),
+				LOWORD(pFileInfo->dwFileVersionLS));
+		}
+	}
+	delete pszAppVersion;
+	return strRet;
 }

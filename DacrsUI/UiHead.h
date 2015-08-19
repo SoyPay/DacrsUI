@@ -767,5 +767,8 @@ namespace UiFun
 	std::string& trimleft(std::string &s) ;
 
 	std::string& trimright(std::string &s) ;
+	
+	bool IsCurrentAppId(string Curappid,string useAppid,string strShow);
+	void  GetCellName(int nRow, int nCol, CString &strName);
 }
 #endif

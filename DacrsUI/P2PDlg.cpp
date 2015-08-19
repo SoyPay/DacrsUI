@@ -739,9 +739,9 @@ void CP2PDlg::OnBnClickedButtonRech()
 {
 	// TODO: 在此添加控件通知处理程序代码
 
-	if (strcmp(theApp.m_betScritptid.c_str(),theApp.m_neststcriptid.strNewScriptBetid.c_str()))
+	string strshow= "猜你妹已经升级,请到菜单栏中选择恢复默认设置";
+	if (!UiFun::IsCurrentAppId(theApp.m_betScritptid.c_str(),theApp.m_neststcriptid.strNewScriptBetid.c_str(),strshow))
 	{
-		UiFun::MessageBoxEx(_T("猜你妹已经升级,请到菜单栏中选择恢复默认设置") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 	if (!theApp.IsSyncBlock )
@@ -985,9 +985,9 @@ void CP2PDlg::OnBnClickedButtonMale()
 {
 	// TODO: 在此添加控件通知处理程序代码
 
-	if (strcmp(theApp.m_betScritptid.c_str(),theApp.m_neststcriptid.strNewScriptBetid.c_str()))
+	string strshow= "猜你妹已经升级,请到菜单栏中选择恢复默认设置";
+	if (!UiFun::IsCurrentAppId(theApp.m_betScritptid.c_str(),theApp.m_neststcriptid.strNewScriptBetid.c_str(),strshow))
 	{
-		UiFun::MessageBoxEx(_T("猜你妹已经升级,请到菜单栏中选择恢复默认设置") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -1037,10 +1037,9 @@ void CP2PDlg::OnBnClickedButtonMale()
 void CP2PDlg::OnBnClickedButtonWoman()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	if (strcmp(theApp.m_betScritptid.c_str(),theApp.m_neststcriptid.strNewScriptBetid.c_str()))
+	string strshow= "猜你妹已经升级,请到菜单栏中选择恢复默认设置";
+	if (!UiFun::IsCurrentAppId(theApp.m_betScritptid.c_str(),theApp.m_neststcriptid.strNewScriptBetid.c_str(),strshow))
 	{
-		
-		UiFun::MessageBoxEx(_T("猜你妹已经升级,请到菜单栏中选择恢复默认设置") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -1124,10 +1123,9 @@ void CP2PDlg::OnListPool()
 }
 void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
  {
-	 if (strcmp(theApp.m_betScritptid.c_str(),theApp.m_neststcriptid.strNewScriptBetid.c_str()))
+	 string strshow= "猜你妹已经升级,请到菜单栏中选择恢复默认设置";
+	 if (!UiFun::IsCurrentAppId(theApp.m_betScritptid.c_str(),theApp.m_neststcriptid.strNewScriptBetid.c_str(),strshow))
 	 {
-		 
-		 UiFun::MessageBoxEx(_T("猜你妹已经升级,请到菜单栏中选择恢复默认设置") , _T("提示") ,MFB_OK|MFB_TIP );
 		 return;
 	 }
 
@@ -1979,9 +1977,9 @@ void  CP2PDlg::AutoSendBet()
 
 BOOL CP2PDlg::AcceptBet(string hash,double dmoney,string sendaddr,int timeout,string addr)
 {
-	if (strcmp(theApp.m_betScritptid.c_str(),theApp.m_neststcriptid.strNewScriptBetid.c_str()))
+	string strshow= "猜你妹已经升级,请到菜单栏中选择恢复默认设置";
+	if (!UiFun::IsCurrentAppId(theApp.m_betScritptid.c_str(),theApp.m_neststcriptid.strNewScriptBetid.c_str(),strshow))
 	{
-		UiFun::MessageBoxEx(_T("猜你妹已经升级,请到菜单栏中选择恢复默认设置") , _T("提示") ,MFB_OK|MFB_TIP );
 		return FALSE;
 	}
 
@@ -2230,88 +2228,70 @@ void CP2PDlg::ReadP2pPoolFromCmd(uistruct::P2PLIST &PoolList)
 	Json::Value root1;
 	if(theApp.m_betScritptid != _T(""))
 	{
-		string strCommand;
-		strCommand = strprintf("%s %s %s %s 0",_T("getscriptvalidedata"),theApp.m_betScritptid,_T("100"),_T("1"));
-		string strShowData;
-		CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
-		//m_AppID
-		int pos = strShowData.find("key");
-		if (pos < 0)
+		int requiredCount = 100;
+		while(TRUE)
 		{
-			return;
-		}
-		if (!reader.parse(strShowData, root)) 
-			return;
-		int size = root.size();
-		for ( int index =0; index < size; ++index )
-		{
-			string txhash = root[index]["key"].asString();
-			txhash = txhash.substr(txhash.length()-64);
-			string nValue = root[index]["value"].asString();
-			uistruct::DBBET_DATA DBbet;
-			memset(&DBbet , 0 , sizeof(uistruct::DBBET_DATA));
-			std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue);
-
-			if (vTemp.size() <=0)
+			string strCommand;
+			strCommand = strprintf("%s %s %s %s 0",_T("getscriptvalidedata"),theApp.m_betScritptid,requiredCount,_T("1"));
+			string strShowData;
+			CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
+			//m_AppID
+			int pos = strShowData.find("key");
+			if (pos < 0)
 			{
-				continue;
-			}
-
-			memcpy(&DBbet, &vTemp[0], sizeof(DBbet));
-
-			std::vector<unsigned char> vnTemp = CSoyPayHelp::getInstance()->ParseHex(txhash);
-			reverse(vnTemp.begin(),vnTemp.end());
-			string strTemp = CSoyPayHelp::getInstance()->HexStr(vnTemp);
-
-			/// 查找数据库中此赌约是否正在接赌
-			uistruct::P2P_QUIZ_RECORD_t  betrecord;
-			string strCond;
-			strCond =strprintf(" tx_hash = '%s' ", strTemp.c_str());
-
-			int nItem =  theApp.m_SqliteDeal.GetP2PQuizRecordItem(strCond, &betrecord );
-
-			if (nItem != 0 && betrecord.state == 4) ////此赌约正在接赌，只是在block中没有确认
-			{
-				continue;
-			}
-
-			/*strCommand = strprintf("%s %s",_T("gettxdetail"),strTemp.c_str());
-			string strShowData ="";
-
-			if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root1))
-			{
-				TRACE("ReadP2pPoolFromCmd rpccmd gettxdetail error");
 				return;
 			}
-			int confirheight =root1["confirmHeight"].asInt();
-
-			strCommand= strprintf("%s",_T("getinfo"));
-			strShowData ="";
-			if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root1))
-			{
-				TRACE("ReadP2pPoolFromCmd rpccmd getinfo error");
+			if (!reader.parse(strShowData, root)) 
 				return;
-			}
-			int curheight =root1["blocks"].asInt();
-			if(curheight >=(confirheight+500))
-				continue;*/
-
-			if (DBbet.betstate == 0x00)
+			int size = root.size();
+			for ( int index =0; index < size; ++index )
 			{
+				string txhash = root[index]["key"].asString();
+				txhash = txhash.substr(txhash.length()-64);
+				string nValue = root[index]["value"].asString();
+				uistruct::DBBET_DATA DBbet;
+				memset(&DBbet , 0 , sizeof(uistruct::DBBET_DATA));
+				std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue);
+
+				if (vTemp.size() <=0)
+				{
+					continue;
+				}
+
+				memcpy(&DBbet, &vTemp[0], sizeof(DBbet));
+
 				std::vector<unsigned char> txTemp = CSoyPayHelp::getInstance()->ParseHex(txhash);
 				reverse(txTemp.begin(),txTemp.end());
 				string newTxhash =  CSoyPayHelp::getInstance()->HexStr(txTemp);
+				/// 查找数据库中此赌约是否正在接赌
+				uistruct::P2P_QUIZ_RECORD_t  betrecord;
+				string strCond;
+				strCond =strprintf(" tx_hash = '%s' ", newTxhash.c_str());
 
-				std::vector<unsigned char> vSendid;
-				vSendid.assign(DBbet.sendbetid,DBbet.sendbetid+sizeof(DBbet.sendbetid));
-				string regid = CSoyPayHelp::getInstance()->GetNotFullRegID(vSendid);
+				int nItem =  theApp.m_SqliteDeal.GetP2PQuizRecordItem(strCond, &betrecord );
 
-				uistruct::LISTP2POOL_T item;
-				item.hash = newTxhash;
-				item.nPayMoney = DBbet.money;
-				item.sendbetid = regid;
-				item.outheight = DBbet.hight;
-				PoolList.push_back(item);
+				if (nItem != 0 && betrecord.state == 4) ////此赌约正在接赌，只是在block中没有确认
+				{
+					continue;
+				}
+
+				if (DBbet.betstate == 0x00)
+				{
+					std::vector<unsigned char> vSendid;
+					vSendid.assign(DBbet.sendbetid,DBbet.sendbetid+sizeof(DBbet.sendbetid));
+					string regid = CSoyPayHelp::getInstance()->GetNotFullRegID(vSendid);
+
+					uistruct::LISTP2POOL_T item;
+					item.hash = newTxhash;
+					item.nPayMoney = DBbet.money;
+					item.sendbetid = regid;
+					item.outheight = DBbet.hight;
+					PoolList.push_back(item);
+				}
+			}
+			if (root.size() < requiredCount ||root.size()>requiredCount )
+			{
+				break;
 			}
 		}
 	}
