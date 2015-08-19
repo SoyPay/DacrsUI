@@ -122,12 +122,11 @@ BOOL CDacrsUIApp::InitInstance()
 	m_blockAutoDelete = false;
 	m_msgAutoDelete= false;
 	GetMoFilename( str_InsPath , str_ModuleFilename ); //获取文件路径和文件名称
-
 	CheckPathValid( str_InsPath );
 	////创建维护线程
-	if( !CreateMaintainThrd() ) {
-		return FALSE ;
-	}
+	//if( !CreateMaintainThrd() ) {
+	//	return FALSE ;
+	//}
 
 	/// 加载配置文件
 	ParseUIConfigFile(str_InsPath);
@@ -762,26 +761,6 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 					Postmsg.SetType(MSG_USER_UPDATA_DATA,WM_DARK_RECORD);
 				}
 
-			}
-			break;
-		case MSG_USER_QUITTHREAD:
-			{
-				std::vector< sThrd >::iterator it ;
-				CDacrsUIApp* pApp = ((CDacrsUIApp*)pParam) ;
-				for( it = pApp->v_ProcSubThrd.begin() ; it != pApp->v_ProcSubThrd.end() ; it++ ) {
-					::PostThreadMessage( it->hThrdId , MSG_USER_QUITTHREAD , 0 , 0 ) ;
-					DWORD exc = 0xffff ;
-					while( ::GetExitCodeThread( it->hThrd , &exc ) ) {
-						if( STILL_ACTIVE == exc ) {
-							;
-						}else {
-							TRACE( "EXC = %d \n" , exc ) ;
-							break;
-						}
-					}
-				}
-				pApp->v_ProcSubThrd.clear() ;
-				_endthreadex( 0 ) ; 
 			}
 			break;
 		default:
