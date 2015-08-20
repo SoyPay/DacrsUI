@@ -162,7 +162,7 @@ public:
 	void AcceptBetRecord(vector<unsigned char> acceptbet,uistruct::REVTRANSACTION_t transcion);
 	void SendBetRecord(vector<unsigned char> sendbet,uistruct::REVTRANSACTION_t transcion);
 	void OpenBet(CString txhash,BOOL Flag = TRUE);
-	void ClearTransaction();
+	void DeleteItemTransaction(int height);
 	void GetMainDlgStruct();
 	BOOL RunOnlyOneApp();
 	void SendUIMsg(int message,string jsonaddr);
@@ -201,6 +201,7 @@ public:
 
 	CFont m_fontSong;         //宋体字体
 	CFont m_fontBlackbody;    //黑体字体
+	int   m_syncHight;
 };
 
 

@@ -65,6 +65,7 @@ CDacrsUIApp::CDacrsUIApp()
 	m_reminder = 0;
 	m_passlock = TRUE;
 	m_dlgCreatfinsh = FALSE;
+	m_syncHight = 0;
 }
 
 
@@ -173,7 +174,7 @@ BOOL CDacrsUIApp::InitInstance()
 	m_SqliteDeal.InitializationDB();
 
 	/// 清空交易记录
-	ClearTransaction();
+	//ClearTransaction();
 
 
 	if (strcmp(m_severip.c_str(),_T("127.0.0.1")))
@@ -258,13 +259,6 @@ BOOL CDacrsUIApp::InitInstance()
 		HANDLE processHandle = OpenProcess(PROCESS_ALL_ACCESS,FALSE,sever_pi.dwProcessId);  
 		if(NULL == processHandle)
 		{
-			/*
-			if(m_bReIndexServer) {
-				StartSeverProcess(str_InsPath);
-				m_bReIndexServer = FALSE;
-				continue;
-			}
-			*/
 			int errorCode = GetLastError();
 			TRACE("Error OpenProcess:%d " , errorCode );
 			UiFun::MessageBoxEx(_T("区块链数据库损坏，请双击运行钱包下clear.bat文件，在重新打开钱包\r\n") , _T("Error") ,MFB_OK|MFB_ERROR );
@@ -277,23 +271,11 @@ BOOL CDacrsUIApp::InitInstance()
 			exit(1);
 		}
 		CloseHandle(processHandle);
-		//TRACE("detect count:%d\n", ++nCount);
-		//pSplashThread->SetDlgPos(progessPos);
-		//TRACE("index:%d\r\n",progessPos);
 		if (isStartMainDlg)
 		{
 			break;
 		}
 		Sleep(100);
-
-	/*	SYSTEMTIME CurTimeLast ;
-		memset( &CurTimeLast , 0 , sizeof(SYSTEMTIME) ) ;
-		GetLocalTime( &CurTimeLast ) ;
-		if ((CurTimeLast.wMinute - WaitTimeLast.wMinute) > 2)
-		{
-			::MessageBox( NULL , _T("加载钱包失败\r\n") , "Error" , MB_ICONERROR) ;
-			exit(0);
-		}*/
 	}
 
 	CDacrsUIDlg dlg;
@@ -783,6 +765,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 #define  RELEASE_TX            9
 #define  REMOVE_TX            10
 #define  CONNECTON_NET        11
+#define  SYSTX_HEIGHT         12
 int GetMsgType(string const strData,Json::Value &root)
 {
 	string strType;
@@ -820,6 +803,10 @@ int GetMsgType(string const strData,Json::Value &root)
 		if(!strcmp(strType.c_str(), _T("rmtx"))) 
 		{
 			return REMOVE_TX;
+		}
+		if(!strcmp(strType.c_str(), _T("SyncTxHight"))) 
+		{
+			return SYSTX_HEIGHT;
 		}
 	}
 	return  -1;
@@ -890,6 +877,18 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 			postmsg.SetData(txData);
 			pApp->m_MsgQueue.push(postmsg);
 			
+		}
+		break;
+	case SYSTX_HEIGHT:
+		{
+			Json::Value obj =msgValue["msg"]; 
+			//插入到数据库
+			if (!obj.isNull())
+			{
+				int height = obj["syncheight"].asInt();
+				pApp->m_syncHight = height;
+				pApp->DeleteItemTransaction(height);
+			}
 		}
 		break;
 	case REV_TRANSATION_TYPE:
