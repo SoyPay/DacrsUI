@@ -762,7 +762,8 @@ void  CSqliteDeal::UpdataAllTableData(){
 	//LOCK(m_pCs);
 	///// 不用更新所所有的数据库表
 	uistruct::P2PBETRECORDLIST pTransaction;
-	GetP2PQuizRecordList(_T(" 1=1 "), &pTransaction);
+	string conditon = strprintf("height >=%d",theApp.m_syncHight);
+	GetP2PQuizRecordList(conditon, &pTransaction);
 
 	//if (0 == pTransaction.size() ) return  ;
 
@@ -850,33 +851,10 @@ void  CSqliteDeal::UpdataAllTableData(){
 		}
 	}
 
-		//strCondition.Format(" hash = '%s' or hash = '%s' ", const_it->tx_hash,const_it->relate_hash);
-
-		//uistruct::REVTRANSACTION_t pTxItem;
-		//GetTransactionItem(strCondition, &pTxItem);
-		//if (pTxItem.txhash == _T(""))
-		//{
-		//	strCondition.Format(_T(" tx_hash='%s' or relate_hash = '%s'"), const_it->tx_hash,const_it->relate_hash);
-		//	DeleteTableItem(_T("t_p2p_quiz"),strCondition);
-		//}else if(pTxItem.confirmedHeight == 0){
-		//	//更新数据
-		//	CString strField,strCond;
-		//	strField.AppendFormat(_T("send_time='%s',recv_time = '%s',comfirmed = %d,height =%d") ,_T("") ,_T(""),0,0 ) ;
-		//	strCond.Format(_T(" tx_hash='%s' or relate_hash = '%s'"), const_it->tx_hash,const_it->relate_hash);
-		//	if ( !UpdateTableItem(_T("t_p2p_quiz") ,strField,strCond )) {
-		//		TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , const_it->tx_hash );
-		//	}
-		//}
-
-		//int nItem =GetTableCountItem(_T("t_transaction") ,strCondition);
-		//if (nItem == 0)
-		//{
-		//	strCondition.Format(" tx_hash = '%s' ", const_it->tx_hash);
-		//	DeleteTableItem(_T("t_p2p_quiz"),strCondition);
-		//}
 	
 	uistruct::REDPACKETSENDLIST RedPackeSendRecordList;
-	GetRedPacketSendRecordList(_T(" 1=1 "), &RedPackeSendRecordList);
+	conditon = strprintf("confirm_height >=%d",theApp.m_syncHight);
+	GetRedPacketSendRecordList(conditon, &RedPackeSendRecordList);
 	std::vector<uistruct::REDPACKETSEND_t>::const_iterator const_it1;
 	for (const_it1 = RedPackeSendRecordList.begin() ; const_it1 != RedPackeSendRecordList.end() ; const_it1++ ) {
 		string strCondition="";
@@ -907,7 +885,8 @@ void  CSqliteDeal::UpdataAllTableData(){
 	}
 
 	uistruct::REDPACKETGRABLIST RedPackeGrabRecordList;
-	GetRedPacketGrabRecordList(_T(" 1=1 "), &RedPackeGrabRecordList);
+	conditon = strprintf("confirm_height >=%d",theApp.m_syncHight);
+	GetRedPacketGrabRecordList(conditon, &RedPackeGrabRecordList);
 	std::vector<uistruct::REDPACKETGRAB_t>::const_iterator const_it2;
 	for (const_it2 = RedPackeGrabRecordList.begin() ; const_it2 != RedPackeGrabRecordList.end() ; const_it2++ ) {
 		string strCondition(_T(""));

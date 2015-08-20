@@ -435,14 +435,19 @@ string ParseJsonToList(const string& strValue)
 			return strData;
 		}
 		Json::Value obj = value["result"];
-		if(obj.isString())
+		if (!obj.isNull())
 		{
-			strData = obj.asCString();
-		}
-		else
-		{
-			strData = obj.toStyledString();
-		}		
+			if(obj.isString())
+			{
+				strData = obj.asCString();
+			}
+			else
+			{
+				strData = obj.toStyledString();
+			}
+		}else{
+			LogPrint("INFO","ParseJsonToList not result");
+		}	
 	}
 
 	return strData;
@@ -551,25 +556,42 @@ BOOL CSoyPayHelp::SendRpc(string cmd,Json::Value  &rev)
 			const std::string &name = *iter;
 			if (strcmp(name.c_str(),"error") == 0)
 			{
-				string message = rev["error"].asString();
+				string message ="";
+				Json::Value obj = rev["error"];
+				if (!obj.isNull())
+				{
+					if(obj.isString())
+					{
+						message = obj.asCString();
+					}
+					else
+					{
+						message = obj.toStyledString();
+					}
+				}
 				TRACE("error rpc comand :%s",message.c_str());
 				return FALSE;
 			}
 		}
 	}
-	
-	//int pos = strShowData.find("error");
-	//if (pos >=0)
-	//{
-	//	string message = rev["error"].asString();
-	//	TRACE("error rpc comand :%s",message.c_str());
-	//	return FALSE;
-	//}
+
 	int pos = strShowData.find("code");
 	if (pos >= 0)
 	{
 		int code = rev["code"].asInt();
-		string message = rev["message"].asString();
+		string message =""; 
+		Json::Value obj = rev["message"];
+		if (!obj.isNull())
+		{
+			if(obj.isString())
+			{
+				message = obj.asCString();
+			}
+			else
+			{
+				message = obj.toStyledString();
+			}
+		}
 		TRACE("error rpc comand :%s",message.c_str());
 		return FALSE;
 	}
