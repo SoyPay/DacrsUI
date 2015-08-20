@@ -602,9 +602,10 @@ void CDacrsUIApp:: SyncTransaction(string obj)
 		PopupCommBalloonTip(transcion.txhash);
 	}
 }
-void CDacrsUIApp::ClearTransaction()
+void CDacrsUIApp::DeleteItemTransaction(int height)
 {
-	m_SqliteDeal.ClearTableData(_T("t_transaction"));
+	string strCondition =strprintf("confirm_height >=%d",height);
+	m_SqliteDeal.DeleteTableItem(_T("t_transaction"),strCondition);
 }
 
 

@@ -82,6 +82,9 @@ bool CNoUiMsgBuffer::AddBytesToBuffer(char *pCh, int nLen)
 		TRACE("Move data:m_nLength=%d nPos=%d\n",m_nLength, nPos);
 		memmove(m_Recvbuffer, m_Recvbuffer+nPos, m_nLength-nPos);
 		m_nLength = m_nLength-nPos;
+		for(int i=0; i<m_nLength;++i) {
+			TRACE(" %02X", m_Recvbuffer[i]);
+		}
 	}
 	return true;
 }
