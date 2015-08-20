@@ -1115,6 +1115,7 @@ UINT __stdcall CDacrsUIApp::blockProc(LPVOID pParam)
 								closesocket(pUiDemeDlg->m_blockSock);
 								pUiDemeDlg->m_blockSock = INVALID_SOCKET;
 							}
+							pUiDemeDlg->m_noUiMsgBuffer.ClearBuffer();
 							bReConnect = true;
 						}
 					}
