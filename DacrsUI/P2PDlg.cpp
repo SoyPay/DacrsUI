@@ -2229,10 +2229,13 @@ void CP2PDlg::ReadP2pPoolFromCmd(uistruct::P2PLIST &PoolList)
 	if(theApp.m_betScritptid != _T(""))
 	{
 		int requiredCount = 100;
+		int index = 1;
 		while(TRUE)
 		{
 			string strCommand;
-			strCommand = strprintf("%s %s %s %s 0",_T("getscriptvalidedata"),theApp.m_betScritptid,requiredCount,_T("1"));
+			strCommand = strprintf("%s %s %s %s 0",_T("getscriptvalidedata"),theApp.m_betScritptid,requiredCount,index);
+			index++;
+
 			string strShowData;
 			CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
 			//m_AppID

@@ -329,7 +329,7 @@ void  CSendRecord::OpenAcceptbet()
 {
 
 	string conditon;
-	conditon= "comfirmed=0 and state =1 and (actor = 0 or actor =2)";
+	conditon= "comfirmed=0 and state =1 and state !=5 and (actor = 0 or actor =2)";
 	uistruct::P2PBETRECORDLIST       lList;;
 	int nItem =  theApp.m_SqliteDeal.GetP2PQuizRecordList(conditon ,&lList ) ;
 
