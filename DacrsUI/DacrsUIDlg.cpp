@@ -584,7 +584,7 @@ void CDacrsUIDlg::CloseThread()
 		}
 		Sleep(100);
 	}
-
+	CloseHandle(theApp.m_msgThread );
 	while( ::GetExitCodeThread( theApp.m_hProcessNoUiMsgThread , &exc ) ) {
 
 		if( STILL_ACTIVE == exc ) {
@@ -595,7 +595,7 @@ void CDacrsUIDlg::CloseThread()
 		}
 		Sleep(100);
 	}
-
+	CloseHandle(theApp.m_hProcessNoUiMsgThread );
 	while( ::GetExitCodeThread( theApp.m_hblockThread , &exc ) ) {
 
 		if( STILL_ACTIVE == exc ) {
@@ -606,7 +606,7 @@ void CDacrsUIDlg::CloseThread()
 		}
 		Sleep(100);
 	}
-
+		CloseHandle(theApp.m_hblockThread);
 	//delete theApp.pSplashThread;
 }
 
@@ -655,7 +655,7 @@ void CDacrsUIDlg::CloseApp()
 	}
 	DeleteTray() ;
 	EndWaitCursor();
-	PostMessage( WM_QUIT ) ; 
+//	PostMessage( WM_QUIT ) ; 
 	PostMessage( WM_CLOSE ); 	
 	//DestroyWindow();
 	Sleep(200);

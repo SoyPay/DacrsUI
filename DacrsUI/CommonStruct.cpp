@@ -445,6 +445,19 @@ string ParseJsonToList(const string& strValue)
 			{
 				strData = obj.toStyledString();
 			}
+		}else if(obj.type() == Json::nullValue){
+			Json::Value error = value["error"];
+			if (!error.isNull())
+			{
+				if(error.isString())
+				{
+					strData = error.asCString();
+				}
+				else
+				{
+					strData = error.toStyledString();
+				}
+			}
 		}else{
 			LogPrint("INFO","ParseJsonToList not result");
 		}	

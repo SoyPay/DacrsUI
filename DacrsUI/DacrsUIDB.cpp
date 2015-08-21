@@ -23,10 +23,13 @@ void CDacrsUIApp::UpdateQuizPoolData()
 	if(theApp.m_betScritptid != _T(""))
 	{
 		int requiredCount = 100;
+		int index = 1;
 		while(TRUE)
 		{
 			string strCommand;
-			strCommand = strprintf("%s %s %d %s",_T("getscriptvalidedata"),theApp.m_betScritptid,requiredCount,_T("1"));
+			strCommand = strprintf("%s %s %d %d",_T("getscriptvalidedata"),theApp.m_betScritptid,requiredCount,index);
+			index++;
+
 
 			if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 			{
@@ -35,9 +38,11 @@ void CDacrsUIApp::UpdateQuizPoolData()
 			}
 			string str = root.toStyledString();
 			int size = root.size();
+			//LogPrint("INFO","Size:%d\r\n",size);
 			for ( int index =0; index < size; ++index )
 			{
 				string txhash = root[index]["key"].asString();
+				//LogPrint("INFO","index:%d,%s\r\n",index,txhash);
 				txhash = txhash.substr(txhash.length()-64);
 				string nValue = root[index]["value"].asString();
 				uistruct::DBBET_DATA DBbet;
@@ -311,7 +316,7 @@ void CDacrsUIApp::OpenBet(CString txhash,BOOL Flag)
 			uistruct::DATABASEINFO_t DatabaseInfo;
 			DatabaseInfo.strSource = strSourceData;
 			DatabaseInfo.strWhere = strW ;
-			DatabaseInfo.strTabName = _T("p2p_bet_record");
+			DatabaseInfo.strTabName = _T("t_p2p_quiz");
 			CPostMsg postmsg(MSG_USER_UPDATA_DATA,0);
 			string strtemp = DatabaseInfo.ToJson();
 
@@ -618,11 +623,13 @@ void CDacrsUIApp::UpdateRedPacketPoolData()
 	if(theApp.m_redPacketScriptid != _T(""))
 	{
 		int requiredCount = 100;
+		int index = 1;
 		while(TRUE)
 		{
 			string strCommand;
-			strCommand = strprintf("%s %s %s %s",_T("getscriptvalidedata"),theApp.m_redPacketScriptid,requiredCount,"1");
-		
+			strCommand = strprintf("%s %s %s %d",_T("getscriptvalidedata"),theApp.m_redPacketScriptid,requiredCount,index);
+		      index++;
+
 			if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 			{
 				TRACE("UpdateRedPacketPoolData rpccmd getscriptvalidedata error");
