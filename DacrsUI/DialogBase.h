@@ -22,8 +22,8 @@ public:
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 public:
 	CFont            m_fontGrid;//×ÖÌå±äÁ¿
-	HBITMAP		     m_pBmp; 
 	HBITMAP		     m_HeadBmp; 
+	HBITMAP           m_pBmp;
 	void		     SetBkBmpNid( UINT nBitmapIn ,HBITMAP &bmp) ;
 	virtual BOOL OnInitDialog();
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
