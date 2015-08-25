@@ -78,6 +78,7 @@ void CWalletPassPhrase::OnBnClickedOk()
 	if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 	{
 		TRACE(" rpccmd walletpassphrase error");
+		UiFun::MessageBoxEx(_T("输入就密码不正确,请重新输入") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
 

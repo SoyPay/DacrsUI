@@ -415,7 +415,7 @@ void  CSendRecord::OnShowPagePool(int page)
 		List_SendAppendData* pinf = m_listBox.GetAppendDataInfo(i);
 
 		///说明开奖了
-		if (const_it.state == 2 || const_it.state == 1)
+		if (const_it.state == 2 || const_it.state == 1 || const_it.state == 5)
 		{
 			SYSTEMTIME curTime =UiFun::Time_tToSystemTime(const_it.recv_time);
 
