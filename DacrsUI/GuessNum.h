@@ -5,7 +5,7 @@
 #include "ShadeButtonST.h"
 // CGuessNum ¶Ô»°¿ò
 
-class CGuessNum : public CDialogEx
+class CGuessNum : public CDialogBase
 {
 	DECLARE_DYNAMIC(CGuessNum)
 
@@ -24,14 +24,11 @@ public:
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnBnClickedCancel();
 	virtual BOOL OnInitDialog();
-	void SetBkBmpNid( UINT nBitmapIn ) ;
 private:
 	CStaticTrans     m_Text;
 	CShadeButtonST   m_rBtnClose;
-	HBITMAP		     m_pBmp; 
 	CShadeButtonST   m_rBtnCancel;
 	CShadeButtonST   m_rBtnOk;
 public:
-	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	afx_msg void OnBnClickedButtonClose();
 };

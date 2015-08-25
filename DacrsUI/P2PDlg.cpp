@@ -438,7 +438,7 @@ void CP2PDlg::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*29, (rc.Height()/100)*20+2 ,  rect.Width() , rect.Height() , SWP_SHOWWINDOW );
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*29+3, (rc.Height()/100)*20+2 ,  rect.Width() , rect.Height() , SWP_SHOWWINDOW );
 		}
 		pst = GetDlgItem( IDC_BUTTON_SETADDR ) ;
 		if ( NULL != pst ) {
@@ -781,7 +781,8 @@ void CP2PDlg::OnBnClickedButtonRech()
 {
 	// TODO: 在此添加控件通知处理程序代码
 
-	if (strcmp(theApp.m_betScritptid.c_str(),theApp.m_neststcriptid.strNewScriptBetid.c_str()))
+	string strshow= "猜你妹已经升级,请到菜单栏中选择恢复默认设置";
+	if (!UiFun::IsCurrentAppId(theApp.m_betScritptid.c_str(),theApp.m_neststcriptid.strNewScriptBetid.c_str(),strshow))
 	{
 		return;
 	}
@@ -1723,7 +1724,7 @@ void  CP2PDlg::GetAppAccountSomeMoney()
 	CString balance ="";
 	
 	GetDlgItem(IDC_STATIC_BALANCE)->GetWindowText(balance);
-	CReCharge outdlg(NULL,"提现:","提现金额","",balance);
+	CReCharge outdlg(NULL,"提现","提现金额","",balance);
 	if ( IDOK != outdlg.DoModal()){
 		return;
 	}

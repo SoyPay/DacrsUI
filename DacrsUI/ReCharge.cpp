@@ -9,12 +9,11 @@
 
 // CReCharge 对话框
 
-IMPLEMENT_DYNAMIC(CReCharge, CDialogEx)
+IMPLEMENT_DYNAMIC(CReCharge, CDialogBase)
 
 CReCharge::CReCharge(CWnd* pParent /*=NULL*/,CString text,CString strsms,CString strhead,CString amount)
-	: CDialogEx(CReCharge::IDD, pParent)
+	: CDialogBase(CReCharge::IDD, pParent)
 {
-	m_pBmp = NULL ;
 	m_strText = text;
 	m_strSms = strsms;
 	m_strHead = strhead;
@@ -23,15 +22,12 @@ CReCharge::CReCharge(CWnd* pParent /*=NULL*/,CString text,CString strsms,CString
 
 CReCharge::~CReCharge()
 {
-	if( NULL != m_pBmp ) {
-		DeleteObject(m_pBmp) ;
-		m_pBmp = NULL ;
-	}
+
 }
 
 void CReCharge::DoDataExchange(CDataExchange* pDX)
 {
-	CDialogEx::DoDataExchange(pDX);
+	CDialogBase::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_STATIC_SHOW, m_Text);
 	DDX_Control(pDX, IDC_BUTTON_GB1, m_rBtnClose);	
 	DDX_Control(pDX, IDCANCEL, m_rBtnCancel);
@@ -39,11 +35,10 @@ void CReCharge::DoDataExchange(CDataExchange* pDX)
 }
 
 
-BEGIN_MESSAGE_MAP(CReCharge, CDialogEx)
+BEGIN_MESSAGE_MAP(CReCharge, CDialogBase)
 	ON_BN_CLICKED(IDOK, &CReCharge::OnBnClickedOk)
 	ON_BN_CLICKED(IDCANCEL, &CReCharge::OnBnClickedCancel)
 	ON_WM_SIZE()
-	ON_WM_ERASEBKGND()
 	ON_BN_CLICKED(IDC_BUTTON_GB1, &CReCharge::OnBnClickedButtonGb1)
 END_MESSAGE_MAP()
 
@@ -84,13 +79,13 @@ void CReCharge::OnBnClickedCancel()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	theApp.m_strAddress = _T("");
-	CDialogEx::OnCancel();
+	CDialogBase::OnCancel();
 }
 
 
 BOOL CReCharge::OnInitDialog()
 {
-	CDialogEx::OnInitDialog();
+	CDialogBase::OnInitDialog();
 
 	// TODO:  在此添加额外的初始化
 	m_Text.SetFont(100, _T("微软雅黑"));				//设置显示字体和大小
@@ -129,6 +124,13 @@ BOOL CReCharge::OnInitDialog()
 	m_rBtnClose.SizeToContent();
 	m_rBtnClose.SetWindowPos(NULL ,320 , 0 , 0 , 0 , SWP_NOSIZE); 
 
+	CRect rect ;
+	m_rBtnClose.GetClientRect(rect);
+
+	RECT ret;
+	GetWindowRect(&ret);
+	m_rBtnClose.SetWindowPos(NULL ,(ret.right-ret.left)-rect.Width() , 2 , 0 , 0 , SWP_NOSIZE); 
+
 	m_rBtnOk.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
 	m_rBtnOk.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
 	m_rBtnOk.SetWindowText("确 定") ;
@@ -148,7 +150,6 @@ BOOL CReCharge::OnInitDialog()
 	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
 	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
 	m_rBtnCancel.SizeToContent();
-	SetBkBmpNid( IDB_BITMAP_ADD_BOOK_BJ ) ;
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE
 }
@@ -156,7 +157,7 @@ BOOL CReCharge::OnInitDialog()
 
 void CReCharge::OnSize(UINT nType, int cx, int cy)
 {
-	CDialogEx::OnSize(nType, cx, cy);
+	CDialogBase::OnSize(nType, cx, cy);
 
 	if( NULL != GetSafeHwnd() ) {
 		const int div = 100 ;
@@ -206,42 +207,6 @@ void CReCharge::OnSize(UINT nType, int cx, int cy)
 		}
 	}
 	// TODO: 在此处添加消息处理程序代码
-}
-void CReCharge::SetBkBmpNid( UINT nBitmapIn ) 
-{
-	if( NULL != m_pBmp ) {
-		::DeleteObject( m_pBmp ) ;
-		m_pBmp = NULL ;
-	}
-	m_pBmp	= NULL ;
-	HINSTANCE	hInstResource = NULL;	
-	hInstResource = AfxFindResourceHandle(MAKEINTRESOURCE(nBitmapIn), RT_BITMAP);
-	if( NULL != hInstResource ) {
-		m_pBmp = (HBITMAP)::LoadImage(hInstResource, MAKEINTRESOURCE(nBitmapIn), IMAGE_BITMAP, 0, 0, 0);
-	}
-}
-
-BOOL CReCharge::OnEraseBkgnd(CDC* pDC)
-{
-	// TODO: 在此添加消息处理程序代码和/或调用默认值
-
-	CRect   rect; 
-	GetClientRect(&rect); 
-
-	if(m_pBmp   !=   NULL) { 
-		BITMAP   bm; 
-		CDC   dcMem; 
-		::GetObject(m_pBmp,sizeof(BITMAP),   (LPVOID)&bm); 
-		dcMem.CreateCompatibleDC(NULL); 
-		HBITMAP     pOldBitmap   =(HBITMAP   )   dcMem.SelectObject(m_pBmp); 
-		pDC->StretchBlt(rect.left,rect.top-1,rect.Width(),rect.Height(),   &dcMem,   0,   0,bm.bmWidth-1,bm.bmHeight-1,   SRCCOPY); 
-
-		dcMem.SelectObject(pOldBitmap);
-		dcMem.DeleteDC();
-	} else  
-		CWnd::OnEraseBkgnd(pDC); 
-
-	return TRUE;
 }
 
 

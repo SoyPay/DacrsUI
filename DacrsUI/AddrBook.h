@@ -6,7 +6,7 @@
 #include "ShadeButtonST.h"
 // CAddrBook 对话框
 
-class CAddrBook : public CDialogEx
+class CAddrBook : public CDialogBase
 {
 	DECLARE_DYNAMIC(CAddrBook)
 
@@ -50,15 +50,7 @@ public:
 	CEdit              editItem;
 	CString            m_prehittex;
 public:
-	CFont            m_fontGrid;//字体变量
-	HBITMAP		     m_pBmp; 
-	void		     SetBkBmpNid( UINT nBitmapIn ) ;
-	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
-	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
-	virtual BOOL Create(LPCTSTR lpszTemplateName, CWnd* pParentWnd = NULL);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
-	afx_msg LRESULT OnNcHitTest(CPoint point);
-	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnBnClickedButtonGb();
 	afx_msg void OnNMDblclkList(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnNMClickList(NMHDR *pNMHDR, LRESULT *pResult);
