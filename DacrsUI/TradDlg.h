@@ -31,7 +31,10 @@ public:
 	//CMFCLinkCtrl v_linkCtrl2;
 	afx_msg void OnBnClickedButtonTxdetail();
 	afx_msg LRESULT OnShowListCtrl(  WPARAM wParam, LPARAM lParam ) ;
-	void OninitializeList();
+	void    OninitializeList();
+	void    ShowListCtrl(uistruct::TRANSRECORDLIST* pListInfo);
+	int     m_nConut   ;     //·­Ò³¼ÆÊý
+	void    ShowPageDataInfo(int nConut);
 private:
 	CListCtrlCl        m_listCtrl;
 	CShadeButtonST     m_rBtnTxdetail;
@@ -42,6 +45,11 @@ private:
 	COLORREF          m_colorEditText;
 	bool              m_seteditcolor;
 	CShadeButtonST    m_rBtnRefresh;
+public:
+	CStaticTrans           m_sCountpage  ;
+	CShadeButtonST         m_rBtnUp;
+	CShadeButtonST         m_rBtnNext;
+	int                    m_pagesize;
 public:
 	afx_msg void OnNMDblclkListListtx(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
@@ -63,4 +71,8 @@ public:
 	
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 	afx_msg void OnBnClickedButtonRefresh();
+	afx_msg void OnBnClickedUpPage();
+	afx_msg void OnBnClickedNextPage();
+	void    ShowPageCotent(int pageIndex);
+	void    ShowComboxCotent();
 };

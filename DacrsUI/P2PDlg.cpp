@@ -9,6 +9,7 @@
 #include "ReCharge.h"
 #include "GuessNum.h"
 #include "RpcCmd.h"
+#include "CommonAddr.h"
 
 #define OUT_HEIGHT  60
 
@@ -68,6 +69,7 @@ void CP2PDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_CANCELORDE, m_rbCancelOrder);
 	
 
+	DDX_Control(pDX, IDC_BUTTON_SETADDR, m_rBtnSetCommonAddr);
 }
 
 
@@ -78,6 +80,7 @@ BEGIN_MESSAGE_MAP(CP2PDlg, CDialogBar)
 	ON_WM_SIZE()
 	ON_CBN_SELCHANGE(IDC_COMBO_ADDRES, &CP2PDlg::OnCbnSelchangeComboAddres)
 	ON_MESSAGE(MSG_USER_P2P_UI , &CP2PDlg::OnShowListCtrol )
+	ON_MESSAGE(MSG_USER_P2PADDRES , &CP2PDlg::OnUpAddressCombo )
 	ON_BN_CLICKED(IDC_BUTTON_WITHD, &CP2PDlg::OnBnClickedButtonWithd)
 	ON_BN_CLICKED(IDC_BUTTON_RECH, &CP2PDlg::OnBnClickedButtonRech)
 	ON_BN_CLICKED(IDC_BUTTON_MALE, &CP2PDlg::OnBnClickedButtonMale)
@@ -91,6 +94,7 @@ BEGIN_MESSAGE_MAP(CP2PDlg, CDialogBar)
 	ON_WM_TIMER()
 	ON_LBN_DBLCLK(IDC_LIST_BONUS, &CP2PDlg::OnLbnDblclkListBonus)
 	ON_BN_CLICKED(IDC_CANCELORDE, &CP2PDlg::OnBnClickedCancelorde)
+	ON_BN_CLICKED(IDC_BUTTON_SETADDR, &CP2PDlg::OnBnClickedButtonSetaddr)
 END_MESSAGE_MAP()
 
 
@@ -256,6 +260,16 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_rbCancelOrder.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(41, 57, 85));
 		m_rbCancelOrder.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(41, 57, 85));
 		m_rbCancelOrder.SizeToContent();
+
+		m_rBtnSetCommonAddr.SetBitmaps( IDB_BITMAP_BUTTON3 , RGB(255, 255, 0) , IDB_BITMAP_BUTTON3 , RGB(255, 255, 255) );
+		m_rBtnSetCommonAddr.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+		m_rBtnSetCommonAddr.SetWindowText("常用地址") ;
+		m_rBtnSetCommonAddr.SetFontEx(20 , _T("微软雅黑"));
+		m_rBtnSetCommonAddr.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(255, 255, 255));
+		m_rBtnSetCommonAddr.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+		m_rBtnSetCommonAddr.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(255, 255, 255));
+		m_rBtnSetCommonAddr.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(255, 255, 255));
+		m_rBtnSetCommonAddr.SizeToContent();
 		
 
 		m_money.SetFont(120, _T("黑体"));				//设置显示字体和大小
@@ -296,6 +310,7 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 
 
 		theApp.SubscribeMsg( theApp.GetMtHthrdId() , GetSafeHwnd() , MSG_USER_P2P_UI ) ;
+		theApp.SubscribeMsg( theApp.GetMtHthrdId() , GetSafeHwnd() , MSG_USER_P2PADDRES ) ;
 
 		/// 设置定时器刷新界面 一分钟
 		//SetTimer(1,30000,NULL);
@@ -423,7 +438,13 @@ void CP2PDlg::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*32, (rc.Height()/100)*20 ,  rect.Width() , rect.Height() , SWP_SHOWWINDOW );
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*29, (rc.Height()/100)*20+2 ,  rect.Width() , rect.Height() , SWP_SHOWWINDOW );
+		}
+		pst = GetDlgItem( IDC_BUTTON_SETADDR ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*42, (rc.Height()/100)*20 ,  rect.Width() , rect.Height() , SWP_SHOWWINDOW );
 		}
 
 		pst = GetDlgItem( IDC_EDIT_MONEY ) ;
@@ -548,17 +569,20 @@ void CP2PDlg::InsertComboxIitem()
 
 BOOL CP2PDlg::AddListaddrDataBox(){
 
-	map<string,uistruct::LISTADDR_t> m_mapAddrInfo;
-	theApp.m_SqliteDeal.GetWalletAddressList(_T(" sign=1 "), &m_mapAddrInfo);
+	map<string,uistruct::COMMONLISTADDR_t> m_mapCommonAddrInfo;
+	theApp.m_SqliteDeal.GetCommonWalletAddressList(_T(" betid=1 "), &m_mapCommonAddrInfo);
 
-	if ( 0 == m_mapAddrInfo.size() ) return FALSE ;
+	//map<string,uistruct::LISTADDR_t> m_mapAddrInfo;
+	//theApp.m_SqliteDeal.GetWalletAddressList(_T(" sign=1 "), &m_mapAddrInfo);
+
+	if ( 0 == m_mapCommonAddrInfo.size() ) return FALSE ;
 
 	//清除ComBox控件
 	((CComboBox*)GetDlgItem(IDC_COMBO_ADDRES))->ResetContent();
 	//加载到ComBox控件
 	int nItem = 0;
-	std::map<string,uistruct::LISTADDR_t>::const_iterator const_it;
-	for ( const_it = m_mapAddrInfo.begin() ; const_it != m_mapAddrInfo.end() ; const_it++ ) {
+	std::map<string,uistruct::COMMONLISTADDR_t>::const_iterator const_it;
+	for ( const_it = m_mapCommonAddrInfo.begin() ; const_it != m_mapCommonAddrInfo.end() ; const_it++ ) {
 
 		((CComboBox*)GetDlgItem(IDC_COMBO_ADDRES))->InsertString(nItem , const_it->second.RegID.c_str() );
 		nItem++;
@@ -595,6 +619,24 @@ LRESULT CP2PDlg::OnShowListCtrol( WPARAM wParam, LPARAM lParam )
 		break;
 
 	}
+	return 0 ;
+}
+LRESULT CP2PDlg::OnUpAddressCombo( WPARAM wParam, LPARAM lParam ) 
+{
+	((CComboBox*)GetDlgItem(IDC_COMBO_ADDRES))->ResetContent(); //清除ComBox控件
+	map<string,uistruct::COMMONLISTADDR_t> m_mapCommonAddrInfo;
+	theApp.m_SqliteDeal.GetCommonWalletAddressList(_T(" betid=1 "), &m_mapCommonAddrInfo);
+
+	if ( 0 == m_mapCommonAddrInfo.size() ) return  0;
+	   
+	int nItem = 0;  //加载到ComBox控件
+	std::map<string,uistruct::COMMONLISTADDR_t>::const_iterator const_it;
+	for ( const_it = m_mapCommonAddrInfo.begin() ; const_it != m_mapCommonAddrInfo.end() ; const_it++ ) {
+
+	  ((CComboBox*)GetDlgItem(IDC_COMBO_ADDRES))->InsertString(nItem , const_it->second.RegID.c_str() );
+	  nItem++;
+	}
+	((CComboBox*)GetDlgItem(IDC_COMBO_ADDRES))->SetCurSel(0);
 	return 0 ;
 }
 void  CP2PDlg::QueryNotDrawBalance(CString addr)
@@ -739,8 +781,7 @@ void CP2PDlg::OnBnClickedButtonRech()
 {
 	// TODO: 在此添加控件通知处理程序代码
 
-	string strshow= "猜你妹已经升级,请到菜单栏中选择恢复默认设置";
-	if (!UiFun::IsCurrentAppId(theApp.m_betScritptid.c_str(),theApp.m_neststcriptid.strNewScriptBetid.c_str(),strshow))
+	if (strcmp(theApp.m_betScritptid.c_str(),theApp.m_neststcriptid.strNewScriptBetid.c_str()))
 	{
 		return;
 	}
@@ -2298,4 +2339,10 @@ void CP2PDlg::ReadP2pPoolFromCmd(uistruct::P2PLIST &PoolList)
 			}
 		}
 	}
+}
+void CP2PDlg::OnBnClickedButtonSetaddr()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CCommonAddr addDlg(UI_SENDP2P_RECORD);
+	addDlg.DoModal() ;
 }
