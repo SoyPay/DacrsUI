@@ -54,6 +54,8 @@ public:
 	CP2PBetHelp		       m_P2PBetHelp;
 	CShadeButtonST         m_rBtnWinerloser;
 	CShadeButtonST         m_rBtnAddrWinerloser;
+
+	CShadeButtonST         m_rBtnSetCommonAddr;
 public:
 	CBetRecord            m_BetRecord     ;
 	CSendRecord           m_SendRecord    ;
@@ -65,6 +67,7 @@ public:
 public:
 	afx_msg LRESULT onBnCLick( WPARAM wParam, LPARAM lParam );
 	afx_msg LRESULT OnShowListCtrol(  WPARAM wParam, LPARAM lParam ) ;
+	afx_msg LRESULT OnUpAddressCombo(  WPARAM wParam, LPARAM lParam ) ;
 public:
 	virtual BOOL Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
@@ -114,4 +117,5 @@ public:
 	afx_msg void OnLbnDblclkListBonus();
 
 	afx_msg void OnBnClickedCancelorde();
+	afx_msg void OnBnClickedButtonSetaddr();
 };

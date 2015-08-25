@@ -31,9 +31,10 @@ using namespace std;
 #define MSG_USER_UPDATA_UI			        WM_USER+115   //更新到接受页面
 #define MSG_USER_P2P_UI			            WM_USER+116	    //更新到P2P界面
 #define MSG_USER_REDPACKET_UI			    WM_USER+117	    //更新到P2P界面
+#define MSG_USER_P2PADDRES			        WM_USER+118	    //更新到P2P界面常用地址
 
-#define WM_SHOWTASK                        (WM_USER +118) 
-#define WM_POPUPBAR                       (WM_USER +119) 
+#define WM_SHOWTASK                        (WM_USER +119) 
+#define WM_POPUPBAR                       (WM_USER +120) 
 
 #define MSG_USER_QUITTHREAD			        WM_USER+200	    //退出线程
 #define MSG_USER_OUT                        WM_USER+201     //退出软件
@@ -147,6 +148,36 @@ namespace uistruct {
 		}
 	}LISTADDR_t;
 	typedef std::vector<LISTADDR_t> LISTADDRLIST ;
+	//常用listaddr结构
+	typedef struct COMMONLISTADDR{   
+		string    address ;   //address
+		string    RegID   ;   //RegID
+		int       betID   ;   //关系ID
+		COMMONLISTADDR(){
+			address="";
+			RegID="";
+			betID = 0;
+		}
+		string ToJson(){
+			Json::Value root;
+			root["address"] = address;
+			root["RegID"] = RegID;
+			root["betid"] = betID;
+			return root.toStyledString();
+		}
+		bool JsonToStruct(string json){
+			Json::Reader reader;  
+			Json::Value root; 
+			if (!reader.parse(json, root)) 
+				return false ;
+			address = root["address"].asString();
+			
+			RegID =  root["RegID"].asString();
+			this->betID = root["betid"].asInt();
+			return true;
+		}
+	}COMMONLISTADDR_t;
+	typedef std::vector<COMMONLISTADDR_t> COMMONADDRLIST ;
 	//初始化服务器结构体
 	typedef struct INITSERVER{   
 		char    sType[32] ;   //类型

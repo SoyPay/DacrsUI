@@ -39,6 +39,16 @@ BOOL CSqliteDeal::InitializationDB(){
 			return FALSE;
 		}
 	}
+	strCondition = "type='table' and name= 't_common_address'";
+	if(!GetTableCountItem(strTableName, strCondition)) 
+	{
+		string createSQL="CREATE TABLE t_common_address(address TEXT PRIMARY KEY, reg_id TEXT, betid INT)";
+		if(!ExcuteSQL(pDBConn, NULL, createSQL, NULL))
+		{
+			LogPrint("INFO", "Create table t_common_address failed\n");
+			return FALSE;
+		}
+	}
 
 	strCondition = "type='table' and name= 't_chain_tip'";
 	if(!GetTableCountItem(strTableName, strCondition))
@@ -338,6 +348,23 @@ int CallGetWalletAddressItem(void *para, int n_column, char ** column_value, cha
 
 	return 0;
 }
+//获取某一个钱包地址
+int CallGetCommonWalletAddressItem(void *para, int n_column, char ** column_value, char ** column_name)
+{
+	uistruct::COMMONLISTADDR_t *pAddr = (uistruct::COMMONLISTADDR_t *)para;
+	if(NULL == column_value[0])
+		return -1;
+	if(n_column != 3)
+		return -1;
+
+	pAddr->address=strprintf("%s",column_value[0]);
+;
+	pAddr->RegID=strprintf("%s",column_value[1]);
+
+	pAddr->betID = atoi(column_value[2]) ;
+
+	return 0;
+}
 //获取钱包地址列表
 int CallGetWalletAddressList(void *para, int n_column, char ** column_value, char ** column_name)
 {
@@ -348,6 +375,21 @@ int CallGetWalletAddressList(void *para, int n_column, char ** column_value, cha
 	uistruct::LISTADDR_t listdata;
 	
 	if(CallGetWalletAddressItem(&listdata, n_column, column_value, column_name) < 0 )
+		return -1;
+	
+	(*pListInfo)[listdata.address] = listdata;
+	return 0;
+}
+//获取常用钱包地址列表
+int CallGetCommonWalletAddressList(void *para, int n_column, char ** column_value, char ** column_name)
+{
+	map<string,uistruct::COMMONLISTADDR_t> *pListInfo = (map<string,uistruct::COMMONLISTADDR_t> *)para;
+	if(n_column != 3)
+		return -1;
+
+	uistruct::COMMONLISTADDR_t listdata;
+	
+	if(CallGetCommonWalletAddressItem(&listdata, n_column, column_value, column_name) < 0 )
 		return -1;
 	
 	(*pListInfo)[listdata.address] = listdata;
@@ -531,7 +573,15 @@ int CSqliteDeal::GetWalletAddressItem(const string &strCondition, uistruct::LIST
 	return 0;
 
 }
-
+int CSqliteDeal::GetCommonWalletAddressItem(const string &strCondition, uistruct::COMMONLISTADDR_t *pAddr)
+{
+	sqlite3 ** pDBConn = GetDBConnect(); //获取数据库连接
+	
+	string strSQL="";
+	strSQL = "SELECT * FROM t_common_address WHERE " + strCondition;
+	ExcuteSQL(pDBConn, &CallGetCommonWalletAddressItem, strSQL, (void *)(pAddr));
+	return 0;
+}
 int CSqliteDeal::GetWalletAddressList(const string &strCondition, map<string,uistruct::LISTADDR_t> *pListInfo)
 {
 	sqlite3 ** pDBConn = GetDBConnect();
@@ -540,7 +590,14 @@ int CSqliteDeal::GetWalletAddressList(const string &strCondition, map<string,uis
 	ExcuteSQL(pDBConn, &CallGetWalletAddressList, strSQL, (void *)pListInfo);
 	return 0;
 }
-
+int CSqliteDeal::GetCommonWalletAddressList(const string &strCondition, map<string,uistruct::COMMONLISTADDR_t> *pListInfo)
+{
+	sqlite3 ** pDBConn = GetDBConnect();
+	string strSQL("");
+	strSQL = "SELECT * FROM t_common_address WHERE " + strCondition;
+	ExcuteSQL(pDBConn, &CallGetCommonWalletAddressList, strSQL, (void *)pListInfo);
+	return 0;
+}
 int CSqliteDeal::GetP2PQuizRecordItem(const string &strCondition, uistruct::P2P_QUIZ_RECORD_t * p2pQuizRecord)
 {
 	sqlite3 ** pDBConn = GetDBConnect();

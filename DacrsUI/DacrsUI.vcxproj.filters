@@ -241,6 +241,9 @@
     <ClCompile Include="DialogBase.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="CommonAddr.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BmpBtn.h">
@@ -538,6 +541,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="DialogBase.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonAddr.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
