@@ -24,6 +24,8 @@ CTradDlg::CTradDlg()
 {
 	m_pBmp = NULL ;
 	m_seteditcolor = TRUE;
+	m_nConut = 0 ;
+	m_pagesize = 17;
 }
 
 CTradDlg::~CTradDlg()
@@ -53,8 +55,9 @@ void CTradDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_COMBO_TIME, m_time);
 	DDX_Control(pDX, IDC_EDIT_ADDR, m_edit);
 	DDX_Control(pDX, IDC_BUTTON_REFRESH, m_rBtnRefresh);
-	//DDX_Control(pDX, IDC_PROGRESS, v_linkCtrl1);
-	//DDX_Control(pDX, IDC_MFCLINK2, v_linkCtrl2);
+	DDX_Control(pDX, IDC_UP_PAGE, m_rBtnUp);
+	DDX_Control(pDX, IDC_NEXT_PAGE, m_rBtnNext);
+	DDX_Control(pDX ,IDC_STATIC_COUNT_PAGE ,m_sCountpage ) ;
 }
 
 
@@ -73,6 +76,8 @@ BEGIN_MESSAGE_MAP(CTradDlg, CDialogBar)
 	//ON_EN_CHANGE(IDC_EDIT_ADDR, &CTradDlg::OnEnChangeEditAddr)
 	ON_WM_CTLCOLOR()
 	ON_BN_CLICKED(IDC_BUTTON_REFRESH, &CTradDlg::OnBnClickedButtonRefresh)
+	ON_BN_CLICKED(IDC_UP_PAGE, &CTradDlg::OnBnClickedUpPage)
+	ON_BN_CLICKED(IDC_NEXT_PAGE, &CTradDlg::OnBnClickedNextPage)
 END_MESSAGE_MAP()
 
 
@@ -165,6 +170,10 @@ BOOL CTradDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		}
 		m_listCtrl.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_HEADERDRAGDROP );// |LVS_SINGLESEL  );
 
+		m_sCountpage.SetFont(90, _T("黑体"));				//设置显示字体和大小
+		m_sCountpage.SetTextColor(RGB(0,0,0));			    //字体颜色	
+		m_sCountpage.SetWindowText(_T("共:"));
+
 		m_rBtnTxdetail.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
 		m_rBtnTxdetail.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
 		m_rBtnTxdetail.SetWindowText("查看详情") ;
@@ -194,6 +203,24 @@ BOOL CTradDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_rBtnRefresh.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
 		m_rBtnRefresh.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
 		m_rBtnRefresh.SizeToContent();
+
+		m_rBtnUp.SetBitmaps( IDB_BITMAP_UP , RGB(255, 255, 0) , IDB_BITMAP_UP , RGB(255, 255, 255) );
+		m_rBtnUp.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+		m_rBtnUp.SetWindowText("") ;
+		m_rBtnUp.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(255, 255, 255));
+		m_rBtnUp.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+		m_rBtnUp.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(255, 255, 255));
+		m_rBtnUp.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(255, 255, 255));
+		m_rBtnUp.SizeToContent();
+
+		m_rBtnNext.SetBitmaps( IDB_BITMAP_NEXT , RGB(255, 255, 0) , IDB_BITMAP_NEXT , RGB(255, 255, 255) );
+		m_rBtnNext.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+		m_rBtnNext.SetWindowText("") ;
+		m_rBtnNext.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(255, 255, 255));
+		m_rBtnNext.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+		m_rBtnNext.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(255, 255, 255));
+		m_rBtnNext.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(255, 255, 255));
+		m_rBtnNext.SizeToContent();
 
 		m_condition.InsertString(0,_T("全部"));
 		m_condition.InsertString(1,_T("接收"));
@@ -256,23 +283,19 @@ void CTradDlg::OnBnClickedButtonTxdetail()
 	}
 
 }
-void  CTradDlg::OninitializeList()
+void  CTradDlg::ShowListCtrl(uistruct::TRANSRECORDLIST* pListInfo)
 {
-	uistruct::TRANSRECORDLIST pListInfo;
-	theApp.m_SqliteDeal.GetTransactionList(_T(" 1=1 order by confirmed_time"), &pListInfo); 
+	if ( NULL == pListInfo ) return ;
 
-	if (pListInfo.size() == 0)
-	{
-		return;
-	}
-
+	m_listCtrl.DeleteAllItems();
 	int nSubIdx = 0 , i = 0 ;
 	string strShowData = "";
 	std::vector<uistruct::REVTRANSACTION_t>::const_iterator const_it;
-	for ( const_it = pListInfo.begin() ; const_it != pListInfo.end() ; const_it++ ) {
+	for ( const_it = pListInfo->begin() ; const_it != pListInfo->end() ; const_it++ ) {
 		nSubIdx = 0;
 		strShowData =strprintf("%d", i+1);
-		m_listCtrl.InsertItem(i, strShowData.c_str());					//序号
+		int item = m_listCtrl.InsertItem(i, strShowData.c_str());					//序号
+		m_listCtrl.SetItemData( item , (DWORD_PTR)(&(*const_it)) ) ;
 
 		string txtype = const_it->txtype;
 		if (!strcmp(txtype.c_str(),"REWARD_TX"))
@@ -321,6 +344,10 @@ void  CTradDlg::OninitializeList()
 
 		i++;
 	}
+}
+void  CTradDlg::OninitializeList()
+{
+	ShowComboxCotent();
 }
 
 void CTradDlg::OnNMDblclkListListtx(NMHDR *pNMHDR, LRESULT *pResult)
@@ -422,7 +449,11 @@ void CTradDlg::InsertItemData()
 	 {
 	 case WM_INSERT:
 		 {
-			 InsertItemData();
+			 //InsertItemData();
+			 if ( 0 == m_nConut ) {   //只有当前是首页 , 才去显示
+				 m_listCtrl.DeleteAllItems();
+				 OninitializeList();
+			 }
 		 }
 		 break;
 	default:
@@ -484,6 +515,34 @@ void CTradDlg::OnSize(UINT nType, int cx, int cy)
 			CRect m_BtnRc ;
 			pButton->GetClientRect( m_BtnRc ) ;
 			pButton->SetWindowPos(NULL ,900 - 1*(103 + 5)- 23-m_BtnRc.Width()-120 , 600 - 72 - 32 - 46 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
+		}
+		pButton = (CButton*)GetDlgItem( IDC_UP_PAGE ) ;
+		if ( NULL != pst ) {
+			CRect m_BtnRc ;
+			pButton->GetClientRect( m_BtnRc ) ;
+			pButton->SetWindowPos(NULL ,50 , 600 - 72 - 32 - 46 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
+		}
+		pButton = (CButton*)GetDlgItem( IDC_UP_PAGE ) ;
+		if ( NULL != pst ) {
+			CRect m_BtnRc ;
+			pButton->GetClientRect( m_BtnRc ) ;
+			pButton->SetWindowPos(NULL ,50 , 600 - 72 - 32 - 46 , 20 , 20 , SWP_SHOWWINDOW);
+		}
+		pst = GetDlgItem( IDC_EDIT_PAGE ) ;
+		if ( NULL != pst ) {
+			pst->SetWindowPos( NULL ,75, 600 - 72 - 32 - 46 , 40, 20  ,SWP_SHOWWINDOW ) ; 
+		}
+		pButton = (CButton*)GetDlgItem( IDC_NEXT_PAGE ) ;
+		if ( NULL != pst ) {
+			CRect m_BtnRc ;
+			pButton->GetClientRect( m_BtnRc ) ;
+			pButton->SetWindowPos(NULL ,75+40+5 , 600 - 72 - 32 - 46 , 20 , 20 , SWP_SHOWWINDOW);
+		}
+		pst = GetDlgItem( IDC_STATIC_COUNT_PAGE ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,75+20+40+13 , 600 - 72 - 32 - 46+4 , 50, 30  ,SWP_SHOWWINDOW ) ; 
 		}
 	}
 }
@@ -826,22 +885,14 @@ bool  CTradDlg::isMine(CString addr)
 void CTradDlg::OnCbnSelchangeCombo1()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	int operate;
-	string condtion = GetConditonStr(operate);
-
-	uistruct::TRANSRECORDLIST pListInfo;
-	theApp.m_SqliteDeal.GetTransactionList(condtion, &pListInfo); 
-	OnShowListCtrl(pListInfo);
+	ShowComboxCotent();
 }
 
 void CTradDlg::OnCbnSelchangeComboTime()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	int operate = 0;
-	string condtion = GetConditonStr(operate);
-	uistruct::TRANSRECORDLIST pListInfo;
-	theApp.m_SqliteDeal.GetTransactionList(condtion, &pListInfo); 
-	OnShowListCtrl(pListInfo);
+	ShowComboxCotent();
+
 }
 string CTradDlg::GetConditonTime(){
 	SYSTEMTIME curTime ;
@@ -876,8 +927,6 @@ string CTradDlg::GetConditonTime(){
 		conditon = strprintf(" confirmed_time>=%d and confirmed_time<=",mincurtime);
 		conditon += strprintf("%d",maxcurtime);
 		return conditon;
-		//theApp.m_SqliteDeal.GetTransactionList(conditon, &pListInfo); 
-		//OnShowListCtrl(pListInfo);
 	}else if (strcmp(text,_T("本周")) == 0)
 	{
 		curTime.wHour = 0;
@@ -894,13 +943,10 @@ string CTradDlg::GetConditonTime(){
 			 mincurtime = maxcurtime -mincurtime;
 			 mincurtime = maxcurtime - (differ+mincurtime);
 		}
-	//	SYSTEMTIME tttt = UiFun::Time_tToSystemTime(mincurtime);
 
 		conditon =strprintf(" confirmed_time>=%d and confirmed_time<=",mincurtime);
 		conditon +=strprintf("%d",maxcurtime);
 		return conditon;
-		//theApp.m_SqliteDeal.GetTransactionList(conditon, &pListInfo); 
-		//OnShowListCtrl(pListInfo);
 	}else if (strcmp(text,_T("本月")) == 0)
 	{
 		curTime.wDay =1;
@@ -985,21 +1031,15 @@ string CTradDlg::GetConditonTxType(int &operate){
 		
 		conditon=" tx_type='COMMON_TX' and (state =2 or state =3)";
 		return conditon;
-		//theApp.m_SqliteDeal.GetTransactionList(_T(" tx_type='COMMON_TX' order by confirmed_time"), &pListInfo); 
-		//OnShowListCtrl(pListInfo,1);
 	}else if (strcmp(text,_T("发送")) == 0)
 	{
 		operate = 2;
 		conditon=" tx_type='COMMON_TX' and (state =1 or state =3)";
 		return conditon;
-		//theApp.m_SqliteDeal.GetTransactionList(_T(" tx_type='COMMON_TX' order by confirmed_time"), &pListInfo); 
-		//OnShowListCtrl(pListInfo,2);
 	}else if (strcmp(text,_T("挖矿所得")) == 0)
 	{
 		conditon=" tx_type='REWARD_TX'";
 		return conditon;
-		//theApp.m_SqliteDeal.GetTransactionList(_T(" tx_type='REWARD_TX' order by confirmed_time"), &pListInfo); 
-		//OnShowListCtrl(pListInfo,2);
 	}else if (strcmp(text,_T("合约")) == 0)
 	{
 		conditon=" tx_type='CONTRACT_TX'";
@@ -1042,6 +1082,16 @@ BOOL CTradDlg::PreTranslateMessage(MSG* pMsg)
 		{
 			ShowAddrConditon();
 			return TRUE;
+		}else  if (GetDlgItem(IDC_EDIT_PAGE) == this->GetFocus()) {
+		  CString nConut;
+		  GetDlgItem(IDC_EDIT_PAGE)->GetWindowText(nConut);
+		  if (IsAllDigtal(nConut)) {
+			  ShowPageDataInfo(atoi(nConut));
+			  return TRUE;
+		  }else {
+			  GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T(""));
+			  UiFun::MessageBoxEx(_T("输入有误,请输入数字") , _T("提示") ,MFB_OK|MFB_TIP );
+		  }
 		}  
 	}  
 	CEdit* pEdit = (CEdit*)GetDlgItem(IDC_EDIT_ADDR);
@@ -1148,7 +1198,7 @@ string CTradDlg::GetConditonStr(int &operate)
 	{
 		condtion ="1=1";
 	}
-	condtion+=" order by confirmed_time";
+	condtion+=" order by confirmed_time DESC";
 	return condtion;
 }
 
@@ -1387,6 +1437,106 @@ void CTradDlg::OnBnClickedButtonRefresh()
 
 	uistruct::TRANSRECORDLIST pListInfo;
 	theApp.m_SqliteDeal.GetTransactionList(condtion, &pListInfo); 
+
+	OnShowListCtrl(pListInfo);
+}
+
+void CTradDlg::OnBnClickedUpPage()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	m_nConut -= 1 ;
+	ShowPageCotent(m_nConut);
+}
+
+
+void CTradDlg::OnBnClickedNextPage()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	m_nConut += 1 ;
+	ShowPageCotent(m_nConut);
+}
+void CTradDlg::ShowPageDataInfo(int nConut)
+{
+	nConut -=  1 ;
+	m_nConut = nConut ;
+	ShowPageCotent(nConut);
+	return ;
+}
+void  CTradDlg::ShowPageCotent(int pageIndex)
+{
+	if ( 0 > pageIndex ){
+		UiFun::MessageBoxEx(_T("已经是最开始页了!") , _T("提示") ,MFB_OK|MFB_TIP );
+		return ;
+	} 
+
+	string strCond ;
+	uistruct::TRANSRECORDLIST pListInfo ;
+	int num = pageIndex * m_pagesize ;
+	std::stringstream strTemp;  
+	string str;
+	strTemp<< num;
+	strTemp>>str;
+	int operate = 0;
+	string condtion = GetConditonStr(operate);
+	strCond =  condtion + strprintf(" LIMIT %d OFFSET ",m_pagesize) + str ;
+	theApp.m_SqliteDeal.GetTransactionList(strCond, &pListInfo); 
+	if ( 0 == pListInfo.size() ) {
+		m_nConut -= 1 ;
+		UiFun::MessageBoxEx(_T("已经是最后页了!") , _T("提示") ,MFB_OK|MFB_TIP );
+		string strpage;
+		strpage = strprintf("%d",m_nConut + 1);
+		GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(strpage.c_str());
+		Invalidate();
+		return ;
+	}
+	int nPage = 0 ;
+	int nItem =  theApp.m_SqliteDeal.GetTableCountItem(_T("t_transaction") , condtion );
+	if ( nItem == 0 ) return ;
+	if ( nItem%m_pagesize != 0  ) {
+		nPage = nItem/m_pagesize + 1 ;
+	}else {
+		nPage =  nItem/m_pagesize ;
+	}
+	string temp;
+	temp =strprintf("共:%d",nPage);
+	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(temp.c_str());
+	GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T(""));
+
+	string strpage;
+	strpage = strprintf("%d",m_nConut + 1);
+	GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(strpage.c_str());
+
+	Invalidate();
+
+	ShowListCtrl(&pListInfo);
+}
+void    CTradDlg::ShowComboxCotent()
+{
+	int operate = 0;
+	string condtion = GetConditonStr(operate);
+	uistruct::TRANSRECORDLIST pListInfo;
+	string strCond =  condtion;// + _T(" LIMIT 17 OFFSET 0") ;
+	strCond += strprintf(" LIMIT %d OFFSET 0",m_pagesize);
+	theApp.m_SqliteDeal.GetTransactionList(strCond, &pListInfo); 
+
+	int nPage = 0 ;
+	int nItem =  theApp.m_SqliteDeal.GetTableCountItem(_T("t_transaction") ,condtion );
+	//	if ( nItem == 0 ) return ;
+	if ( nItem%m_pagesize != 0  ) {
+		nPage = nItem/m_pagesize + 1 ;
+	}else {
+		nPage =  nItem/m_pagesize ;
+	}
+	string temp;
+	temp =strprintf("共:%d",nPage);
+	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(temp.c_str());
+	if (nPage > 0)
+	{
+		GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T("1"));
+	}else{
+		GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T("0"));
+	}
+	Invalidate();
 
 	OnShowListCtrl(pListInfo);
 }

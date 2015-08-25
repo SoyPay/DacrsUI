@@ -284,6 +284,7 @@
     <ClInclude Include="CFont0.h" />
     <ClInclude Include="ChangeDPI.h" />
     <ClInclude Include="ChangPassWord.h" />
+    <ClInclude Include="CommonAddr.h" />
     <ClInclude Include="CommonStruct.h" />
     <ClInclude Include="CRange.h" />
     <ClInclude Include="CWorkbook.h" />
@@ -383,6 +384,7 @@
     <ClCompile Include="CeXDib.cpp" />
     <ClCompile Include="ChangeDPI.cpp" />
     <ClCompile Include="ChangPassWord.cpp" />
+    <ClCompile Include="CommonAddr.cpp" />
     <ClCompile Include="CommonStruct.cpp" />
     <ClCompile Include="DacrsUI.cpp" />
     <ClCompile Include="DacrsUIDB.cpp" />
