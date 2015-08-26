@@ -1009,7 +1009,7 @@ void CP2PDlg::SendBet(int rewardnum)
 
 		strSourceData += strprintf(",'%s' ,'%d','%d','%d','%d','%s','%d'",p2pbetrecord.content ,p2pbetrecord.actor ,p2pbetrecord.confirmed ,p2pbetrecord.height ,p2pbetrecord.state ,\
 			p2pbetrecord.relate_hash.c_str() ,p2pbetrecord.guess_num ) ;
-
+		strSourceData += strprintf(" ,'%d'",p2pbetrecord.deleteflag);
 		uistruct::DATABASEINFO_t   pDatabase;
 		pDatabase.strSource = strSourceData;
 		pDatabase.strTabName =  _T("t_p2p_quiz");
@@ -1311,6 +1311,8 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 
 			 strSourceData+=strprintf(",'%s' ,'%d','%d','%d','%d','%s','%d'",p2pbetrecord.content ,p2pbetrecord.actor ,p2pbetrecord.confirmed ,p2pbetrecord.height ,p2pbetrecord.state ,\
 				 p2pbetrecord.relate_hash ,p2pbetrecord.guess_num ) ;
+
+			 strSourceData += strprintf(" ,'%d'",p2pbetrecord.deleteflag);
 
 			 uistruct::DATABASEINFO_t   pDatabase;
 			 pDatabase.strSource = strSourceData;
@@ -2004,6 +2006,8 @@ void  CP2PDlg::AutoSendBet()
 			strSourceData += strprintf(",'%s' ,'%d','%d','%d','%d','%s','%d'",p2pbetrecord.content ,p2pbetrecord.actor ,p2pbetrecord.confirmed ,p2pbetrecord.height ,p2pbetrecord.state ,\
 				p2pbetrecord.relate_hash.c_str() ,p2pbetrecord.guess_num ) ;
 
+			strSourceData += strprintf(" ,'%d'",p2pbetrecord.deleteflag);
+
 			uistruct::DATABASEINFO_t   pDatabase;
 			pDatabase.strSource = strSourceData;
 			pDatabase.strTabName =  _T("t_p2p_quiz");
@@ -2128,6 +2132,8 @@ BOOL CP2PDlg::AcceptBet(string hash,double dmoney,string sendaddr,int timeout,st
 
 			strSourceData+=strprintf(",'%s' ,'%d','%d','%d','%d','%s','%d'",p2pbetrecord.content ,p2pbetrecord.actor ,p2pbetrecord.confirmed ,p2pbetrecord.height ,p2pbetrecord.state ,\
 				p2pbetrecord.relate_hash ,p2pbetrecord.guess_num ) ;
+
+			strSourceData += strprintf(" ,'%d'",p2pbetrecord.deleteflag);
 
 			uistruct::DATABASEINFO_t   pDatabase;
 			pDatabase.strSource = strSourceData;

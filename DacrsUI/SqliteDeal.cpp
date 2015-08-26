@@ -86,10 +86,18 @@ BOOL CSqliteDeal::InitializationDB(){
 	strCondition = _T("type='table' and name='t_p2p_quiz'");
 	if(!GetTableCountItem(strTableName, strCondition))
 	{
-		string createSQL="CREATE TABLE t_p2p_quiz(send_time TEXT,recv_time TEXT,time_out INT,tx_hash TEXT PRIMARY KEY, left_addr TEXT, right_addr TEXT, amount double, content TEXT, actor INT, comfirmed INT, height INT, state INT, relate_hash TEXT, guess_num INT)";
+		string createSQL="CREATE TABLE t_p2p_quiz(send_time TEXT,recv_time TEXT,time_out INT,tx_hash TEXT PRIMARY KEY, left_addr TEXT, right_addr TEXT, amount double, content TEXT, actor INT, comfirmed INT, height INT, state INT, relate_hash TEXT, guess_num INT,deleteflag INT)";
 		if(!ExcuteSQL(pDBConn, NULL, createSQL, NULL))
 		{
 			LogPrint("INFO", "Create table t_p2p_quiz failed\n");
+			return FALSE;
+		}
+	}else if (!IsExistField(_T("t_p2p_quiz"),_T("deleteflag"),_T("1=1")))
+	{
+		string createSQL="alter table t_p2p_quiz add column deleteflag INT";
+		if(!ExcuteSQL(pDBConn, NULL, createSQL, NULL))
+		{
+			LogPrint("INFO", "Create table t_quiz_pool failed\n");
 			return FALSE;
 		}
 	}
@@ -265,7 +273,7 @@ int CallGetP2PQuizRecordItem(void *para, int n_column, char ** column_value, cha
 	uistruct::P2P_QUIZ_RECORD_t * p2pQuizRecord =  (uistruct::P2P_QUIZ_RECORD_t *)para;
 	if(NULL == column_value[0])
 		return -1;
-	if(n_column != 14)
+	if(n_column != 15)
 		return -1;
 
 
@@ -312,7 +320,12 @@ int CallGetP2PQuizRecordItem(void *para, int n_column, char ** column_value, cha
 	p2pQuizRecord->relate_hash = strprintf("%s",column_value[12]);
 			
 	p2pQuizRecord->guess_num = atoi(column_value[13]);
-		
+	
+	if (column_value[14] != NULL)
+	{
+		p2pQuizRecord->deleteflag = atoi(column_value[14]);
+	}
+	
 	return 0;
 }
 //获取所有p2p quiz record列表
@@ -836,7 +849,12 @@ void  CSqliteDeal::UpdataAllTableData(){
 			if (pTxItem.txhash == "")
 			{
 				strCondition=strprintf(" tx_hash='%s'", const_it->tx_hash.c_str());
-				DeleteTableItem(_T("t_p2p_quiz"),strCondition);
+				//DeleteTableItem(_T("t_p2p_quiz"),strCondition);
+				string strField;
+				strField="deleteflag=1";
+				if ( !UpdateTableItem(_T("t_p2p_quiz") ,strField,strCondition )) {
+					TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , const_it->tx_hash.c_str() );
+				}
 			}else if(pTxItem.confirmedHeight == 0){
 				//更新数据
 				string strField,strCond;
@@ -854,7 +872,12 @@ void  CSqliteDeal::UpdataAllTableData(){
 			if (pTxItem.txhash == "")
 			{
 				strCondition=strprintf("relate_hash = '%s'",const_it->relate_hash.c_str());
-				DeleteTableItem(_T("t_p2p_quiz"),strCondition);
+			//	DeleteTableItem(_T("t_p2p_quiz"),strCondition);
+				string strField;
+				strField="deleteflag=1";
+				if ( !UpdateTableItem(_T("t_p2p_quiz") ,strField,strCondition )) {
+					TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , const_it->tx_hash.c_str() );
+				}
 			}else if(pTxItem.confirmedHeight == 0){
 				//更新数据
 				string strField,strCond;
@@ -875,7 +898,12 @@ void  CSqliteDeal::UpdataAllTableData(){
 			if (pTxItem.txhash =="")
 			{
 				strCondition=strprintf(" tx_hash='%s'", const_it->tx_hash.c_str());
-				DeleteTableItem(_T("t_p2p_quiz"),strCondition);
+				//DeleteTableItem(_T("t_p2p_quiz"),strCondition);
+				string strField;
+				strField="deleteflag=1";
+				if ( !UpdateTableItem(_T("t_p2p_quiz") ,strField,strCondition )) {
+					TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , const_it->tx_hash.c_str() );
+				}
 			}else if(pTxItem.confirmedHeight == 0){
 				//更新数据
 				string strField,strCond;
@@ -1169,7 +1197,9 @@ BOOL CSqliteDeal::IsExistField(const string tablename,const string filed , const
 {
 	sqlite3 ** pDBConn = GetDBConnect(); //获取数据库连接
 	string strSQL("");
-	strSQL ="SELECT * FROM t_red_packets_pool";
+	strSQL =strprintf("SELECT * FROM %s",tablename);
+
+	//strSQL =strprintf("SELECT * FROM USER_TAB_COLUMNS WHERE TABLE_NAME = '%s' AND COLUMN_NAME = '%s'",tablename,filed);
 	BOOL isExist = false;
 	char **pazResult;
 	char *zErrMsg = NULL;
