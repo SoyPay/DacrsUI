@@ -94,7 +94,7 @@ BOOL CSqliteDeal::InitializationDB(){
 		}
 	}else if (!IsExistField(_T("t_p2p_quiz"),_T("deleteflag"),_T("1=1")))
 	{
-		string createSQL="alter table t_p2p_quiz add column deleteflag INT";
+		string createSQL="alter table t_p2p_quiz add column deleteflag INT default 0";
 		if(!ExcuteSQL(pDBConn, NULL, createSQL, NULL))
 		{
 			LogPrint("INFO", "Create table t_quiz_pool failed\n");

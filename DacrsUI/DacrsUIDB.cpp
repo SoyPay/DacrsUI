@@ -92,7 +92,8 @@ void CDacrsUIApp::UpdateQuizPoolData()
 	}
 
 	////////////////////通知更新赌约数据界面
-	::SendMessage(theApp.m_pMainWnd->m_hWnd,WM_REFRESHP2PUI,0,0);
+	m_readQuizPool = TRUE;
+	//::SendMessage(theApp.m_pMainWnd->m_hWnd,WM_REFRESHP2PUI,0,0);
 
 }
 void CDacrsUIApp::UpdateAddressData(){
@@ -609,7 +610,7 @@ void CDacrsUIApp:: SyncTransaction(string obj)
 }
 void CDacrsUIApp::DeleteItemTransaction(int height)
 {
-	string strCondition =strprintf("confirm_height >=%d",height);
+	string strCondition =strprintf("confirm_height >=%d or confirm_height=0",height);
 	m_SqliteDeal.DeleteTableItem(_T("t_transaction"),strCondition);
 }
 
@@ -683,7 +684,8 @@ void CDacrsUIApp::UpdateRedPacketPoolData()
 	}
 
 	////////////////////通知更新红包池数据界面
-	::SendMessage(theApp.m_pMainWnd->m_hWnd,WM_REFRESHREDPACKET,0,0);
+	m_readReadPacketPool = FALSE;
+	//::SendMessage(theApp.m_pMainWnd->m_hWnd,WM_REFRESHREDPACKET,0,0);
 }
 
 void CDacrsUIApp::AcceptRePacketCommtRecord(vector<unsigned char> acceptRedPacket,uistruct::REVTRANSACTION_t transcion){

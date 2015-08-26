@@ -1146,17 +1146,24 @@ void CP2PDlg::OnListPool()
 	List_AppendData* pinf = m_BonusListBox.GetAppendDataInfo((int)wParam);
 	if ( NULL != pinf ) { 
 		CString hash = pinf->pstr;
-		string conditon;
-		conditon = strprintf("hash='%s'",hash);
-		uistruct::LISTP2POOL_T pPoolList;
-		theApp.m_SqliteDeal.GetP2PQuizPoolItem(conditon, &pPoolList);
-		if (pPoolList.hash.length() != 0)
+		int index = ((m_curpage-1)*m_pagesize)+pinf->nItem;
+		if (index > m_PoolList.size())
+		{
+			UiFun::MessageBoxEx("此单不存在" , _T("提示") ,MFB_OK|MFB_TIP );
+			return 0;
+		}
+		uistruct::LISTP2POOL_T item = m_PoolList.at(index);
+		//string conditon;
+		//conditon = strprintf("hash='%s'",hash);
+		//uistruct::LISTP2POOL_T pPoolList;
+		//theApp.m_SqliteDeal.GetP2PQuizPoolItem(conditon, &pPoolList);
+		//if (pPoolList.hash.length() != 0)
 		{
 			CString money,adddr;
 			money = pinf->pstr1;
 			//pinf->pSta2->GetWindowText(money);
 			pinf->pSta1->GetWindowText(adddr);
-			AcceptBet(hash,money,adddr,pPoolList.outheight);
+			AcceptBet(hash,money,adddr,item.outheight);
 		}
 		
 	}
@@ -1554,7 +1561,8 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
  void CP2PDlg::OnBnClickedButtonRefresh1()
  {
 	 // TODO: 在此添加控件通知处理程序代码
-	 OnListPool();
+	// OnListPool();
+	 ReadP2pPoolFromDB();
  }
 
 
@@ -2265,8 +2273,12 @@ void CP2PDlg::OnBnClickedCancelorde()
 }
 void CP2PDlg::ReadP2pPoolFromDB()
 {
-	m_PoolList.clear();
-	theApp.m_SqliteDeal.GetP2PQuizPoolList(_T(" 1=1 order by total_amount desc"), &m_PoolList);
+	if (theApp.m_readQuizPool)
+	{
+		m_PoolList.clear();
+		theApp.m_SqliteDeal.GetP2PQuizPoolList(_T(" 1=1 order by total_amount desc"), &m_PoolList);
+		theApp.m_readQuizPool = false;
+	}
 	OnListPool();	
 }
 void CP2PDlg::ReadP2pPoolFromCmd(uistruct::P2PLIST &PoolList)
