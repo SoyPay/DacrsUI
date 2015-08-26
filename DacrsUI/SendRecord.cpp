@@ -191,7 +191,7 @@ void CSendRecord::Showlistbox(CString address)
 	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(_T(""));
 	m_PoolList.clear();
 	string conditon;
-	conditon= strprintf("left_addr ='%s' and (actor = 0 or actor = 2) order by send_time desc" , address);
+	conditon= strprintf("left_addr ='%s' and (actor = 0 or actor = 2) and deleteflag =0 order by send_time desc" , address);
 	//uistruct::P2PBETRECORDLIST  pPoolItem;
 	int nItem =  theApp.m_SqliteDeal.GetP2PQuizRecordList(conditon ,&m_PoolList ) ;
 	m_pagecount = (m_PoolList.size()%m_pagesize)==0?(m_PoolList.size()/m_pagesize):(m_PoolList.size()/m_pagesize)+1;
