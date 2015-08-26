@@ -211,6 +211,7 @@ namespace uistruct {
 		int    state          ;         //0 发起状态 1 接赌状态 2 揭赌状态 3 已经超过揭赌时间 4 正在接赌 5正在揭赌
 		string   relate_hash;          //接赌hash
 		int    guess_num;      //接猜的数字
+		int    deleteflag;      //接猜的数字 0 没有删除 1 删除标志
 		P2P_QUIZ_RECORD(){
 			send_time = 0;
 			recv_time = 0;
@@ -226,6 +227,7 @@ namespace uistruct {
 			state = 0;
 			relate_hash = "";
 			guess_num = 0;
+			deleteflag = 0;
 		}
 		string ToJson(){
 			Json::Value root;
@@ -243,6 +245,7 @@ namespace uistruct {
 			root["relate_hash"] = relate_hash;
 			root["state"] = state;
 			root["guess_num"] = guess_num;
+			root["deleteflag"] = deleteflag;
 			return root.toStyledString();
 		}
 		bool JsonToStruct(string json){
@@ -275,7 +278,7 @@ namespace uistruct {
 		
 			this->state = root["state"].asInt();
 			this->guess_num = root["guess_num"].asInt() ;
-
+			this->deleteflag=root["deleteflag"].asInt() ;
 			return true;
 		}
 	}P2P_QUIZ_RECORD_t;
