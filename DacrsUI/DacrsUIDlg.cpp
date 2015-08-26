@@ -117,8 +117,6 @@ BEGIN_MESSAGE_MAP(CDacrsUIDlg, CDialogEx)
 	ON_COMMAND(ID_GRABREDPACKE,&CDacrsUIDlg::OnGrabRedPacketExportHistory)
 
 	ON_MESSAGE(WM_POPUPBAR,OnPopupBar)
-	ON_MESSAGE(WM_REFRESHP2PUI,OnRefreshP2Pool)
-	ON_MESSAGE(WM_REFRESHREDPACKET,OnRefreshRedPacketPool)
 	ON_WM_ACTIVATE()
 END_MESSAGE_MAP()
 
@@ -1512,22 +1510,6 @@ void CDacrsUIDlg::OnCloseWriteAppFee()
 	}
 }
 
-LRESULT CDacrsUIDlg::OnRefreshP2Pool(WPARAM wParam,LPARAM lParam) 
-{
-	if (m_pP2PDlg !=NULL)
-	{
-		m_pP2PDlg->ReadP2pPoolFromDB();
-	}
-	return 0;
-}
-LRESULT CDacrsUIDlg::OnRefreshRedPacketPool(WPARAM wParam,LPARAM lParam) 
-{
-	if (m_pMortgageTardDlg != NULL)
-	{
-		m_pMortgageTardDlg->ReadRedPacketPoolFromDB();
-	}
-	return 0;
-}
 
 void CDacrsUIDlg::OnSendBetExportHistory()
 {

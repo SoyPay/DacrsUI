@@ -83,7 +83,6 @@ public:
 	void      SetGrabParam();
 	void      onShowLink();
 	void      GetAppAccountSomeMoney();
-	void      ReadRedPacketPoolFromDB();
 	double    ComputeSpecailRedPacket(uistruct::REDPACKETGRABLIST  RedPackeGrabRecordList);
 	void      ShowAllSpecailWinAndLoss();
 	void      ShowAddressSpecailWinAndLoss(CString addr);

@@ -66,6 +66,9 @@ CDacrsUIApp::CDacrsUIApp()
 	m_passlock = TRUE;
 	m_dlgCreatfinsh = FALSE;
 	m_syncHight = 0;
+	m_commitdb = FALSE;
+	m_readQuizPool = FALSE;
+	m_readReadPacketPool = FALSE;
 }
 
 
@@ -448,7 +451,7 @@ UINT __stdcall CDacrsUIApp::ProcessAppTx(LPVOID pParam)
 			return 1;
 		}
 		/// 同步以后更新数据库表
-		if (theApp.IsSyncAppTx )
+		if (theApp.IsSyncAppTx && theApp.m_commitdb)
 		{
 			theApp.m_SqliteDeal.UpdataAllTableData();
 			return 1;
@@ -491,7 +494,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 				}
 				if(theApp.IsSyncTx){
 					theApp.IsSyncTx = FALSE;
-					theApp.m_SqliteDeal.CommitDbTransaction();
+					theApp.m_commitdb =theApp.m_SqliteDeal.CommitDbTransaction();
 					TRACE("Sync Tx commit transaction\n");
 					LogPrint("INFO", "Sync Tx commit transaction\n");
 				}

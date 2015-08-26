@@ -203,7 +203,6 @@ void CSendRecord::Showlistbox(CString address)
 	Invalidate();
 	m_listBox.DeleteAllIndex();
 	OnShowPagePool(1);
-
 	OpenAcceptbet();
 }
 void CSendRecord::OpenBet(CString txhash)
