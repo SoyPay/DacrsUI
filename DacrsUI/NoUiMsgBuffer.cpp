@@ -31,6 +31,7 @@ bool CNoUiMsgBuffer::AddBytesToBuffer(char *pCh, int nLen)
 		int nStart = nPos;
 		if(m_Recvbuffer[nStart] != '<') {
 			TRACE("起始字符不对\n");
+			LogPrint("INFO","起始字符不对\n");
 			return false;
 		}
 
@@ -48,6 +49,7 @@ bool CNoUiMsgBuffer::AddBytesToBuffer(char *pCh, int nLen)
 		
 		if(nDataLen <= 0){
 			TRACE("数据长度小于或等于0\n");
+			LogPrint("INFO","数据长度小于或等于0\n");
 			return false;
 		}
 
@@ -64,6 +66,7 @@ bool CNoUiMsgBuffer::AddBytesToBuffer(char *pCh, int nLen)
 		nStart += nDataLen;
 		if(m_Recvbuffer[nStart] != '>') {
 			TRACE("结束字符不对\n");
+			LogPrint("INFO","结束字符不对\n");
 			return false;
 		}
 		nPos = nStart + 1;
@@ -82,9 +85,9 @@ bool CNoUiMsgBuffer::AddBytesToBuffer(char *pCh, int nLen)
 		TRACE("Move data:m_nLength=%d nPos=%d\n",m_nLength, nPos);
 		memmove(m_Recvbuffer, m_Recvbuffer+nPos, m_nLength-nPos);
 		m_nLength = m_nLength-nPos;
-		for(int i=0; i<m_nLength;++i) {
+	/*	for(int i=0; i<m_nLength;++i) {
 			TRACE(" %02X", m_Recvbuffer[i]);
-		}
+		}*/
 	}
 	return true;
 }
