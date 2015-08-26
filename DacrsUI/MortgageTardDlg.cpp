@@ -1034,10 +1034,10 @@ void  CMortgageTardDlg::ShowListPoolItem(int seltab)
 
 	if (seltab == 0)
 	{
-		m_GrabCommRedPacket.Showlistbox();
+		m_GrabCommRedPacket.ReadComRedPacketPool();
 	}else if (seltab == 1)
 	{
-		m_GrabSpecailRedPacket.Showlistbox();
+		m_GrabSpecailRedPacket.ReadSpecailRedPacketPool();
 		//m_SendRecord.Showlistbox(addr);
 	}
 }
@@ -1480,9 +1480,4 @@ void  CMortgageTardDlg::GetAppAccountSomeMoney()
 	}
 	
 	UiFun::MessageBoxEx(strTip.c_str() , _T("ÌבÊ¾") ,MFB_OK|MFB_TIP );
-}
-void CMortgageTardDlg::ReadRedPacketPoolFromDB()
-{
-	m_GrabCommRedPacket.ReadComRedPacketPool();
-	m_GrabSpecailRedPacket.ReadSpecailRedPacketPool();
 }

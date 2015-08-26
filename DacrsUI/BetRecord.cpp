@@ -177,7 +177,7 @@ void CBetRecord::Showlistbox(CString address)
 	m_curpage = 0;
 	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(_T(""));
 	string conditon;
-	conditon = strprintf("right_addr ='%s' and (actor = 1 or actor = 2) order by recv_time desc" , address);
+	conditon = strprintf("right_addr ='%s' and (actor = 1 or actor = 2) and deleteflag = 0 order by recv_time desc" , address);
 
 	int nItem =  theApp.m_SqliteDeal.GetP2PQuizRecordList(conditon.c_str() ,&m_PoolList ) ;
 

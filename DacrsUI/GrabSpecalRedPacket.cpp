@@ -515,7 +515,12 @@ void CGrabSpecalRedPacket::OnLbnDblclkListBox()
 }
 void CGrabSpecalRedPacket::ReadSpecailRedPacketPool()
 {
-	m_PoolList.clear();
-	theApp.m_SqliteDeal.GetRedPacketPoolRecordList(_T(" packet_type = 2 "), &m_PoolList);
+	if (theApp.m_readReadPacketPool)
+	{
+		m_PoolList.clear();
+		theApp.m_SqliteDeal.GetRedPacketPoolRecordList(_T(" packet_type = 2 "), &m_PoolList);
+		theApp.m_readReadPacketPool = false;
+	}
+
 	Showlistbox();
 }

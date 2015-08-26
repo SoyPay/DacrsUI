@@ -202,6 +202,9 @@ public:
 	CFont m_fontSong;         //宋体字体
 	CFont m_fontBlackbody;    //黑体字体
 	int   m_syncHight;
+	bool  m_commitdb;
+	bool  m_readQuizPool;         /// TURE 可以从数据库中读 赌约池的数据 FALSE 不可以读
+	bool  m_readReadPacketPool;         /// TURE 可以从数据库中读 红包池的数据 FALSE 不可以读
 };
 
 
