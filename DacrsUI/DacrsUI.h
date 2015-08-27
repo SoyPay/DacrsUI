@@ -148,8 +148,6 @@ public:
 	CMyQueue m_UiReciveDlgQueue;
 	CMyQueue m_UiSendDlgQueue;
 	CMyQueue m_UiTxDetailQueue;
-	CMyQueue m_UiP2pDlgQueue;
-	CMyQueue m_UiRedPacketDlgQueue;
 	CMyQueue m_NetConnetCountQueue;
 	void UpdateRedPacketPoolData();
 	void UpdateQuizPoolData();
@@ -169,7 +167,6 @@ public:
 	void GetMainDlgStruct();
 	BOOL RunOnlyOneApp();
 	void SendUIMsg(int message,string jsonaddr);
-	void SendP2pMsg(int message,string jsonaddr);
 	void CheckPathValid(const string& strDir);
 
 	void AcceptRePacketCommtRecord(vector<unsigned char> acceptRedPacket,uistruct::REVTRANSACTION_t transcion);

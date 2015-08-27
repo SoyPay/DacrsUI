@@ -72,7 +72,6 @@ public:
 	virtual BOOL Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg void OnCbnSelchangeComboAddres();
-	void InsertComboxIitem();
 	BOOL AddListaddrDataBox();
 	void QueryNotDrawBalance(CString addr);
 	afx_msg void OnBnClickedButtonWithd();

@@ -548,29 +548,12 @@ void CP2PDlg::OnCbnSelchangeComboAddres()
 	ShowAddressBetWinAndLoss(text);
 }
 
-void CP2PDlg::InsertComboxIitem()
-{
-	CPostMsg postmsg;
-	if (!theApp.m_UiP2pDlgQueue.pop(postmsg))
-	{
-		return ;
-	}
-
-	uistruct::LISTADDR_t addr; 
-	string strTemp = postmsg.GetData();
-	addr.JsonToStruct(strTemp.c_str());
-
-	string addressd;
-	addressd =strprintf("%s",addr.RegID);
-
-	int item = m_addrbook.GetCount();
-	m_addrbook.InsertString(item,addressd.c_str());
-}
 
 BOOL CP2PDlg::AddListaddrDataBox(){
 
-	map<string,uistruct::COMMONLISTADDR_t> m_mapCommonAddrInfo;
-	theApp.m_SqliteDeal.GetCommonWalletAddressList(_T(" betid=1 "), &m_mapCommonAddrInfo);
+	map<int,uistruct::COMMONLISTADDR_t> m_mapCommonAddrInfo;
+	string conditon =strprintf("app_id ='%s'",theApp.m_betScritptid);
+	theApp.m_SqliteDeal.GetCommonWalletAddressList(conditon, &m_mapCommonAddrInfo);
 
 	//map<string,uistruct::LISTADDR_t> m_mapAddrInfo;
 	//theApp.m_SqliteDeal.GetWalletAddressList(_T(" sign=1 "), &m_mapAddrInfo);
@@ -581,10 +564,10 @@ BOOL CP2PDlg::AddListaddrDataBox(){
 	((CComboBox*)GetDlgItem(IDC_COMBO_ADDRES))->ResetContent();
 	//加载到ComBox控件
 	int nItem = 0;
-	std::map<string,uistruct::COMMONLISTADDR_t>::const_iterator const_it;
+	std::map<int,uistruct::COMMONLISTADDR_t>::const_iterator const_it;
 	for ( const_it = m_mapCommonAddrInfo.begin() ; const_it != m_mapCommonAddrInfo.end() ; const_it++ ) {
 
-		((CComboBox*)GetDlgItem(IDC_COMBO_ADDRES))->InsertString(nItem , const_it->second.RegID.c_str() );
+		((CComboBox*)GetDlgItem(IDC_COMBO_ADDRES))->InsertString(nItem , const_it->second.reg_id.c_str() );
 		nItem++;
 	}
 	((CComboBox*)GetDlgItem(IDC_COMBO_ADDRES))->SetCurSel(0);
@@ -605,11 +588,6 @@ LRESULT CP2PDlg::OnShowListCtrol( WPARAM wParam, LPARAM lParam )
 	int type = (int)wParam;
 	switch(type)
 	{
-	case WM_UP_NEWADDRESS:
-		{
-			InsertComboxIitem();
-		}
-		break;
 	case WM_UP_ADDRESS:
 		{
 			OnCbnSelchangeComboAddres();
@@ -624,16 +602,17 @@ LRESULT CP2PDlg::OnShowListCtrol( WPARAM wParam, LPARAM lParam )
 LRESULT CP2PDlg::OnUpAddressCombo( WPARAM wParam, LPARAM lParam ) 
 {
 	((CComboBox*)GetDlgItem(IDC_COMBO_ADDRES))->ResetContent(); //清除ComBox控件
-	map<string,uistruct::COMMONLISTADDR_t> m_mapCommonAddrInfo;
-	theApp.m_SqliteDeal.GetCommonWalletAddressList(_T(" betid=1 "), &m_mapCommonAddrInfo);
+	map<int,uistruct::COMMONLISTADDR_t> m_mapCommonAddrInfo;
+	string conditon =strprintf("app_id ='%s'",theApp.m_betScritptid);
+	theApp.m_SqliteDeal.GetCommonWalletAddressList(conditon, &m_mapCommonAddrInfo);
 
 	if ( 0 == m_mapCommonAddrInfo.size() ) return  0;
 	   
 	int nItem = 0;  //加载到ComBox控件
-	std::map<string,uistruct::COMMONLISTADDR_t>::const_iterator const_it;
+	std::map<int,uistruct::COMMONLISTADDR_t>::const_iterator const_it;
 	for ( const_it = m_mapCommonAddrInfo.begin() ; const_it != m_mapCommonAddrInfo.end() ; const_it++ ) {
 
-	  ((CComboBox*)GetDlgItem(IDC_COMBO_ADDRES))->InsertString(nItem , const_it->second.RegID.c_str() );
+	  ((CComboBox*)GetDlgItem(IDC_COMBO_ADDRES))->InsertString(nItem , const_it->second.reg_id.c_str() );
 	  nItem++;
 	}
 	((CComboBox*)GetDlgItem(IDC_COMBO_ADDRES))->SetCurSel(0);

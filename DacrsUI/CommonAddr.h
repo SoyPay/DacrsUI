@@ -26,9 +26,9 @@ public:
 	CShadeButtonST m_ButClose;    //关闭
 public:
 	map<string,uistruct::LISTADDR_t> m_mapAddrInfo ; //全部地址
-	map<string,uistruct::COMMONLISTADDR_t> m_mapCommonAddrInfo; //常用地址
+	map<int,uistruct::COMMONLISTADDR_t> m_mapCommonAddrInfo; //常用地址
 	BOOL AddListaddrDataBox();
-	void UpdataCommonAddrList(map<string,uistruct::COMMONLISTADDR_t> *pListInfo);
+	void UpdataCommonAddrList(map<int,uistruct::COMMONLISTADDR_t> *pListInfo);
 public:
 	UiType     m_uAddrType   ;    //常用地址类型
 	afx_msg void OnSize(UINT nType, int cx, int cy);

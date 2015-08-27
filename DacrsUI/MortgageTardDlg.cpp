@@ -8,6 +8,7 @@
 #include "Out.h"
 #include "ReCharge.h"
 #include "RpcCmd.h"
+#include "CommonAddr.h"
 // CMortgageTardDlg 对话框
 
 IMPLEMENT_DYNAMIC(CMortgageTardDlg, CDialogBar)
@@ -59,6 +60,7 @@ void CMortgageTardDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_WINERLOUSER, m_rBtnWinerloser);
 	DDX_Control(pDX, IDC_ONEWINER, m_rBtnAddrWinerloser);
 
+	DDX_Control(pDX, IDC_BUTTON_SETADDR, m_rBtnSetCommonAddr);
 }
 
 
@@ -77,6 +79,7 @@ BEGIN_MESSAGE_MAP(CMortgageTardDlg, CDialogBar)
 	ON_BN_CLICKED(IDC_BUTTON_REFRESH_2, &CMortgageTardDlg::OnBnClickedButtonRefresh2)
 	ON_BN_CLICKED(IDC_BUTTON_SPECAILRED, &CMortgageTardDlg::OnBnClickedButtonSpecailred)
 	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB1, &CMortgageTardDlg::OnTcnSelchangeTab1)
+	ON_BN_CLICKED(IDC_BUTTON_SETADDR, &CMortgageTardDlg::OnBnClickedButtonSetaddr)
 END_MESSAGE_MAP()
 
 
@@ -256,6 +259,16 @@ BOOL CMortgageTardDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, U
 		m_rBtnAddrWinerloser.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(41, 57, 85));
 		m_rBtnAddrWinerloser.SizeToContent();
 
+		m_rBtnSetCommonAddr.SetBitmaps( IDB_BITMAP_REDPACKET_TYPE , RGB(255, 255, 0) , IDB_BITMAP_REDPACKET_TYPE , RGB(255, 255, 255) );
+		m_rBtnSetCommonAddr.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+		m_rBtnSetCommonAddr.SetWindowText("常用地址") ;
+		m_rBtnSetCommonAddr.SetFontEx(20 , _T("微软雅黑"));
+		m_rBtnSetCommonAddr.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(255, 255, 255));
+		m_rBtnSetCommonAddr.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
+		m_rBtnSetCommonAddr.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(255, 255, 255));
+		m_rBtnSetCommonAddr.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(255, 255, 255));
+	
+
 		m_money.SetFont(120, _T("黑体"));				//设置显示字体和大小
 		m_money.SetTextColor(RGB(0,0,0));			    //字体颜色	
 		m_money.SetWindowText(_T(""));
@@ -428,7 +441,15 @@ void CMortgageTardDlg::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*32, (rc.Height()/100)*20 ,  rect.Width() , rect.Height() , SWP_SHOWWINDOW); 
+			//pst->SetWindowPos( NULL ,(rc.Width()/100)*32, (rc.Height()/100)*20 ,  rect.Width() , rect.Height() , SWP_SHOWWINDOW); 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*29+3, (rc.Height()/100)*20+2 ,  rect.Width() , rect.Height() , SWP_SHOWWINDOW );
+		}
+
+		pst = GetDlgItem( IDC_BUTTON_SETADDR ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*42, (rc.Height()/100)*19 ,  rect.Width() , rect.Height() , SWP_SHOWWINDOW );
 		}
 
 		pst = GetDlgItem( IDC_EDIT_NUM ) ;
@@ -659,19 +680,23 @@ void CMortgageTardDlg::OnBnClickedButtonCommred()
 
 BOOL CMortgageTardDlg::AddListaddrDataBox(){
 
-	map<string,uistruct::LISTADDR_t> m_mapAddrInfo;
-	theApp.m_SqliteDeal.GetWalletAddressList(_T(" sign=1 "), &m_mapAddrInfo);
+	map<int,uistruct::COMMONLISTADDR_t> m_mapCommonAddrInfo;
+	string conditon =strprintf("app_id ='%s'",theApp.m_redPacketScriptid);
+	theApp.m_SqliteDeal.GetCommonWalletAddressList(conditon, &m_mapCommonAddrInfo);
 
-	if ( 0 == m_mapAddrInfo.size() ) return FALSE ;
+	//map<string,uistruct::LISTADDR_t> m_mapAddrInfo;
+	//theApp.m_SqliteDeal.GetWalletAddressList(_T(" sign=1 "), &m_mapAddrInfo);
+
+	if ( 0 == m_mapCommonAddrInfo.size() ) return FALSE ;
 
 	//清除ComBox控件
 	((CComboBox*)GetDlgItem(IDC_COMBO_ADDRES))->ResetContent();
 	//加载到ComBox控件
 	int nItem = 0;
-	std::map<string,uistruct::LISTADDR_t>::const_iterator const_it;
-	for ( const_it = m_mapAddrInfo.begin() ; const_it != m_mapAddrInfo.end() ; const_it++ ) {
+	std::map<int,uistruct::COMMONLISTADDR_t>::const_iterator const_it;
+	for ( const_it = m_mapCommonAddrInfo.begin() ; const_it != m_mapCommonAddrInfo.end() ; const_it++ ) {
 
-		((CComboBox*)GetDlgItem(IDC_COMBO_ADDRES))->InsertString(nItem , const_it->second.RegID.c_str() );
+		((CComboBox*)GetDlgItem(IDC_COMBO_ADDRES))->InsertString(nItem , const_it->second.reg_id.c_str() );
 		nItem++;
 	}
 	((CComboBox*)GetDlgItem(IDC_COMBO_ADDRES))->SetCurSel(0);
@@ -1041,24 +1066,7 @@ void  CMortgageTardDlg::ShowListPoolItem(int seltab)
 		//m_SendRecord.Showlistbox(addr);
 	}
 }
-void CMortgageTardDlg::InsertComboxIitem()
-{
-	CPostMsg postmsg;
-	if (!theApp.m_UiRedPacketDlgQueue.pop(postmsg))
-	{
-		return ;
-	}
 
-	uistruct::LISTADDR_t addr; 
-	string strTemp = postmsg.GetData();
-	addr.JsonToStruct(strTemp.c_str());
-
-	string addressd;
-	addressd = strprintf("%s",addr.RegID);
-
-	int item = m_addrbook.GetCount();
-	m_addrbook.InsertString(item,addressd.c_str());
-}
 LRESULT CMortgageTardDlg::OnShowListCtrol( WPARAM wParam, LPARAM lParam ) 
 {
 	//更新数据
@@ -1067,7 +1075,7 @@ LRESULT CMortgageTardDlg::OnShowListCtrol( WPARAM wParam, LPARAM lParam )
 	{
 	case WM_UP_NEWADDRESS:
 		{
-			InsertComboxIitem();
+			OnUpAddressCombo();
 		}
 		break;
 	case WM_UP_ADDRESS:
@@ -1480,4 +1488,31 @@ void  CMortgageTardDlg::GetAppAccountSomeMoney()
 	}
 	
 	UiFun::MessageBoxEx(strTip.c_str() , _T("提示") ,MFB_OK|MFB_TIP );
+}
+
+
+void CMortgageTardDlg::OnBnClickedButtonSetaddr()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CCommonAddr addDlg(UI_READPACKET_RECORD);
+	addDlg.DoModal() ;
+}
+void CMortgageTardDlg::OnUpAddressCombo() 
+{
+	((CComboBox*)GetDlgItem(IDC_COMBO_ADDRES))->ResetContent(); //清除ComBox控件
+	map<int,uistruct::COMMONLISTADDR_t> m_mapCommonAddrInfo;
+	string conditon =strprintf("app_id ='%s'",theApp.m_redPacketScriptid);
+	theApp.m_SqliteDeal.GetCommonWalletAddressList(conditon, &m_mapCommonAddrInfo);
+
+	if ( 0 == m_mapCommonAddrInfo.size() ) return  ;
+
+	int nItem = 0;  //加载到ComBox控件
+	std::map<int,uistruct::COMMONLISTADDR_t>::const_iterator const_it;
+	for ( const_it = m_mapCommonAddrInfo.begin() ; const_it != m_mapCommonAddrInfo.end() ; const_it++ ) {
+
+		((CComboBox*)GetDlgItem(IDC_COMBO_ADDRES))->InsertString(nItem , const_it->second.reg_id.c_str() );
+		nItem++;
+	}
+	((CComboBox*)GetDlgItem(IDC_COMBO_ADDRES))->SetCurSel(0);
+	return  ;
 }
