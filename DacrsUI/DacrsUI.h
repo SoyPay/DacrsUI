@@ -64,6 +64,8 @@ public:
 	UINT            m_uProNoUiMsgThreadId;
 	HANDLE          m_hProcessAppTxThread;
 	UINT            m_uProAppTxThreadId;
+	HANDLE          m_hProcessBet;
+	UINT            m_uProBetxThreadId;
 	bool            m_blockAutoDelete;
 	bool            m_msgAutoDelete;
 	void            StartblockThrd();  
@@ -71,6 +73,7 @@ public:
 	static UINT __stdcall ProcessMsg(LPVOID pParam);
 	static UINT __stdcall ProcessNoUiMsg(LPVOID pParam);
 	static UINT __stdcall ProcessAppTx(LPVOID pParam);
+	static UINT __stdcall ProcessBetAcceptTx(LPVOID pParam);
 public:
 	CMyMutex		cs_MsgDisptch ;    //消息订阅临界
 	CMyMutex        cs_SqlData ;       //数据列表临界
@@ -181,6 +184,7 @@ public:
 	bool IsLockWallet();
 	void PopupCommBalloonTip(string hash);
 	void PopupContactBalloonTip(uistruct::REVTRANSACTION_t,int apptype,int txtype);
+	void ScanQUIZNotAcceptBet();
 public:
 	bool isStartMainDlg;
 	CNoUiMsgBuffer m_noUiMsgBuffer;
