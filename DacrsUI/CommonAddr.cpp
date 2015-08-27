@@ -146,7 +146,7 @@ void CCommonAddr::OnBnClickedButtonAdd()
 
 	string strSourceData , strCond;
 	m_mapCommonAddrInfo.clear();//³£ÓÃµØÖ·
-	strCond =strprintf(" reg_id = '%s' ", pAddrList->address.c_str());
+	strCond =strprintf(" reg_id = '%s' ", pAddrList->RegID.c_str());
 	uistruct::COMMONLISTADDR_t addrsql;
 	int item = theApp.m_SqliteDeal.GetCommonWalletAddressItem(strCond, &addrsql) ;
 
