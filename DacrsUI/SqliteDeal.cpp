@@ -97,7 +97,7 @@ BOOL CSqliteDeal::InitializationDB(){
 		string createSQL="alter table t_p2p_quiz add column deleteflag INT default 0";
 		if(!ExcuteSQL(pDBConn, NULL, createSQL, NULL))
 		{
-			LogPrint("INFO", "Create table t_quiz_pool failed\n");
+			LogPrint("INFO", "Create table t_p2p_quiz failed\n");
 			return FALSE;
 		}
 	}
@@ -105,16 +105,16 @@ BOOL CSqliteDeal::InitializationDB(){
 	strCondition = _T("type='table' and name='t_quiz_pool'");
 	if(!GetTableCountItem(strTableName, strCondition))
 	{
-			string createSQL="CREATE TABLE t_quiz_pool(hash TEXT PRIMARY KEY,send_acct_id TEXT,total_amount INT,height INT)";
+			string createSQL="CREATE TABLE t_quiz_pool(hash TEXT PRIMARY KEY,send_acct_id TEXT,total_amount INT,height INT,acceptid TEXT,accepthash TEXT,guess INT,state INT)";
 		if(!ExcuteSQL(pDBConn, NULL, createSQL, NULL))
 		{
 			LogPrint("INFO", "Create table t_p2p_quiz failed\n");
 			return FALSE;
 		}
-	}else if (!IsExistField(_T("t_quiz_pool"),_T("send_acct_id"),_T("1=1")))
+	}else if (!IsExistField(_T("t_quiz_pool"),_T("acceptid"),_T("1=1")))
 	{
 		DeleteTable(_T("t_quiz_pool"));
-		string createSQL="CREATE TABLE t_quiz_pool(hash TEXT PRIMARY KEY,send_acct_id TEXT,total_amount INT,height INT)";
+		string createSQL="CREATE TABLE t_quiz_pool(hash TEXT PRIMARY KEY,send_acct_id TEXT,total_amount INT,height INT,acceptid TEXT,accepthash TEXT,guess INT,state INT)";
 		if(!ExcuteSQL(pDBConn, NULL, createSQL, NULL))
 		{
 			LogPrint("INFO", "Create table t_quiz_pool failed\n");
@@ -414,7 +414,7 @@ int CallGetP2PQuizPoolItem(void *para, int n_column, char ** column_value, char 
 	uistruct::LISTP2POOL_T* pPoolInfo = (uistruct::LISTP2POOL_T*)para;
 	if(NULL == column_value[0])
 		return -1;
-	if(n_column != 4)
+	if(n_column != 8)
 		return -1;
 	string strValue ;
 	strValue = strprintf("%s" , column_value[0]) ;
@@ -425,6 +425,12 @@ int CallGetP2PQuizPoolItem(void *para, int n_column, char ** column_value, char 
 
 	sscanf_s(column_value[2],"%lld",&pPoolInfo->nPayMoney);
 	pPoolInfo->outheight = atoi(column_value[3]);
+
+	pPoolInfo->acceptid = strprintf("%s" , column_value[4] ) ;
+
+	pPoolInfo->accepthash = strprintf("%s" , column_value[5] ) ;
+	pPoolInfo->guess =atoi(column_value[6]);
+	pPoolInfo->state = atoi(column_value[7]);
 	return 0;
 }
 //获取quiz pool列表

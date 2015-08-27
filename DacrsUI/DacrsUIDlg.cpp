@@ -604,7 +604,19 @@ void CDacrsUIDlg::CloseThread()
 		}
 		Sleep(100);
 	}
-		CloseHandle(theApp.m_hblockThread);
+	CloseHandle(theApp.m_hblockThread);
+
+	while( ::GetExitCodeThread( theApp.m_hProcessBet , &exc ) ) {
+
+		if( STILL_ACTIVE == exc ) {
+			;
+		}else {
+			TRACE( "EXC = %d \n" , exc ) ;
+			break;
+		}
+		Sleep(100);
+	}
+	CloseHandle(theApp.m_hProcessBet);
 	//delete theApp.pSplashThread;
 }
 

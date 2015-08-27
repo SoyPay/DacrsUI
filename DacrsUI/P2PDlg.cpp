@@ -2276,7 +2276,7 @@ void CP2PDlg::ReadP2pPoolFromDB()
 	if (theApp.m_readQuizPool)
 	{
 		m_PoolList.clear();
-		theApp.m_SqliteDeal.GetP2PQuizPoolList(_T(" 1=1 order by total_amount desc"), &m_PoolList);
+		theApp.m_SqliteDeal.GetP2PQuizPoolList(_T(" state =0 order by total_amount desc"), &m_PoolList);
 		theApp.m_readQuizPool = false;
 	}
 	OnListPool();	

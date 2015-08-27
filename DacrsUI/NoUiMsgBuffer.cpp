@@ -18,6 +18,9 @@ bool CNoUiMsgBuffer::AddBytesToBuffer(char *pCh, int nLen)
 
 	if(m_nLength+nLen > nBufferMaxLength-1) {
 		TRACE("Buffer Overflowed Len:%d\n",m_nLength + nLen);
+		for(int i=0; i<m_nLength;++i) {
+			LogPrint("INFO"," %02X", m_Recvbuffer[i]);
+		}
 		return false;
 	}
 	memcpy(m_Recvbuffer+m_nLength, pCh, nLen);
@@ -32,6 +35,9 @@ bool CNoUiMsgBuffer::AddBytesToBuffer(char *pCh, int nLen)
 		if(m_Recvbuffer[nStart] != '<') {
 			TRACE("起始字符不对\n");
 			LogPrint("INFO","起始字符不对\n");
+			for(int i=0; i<m_nLength;++i) {
+				LogPrint("INFO"," %02X", m_Recvbuffer[i]);
+			}
 			return false;
 		}
 
@@ -50,6 +56,9 @@ bool CNoUiMsgBuffer::AddBytesToBuffer(char *pCh, int nLen)
 		if(nDataLen <= 0){
 			TRACE("数据长度小于或等于0\n");
 			LogPrint("INFO","数据长度小于或等于0\n");
+			for(int i=0; i<m_nLength;++i) {
+				LogPrint("INFO"," %02X", m_Recvbuffer[i]);
+			}
 			return false;
 		}
 
@@ -66,7 +75,10 @@ bool CNoUiMsgBuffer::AddBytesToBuffer(char *pCh, int nLen)
 		nStart += nDataLen;
 		if(m_Recvbuffer[nStart] != '>') {
 			TRACE("结束字符不对\n");
-			LogPrint("INFO","结束字符不对\n");
+			LogPrint("INFO","结束字符不对\r\n");
+			for(int i=0; i<m_nLength;++i) {
+			LogPrint("INFO"," %02X", m_Recvbuffer[i]);
+			}
 			return false;
 		}
 		nPos = nStart + 1;
