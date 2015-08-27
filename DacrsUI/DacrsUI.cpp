@@ -1592,38 +1592,20 @@ BOOL CDacrsUIApp::RunOnlyOneApp()
 //// 通知发送界面或者接受界面地址的内容改变了获取要插入新地址
 void CDacrsUIApp::SendUIMsg(int message,string jsonaddr){
 
-	//m_UiReciveDlgQueue.clear();
-	//m_MsgQueue
 	CPostMsg Postmsg(MSG_USER_MAIN_UI,message);
 	Postmsg.SetData(jsonaddr);	
 	m_UiReciveDlgQueue.push(Postmsg);
-	//while(!m_UiReciveDlgQueue.isEmpty())
+
 	CPostMsg msg(MSG_USER_RECIVE_UI,message);
 	m_MsgQueue.push(msg);
-	//DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_RECIVE_UI ,message,0);
+
 
 	m_UiSendDlgQueue.push(Postmsg);
-	//while(!m_UiSendDlgQueue.isEmpty())
 	CPostMsg msg1(MSG_USER_SEND_UI,message);
 	m_MsgQueue.push(msg1);
-	//DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_SEND_UI ,message,0);
 
 }
-void CDacrsUIApp::SendP2pMsg(int message,string jsonaddr)
-{
-	CPostMsg Postmsg(MSG_USER_MAIN_UI,message);
-	Postmsg.SetData(jsonaddr);
-	m_UiP2pDlgQueue.push(Postmsg);
 
-	CPostMsg msg(MSG_USER_P2P_UI,message);
-	m_MsgQueue.push(msg);
-	//DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_P2P_UI ,message,0);
-
-	m_UiRedPacketDlgQueue.push(Postmsg);
-	CPostMsg msg1(MSG_USER_REDPACKET_UI,message);
-	m_MsgQueue.push(msg1);
-	//DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_REDPACKET_UI ,message,0);
-}
 void CDacrsUIApp::CheckPathValid(const string& strDir)
 {
 	BOOL bExist = FALSE;

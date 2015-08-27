@@ -176,11 +176,11 @@ void CDacrsUIApp::UpdateAddressData(){
 				listaddr.Label=addrsql.Label;
 				string Temp = listaddr.ToJson();
 				SendUIMsg((int)WM_UP_ADDRESS,Temp);
-				if (listaddr.bSign != addrsql.bSign)
-				{
-					/// p2pdlg 激活的地址要插入
-					SendP2pMsg((int)WM_UP_NEWADDRESS,Temp.c_str());
-				}
+				//if (listaddr.bSign != addrsql.bSign)
+				//{
+				//	/// p2pdlg 激活的地址要插入
+				//	SendP2pMsg((int)WM_UP_NEWADDRESS,Temp.c_str());
+				//}
 			}
 		}
 	}

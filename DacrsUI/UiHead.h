@@ -95,7 +95,7 @@ typedef enum tagUiType{
 	UI_TRANSIONRECORD     = 0x01,   //交易记录 
 	UI_SENDP2P_RECORD       ,       //P2p赌约
 	UI_ACCEPTP2P_RECORD     ,       //接受赌约记录  
-	UI_DARK_RECORD          ,       //抵压交易
+	UI_READPACKET_RECORD          ,       //抵压交易
 } UiType ;
 
 CString txTypeArray[] = { "NULL_TXTYPE", "REWARD_TX", "REG_ACCT_TX", "COMMON_TX", "CONTRACT_TX", "REG_APP_TX"};
@@ -148,19 +148,19 @@ namespace uistruct {
 	typedef std::vector<LISTADDR_t> LISTADDRLIST ;
 	//常用listaddr结构
 	typedef struct COMMONLISTADDR{   
-		string    address ;   //address
-		string    RegID   ;   //RegID
-		int       betID   ;   //关系ID
+		string    reg_id ;   //address
+		string    app_id   ;   //RegID
+		int       keyid   ;   //关系ID
 		COMMONLISTADDR(){
-			address="";
-			RegID="";
-			betID = 0;
+			reg_id="";
+			app_id="";
+			keyid = 0;
 		}
 		string ToJson(){
 			Json::Value root;
-			root["address"] = address;
-			root["RegID"] = RegID;
-			root["betid"] = betID;
+			root["reg_id"] = reg_id;
+			root["app_id"] = app_id;
+			root["keyid"] = keyid;
 			return root.toStyledString();
 		}
 		bool JsonToStruct(string json){
@@ -168,10 +168,10 @@ namespace uistruct {
 			Json::Value root; 
 			if (!reader.parse(json, root)) 
 				return false ;
-			address = root["address"].asString();
+			reg_id = root["reg_id"].asString();
 			
-			RegID =  root["RegID"].asString();
-			this->betID = root["betid"].asInt();
+			app_id =  root["app_id"].asString();
+			this->keyid = root["keyid"].asInt();
 			return true;
 		}
 	}COMMONLISTADDR_t;

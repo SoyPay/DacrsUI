@@ -42,7 +42,7 @@ BOOL CSqliteDeal::InitializationDB(){
 	strCondition = "type='table' and name= 't_common_address'";
 	if(!GetTableCountItem(strTableName, strCondition)) 
 	{
-		string createSQL="CREATE TABLE t_common_address(address TEXT PRIMARY KEY, reg_id TEXT, betid INT)";
+		string createSQL="CREATE TABLE t_common_address(reg_id TEXT, app_id TEXT, keyid integer PRIMARY KEY autoincrement)";
 		if(!ExcuteSQL(pDBConn, NULL, createSQL, NULL))
 		{
 			LogPrint("INFO", "Create table t_common_address failed\n");
@@ -370,11 +370,11 @@ int CallGetCommonWalletAddressItem(void *para, int n_column, char ** column_valu
 	if(n_column != 3)
 		return -1;
 
-	pAddr->address=strprintf("%s",column_value[0]);
+	pAddr->reg_id=strprintf("%s",column_value[0]);
 ;
-	pAddr->RegID=strprintf("%s",column_value[1]);
+	pAddr->app_id=strprintf("%s",column_value[1]);
 
-	pAddr->betID = atoi(column_value[2]) ;
+	pAddr->keyid = atoi(column_value[2]) ;
 
 	return 0;
 }
@@ -396,7 +396,7 @@ int CallGetWalletAddressList(void *para, int n_column, char ** column_value, cha
 //获取常用钱包地址列表
 int CallGetCommonWalletAddressList(void *para, int n_column, char ** column_value, char ** column_name)
 {
-	map<string,uistruct::COMMONLISTADDR_t> *pListInfo = (map<string,uistruct::COMMONLISTADDR_t> *)para;
+	map<int,uistruct::COMMONLISTADDR_t> *pListInfo = (map<int,uistruct::COMMONLISTADDR_t> *)para;
 	if(n_column != 3)
 		return -1;
 
@@ -405,7 +405,7 @@ int CallGetCommonWalletAddressList(void *para, int n_column, char ** column_valu
 	if(CallGetCommonWalletAddressItem(&listdata, n_column, column_value, column_name) < 0 )
 		return -1;
 	
-	(*pListInfo)[listdata.address] = listdata;
+	(*pListInfo)[listdata.keyid] = listdata;
 	return 0;
 }
 //获取quiz pool某一项
@@ -609,7 +609,7 @@ int CSqliteDeal::GetWalletAddressList(const string &strCondition, map<string,uis
 	ExcuteSQL(pDBConn, &CallGetWalletAddressList, strSQL, (void *)pListInfo);
 	return 0;
 }
-int CSqliteDeal::GetCommonWalletAddressList(const string &strCondition, map<string,uistruct::COMMONLISTADDR_t> *pListInfo)
+int CSqliteDeal::GetCommonWalletAddressList(const string &strCondition, map<int,uistruct::COMMONLISTADDR_t> *pListInfo)
 {
 	sqlite3 ** pDBConn = GetDBConnect();
 	string strSQL("");
