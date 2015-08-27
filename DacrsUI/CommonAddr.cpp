@@ -77,9 +77,6 @@ BOOL CCommonAddr::OnInitDialog()
 	m_ButClose.GetClientRect(titleRect);
 	m_ButClose.SetWindowPos(NULL ,(ret.right-ret.left)-titleRect.Width() , 2 , 0 , 0 , SWP_NOSIZE); 
 
-	//GetDlgItem(IDC_LIST_ALLADDR)->SetWindowPos(NULL ,2 , 30 , (ret.left + ret.right)/6  , (ret.top + ret.bottom) - 165 , SWP_SHOWWINDOW); 
-	//GetDlgItem(IDC_LIST_COMMONADDR)->SetWindowPos(NULL , (ret.left + ret.right)/6 + 42 , 30 , (ret.left + ret.right)/6  , (ret.top + ret.bottom) - 165  , SWP_SHOWWINDOW); 
-
 	AddListaddrDataBox();
 
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -94,11 +91,19 @@ BOOL CCommonAddr::AddListaddrDataBox()
 	if ( 0 == m_mapAddrInfo.size() ) return FALSE ;
 
 	m_mapCommonAddrInfo.clear();//常用地址
+	string strconditom = "";
 	switch(m_uAddrType)
 	{
 	case UI_SENDP2P_RECORD:
 		{
-			theApp.m_SqliteDeal.GetCommonWalletAddressList(_T(" betid=1 "), &m_mapCommonAddrInfo);
+			strconditom =strprintf("app_id = '%s'",theApp.m_betScritptid);
+			theApp.m_SqliteDeal.GetCommonWalletAddressList(strconditom, &m_mapCommonAddrInfo);
+		}
+		break;
+	case UI_READPACKET_RECORD:
+		{
+			strconditom =strprintf("app_id = '%s'",theApp.m_redPacketScriptid);
+			theApp.m_SqliteDeal.GetCommonWalletAddressList(strconditom, &m_mapCommonAddrInfo);
 		}
 		break;
 	}
@@ -112,15 +117,16 @@ BOOL CCommonAddr::AddListaddrDataBox()
 
 	//更新常用地址
 	UpdataCommonAddrList(&m_mapCommonAddrInfo);
+	return TRUE;
 }
-void CCommonAddr::UpdataCommonAddrList(map<string,uistruct::COMMONLISTADDR_t> *pListInfo)
+void CCommonAddr::UpdataCommonAddrList(map<int,uistruct::COMMONLISTADDR_t> *pListInfo)
 {
 	if ( NULL == pListInfo ) return ;
 	//常用地址
 	m_CommonAddrListBox.ResetContent(); //清除全部地址ComBox控件
-	std::map<string,uistruct::COMMONLISTADDR_t>::const_iterator const_it; //加载到全部地址ComBox控件
+	std::map<int,uistruct::COMMONLISTADDR_t>::const_iterator const_it; //加载到全部地址ComBox控件
 	for ( const_it = pListInfo->begin() ; const_it != pListInfo->end() ; const_it++ ) {
-		int pos = m_CommonAddrListBox.AddString( const_it->second.RegID.c_str() ) ;
+		int pos = m_CommonAddrListBox.AddString( const_it->second.reg_id.c_str() ) ;
 		m_CommonAddrListBox.SetItemData( pos , (DWORD_PTR)(&const_it->second) ) ;
 	}
 }
@@ -140,20 +146,31 @@ void CCommonAddr::OnBnClickedButtonAdd()
 
 	string strSourceData , strCond;
 	m_mapCommonAddrInfo.clear();//常用地址
-	strCond =strprintf(" address = '%s' ", pAddrList->address.c_str());
+	strCond =strprintf(" reg_id = '%s' ", pAddrList->address.c_str());
 	uistruct::COMMONLISTADDR_t addrsql;
 	int item = theApp.m_SqliteDeal.GetCommonWalletAddressItem(strCond, &addrsql) ;
 
-	if (addrsql.address.length() == 0 ){  //插入
+	if (addrsql.reg_id.length() == 0 ){  //插入
 	    switch(m_uAddrType)
 		{
 		case UI_SENDP2P_RECORD:
 			{
-				strSourceData=strprintf("'%s' , '%s' , '%d' " , pAddrList->address.c_str() ,pAddrList->RegID.c_str() , 1 ) ;
+				strSourceData=strprintf("'%s' , '%s',null" , pAddrList->RegID.c_str() ,theApp.m_betScritptid) ;
 				if (!theApp.m_SqliteDeal.InsertTableItem(_T("t_common_address") ,strSourceData ) ) {
 					  TRACE("Insert t_common_address error!\n");
 				}
-				theApp.m_SqliteDeal.GetCommonWalletAddressList(_T(" betid=1 "), &m_mapCommonAddrInfo);
+				strCond =strprintf(" app_id = '%s' ", theApp.m_betScritptid);
+				theApp.m_SqliteDeal.GetCommonWalletAddressList(strCond, &m_mapCommonAddrInfo);
+			}
+			break;
+		case UI_READPACKET_RECORD:
+			{
+				strSourceData=strprintf("'%s' , '%s',null" , pAddrList->RegID.c_str() ,theApp.m_redPacketScriptid) ;
+				if (!theApp.m_SqliteDeal.InsertTableItem(_T("t_common_address") ,strSourceData ) ) {
+					TRACE("Insert t_common_address error!\n");
+				}
+				strCond =strprintf(" app_id = '%s' ", theApp.m_betScritptid);
+				theApp.m_SqliteDeal.GetCommonWalletAddressList(strCond, &m_mapCommonAddrInfo);
 			}
 			break;
 		}
@@ -164,6 +181,12 @@ void CCommonAddr::OnBnClickedButtonAdd()
 		case UI_SENDP2P_RECORD:
 			{
 				CPostMsg postp2pmsg(MSG_USER_P2PADDRES,0);
+				theApp.m_MsgQueue.push(postp2pmsg);
+			}
+			break;
+		case UI_READPACKET_RECORD:
+			{
+				CPostMsg postp2pmsg(MSG_USER_REDPACKET_UI,WM_UP_NEWADDRESS);
 				theApp.m_MsgQueue.push(postp2pmsg);
 			}
 			break;
@@ -183,15 +206,23 @@ void CCommonAddr::OnBnClickedButtonDelete()
 
 	string strSourceData ;
 
-	strSourceData = strprintf(" address='%s' ", pAddrList->address.c_str());
+	strSourceData = strprintf(" reg_id='%s' ", pAddrList->reg_id);
 	int item = theApp.m_SqliteDeal.DeleteTableItem(_T("t_common_address"), strSourceData);
 
 	m_mapCommonAddrInfo.clear();//常用地址
+	string conditon = "";
 	switch(m_uAddrType)
 	{
 	case UI_SENDP2P_RECORD:
 		{
-			theApp.m_SqliteDeal.GetCommonWalletAddressList(_T(" betid=1 "), &m_mapCommonAddrInfo);
+			conditon = strprintf("app_id='%s'",theApp.m_betScritptid);
+			theApp.m_SqliteDeal.GetCommonWalletAddressList(conditon, &m_mapCommonAddrInfo);
+		}
+		break;
+	case UI_READPACKET_RECORD:
+		{
+			conditon = strprintf("app_id='%s'",theApp.m_betScritptid);
+			theApp.m_SqliteDeal.GetCommonWalletAddressList(conditon, &m_mapCommonAddrInfo);
 		}
 		break;
 	}
@@ -202,6 +233,12 @@ void CCommonAddr::OnBnClickedButtonDelete()
 	case UI_SENDP2P_RECORD:
 		{
 			CPostMsg postp2pmsg(MSG_USER_P2PADDRES,0);
+			theApp.m_MsgQueue.push(postp2pmsg);
+		}
+		break;
+	case UI_READPACKET_RECORD:
+		{
+			CPostMsg postp2pmsg(MSG_USER_REDPACKET_UI,WM_UP_NEWADDRESS);
 			theApp.m_MsgQueue.push(postp2pmsg);
 		}
 		break;

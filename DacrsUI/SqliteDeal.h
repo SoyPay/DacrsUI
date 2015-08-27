@@ -54,7 +54,7 @@ public:
 	BOOL       IsExistField(const string tablename,const string filed , const string &strCond);
 	BOOL       DeleteTable(const string tablename);
 	int       GetCommonWalletAddressItem(const string &strCondition, uistruct::COMMONLISTADDR_t *pAddr);
-	int       GetCommonWalletAddressList(const string &strCondition, map<string,uistruct::COMMONLISTADDR_t> *pListInfo);
+	int       GetCommonWalletAddressList(const string &strCondition, map<int,uistruct::COMMONLISTADDR_t> *pListInfo);
 };
 
 

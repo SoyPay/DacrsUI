@@ -51,6 +51,7 @@ public:
 	CP2PBetHelp		                    m_P2PBetHelp;
 	CShadeButtonST         m_rBtnWinerloser;
 	CShadeButtonST         m_rBtnAddrWinerloser;
+	CShadeButtonST         m_rBtnSetCommonAddr;
 public:
 	BOOL AddListaddrDataBox();
 	bool CheckBalance(string strshow = "");
@@ -75,7 +76,6 @@ public:
 	std::vector<CDialog*>            m_poopDialog;
 	void      OnSelectShowWin(int nCurSelTab);
 	void      OnSelectShowPoolWin(int nCurSelTab);
-	void      InsertComboxIitem();
 	void      ShowListItem(int seltab);
 	void      ShowListPoolItem(int seltab);
 	void      SendRedPacketComm();
@@ -99,4 +99,6 @@ public:
 	afx_msg void OnBnClickedButtonRefresh2();
 	afx_msg void OnBnClickedButtonSpecailred();
 	afx_msg void OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnBnClickedButtonSetaddr();
+	void OnUpAddressCombo() ;
 };
