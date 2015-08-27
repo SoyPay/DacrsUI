@@ -511,12 +511,20 @@ namespace uistruct {
 		string   sendbetid ;   //RegID
 		INT64   nPayMoney;
 		int     outheight;
+		string  acceptid;
+		string  accepthash;
+		int     guess;
+		int     state;
 		string ToJson(){
 			Json::Value root;
 			root["hash"] = hash;
 			root["sendbetid"] = sendbetid;
 			root["money"] = nPayMoney;
 			root["height"] = outheight;
+			root["acceptid"] = acceptid;
+			root["accepthash"] = accepthash;
+			root["guess"] = guess;
+			root["state"] = state;
 			return root.toStyledString();
 		}
 		bool JsonToStruct(string json){
@@ -526,9 +534,13 @@ namespace uistruct {
 				return false ;
 
 			this->hash = root["hash"].asString();
-			this->sendbetid = root["data"].asString();
+			this->sendbetid = root["sendbetid"].asString();
 			this->nPayMoney = root["money"].asInt64();
 			this->outheight=root["height"].asInt();
+			this->acceptid = root["acceptid"].asString();
+			this->accepthash  = root["accepthash"].asString();
+			this->state = root["state"].asInt();
+			this->guess = root["guess"].asInt();
 			return true;
 		}
 	}LISTP2POOL_T;

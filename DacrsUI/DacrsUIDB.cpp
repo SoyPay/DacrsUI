@@ -72,14 +72,29 @@ void CDacrsUIApp::UpdateQuizPoolData()
 					continue;
 				}
 
-				if (DBbet.betstate == 0x00)
+				if (DBbet.betstate == 0x00 || DBbet.betstate == 0x01)
 				{
 					std::vector<unsigned char> vSendid;
 					vSendid.assign(DBbet.sendbetid,DBbet.sendbetid+sizeof(DBbet.sendbetid));
 					string regid = CSoyPayHelp::getInstance()->GetNotFullRegID(vSendid);
 
+					string acceptid = "";
+					string accepthash = "";
+					if (DBbet.betstate == 0x01)
+					{
+						vSendid.assign(DBbet.acceptbetid,DBbet.acceptbetid+sizeof(DBbet.acceptbetid));
+						acceptid = CSoyPayHelp::getInstance()->GetNotFullRegID(vSendid);
+
+						std::vector<unsigned char> vaccept;
+						vaccept.assign(DBbet.accepthash,DBbet.accepthash+sizeof(DBbet.accepthash));
+						reverse(vaccept.begin(),vaccept.end());
+						accepthash = CSoyPayHelp::getInstance()->HexStr(vaccept);
+
+					}
+					
+
 					string strSourceData;
-					strSourceData=strprintf("'%s' , '%s',%ld,%d" , strTemp.c_str(), regid.c_str(),DBbet.money,DBbet.hight);
+					strSourceData=strprintf("'%s' , '%s',%ld,%d,'%s','%s',%d,%d" , strTemp.c_str(), regid.c_str(),DBbet.money,DBbet.hight,acceptid,accepthash,DBbet.acceptebetdata,DBbet.betstate);
 					m_SqliteDeal.InsertTableItem(_T("t_quiz_pool") ,strSourceData);
 				}
 			}
@@ -1177,4 +1192,64 @@ void CDacrsUIApp::PopupContactBalloonTip(uistruct::REVTRANSACTION_t tx,int appty
 	}
 
 	::SendMessage(theApp.m_pMainWnd->m_hWnd,WM_POPUPBAR,0,(LPARAM)strShow.c_str());
+}
+
+void CDacrsUIApp::ScanQUIZNotAcceptBet()
+{
+	string strCond;
+	strCond = " state =0 and height !=0 and (actor =0 or actor =2)";
+
+	uistruct::P2PBETRECORDLIST pQuizList;
+	theApp.m_SqliteDeal.GetP2PQuizRecordList(strCond,&pQuizList);
+	std::vector<uistruct::P2P_QUIZ_RECORD_t>::iterator item = pQuizList.begin();
+	for (;item!= pQuizList.end();item++)
+	{
+		strCond = strprintf("hash ='%s' and state=1",item->tx_hash);
+
+		uistruct::LISTP2POOL_T pPoolItem;
+		theApp.m_SqliteDeal.GetP2PQuizPoolItem(strCond, &pPoolItem);
+		if (pPoolItem.hash.length() != 0)
+		{
+			string strCommand,strShowData;
+			strCommand = strprintf("%s %s",_T("gettxdetail") ,pPoolItem.accepthash );
+			Json::Value root; 
+			if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
+			{
+				TRACE("InsertTransaction rpccmd gettxdetail error");
+				return;
+			}
+
+			uistruct::REVTRANSACTION_t transcion;
+			if (transcion.JsonToStruct(root.toStyledString()))
+			{
+				if (transcion.confirmedHeight == 0)
+				 return;
+
+				string strCond,strField;
+				strCond = strprintf(" tx_hash='%s' ", item->tx_hash);
+
+				SYSTEMTIME curTime =UiFun::Time_tToSystemTime(transcion.confirmedtime);
+				string strTime;
+				strTime = strprintf("%04d-%02d-%02d %02d:%02d:%02d",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+
+				strField +=strprintf(" right_addr = '%s' ,",transcion.regid.c_str() );
+				strField+=strprintf("recv_time = '%s' ,height = %d ,state = %d ,relate_hash = '%s' ,guess_num = %d " ,strTime ,transcion.confirmedHeight ,1 ,transcion.txhash ,(int)pPoolItem.guess) ;
+				
+				string addr;
+				addr = strprintf("address='%s'",transcion.addr.c_str());
+				int itemaddr = m_SqliteDeal.GetTableCountItem(_T("t_wallet_address"),addr);
+				if (itemaddr != 0)
+				{
+					strField +=",actor =2";
+				}
+				//更新数据
+				if ( !m_SqliteDeal.UpdateTableItem(_T("t_p2p_quiz") ,strField,strCond )) {
+					TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , item->tx_hash.c_str() );
+					LogPrint("INFO","AcceptBetRecord 更新失败:%s\r\n", item->tx_hash.c_str());
+				}
+			}
+		}
+		
+	}
+
 }

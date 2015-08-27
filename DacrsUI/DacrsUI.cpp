@@ -436,9 +436,36 @@ void CDacrsUIApp::StartblockThrd()
 	m_msgThread = (HANDLE)_beginthreadex(NULL,	0,	ProcessMsg, this, 0, &umsgThreadId);
 	m_hProcessNoUiMsgThread = (HANDLE)_beginthreadex(NULL,	0,	ProcessNoUiMsg, this, 0, &m_uProNoUiMsgThreadId);
 	m_hProcessAppTxThread = (HANDLE)_beginthreadex(NULL,	0,	ProcessAppTx, this, 0, &m_uProAppTxThreadId);	
+	m_hProcessBet = (HANDLE)_beginthreadex(NULL,	0,	ProcessBetAcceptTx, this, 0, &m_uProBetxThreadId);	
 	return ;
 }
 
+UINT __stdcall CDacrsUIApp::ProcessBetAcceptTx(LPVOID pParam)
+{
+	CDacrsUIApp * pUiDemeDlg  = (CDacrsUIApp*)pParam ;
+	while ( true)
+	{
+
+		if (theApp.m_msgAutoDelete)
+		{
+			return 1;
+		}
+		static int timelag = 0;
+		SYSTEMTIME curTime ;
+		memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
+		GetLocalTime( &curTime ) ;
+		int Curtimelag = UiFun::SystemTimeToTimet(curTime);
+		/// 同步以后更新数据库表
+		if (timelag == 0 || (Curtimelag-timelag) >=180)  /// 时间间隔3分
+		{
+			pUiDemeDlg->ScanQUIZNotAcceptBet();
+			timelag = Curtimelag;
+		}
+
+
+	}
+	return 1 ;
+}
 UINT __stdcall CDacrsUIApp::ProcessAppTx(LPVOID pParam)
 {
 	CDacrsUIApp * pUiDemeDlg  = (CDacrsUIApp*)pParam ;
