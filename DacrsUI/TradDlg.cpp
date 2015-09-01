@@ -55,7 +55,6 @@ void CTradDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_COMBO1, m_condition);
 	DDX_Control(pDX, IDC_COMBO_TIME, m_time);
 	DDX_Control(pDX, IDC_EDIT_ADDR, m_edit);
-	DDX_Control(pDX, IDC_BUTTON_REFRESH, m_rBtnRefresh);
 	DDX_Control(pDX, IDC_UP_PAGE, m_rBtnUp);
 	DDX_Control(pDX, IDC_NEXT_PAGE, m_rBtnNext);
 	DDX_Control(pDX ,IDC_STATIC_COUNT_PAGE ,m_sCountpage ) ;
@@ -77,7 +76,7 @@ BEGIN_MESSAGE_MAP(CTradDlg, CDialogBar)
 	ON_CBN_SELCHANGE(IDC_COMBO_TIME, &CTradDlg::OnCbnSelchangeComboTime)
 	//ON_EN_CHANGE(IDC_EDIT_ADDR, &CTradDlg::OnEnChangeEditAddr)
 	ON_WM_CTLCOLOR()
-	ON_BN_CLICKED(IDC_BUTTON_REFRESH, &CTradDlg::OnBnClickedButtonRefresh)
+
 	ON_BN_CLICKED(IDC_UP_PAGE, &CTradDlg::OnBnClickedUpPage)
 	ON_BN_CLICKED(IDC_NEXT_PAGE, &CTradDlg::OnBnClickedNextPage)
 	ON_CBN_SELCHANGE(IDC_COMBO_PAGE, &CTradDlg::OnCbnSelchangeComboPage)
@@ -196,16 +195,6 @@ BOOL CTradDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_rBtnExportTx.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
 		m_rBtnExportTx.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
 		m_rBtnExportTx.SizeToContent();
-
-		m_rBtnRefresh.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
-		m_rBtnRefresh.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		m_rBtnRefresh.SetWindowText("刷  新") ;
-		m_rBtnRefresh.SetFontEx(20 , _T("微软雅黑"));
-		m_rBtnRefresh.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
-		m_rBtnRefresh.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
-		m_rBtnRefresh.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
-		m_rBtnRefresh.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
-		m_rBtnRefresh.SizeToContent();
 
 		m_rBtnUp.SetBitmaps( IDB_TRADE_UP , RGB(255, 255, 0) , IDB_TRADE_UP , RGB(255, 255, 255) );
 		m_rBtnUp.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
@@ -533,12 +522,6 @@ void CTradDlg::OnSize(UINT nType, int cx, int cy)
 			pButton->SetWindowPos(NULL ,900 - 1*(103 + 5)- 23-m_BtnRc.Width()-18 , 600 - 72 - 32 - 46 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
 		}
 
-		pButton = (CButton*)GetDlgItem( IDC_BUTTON_REFRESH ) ;
-		if ( NULL != pst ) {
-			CRect m_BtnRc ;
-			pButton->GetClientRect( m_BtnRc ) ;
-			pButton->SetWindowPos(NULL ,900 - 1*(103 + 5)- 23-m_BtnRc.Width()-120 , 600 - 72 - 32 - 46 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
-		}
 
 		pButton = (CButton*)GetDlgItem( IDC_UP_PAGE ) ;
 		if ( NULL != pst ) {
@@ -1484,17 +1467,7 @@ BOOL CTradDlg::IsInsertTx(uistruct::REVTRANSACTION_t txdetail)
 
 }
 
-void CTradDlg::OnBnClickedButtonRefresh()
-{
-	// TODO: 在此添加控件通知处理程序代码
-	int operate = 0;
-	string condtion = GetConditonStr(operate);
 
-	uistruct::TRANSRECORDLIST pListInfo;
-	theApp.m_SqliteDeal.GetTransactionList(condtion, &pListInfo); 
-
-	OnShowListCtrl(pListInfo);
-}
 
 void CTradDlg::OnBnClickedUpPage()
 {

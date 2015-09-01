@@ -45,7 +45,6 @@ private:
 	CEdit		       m_edit;
 	COLORREF          m_colorEditText;
 	bool              m_seteditcolor;
-	CShadeButtonST    m_rBtnRefresh;
 public:
 	CStaticTrans           m_sCountpage  ;
 	CShadeButtonST         m_rBtnUp;
@@ -72,7 +71,7 @@ public:
 	BOOL IsInsertTx(uistruct::REVTRANSACTION_t txdetail);
 	
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
-	afx_msg void OnBnClickedButtonRefresh();
+
 	afx_msg void OnBnClickedUpPage();
 	afx_msg void OnBnClickedNextPage();
 	void    ShowPageCotent(int pageIndex);
