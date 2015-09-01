@@ -41,6 +41,7 @@ private:
 	CShadeButtonST     m_rBtnExportTx;
 	CComboBox		   m_condition;
 	CComboBox		   m_time;
+	CComboBox		   m_pageitem;
 	CEdit		       m_edit;
 	COLORREF          m_colorEditText;
 	bool              m_seteditcolor;
@@ -50,6 +51,7 @@ public:
 	CShadeButtonST         m_rBtnUp;
 	CShadeButtonST         m_rBtnNext;
 	int                    m_pagesize;
+	int                    m_offset;
 public:
 	afx_msg void OnNMDblclkListListtx(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
@@ -75,4 +77,6 @@ public:
 	afx_msg void OnBnClickedNextPage();
 	void    ShowPageCotent(int pageIndex);
 	void    ShowComboxCotent();
+	afx_msg void OnCbnSelchangeComboPage();
+	void GetExportCol(int index,map<int,string> &item,uistruct::REVTRANSACTION_t const_it);
 };
