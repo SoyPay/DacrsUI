@@ -27,6 +27,7 @@ void CCommonAddr::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BUTTON_CLOSE, m_ButClose);
 	DDX_Control(pDX, IDC_LIST_ALLADDR, m_AllAddrlistBox);
 	DDX_Control(pDX, IDC_LIST_COMMONADDR, m_CommonAddrListBox);
+	DDX_Control(pDX, IDC_HEAD, m_head);
 }
 
 
@@ -56,6 +57,8 @@ BOOL CCommonAddr::OnInitDialog()
 {
 	CDialogBase::OnInitDialog();
 
+	m_head.SetFont(100, _T("微软雅黑"));
+	m_head.SetTextColor(RGB(255,255,255));	
 	// TODO:  在此添加额外的初始化
 	UpdateData(FALSE);
 
@@ -146,7 +149,15 @@ void CCommonAddr::OnBnClickedButtonAdd()
 
 	string strSourceData , strCond;
 	m_mapCommonAddrInfo.clear();//常用地址
-	strCond =strprintf(" reg_id = '%s' ", pAddrList->RegID.c_str());
+
+	if (m_uAddrType == UI_SENDP2P_RECORD)
+	{
+		strCond =strprintf(" reg_id = '%s'and app_id='%s' ", pAddrList->RegID.c_str(),theApp.m_betScritptid);
+	}else if (m_uAddrType == UI_READPACKET_RECORD)
+	{
+		strCond =strprintf(" reg_id = '%s'and app_id='%s' ", pAddrList->RegID.c_str(),theApp.m_redPacketScriptid);
+	}
+	
 	uistruct::COMMONLISTADDR_t addrsql;
 	int item = theApp.m_SqliteDeal.GetCommonWalletAddressItem(strCond, &addrsql) ;
 
@@ -169,7 +180,7 @@ void CCommonAddr::OnBnClickedButtonAdd()
 				if (!theApp.m_SqliteDeal.InsertTableItem(_T("t_common_address") ,strSourceData ) ) {
 					TRACE("Insert t_common_address error!\n");
 				}
-				strCond =strprintf(" app_id = '%s' ", theApp.m_betScritptid);
+				strCond =strprintf(" app_id = '%s' ", theApp.m_redPacketScriptid);
 				theApp.m_SqliteDeal.GetCommonWalletAddressList(strCond, &m_mapCommonAddrInfo);
 			}
 			break;
@@ -206,7 +217,13 @@ void CCommonAddr::OnBnClickedButtonDelete()
 
 	string strSourceData ;
 
-	strSourceData = strprintf(" reg_id='%s' ", pAddrList->reg_id);
+	if (m_uAddrType == UI_SENDP2P_RECORD)
+	{
+		strSourceData =strprintf(" reg_id = '%s'and app_id='%s' ", pAddrList->reg_id.c_str(),theApp.m_betScritptid);
+	}else if (m_uAddrType == UI_READPACKET_RECORD)
+	{
+		strSourceData =strprintf(" reg_id = '%s'and app_id='%s' ", pAddrList->reg_id.c_str(),theApp.m_redPacketScriptid);
+	}
 	int item = theApp.m_SqliteDeal.DeleteTableItem(_T("t_common_address"), strSourceData);
 
 	m_mapCommonAddrInfo.clear();//常用地址
@@ -221,7 +238,7 @@ void CCommonAddr::OnBnClickedButtonDelete()
 		break;
 	case UI_READPACKET_RECORD:
 		{
-			conditon = strprintf("app_id='%s'",theApp.m_betScritptid);
+			conditon = strprintf("app_id='%s'",theApp.m_redPacketScriptid);
 			theApp.m_SqliteDeal.GetCommonWalletAddressList(conditon, &m_mapCommonAddrInfo);
 		}
 		break;

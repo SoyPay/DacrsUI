@@ -256,6 +256,8 @@
     <None Include="res\tradedetail_logo_2.bmp" />
     <None Include="res\tradedetail_logo_3.bmp" />
     <None Include="res\tradedetail_logo_4.bmp" />
+    <None Include="res\trade_next.bmp" />
+    <None Include="res\trade__up.bmp" />
     <None Include="res\Trad_dlg.bmp" />
     <None Include="res\unlock.bmp" />
     <None Include="res\wallet_uipro.bmp" />

@@ -24,6 +24,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	CShadeButtonST m_ButClose;    //关闭
+	CStaticTrans   m_head  ;
 public:
 	map<string,uistruct::LISTADDR_t> m_mapAddrInfo ; //全部地址
 	map<int,uistruct::COMMONLISTADDR_t> m_mapCommonAddrInfo; //常用地址

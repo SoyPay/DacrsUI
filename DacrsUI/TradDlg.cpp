@@ -25,7 +25,8 @@ CTradDlg::CTradDlg()
 	m_pBmp = NULL ;
 	m_seteditcolor = TRUE;
 	m_nConut = 0 ;
-	m_pagesize = 17;
+	m_pagesize = 13;
+	m_offset = 0;
 }
 
 CTradDlg::~CTradDlg()
@@ -58,6 +59,7 @@ void CTradDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_UP_PAGE, m_rBtnUp);
 	DDX_Control(pDX, IDC_NEXT_PAGE, m_rBtnNext);
 	DDX_Control(pDX ,IDC_STATIC_COUNT_PAGE ,m_sCountpage ) ;
+	DDX_Control(pDX ,IDC_COMBO_PAGE ,m_pageitem ) ;
 }
 
 
@@ -78,6 +80,7 @@ BEGIN_MESSAGE_MAP(CTradDlg, CDialogBar)
 	ON_BN_CLICKED(IDC_BUTTON_REFRESH, &CTradDlg::OnBnClickedButtonRefresh)
 	ON_BN_CLICKED(IDC_UP_PAGE, &CTradDlg::OnBnClickedUpPage)
 	ON_BN_CLICKED(IDC_NEXT_PAGE, &CTradDlg::OnBnClickedNextPage)
+	ON_CBN_SELCHANGE(IDC_COMBO_PAGE, &CTradDlg::OnCbnSelchangeComboPage)
 END_MESSAGE_MAP()
 
 
@@ -186,7 +189,7 @@ BOOL CTradDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 
 		m_rBtnExportTx.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
 		m_rBtnExportTx.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		m_rBtnExportTx.SetWindowText("导出EXEL") ;
+		m_rBtnExportTx.SetWindowText("导出EXCEL") ;
 		m_rBtnExportTx.SetFontEx(20 , _T("微软雅黑"));
 		m_rBtnExportTx.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		m_rBtnExportTx.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
@@ -204,7 +207,7 @@ BOOL CTradDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_rBtnRefresh.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
 		m_rBtnRefresh.SizeToContent();
 
-		m_rBtnUp.SetBitmaps( IDB_BITMAP_UP , RGB(255, 255, 0) , IDB_BITMAP_UP , RGB(255, 255, 255) );
+		m_rBtnUp.SetBitmaps( IDB_TRADE_UP , RGB(255, 255, 0) , IDB_TRADE_UP , RGB(255, 255, 255) );
 		m_rBtnUp.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
 		m_rBtnUp.SetWindowText("") ;
 		m_rBtnUp.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(255, 255, 255));
@@ -213,7 +216,7 @@ BOOL CTradDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_rBtnUp.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(255, 255, 255));
 		m_rBtnUp.SizeToContent();
 
-		m_rBtnNext.SetBitmaps( IDB_BITMAP_NEXT , RGB(255, 255, 0) , IDB_BITMAP_NEXT , RGB(255, 255, 255) );
+		m_rBtnNext.SetBitmaps( IDB_TRADE_NEXT , RGB(255, 255, 0) , IDB_TRADE_NEXT , RGB(255, 255, 255) );
 		m_rBtnNext.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
 		m_rBtnNext.SetWindowText("") ;
 		m_rBtnNext.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(255, 255, 255));
@@ -240,10 +243,19 @@ BOOL CTradDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_time.InsertString(4,_T("上月"));
 		m_time.InsertString(5,_T("今年"));
 		m_time.InsertString(6,_T("昨天"));
+
+		m_pageitem.InsertString(0,_T("13"));
+		m_pageitem.InsertString(1,_T("20"));
+		m_pageitem.InsertString(2,_T("30"));
+		m_pageitem.InsertString(3,_T("50"));
+		m_pageitem.InsertString(4,_T("100"));
+
+
 		m_edit.SetWindowText(_T("请输入地址进行搜索"));
 
 		m_condition.SetCurSel(0);
 		m_time.SetCurSel(0);
+		m_pageitem.SetCurSel(0);
 
 		m_colorEditText = RGB(159,161,164);
 
@@ -288,12 +300,14 @@ void  CTradDlg::ShowListCtrl(uistruct::TRANSRECORDLIST* pListInfo)
 	if ( NULL == pListInfo ) return ;
 
 	m_listCtrl.DeleteAllItems();
+	int count = (m_nConut)*m_pagesize+1;
+
 	int nSubIdx = 0 , i = 0 ;
 	string strShowData = "";
 	std::vector<uistruct::REVTRANSACTION_t>::const_iterator const_it;
 	for ( const_it = pListInfo->begin() ; const_it != pListInfo->end() ; const_it++ ) {
 		nSubIdx = 0;
-		strShowData =strprintf("%d", i+1);
+		strShowData =strprintf("%d", count++);
 		int item = m_listCtrl.InsertItem(i, strShowData.c_str());					//序号
 		m_listCtrl.SetItemData( item , (DWORD_PTR)(&(*const_it)) ) ;
 
@@ -456,6 +470,14 @@ void CTradDlg::InsertItemData()
 			 }
 		 }
 		 break;
+	 case WM_REMOVETX:
+	{
+		if ( 0 == m_nConut ) {   //只有当前是首页 , 才去显示
+			m_listCtrl.DeleteAllItems();
+			OninitializeList();
+		}
+	}
+	break;
 	default:
 		 break;
 	 }
@@ -494,7 +516,8 @@ void CTradDlg::OnSize(UINT nType, int cx, int cy)
 		
 		CButton *pList = (CButton*)GetDlgItem(IDC_LIST_LISTTX);
 		if( NULL != pList ) {	
-			pList->SetWindowPos(NULL ,32, 50 , 837 , 380 , SWP_SHOWWINDOW);
+			//pList->SetWindowPos(NULL ,32, 50 , 837 , 380 , SWP_SHOWWINDOW);
+			pList->SetWindowPos(NULL ,32, 50 , 837 , 350 , SWP_SHOWWINDOW);
 		}
 		CButton *pButton = (CButton*)GetDlgItem(IDC_BUTTON_TXDETAIL);
 		if( NULL != pButton ) {	
@@ -516,33 +539,48 @@ void CTradDlg::OnSize(UINT nType, int cx, int cy)
 			pButton->GetClientRect( m_BtnRc ) ;
 			pButton->SetWindowPos(NULL ,900 - 1*(103 + 5)- 23-m_BtnRc.Width()-120 , 600 - 72 - 32 - 46 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
 		}
+
 		pButton = (CButton*)GetDlgItem( IDC_UP_PAGE ) ;
 		if ( NULL != pst ) {
 			CRect m_BtnRc ;
 			pButton->GetClientRect( m_BtnRc ) ;
-			pButton->SetWindowPos(NULL ,50 , 600 - 72 - 32 - 46 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
-		}
-		pButton = (CButton*)GetDlgItem( IDC_UP_PAGE ) ;
-		if ( NULL != pst ) {
-			CRect m_BtnRc ;
-			pButton->GetClientRect( m_BtnRc ) ;
-			pButton->SetWindowPos(NULL ,50 , 600 - 72 - 32 - 46 , 20 , 20 , SWP_SHOWWINDOW);
+			pButton->SetWindowPos(NULL ,(rc.Width()/div)*85 , (rc.Height()/div)*102 , 20 , 20 , SWP_SHOWWINDOW);
 		}
 		pst = GetDlgItem( IDC_EDIT_PAGE ) ;
 		if ( NULL != pst ) {
-			pst->SetWindowPos( NULL ,75, 600 - 72 - 32 - 46 , 40, 20  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/div)*88, (rc.Height()/div)*102 , 63, 20  ,SWP_SHOWWINDOW ) ; 
 		}
 		pButton = (CButton*)GetDlgItem( IDC_NEXT_PAGE ) ;
 		if ( NULL != pst ) {
 			CRect m_BtnRc ;
 			pButton->GetClientRect( m_BtnRc ) ;
-			pButton->SetWindowPos(NULL ,75+40+5 , 600 - 72 - 32 - 46 , 20 , 20 , SWP_SHOWWINDOW);
+			pButton->SetWindowPos(NULL ,(rc.Width()/div)*96+2, (rc.Height()/div)*102 , 20 , 20 , SWP_SHOWWINDOW);
 		}
 		pst = GetDlgItem( IDC_STATIC_COUNT_PAGE ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,75+20+40+13 , 600 - 72 - 32 - 46+4 , 50, 30  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/div)*99, (rc.Height()/div)*102+3, 70, 30  ,SWP_SHOWWINDOW ) ; 
+		}
+
+		pst = GetDlgItem( IDC_STATIC_PAGE ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/div)*73, (rc.Height()/div)*102+3, 25, 18 ,SWP_SHOWWINDOW ) ; 
+		}
+		pst = GetDlgItem( IDC_COMBO_PAGE ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/div)*77-5, (rc.Height()/div)*102,45,18  ,SWP_SHOWWINDOW ) ; 
+		}
+
+		pst = GetDlgItem( IDC_STATIC_ITEM ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/div)*82, (rc.Height()/div)*102+3, rect.Width(), 18  ,SWP_SHOWWINDOW ) ; 
 		}
 	}
 }
@@ -554,29 +592,85 @@ BOOL CTradDlg::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 	return CDialogBar::OnMouseWheel(nFlags, zDelta, pt);
 }
 
+void CTradDlg:: GetExportCol(int index,map<int,string> &item,uistruct::REVTRANSACTION_t const_it)
+{
+	     string strShowData = "";
+		string txtype = const_it.txtype;
 
+		int i = 0;
+		strShowData= strprintf("%d" , index) ;
+		item[i++] =strShowData;
+		if (!strcmp(txtype.c_str(),"REWARD_TX"))
+		{
+			strShowData ="挖矿" ;
+		}else if (!strcmp(txtype.c_str(),"REG_ACCT_TX"))
+		{
+			strShowData="激活" ;
+		}else if (!strcmp(txtype.c_str(),"COMMON_TX"))
+		{
+			if (const_it.state == 3)
+			{
+				strShowData="转账<平>";
+			}else if (const_it.state == 2)
+			{
+				strShowData="转账<收>";
+			}else if (const_it.state == 1)
+			{
+				strShowData="转账<发>" ;
+			}else
+			{
+				strShowData="转账" ;
+			}
+		}else if (!strcmp(txtype.c_str(),"CONTRACT_TX"))
+		{
+			strShowData="合约";
+		}else if (!strcmp(txtype.c_str(),"REG_APP_TX"))
+		{
+			strShowData="注册" ;
+		}
+		item[i++] =strShowData;
+		item[i++] =const_it.addr;
+		strShowData= strprintf("%.8f" , const_it.money ) ;
+		item[i++] =strShowData;
+		item[i++] =const_it.desaddr;
+		item[i++] =const_it.txhash;
+}
 
 void CTradDlg::OnBnClickedExportExel()
 {
-	// TODO: 在此添加控件通知处理程序代码
-	if (m_listCtrl.GetItemCount() == 0)
+	int operate = 0;
+	string condtion = GetConditonStr(operate);
+	uistruct::TRANSRECORDLIST pListInfo;
+	string strCond =  condtion;
+	theApp.m_SqliteDeal.GetTransactionList(strCond, &pListInfo); 
+	if (pListInfo.size() == 0)
 	{
 		UiFun::MessageBoxEx(_T("没有记录可以导出！") , _T("提示") ,MFB_OK|MFB_TIP );
 		return;
 	}
-		CFileDialog dlg(FALSE,NULL,NULL,OFN_HIDEREADONLY|OFN_FILEMUSTEXIST ,"文件 (*.xls)|*.xls||");
-		if (IDOK != dlg.DoModal())
-		{
-			return;
-		}
+	CFileDialog dlg(FALSE,NULL,"交易记录",OFN_HIDEREADONLY|OFN_FILEMUSTEXIST ,"文件 (*.xls)|*.xls||");
+	if (IDOK != dlg.DoModal())
+	{
+		return;
+	}
 
 	CString strFile = dlg.GetPathName();
 	if (!((CDacrsUIDlg*)(theApp.m_pMainWnd))->GetFileName(strFile,_T(".xls")))
 	{
 		return;
 	}
-	//strFile.AppendFormat(_T(".xls"));
-//	CString strFile = _T("d:\\Test.xls");
+
+	struct LISTCol {
+		string		name ;
+		UINT		size ;
+	} listheadr[6]  = {
+		{"序号" ,    10},
+		{"交易类型" ,    30},
+		{"源地址" ,    40},
+		{"金额" ,    10},
+		{"目的地址" ,  40}, 
+		{"交易ID" ,100}
+	};
 
 	COleVariant
 
@@ -629,17 +723,17 @@ void CTradDlg::OnBnClickedExportExel()
 
 	////////////////////////////////////CListCtrl控件report风格//////////////////////////////////////////////////////////
 
-	CHeaderCtrl   *pmyHeaderCtrl;
+	//CHeaderCtrl   *pmyHeaderCtrl;
 
-	pmyHeaderCtrl = m_listCtrl.GetHeaderCtrl();//此句取得CListCtrl控件的列表頭
+	//pmyHeaderCtrl = m_listCtrl.GetHeaderCtrl();//此句取得CListCtrl控件的列表頭
 
 
 
 	int   iRow,iCol;
 
-	int   m_cols   =   pmyHeaderCtrl-> GetItemCount();
+	int   m_cols   =   6;
 
-	int   m_rows = m_listCtrl.GetItemCount();
+	int   m_rows = pListInfo.size();
 
 	HDITEM   hdi;
 
@@ -667,11 +761,11 @@ void CTradDlg::OnBnClickedExportExel()
 
 		range   =   sheet.get_Range(COleVariant(colname),COleVariant(colname));
 
-		pmyHeaderCtrl-> GetItem(iCol,   &hdi);
+		//pmyHeaderCtrl-> GetItem(iCol,   &hdi);
 
-		range.put_Value2(COleVariant(hdi.pszText));
+		range.put_Value2(COleVariant(listheadr[iCol].name.c_str()));
 
-		int   nWidth   =   m_listCtrl.GetColumnWidth(iCol)/6;
+		int   nWidth   = listheadr[iCol].size;  //m_listCtrl.GetColumnWidth(iCol)/6;
 
 		//得到第iCol+1列  
 
@@ -711,10 +805,17 @@ void CTradDlg::OnBnClickedExportExel()
 
 	range   =   range.get_Resize(COleVariant((short)m_rows),COleVariant((short)m_cols));
 
-	for   (   iRow   =   1;   iRow   <=   m_rows;   iRow++)//将列表内容写入EXCEL
 
+	int iLine = 0;
+	iRow   =   1;
+	iCol   =   1;
+	int ncount =1;
+	std::vector<uistruct::REVTRANSACTION_t>::const_iterator pitem = pListInfo.begin();
+	for(;pitem != pListInfo.end();pitem++,iRow++)
 	{
-
+		map<int,string> item;
+		GetExportCol(ncount,item,*pitem);
+		ncount++;
 		for   (   iCol   =   1;   iCol   <=   m_cols;   iCol++)  
 
 		{
@@ -722,10 +823,8 @@ void CTradDlg::OnBnClickedExportExel()
 			index[0]=iRow-1;
 
 			index[1]=iCol-1;
-
-			CString   szTemp;
-
-			szTemp=m_listCtrl.GetItemText(iRow-1,iCol-1);
+			string strTemp =  item[iCol-1];
+			CString   szTemp = strTemp.c_str();
 
 			BSTR   bstr   =   szTemp.AllocSysString();
 
@@ -734,62 +833,15 @@ void CTradDlg::OnBnClickedExportExel()
 			SysFreeString(bstr);
 
 		}
-
 	}
-
 
 
 	range.put_Value2(COleVariant(saRet));
 
 
-
-	//       Cnterior cellinterior;
-
-	//       range   =   sheet.get_Range(COleVariant( _T("A1 ")),covOptional);
-
-	//       range   =   range.get_Resize(COleVariant((short)1),COleVariant((short)m_cols));
-
-	//       books = range.get_Interior();
-
-	//       cellinterior.AttachDispatch(books);
-
-	//       cellinterior.put_ColorIndex(COleVariant((short)37));//设置EXCEL头一行的背景颜色
-
-	//       for(   iRow=1;   iRow   <=   m_rows;   iRow++)//设置EXCEL其余的背景颜色（颜色交替变换）
-
-	//       {
-
-	//                 int   state=iRow%2;
-
-	//                 CString   index;
-
-	//                 index.Format( _T("A%d "),iRow+1);
-
-	//                 range   =   sheet.get_Range(COleVariant(index),covOptional);
-
-	//                 range   =   range.get_Resize(COleVariant((short)1),COleVariant((short)m_cols));
-
-	//                 books=range.get_Interior();
-
-	//                 cellinterior.AttachDispatch(books);
-
-	//                 if(!state)
-
-	//                          cellinterior.put_ColorIndex(COleVariant((short)36));
-
-	//                 else
-
-	//                          cellinterior.put_ColorIndex(COleVariant((short)24));
-
-	//       }
-
-
-
 	saRet.Detach();
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 
 	book.SaveCopyAs(COleVariant(strFile));
 
@@ -813,14 +865,14 @@ void CTradDlg::OnShowListCtrl(uistruct::TRANSRECORDLIST pListInfo){
 	{
 		return;
 	}
-
+	int count = (m_nConut)*m_pagesize+1;
 	int nSubIdx = 0 , i = 0 ;
 	string strShowData = "";
 	std::vector<uistruct::REVTRANSACTION_t>::const_iterator const_it;
 	for ( const_it = pListInfo.begin() ; const_it != pListInfo.end() ; const_it++ ) {
 
 		nSubIdx = 0;
-		strShowData = strprintf("%d", i+1);
+		strShowData = strprintf("%d", count++);
 		m_listCtrl.InsertItem(i, strShowData.c_str());					//序号
 
 		string txtype = const_it->txtype;
@@ -885,12 +937,14 @@ bool  CTradDlg::isMine(CString addr)
 void CTradDlg::OnCbnSelchangeCombo1()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	m_nConut = 0;
 	ShowComboxCotent();
 }
 
 void CTradDlg::OnCbnSelchangeComboTime()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	m_nConut = 0;
 	ShowComboxCotent();
 
 }
@@ -1065,6 +1119,7 @@ string CTradDlg::Getaddr(){
 }
 void CTradDlg::ShowAddrConditon()
 {
+	m_nConut = 0;
 	int operate;
 	string condtion = GetConditonStr(operate);
 
@@ -1468,10 +1523,14 @@ void  CTradDlg::ShowPageCotent(int pageIndex)
 		UiFun::MessageBoxEx(_T("已经是最开始页了!") , _T("提示") ,MFB_OK|MFB_TIP );
 		return ;
 	} 
-
+	if (pageIndex == 0)
+	{
+		ShowComboxCotent();
+		return;
+	}
 	string strCond ;
 	uistruct::TRANSRECORDLIST pListInfo ;
-	int num = pageIndex * m_pagesize ;
+	int num = (pageIndex * m_pagesize - m_offset)<0?0:(pageIndex * m_pagesize - m_offset);
 	std::stringstream strTemp;  
 	string str;
 	strTemp<< num;
@@ -1498,7 +1557,7 @@ void  CTradDlg::ShowPageCotent(int pageIndex)
 		nPage =  nItem/m_pagesize ;
 	}
 	string temp;
-	temp =strprintf("共:%d",nPage);
+	temp =strprintf("共:%d 页",nPage);
 	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(temp.c_str());
 	GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T(""));
 
@@ -1515,12 +1574,22 @@ void    CTradDlg::ShowComboxCotent()
 	int operate = 0;
 	string condtion = GetConditonStr(operate);
 	uistruct::TRANSRECORDLIST pListInfo;
+
+	string strCond0 =  condtion;
+	int pos = strCond0.find("1=1");
+	strCond0.replace(pos,pos+3 ,"confirm_height=0");
+	theApp.m_SqliteDeal.GetTransactionList(strCond0, &pListInfo); 
+
+	uistruct::TRANSRECORDLIST pListInfo1;
 	string strCond =  condtion;// + _T(" LIMIT 17 OFFSET 0") ;
-	strCond += strprintf(" LIMIT %d OFFSET 0",m_pagesize);
-	theApp.m_SqliteDeal.GetTransactionList(strCond, &pListInfo); 
+	strCond += strprintf(" LIMIT %d OFFSET 0",(m_pagesize-pListInfo.size()));
+	theApp.m_SqliteDeal.GetTransactionList(strCond, &pListInfo1); 
+
+	m_offset = pListInfo.size();
+	pListInfo.insert(pListInfo.end(),pListInfo1.begin(),pListInfo1.end());
 
 	int nPage = 0 ;
-	int nItem =  theApp.m_SqliteDeal.GetTableCountItem(_T("t_transaction") ,condtion );
+	int nItem =  theApp.m_SqliteDeal.GetTableCountItem("t_transaction",strCond);
 	//	if ( nItem == 0 ) return ;
 	if ( nItem%m_pagesize != 0  ) {
 		nPage = nItem/m_pagesize + 1 ;
@@ -1528,7 +1597,7 @@ void    CTradDlg::ShowComboxCotent()
 		nPage =  nItem/m_pagesize ;
 	}
 	string temp;
-	temp =strprintf("共:%d",nPage);
+	temp =strprintf("共:%d 页",nPage);
 	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(temp.c_str());
 	if (nPage > 0)
 	{
@@ -1539,4 +1608,42 @@ void    CTradDlg::ShowComboxCotent()
 	Invalidate();
 
 	OnShowListCtrl(pListInfo);
+}
+
+void CTradDlg::OnCbnSelchangeComboPage()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	int cursel = m_pageitem.GetCurSel();
+	switch(cursel)
+	{
+	case 0:
+		{
+			m_pagesize = 13;
+		}
+		break;
+	case 1:
+		{
+			m_pagesize = 20;
+		}
+		break;
+	case 2:
+		{
+			m_pagesize = 30;
+		}
+		break;
+	case 3:
+		{
+			m_pagesize = 50;
+		}
+		break;
+	case 4:
+		{
+			m_pagesize = 100;
+		}
+		break;
+	default:
+		break;
+	}
+	m_nConut = 0 ;
+	ShowComboxCotent();
 }
