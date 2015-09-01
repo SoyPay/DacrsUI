@@ -462,7 +462,7 @@ UINT __stdcall CDacrsUIApp::ProcessBetAcceptTx(LPVOID pParam)
 			timelag = Curtimelag;
 		}
 
-
+		Sleep(100); 
 	}
 	return 1 ;
 }
@@ -483,6 +483,7 @@ UINT __stdcall CDacrsUIApp::ProcessAppTx(LPVOID pParam)
 			theApp.m_SqliteDeal.UpdataAllTableData();
 			return 1;
 		}
+		Sleep(100); 
 	}
 	return 1 ;
 }
