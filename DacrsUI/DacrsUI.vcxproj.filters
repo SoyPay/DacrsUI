@@ -1032,6 +1032,12 @@
     <None Include="res\warning_icon.bmp">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="res\trade__up.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\trade_next.bmp">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="资源文件">

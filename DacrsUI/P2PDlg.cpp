@@ -261,7 +261,8 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_rbCancelOrder.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(41, 57, 85));
 		m_rbCancelOrder.SizeToContent();
 
-		m_rBtnSetCommonAddr.SetBitmaps( IDB_BITMAP_BUTTON3 , RGB(255, 255, 0) , IDB_BITMAP_BUTTON3 , RGB(255, 255, 255) );
+		
+		m_rBtnSetCommonAddr.SetBitmaps( IDB_BITMAP_P2PBUTTON_2 , RGB(255, 255, 0) , IDB_BITMAP_P2PBUTTON_2 , RGB(255, 255, 255) );
 		m_rBtnSetCommonAddr.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
 		m_rBtnSetCommonAddr.SetWindowText("常用地址") ;
 		m_rBtnSetCommonAddr.SetFontEx(20 , _T("微软雅黑"));
@@ -270,7 +271,7 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_rBtnSetCommonAddr.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(255, 255, 255));
 		m_rBtnSetCommonAddr.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(255, 255, 255));
 		m_rBtnSetCommonAddr.SizeToContent();
-		
+
 
 		m_money.SetFont(120, _T("黑体"));				//设置显示字体和大小
 		m_money.SetTextColor(RGB(0,0,0));			    //字体颜色	
@@ -1037,10 +1038,10 @@ void CP2PDlg::OnBnClickedButtonMale()
 		return ;
 	}
 
-	if (strtod(strTxMoney,NULL)<1)
+	if (strtod(strTxMoney,NULL)<100)
 	{
 		
-		UiFun::MessageBoxEx(_T("投注金额必须大于1") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(_T("投注金额必须大于100") , _T("提示") ,MFB_OK|MFB_TIP );
 		return ;
 	}
 

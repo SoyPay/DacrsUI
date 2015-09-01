@@ -541,7 +541,8 @@ void CMainDlg::onnitLinkText()
    v_linkCtrl1.SetWindowText(_T(""));
    v_linkCtrl2.SetWindowText(_T(""));
    v_linkCtrl3.SetWindowText(_T(""));
-   v_linkCtrlQQ.SetWindowText(_T("官方客服QQ"));
+   v_linkCtrlQQ.SetWindowText("官方客服	QQ");
+  // v_linkCtrlQQ.SetWindowText(UiFun::UI_LoadString("WALLET_MODULE" , "WALLET_OFFICIAL_CUSTOMER" , theApp.gsLanguage ));
    v_linkCtrlQQ.SetURL("http://wpa.qq.com/msgrd?v=3&uin=1578215488&site=qq&menu=yes");
    int i = 1;
 	map<CString,CString>::iterator it;

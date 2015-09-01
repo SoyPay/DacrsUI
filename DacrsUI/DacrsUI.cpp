@@ -690,7 +690,10 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 								theApp.m_SqliteDeal.UpdataAllTableData();   /// 更新应用表格
 							}
 						}
-							LogPrint("PROCESSMSG", "WM_REMOVETX 删除交易:%s\n",pHash.c_str());
+						/// 通知显示交易界面
+						CPostMsg Postmsg(MSG_USER_TRANSRECORD_UI,WM_REMOVETX);
+						pUiDemeDlg->m_MsgQueue.push(Postmsg);
+						LogPrint("PROCESSMSG", "WM_REMOVETX 删除交易:%s\n",pHash.c_str());
 					}
 					break;
 				default:

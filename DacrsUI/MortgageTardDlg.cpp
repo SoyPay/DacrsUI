@@ -259,7 +259,7 @@ BOOL CMortgageTardDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, U
 		m_rBtnAddrWinerloser.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(41, 57, 85));
 		m_rBtnAddrWinerloser.SizeToContent();
 
-		m_rBtnSetCommonAddr.SetBitmaps( IDB_BITMAP_REDPACKET_TYPE , RGB(255, 255, 0) , IDB_BITMAP_REDPACKET_TYPE , RGB(255, 255, 255) );
+		m_rBtnSetCommonAddr.SetBitmaps( IDB_BITMAP_REDPACKETDRAW , RGB(255, 255, 0) , IDB_BITMAP_REDPACKETDRAW , RGB(255, 255, 255) );
 		m_rBtnSetCommonAddr.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
 		m_rBtnSetCommonAddr.SetWindowText("常用地址") ;
 		m_rBtnSetCommonAddr.SetFontEx(20 , _T("微软雅黑"));
@@ -267,7 +267,7 @@ BOOL CMortgageTardDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, U
 		m_rBtnSetCommonAddr.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 		m_rBtnSetCommonAddr.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(255, 255, 255));
 		m_rBtnSetCommonAddr.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(255, 255, 255));
-	
+		m_rBtnSetCommonAddr.SizeToContent();
 
 		m_money.SetFont(120, _T("黑体"));				//设置显示字体和大小
 		m_money.SetTextColor(RGB(0,0,0));			    //字体颜色	
@@ -449,7 +449,7 @@ void CMortgageTardDlg::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*42, (rc.Height()/100)*19 ,  rect.Width() , rect.Height() , SWP_SHOWWINDOW );
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*42, (rc.Height()/100)*18 ,  rect.Width() , rect.Height() , SWP_SHOWWINDOW );
 		}
 
 		pst = GetDlgItem( IDC_EDIT_NUM ) ;
