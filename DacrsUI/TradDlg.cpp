@@ -1100,7 +1100,7 @@ string CTradDlg::GetConditonTxType(int &operate){
 		return conditon;
 	}else if (strcmp(text,_T("¼¤»î")) == 0)
 	{
-		conditon=" tx_type='REG_APP_TX'";
+		conditon=" tx_type='REG_ACCT_TX'";
 		return conditon;
 	}
 	return "";
@@ -1576,8 +1576,11 @@ void    CTradDlg::ShowComboxCotent()
 	uistruct::TRANSRECORDLIST pListInfo;
 
 	string strCond0 =  condtion;
-	int pos = strCond0.find("1=1");
-	strCond0.replace(pos,pos+3 ,"confirm_height=0");
+
+	string tempConditon = "confirm_height=0 and ";
+	tempConditon +=strCond0;
+	strCond0 = tempConditon;
+
 	theApp.m_SqliteDeal.GetTransactionList(strCond0, &pListInfo); 
 
 	uistruct::TRANSRECORDLIST pListInfo1;
