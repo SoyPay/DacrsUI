@@ -261,7 +261,7 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_rbCancelOrder.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(41, 57, 85));
 		m_rbCancelOrder.SizeToContent();
 
-		
+
 		m_rBtnSetCommonAddr.SetBitmaps( IDB_BITMAP_P2PBUTTON_2 , RGB(255, 255, 0) , IDB_BITMAP_P2PBUTTON_2 , RGB(255, 255, 255) );
 		m_rBtnSetCommonAddr.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
 		m_rBtnSetCommonAddr.SetWindowText("常用地址") ;
@@ -271,7 +271,6 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_rBtnSetCommonAddr.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(255, 255, 255));
 		m_rBtnSetCommonAddr.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(255, 255, 255));
 		m_rBtnSetCommonAddr.SizeToContent();
-
 
 		m_money.SetFont(120, _T("黑体"));				//设置显示字体和大小
 		m_money.SetTextColor(RGB(0,0,0));			    //字体颜色	
