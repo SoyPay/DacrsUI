@@ -418,7 +418,7 @@ void CDacrsUIApp::AcceptBetRecord(vector<unsigned char> acceptbet,uistruct::REVT
 				 sendtrTime, strTime , sendbetdata.hight , \
 				 SendTxhash.c_str() ,  sendtx.regid , transcion.regid ,money);
 
-			 strSourceData +=strprintf(",'%s' ,'%d','%d','%d','%d','%s','%d'","" ,1 ,0 ,transcion.confirmedHeight ,1 ,\
+			 strSourceData +=strprintf(",'%s' ,'%d','%d','%d','%d','%s','%d','0',","" ,1 ,0 ,transcion.confirmedHeight ,1 ,\
 				 transcion.txhash ,(int)acceptcbet.data ) ;
 			 if ( !m_SqliteDeal.InsertTableItem(_T("t_p2p_quiz") ,strSourceData)) {
 				 TRACE(_T("t_p2p_quiz:更新数据失败!  Hash: %s") , SendTxhash.c_str() );
