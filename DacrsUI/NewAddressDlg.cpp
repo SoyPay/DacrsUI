@@ -63,7 +63,7 @@ BOOL CNewAddressDlg::OnInitDialog()
 
 	m_rBtnNewAdd.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255));
 	m_rBtnNewAdd.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-	m_rBtnNewAdd.SetWindowText("生成地址") ;
+	m_rBtnNewAdd.SetWindowText(UiFun::UI_LoadString("NEWADDR_MODULE" , "NEWADDR_GENERAT_ADDRESS" ,theApp.gsLanguage)) ;
 	//m_rBtnNewAdd.SetFontEx(20 , _T("微软雅黑"));
 	m_rBtnNewAdd.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 	m_rBtnNewAdd.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
@@ -133,9 +133,9 @@ void CNewAddressDlg::OnBnClickedButtonScdz()
 
 	
 
-	strCommand = strprintf("恭喜生成新地址:\n%s\n重新备份钱包或者重新导出私钥",addr);
+	strCommand = strprintf("%s:\n%s\n%s",UiFun::UI_LoadString("NEWADDR_MODULE" , "NEWADDR_GENERAT_NEWADDRESS" ,theApp.gsLanguage) ,addr ,UiFun::UI_LoadString("NEWADDR_MODULE" , "NEWADDR_BACKUP_WALLET" ,theApp.gsLanguage) );
 
-	if(IDOK == UiFun::MessageBoxEx( strCommand.c_str() , _T("提示") , MFB_OK|MFB_TIP ))
+	if(IDOK == UiFun::MessageBoxEx( strCommand.c_str() , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage), MFB_OK|MFB_TIP ))
 	{
 		EndDialog(IDOK);
 	}

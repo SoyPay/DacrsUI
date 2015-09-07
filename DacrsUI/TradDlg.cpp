@@ -76,7 +76,6 @@ BEGIN_MESSAGE_MAP(CTradDlg, CDialogBar)
 	ON_CBN_SELCHANGE(IDC_COMBO_TIME, &CTradDlg::OnCbnSelchangeComboTime)
 	//ON_EN_CHANGE(IDC_EDIT_ADDR, &CTradDlg::OnEnChangeEditAddr)
 	ON_WM_CTLCOLOR()
-
 	ON_BN_CLICKED(IDC_UP_PAGE, &CTradDlg::OnBnClickedUpPage)
 	ON_BN_CLICKED(IDC_NEXT_PAGE, &CTradDlg::OnBnClickedNextPage)
 	ON_CBN_SELCHANGE(IDC_COMBO_PAGE, &CTradDlg::OnCbnSelchangeComboPage)
@@ -152,12 +151,12 @@ BOOL CTradDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 			CString		name ;
 			UINT		size ;
 		} listcol[6]  = {
-			{"序号",          50},
-			{"交易类型" ,      60},
-			{"源地址" ,       220}, 
-			{"金额",          100},
-			{"目的地址" ,     220},
-			{"交易ID" ,     400}
+			{UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_SERIAL_NUMBER" ,theApp.gsLanguage),          50},
+			{UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TYPE" ,theApp.gsLanguage) ,      60},
+			{UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_SOURCE_ADDRESS" ,theApp.gsLanguage) ,       220}, 
+			{UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_MONEY" ,theApp.gsLanguage),          100},
+			{UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_DESTINATION_ADDRESS" ,theApp.gsLanguage) ,     220},
+			{UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_ID" ,theApp.gsLanguage) ,     400}
 			
 		};
 		m_listCtrl.SetBkColor(RGB(240,240,240));       
@@ -174,11 +173,11 @@ BOOL CTradDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 
 		m_sCountpage.SetFont(90, _T("黑体"));				//设置显示字体和大小
 		m_sCountpage.SetTextColor(RGB(0,0,0));			    //字体颜色	
-		m_sCountpage.SetWindowText(_T("共:"));
+		m_sCountpage.SetWindowText(UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TOTAL" ,theApp.gsLanguage));
 
 		m_rBtnTxdetail.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
 		m_rBtnTxdetail.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		m_rBtnTxdetail.SetWindowText("查看详情") ;
+		m_rBtnTxdetail.SetWindowText(UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_VIEW_DETAILS" ,theApp.gsLanguage)) ;
 		m_rBtnTxdetail.SetFontEx(20 , _T("微软雅黑"));
 		m_rBtnTxdetail.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		m_rBtnTxdetail.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
@@ -188,13 +187,14 @@ BOOL CTradDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 
 		m_rBtnExportTx.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
 		m_rBtnExportTx.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		m_rBtnExportTx.SetWindowText("导出EXCEL") ;
+		m_rBtnExportTx.SetWindowText(UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_OUT_EXCEL" ,theApp.gsLanguage)) ;
 		m_rBtnExportTx.SetFontEx(20 , _T("微软雅黑"));
 		m_rBtnExportTx.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		m_rBtnExportTx.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 		m_rBtnExportTx.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
 		m_rBtnExportTx.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
 		m_rBtnExportTx.SizeToContent();
+
 
 		m_rBtnUp.SetBitmaps( IDB_TRADE_UP , RGB(255, 255, 0) , IDB_TRADE_UP , RGB(255, 255, 255) );
 		m_rBtnUp.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
@@ -214,24 +214,24 @@ BOOL CTradDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_rBtnNext.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(255, 255, 255));
 		m_rBtnNext.SizeToContent();
 
-		m_condition.InsertString(0,_T("全部"));
-		m_condition.InsertString(1,_T("接收"));
-		m_condition.InsertString(2,_T("发送"));
-		m_condition.InsertString(3,_T("挖矿所得"));
-		m_condition.InsertString(4,_T("合约"));
-		m_condition.InsertString(5,_T("激活"));
+		m_condition.InsertString(0,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_ALL" ,theApp.gsLanguage));
+		m_condition.InsertString(1,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_RECEIVE" ,theApp.gsLanguage));
+		m_condition.InsertString(2,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_SEND" ,theApp.gsLanguage));
+		m_condition.InsertString(3,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_MINING" ,theApp.gsLanguage));
+		m_condition.InsertString(4,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_CONTRACT" ,theApp.gsLanguage));
+		m_condition.InsertString(5,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_ACTIVATION" ,theApp.gsLanguage));
 		//m_condition.AddString(_T("全部"));
 		//m_condition.AddString(_T("接收"));
 		//m_condition.AddString(_T("发送"));
 		//m_condition.AddString(_T("挖矿所得"));
 
-		m_time.InsertString(0,_T("全部"));
-		m_time.InsertString(1,_T("今天"));
-		m_time.InsertString(2,_T("本周"));
-		m_time.InsertString(3,_T("本月"));
-		m_time.InsertString(4,_T("上月"));
-		m_time.InsertString(5,_T("今年"));
-		m_time.InsertString(6,_T("昨天"));
+		m_time.InsertString(0,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_ALL" ,theApp.gsLanguage));
+		m_time.InsertString(1,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TODAY" ,theApp.gsLanguage));
+		m_time.InsertString(2,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_WEEK" ,theApp.gsLanguage));
+		m_time.InsertString(3,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_THIS_MONTH" ,theApp.gsLanguage));
+		m_time.InsertString(4,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_LAST_MONTH" ,theApp.gsLanguage));
+		m_time.InsertString(5,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_THIS_YEAR" ,theApp.gsLanguage));
+		m_time.InsertString(6,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_YESTERDAY" ,theApp.gsLanguage));
 
 		m_pageitem.InsertString(0,_T("13"));
 		m_pageitem.InsertString(1,_T("20"));
@@ -240,7 +240,7 @@ BOOL CTradDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_pageitem.InsertString(4,_T("100"));
 
 
-		m_edit.SetWindowText(_T("请输入地址进行搜索"));
+		m_edit.SetWindowText(UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_ADDRESS_SEARCH" ,theApp.gsLanguage));
 
 		m_condition.SetCurSel(0);
 		m_time.SetCurSel(0);
@@ -279,7 +279,7 @@ void CTradDlg::OnBnClickedButtonTxdetail()
 		dlg.DoModal();
 
 	}else{
-		StrShow.Format(_T("请选择地址!\n"));
+		StrShow.Format(UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_SELECT_ADDRESS" ,theApp.gsLanguage));
 		UiFun::MessageBoxEx(StrShow , _T("Error") ,MFB_OK|MFB_ERROR );
 	}
 
@@ -303,31 +303,31 @@ void  CTradDlg::ShowListCtrl(uistruct::TRANSRECORDLIST* pListInfo)
 		string txtype = const_it->txtype;
 		if (!strcmp(txtype.c_str(),"REWARD_TX"))
 		{
-			strShowData = strprintf("%s" ,_T("挖矿")) ;
+			strShowData = strprintf("%s" ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_MINING" ,theApp.gsLanguage)) ;
 		}else if (!strcmp(txtype.c_str(),"REG_ACCT_TX"))
 		{
-			strShowData="激活" ;
+			strShowData= UiFun::UI_LoadString("COMM_MODULE" , "COMM_ACTIVATEDS" ,theApp.gsLanguage) ;
 		}else if (!strcmp(txtype.c_str(),"COMMON_TX"))
 		{
 			if (const_it->state == 3)
 			{
-				strShowData="转账<平>" ;
+				strShowData= UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TRAN_PING" ,theApp.gsLanguage) ;
 			}else if (const_it->state == 2)
 			{
-				strShowData="转账<收>" ;
+				strShowData= UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TRAN_COLLECT" ,theApp.gsLanguage) ;
 			}else if (const_it->state == 1)
 			{
-				strShowData="转账<发>";
+				strShowData= UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TRAN_HAIR" ,theApp.gsLanguage);
 			}else
 			{
-				strShowData="转账" ;
+				strShowData= UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TRAN" ,theApp.gsLanguage) ;
 			}
 		}else if (!strcmp(txtype.c_str(),"CONTRACT_TX"))
 		{
-			strShowData="合约" ;
+			strShowData= UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_CONTRACT" ,theApp.gsLanguage) ;
 		}else if (!strcmp(txtype.c_str(),"REG_APP_TX"))
 		{
-			strShowData="注册" ;
+			strShowData= UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_REGISTER" ,theApp.gsLanguage) ;
 		}
 		m_listCtrl.SetItemText( i , ++nSubIdx, strShowData.c_str());   //交易类型
 
@@ -403,30 +403,30 @@ void CTradDlg::InsertItemData()
 	string txtype = txdetail.txtype;
 	if (!strcmp(txtype.c_str(),"REWARD_TX"))
 	{
-		strShowData =strprintf("%s" ,"挖矿") ;
+		strShowData =strprintf("%s" ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_MINING" ,theApp.gsLanguage)) ;
 	}else if (!strcmp(txtype.c_str(),"REG_ACCT_TX"))
 	{
-		strShowData =strprintf("%s" ,"激活") ;
+		strShowData =strprintf("%s" ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_ACTIVATEDS" ,theApp.gsLanguage)) ;
 	}else if (!strcmp(txtype.c_str(),"COMMON_TX"))
 	{
 		if (txdetail.state == 3)
 		{
-			strShowData="转账<平>" ;
+			strShowData= UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TRAN_PING" ,theApp.gsLanguage) ;
 		}else if (txdetail.state == 2)
 		{
-			strShowData="转账<收>" ;
+			strShowData= UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TRAN_COLLECT" ,theApp.gsLanguage) ;
 		}else if (txdetail.state == 1)
 		{
-			strShowData="转账<发>" ;
+			strShowData= UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TRAN_HAIR" ,theApp.gsLanguage) ;
 		}else{
-			strShowData="转账" ;
+			strShowData= UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TRAN" ,theApp.gsLanguage) ;
 		}
 	}else if (!strcmp(txtype.c_str(),"CONTRACT_TX"))
 	{
-		strShowData="合约" ;
+		strShowData= UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_CONTRACT" ,theApp.gsLanguage) ;
 	}else if (!strcmp(txtype.c_str(),"REG_APP_TX"))
 	{
-		strShowData="注册" ;
+		strShowData= UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_REGISTER" ,theApp.gsLanguage);
 	}
 	m_listCtrl.SetItemText( count , ++nSubIdx, strShowData.c_str()); //交易类型
 
@@ -522,6 +522,12 @@ void CTradDlg::OnSize(UINT nType, int cx, int cy)
 			pButton->SetWindowPos(NULL ,900 - 1*(103 + 5)- 23-m_BtnRc.Width()-18 , 600 - 72 - 32 - 46 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
 		}
 
+		pButton = (CButton*)GetDlgItem( IDC_BUTTON_REFRESH ) ;
+		if ( NULL != pst ) {
+			CRect m_BtnRc ;
+			pButton->GetClientRect( m_BtnRc ) ;
+			pButton->SetWindowPos(NULL ,900 - 1*(103 + 5)- 23-m_BtnRc.Width()-120 , 600 - 72 - 32 - 46 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
+		}
 
 		pButton = (CButton*)GetDlgItem( IDC_UP_PAGE ) ;
 		if ( NULL != pst ) {
@@ -585,31 +591,31 @@ void CTradDlg:: GetExportCol(int index,map<int,string> &item,uistruct::REVTRANSA
 		item[i++] =strShowData;
 		if (!strcmp(txtype.c_str(),"REWARD_TX"))
 		{
-			strShowData ="挖矿" ;
+			strShowData = UiFun::UI_LoadString("COMM_MODULE" , "COMM_MINING" ,theApp.gsLanguage) ;
 		}else if (!strcmp(txtype.c_str(),"REG_ACCT_TX"))
 		{
-			strShowData="激活" ;
+			strShowData= UiFun::UI_LoadString("COMM_MODULE" , "COMM_ACTIVATEDS" ,theApp.gsLanguage) ;
 		}else if (!strcmp(txtype.c_str(),"COMMON_TX"))
 		{
 			if (const_it.state == 3)
 			{
-				strShowData="转账<平>";
+				strShowData= UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TRAN_PING" ,theApp.gsLanguage);
 			}else if (const_it.state == 2)
 			{
-				strShowData="转账<收>";
+				strShowData= UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TRAN_COLLECT" ,theApp.gsLanguage);
 			}else if (const_it.state == 1)
 			{
-				strShowData="转账<发>" ;
+				strShowData= UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TRAN_HAIR" ,theApp.gsLanguage) ;
 			}else
 			{
-				strShowData="转账" ;
+				strShowData= UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TRAN" ,theApp.gsLanguage) ;
 			}
 		}else if (!strcmp(txtype.c_str(),"CONTRACT_TX"))
 		{
-			strShowData="合约";
+			strShowData= UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_CONTRACT" ,theApp.gsLanguage);
 		}else if (!strcmp(txtype.c_str(),"REG_APP_TX"))
 		{
-			strShowData="注册" ;
+			strShowData= UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_REGISTER" ,theApp.gsLanguage) ;
 		}
 		item[i++] =strShowData;
 		item[i++] =const_it.addr;
@@ -628,10 +634,10 @@ void CTradDlg::OnBnClickedExportExel()
 	theApp.m_SqliteDeal.GetTransactionList(strCond, &pListInfo); 
 	if (pListInfo.size() == 0)
 	{
-		UiFun::MessageBoxEx(_T("没有记录可以导出！") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_NOT_RECORD_OUT" ,theApp.gsLanguage) ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
-	CFileDialog dlg(FALSE,NULL,"交易记录",OFN_HIDEREADONLY|OFN_FILEMUSTEXIST ,"文件 (*.xls)|*.xls||");
+	CFileDialog dlg(FALSE,NULL,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_RECORD" ,theApp.gsLanguage),OFN_HIDEREADONLY|OFN_FILEMUSTEXIST ,"文件 (*.xls)|*.xls||");
 	if (IDOK != dlg.DoModal())
 	{
 		return;
@@ -647,12 +653,12 @@ void CTradDlg::OnBnClickedExportExel()
 		string		name ;
 		UINT		size ;
 	} listheadr[6]  = {
-		{"序号" ,    10},
-		{"交易类型" ,    30},
-		{"源地址" ,    40},
-		{"金额" ,    10},
-		{"目的地址" ,  40}, 
-		{"交易ID" ,100}
+		{UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_SERIAL_NUMBER" ,theApp.gsLanguage) ,    10},
+		{UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TYPE" ,theApp.gsLanguage) ,    30},
+		{UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_SOURCE_ADDRESS" ,theApp.gsLanguage) ,    40},
+		{UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_MONEY" ,theApp.gsLanguage) ,    10},
+		{UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_DESTINATION_ADDRESS" ,theApp.gsLanguage) ,  40}, 
+		{UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_ID" ,theApp.gsLanguage) ,100}
 	};
 
 	COleVariant
@@ -683,7 +689,7 @@ void CTradDlg::OnBnClickedExportExel()
 
 	{
 
-		UiFun::MessageBoxEx(_T("可能是没有装office 导致创建失败！") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_NOT_OFFICE" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 
 	}
@@ -861,31 +867,31 @@ void CTradDlg::OnShowListCtrl(uistruct::TRANSRECORDLIST pListInfo){
 		string txtype = const_it->txtype;
 		if (!strcmp(txtype.c_str(),"REWARD_TX"))
 		{
-			strShowData ="挖矿" ;
+			strShowData = UiFun::UI_LoadString("COMM_MODULE" , "COMM_MINING" ,theApp.gsLanguage);
 		}else if (!strcmp(txtype.c_str(),"REG_ACCT_TX"))
 		{
-			strShowData="激活" ;
+			strShowData= UiFun::UI_LoadString("COMM_MODULE" , "COMM_ACTIVATEDS" ,theApp.gsLanguage) ;
 		}else if (!strcmp(txtype.c_str(),"COMMON_TX"))
 		{
 			if (const_it->state == 3)
 			{
-				strShowData="转账<平>";
+				strShowData= UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TRAN_PING" ,theApp.gsLanguage);
 			}else if (const_it->state == 2)
 			{
-				strShowData="转账<收>";
+				strShowData= UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TRAN_COLLECT" ,theApp.gsLanguage);
 			}else if (const_it->state == 1)
 			{
-				strShowData="转账<发>" ;
+				strShowData= UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TRAN_HAIR" ,theApp.gsLanguage) ;
 			}else
 			{
-				strShowData="转账" ;
+				strShowData= UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TRAN" ,theApp.gsLanguage) ;
 			}
 		}else if (!strcmp(txtype.c_str(),"CONTRACT_TX"))
 		{
-			strShowData="合约";
+			strShowData= UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_CONTRACT" ,theApp.gsLanguage);
 		}else if (!strcmp(txtype.c_str(),"REG_APP_TX"))
 		{
-			strShowData="注册" ;
+			strShowData= UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_REGISTER" ,theApp.gsLanguage) ;
 		}
 		m_listCtrl.SetItemText( i , ++nSubIdx, strShowData.c_str());   //交易类型
 
@@ -950,10 +956,10 @@ string CTradDlg::GetConditonTime(){
 
 	string conditon;
 
-	if (strcmp(text,_T("全部")) == 0)
+	if (strcmp(text,  UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_ALL" ,theApp.gsLanguage) ) == 0)
 	{
 		return _T("");
-	}else if (strcmp(text,_T("今天")) == 0)
+	}else if (strcmp(text, UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TODAY" ,theApp.gsLanguage) ) == 0)
 	{
 		curTime.wHour = 0;
 		curTime.wMinute = 0;
@@ -964,7 +970,7 @@ string CTradDlg::GetConditonTime(){
 		conditon = strprintf(" confirmed_time>=%d and confirmed_time<=",mincurtime);
 		conditon += strprintf("%d",maxcurtime);
 		return conditon;
-	}else if (strcmp(text,_T("本周")) == 0)
+	}else if (strcmp(text, UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_WEEK" ,theApp.gsLanguage) ) == 0)
 	{
 		curTime.wHour = 0;
 		curTime.wMinute = 0;
@@ -984,7 +990,7 @@ string CTradDlg::GetConditonTime(){
 		conditon =strprintf(" confirmed_time>=%d and confirmed_time<=",mincurtime);
 		conditon +=strprintf("%d",maxcurtime);
 		return conditon;
-	}else if (strcmp(text,_T("本月")) == 0)
+	}else if (strcmp(text,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_THIS_MONTH" ,theApp.gsLanguage)) == 0)
 	{
 		curTime.wDay =1;
 		curTime.wHour = 0;
@@ -996,7 +1002,7 @@ string CTradDlg::GetConditonTime(){
 		conditon = strprintf(" confirmed_time>=%d and confirmed_time<=",mincurtime);
 		conditon +=strprintf("%d",maxcurtime);
 		return conditon;
-	}else if (strcmp(text,_T("上月")) == 0)
+	}else if (strcmp(text,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_LAST_MONTH" ,theApp.gsLanguage)) == 0)
 	{
 		INT64 maxcurtime = 0;
 		INT64 mincurtime = 0;
@@ -1019,7 +1025,7 @@ string CTradDlg::GetConditonTime(){
 		conditon= strprintf(" confirmed_time>=%d and confirmed_time<=",mincurtime);
 		conditon +=strprintf("%d",maxcurtime);
 		return conditon;
-	}else if (strcmp(text,_T("今年")) == 0)
+	}else if (strcmp(text,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_THIS_YEAR" ,theApp.gsLanguage)) == 0)
 	{
 		curTime.wMonth =1;
 		curTime.wDay=1;
@@ -1032,7 +1038,7 @@ string CTradDlg::GetConditonTime(){
 		conditon =strprintf(" confirmed_time>=%d and confirmed_time<=",mincurtime);
 		conditon+=strprintf("%d",maxcurtime);
 		return conditon;
-	}else if (strcmp(text,_T("昨天")) == 0)
+	}else if (strcmp(text,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_YESTERDAY" ,theApp.gsLanguage)) == 0)
 	{
 		curTime.wHour=0;
 		curTime.wMinute = 0;
@@ -1059,29 +1065,29 @@ string CTradDlg::GetConditonTxType(int &operate){
 
 	string conditon;
 
-	if (strcmp(text,_T("全部")) == 0)
+	if (strcmp(text,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_ALL" ,theApp.gsLanguage)) == 0)
 	{
 		return _T("");
-	}else if (strcmp(text,_T("接收")) == 0)
+	}else if (strcmp(text,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_RECEIVE" ,theApp.gsLanguage)) == 0)
 	{
 		operate = 1;
 		
 		conditon=" tx_type='COMMON_TX' and (state =2 or state =3)";
 		return conditon;
-	}else if (strcmp(text,_T("发送")) == 0)
+	}else if (strcmp(text,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_SEND" ,theApp.gsLanguage)) == 0)
 	{
 		operate = 2;
 		conditon=" tx_type='COMMON_TX' and (state =1 or state =3)";
 		return conditon;
-	}else if (strcmp(text,_T("挖矿所得")) == 0)
+	}else if (strcmp(text,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_MINING" ,theApp.gsLanguage)) == 0)
 	{
 		conditon=" tx_type='REWARD_TX'";
 		return conditon;
-	}else if (strcmp(text,_T("合约")) == 0)
+	}else if (strcmp(text,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_CONTRACT" ,theApp.gsLanguage)) == 0)
 	{
 		conditon=" tx_type='CONTRACT_TX'";
 		return conditon;
-	}else if (strcmp(text,_T("激活")) == 0)
+	}else if (strcmp(text,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_ACTIVATION" ,theApp.gsLanguage)) == 0)
 	{
 		conditon=" tx_type='REG_ACCT_TX'";
 		return conditon;
@@ -1093,7 +1099,7 @@ string CTradDlg::Getaddr(){
 
 	CString ret = _T("");
 	GetDlgItem(IDC_EDIT_ADDR)->GetWindowText(ret);
-	if (strcmp(ret,"请输入地址进行搜索") == 0)
+	if (strcmp(ret,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_ADDRESS_SEARCH" ,theApp.gsLanguage)) == 0)
 	{
 		 ret = "";
 	}
@@ -1128,7 +1134,7 @@ BOOL CTradDlg::PreTranslateMessage(MSG* pMsg)
 			  return TRUE;
 		  }else {
 			  GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T(""));
-			  UiFun::MessageBoxEx(_T("输入有误,请输入数字") , _T("提示") ,MFB_OK|MFB_TIP );
+			  UiFun::MessageBoxEx(UiFun::UI_LoadString("COMM_MODULE" , "COMM_INPUT_ERROR" ,theApp.gsLanguage) ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		  }
 		}  
 	}  
@@ -1138,7 +1144,7 @@ BOOL CTradDlg::PreTranslateMessage(MSG* pMsg)
 	{
 		CString strTemp = _T("");
 		m_edit.GetWindowText(strTemp);
-		if (strcmp(strTemp,"请输入地址进行搜索") == 0)
+		if (strcmp(strTemp, UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_ADDRESS_SEARCH" ,theApp.gsLanguage)) == 0)
 		{
 			pEdit->SetFocus();
 			pEdit->SetSel(1,1,FALSE);
@@ -1152,7 +1158,7 @@ BOOL CTradDlg::PreTranslateMessage(MSG* pMsg)
 		m_edit.GetWindowText(strTemp);
 		if (((pMsg->wParam >=48 && pMsg->wParam <=57) 
 			|| (pMsg->wParam >=65 && pMsg->wParam <=90)
-			|| (pMsg->wParam >=0x60 && pMsg->wParam <=0x69)) && strcmp(strTemp,"请输入地址进行搜索") == 0)
+			|| (pMsg->wParam >=0x60 && pMsg->wParam <=0x69)) && strcmp(strTemp,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_ADDRESS_SEARCH" ,theApp.gsLanguage)) == 0)
 		{
 			m_edit.SetWindowText(_T(""));
 			m_seteditcolor = FALSE;
@@ -1165,7 +1171,7 @@ BOOL CTradDlg::PreTranslateMessage(MSG* pMsg)
 		m_edit.GetWindowText(strTemp);
 		if (strTemp.GetLength() ==  1)
 		{
-			m_edit.SetWindowText(_T("请输入地址进行搜索"));
+			m_edit.SetWindowText(UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_ADDRESS_SEARCH" ,theApp.gsLanguage));
 			m_seteditcolor = TRUE;
 		}
 	}
@@ -1286,10 +1292,10 @@ string CTradDlg::GetConditonTime(INT64 &maxtime,INT64 &mintime)
 	uistruct::TRANSRECORDLIST pListInfo;
 
 	string conditon;
-	if (strcmp(text,_T("全部")) == 0)
+	if (strcmp(text,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_ALL" ,theApp.gsLanguage)) == 0)
 	{
 		return _T("");
-	}else if (strcmp(text,_T("今天")) == 0)
+	}else if (strcmp(text,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TODAY" ,theApp.gsLanguage)) == 0)
 	{
 		curTime.wHour = 0;
 		curTime.wMinute = 0;
@@ -1304,7 +1310,7 @@ string CTradDlg::GetConditonTime(INT64 &maxtime,INT64 &mintime)
 		return conditon;
 		//theApp.m_SqliteDeal.GetTransactionList(conditon, &pListInfo); 
 		//OnShowListCtrl(pListInfo);
-	}else if (strcmp(text,_T("本周")) == 0)
+	}else if (strcmp(text,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_WEEK" ,theApp.gsLanguage)) == 0)
 	{
 		curTime.wHour = 0;
 		curTime.wMinute = 0;
@@ -1329,7 +1335,7 @@ string CTradDlg::GetConditonTime(INT64 &maxtime,INT64 &mintime)
 		return conditon;
 		//theApp.m_SqliteDeal.GetTransactionList(conditon, &pListInfo); 
 		//OnShowListCtrl(pListInfo);
-	}else if (strcmp(text,_T("本月")) == 0)
+	}else if (strcmp(text,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_THIS_MONTH" ,theApp.gsLanguage)) == 0)
 	{
 		curTime.wDay =1;
 		curTime.wHour = 0;
@@ -1343,7 +1349,7 @@ string CTradDlg::GetConditonTime(INT64 &maxtime,INT64 &mintime)
 		maxtime = maxcurtime;
 		mintime=mincurtime;
 		return conditon;
-	}else if (strcmp(text,_T("上月")) == 0)
+	}else if (strcmp(text,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_LAST_MONTH" ,theApp.gsLanguage)) == 0)
 	{
 		INT64 maxcurtime = 0;
 		INT64 mincurtime = 0;
@@ -1383,7 +1389,7 @@ string CTradDlg::GetConditonTime(INT64 &maxtime,INT64 &mintime)
 		maxtime = maxcurtime;
 		mintime=mincurtime;
 		return conditon;
-	}else if (strcmp(text,_T("昨天")) == 0)
+	}else if (strcmp(text,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_THIS_YEAR" ,theApp.gsLanguage)) == 0)
 	{
 		curTime.wHour=0;
 		curTime.wMinute = 0;
@@ -1468,7 +1474,6 @@ BOOL CTradDlg::IsInsertTx(uistruct::REVTRANSACTION_t txdetail)
 }
 
 
-
 void CTradDlg::OnBnClickedUpPage()
 {
 	// TODO: 在此添加控件通知处理程序代码
@@ -1493,7 +1498,7 @@ void CTradDlg::ShowPageDataInfo(int nConut)
 void  CTradDlg::ShowPageCotent(int pageIndex)
 {
 	if ( 0 > pageIndex ){
-		UiFun::MessageBoxEx(_T("已经是最开始页了!") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_BEGIN_PAGE" ,theApp.gsLanguage) ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return ;
 	} 
 	if (pageIndex == 0)
@@ -1514,7 +1519,7 @@ void  CTradDlg::ShowPageCotent(int pageIndex)
 	theApp.m_SqliteDeal.GetTransactionList(strCond, &pListInfo); 
 	if ( 0 == pListInfo.size() ) {
 		m_nConut -= 1 ;
-		UiFun::MessageBoxEx(_T("已经是最后页了!") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_END_PAGE" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		string strpage;
 		strpage = strprintf("%d",m_nConut + 1);
 		GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(strpage.c_str());
@@ -1530,7 +1535,7 @@ void  CTradDlg::ShowPageCotent(int pageIndex)
 		nPage =  nItem/m_pagesize ;
 	}
 	string temp;
-	temp =strprintf("共:%d 页",nPage);
+	temp =strprintf("%s%d %s",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TOTAL" ,theApp.gsLanguage) ,nPage ,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_PAGE" ,theApp.gsLanguage));
 	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(temp.c_str());
 	GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T(""));
 
@@ -1573,7 +1578,7 @@ void    CTradDlg::ShowComboxCotent()
 		nPage =  nItem/m_pagesize ;
 	}
 	string temp;
-	temp =strprintf("共:%d 页",nPage);
+	temp =strprintf("%s%d %s",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TOTAL" ,theApp.gsLanguage) ,nPage ,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_PAGE" ,theApp.gsLanguage));
 	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(temp.c_str());
 	if (nPage > 0)
 	{
