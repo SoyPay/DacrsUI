@@ -522,12 +522,12 @@ void CTradDlg::OnSize(UINT nType, int cx, int cy)
 			pButton->SetWindowPos(NULL ,900 - 1*(103 + 5)- 23-m_BtnRc.Width()-18 , 600 - 72 - 32 - 46 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
 		}
 
-		pButton = (CButton*)GetDlgItem( IDC_BUTTON_REFRESH ) ;
-		if ( NULL != pst ) {
-			CRect m_BtnRc ;
-			pButton->GetClientRect( m_BtnRc ) ;
-			pButton->SetWindowPos(NULL ,900 - 1*(103 + 5)- 23-m_BtnRc.Width()-120 , 600 - 72 - 32 - 46 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
-		}
+		//pButton = (CButton*)GetDlgItem( IDC_BUTTON_REFRESH ) ;
+		//if ( NULL != pst ) {
+		//	CRect m_BtnRc ;
+		//	pButton->GetClientRect( m_BtnRc ) ;
+		//	pButton->SetWindowPos(NULL ,900 - 1*(103 + 5)- 23-m_BtnRc.Width()-120 , 600 - 72 - 32 - 46 , m_BtnRc.Width() , m_BtnRc.Height() , SWP_SHOWWINDOW);
+		//}
 
 		pButton = (CButton*)GetDlgItem( IDC_UP_PAGE ) ;
 		if ( NULL != pst ) {
