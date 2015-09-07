@@ -63,7 +63,7 @@ BOOL COut::OnInitDialog()
 	m_Text.SetTextColor(RGB(0,0,0));			    //字体颜色	
 	if(_T("") == m_strDisplay) 
 	{
-		m_Text.SetWindowText("确认要退出软件吗?") ;
+		m_Text.SetWindowText(UiFun::UI_LoadString("OUT_MODULE" , "OUT_OUTAPP" ,theApp.gsLanguage)) ;
 	}else
 	{
 		m_Text.SetWindowText(m_strDisplay.GetString());
@@ -74,7 +74,7 @@ BOOL COut::OnInitDialog()
 	m_rBtnOK.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
 	if (m_strok == _T(""))
 	{
-		m_rBtnOK.SetWindowText("确 定") ;
+		m_rBtnOK.SetWindowText(UiFun::UI_LoadString("OUT_MODULE" , "OUT_CONFIRM" ,theApp.gsLanguage)) ;
 	}else{
 		m_rBtnOK.SetWindowText(m_strok) ;
 	}
@@ -90,7 +90,7 @@ BOOL COut::OnInitDialog()
 	m_rBtnNO.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
 	if (m_strno == _T(""))
 	{
-		m_rBtnNO.SetWindowText("取 消") ;
+		m_rBtnNO.SetWindowText(UiFun::UI_LoadString("OUT_MODULE" , "OUT_CANCEL" ,theApp.gsLanguage)) ;
 	}else{
 		m_rBtnNO.SetWindowText(m_strno) ;
 	}
@@ -214,6 +214,6 @@ void COut::OnBnClickedButtonOk()
 }
 void  COut::onShowLink()
 {
-	v_linkCtrl.SetWindowText(_T("为什么智能坊不支持xp"));
+	v_linkCtrl.SetWindowText(UiFun::UI_LoadString("OUT_MODULE" , "OUT_WHY_XP" ,theApp.gsLanguage));
 	v_linkCtrl.SetURL("www.baidu.com");
 }

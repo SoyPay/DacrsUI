@@ -89,7 +89,7 @@ BOOL CAddrBook::OnInitDialog()
 	// TODO:  在此添加额外的初始化
 	m_Text.SetFont(100, _T("微软雅黑"));				//设置显示字体和大小
 	m_Text.SetTextColor(RGB(255,255,255));	    //字体颜色
-	m_Text.SetWindowText(_T("地址簿管理")) ;
+	m_Text.SetWindowText(UiFun::UI_LoadString("ADDRBOOK_MODULE" , "ADDRBOOK_MANAGE" ,theApp.gsLanguage)) ;
 	m_Text.SetWindowPos( NULL , 5 , 4 , 200, 25  ,SWP_SHOWWINDOW ) ; 
 
 	m_rBtnClose.SetBitmaps( IDB_BITMAP_CLOSE , RGB(255, 255, 0) , IDB_BITMAP_CLOSE2 , RGB(255, 255, 255) );
@@ -113,8 +113,8 @@ BOOL CAddrBook::OnInitDialog()
 		string		name ;
 		UINT		size ;
 	} listcol[3]  = {
-		{"标签" ,      200},
-		{"地址" ,      558}
+		{UiFun::UI_LoadString("ADDRBOOK_MODULE" , "ADDRBOOK_LABEL" ,theApp.gsLanguage) ,      200},
+		{UiFun::UI_LoadString("ADDRBOOK_MODULE" , "ADDRBOOK_ADDRESS" ,theApp.gsLanguage) ,      558}
 	};
 	m_listCtrl.SetBkColor(RGB(240,240,240));       
 	m_listCtrl.SetRowHeigt(23);               
@@ -132,7 +132,7 @@ BOOL CAddrBook::OnInitDialog()
 
 	m_rBtnAdd.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
 	m_rBtnAdd.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-	m_rBtnAdd.SetWindowText("添加地址") ;
+	m_rBtnAdd.SetWindowText(UiFun::UI_LoadString("ADDRBOOK_MODULE" , "ADDRBOOK_ADD_ADDRESS" ,theApp.gsLanguage)) ;
 	m_rBtnAdd.SetFontEx(20 , _T("微软雅黑"));
 	m_rBtnAdd.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 	m_rBtnAdd.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
@@ -143,7 +143,7 @@ BOOL CAddrBook::OnInitDialog()
 
 	m_rBtnDelete.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
 	m_rBtnDelete.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-	m_rBtnDelete.SetWindowText("删除地址") ;
+	m_rBtnDelete.SetWindowText(UiFun::UI_LoadString("ADDRBOOK_MODULE" , "ADDRBOOK_DELETE_ADDRESS" ,theApp.gsLanguage)) ;
 	m_rBtnDelete.SetFontEx(20 , _T("微软雅黑"));
 	m_rBtnDelete.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 	m_rBtnDelete.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
@@ -154,7 +154,7 @@ BOOL CAddrBook::OnInitDialog()
 
 	m_rBtnOk.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
 	m_rBtnOk.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-	m_rBtnOk.SetWindowText("确 定") ;
+	m_rBtnOk.SetWindowText(UiFun::UI_LoadString("COMM_MODULE" , "COMM_CONFIRM" ,theApp.gsLanguage)) ;
 	m_rBtnOk.SetFontEx(20 , _T("微软雅黑"));
 	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
@@ -212,8 +212,8 @@ void CAddrBook::OnBnClickedOk()
 		m_selectAddr.label = Label;
 		m_selectAddr.address = addr;
 		}else{
-			StrShow.Format(_T("请选择地址!\n"));
-			UiFun::MessageBoxEx(StrShow, _T("提示") ,MFB_OK|MFB_TIP );
+			StrShow.Format(UiFun::UI_LoadString("ADDRBOOK_MODULE" , "ADDRBOOK_SELECT_ADDRESS" ,theApp.gsLanguage));
+			UiFun::MessageBoxEx(StrShow, UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 			return;
 		}
 	CDialogEx::OnOK();
@@ -227,7 +227,7 @@ void CAddrBook::OnBnClickedButtonDeleitem()
 		string StrShow;
 		POSITION pos = m_listCtrl.GetFirstSelectedItemPosition() ;
 		if ( pos ) {
-			if ( IDYES == UiFun::MessageBoxEx(_T("是否要删除此收款地址") , _T("提示") , MFB_YESNO|MFB_TIP ) ){
+			if ( IDYES == UiFun::MessageBoxEx(UiFun::UI_LoadString("ADDRBOOK_MODULE" , "ADDRBOOK_DELETE_OK_ADDRESS" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) , MFB_YESNO|MFB_TIP ) ){
 				int nRow = m_listCtrl.GetNextSelectedItem(pos) ;
 
 				//// 删除此条数据库
@@ -246,8 +246,8 @@ void CAddrBook::OnBnClickedButtonDeleitem()
 			}
 		}else{
 			//StrShow.Format(_T("请选择地址!\n"));
-			StrShow = "请选择地址!\n";
-			UiFun::MessageBoxEx(StrShow.c_str() , _T("提示") ,MFB_OK|MFB_TIP );
+			StrShow = UiFun::UI_LoadString("ADDRBOOK_MODULE" , "ADDRBOOK_SELECT_ADDRESS" ,theApp.gsLanguage);
+			UiFun::MessageBoxEx(StrShow.c_str() ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 			return;
 		}
 }

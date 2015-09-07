@@ -89,11 +89,11 @@ void CSignAccountsDlg::OnBnClickedButtonSend()
 		}
 
 		if ( pos >=0 ) {
-			strData = strprintf("激活交易发送成功，请等待1-2分钟确认激活交易\n%s" , root["hash"].asCString() ) ;
+			strData = strprintf("%s\n%s" , UiFun::UI_LoadString("SIGN_MODULE" , "SIGN_ACTIVE_TRAD" ,theApp.gsLanguage) ,root["hash"].asCString() ) ;
 		}else{
-			strData="激活账户失败!" ;
+			strData= UiFun::UI_LoadString("SIGN_MODULE" , "SIGN_ACTIVE_FAIL" ,theApp.gsLanguage) ;
 		}
-		if ( IDOK == UiFun::MessageBoxEx(strData.c_str(), _T("提示") , MFB_OK|MFB_TIP ) ){
+		if ( IDOK == UiFun::MessageBoxEx(strData.c_str(), UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) , MFB_OK|MFB_TIP ) ){
 			EndDialog(IDOK);
 		}
 	}
@@ -133,7 +133,7 @@ BOOL CSignAccountsDlg::OnInitDialog()
 
 	m_rBtnSend.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
 	m_rBtnSend.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-	m_rBtnSend.SetWindowText("激   活") ;
+	m_rBtnSend.SetWindowText(UiFun::UI_LoadString("SIGN_MODULE" , "SIGN_ACTIVE" ,theApp.gsLanguage)) ;
 	//m_rBtnSend.SetFontEx(20 , _T("微软雅黑"));
 	m_rBtnSend.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 	m_rBtnSend.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));

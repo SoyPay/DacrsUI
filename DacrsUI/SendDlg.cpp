@@ -78,7 +78,7 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 
 	if (m_mapAddrInfo.size() == 0)
 	{
-		UiFun::MessageBoxEx(_T("发送地址不存在") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("SEND_MODULE" , "SEND_ADDR_NOT" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
 	CString text =_T("");
@@ -102,7 +102,7 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 		strAddr =UiFun::trimright(strAddr);
 		if(m_mapAddrInfo.count(strAddr)<=0)
 		{
-			UiFun::MessageBoxEx(_T("发送地址不是钱包地址") , _T("提示") ,MFB_OK|MFB_TIP );
+			UiFun::MessageBoxEx(UiFun::UI_LoadString("SEND_MODULE" , "SEND_ADDR_NOT_MODULE_ADDR" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 			return;
 		}
 		//uistruct::LISTADDR_t te = m_pListaddrInfo[text];
@@ -112,19 +112,19 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 
 		if(!data.bSign) 
 		{
-			UiFun::MessageBoxEx(_T("发送地址未激活") , _T("提示") ,MFB_OK|MFB_TIP );
+			UiFun::MessageBoxEx(UiFun::UI_LoadString("SEND_MODULE" , "SEND_ADDR_NOT_ACTIVATION" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 			return;
 		}
 
 		GetDlgItem(IDC_EDIT_DESADDRESS)->GetWindowTextA(strMaddress);
 		if (strMaddress == _T(""))
 		{
-			UiFun::MessageBoxEx(_T("接受地址不能未空") , _T("提示") ,MFB_OK|MFB_TIP );
+			UiFun::MessageBoxEx(UiFun::UI_LoadString("SEND_MODULE" , "SEND_RECEADDR_NOT_NULL" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 			return;
 		}
 		if(!strcmp(strMaddress.GetString(), data.address.c_str()))
 		{
-			UiFun::MessageBoxEx(_T("发送地址和目的地址不能相同") , _T("提示") ,MFB_OK|MFB_TIP );
+			UiFun::MessageBoxEx(UiFun::UI_LoadString("SEND_MODULE" , "SEND_ADDR_AND_DESADDR" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 			return;
 		}
 		
@@ -132,28 +132,28 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 		double dSendMoney = strtod(strMoney,NULL);
 		if(dSendMoney > data.fMoney || ( data.fMoney>-0.0000001 && data.fMoney< 0.000001 )) 
 		{
-			UiFun::MessageBoxEx(_T("账户余额不足") , _T("提示") ,MFB_OK|MFB_TIP );
+			UiFun::MessageBoxEx(UiFun::UI_LoadString("SEND_MODULE" , "SEND_NOT_SUFFICIENT_FUNDS" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 			return;
 		}
 
 		if(_T("") == strMoney.GetString() || (dSendMoney >-0.0000001 && dSendMoney< 0.000001))
 		{
-			UiFun::MessageBoxEx(_T("发送金额不能为0") , _T("提示") ,MFB_OK|MFB_TIP );
+			UiFun::MessageBoxEx(UiFun::UI_LoadString("SEND_MODULE" , "SEND_MONEY_NOT_NULL" ,theApp.gsLanguage) ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 			return;
 		}
 
 		if (!theApp.IsSyncBlock )
 		{
-			UiFun::MessageBoxEx(_T("同步未完成,不能发送交易") , _T("提示") ,MFB_OK|MFB_TIP );
+			UiFun::MessageBoxEx(UiFun::UI_LoadString("SEND_MODULE" , "SEND_UNFINISHED_BUSINESS" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 			return;
 		}
 		strCommand = strprintf("%s %s %s %lld","sendtoaddress" ,data.address.c_str() ,strMaddress ,REAL_MONEY(dSendMoney));
 		string strShowData ;
 
 		CString strDisplay;
-		strDisplay.Format(_T("转账%.4lfsmc至%s"), dSendMoney, strMaddress);
+		strDisplay.Format(_T("%s%.4lfsmc%s%s"),UiFun::UI_LoadString("COMM_MODULE" , "COMM_TRAN" ,theApp.gsLanguage), dSendMoney, UiFun::UI_LoadString("COMM_MODULE" , "COMM_TO" ,theApp.gsLanguage) ,strMaddress);
 
-		if (IDCANCEL == UiFun::MessageBoxEx(strDisplay , _T("提示") , MFB_OKCANCEL|MFB_TIP ) )
+		if (IDCANCEL == UiFun::MessageBoxEx(strDisplay , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) , MFB_OKCANCEL|MFB_TIP ) )
 		{
 			return;
 		}
@@ -185,11 +185,11 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 
 		string strData;
 		if ( pos >=0 ) {
-			strData = strprintf(" 转账交易发送成功\n\n 源地址:%s\n\n 目的地址:%s\n\n 金额：%.4lf\n  hash:%s", data.address.c_str(),strMaddress, dSendMoney,root["hash"].asCString()) ;
+			strData = strprintf(" %s\n\n %s:%s\n\n %s:%s\n\n %s：%.4lf\n  hash:%s",UiFun::UI_LoadString("COMM_MODULE" , "COMM_TRANTRAD_SUCCESS" ,theApp.gsLanguage),UiFun::UI_LoadString("COMM_MODULE" , "COMM_SOURCE_ADDRESS" ,theApp.gsLanguage), data.address.c_str(),UiFun::UI_LoadString("COMM_MODULE" , "COMM_DESTINATION_ADDRESS" ,theApp.gsLanguage),strMaddress,UiFun::UI_LoadString("COMM_MODULE" , "COMM_MONEY" ,theApp.gsLanguage), dSendMoney,root["hash"].asCString()) ;
 		}else{
-			strData = "转账失败!";
+			strData = UiFun::UI_LoadString("COMM_MODULE" , "COMM_TRAN_FAIL" ,theApp.gsLanguage);
 		}
-		UiFun::MessageBoxEx(strData.c_str() , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(strData.c_str() , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		
 
 		//// 插入数据库,将收款人添加到地址簿
@@ -322,7 +322,7 @@ BOOL CSendDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 
 		m_rBtnSend.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
 		m_rBtnSend.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		m_rBtnSend.SetWindowText("发  送") ;
+		m_rBtnSend.SetWindowText(UiFun::UI_LoadString("COMM_MODULE" , "COMM_SEND" ,theApp.gsLanguage)) ;
 		m_rBtnSend.SetFontEx(20 , _T("微软雅黑"));
 		m_rBtnSend.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		m_rBtnSend.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
@@ -495,7 +495,7 @@ BOOL CSendDlg::PreTranslateMessage(MSG* pMsg)
 						{
 							//TRACE("map OnCbnSelchangeCombo1 error");
 							
-							UiFun::MessageBoxEx(_T("复制的地址有误") , _T("提示") ,MFB_OK|MFB_TIP );
+							UiFun::MessageBoxEx(UiFun::UI_LoadString("SEND_MODULE" , "SEND_SOPY_ADDR_ERROR" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 						}else{
 							//uistruct::LISTADDR_t te = m_pListaddrInfo[text];
 							CString strshow;

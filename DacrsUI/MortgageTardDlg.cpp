@@ -163,7 +163,7 @@ BOOL CMortgageTardDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, U
 
 		m_rBtnMale.SetBitmaps( IDB_BITMAP_REDPACKET_TYPE , RGB(255, 255, 0) , IDB_BITMAP_REDPACKET_TYPE , RGB(255, 255, 255) );
 		m_rBtnMale.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		m_rBtnMale.SetWindowText("普通红包") ;
+		m_rBtnMale.SetWindowText(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_GENERAL_ENVELOPE" ,theApp.gsLanguage)) ;
 		m_rBtnMale.SetFontEx(23 , _T("微软雅黑"));
 		m_rBtnMale.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(255, 182, 0));
 		m_rBtnMale.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(255, 251, 240));
@@ -173,7 +173,7 @@ BOOL CMortgageTardDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, U
 
 		m_rBtnWoman.SetBitmaps( IDB_BITMAP_REDPACKET_TYPE , RGB(255, 255, 0) , IDB_BITMAP_REDPACKET_TYPE , RGB(255, 255, 255) );
 		m_rBtnWoman.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		m_rBtnWoman.SetWindowText("接龙红包") ;
+		m_rBtnWoman.SetWindowText(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_RED_ENVELOPE" ,theApp.gsLanguage)) ;
 		m_rBtnWoman.SetFontEx(23 , _T("微软雅黑"));
 		m_rBtnWoman.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(255, 182, 0));
 		m_rBtnWoman.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(255, 251, 240));
@@ -184,7 +184,7 @@ BOOL CMortgageTardDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, U
 
 		m_rBtnWithd.SetBitmaps( IDB_BITMAP_REDPACKETDRAW , RGB(255, 255, 0) , IDB_BITMAP_REDPACKETDRAW , RGB(255, 255, 255) );
 		m_rBtnWithd.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		m_rBtnWithd.SetWindowText("提现") ;
+		m_rBtnWithd.SetWindowText(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_WITHDRAWALS" ,theApp.gsLanguage)) ;
 		m_rBtnWithd.SetFontEx(20 , _T("微软雅黑"));
 		m_rBtnWithd.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(255, 182, 0));
 		m_rBtnWithd.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(255, 251, 240));
@@ -194,7 +194,7 @@ BOOL CMortgageTardDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, U
 
 		m_rBtnRech.SetBitmaps( IDB_BITMAP_REDRCHANGE , RGB(255, 76, 0) , IDB_BITMAP_REDRCHANGE , RGB(255, 76, 0) );
 		m_rBtnRech.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		m_rBtnRech.SetWindowText("充值") ;
+		m_rBtnRech.SetWindowText(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_RECHARGE" ,theApp.gsLanguage)) ;
 		m_rBtnRech.SetFontEx(20 , _T("微软雅黑"));
 		m_rBtnRech.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(255, 76, 0));
 		m_rBtnRech.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(255, 251, 240));
@@ -204,7 +204,7 @@ BOOL CMortgageTardDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, U
 
 		m_rBtnRefresh1.SetBitmaps( IDB_BITMAP_RED_FRESH , RGB(255, 255, 0) , IDB_BITMAP_RED_FRESH , RGB(255, 255, 255) );
 		m_rBtnRefresh1.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		m_rBtnRefresh1.SetWindowText("刷新") ;
+		m_rBtnRefresh1.SetWindowText(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_REFRESH" ,theApp.gsLanguage)) ;
 		m_rBtnRefresh1.SetFontEx(20 , _T("微软雅黑"));
 		m_rBtnRefresh1.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(255, 76, 0));
 		m_rBtnRefresh1.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(255, 251, 240));
@@ -214,7 +214,7 @@ BOOL CMortgageTardDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, U
 
 		m_rBtnRefresh2.SetBitmaps( IDB_BITMAP_RED_FRESH , RGB(255, 255, 0) , IDB_BITMAP_RED_FRESH , RGB(255, 255, 255) );
 		m_rBtnRefresh2.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		m_rBtnRefresh2.SetWindowText("刷新") ;
+		m_rBtnRefresh2.SetWindowText(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_REFRESH" ,theApp.gsLanguage)) ;
 		m_rBtnRefresh2.SetFontEx(20 , _T("微软雅黑"));
 		m_rBtnRefresh2.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(255, 76, 0));
 		m_rBtnRefresh2.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(255, 251, 240));
@@ -261,7 +261,7 @@ BOOL CMortgageTardDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, U
 
 		m_rBtnSetCommonAddr.SetBitmaps( IDB_BITMAP_REDPACKETDRAW , RGB(255, 255, 0) , IDB_BITMAP_REDPACKETDRAW , RGB(255, 255, 255) );
 		m_rBtnSetCommonAddr.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		m_rBtnSetCommonAddr.SetWindowText("常用地址") ;
+		m_rBtnSetCommonAddr.SetWindowText(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_COMM_ADRESS" ,theApp.gsLanguage)) ;
 		m_rBtnSetCommonAddr.SetFontEx(20 , _T("微软雅黑"));
 		m_rBtnSetCommonAddr.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(255, 182, 0));
 		m_rBtnSetCommonAddr.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(255, 251, 240));
@@ -274,8 +274,8 @@ BOOL CMortgageTardDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, U
 		m_money.SetWindowText(_T(""));
 		m_tab.SetBitmap(IDB_BITMAP_P2PBUTTON_2,2);
 
-		m_tab.InsertItem(0,_T("抢到的红包"));  //添加参数一选项卡 
-		m_tab.InsertItem(1,_T("发起的红包"));  //添加参数二选项卡 
+		m_tab.InsertItem(0,UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_GRAD_ENVELOPES" ,theApp.gsLanguage));  //添加参数一选项卡 
+		m_tab.InsertItem(1,UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_SEND_ENVELOPES" ,theApp.gsLanguage));  //添加参数二选项卡 
 
 		CSize sz(80,30);
 		m_tab.SetItemSize(sz);
@@ -302,8 +302,8 @@ BOOL CMortgageTardDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, U
 
 		m_tabpool.SetBitmap(IDB_BITMAP_P2PBUTTON_2,2);
 
-		m_tabpool.InsertItem(0,_T("普通红包"));  //添加参数一选项卡 
-		m_tabpool.InsertItem(1,_T("接龙红包"));  //添加参数二选项卡 
+		m_tabpool.InsertItem(0,UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_GENERAL_ENVELOPE" ,theApp.gsLanguage));  //添加参数一选项卡 
+		m_tabpool.InsertItem(1,UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_RED_ENVELOPE" ,theApp.gsLanguage));  //添加参数二选项卡 
 
 		CSize sz1(80,30);
 		m_tabpool.SetItemSize(sz1);
@@ -502,7 +502,7 @@ void CMortgageTardDlg::SendRedPacketComm(){
 
 	if (!theApp.IsSyncBlock )
 	{
-		UiFun::MessageBoxEx(_T("同步未完成,不能发送交易") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_UNFINISHED_BUSINESS" ,theApp.gsLanguage) ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -513,7 +513,7 @@ void CMortgageTardDlg::SendRedPacketComm(){
 	GetDlgItem(IDC_EDIT_MONEY)->GetWindowText(strTxMoney) ;
 	
 
-	CReCharge outdlg(NULL,_T("广告语句"),_T("广告词:"),_T("  "));
+	CReCharge outdlg(NULL,UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_AD_STATEMENT" ,theApp.gsLanguage),UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_AD_WORD" ,theApp.gsLanguage),_T("  "));
 	if (outdlg.DoModal() == IDCANCEL)
 	{
 		return;
@@ -539,7 +539,7 @@ void CMortgageTardDlg::SendRedPacketComm(){
 
 	INT64 strTxFee = theApp.m_RedPacketCfg.SendRedPacketCommFee;
 	if (  strTxFee < 10000  ) {
-		UiFun::MessageBoxEx(_T("小费不足") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_TIP_INSU" ,theApp.gsLanguage) ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return ;
 	}
 	string strShowData = "";
@@ -570,9 +570,9 @@ void CMortgageTardDlg::SendRedPacketComm(){
 	if ( pos >=0 ) {
 		bRes = TRUE ;
 		//strTip.Format( _T("恭喜发送赌约成功!\n%s") , root["hash"].asCString() ) ;
-		strTip = "恭喜发送成功，请等待1-2分钟确认交易\n" ;
+		strTip = UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_WITHDRAWALS_SEND_SUCCESS" ,theApp.gsLanguage);
 	}else{
-		strTip = "发送红包失败!" ;
+		strTip = UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_SENDRED_FAIL" ,theApp.gsLanguage) ;
 	}
 
 	//保存到数据库
@@ -594,7 +594,7 @@ void CMortgageTardDlg::SendRedPacketComm(){
 		postmsg.SetData(strTemp);
 		theApp.m_MsgQueue.push(postmsg);
 	}
-	UiFun::MessageBoxEx(strTip.c_str() , _T("提示") ,MFB_OK|MFB_TIP );
+	UiFun::MessageBoxEx(strTip.c_str() , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 }
 /// 发送普通红包
 void CMortgageTardDlg::OnBnClickedButtonCommred()
@@ -620,19 +620,19 @@ void CMortgageTardDlg::OnBnClickedButtonCommred()
 	GetDlgItem(IDC_EDIT_MONEY)->GetWindowText(strTxMoney) ;
 	if (strTxMoney == _T(""))
 	{
-		UiFun::MessageBoxEx(_T("金额不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_MONEY_NOT_NULL" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
 	if (strtod(strTxMoney,NULL) > balance)
 	{
-		UiFun::MessageBoxEx(_T("红包金额大于账户余额") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_REDMONEY_MORE_BALANCE" ,theApp.gsLanguage) ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
 	if (strtod(strTxMoney,NULL)<1)
 	{
-		UiFun::MessageBoxEx(_T("红包金额必须大于1") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_REDMONEY_MORE_1" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
@@ -643,13 +643,13 @@ void CMortgageTardDlg::OnBnClickedButtonCommred()
 
 	if (redNum < 2 || redNum >100)
 	{
-		UiFun::MessageBoxEx(_T("请正确填写红包个数,红包的个数在2-100范围之内") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_RED_COUNT" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
 	double minamout = strtod(strTxMoney,NULL)/redNum;
 	if (minamout < 1.0) /// 平均每个热你的红包吧不能少于1
 	{
-		UiFun::MessageBoxEx(_T("平均每个红包的金额不能小于1") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_AGERED_COUNT_1" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -657,21 +657,21 @@ void CMortgageTardDlg::OnBnClickedButtonCommred()
 	int sel = m_addrbook.GetCurSel();
 	if (sel < 0)
 	{
-		UiFun::MessageBoxEx(_T("请选择地址") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_SELECT_ADDRESS" ,theApp.gsLanguage), UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return ;
 	}
 	m_addrbook.GetLBText(sel,addr);
 
 	if (addr == _T(""))
 	{
-		UiFun::MessageBoxEx(_T("地址不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_ADDRESS_NOT_NULL" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
 
 	CString strDisplay;
-	strDisplay.Format(_T("确定要发红包--->金额:%s"), strTxMoney);
+	strDisplay.Format(_T("%s:%s"),UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_GRADNUM_MONEY" ,theApp.gsLanguage), strTxMoney);
 
-	if (IDCANCEL == UiFun::MessageBoxEx(strDisplay , _T("提示") , MFB_OKCANCEL|MFB_TIP ) )
+	if (IDCANCEL == UiFun::MessageBoxEx(strDisplay , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) , MFB_OKCANCEL|MFB_TIP ) )
 	{
 		return;
 	}
@@ -802,9 +802,9 @@ bool CMortgageTardDlg::CheckBalance(string strshow)
 	{
 		if (strshow == "")
 		{
-			UiFun::MessageBoxEx(_T("账户金额为零,请先充值") , _T("提示") ,MFB_OK|MFB_TIP );
+			UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_ACCOUNT_RECHARGE" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage),MFB_OK|MFB_TIP );
 		}else{
-			UiFun::MessageBoxEx(strshow.c_str() , _T("提示") ,MFB_OK|MFB_TIP );
+			UiFun::MessageBoxEx(strshow.c_str() ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		}
 		
 		return false;
@@ -822,7 +822,7 @@ void CMortgageTardDlg::OnBnClickedButtonWithd()
 
 	if (!theApp.IsSyncBlock )
 	{
-		UiFun::MessageBoxEx(_T("同步未完成,不能发送交易") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_UNFINISHED_BUSINESS" ,theApp.gsLanguage) ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -831,7 +831,7 @@ void CMortgageTardDlg::OnBnClickedButtonWithd()
 		return;
 	}
 
-	if ( IDNO == UiFun::MessageBoxEx(_T("是否确定要提现") , _T("提示") ,MFB_YESNO|MFB_TIP ) )
+	if ( IDNO == UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_CONFIRM_WITHDRAWALS" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_YESNO|MFB_TIP ) )
 		return;
 
 	if (!CheckRegIDValid( theApp.m_redPacketScriptid)) return ;
@@ -849,7 +849,7 @@ void CMortgageTardDlg::OnBnClickedButtonWithd()
 
 	if (addr == _T(""))
 	{
-		UiFun::MessageBoxEx(_T("地址不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_ADDRESS_NOT_NULL" ,theApp.gsLanguage), UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -862,7 +862,7 @@ void CMortgageTardDlg::OnBnClickedButtonWithd()
 
 	INT64 strTxFee = theApp.m_P2PBetCfg.GetAppAmountnFee;
 	if (  strTxFee < 10000  ) {
-		UiFun::MessageBoxEx(_T("小费不足") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_TIP_INSU" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
@@ -893,11 +893,11 @@ void CMortgageTardDlg::OnBnClickedButtonWithd()
 	if ( pos >=0 ) {
 		bRes = TRUE ;
 		//strTip.Format( _T("恭喜提现成功!\n%s") , root["hash"].asCString() ) ;
-		strTip = "恭喜提现成功，请等待1-2分钟确认交易\n";
+		strTip = UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_WITHDRAWALS_WITHDRAWALS_SUCCESS" ,theApp.gsLanguage);
 	}else{
-		strTip = "提现失败!" ;
+		strTip = UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_WITHDRAWALS_FAIL" ,theApp.gsLanguage) ;
 	}
-	UiFun::MessageBoxEx(strTip.c_str() , _T("提示") ,MFB_OK|MFB_TIP );
+	UiFun::MessageBoxEx(strTip.c_str() , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 }
 
 
@@ -912,7 +912,7 @@ void CMortgageTardDlg::OnBnClickedButtonRech()
 
 	if (!theApp.IsSyncBlock )
 	{
-		UiFun::MessageBoxEx(_T("同步未完成,不能发送交易") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_UNFINISHED_BUSINESS" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -925,7 +925,7 @@ void CMortgageTardDlg::OnBnClickedButtonRech()
 
 	if (theApp.m_strAddress == _T(""))
 	{
-		UiFun::MessageBoxEx(_T("金额不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_MONEY_NOT_NULL" ,theApp.gsLanguage) ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
@@ -940,7 +940,7 @@ void CMortgageTardDlg::OnBnClickedButtonRech()
 
 	if (addr == _T(""))
 	{
-		UiFun::MessageBoxEx(_T("地址不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_ADDRESS_NOT_NULL" ,theApp.gsLanguage) ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -951,7 +951,7 @@ void CMortgageTardDlg::OnBnClickedButtonRech()
 	double sub = pAddr.fMoney - strtod(theApp.m_strAddress,NULL);
 	if (sub <1.0)
 	{
-		UiFun::MessageBoxEx(_T("系统账户最少余额1smc,作为后续合约交易小费") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_TRDING_TIPS" ,theApp.gsLanguage) ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -960,7 +960,7 @@ void CMortgageTardDlg::OnBnClickedButtonRech()
 
 	INT64 strTxFee = theApp.m_P2PBetCfg.GetAppAmountnFee;
 	if (  strTxFee < 10000  ) {
-		UiFun::MessageBoxEx(_T("小费不足") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_TIP_INSU" ,theApp.gsLanguage) ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
@@ -990,11 +990,11 @@ void CMortgageTardDlg::OnBnClickedButtonRech()
 	if ( pos >=0 ) {
 		bRes = TRUE ;
 		//strTip.Format( _T("恭喜充值成功!\n%s") , root["hash"].asCString() ) ;
-		strTip = "恭喜充值成功，请等待1-2分钟确认交易\n" ;
+		strTip = UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_WITHDRAWALS_RECHARGE_SUCCESS" ,theApp.gsLanguage) ;
 	}else{
-		strTip = "充值失败!" ;
+		strTip = UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_RECHARGE_FAIL" ,theApp.gsLanguage) ;
 	}
-	UiFun::MessageBoxEx(strTip.c_str()  , _T("提示") ,MFB_OK|MFB_TIP );
+	UiFun::MessageBoxEx(strTip.c_str()  , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage),MFB_OK|MFB_TIP );
 }
 
 void CMortgageTardDlg::OnSelectShowWin(int nCurSelTab)
@@ -1121,7 +1121,7 @@ void CMortgageTardDlg::OnBnClickedButtonRefresh2()
 void   CMortgageTardDlg::SendRedPackeSpecail(){
 	if (!theApp.IsSyncBlock )
 	{
-		UiFun::MessageBoxEx(_T("同步未完成,不能发送交易") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_UNFINISHED_BUSINESS" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -1149,7 +1149,7 @@ void   CMortgageTardDlg::SendRedPackeSpecail(){
 
 	INT64 strTxFee = theApp.m_RedPacketCfg.SendRedPacketSpecailFee;
 	if (  strTxFee < 10000  ) {
-		UiFun::MessageBoxEx(_T("小费不足") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_TIP_INSU" ,theApp.gsLanguage) ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return ;
 	}
 	string strShowData =_T("");
@@ -1180,9 +1180,9 @@ void   CMortgageTardDlg::SendRedPackeSpecail(){
 	if ( pos >=0 ) {
 		bRes = TRUE ;
 		//strTip.Format( _T("恭喜发送赌约成功!\n%s") , root["hash"].asCString() ) ;
-		strTip.Format( _T("恭喜发送成功，请等待1-2分钟确认交易\n")) ;
+		strTip.Format(  UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_WITHDRAWALS_SEND_SUCCESS" ,theApp.gsLanguage) ) ;
 	}else{
-		strTip.Format( _T("发送红包失败!") ) ;
+		strTip.Format( UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_SENDRED_FAIL" ,theApp.gsLanguage) ) ;
 	}
 
 	//保存到数据库
@@ -1204,7 +1204,7 @@ void   CMortgageTardDlg::SendRedPackeSpecail(){
 		postmsg.SetData(strTemp);
 		theApp.m_MsgQueue.push(postmsg);
 	}
-	UiFun::MessageBoxEx(strTip , _T("提示") ,MFB_OK|MFB_TIP );
+	UiFun::MessageBoxEx(strTip ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 }
 void CMortgageTardDlg::OnBnClickedButtonSpecailred()
 {
@@ -1229,19 +1229,19 @@ void CMortgageTardDlg::OnBnClickedButtonSpecailred()
 	GetDlgItem(IDC_EDIT_MONEY)->GetWindowText(strTxMoney) ;
 	if (strTxMoney == _T(""))
 	{
-		UiFun::MessageBoxEx(_T("金额不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx( UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_MONEY_NOT_NULL" ,theApp.gsLanguage) ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
 	if (strtod(strTxMoney,NULL) > balance)
 	{
-		UiFun::MessageBoxEx(_T("红包金额大于账户余额") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx( UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_REDMONEY_MORE_BALANCE" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
 	if (strtod(strTxMoney,NULL)<10.0)
 	{
-		UiFun::MessageBoxEx(_T("接龙红包金额必须大于10.0") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_REDMONEY_MORE_10" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 
 		return ;
 	}
@@ -1253,14 +1253,14 @@ void CMortgageTardDlg::OnBnClickedButtonSpecailred()
 
 	if (redNum < 2 || redNum >20)
 	{
-		UiFun::MessageBoxEx(_T("请正确填写红包个数,接龙红包的个数在2-20范围之内") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_REDMONEY_COUNT" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
 
 	double minamout = strtod(strTxMoney,NULL)/redNum;
 	if (minamout < 1.0) /// 平均每个热你的红包吧不能少于1
 	{
-		UiFun::MessageBoxEx(_T("平均每个红包的金额不能小于1") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_AGERED_COUNT_1" ,theApp.gsLanguage), UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -1268,21 +1268,21 @@ void CMortgageTardDlg::OnBnClickedButtonSpecailred()
 	int sel = m_addrbook.GetCurSel();
 	if (sel < 0)
 	{
-		UiFun::MessageBoxEx(_T("请选择地址") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_SELECT_ADDRESS" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return ;
 	}
 	m_addrbook.GetLBText(sel,addr);
 
 	if (addr == _T(""))
 	{
-		UiFun::MessageBoxEx(_T("地址不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_ADDRESS_NOT_NULL" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
 
 	CString strDisplay;
-	strDisplay.Format(_T("确定要发红包--->金额:%s"), strTxMoney);
+	strDisplay.Format(_T("%s:%s"), UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_GRADNUM_MONEY" ,theApp.gsLanguage) ,strTxMoney);
 
-	if (IDCANCEL == UiFun::MessageBoxEx(strDisplay , _T("提示") , MFB_OKCANCEL|MFB_TIP ) )
+	if (IDCANCEL == UiFun::MessageBoxEx(strDisplay , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) , MFB_OKCANCEL|MFB_TIP ) )
 	{
 		return;
 	}
@@ -1316,7 +1316,7 @@ void CMortgageTardDlg::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult)
 
 void  CMortgageTardDlg::onShowLink()
 {
-	v_linkCtrl.SetWindowText(_T("帮助"));
+	v_linkCtrl.SetWindowText(UiFun::UI_LoadString("COMM_MODULE" , "COMM_HELP" ,theApp.gsLanguage));
 	v_linkCtrl.SetURL("http://www.dacrs.com/forum.php?mod=viewthread&tid=3503&extra=page%3D1");
 }
 
@@ -1347,7 +1347,7 @@ void    CMortgageTardDlg::ShowAllSpecailWinAndLoss(){
 	theApp.m_SqliteDeal.GetRedPacketGrabRecordList(_T(" packet_type = 2 "), &RedPackeGrabRecordList);
 	double result = ComputeSpecailRedPacket(RedPackeGrabRecordList);
 	string show;
-	show = strprintf("接龙总盈亏:%.4f",result);
+	show = strprintf("%s:%.4f",UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_SOLITAIRETOTAL_PROFIT_LOSS" ,theApp.gsLanguage) ,result);
 	m_rBtnWinerloser.SetWindowText(show.c_str());
 	m_rBtnWinerloser.Invalidate();
 }
@@ -1360,7 +1360,7 @@ void   CMortgageTardDlg::ShowAddressSpecailWinAndLoss(CString addr)
 	theApp.m_SqliteDeal.GetRedPacketGrabRecordList(condtion, &RedPackeGrabRecordList);
 	double result = ComputeSpecailRedPacket(RedPackeGrabRecordList);
 	string show;
-	show = strprintf("盈亏:%.4f",result);
+	show = strprintf("%s:%.4f",UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_TOTAL_PROFIT" ,theApp.gsLanguage),result);
 	m_rBtnAddrWinerloser.SetWindowText(show.c_str());
 	m_rBtnAddrWinerloser.Invalidate();
 }
@@ -1374,14 +1374,14 @@ bool CMortgageTardDlg::CheckBalance(double dmoney)
 	if (money == 0.0)
 	{
 		
-		UiFun::MessageBoxEx(_T("账户金额为零,请先充值") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_ACCOUNT_RECHARGE" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return false;
 	}
 
 	if (dmoney >money)
 	{
 		
-		UiFun::MessageBoxEx(_T("提现金额大于账户中的金额") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_WITHDRAWALS_MORE_BALANCE" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return false;
 	}
 	return true;
@@ -1392,7 +1392,7 @@ void  CMortgageTardDlg::GetAppAccountSomeMoney()
 	if (!theApp.IsSyncBlock )
 	{
 		
-		UiFun::MessageBoxEx(_T("同步未完成,不能发送交易") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_UNFINISHED_BUSINESS" ,theApp.gsLanguage) ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -1406,7 +1406,7 @@ void  CMortgageTardDlg::GetAppAccountSomeMoney()
 	CString balance ="";
 
 	GetDlgItem(IDC_STATIC_BALANCE)->GetWindowText(balance);
-	CReCharge outdlg(NULL,"提现:","提现金额","",balance);
+	CReCharge outdlg(NULL,UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_WITHDRAWALS1" ,theApp.gsLanguage),UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_WITHDRAWALS_MONEY" ,theApp.gsLanguage),"",balance);
 	if ( IDOK != outdlg.DoModal()){
 		return;
 	}
@@ -1414,7 +1414,7 @@ void  CMortgageTardDlg::GetAppAccountSomeMoney()
 	if (theApp.m_strAddress == _T(""))
 	{
 		
-		UiFun::MessageBoxEx(_T("提现金额不能为零") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_WITHDRAWALS_NULL" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
@@ -1423,8 +1423,8 @@ void  CMortgageTardDlg::GetAppAccountSomeMoney()
 	{
 		return;
 	}
-	string show = strprintf("是否确定要体现 金额为:%lf",money);
-	if ( IDNO == UiFun::MessageBoxEx(show.c_str() , _T("提示") , MFB_YESNO|MFB_TIP ) )
+	string show = strprintf("%s:%lf",UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_OK_WITHDRAWALS" ,theApp.gsLanguage) ,money);
+	if ( IDNO == UiFun::MessageBoxEx(show.c_str() , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage), MFB_YESNO|MFB_TIP ) )
 		return;
 
 	string strShowData ="";
@@ -1441,7 +1441,7 @@ void  CMortgageTardDlg::GetAppAccountSomeMoney()
 	if (addr == _T(""))
 	{
 		
-		UiFun::MessageBoxEx(_T("地址不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_ADDRESS_NOT_NULL" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -1451,7 +1451,7 @@ void  CMortgageTardDlg::GetAppAccountSomeMoney()
 	INT64 strTxFee = theApp.m_P2PBetCfg.GetAppAmountnFee;
 	if (  strTxFee < 10000  ) {
 		
-		UiFun::MessageBoxEx(_T("小费不足") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_TIP_INSU" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
@@ -1482,12 +1482,12 @@ void  CMortgageTardDlg::GetAppAccountSomeMoney()
 	if ( pos >=0 ) {
 		bRes = TRUE ;
 		//strTip.Format( _T("恭喜提现成功!\n%s") , root["hash"].asCString() ) ;
-		strTip = "恭喜提现成功，请等待1-2分钟确认交易\n" ;
+		strTip = UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_WITHDRAWALS_WITHDRAWALS_SUCCESS" ,theApp.gsLanguage) ;
 	}else{
-		strTip = "提现失败!" ;
+		strTip = UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_WITHDRAWALS_FAIL" ,theApp.gsLanguage) ;
 	}
 	
-	UiFun::MessageBoxEx(strTip.c_str() , _T("提示") ,MFB_OK|MFB_TIP );
+	UiFun::MessageBoxEx(strTip.c_str() , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 }
 
 

@@ -86,18 +86,18 @@ void CReceiveDlg::ShowListInfo()
 
 		if (address.bSign == 1)
 		{
-			strShowData="已激活" ;
+			strShowData=UiFun::UI_LoadString("COMM_MODULE" , "COMM_ACTIVATED" ,theApp.gsLanguage) ;
 		}else{
-			strShowData="未激活" ;
+			strShowData=UiFun::UI_LoadString("COMM_MODULE" , "COMM_NOT_ACTIVATED" ,theApp.gsLanguage);
 		}
 
 		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData.c_str() ) ;
 
 		if (address.nColdDig== 1)
 		{
-			strShowData="支持" ;
+			strShowData=UiFun::UI_LoadString("COMM_MODULE" , "COMM_SUPPORT" ,theApp.gsLanguage);
 		}else{
-			strShowData="不支持" ;
+			strShowData=UiFun::UI_LoadString("COMM_MODULE" , "COMM_NOT_SUPPORT" ,theApp.gsLanguage);
 		}
 		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData.c_str() ) ;
 
@@ -124,13 +124,13 @@ BOOL CReceiveDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT n
 			CString		name ;
 			UINT		size ;
 		} listcol[7]  = {
-							{"序号" ,      50},
-							{"账户ID" ,    100},
-							{"标签" ,      100},
-							{"地址" ,      230}, 
-							{"激活状态" ,  80}, 
-							{"冷挖矿" ,100},
-							{"余额" ,      168}
+							{UiFun::UI_LoadString("RECEIVE_MODULE" , "RECEIVE_SERIAL_NUMBER" ,theApp.gsLanguage) ,      50},
+							{UiFun::UI_LoadString("RECEIVE_MODULE" , "RECEIVE_ACCOUNT_ID" ,theApp.gsLanguage) ,    100},
+							{UiFun::UI_LoadString("RECEIVE_MODULE" , "RECEIVE_LABEL" ,theApp.gsLanguage) ,      100},
+							{UiFun::UI_LoadString("RECEIVE_MODULE" , "RECEIVE_ADDRESS" ,theApp.gsLanguage) ,      230}, 
+							{UiFun::UI_LoadString("RECEIVE_MODULE" , "RECEIVE_ACTIVATION_STATE" ,theApp.gsLanguage) ,  80}, 
+							{UiFun::UI_LoadString("RECEIVE_MODULE" , "RECEIVE_COLD" ,theApp.gsLanguage) ,100},
+							{UiFun::UI_LoadString("RECEIVE_MODULE" , "RECEIVE_BALANCE" ,theApp.gsLanguage) ,      168}
 							
 						};
 		m_listCtrl.SetBkColor(RGB(240,240,240));       
@@ -147,7 +147,7 @@ BOOL CReceiveDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT n
 		
 		m_rBtnAcitve.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
 		m_rBtnAcitve.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		m_rBtnAcitve.SetWindowText("激活地址") ;
+		m_rBtnAcitve.SetWindowText(UiFun::UI_LoadString("RECEIVE_MODULE" , "RECEIVE_ACTIVATION_ADDRESS" ,theApp.gsLanguage)) ;
 		m_rBtnAcitve.SetFontEx(20 , _T("微软雅黑"));
 		m_rBtnAcitve.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		m_rBtnAcitve.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
@@ -157,7 +157,7 @@ BOOL CReceiveDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT n
 
 		m_rBtnNewaddr.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
 		m_rBtnNewaddr.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		m_rBtnNewaddr.SetWindowText("新建地址") ;
+		m_rBtnNewaddr.SetWindowText(UiFun::UI_LoadString("RECEIVE_MODULE" , "RECEIVE_NEW_ADDRESS" ,theApp.gsLanguage)) ;
 		m_rBtnNewaddr.SetFontEx(20 , _T("微软雅黑"));
 		m_rBtnNewaddr.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		m_rBtnNewaddr.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
@@ -167,7 +167,7 @@ BOOL CReceiveDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT n
 
 		m_rBtnCopyaddr.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
 		m_rBtnCopyaddr.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		m_rBtnCopyaddr.SetWindowText("复制地址") ;
+		m_rBtnCopyaddr.SetWindowText(UiFun::UI_LoadString("RECEIVE_MODULE" , "RECEIVE_COPY_ADDRESS" ,theApp.gsLanguage)) ;
 		m_rBtnCopyaddr.SetFontEx(20 , _T("微软雅黑"));
 		m_rBtnCopyaddr.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		m_rBtnCopyaddr.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
@@ -210,15 +210,15 @@ void CReceiveDlg::OnBnClickedCopyaddress()
 				GlobalUnlock(clipbuffer);
 				SetClipboardData(CF_TEXT,clipbuffer);
 				CloseClipboard();
-				StrShow ="地址已复制到剪贴板\n";
+				StrShow = UiFun::UI_LoadString("RECEIVE_MODULE" , "RECEIVE_ADDRESS_CLIPBOARD" ,theApp.gsLanguage);
 				
-				UiFun::MessageBoxEx(StrShow.c_str() , _T("提示") ,MFB_OK|MFB_TIP );
+				UiFun::MessageBoxEx(StrShow.c_str() , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		     }
 	}
 	else{
-		StrShow = "请选择地址!\n";
+		StrShow = UiFun::UI_LoadString("RECEIVE_MODULE" , "RECEIVE_SELECT_ADDRESS" ,theApp.gsLanguage);
 		
-		UiFun::MessageBoxEx(StrShow.c_str() , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(StrShow.c_str() , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 	}
 	
 }
@@ -264,7 +264,7 @@ void CReceiveDlg::OnBnClickedButtonSignAccount()
 	if (!theApp.IsSyncBlock )
 	{
 		
-		UiFun::MessageBoxEx(_T("同步未完成,不能发送激活交易") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("RECEIVE_MODULE" , "RECEIVE_UNFINISHED_BUSINESS" ,theApp.gsLanguage) ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -277,25 +277,25 @@ void CReceiveDlg::OnBnClickedButtonSignAccount()
 		if(!m_MapAddrInfo.count(addr))
 			{
 					TRACE("ERROR");
-				StrShow.Format(_T("地址不存在\n"));
+				StrShow.Format(UiFun::UI_LoadString("RECEIVE_MODULE" , "RECEIVE_ADDRESS_NOT_EXIST" ,theApp.gsLanguage));
 				
-				UiFun::MessageBoxEx(StrShow , _T("提示") ,MFB_OK|MFB_TIP );
+				UiFun::MessageBoxEx(StrShow ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 				return;
 		   }
 		uistruct::LISTADDR_t te =  m_MapAddrInfo[addr];
 		//uistruct::LISTADDR_t * pAddrItem = (uistruct::LISTADDR_t*)m_listCtrl.GetItemData(nRow) ;
 		if (te.fMoney <=0)
 		{
-			StrShow.Format(_T("账户余额为零,不能激活!\n"));
+			StrShow.Format(UiFun::UI_LoadString("RECEIVE_MODULE" , "RECEIVE_SUFFICIENT_NULL" ,theApp.gsLanguage));
 			
-			UiFun::MessageBoxEx(StrShow , _T("提示") ,MFB_OK|MFB_TIP );
+			UiFun::MessageBoxEx(StrShow ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 			return;
 		}
 		if(te.bSign) 
 		{
-			StrShow.Format(_T("账户已激活!\n"));
+			StrShow.Format(UiFun::UI_LoadString("RECEIVE_MODULE" , "RECEIVE_SUFFICIENT_ACTIVATION" ,theApp.gsLanguage));
 			
-			UiFun::MessageBoxEx(StrShow, _T("提示") ,MFB_OK|MFB_TIP );
+			UiFun::MessageBoxEx(StrShow, UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 			return;
 		}
 		theApp.m_strAddress.Format(_T("%s") ,te.address.c_str() ) ;
@@ -308,9 +308,9 @@ void CReceiveDlg::OnBnClickedButtonSignAccount()
 		m_accountDlg->MoveWindow(rcWindow.right/2+50,rcWindow.top+200,400,rcWindow.Height()/2);
 		m_accountDlg->ShowWindow(SW_SHOW);*/
 	}else{
-		StrShow.Format(_T("请选择地址!\n"));
+		StrShow.Format(UiFun::UI_LoadString("RECEIVE_MODULE" , "RECEIVE_SELECT_ADDRESS" ,theApp.gsLanguage));
 		
-		UiFun::MessageBoxEx(StrShow , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(StrShow , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage),MFB_OK|MFB_TIP );
 	}
 }
 
@@ -464,18 +464,18 @@ void   CReceiveDlg::ModifyListCtrlItem()
 
 			if (addr.bSign == 1)
 			{
-				strShowData="已激活" ;
+				strShowData=UiFun::UI_LoadString("COMM_MODULE" , "COMM_ACTIVATED" ,theApp.gsLanguage);
 			}else{
-				strShowData = "未激活" ;
+				strShowData = UiFun::UI_LoadString("COMM_MODULE" , "COMM_NOT_ACTIVATED" ,theApp.gsLanguage) ;
 			}
 
 			m_listCtrl.SetItemText(i , ++nSubIdx , strShowData.c_str() ) ;
 
 			if (addr.nColdDig== 1)
 			{
-				strShowData = "支持" ;
+				strShowData = UiFun::UI_LoadString("COMM_MODULE" , "COMM_SUPPORT" ,theApp.gsLanguage) ;
 			}else{
-				strShowData = "不支持" ;
+				strShowData = UiFun::UI_LoadString("COMM_MODULE" , "COMM_NOT_SUPPORT" ,theApp.gsLanguage);
 			}
 			m_listCtrl.SetItemText(i , ++nSubIdx , strShowData.c_str()) ;
 
@@ -526,18 +526,18 @@ void   CReceiveDlg::InsertListCtrlItem()
 
 	if (addr.bSign == 1)
 	{
-		strShowData="已激活" ;
+		strShowData= UiFun::UI_LoadString("COMM_MODULE" , "COMM_ACTIVATED" ,theApp.gsLanguage) ;
 	}else{
-		strShowData="未激活" ;
+		strShowData= UiFun::UI_LoadString("COMM_MODULE" , "COMM_NOT_ACTIVATED" ,theApp.gsLanguage) ;
 	}
 
 	m_listCtrl.SetItemText(i , ++nSubIdx , strShowData.c_str() ) ;
 
 	if (addr.nColdDig== 1)
 	{
-		strShowData="支持";
+		strShowData= UiFun::UI_LoadString("COMM_MODULE" , "COMM_SUPPORT" ,theApp.gsLanguage);
 	}else{
-		strShowData="不支持" ;
+		strShowData= UiFun::UI_LoadString("COMM_MODULE" , "COMM_NOT_SUPPORT" ,theApp.gsLanguage) ;
 	}
 	m_listCtrl.SetItemText(i , ++nSubIdx , strShowData.c_str() ) ;
 

@@ -101,7 +101,7 @@ BOOL CIpoCoin::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		UpdateData(0);
 		m_rBtnSend.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
 		m_rBtnSend.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		m_rBtnSend.SetWindowText("提  现") ;
+		m_rBtnSend.SetWindowText(UiFun::UI_LoadString("IPO_MODULE" , "IPO_WITHDRAWALS" ,theApp.gsLanguage)) ;
 		m_rBtnSend.SetFontEx(20 , _T("微软雅黑"));
 		m_rBtnSend.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		m_rBtnSend.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
@@ -129,9 +129,9 @@ BOOL CIpoCoin::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 			CString		name ;
 			UINT		size ;
 		} listcol[3]  = {
-			{_T("序号") ,      150},
-			{_T("金额") ,      300},
-			{_T("解冻高度") ,      405}
+			{UiFun::UI_LoadString("IPO_MODULE" , "IPO_NUMBER" ,theApp.gsLanguage) ,      150},
+			{UiFun::UI_LoadString("IPO_MODULE" , "IPO_MONEY" ,theApp.gsLanguage) ,      300},
+			{UiFun::UI_LoadString("IPO_MODULE" , "IPO_THAW_HEIGHT" ,theApp.gsLanguage) ,      405}
 		};
 		m_listCtrl.SetBkColor(RGB(240,240,240));       
 		m_listCtrl.SetRowHeigt(23);               
@@ -156,7 +156,7 @@ BOOL CIpoCoin::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 void CIpoCoin::OnBnClickedButtonDrawal()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	if ( IDNO == UiFun::MessageBoxEx(_T("是否确定要提现") , _T("提示") , MFB_YESNO|MFB_TIP ) )
+	if ( IDNO == UiFun::MessageBoxEx(UiFun::UI_LoadString("IPO_MODULE" , "IPO_WITHDRAWALS_OK" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) , MFB_YESNO|MFB_TIP ) )
 		return;
 
 	if (!CheckRegIDValid( theApp.m_ipoScritptid )) return ;
@@ -167,7 +167,7 @@ void CIpoCoin::OnBnClickedButtonDrawal()
 	GetDlgItem(IDC_EDIT_ADDR)->GetWindowText(addr);
 	if (addr == _T(""))
 	{
-		UiFun::MessageBoxEx(_T("地址不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("IPO_MODULE" , "IPO_ADDRESS_NOT_NULL" ,theApp.gsLanguage) ,  UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -177,19 +177,19 @@ void CIpoCoin::OnBnClickedButtonDrawal()
 	int nItem =  theApp.m_SqliteDeal.GetWalletAddressItem(strCond, &pAddr) ;
 	if (pAddr.address == "")
 	{
-		UiFun::MessageBoxEx(_T("此地址不是钱包地址,不能提现") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("IPO_MODULE" , "IPO_WALLET_ADDRESS_NOT" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
 
 	if (pAddr.bSign == 0 )
 	{
-		UiFun::MessageBoxEx(_T("此地址没有注册,不能提现") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("IPO_MODULE" , "IPO_REGISTERED_ADDRESS_NOT" ,theApp.gsLanguage) ,  UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
 	double dmoney = GetFreeMoney(addr);
 	if (dmoney <=0.0)
 	{
-		UiFun::MessageBoxEx(_T("此地址没有可提现的金额") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("IPO_MODULE" , "IPO_MONEY_ADDRESS_NOT" ,theApp.gsLanguage) ,  UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
 	string strContractData = m_P2PBetHelp.GetAppAccountMoneyContract(addr.GetString(),1,2,REAL_MONEY(dmoney));
@@ -200,7 +200,7 @@ void CIpoCoin::OnBnClickedButtonDrawal()
 	strTxFee.Format(_T("%.8f"),dnum);
 
 	if (  (INT64)REAL_MONEY(strtod(strTxFee,NULL)) < 10000  ) {
-		UiFun::MessageBoxEx(_T("小费不足") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("IPO_MODULE" , "IPO_TIP_INSU" ,theApp.gsLanguage) ,  UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
@@ -229,11 +229,11 @@ void CIpoCoin::OnBnClickedButtonDrawal()
 
 	if ( pos >=0 ) {
 		bRes = TRUE ;
-		strTip = strprintf("恭喜提现成功!\n%s" , root["hash"].asCString() ) ;
+		strTip = strprintf("%s\n%s" , UiFun::UI_LoadString("IPO_MODULE" , "IPO_WITHDRAWALS_SUCCESS" ,theApp.gsLanguage) ,root["hash"].asCString() ) ;
 	}else{
-		strTip = "提现失败!" ;
+		strTip = UiFun::UI_LoadString("IPO_MODULE" , "IPO_WITHDRAWALS_FAIL" ,theApp.gsLanguage) ;
 	}
-	UiFun::MessageBoxEx(strTip.c_str() , _T("提示") ,MFB_OK|MFB_TIP );
+	UiFun::MessageBoxEx(strTip.c_str() , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 }
 
 
@@ -333,7 +333,7 @@ void CIpoCoin::OnShowListCtrol(CString addr)
 	}
 	
 	double money = (nMoney*1.0/COIN);
-	strShowData = strprintf("可用金额:%.8f",money);
+	strShowData = strprintf("%s:%.8f",UiFun::UI_LoadString("IPO_MODULE" , "IPO_USABLE_MONEY" ,theApp.gsLanguage) ,money);
 	((CStatic*)GetDlgItem(IDC_STATIC_AMOUNT))->SetWindowText(strShowData.c_str());
 	
 	Invalidate();
@@ -366,7 +366,7 @@ void CIpoCoin::OnBnClickedButtonQuery()
 	GetDlgItem(IDC_EDIT_ADDR)->GetWindowText(addr);
 	if (addr == _T(""))
 	{
-		UiFun::MessageBoxEx(_T("地址不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("IPO_MODULE" , "IPO_ADDRESS_NOT_NULL" ,theApp.gsLanguage) ,  UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
 	OnShowListCtrol(addr);
