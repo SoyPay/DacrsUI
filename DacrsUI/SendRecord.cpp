@@ -147,7 +147,7 @@ BOOL CSendRecord::Create(LPCTSTR lpszTemplateName, CWnd* pParentWnd)
 
 		m_sCountpage.SetFont(90, _T("黑体"));				//设置显示字体和大小
 		m_sCountpage.SetTextColor(RGB(0,0,0));			    //字体颜色	
-		m_sCountpage.SetWindowText(_T("共:"));
+		m_sCountpage.SetWindowText(UiFun::UI_LoadString("P2P_MODULE" , "P2P_TOTAL" ,theApp.gsLanguage));
 
 		m_rBtnUp.SetBitmaps( IDB_BITMAP_UP , RGB(255, 255, 0) , IDB_BITMAP_UP , RGB(255, 255, 255) );
 		m_rBtnUp.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
@@ -167,7 +167,9 @@ BOOL CSendRecord::Create(LPCTSTR lpszTemplateName, CWnd* pParentWnd)
 		m_rBtnNext.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(255, 255, 255));
 		m_rBtnNext.SizeToContent();
 
-		GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(_T("共:0"));
+		CString strTemp;
+		strTemp.Format(_T("%s:0") ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TOTAL" ,theApp.gsLanguage) );
+		GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(strTemp);
 	}
 	return bRes ;
 }
@@ -197,7 +199,7 @@ void CSendRecord::Showlistbox(CString address)
 	m_pagecount = (m_PoolList.size()%m_pagesize)==0?(m_PoolList.size()/m_pagesize):(m_PoolList.size()/m_pagesize)+1;
 
 	string temp;
-	temp = strprintf("共:%d",m_pagecount);
+	temp = strprintf("%s:%d",UiFun::UI_LoadString("COMM_MODULE" , "COMM_TOTAL" ,theApp.gsLanguage) ,m_pagecount);
 	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(temp.c_str());
 	GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T(""));
 	Invalidate();
@@ -210,14 +212,14 @@ void CSendRecord::OpenBet(CString txhash)
 	if (!theApp.IsSyncBlock )
 	{
 		
-		UiFun::MessageBoxEx(_T("同步未完成,不能发送交易") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_UNFINISHED_BUSINESS" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
 
 	if (m_addr == _T(""))
 	{
 		
-		UiFun::MessageBoxEx(_T("请选择地址") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_SELECT_ADDRESS" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
 	if (!CheckRegIDValid( theApp.m_betScritptid )) return ;
@@ -229,7 +231,7 @@ void CSendRecord::OpenBet(CString txhash)
 	if (pPoolItem.tx_hash == "")
 	{
 		
-		UiFun::MessageBoxEx(_T("数据库中无此记录") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_DATABASE_NO_RECORD" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 	}
 
 	string strCommand1;
@@ -286,9 +288,9 @@ void CSendRecord::OpenBet(CString txhash)
 	if ( pos >=0 ) {
 		bRes = TRUE ;
 		//strTip.Format( _T("恭喜开奖成功!\n%s") , root["hash"].asCString() ) ;
-		 strTip = "恭喜开奖成功，请等待1-2分钟确认交易\n" ;
+		 strTip = UiFun::UI_LoadString("P2P_MODULE" , "P2P_WITHDRAWALS_LOTTERY_SUCCESS" ,theApp.gsLanguage) ;
 	}else{
-		strTip="开奖失败!" ;
+		strTip= UiFun::UI_LoadString("P2P_MODULE" , "P2P_LOTTERY_FAILURE" ,theApp.gsLanguage) ;
 	}
 
 	//保存到数据库
@@ -321,7 +323,7 @@ void CSendRecord::OpenBet(CString txhash)
 		}
 	}
 
-	UiFun::MessageBoxEx(strTip.c_str() , _T("提示") ,MFB_OK|MFB_TIP );
+	UiFun::MessageBoxEx(strTip.c_str() , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 }
 ///开接赌了没有开奖的
 void  CSendRecord::OpenAcceptbet()
@@ -350,7 +352,7 @@ void  CSendRecord::OpenAcceptbet()
 				if (minfee > pAddr.fMoney)
 				{
 				
-					UiFun::MessageBoxEx(_T("有些赌约未开奖,请先充值") , _T("提示") ,MFB_OK|MFB_TIP );
+					UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_BET_NO_LOTTERY" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 				}
 				CString txhash;
 				txhash.Format(_T("%s"),const_it.tx_hash.c_str());
@@ -400,10 +402,10 @@ void  CSendRecord::OnShowPagePool(int page)
 
 		if (const_it.content[32] == 1)
 		{
-			result = "妹";
+			result = UiFun::UI_LoadString("COMM_MODULE" , "COMM_SISTER" ,theApp.gsLanguage);
 		}else
 		{
-			result = "哥";
+			result = UiFun::UI_LoadString("COMM_MODULE" , "COMM_BROTHER" ,theApp.gsLanguage);
 		}
 		reward =strprintf("%.4f",const_it.amount);
 
@@ -422,10 +424,10 @@ void  CSendRecord::OnShowPagePool(int page)
 		
 			if (const_it.guess_num == 1)
 			{
-				guess = "妹";
+				guess = UiFun::UI_LoadString("COMM_MODULE" , "COMM_SISTER" ,theApp.gsLanguage);
 			}else
 			{
-				guess = "哥";
+				guess = UiFun::UI_LoadString("COMM_MODULE" , "COMM_BROTHER" ,theApp.gsLanguage);
 			}
 			if (const_it.state == 2)  /// 开奖
 			{
@@ -499,7 +501,7 @@ BOOL CSendRecord::PreTranslateMessage(MSG* pMsg)
 				{
 					GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T(""));
 					
-					UiFun::MessageBoxEx(_T("输入有误,请输入数字") , _T("提示") ,MFB_OK|MFB_TIP );
+					UiFun::MessageBoxEx(UiFun::UI_LoadString("COMM_MODULE" , "COMM_INPUT_ERROR" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 				}
 				return TRUE;
 			}
@@ -550,10 +552,10 @@ void CSendRecord::ExportSendBetRecordToexel()
 	int nItem =  theApp.m_SqliteDeal.GetP2PQuizRecordList(conditon.c_str() ,&PoolList ) ;
 	if (PoolList.size() == 0)
 	{
-		UiFun::MessageBoxEx(_T("没有记录可以导出！") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_NO_RECORDS_EXPORT" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
-	CFileDialog dlg(FALSE,NULL,"猜你妹发起记录",OFN_HIDEREADONLY|OFN_FILEMUSTEXIST ,"文件 (*.xls)|*.xls||");
+	CFileDialog dlg(FALSE,NULL,UiFun::UI_LoadString("P2P_MODULE" , "P2P_SINGLE_SENDRECORD" ,theApp.gsLanguage),OFN_HIDEREADONLY|OFN_FILEMUSTEXIST ,"文件 (*.xls)|*.xls||");
 
 	if (IDOK != dlg.DoModal())
 	{
@@ -570,16 +572,16 @@ void CSendRecord::ExportSendBetRecordToexel()
 		string		name ;
 		UINT		size ;
 	} listheadr[10]  = {
-		{"发起竞猜hash" ,  65},
-		{"发起人" ,    10},
-		{"接单人" ,   10},
-		{"发起时间" ,  15}, 
-		{"接单时间" ,  15}, 
-		{"底牌" ,8},
-		{"猜测" ,8},
-		{"金额" ,20},
-		{"超时",10},
-		{"操作",10}
+		{UiFun::UI_LoadString("P2P_MODULE" , "P2P_SINGLE_SEND_SASH" ,theApp.gsLanguage) ,  65},
+		{UiFun::UI_LoadString("P2P_MODULE" , "P2P_PROMOTER" ,theApp.gsLanguage) ,    10},
+		{UiFun::UI_LoadString("P2P_MODULE" , "P2P_SINGLE_PEOPLE" ,theApp.gsLanguage) ,   10},
+		{UiFun::UI_LoadString("P2P_MODULE" , "P2P_SEND_TIME" ,theApp.gsLanguage) ,  15}, 
+		{UiFun::UI_LoadString("P2P_MODULE" , "P2P_SINGLE_TIME" ,theApp.gsLanguage) ,  15}, 
+		{UiFun::UI_LoadString("P2P_MODULE" , "P2P_A_HAND" ,theApp.gsLanguage) ,8},
+		{UiFun::UI_LoadString("P2P_MODULE" , "P2P_GUESS" ,theApp.gsLanguage) ,8},
+		{UiFun::UI_LoadString("COMM_MODULE" , "COMM_MONEY" ,theApp.gsLanguage) ,20},
+		{UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIMEOUT" ,theApp.gsLanguage),10},
+		{UiFun::UI_LoadString("COMM_MODULE" , "COMM_OPERATION" ,theApp.gsLanguage),10}
 
 	};
 
@@ -612,7 +614,7 @@ void CSendRecord::ExportSendBetRecordToexel()
 	{
 
 		
-		UiFun::MessageBoxEx(_T("可能是没有装office 导致创建失败！") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_NOT_OFFICE" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 
 	}
@@ -788,10 +790,10 @@ void CSendRecord::GetExportCol(map<int,string> &item,uistruct::P2P_QUIZ_RECORD_t
 
 	if (const_it.content[32] == 1)
 	{
-		result = "妹";
+		result = UiFun::UI_LoadString("COMM_MODULE" , "COMM_SISTER" ,theApp.gsLanguage);
 	}else
 	{
-		result = "哥";
+		result = UiFun::UI_LoadString("COMM_MODULE" , "COMM_BROTHER" ,theApp.gsLanguage);
 	}
 
 	reward = strprintf("%.4f",const_it.amount);
@@ -805,10 +807,10 @@ void CSendRecord::GetExportCol(map<int,string> &item,uistruct::P2P_QUIZ_RECORD_t
 
 		if (const_it.guess_num == 1)
 		{
-			guess = "妹";
+			guess =UiFun::UI_LoadString("COMM_MODULE" , "COMM_SISTER" ,theApp.gsLanguage);
 		}else
 		{
-			guess = "哥";
+			guess = UiFun::UI_LoadString("COMM_MODULE" , "COMM_BROTHER" ,theApp.gsLanguage);
 		}
 		if (const_it.state == 2)  /// 开奖
 		{
@@ -831,7 +833,7 @@ void CSendRecord::GetExportCol(map<int,string> &item,uistruct::P2P_QUIZ_RECORD_t
 				item[i++] =guess;
 				item[i++] =reward;
 				item[i++] =time;
-				item[i++] ="已开";
+				item[i++] =UiFun::UI_LoadString("COMM_MODULE" , "COMM_BEEN_OPEN" ,theApp.gsLanguage);
 			}else{
 				if ((const_it.time_out + const_it.height)> theApp.blocktipheight && theApp.IsSyncBlock)
 				{
@@ -841,7 +843,7 @@ void CSendRecord::GetExportCol(map<int,string> &item,uistruct::P2P_QUIZ_RECORD_t
 					item[i++] ="--";
 					item[i++] =reward;
 					item[i++] =time;
-					item[i++] ="待开";
+					item[i++] =UiFun::UI_LoadString("COMM_MODULE" , "COMM_STAY_OPEN" ,theApp.gsLanguage);
 				}else if(theApp.IsSyncBlock && const_it.height != 0 &&(const_it.time_out + const_it.height)< theApp.blocktipheight){
 				reward= strprintf("-%.4f",const_it.amount);
 				item[i++] =reciveTime;
@@ -849,7 +851,7 @@ void CSendRecord::GetExportCol(map<int,string> &item,uistruct::P2P_QUIZ_RECORD_t
 				item[i++] =guess;
 				item[i++] =reward;
 				item[i++] =time;
-				item[i++] ="超时";
+				item[i++] = UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIMEOUT" ,theApp.gsLanguage);
 				}else{
 					reward= strprintf("%.4f",const_it.amount);
 					item[i++] =reciveTime;
@@ -857,7 +859,7 @@ void CSendRecord::GetExportCol(map<int,string> &item,uistruct::P2P_QUIZ_RECORD_t
 					item[i++] ="--";
 					item[i++] =reward;
 					item[i++] =time;
-					item[i++] ="待开";
+					item[i++] = UiFun::UI_LoadString("COMM_MODULE" , "COMM_STAY_OPEN" ,theApp.gsLanguage);
 				}
 
 			}
@@ -871,14 +873,14 @@ void CSendRecord::GetExportCol(map<int,string> &item,uistruct::P2P_QUIZ_RECORD_t
 				item[i++] ="--";
 				item[i++] =reward;
 				item[i++] ="--";
-				item[i++] ="未接";
+				item[i++] = UiFun::UI_LoadString("COMM_MODULE" , "COMM_MISSED" ,theApp.gsLanguage);
 			}else if(theApp.IsSyncBlock&&const_it.height !=0 && (500 + const_it.height)< theApp.blocktipheight){
 				item[i++] ="--";
 				item[i++] =result;
 				item[i++] ="--";
 				item[i++] =reward;
 				item[i++] ="--";
-				item[i++] ="超时";
+				item[i++] = UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIMEOUT" ,theApp.gsLanguage);
 			}else
 			{
 				item[i++] ="--";
@@ -886,7 +888,7 @@ void CSendRecord::GetExportCol(map<int,string> &item,uistruct::P2P_QUIZ_RECORD_t
 				item[i++] ="--";
 				item[i++] =reward;
 				item[i++] ="--";
-				item[i++] ="未接";
+				item[i++] = UiFun::UI_LoadString("COMM_MODULE" , "COMM_MISSED" ,theApp.gsLanguage);
 			}
 
 		}

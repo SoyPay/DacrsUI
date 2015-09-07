@@ -56,7 +56,7 @@ void CReCharge::OnBnClickedOk()
 		if (strTxMoney == _T(""))
 		{
 			
-			UiFun::MessageBoxEx(_T("金额不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
+			UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_MONEY_NOT_NULL" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 			return ;
 		}
 		theApp.m_strAddress = strTxMoney;
@@ -66,7 +66,7 @@ void CReCharge::OnBnClickedOk()
 		if (strTxmessage.GetLength() >200)
 		{
 			
-			UiFun::MessageBoxEx(_T("广告语不能超过两百个字节") , _T("提示") ,MFB_OK|MFB_TIP );
+			UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_ADVERTIS_TOW_BYTES" ,theApp.gsLanguage) ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 			return ;
 		}
 		theApp.m_strAddress = strTxmessage;
@@ -92,7 +92,7 @@ BOOL CReCharge::OnInitDialog()
 	m_Text.SetTextColor(RGB(255,255,255));	    //字体颜色
 	if (m_strText == _T(""))
 	{
-		m_Text.SetWindowText(_T("充值")) ;
+		m_Text.SetWindowText(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_RECHARGE" ,theApp.gsLanguage)) ;
 	}else{
 		m_Text.SetWindowText(m_strText) ;
 	}
@@ -133,7 +133,7 @@ BOOL CReCharge::OnInitDialog()
 
 	m_rBtnOk.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
 	m_rBtnOk.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-	m_rBtnOk.SetWindowText("确 定") ;
+	m_rBtnOk.SetWindowText(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_CONFIRM" ,theApp.gsLanguage)) ;
 	//m_rBtnOk.SetFontEx(20 , _T("微软雅黑"));
 	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
@@ -143,7 +143,7 @@ BOOL CReCharge::OnInitDialog()
 
 	m_rBtnCancel.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255));
 	m_rBtnCancel.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-	m_rBtnCancel.SetWindowText("取 消") ;
+	m_rBtnCancel.SetWindowText(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_CANCEL" ,theApp.gsLanguage)) ;
 	//m_rBtnCancel.SetFontEx(20 , _T("微软雅黑"));
 	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));

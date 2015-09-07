@@ -278,13 +278,13 @@ BOOL CIndTitleBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT 
 		UpdateData(0);
 
 		m_tooltip.Create(this); 
-		m_tooltip.AddTool((CButton   *)GetDlgItem(IDC_BUTTON_MAIN_UI), _T("主界面")); 
-		m_tooltip.AddTool((CButton   *)GetDlgItem(IDC_BUTTON_SEND), _T("发送")); 
-		m_tooltip.AddTool((CButton   *)GetDlgItem(IDC_BUTTON_RECE), _T("接收")); 
-		m_tooltip.AddTool((CButton   *)GetDlgItem(IDC_BUTTON_TRAD_INFO), _T("交易详情")); 
-		m_tooltip.AddTool((CButton   *)GetDlgItem(IDC_BUTTON_P2P), _T("猜你妹")); 
-		m_tooltip.AddTool((CButton   *)GetDlgItem(IDC_BUTTON_MORTGAGE), _T("抢红包")); 
-		m_tooltip.AddTool((CButton   *)GetDlgItem(IDC_BUTTON_IPO), _T("IPO领币")); 
+	    m_tooltip.AddTool((CButton   *)GetDlgItem(IDC_BUTTON_MAIN_UI), UiFun::UI_LoadString("TITLEBAR_MODULE"  , "TITLEBAR_MAIN_INTERFACE",theApp.gsLanguage )); 
+		m_tooltip.AddTool((CButton   *)GetDlgItem(IDC_BUTTON_SEND), UiFun::UI_LoadString("TITLEBAR_MODULE"  , "TITLEBAR_SEND",theApp.gsLanguage )); 
+		m_tooltip.AddTool((CButton   *)GetDlgItem(IDC_BUTTON_RECE), UiFun::UI_LoadString("TITLEBAR_MODULE"  , "TITLEBAR_RECE",theApp.gsLanguage )); 
+		m_tooltip.AddTool((CButton   *)GetDlgItem(IDC_BUTTON_TRAD_INFO),UiFun::UI_LoadString("TITLEBAR_MODULE"  , "TITLEBAR_TRAD",theApp.gsLanguage )); 
+		m_tooltip.AddTool((CButton   *)GetDlgItem(IDC_BUTTON_P2P),UiFun::UI_LoadString("TITLEBAR_MODULE"  , "TITLEBAR_P2P",theApp.gsLanguage )); 
+		m_tooltip.AddTool((CButton   *)GetDlgItem(IDC_BUTTON_MORTGAGE), UiFun::UI_LoadString("TITLEBAR_MODULE"  , "TITLEBAR_MORTGAGE",theApp.gsLanguage )); 
+		m_tooltip.AddTool((CButton   *)GetDlgItem(IDC_BUTTON_IPO), UiFun::UI_LoadString("TITLEBAR_MODULE"  , "TITLEBAR_IPO",theApp.gsLanguage )); 
 
 		MobileTip(IDC_BUTTON_MAIN_UI , TRUE );
 

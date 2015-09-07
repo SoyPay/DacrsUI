@@ -174,11 +174,11 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 
 		m_sCountpage.SetFont(90, _T("黑体"));				//设置显示字体和大小
 		m_sCountpage.SetTextColor(RGB(0,0,0));			    //字体颜色	
-		m_sCountpage.SetWindowText(_T("共:"));
+		m_sCountpage.SetWindowText(UiFun::UI_LoadString("P2P_MODULE" , "P2P_TOTAL" ,theApp.gsLanguage));
 
 		m_rBtnWithd.SetBitmaps( IDB_BITMAP_P2PBUTTON_1 , RGB(255, 255, 0) , IDB_BITMAP_P2PBUTTON_1 , RGB(255, 255, 255) );
 		m_rBtnWithd.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		m_rBtnWithd.SetWindowText("提现") ;
+		m_rBtnWithd.SetWindowText(UiFun::UI_LoadString("P2P_MODULE" , "P2P_WITHDRAWALS" ,theApp.gsLanguage)) ;
 		m_rBtnWithd.SetFontEx(20 , _T("微软雅黑"));
 		m_rBtnWithd.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(255, 255, 255));
 		m_rBtnWithd.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
@@ -188,7 +188,7 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 
 		m_rBtnRech.SetBitmaps( IDB_BITMAP_P2PBUTTON_2 , RGB(255, 255, 0) , IDB_BITMAP_P2PBUTTON_2 , RGB(255, 255, 255) );
 		m_rBtnRech.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		m_rBtnRech.SetWindowText("充值") ;
+		m_rBtnRech.SetWindowText(UiFun::UI_LoadString("P2P_MODULE" , "P2P_RECHARGE" ,theApp.gsLanguage)) ;
 		m_rBtnRech.SetFontEx(20 , _T("微软雅黑"));
 		m_rBtnRech.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(255, 255, 255));
 		m_rBtnRech.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
@@ -198,7 +198,7 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 
 		m_rBtnRefresh1.SetBitmaps( IDB_BITMAP_P2PBUTTON_2 , RGB(255, 255, 0) , IDB_BITMAP_P2PBUTTON_2 , RGB(255, 255, 255) );
 		m_rBtnRefresh1.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		m_rBtnRefresh1.SetWindowText("刷新") ;
+		m_rBtnRefresh1.SetWindowText(UiFun::UI_LoadString("P2P_MODULE" , "P2P_REFRESH" ,theApp.gsLanguage)) ;
 		m_rBtnRefresh1.SetFontEx(20 , _T("微软雅黑"));
 		m_rBtnRefresh1.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(255, 255, 255));
 		m_rBtnRefresh1.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
@@ -208,7 +208,7 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 
 		m_rBtnRefresh2.SetBitmaps( IDB_BITMAP_BUTTON3 , RGB(255, 255, 0) , IDB_BITMAP_BUTTON3 , RGB(255, 255, 255) );
 		m_rBtnRefresh2.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		m_rBtnRefresh2.SetWindowText("刷新") ;
+		m_rBtnRefresh2.SetWindowText(UiFun::UI_LoadString("P2P_MODULE" , "P2P_REFRESH" ,theApp.gsLanguage)) ;
 		m_rBtnRefresh2.SetFontEx(20 , _T("微软雅黑"));
 		m_rBtnRefresh2.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(255, 255, 255));
 		m_rBtnRefresh2.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
@@ -264,7 +264,7 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 
 		m_rBtnSetCommonAddr.SetBitmaps( IDB_BITMAP_P2PBUTTON_2 , RGB(255, 255, 0) , IDB_BITMAP_P2PBUTTON_2 , RGB(255, 255, 255) );
 		m_rBtnSetCommonAddr.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		m_rBtnSetCommonAddr.SetWindowText("常用地址") ;
+		m_rBtnSetCommonAddr.SetWindowText(UiFun::UI_LoadString("P2P_MODULE" , "P2P_COMM_ADDRESS" ,theApp.gsLanguage)) ;
 		m_rBtnSetCommonAddr.SetFontEx(20 , _T("微软雅黑"));
 		m_rBtnSetCommonAddr.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(255, 255, 255));
 		m_rBtnSetCommonAddr.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
@@ -277,8 +277,8 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_money.SetWindowText(_T(""));
 		
 
-		m_tab.InsertItem(0,_T("接单记录"));  //添加参数一选项卡 
-		m_tab.InsertItem(1,_T("发起记录"));  //添加参数二选项卡 
+		m_tab.InsertItem(0,UiFun::UI_LoadString("P2P_MODULE" , "P2P_SINGLE_RECORD" ,theApp.gsLanguage));  //添加参数一选项卡 
+		m_tab.InsertItem(1,UiFun::UI_LoadString("P2P_MODULE" , "P2P_SEND_RECORD" ,theApp.gsLanguage));  //添加参数二选项卡 
 
 		CSize sz(80,30);
 		m_tab.SetItemSize(sz);
@@ -675,15 +675,14 @@ void CP2PDlg::OnBnClickedButtonWithd()
 
 	if (!theApp.IsSyncBlock )
 	{
-		UiFun::MessageBoxEx(_T("同步未完成,不能发送交易") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_UNFINISHED_BUSINESS" ,theApp.gsLanguage) ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
-
 	if (!CheckBalance("账户金额为零,不能提现"))
 	{
 		return;
 	}
-	if ( IDNO == UiFun::MessageBoxEx( _T("是否确定要提现") , _T("提示") ,MFB_YESNO|MFB_TIP ) )
+	if ( IDNO == UiFun::MessageBoxEx( UiFun::UI_LoadString("P2P_MODULE" , "P2P_CONFIRM_WITHDRAWALS" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_YESNO|MFB_TIP ) )
 		return;
 
 	if (!CheckRegIDValid( theApp.m_betScritptid )) return ;
@@ -702,7 +701,7 @@ void CP2PDlg::OnBnClickedButtonWithd()
 	if (addr == _T(""))
 	{
 		
-		UiFun::MessageBoxEx(_T("地址不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_ADDRESS_NOT_NULL" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -716,7 +715,7 @@ void CP2PDlg::OnBnClickedButtonWithd()
 	INT64 strTxFee = theApp.m_P2PBetCfg.GetAppAmountnFee;
 	if (  strTxFee < 10000  ) {
 		
-		UiFun::MessageBoxEx(_T("小费不足") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_TIP" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
@@ -747,12 +746,12 @@ void CP2PDlg::OnBnClickedButtonWithd()
 	if ( pos >=0 ) {
 		bRes = TRUE ;
 		//strTip.Format( _T("恭喜提现成功!\n%s") , root["hash"].asCString() ) ;
-		strTip = "恭喜提现成功，请等待1-2分钟确认交易\n" ;
+		strTip = UiFun::UI_LoadString("P2P_MODULE" , "P2P_WITHDRAWALS_SUCCESS" ,theApp.gsLanguage) ;
 	}else{
-		strTip = "提现失败!" ;
+		strTip = UiFun::UI_LoadString("P2P_MODULE" , "P2P_WITHDRAWALS_FAIL" ,theApp.gsLanguage) ;
 	}
 	
-	UiFun::MessageBoxEx(strTip.c_str(), _T("提示") ,MFB_OK|MFB_TIP );
+	UiFun::MessageBoxEx(strTip.c_str(), UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 }
 
 
@@ -768,7 +767,7 @@ void CP2PDlg::OnBnClickedButtonRech()
 	if (!theApp.IsSyncBlock )
 	{
 		
-		UiFun::MessageBoxEx(_T("同步未完成,不能发送交易") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_UNFINISHED_BUSINESS" ,theApp.gsLanguage) ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -782,7 +781,7 @@ void CP2PDlg::OnBnClickedButtonRech()
 	if (theApp.m_strAddress == _T(""))
 	{
 		
-		UiFun::MessageBoxEx(_T("金额不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_MONEY_NOT_NULL" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
@@ -798,7 +797,7 @@ void CP2PDlg::OnBnClickedButtonRech()
 	if (addr == _T(""))
 	{
 		
-		UiFun::MessageBoxEx(_T("地址不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_ADDRESS_NOT_NULL" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -810,7 +809,7 @@ void CP2PDlg::OnBnClickedButtonRech()
 	if (sub <1.0)
 	{
 		
-		UiFun::MessageBoxEx(_T("系统账户最少余额1smc,作为后续合约交易小费") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_TRDING_TIPS" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -820,7 +819,7 @@ void CP2PDlg::OnBnClickedButtonRech()
 	INT64 strTxFee = theApp.m_P2PBetCfg.GetAppAmountnFee;
 	if (  strTxFee < 10000  ) {
 		
-		UiFun::MessageBoxEx(_T("小费不足") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_TIP_INSU" ,theApp.gsLanguage) ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
@@ -850,12 +849,12 @@ void CP2PDlg::OnBnClickedButtonRech()
 	if ( pos >=0 ) {
 		bRes = TRUE ;
 		//strTip.Format( _T("恭喜充值成功!\n%s") , root["hash"].asCString() ) ;
-		strTip = "恭喜充值成功，请等待1-2分钟确认交易\n" ;
+		strTip = UiFun::UI_LoadString("P2P_MODULE" , "P2P_WITHDRAWALS_SUCCESS" ,theApp.gsLanguage) ;
 	}else{
-		strTip = "充值失败!";
+		strTip = UiFun::UI_LoadString("P2P_MODULE" , "P2P_RECHARGE_FAIL" ,theApp.gsLanguage);
 	}
 	
-	UiFun::MessageBoxEx(strTip.c_str(), _T("提示") ,MFB_OK|MFB_TIP );
+	UiFun::MessageBoxEx(strTip.c_str(), UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 }
 
 void CP2PDlg::SendBet(int rewardnum)
@@ -865,7 +864,7 @@ void CP2PDlg::SendBet(int rewardnum)
 	if (!theApp.IsSyncBlock )
 	{
 		
-		UiFun::MessageBoxEx(_T("同步未完成,不能发送交易") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_UNFINISHED_BUSINESS" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -887,7 +886,7 @@ void CP2PDlg::SendBet(int rewardnum)
 	if (addr == _T(""))
 	{
 		
-		UiFun::MessageBoxEx(_T("地址不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_ADDRESS_NOT_NULL" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		return;
 	}
 	//// 查询地址是否激活
@@ -927,7 +926,7 @@ void CP2PDlg::SendBet(int rewardnum)
 	INT64 strTxFee = theApp.m_P2PBetCfg.SendBetFee;
 	if (  strTxFee < 10000  ) {
 		
-		UiFun::MessageBoxEx(_T("小费不足") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_TIP_INSU" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		return ;
 	}
 	
@@ -957,9 +956,9 @@ void CP2PDlg::SendBet(int rewardnum)
 	if ( pos >=0 ) {
 		bRes = TRUE ;
 		//strTip.Format( _T("恭喜发送赌约成功!\n%s") , root["hash"].asCString() ) ;
-		strTip.Format( _T("恭喜发送成功，请等待1-2分钟确认交易\n")) ;
+		strTip.Format(UiFun::UI_LoadString("P2P_MODULE" , "P2P_WITHDRAWALS_SUCCESS" ,theApp.gsLanguage)) ;
 	}else{
-		strTip.Format( _T("发送赌约失败!") ) ;
+		strTip.Format( UiFun::UI_LoadString("P2P_MODULE" , "P2P_SEND_BET_FAIL" ,theApp.gsLanguage) ) ;
 	}
 
 	//保存到数据库
@@ -999,7 +998,7 @@ void CP2PDlg::SendBet(int rewardnum)
 		theApp.m_MsgQueue.push(postmsg);
 	}
 	
-	UiFun::MessageBoxEx(strTip, _T("提示") ,MFB_OK|MFB_TIP );
+	UiFun::MessageBoxEx(strTip, UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 }
 
 void CP2PDlg::OnBnClickedButtonMale()
@@ -1026,27 +1025,27 @@ void CP2PDlg::OnBnClickedButtonMale()
 	if (strTxMoney == _T(""))
 	{
 		
-		UiFun::MessageBoxEx(_T("金额不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_MONEY_NOT_NULL" ,theApp.gsLanguage) ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
 	if (strtod(strTxMoney,NULL) > balance)
 	{
 	
-		UiFun::MessageBoxEx(_T("投注金额大于账户余额") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_MONEY_MORE_BALANCE" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
 	if (strtod(strTxMoney,NULL)<100)
 	{
 		
-		UiFun::MessageBoxEx(_T("投注金额必须大于100") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_BET_MONEY_MORE_100" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
 	CString strDisplay;
-	strDisplay.Format(_T("确定要发送妹--->金额:%s"), strTxMoney);
-	if (IDCANCEL == UiFun::MessageBoxEx(strDisplay , _T("提示") , MFB_OKCANCEL|MFB_TIP ) )
+	strDisplay.Format(_T("%s:%s"), UiFun::UI_LoadString("P2P_MODULE" , "P2P_SENDSIS_MONEY" ,theApp.gsLanguage) ,strTxMoney);
+	if (IDCANCEL == UiFun::MessageBoxEx(strDisplay , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  , MFB_OKCANCEL|MFB_TIP ) )
 	{
 		return;
 	}
@@ -1078,27 +1077,27 @@ void CP2PDlg::OnBnClickedButtonWoman()
 	if (strTxMoney == _T(""))
 	{
 		
-		UiFun::MessageBoxEx(_T("金额不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_MONEY_NOT_NULL" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
 	if (strtod(strTxMoney,NULL) > balance)
 	{
 		
-		UiFun::MessageBoxEx(_T("投注金额大于账户余额") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_MONEY_MORE_BALANCE" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
 	if (strtod(strTxMoney,NULL)<1)
 	{
 		
-		UiFun::MessageBoxEx(_T("投注金额必须大于1") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_BET_MONEY_MORE_1" ,theApp.gsLanguage) ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
 	CString strDisplay;
-	strDisplay.Format(_T("确定要发送哥--->金额:%s"), strTxMoney);
-	if (IDCANCEL == UiFun::MessageBoxEx(strDisplay , _T("提示") , MFB_OKCANCEL|MFB_TIP ) )
+	strDisplay.Format(UiFun::UI_LoadString("P2P_MODULE" , "P2P_SENDBRO_MONEY" ,theApp.gsLanguage), strTxMoney);
+	if (IDCANCEL == UiFun::MessageBoxEx(strDisplay ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  , MFB_OKCANCEL|MFB_TIP ) )
 	{
 		return;
 	}
@@ -1113,7 +1112,7 @@ void CP2PDlg::OnListPool()
 	m_pagecount = (m_PoolList.size()%m_pagesize)==0?(m_PoolList.size()/m_pagesize):(m_PoolList.size()/m_pagesize)+1;
 	
 	string temp;
-	temp =strprintf("共:%d",m_pagecount);
+	temp =strprintf("%s:%d",UiFun::UI_LoadString("COMM_MODULE" , "COMM_TOTAL" ,theApp.gsLanguage) ,m_pagecount);
 	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(temp.c_str());
 	GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T(""));
 	Invalidate();
@@ -1128,7 +1127,7 @@ void CP2PDlg::OnListPool()
 		int index = ((m_curpage-1)*m_pagesize)+pinf->nItem;
 		if (index > m_PoolList.size())
 		{
-			UiFun::MessageBoxEx("此单不存在" , _T("提示") ,MFB_OK|MFB_TIP );
+			UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_THIS_ALONE_NOT" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 			return 0;
 		}
 		uistruct::LISTP2POOL_T item = m_PoolList.at(index);
@@ -1160,7 +1159,7 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 	 if (!theApp.IsSyncBlock )
 	 {
 		 
-		 UiFun::MessageBoxEx(_T("同步未完成,不能发送交易") , _T("提示") ,MFB_OK|MFB_TIP );
+		 UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_UNFINISHED_BUSINESS" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		 return;
 	 }
 	 if (!CheckBalance())
@@ -1174,7 +1173,7 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 
 	 if (strtod(strTxMoney,NULL) < strtod(money,NULL))
 	 {
-		 UiFun::MessageBoxEx(_T("接单金额大于账户余额") , _T("提示") ,MFB_OK|MFB_TIP );
+		 UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_ORDERS_MORE_BALANCE" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		 return ;
 	 }
 
@@ -1190,7 +1189,7 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 	 if (addr == _T(""))
 	 {
 		 
-		 UiFun::MessageBoxEx(_T("地址不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
+		 UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_ADDRESS_NOT_NULL" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		 return;
 	 }
 
@@ -1236,9 +1235,9 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 	 if ( pos >=0 ) {
 		 bRes = TRUE ;
 		 //strTip.Format( _T("恭喜接赌成功!\n%s") , root["hash"].asCString() ) ;
-		 strTip="恭喜接单成功，请等待1-2分钟确认交易\n";
+		 strTip=UiFun::UI_LoadString("P2P_MODULE" , "P2P_WITHDRAWALS_SUCCESS" ,theApp.gsLanguage);
 	 }else{
-		 strTip="此单已经被接!" ;
+		 strTip= UiFun::UI_LoadString("P2P_MODULE" , "P2P_THIS_ALONE_OK" ,theApp.gsLanguage) ;
 	 }
 
 	 //保存到数据库
@@ -1329,7 +1328,7 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 		 }
 	 }
 	
-	 UiFun::MessageBoxEx(strTip.c_str() , _T("提示") ,MFB_OK|MFB_TIP );
+	 UiFun::MessageBoxEx(strTip.c_str() , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
  }
  bool CP2PDlg::CheckBalance(string strshow)
  {
@@ -1342,9 +1341,9 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 		if (strshow == "")
 		{
 			
-			UiFun::MessageBoxEx(_T("账户金额为零,请先充值") , _T("提示") ,MFB_OK|MFB_TIP );
+			UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_ACCOUNT_RECHARGE" ,theApp.gsLanguage) ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		}else{
-			UiFun::MessageBoxEx(strshow.c_str() , _T("提示") ,MFB_OK|MFB_TIP );
+			UiFun::MessageBoxEx(strshow.c_str() , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		}
 		
 		return false;
@@ -1385,7 +1384,7 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 
 	 double result = ComPuteBetWinAandLoser(m_P2pBetTxList);
 	 string show;
-	 show =strprintf("总盈亏:%.4f",result);
+	 show =strprintf("%s:%.4f",UiFun::UI_LoadString("P2P_MODULE" , "P2P_TOTAL_PROFIT_LOSS" ,theApp.gsLanguage),result);
 	 m_rBtnWinerloser.SetWindowText(show.c_str());
 	 m_rBtnWinerloser.Invalidate();
  }
@@ -1398,7 +1397,7 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 
 	 double result = ComPuteAddrBetWinAandLoser(m_P2pBetTxList,addr);
 	 string show;
-	 show = strprintf("盈亏:%.4f",result);
+	 show = strprintf("%s:%.4f",UiFun::UI_LoadString("P2P_MODULE" , "P2P_TOTAL_PROFIT" ,theApp.gsLanguage),result);
 	 m_rBtnAddrWinerloser.SetWindowText(show.c_str());
 	 m_rBtnAddrWinerloser.Invalidate();
  }
@@ -1613,7 +1612,7 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 				 {
 					  GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T(""));
 					
-					UiFun::MessageBoxEx(_T("输入有误,请输入数字") , _T("提示") ,MFB_OK|MFB_TIP );
+					UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_INPUT_ERROR" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 				 }
 				 return TRUE;
 			 }
@@ -1655,7 +1654,7 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
  }
  void  CP2PDlg::onShowLink()
  {
-	 v_linkCtrl.SetWindowText(_T("帮助"));
+	 v_linkCtrl.SetWindowText(UiFun::UI_LoadString("COMM_MODULE" , "COMM_HELP" ,theApp.gsLanguage));
 	 v_linkCtrl.SetURL("http://www.dacrs.com/forum.php?mod=viewthread&tid=3487&extra=page%3D1");
  }
 
@@ -1667,9 +1666,9 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 	 if (count <=(int)m_PoolList.size())
 	 {
 		 uistruct::LISTP2POOL_T const_it = m_PoolList.at(count);
-		 string temp = _T("竞猜交易ID:");
+		 string temp = UiFun::UI_LoadString("P2P_MODULE" , "P2P_QUIZ_TRAD_ID" ,theApp.gsLanguage);
 	    temp +=const_it.hash ;
-		 UiFun::MessageBoxEx(temp.c_str() , _T("提示") ,MFB_OK|MFB_TIP );
+		 UiFun::MessageBoxEx(temp.c_str() , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 	 }
  }
 bool CP2PDlg::CheckBalance(double dmoney)
@@ -1681,14 +1680,14 @@ bool CP2PDlg::CheckBalance(double dmoney)
 	if (money == 0.0)
 	{
 		
-		UiFun::MessageBoxEx(_T("账户金额为零,请先充值") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_ACCOUNT_RECHARGE" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		return false;
 	}
 
 	if (dmoney >money)
 	{
 		
-		UiFun::MessageBoxEx(_T("提现金额大于账户中的金额") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_WITHDRAWALS_MORE_BALANCE" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		return false;
 	}
 	return true;
@@ -1699,7 +1698,7 @@ void  CP2PDlg::GetAppAccountSomeMoney()
 	if (!theApp.IsSyncBlock )
 	{
 		
-		UiFun::MessageBoxEx(_T("同步未完成,不能发送交易") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_UNFINISHED_BUSINESS" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -1713,7 +1712,7 @@ void  CP2PDlg::GetAppAccountSomeMoney()
 	CString balance ="";
 	
 	GetDlgItem(IDC_STATIC_BALANCE)->GetWindowText(balance);
-	CReCharge outdlg(NULL,"提现","提现金额","",balance);
+	CReCharge outdlg(NULL,UiFun::UI_LoadString("P2P_MODULE" , "P2P_WITHDRAWALS" ,theApp.gsLanguage),UiFun::UI_LoadString("P2P_MODULE" , "P2P_WITHDRAWALS_MONEY" ,theApp.gsLanguage),"",balance);
 	if ( IDOK != outdlg.DoModal()){
 		return;
 	}
@@ -1721,7 +1720,7 @@ void  CP2PDlg::GetAppAccountSomeMoney()
 	if (theApp.m_strAddress == _T(""))
 	{
 		
-		UiFun::MessageBoxEx(_T("提现金额不能为零") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_WITHDRAWALS_MONEY_NULL" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		return ;
 	}
 	
@@ -1730,8 +1729,8 @@ void  CP2PDlg::GetAppAccountSomeMoney()
 	{
 		return;
 	}
-		string show = strprintf("是否确定要提现 金额为:%lf",money);
-	if ( IDNO == UiFun::MessageBoxEx( show.c_str() , _T("提示") , MFB_YESNO|MFB_TIP ) )
+		string show = strprintf("%s:%lf",UiFun::UI_LoadString("P2P_MODULE" , "P2P_WITHDRAWALS_MONEY_MM" ,theApp.gsLanguage),money);
+	if ( IDNO == UiFun::MessageBoxEx( show.c_str() , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  , MFB_YESNO|MFB_TIP ) )
 		return;
 
 	string strShowData ="";
@@ -1748,7 +1747,7 @@ void  CP2PDlg::GetAppAccountSomeMoney()
 	if (addr == _T(""))
 	{
 	
-		UiFun::MessageBoxEx(_T("地址不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_ADDRESS_NOT_NULL" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -1758,7 +1757,7 @@ void  CP2PDlg::GetAppAccountSomeMoney()
 	INT64 strTxFee = theApp.m_P2PBetCfg.GetAppAmountnFee;
 	if (  strTxFee < 10000  ) {
 		
-		UiFun::MessageBoxEx(_T("小费不足") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_TIP_INSU" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
@@ -1789,12 +1788,12 @@ void  CP2PDlg::GetAppAccountSomeMoney()
 	if ( pos >=0 ) {
 		bRes = TRUE ;
 		//strTip.Format( _T("恭喜提现成功!\n%s") , root["hash"].asCString() ) ;
-		strTip = "恭喜提现成功，请等待1-2分钟确认交易\n" ;
+		strTip = UiFun::UI_LoadString("P2P_MODULE" , "P2P_WITHDRAWALS_SUCCESS" ,theApp.gsLanguage) ;
 	}else{
-		strTip = "提现失败!" ;
+		strTip = UiFun::UI_LoadString("P2P_MODULE" , "P2P_WITHDRAWALS_FAIL" ,theApp.gsLanguage) ;
 	}
 	
-	UiFun::MessageBoxEx(strTip.c_str() , _T("提示") ,MFB_OK|MFB_TIP );
+	UiFun::MessageBoxEx(strTip.c_str() , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 }
 void  CP2PDlg::AutoSendBet()
 {
@@ -1933,7 +1932,8 @@ void  CP2PDlg::AutoSendBet()
 
 		INT64 strTxFee = theApp.m_P2PBetCfg.SendBetFee;
 		if (  strTxFee < 10000  ) {
-			::MessageBox( this->GetSafeHwnd() ,_T("小费不足") , _T("提示") , MB_ICONINFORMATION ) ;
+			//::MessageBox( this->GetSafeHwnd() ,UiFun::UI_LoadString("P2P_MODULE" , "P2P_TIP_INSU" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) , MB_ICONINFORMATION ) ;
+			UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_TIP_INSU" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 			return ;
 		}
 
@@ -1961,9 +1961,9 @@ void  CP2PDlg::AutoSendBet()
 		if ( pos >=0 ) {
 			bRes = TRUE ;
 			//strTip.Format( _T("恭喜发送赌约成功!\n%s") , root["hash"].asCString() ) ;
-			strTip.Format( _T("恭喜发送成功，请等待1-2分钟确认交易\n")) ;
+			strTip.Format( UiFun::UI_LoadString("P2P_MODULE" , "P2P_WITHDRAWALS_SEND_SUCCESS" ,theApp.gsLanguage)) ;
 		}else{
-			strTip.Format( _T("发送赌约失败!") ) ;
+			strTip.Format( UiFun::UI_LoadString("P2P_MODULE" , "P2P_SEND_BET_FAIL" ,theApp.gsLanguage) ) ;
 		}
 
 		//保存到数据库
@@ -2019,7 +2019,7 @@ BOOL CP2PDlg::AcceptBet(string hash,double dmoney,string sendaddr,int timeout,st
 	if (!theApp.IsSyncBlock )
 	{
 		
-		UiFun::MessageBoxEx(_T("同步未完成,不能发送交易") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx( UiFun::UI_LoadString("P2P_MODULE" , "P2P_UNFINISHED_BUSINESS" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		return FALSE;
 	}
 
@@ -2163,7 +2163,7 @@ void CP2PDlg::AKeyCancelTheOrder()
 	if (pPoolList.size() == 0)
 	{
 		
-		UiFun::MessageBoxEx(_T("没有可取消的订单") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_NOT_CANCEL_ORDER" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -2172,7 +2172,7 @@ void CP2PDlg::AKeyCancelTheOrder()
 	if (mapAddrInfo.size() == 0)
 	{
 		
-		UiFun::MessageBoxEx(_T("没有激活的地址") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_NOT_ACTI_ADDRESS" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -2225,23 +2225,23 @@ void CP2PDlg::AKeyCancelTheOrder()
 	string strShow = "";
 	if (acceptaccount != 0)
 	{
-		strShow = "部分订单已经被接,不能取消";
+		strShow = UiFun::UI_LoadString("P2P_MODULE" , "P2P_ORDER_NOT_QX" ,theApp.gsLanguage);
 	}
 	if (pPoolList.size() != 0)
 	{
 		if (strShow != "")
 		{
-			strShow += " 并且部分订单不能取消,请充值再取消订单";
+			strShow += UiFun::UI_LoadString("P2P_MODULE" , "P2P_ORDER_NOT_CZZQX" ,theApp.gsLanguage);
 		}else{
-			strShow = "部分订单不能取消,请充值再取消订单";
+			strShow = UiFun::UI_LoadString("P2P_MODULE" , "P2P_ORDER_NOT_BFCZZQX" ,theApp.gsLanguage);
 		}
 	}
 	if (strShow == "")
 	{
-		strShow = "恭喜订单全部取消成功";
+		strShow = UiFun::UI_LoadString("P2P_MODULE" , "P2P_ORDER_OK" ,theApp.gsLanguage);
 	}
 	
-	UiFun::MessageBoxEx(strShow.c_str()  , _T("提示") ,MFB_OK|MFB_TIP );
+	UiFun::MessageBoxEx(strShow.c_str()  , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 
 }
 

@@ -107,8 +107,8 @@ BOOL CAddApp::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		v_linkCtrl1.SetWindowText(_T(""));
 		v_linkCtrl2.SetWindowText(_T(""));
 
-		v_linkCtrl1.SetWindowText(_T("关注开发进度"));
-		v_linkCtrl2.SetWindowText(_T("QQ群"));
+		v_linkCtrl1.SetWindowText(UiFun::UI_LoadString("ADDAPP_MODULE" , "ADDAPP_DEVE_PROGESS" ,theApp.gsLanguage));
+		v_linkCtrl2.SetWindowText(UiFun::UI_LoadString("ADDAPP_MODULE" , "ADDAPP_QQ_GROUP" ,theApp.gsLanguage));
 
 		v_linkCtrl1.SetURL(_T("http://www.dacrs.com/forum.php?mod=viewthread&tid=2641"));
 		v_linkCtrl2.SetURL(_T("http://jq.qq.com/?_wv=1027&k=T5mlmd"));

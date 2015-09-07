@@ -148,33 +148,32 @@ BOOL CProgStatusBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UIN
 	if ( bRes ) {
 		UpdateData(0);
 
-		if (theApp.netWork == 0)
-		{
-			netStr = _T("主");
-		}else if (theApp.netWork == 1)
-		{
-			netStr = _T("局域");
-		}else if (theApp.netWork == 2)
-		{
-			netStr = _T("测试");
-		}
-
 		m_strNeting.SetFont(90, _T("宋体"));				//设置显示字体和大小
 		m_strNeting.SetTextColor(RGB(255,255,255));			    //字体颜色
-//		m_strNeting.SetWindowText(_T("网络同步中..."));
+		if (theApp.netWork == 0)
+		{
+			netStr = UiFun::UI_LoadString("PROGSTATUS_MODULE"  , "PROGSTATUS_MAIN",theApp.gsLanguage ) ; 
+		}else if (theApp.netWork == 1)
+		{
+			netStr = UiFun::UI_LoadString("PROGSTATUS_MODULE"  , "PROGSTATUS_LOCAL",theApp.gsLanguage ) ; 
+		}else if (theApp.netWork == 2)
+		{
+			netStr = UiFun::UI_LoadString("PROGSTATUS_MODULE"  , "PROGSTATUS_TEST",theApp.gsLanguage ) ; 
+		}
 		string strTemp ="";
-		strTemp = strprintf("获取%s网络连接",netStr);
+		strTemp =strprintf("%s%s%s",UiFun::UI_LoadString("PROGSTATUS_MODULE"  , "PROGSTATUS_GET",theApp.gsLanguage ) , netStr , UiFun::UI_LoadString("PROGSTATUS_MODULE"  , "PROGSTATUS_NETWORK_CONN",theApp.gsLanguage ));
 		m_strNeting.SetWindowText(strTemp.c_str()) ;
+			
 
 		m_strHeight.SetFont(90, _T("宋体"));				//设置显示字体和大小
 		m_strHeight.SetTextColor(RGB(255,255,255));			    //字体颜色
-		m_strHeight.SetWindowText(_T("高度:")) ;
+		m_strHeight.SetWindowText(UiFun::UI_LoadString("COMM_MODULE"  , "COMM_HEIGHT",theApp.gsLanguage )) ;
 		m_strHeight.ShowWindow(SW_HIDE) ;
 		
 		m_strVersion.SetFont(90, _T("宋体"));				//设置显示字体和大小
 		m_strVersion.SetTextColor(RGB(255,255,255));	    //字体颜色
 
-		string ver = strprintf("版本:v%s RC",GetUIVersion());
+		string ver = strprintf("%s:v%s RC",UiFun::UI_LoadString("COMM_MODULE"  , "COMM_VERSION",theApp.gsLanguage ) ,GetUIVersion());
 		m_strVersion.SetWindowText(ver.c_str()) ;
 		//m_strVersion.SetWindowText(_T("版本:v1.0.2.0 RC")) ;
 
@@ -225,7 +224,7 @@ int CProgStatusBar::ShowProgressCtrl(){
 	if (!m_bProgressType)
 	{
 		string strTemp = "";
-		strTemp = strprintf("%s网络同步中...",netStr);
+		strTemp = strprintf("%s%s",netStr , UiFun::UI_LoadString("PROGSTATUS_MODULE"  , "PROGSTATUS_NETWORK_SYNING",theApp.gsLanguage ));
 		m_strNeting.SetWindowText(strTemp.c_str());
 		m_strNeting.ShowWindow(SW_HIDE);
 		m_strNeting.ShowWindow(SW_SHOW);
@@ -236,7 +235,7 @@ int CProgStatusBar::ShowProgressCtrl(){
 		//设置进度条的值
 		m_progress.SetPos(setpos);
 		CString strText;
-		strText.AppendFormat("剩余 ~%d 块没有同步到本地", pBlockchanged.tips-pBlockchanged.high);
+		strText.AppendFormat("%s ~%d %s", UiFun::UI_LoadString("PROGSTATUS_MODULE"  , "PROGSTATUS_SURPLUS",theApp.gsLanguage ) , pBlockchanged.tips-pBlockchanged.high , UiFun::UI_LoadString("PROGSTATUS_MODULE"  , "PROGSTATUS_SYNLOCAL",theApp.gsLanguage ));
 		m_progress.SetDefinedStr(strText);
 		m_bProgressType = TRUE;
 		m_nSigIndex =pBlockchanged.connections>3?3:pBlockchanged.connections;
@@ -269,7 +268,7 @@ int CProgStatusBar::ShowProgressCtrl(){
 	//设置进度条的值
 	m_progress.SetPos(setpos);
 	CString strText;
-	strText.AppendFormat("剩余 ~%d 块没有同步到本地", pBlockchanged.tips-pBlockchanged.high);
+	strText.AppendFormat("%s ~%d %s",UiFun::UI_LoadString("PROGSTATUS_MODULE"  , "PROGSTATUS_SURPLUS",theApp.gsLanguage ) , pBlockchanged.tips-pBlockchanged.high ,UiFun::UI_LoadString("PROGSTATUS_MODULE"  , "PROGSTATUS_SYNLOCAL",theApp.gsLanguage ));
 	m_progress.SetDefinedStr(strText);
 	m_progress.Invalidate();
 
@@ -289,7 +288,7 @@ int CProgStatusBar::ShowProgressCtrl(){
 	}
 	if ( m_walletui && !m_prosshiden) {
 		string strTemp = "";
-		strTemp =strprintf("%s网络已同步",netStr);
+		strTemp =strprintf("%s%s",netStr , UiFun::UI_LoadString("PROGSTATUS_MODULE"  , "PROGSTATUS_SURPLUS",theApp.gsLanguage ) );
 		m_strNeting.SetWindowText(strTemp.c_str()) ;
 		m_strNeting.ShowWindow(SW_HIDE);
 		m_strNeting.ShowWindow(SW_SHOW);
@@ -304,7 +303,7 @@ int CProgStatusBar::ShowProgressCtrl(){
 	if (m_walletui && m_prosshiden)
 	{
 		string strTips;
-		strTips = strprintf("当前高度:%d" ,pBlockchanged.tips ) ;
+		strTips = strprintf("%s:%d" ,UiFun::UI_LoadString("PROGSTATUS_MODULE"  , "PROGSTATUS_CURRENT_HEIGHT",theApp.gsLanguage ) ,pBlockchanged.tips ) ;
 		m_strHeight.SetWindowText(strTips.c_str()) ;
 		m_strHeight.ShowWindow(SW_HIDE);
 		m_strHeight.ShowWindow(SW_SHOW);
@@ -357,7 +356,7 @@ void CProgStatusBar::ShowNetCount()
 			if (netCount == 0 )
 			{
 				string strTemp ="";
-				strTemp =strprintf("获取%s网络连接",netStr);
+				strTemp =strprintf("%s%s%s",UiFun::UI_LoadString("PROGSTATUS_MODULE"  , "PROGSTATUS_GET",theApp.gsLanguage ) ,netStr ,UiFun::UI_LoadString("PROGSTATUS_MODULE"  , "PROGSTATUS_NETWORK_CONN",theApp.gsLanguage ));
 				m_strNeting.SetWindowText(strTemp.c_str()) ;
 				Invalidate(); 
 			}
@@ -482,7 +481,7 @@ void CProgStatusBar::OnMouseMove(UINT nFlags, CPoint point)
 		lf.lfUnderline = FALSE;
 		strcpy((char*)lf.lfFaceName, "宋体");
 
-		string strShow = strprintf("当前网络连接数:%d",m_connectCount);
+		string strShow = strprintf("%s:%d",UiFun::UI_LoadString("PROGSTATUS_MODULE"  , "PROGSTATUS_CURRENT_NETWORK_CONN_NUM",theApp.gsLanguage ) ,m_connectCount);
 		if (IsWindowVisible()&& pDlg->m_BalloonTip->nBalloonInstances !=1)
 		{
 			pDlg->m_BalloonTip=CBalloonTip::Show(

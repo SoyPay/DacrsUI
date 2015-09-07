@@ -59,7 +59,7 @@ string CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
 		std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue);
 
 		string strContract = CSoyPayHelp::getInstance()->HexStr(vTemp);
-		txdetail +=strprintf("合约内容:   %d\r\n\r\n",strContract.c_str() );
+		txdetail +=strprintf("%s:   %d\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_CONTRACT" ,theApp.gsLanguage) ,strContract.c_str() );
 
 
 	if (!strcmp(tx.desregid.c_str(),theApp.m_betScritptid.c_str()))
@@ -77,29 +77,29 @@ string CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
 			string reward = "";
 			if (Openbet.dhash[32] == 1)
 			{
-				reward="妹";
+				reward= UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_BROTHER" ,theApp.gsLanguage);
 			}else
 			{
-				reward="哥";
+				reward= UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_SISTER" ,theApp.gsLanguage);
 			}
 
-			txdetail+=strprintf("应用名称:   %s\r\n\r\n","猜你妹" );
-			txdetail+=strprintf("合约类型:   %s\r\n\r\n","开奖" );
-			txdetail+=strprintf("开奖底牌:%s\r\n\r\n",reward.c_str() );
+			txdetail+=strprintf("%s:   %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_APP_NAME" ,theApp.gsLanguage) ,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_GUESS_SISTER" ,theApp.gsLanguage) );
+			txdetail+=strprintf("%s:   %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_CONTRACT_TYPE" ,theApp.gsLanguage) ,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_LOTTERY" ,theApp.gsLanguage) );
+			txdetail+=strprintf("%s:%s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_LOTTERY_CARDS" ,theApp.gsLanguage),reward.c_str() );
 
 			std::vector<unsigned char> vTemp;
 			vTemp.assign(Openbet.txhash,Openbet.txhash+sizeof(Openbet.txhash));
 			reverse(vTemp.begin(),vTemp.end());
 			string txhash = CSoyPayHelp::getInstance()->HexStr(vTemp);
 
-			txdetail+=strprintf("发起竞猜交易ID:   %s\r\n\r\n",txhash.c_str() );
+			txdetail+=strprintf("%s:   %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_SEND_TRADID" ,theApp.gsLanguage) ,txhash.c_str() );
 			// temp = CSoyPayHelp::getInstance()->HexStr(Openbet.accepthash );
 
 			 vTemp.assign(Openbet.accepthash,Openbet.accepthash+sizeof(Openbet.accepthash));
 			 reverse(vTemp.begin(),vTemp.end());
 			 txhash = CSoyPayHelp::getInstance()->HexStr(vTemp);
 
-			txdetail+=strprintf("接单交易ID:   %s\r\n\r\n",txhash.c_str() );
+			txdetail+=strprintf("%s:   %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_ORDERS_TRADID" ,theApp.gsLanguage) ,txhash.c_str() );
 			//OpenBetRecord(vTemp,transcion);
 		}else if (vTemp[0] == TX_ACCEPTBET)
 		{
@@ -113,23 +113,23 @@ string CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
 			string guess = "";
 			if (acceptcbet.data == 1)
 			{
-				guess="妹";
+				guess= UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_SISTER" ,theApp.gsLanguage);
 			}else
 			{
-				guess="哥";
+				guess= UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_BROTHER" ,theApp.gsLanguage);
 			}
 
-			txdetail+=strprintf("应用名称:  %s\r\n\r\n","猜你妹" );
-			txdetail+=strprintf("合约类型:   %s\r\n\r\n","接单" );
-			txdetail+=strprintf("竞猜内容: %s\r\n\r\n",guess.c_str() );
+			txdetail+=strprintf("%s:  %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_APP_NAME" ,theApp.gsLanguage) ,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_GUESS_SISTER" ,theApp.gsLanguage) );
+			txdetail+=strprintf("%s:   %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_CONTRACT_TYPE" ,theApp.gsLanguage),UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_ORDERS" ,theApp.gsLanguage) );
+			txdetail+=strprintf("%s: %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_QUIZ_CONTENT" ,theApp.gsLanguage) ,guess.c_str() );
 
 			std::vector<unsigned char> vTemp;
 			vTemp.assign(acceptcbet.txhash,acceptcbet.txhash+sizeof(acceptcbet.txhash));
 			reverse(vTemp.begin(),vTemp.end());
 			string txhash = CSoyPayHelp::getInstance()->HexStr(vTemp);
 
-			txdetail+=strprintf("发起竞猜交易ID:   %s\r\n\r\n",txhash.c_str() );
-			txdetail+=strprintf("金额:     %.8f\r\n\r\n",(acceptcbet.money*1.0)/COIN);
+			txdetail+=strprintf("%s:   %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_SEND_TRADID" ,theApp.gsLanguage) ,txhash.c_str() );
+			txdetail+=strprintf("%s:     %.8f\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_MONEY" ,theApp.gsLanguage) ,(acceptcbet.money*1.0)/COIN);
 		}else if (vTemp[0] == TX_SENDBET)
 		{
 			if(vTemp.size()==0)
@@ -139,24 +139,24 @@ string CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
 			memset(&sendbetdata,0,sizeof(SEND_DATA));
 			memcpy(&sendbetdata, &vTemp[0],sizeof(SEND_DATA));
 	
-			txdetail+=strprintf("应用名称:  %s\r\n\r\n","猜你妹" );
-			txdetail+=strprintf("合约类型:   %s\r\n\r\n","发起竞猜" );
-			txdetail+=strprintf("金额:%.8f\r\n\r\n",(sendbetdata.money*1.0)/COIN );
+			txdetail+=strprintf("%s:  %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_APP_NAME" ,theApp.gsLanguage),UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_GUESS_SISTER" ,theApp.gsLanguage) );
+			txdetail+=strprintf("%s:   %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_CONTRACT_TYPE" ,theApp.gsLanguage),UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_SEND_QUIZ" ,theApp.gsLanguage) );
+			txdetail+=strprintf("%s:%.8f\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_MONEY" ,theApp.gsLanguage),(sendbetdata.money*1.0)/COIN );
 		}else if (vTemp[0] == 0xff)
 		{
 			if (vTemp[1] == 0x02)    /// 充值
 			{
-				txdetail+=strprintf("应用名称:  %s\r\n\r\n","猜你妹" );
-				txdetail+=strprintf("合约类型:  %s\r\n\r\n","充值" );
+				txdetail+=strprintf("%s:  %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_APP_NAME" ,theApp.gsLanguage),UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_GUESS_SISTER" ,theApp.gsLanguage) );
+				txdetail+=strprintf("%s:  %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_CONTRACT_TYPE" ,theApp.gsLanguage),UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_RECHARGE" ,theApp.gsLanguage) );
 			}else if (vTemp[1] == 0x01|| vTemp[1] == 0x03)   /// 提现
 			{
-				txdetail+=strprintf("应用名称:  %s\r\n\r\n","猜你妹" );
-				txdetail+=strprintf("合约类型:  %s\r\n\r\n","提现" );
+				txdetail+=strprintf("%s:  %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_APP_NAME" ,theApp.gsLanguage),UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_GUESS_SISTER" ,theApp.gsLanguage) );
+				txdetail+=strprintf("%s:  %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_CONTRACT_TYPE" ,theApp.gsLanguage),UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_WITHDRAWALS" ,theApp.gsLanguage) );
 				if (vTemp.size() == sizeof(APPACC))
 				{
 					APPACC drawtx;
 					memcpy(&drawtx, &vTemp[0],sizeof(APPACC));
-					txdetail+=strprintf("提现金额:  %.8f\r\n\r\n",(drawtx.money*1.0)/COIN);
+					txdetail+=strprintf("%s:  %.8f\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_WITHDRAWALS_MONEY" ,theApp.gsLanguage) ,(drawtx.money*1.0)/COIN);
 				}
 			}
 		}
@@ -171,17 +171,17 @@ string CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
 			memset(&redpacket,0,sizeof(RED_PACKET));
 			memcpy(&redpacket, &vTemp[0],sizeof(SEND_DATA));
 	
-			txdetail+=strprintf("应用名称:  %s\r\n\r\n","抢红包" );
-			txdetail+=strprintf("合约类型:  %s\r\n\r\n","发送普通红包" );
+			txdetail+=strprintf("%s:  %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_APP_NAME" ,theApp.gsLanguage),UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_GRAB_REDENVELOPE" ,theApp.gsLanguage) );
+			txdetail+=strprintf("%s:  %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_CONTRACT_TYPE" ,theApp.gsLanguage),UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_SEND_REDENVELOPE" ,theApp.gsLanguage) );
 
-			txdetail+=strprintf("发普通红包金额:%.8f\r\n\r\n",(redpacket.money*1.0)/COIN);
-			txdetail+=strprintf("发普通红包个数:%d\r\n\r\n",redpacket.number);
+			txdetail+=strprintf("%s:%.8f\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_SEND_REDENVELOPE_MONEY" ,theApp.gsLanguage),(redpacket.money*1.0)/COIN);
+			txdetail+=strprintf("%s:%d\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_SEND_REDENVELOPE_NUM" ,theApp.gsLanguage),redpacket.number);
 			string message = "";
 			message+=strprintf("%s",redpacket.message);
 			if (message != "")
 			{
 				
-				txdetail+=strprintf("发普通红包广告语: %s\r\n\r\n",redpacket.message);
+				txdetail+=strprintf("%s: %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_SEND_REDENVELOPE_GDY" ,theApp.gsLanguage),redpacket.message);
 			}
 			//SendRePacketCommtRecord(vTemp,transcion);
 
@@ -194,15 +194,15 @@ string CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
 			memcpy(&redpacket, &vTemp[0],sizeof(ACCEPT_RED_PACKET));
 
 
-			txdetail+=strprintf("应用名称:  %s\r\n\r\n","抢红包" );
-			txdetail+=strprintf("合约类型:  %s\r\n\r\n","抢普通红包" );
+			txdetail+=strprintf("%s:  %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_APP_NAME" ,theApp.gsLanguage),UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_GRAB_REDENVELOPE" ,theApp.gsLanguage) );
+			txdetail+=strprintf("%s:  %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_CONTRACT_TYPE" ,theApp.gsLanguage),UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_GRAB_PT_REDENVELOPE" ,theApp.gsLanguage) );
 
 			std::vector<unsigned char> vTemp;
 			vTemp.assign(redpacket.redhash,redpacket.redhash+sizeof(redpacket.redhash));
 			reverse(vTemp.begin(),vTemp.end());
 			string txhash = CSoyPayHelp::getInstance()->HexStr(vTemp);
 
-			txdetail+=strprintf("普通红包ID: %s\r\n\r\n",txhash.c_str());
+			txdetail+=strprintf("%s: %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_PT_REDENVELOPE_ID" ,theApp.gsLanguage) ,txhash.c_str());
 			//AcceptRePacketCommtRecord(vTemp,transcion);
 		}else if (vTemp[0] == TX_SPECIAL_SENDREDPACKET)
 		{
@@ -212,11 +212,11 @@ string CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
 			memset(&redpacket,0,sizeof(RED_PACKET));
 			memcpy(&redpacket, &vTemp[0],sizeof(SEND_DATA));
 
-			txdetail+=strprintf("应用名称:  %s\r\n\r\n","抢红包" );
-			txdetail+=strprintf("合约类型:  %s\r\n\r\n","发送接龙红包" );
+			txdetail+=strprintf("%s:  %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_APP_NAME" ,theApp.gsLanguage),UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_GRAB_REDENVELOPE" ,theApp.gsLanguage) );
+			txdetail+=strprintf("%s:  %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_CONTRACT_TYPE" ,theApp.gsLanguage),UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_SEND_JL_REDENVELOPE" ,theApp.gsLanguage) );
 
-			txdetail+=strprintf("发接龙红包金额:  %.8f\r\n\r\n",(redpacket.money*1.0)/COIN);
-			txdetail+=strprintf("发接龙红包个数:  %d\r\n\r\n",redpacket.number);
+			txdetail+=strprintf("%s:  %.8f\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_SEND_JL_REDENVELOPE_MONEY" ,theApp.gsLanguage) ,(redpacket.money*1.0)/COIN);
+			txdetail+=strprintf("%s:  %d\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_SEND_JL_REDENVELOPE_NUM" ,theApp.gsLanguage),redpacket.number);
 			//SendRePacketSpecailRecord(vTemp,transcion);
 		}else if (vTemp[0] == TX_SPECIAL_ACCEPTREDPACKET)
 		{
@@ -227,30 +227,30 @@ string CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
 			memcpy(&redpacket, &vTemp[0],sizeof(ACCEPT_RED_PACKET));
 
 	
-			txdetail+=strprintf("应用名称:  %s\r\n\r\n","抢红包" );
-			txdetail+=strprintf("合约类型:  %s\r\n\r\n","抢接龙红包" );
+			txdetail+=strprintf("%s:  %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_APP_NAME" ,theApp.gsLanguage),UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_GRAB_REDENVELOPE" ,theApp.gsLanguage) );
+			txdetail+=strprintf("%s:  %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_CONTRACT_TYPE" ,theApp.gsLanguage),UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_GRAB_JL_REDENVELOPE" ,theApp.gsLanguage));
 
 			std::vector<unsigned char> vTemp;
 			vTemp.assign(redpacket.redhash,redpacket.redhash+sizeof(redpacket.redhash));
 			reverse(vTemp.begin(),vTemp.end());
 			string txhash = CSoyPayHelp::getInstance()->HexStr(vTemp);
 
-			txdetail+=strprintf("接龙红包ID:   %s\r\n\r\n",txhash.c_str());
+			txdetail+=strprintf("%s:   %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_JL_REDENVELOPE_ID" ,theApp.gsLanguage) ,txhash.c_str());
 		}else if (vTemp[0] == 0xff)
 		{
 			if (vTemp[1] == 0x02)    /// 充值
 			{
-				txdetail+=strprintf("应用名称:  %s\r\n\r\n","抢红包" );
-				txdetail+=strprintf("合约类型:  %s\r\n\r\n","充值" );
+				txdetail+=strprintf("%s:  %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_APP_NAME" ,theApp.gsLanguage),UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_GRAB_REDENVELOPE" ,theApp.gsLanguage) );
+				txdetail+=strprintf("%s:  %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_CONTRACT_TYPE" ,theApp.gsLanguage),UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_RECHARGE" ,theApp.gsLanguage) );
 			}else if (vTemp[1] == 0x01 || vTemp[1] == 0x03)   /// 提现
 			{
-				txdetail+=strprintf("应用名称:  %s\r\n\r\n","抢红包" );
-				txdetail+=strprintf("合约类型:  %s\r\n\r\n","提现" );
+				txdetail+=strprintf("%s:  %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_APP_NAME" ,theApp.gsLanguage),UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_GRAB_REDENVELOPE" ,theApp.gsLanguage) );
+				txdetail+=strprintf("%s:  %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_CONTRACT_TYPE" ,theApp.gsLanguage),UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_WITHDRAWALS" ,theApp.gsLanguage) );
 				if (vTemp.size() == sizeof(APPACC))
 				{
 					APPACC draw;
 					memcpy(&draw, &vTemp[0],sizeof(APPACC));
-					txdetail+=strprintf("提现金额:  %.8f\r\n\r\n",(draw.money*1.0)/COIN);
+					txdetail+=strprintf("%s:  %.8f\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_WITHDRAWALS_MONEY" ,theApp.gsLanguage),(draw.money*1.0)/COIN);
 				}
 			}
 		}
@@ -259,17 +259,17 @@ string CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
 
 		if (vTemp[1] == 0x02)    /// 充值
 		{
-			txdetail+=strprintf("应用名称:  %s\r\n\r\n","ipo领币" );
-			txdetail+=strprintf("合约类型:  %s\r\n\r\n","充值" );
+			txdetail+=strprintf("%s:  %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_APP_NAME" ,theApp.gsLanguage),UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_IPO_CURRENCY" ,theApp.gsLanguage) );
+			txdetail+=strprintf("%s:  %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_CONTRACT_TYPE" ,theApp.gsLanguage) ,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_RECHARGE" ,theApp.gsLanguage) );
 		}else if (vTemp[1] == 0x01 || vTemp[1] == 0x03)   /// 提现
 		{
-			txdetail+=strprintf("应用名称:  %s\r\n\r\n","ipo领币" );
-			txdetail+=strprintf("合约类型:  %s\r\n\r\n","提现" );
+			txdetail+=strprintf("%s:  %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_APP_NAME" ,theApp.gsLanguage),UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_IPO_CURRENCY" ,theApp.gsLanguage) );
+			txdetail+=strprintf("%s:  %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_CONTRACT_TYPE" ,theApp.gsLanguage),UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_WITHDRAWALS" ,theApp.gsLanguage) );
 			if (vTemp.size() == sizeof(APPACC))
 			{
 				APPACC draw;
 				memcpy(&draw, &vTemp[0],sizeof(APPACC));
-				txdetail+=strprintf("提现金额:  %.8f\r\n\r\n",(draw.money*1.0)/COIN);
+				txdetail+=strprintf("%s:  %.8f\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_WITHDRAWALS_MONEY" ,theApp.gsLanguage),(draw.money*1.0)/COIN);
 			}
 		}
 	}
@@ -281,7 +281,7 @@ void CTxDetailDlg::ShowTxDetail(CString jsontx)
 	if (jsontx == _T(""))
 	{
 		string strShowData;
-		strShowData+=strprintf("%s" ,_T("此交易不存在")) ;
+		strShowData+=strprintf("%s" ,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TRAN_NOT" ,theApp.gsLanguage)) ;
 		GetDlgItem(IDC_EDIT_TXDETAIL)->SetWindowText(strShowData.c_str());
 		return;
 	}
@@ -293,48 +293,48 @@ void CTxDetailDlg::ShowTxDetail(CString jsontx)
 	string txtype = tx.txtype;
 	if (!strcmp(txtype.c_str(),"REWARD_TX"))
 	{
-		strShowData+=strprintf("%s" ,_T("挖矿奖励交易")) ;
+		strShowData+=strprintf("%s" ,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_MIN_REWARD_TRAN" ,theApp.gsLanguage)) ;
 	}else if (!strcmp(txtype.c_str(),"REG_ACCT_TX"))
 	{
-		strShowData+=strprintf("%s" ,_T("注册账户交易")) ;
+		strShowData+=strprintf("%s" ,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_REG_ACCOUNT" ,theApp.gsLanguage)) ;
 	}else if (!strcmp(txtype.c_str(),"COMMON_TX"))
 	{
-		strShowData+=strprintf("%s" ,_T("转账交易")) ;
+		strShowData+=strprintf("%s" ,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TRANSF_TRANSA" ,theApp.gsLanguage)) ;
 	}else if (!strcmp(txtype.c_str(),"CONTRACT_TX"))
 	{
-		strShowData+=strprintf("%s" ,_T("合约交易")) ;
+		strShowData+=strprintf("%s" ,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_CONTRACT_RANSA" ,theApp.gsLanguage)) ;
 	}else if (!strcmp(txtype.c_str(),"REG_APP_TX"))
 	{
-		strShowData+=strprintf("%s" ,_T("注册应用交易")) ;
+		strShowData+=strprintf("%s" ,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_REGISTERED_TRADE" ,theApp.gsLanguage)) ;
 	}
-	txdetail=strprintf("交易类型: %s\r\n\r\n",strShowData.c_str());
-	txdetail+=strprintf("交易ID: %s\r\n\r\n",tx.txhash);
-	txdetail+=strprintf("版本号:   %d\r\n\r\n",tx.ver);
-	txdetail+=strprintf("源地址:   %s\r\n\r\n",tx.addr.c_str());
+	txdetail=strprintf("%s: %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TYPE" ,theApp.gsLanguage),strShowData.c_str());
+	txdetail+=strprintf("%s: %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_ID" ,theApp.gsLanguage),tx.txhash);
+	txdetail+=strprintf("%s:   %d\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_VERSION_NUMBER" ,theApp.gsLanguage),tx.ver);
+	txdetail+=strprintf("%s:   %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_SOURCE_ADDRESS" ,theApp.gsLanguage),tx.addr.c_str());
 	if (tx.pubkey != "")
 	{
-		txdetail+=strprintf("公钥:   %s\r\n\r\n",tx.pubkey.c_str());
+		txdetail+=strprintf("%s:   %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_PUBLIC_KEY" ,theApp.gsLanguage),tx.pubkey.c_str());
 	}
 	if (tx.miner_pubkey != "")
 	{
-		txdetail+=strprintf("冷挖矿公钥:   %s\r\n\r\n",tx.miner_pubkey.c_str());
+		txdetail+=strprintf("%s:   %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_COLD_PUBLICKEY" ,theApp.gsLanguage),tx.miner_pubkey.c_str());
 	}
 	if (tx.fees != 0)
 	{
-		txdetail+=strprintf("小费:   %.8f\r\n\r\n",tx.fees*COIN);
+		txdetail+=strprintf("%s:   %.8f\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TIP" ,theApp.gsLanguage),tx.fees*COIN);
 	}
 	if (tx.height != 0)
 	{
 		int height = tx.height +250; 
-		txdetail+=strprintf("交易超时高度:   %d\r\n\r\n",height);
+		txdetail+=strprintf("%s:   %d\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TRAN_TIMEOUT_HEIGHT" ,theApp.gsLanguage),height);
 	}
 	if (tx.desaddr != "")
 	{
-		txdetail+=strprintf("目的地址:   %s\r\n\r\n",tx.desaddr.c_str() );
+		txdetail+=strprintf("%s:   %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_DESTINATION_ADDRESS" ,theApp.gsLanguage),tx.desaddr.c_str() );
 	}
 	if (tx.money != 0)
 	{
-		txdetail+=strprintf("交易金额:   %.8f\r\n\r\n",tx.money*COIN);
+		txdetail+=strprintf("%s:   %.8f\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TRADMONEY" ,theApp.gsLanguage),tx.money*COIN);
 	}
 	if (tx.Contract != "")
 	{
@@ -345,23 +345,23 @@ void CTxDetailDlg::ShowTxDetail(CString jsontx)
 
 	if (tx.confirmedHeight != 0)
 	{
-		txdetail+=strprintf("确认高度:   %d\r\n\r\n",tx.confirmedHeight );
+		txdetail+=strprintf("%s:   %d\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_OK_HEIGHT" ,theApp.gsLanguage),tx.confirmedHeight );
 	}
 	if (tx.confirmedtime != 0)
 	{
 		SYSTEMTIME curTime = UiFun::Time_tToSystemTime(tx.confirmedtime);
-		txdetail+=strprintf("确认时间:   %04d-%02d-%02d %02d:%02d:%02d\r\n\r\n",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+		txdetail+=strprintf("%s:   %04d-%02d-%02d %02d:%02d:%02d\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_OK_TIME" ,theApp.gsLanguage),curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
 	}
 	if (tx.blockhash != "")
 	{
-		txdetail+=strprintf("确认blockHash:   %s\r\n\r\n",tx.blockhash.c_str());
+		txdetail+=strprintf("%s:   %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_OK_BLOCK" ,theApp.gsLanguage),tx.blockhash.c_str());
 	}
 	if ( theApp.blocktipheight != 0 && tx.confirmedHeight != 0)
 	{
 		unsigned int quredCount = theApp.blocktipheight - tx.confirmedHeight;
 		if (quredCount >=0)
 		{
-			txdetail+=strprintf("确认数:  %d\r\n\r\n",quredCount );
+			txdetail+=strprintf("%s:  %d\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_OK_NUM" ,theApp.gsLanguage),quredCount );
 		}	
 	}
 
@@ -393,7 +393,7 @@ BOOL CTxDetailDlg::OnInitDialog()
 
 	m_rBtnOk.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
 	m_rBtnOk.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-	m_rBtnOk.SetWindowText("确 定") ;
+	m_rBtnOk.SetWindowText(UiFun::UI_LoadString("COMM_MODULE" , "COMM_CONFIRM" ,theApp.gsLanguage)) ;
 	//m_rBtnOk.SetFontEx(20 , _T("微软雅黑"));
 	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));

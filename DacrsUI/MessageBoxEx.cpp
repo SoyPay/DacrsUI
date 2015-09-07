@@ -227,7 +227,7 @@ BOOL CMessageBoxEx::OnInitDialog()
 	if ( (m_uType & MFB_OKCANCEL) == MFB_OKCANCEL ) {
 		  m_OK.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
 		   m_OK.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		   m_OK.SetWindowText("确认") ;
+		   m_OK.SetWindowText(UiFun::UI_LoadString("COMM_MODULE" , "COMM_CONFIRM" ,theApp.gsLanguage)) ;
 		   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 		   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
@@ -237,7 +237,7 @@ BOOL CMessageBoxEx::OnInitDialog()
 
 		   m_cancel.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
 		   m_cancel.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		   m_cancel.SetWindowText("取消") ;
+		   m_cancel.SetWindowText(UiFun::UI_LoadString("COMM_MODULE" , "COMM_CANCEL" ,theApp.gsLanguage)) ;
 		  
 		   m_cancel.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		   m_cancel.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
@@ -250,7 +250,7 @@ BOOL CMessageBoxEx::OnInitDialog()
 	else if ( (m_uType & MFB_YESNO) == MFB_YESNO ) {
 		   m_OK.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
 		   m_OK.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		   m_OK.SetWindowText("是") ;
+		   m_OK.SetWindowText(UiFun::UI_LoadString("COMM_MODULE" , "COMM_YES" ,theApp.gsLanguage)) ;
 		   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 		   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
@@ -261,7 +261,7 @@ BOOL CMessageBoxEx::OnInitDialog()
 		   //否按钮
 		   m_cancel.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
 		   m_cancel.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		   m_cancel.SetWindowText("否") ;
+		   m_cancel.SetWindowText(UiFun::UI_LoadString("COMM_MODULE" , "COMM_NO" ,theApp.gsLanguage)) ;
 		   m_cancel.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		   m_cancel.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 		   m_cancel.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
@@ -273,7 +273,7 @@ BOOL CMessageBoxEx::OnInitDialog()
 	else if ( (m_uType & MFB_OK) == MFB_OK ) {
 		   m_OK.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
 		   m_OK.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		   m_OK.SetWindowText("确认") ;
+		   m_OK.SetWindowText(UiFun::UI_LoadString("COMM_MODULE" , "COMM_CONFIRM" ,theApp.gsLanguage)) ;
 		   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 		   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
@@ -286,7 +286,7 @@ BOOL CMessageBoxEx::OnInitDialog()
 	else if ( (m_uType & MFB_YES) == MFB_YES ) {
 		   m_OK.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
 		   m_OK.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-		   m_OK.SetWindowText("是") ;
+		   m_OK.SetWindowText(UiFun::UI_LoadString("COMM_MODULE" , "COMM_YES" ,theApp.gsLanguage)) ;
 		   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 		   m_OK.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));

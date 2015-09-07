@@ -204,7 +204,7 @@ void CCommonAddr::OnBnClickedButtonAdd()
 		}
 
 	}else{  //更新
-	    UiFun::MessageBoxEx(_T("该地址以存在!") , _T("提示") ,MFB_OK|MFB_TIP );
+	    UiFun::MessageBoxEx(UiFun::UI_LoadString("ADDRBOOK_MODULE" , "ADDRBOOK_ADDRESS_TO_EXIST" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 	}
 }
 

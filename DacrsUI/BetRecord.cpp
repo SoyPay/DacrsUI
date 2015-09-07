@@ -184,7 +184,7 @@ void CBetRecord::Showlistbox(CString address)
 	m_pagecount = (m_PoolList.size()%m_pagesize)==0?(m_PoolList.size()/m_pagesize):(m_PoolList.size()/m_pagesize)+1;
 
 	string temp;
-	temp= strprintf("共:%d",m_pagecount);
+	temp= strprintf("%s:%d",UiFun::UI_LoadString("COMM_MODULE" , "COMM_TOTAL" ,theApp.gsLanguage),m_pagecount);
 	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(temp.c_str());
 	GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T(""));
 	Invalidate();
@@ -224,10 +224,10 @@ void  CBetRecord::OnShowPagePool(int page)
 
 		if (const_it.guess_num == 1)
 		{
-			guess = "妹";
+			guess = UiFun::UI_LoadString("COMM_MODULE" , "COMM_SISTER" ,theApp.gsLanguage);
 		}else
 		{
-			guess = "哥";
+			guess = UiFun::UI_LoadString("COMM_MODULE" , "COMM_BROTHER" ,theApp.gsLanguage);
 		}
 		m_ListBox.InsertStr(i,this->GetSafeHwnd());
 		m_ListBox.SetIndexBackCol(i , 0 , RGB(242,32,32));
@@ -270,10 +270,10 @@ void  CBetRecord::OnShowPagePool(int page)
 
 			if (const_it.content[32] == 1)
 			{
-				result = "妹";
+				result = UiFun::UI_LoadString("COMM_MODULE" , "COMM_SISTER" ,theApp.gsLanguage);
 			}else
 			{
-				result = "哥";
+				result = UiFun::UI_LoadString("COMM_MODULE" , "COMM_BROTHER" ,theApp.gsLanguage);
 			}
 			m_ListBox.SetIndexString(i , const_it.left_addr.c_str(),const_it.right_addr.c_str(),sendTime.c_str(),reciveTime.c_str(), result.c_str(),guess.c_str(), reward.c_str());
 
@@ -309,7 +309,7 @@ BOOL CBetRecord::PreTranslateMessage(MSG* pMsg)
 				}else
 				{
 					GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T(""));
-					UiFun::MessageBoxEx(_T("输入有误,请输入数字") , _T("提示") ,MFB_OK|MFB_TIP );
+					UiFun::MessageBoxEx(UiFun::UI_LoadString("COMM_MODULE" , "COMM_INPUT_ERROR" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 				}
 				return TRUE;
 			}
@@ -361,10 +361,10 @@ void CBetRecord::GetExportCol(map<int,string> &item,uistruct::P2P_QUIZ_RECORD_t 
 	string guess;
 	if (pitem.guess_num == 1)
 	{
-		guess = "妹";
+		guess = UiFun::UI_LoadString("COMM_MODULE" , "COMM_SISTER" ,theApp.gsLanguage);
 	}else
 	{
-		guess = "哥";
+		guess = UiFun::UI_LoadString("COMM_MODULE" , "COMM_BROTHER" ,theApp.gsLanguage);
 	}
 
 
@@ -400,10 +400,10 @@ void CBetRecord::GetExportCol(map<int,string> &item,uistruct::P2P_QUIZ_RECORD_t 
 
 		if (pitem.content[32] == 1)
 		{
-			result = "妹";
+			result = UiFun::UI_LoadString("COMM_MODULE" , "COMM_SISTER" ,theApp.gsLanguage);
 		}else
 		{
-			result = "哥";
+			result = UiFun::UI_LoadString("COMM_MODULE" , "COMM_BROTHER" ,theApp.gsLanguage);
 		}
 		item[i++] = result;
 		item[i++] = guess;
@@ -412,16 +412,16 @@ void CBetRecord::GetExportCol(map<int,string> &item,uistruct::P2P_QUIZ_RECORD_t 
 	}else{
 		if (pitem.height>0 &&(pitem.time_out + pitem.height)> theApp.blocktipheight&& theApp.IsSyncBlock)
 		{
-			item[i++] = "未开奖";
+			item[i++] = UiFun::UI_LoadString("COMM_MODULE" , "COMM_NO_LOTTERY" ,theApp.gsLanguage);
 			item[i++] = guess;
 			item[i++] = amount;
 		}else if(theApp.IsSyncBlock && pitem.height != 0){
 			amount= strprintf("+%.4f", pitem.amount);
-			item[i++] = "超时";
+			item[i++] = UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIMEOUT" ,theApp.gsLanguage);
 			item[i++] = guess;
 			item[i++] = amount;
 		}else{
-			item[i++] = "未开奖";
+			item[i++] = UiFun::UI_LoadString("COMM_MODULE" , "COMM_NO_LOTTERY" ,theApp.gsLanguage);
 			item[i++] = guess;
 			item[i++] = amount;
 		}
@@ -437,10 +437,10 @@ void CBetRecord::OExportAcceptBetToexel()
 	int nItem =  theApp.m_SqliteDeal.GetP2PQuizRecordList(conditon.c_str() ,&PoolList ) ;
 	if (PoolList.size() == 0)
 	{
-		UiFun::MessageBoxEx(_T("没有记录可以导出！") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_NO_RECORDS_EXPORT" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
-	CFileDialog dlg(FALSE,NULL,"猜你妹接单记录",OFN_HIDEREADONLY|OFN_FILEMUSTEXIST ,"文件 (*.xls)|*.xls||");
+	CFileDialog dlg(FALSE,NULL,UiFun::UI_LoadString("P2P_MODULE" , "P2P_SINGLE_RECORD" ,theApp.gsLanguage),OFN_HIDEREADONLY|OFN_FILEMUSTEXIST ,"文件 (*.xls)|*.xls||");
 	if (IDOK != dlg.DoModal())
 	{
 		return;
@@ -456,15 +456,14 @@ void CBetRecord::OExportAcceptBetToexel()
 		string		name ;
 		UINT		size ;
 	} listheadr[8]  = {
-		{"接单hash" ,  70},
-		{"发起人" ,    30},
-		{"接单人" ,    30},
-		{"发起时间" ,  20}, 
-		{"接单时间" ,  20}, 
-		{"底牌" ,10},
-		{"猜测" ,10},
-		{"金额" , 50}
-
+		{UiFun::UI_LoadString("P2P_MODULE" , "P2P_SINGLE_SASH" ,theApp.gsLanguage) ,  70},
+		{UiFun::UI_LoadString("P2P_MODULE" , "P2P_PROMOTER" ,theApp.gsLanguage) ,    30},
+		{UiFun::UI_LoadString("P2P_MODULE" , "P2P_SINGLE_PEOPLE" ,theApp.gsLanguage) ,    30},
+		{UiFun::UI_LoadString("P2P_MODULE" , "P2P_SEND_TIME" ,theApp.gsLanguage) ,  20}, 
+		{UiFun::UI_LoadString("P2P_MODULE" , "P2P_SINGLE_TIME" ,theApp.gsLanguage) ,  20}, 
+		{UiFun::UI_LoadString("P2P_MODULE" , "P2P_A_HAND" ,theApp.gsLanguage) ,10},
+		{UiFun::UI_LoadString("P2P_MODULE" , "P2P_GUESS" ,theApp.gsLanguage) ,10},
+		{UiFun::UI_LoadString("COMM_MODULE" , "COMM_MONEY" ,theApp.gsLanguage) , 50}
 	};
 
 	COleVariant
@@ -495,7 +494,7 @@ void CBetRecord::OExportAcceptBetToexel()
 
 	{
 
-		UiFun::MessageBoxEx(_T("可能是没有装office 导致创建失败 ！") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_NOT_OFFICE" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 
 	}
