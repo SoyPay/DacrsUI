@@ -33,7 +33,8 @@ public:
 	CRoundButton     m_rBtnMin;
 	CRoundButton     m_rBtnMainMenu;
 	CNewMenu         newMenu;
-
+	CRoundButton     m_rCnButton;
+	CMenu         LanguageMenu;
 public:
 	CToolTipCtrl     m_tooltip;			// 提示信息
 	HBITMAP		     m_pBmp; 
@@ -54,4 +55,10 @@ public:
 	afx_msg void OnBnClickedMenubar();
 	afx_msg void OnMeasureItem(int nIDCtl, LPMEASUREITEMSTRUCT lpMeasureItemStruct);
 	afx_msg void OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct);
+	afx_msg void OnBnClickedCn();
+	afx_msg void OnChinese();
+	afx_msg void OnEnglish();
+	afx_msg void OnUpdateEn(CCmdUI *pCmdUI);
+	afx_msg void OnUpdateCn(CCmdUI *pCmdUI);
+	void Setlanguage(int index);
 };

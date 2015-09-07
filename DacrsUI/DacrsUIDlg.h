@@ -120,8 +120,11 @@ public:
 	afx_msg void OnAcceptBetExportHistory();
 	afx_msg void OnSendRedPacketExportHistory();
 	afx_msg void OnGrabRedPacketExportHistory();
+
+
 public:
 	CBalloonTip*  m_BalloonTip;
 	afx_msg void OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized);
 	CMyQueue m_barpoomesg;
+
 };

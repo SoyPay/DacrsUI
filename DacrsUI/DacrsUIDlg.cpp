@@ -47,6 +47,7 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
+
 END_MESSAGE_MAP()
 
 
@@ -115,6 +116,7 @@ BEGIN_MESSAGE_MAP(CDacrsUIDlg, CDialogEx)
 	ON_COMMAND(ID_ACCEPTBET,&CDacrsUIDlg::OnAcceptBetExportHistory)
 	ON_COMMAND(ID_SENDREDPAKET,&CDacrsUIDlg::OnSendRedPacketExportHistory)
 	ON_COMMAND(ID_GRABREDPACKE,&CDacrsUIDlg::OnGrabRedPacketExportHistory)
+
 
 	ON_MESSAGE(WM_POPUPBAR,OnPopupBar)
 	ON_WM_ACTIVATE()
