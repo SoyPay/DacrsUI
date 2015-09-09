@@ -88,7 +88,7 @@ void CMainDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_STATIC_DES3 , m_strDesTx3);
 	DDX_Control(pDX, IDC_STATIC_DES4 , m_strDesTx4);
 	DDX_Control(pDX, IDC_STATIC_DES5 , m_strDesTx5);
-
+    DDX_Control(pDX, IDC_STATIC_WALLET , m_sysWallet);
 }
 
 
@@ -327,7 +327,7 @@ BOOL CMainDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 
 	BOOL bRes =  CDialogBar::Create(pParentWnd, nIDTemplate, nStyle, nID);
 	if ( bRes ) {
-		m_rBtnAllTxdetail.LoadBitmaps(IDB_BITMAP_ALLTRADE1,IDB_BITMAP_ALLTRADE1,IDB_BITMAP_ALLTRADE1,IDB_BITMAP_ALLTRADE1);
+		m_rBtnAllTxdetail.LoadBitmaps(UiFun::GetBmpId(IDB_BITMAP_ALLTRADE1,IDB_BITMAP_ALLTRADE1EN,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_ALLTRADE1,IDB_BITMAP_ALLTRADE1EN,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_ALLTRADE1,IDB_BITMAP_ALLTRADE1EN,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_ALLTRADE1,IDB_BITMAP_ALLTRADE1EN,theApp.language()));
 		//m_rBtnImportWallet.LoadBitmaps(IDB_BITMAP_IMPORTWALLET,IDB_BITMAP_IMPORTWALLET,IDB_BITMAP_IMPORTWALLET,IDB_BITMAP_IMPORTWALLET);
 		//m_rBtnDumpWallet.LoadBitmaps(IDB_BITMAP_DUMPWALLET,IDB_BITMAP_DUMPWALLET,IDB_BITMAP_DUMPWALLET,IDB_BITMAP_DUMPWALLET);
 
@@ -363,6 +363,10 @@ BOOL CMainDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		//v_linkCtrl.SetURL(_T("www.hao123.com"));
 		//v_linkCtrl.SetURLPrefix(_T("http://"));
 
+		//加载指定位图资源 Bmp图片ID
+		HBITMAP hBitmap; 
+		hBitmap = ::LoadBitmap(AfxGetInstanceHandle(),MAKEINTRESOURCE(UiFun::GetBmpId(IDB_BITMAP_WALLET,IDB_BITMAP_WALLETEN,theApp.language()))); 
+		m_sysWallet.SetBitmap(hBitmap);
 
 		theApp.SubscribeMsg( theApp.GetMtHthrdId() , GetSafeHwnd() , MSG_USER_MAIN_UI ) ;
 	}
@@ -387,7 +391,8 @@ int CMainDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 
 	// TODO:  在此添加您专用的创建代码
-	SetBkBmpNid( IDB_BITMAP_MAINUI_BJ ) ;
+	//SetBkBmpNid( IDB_BITMAP_MAINUI_BJ ) ;
+	SetBkBmpNid(UiFun::GetBmpId(IDB_BITMAP_MAINUI_BJ,IDB_BITMAP_MAINUI_BJEN,theApp.language()));
 	m_strOver.SetFont(90, _T("Arial"));				//设置显示字体和大小
 	m_strOking.SetFont(90, _T("Arial"));	   
 	m_strTranNum.SetFont(90, _T("Arial"));	

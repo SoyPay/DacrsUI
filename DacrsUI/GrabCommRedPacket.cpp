@@ -98,7 +98,8 @@ int CGrabCommRedPacket::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 
 	// TODO:  在此添加您专用的创建代码
-	SetBkBmpNid(IDB_BITMAP_REDPACKETPOOL);
+	//SetBkBmpNid(IDB_BITMAP_REDPACKETPOOL);
+	SetBkBmpNid(UiFun::GetBmpId(IDB_BITMAP_REDPACKETPOOL,IDB_BITMAP_REDPACKETPOOLEN,theApp.language()));
 	return 0;
 }
 

@@ -102,7 +102,8 @@ int CSendRecord::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 
 	// TODO:  在此添加您专用的创建代码
-	SetBkBmpNid(IDB_BITMAP_SEND_BET) ;
+	//SetBkBmpNid(IDB_BITMAP_SEND_BET) ;
+	SetBkBmpNid(UiFun::GetBmpId(IDB_BITMAP_SEND_BET,IDB_BITMAP_SEND_BETEN,theApp.language())) ;
 	return 0;
 }
 

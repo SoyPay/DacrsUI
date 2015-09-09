@@ -119,7 +119,8 @@ int CP2PDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 
 	// TODO:  在此添加您专用的创建代码
-	SetBkBmpNid(IDB_BITMAP_P2P_BJ);
+	//SetBkBmpNid(IDB_BITMAP_P2P_BJ);IDB_BITMAP_P2P_BJEN
+    SetBkBmpNid(UiFun::GetBmpId(IDB_BITMAP_P2P_BJ,IDB_BITMAP_P2P_BJEN,theApp.language()));
 	return 0;
 }
 
@@ -393,14 +394,14 @@ void CP2PDlg::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*12 , (rc.Height()/100)*7 ,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*13 , (rc.Height()/100)*8 ,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
 		}
 		
 		pst = GetDlgItem( IDC_STATIC_NOT_DRAW ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*12 , (rc.Height()/100)*13 ,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*13 , (rc.Height()/100)*14 ,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
 		}
 		
 		pst = GetDlgItem( IDC_BUTTON_WITHD ) ;
@@ -421,7 +422,7 @@ void CP2PDlg::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*12 , (rc.Height()/100)*20 ,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*12+3 , (rc.Height()/100)*20 ,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
 
 			CComboBox*   pCtl  = (CComboBox*)pst; 
 			CWnd *p_edit = pCtl->GetDlgItem (0x3E9);

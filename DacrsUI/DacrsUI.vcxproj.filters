@@ -1038,6 +1038,129 @@
     <None Include="res\trade_next.bmp">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="res\Logo_En.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\progress1_EN.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\progress2_EN.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\progress3_EN.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\progress4_EN.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\main_log_1en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\main_log_2en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\main_log_3en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\send_logo_1en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\send_logo_2en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\send_logo_3en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\rev_logo_1en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\rev_logo_2en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\rev_logo_3en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\tradedetail_logo_1en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\tradedetail_logo_2en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\bitmap15.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\tradedetail_logo_3en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\your_sister_1en .bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\your_sister_2en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\your_sister_3en .bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\grab_rp_log_en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\grab_rp_log_2_en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\grab_rp_log_3_en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\ipo_1en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\ipo_2en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\ipo_3en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\add_app_1en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\add_app_2en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\add_app_3en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\main_ui_backgrounden.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\alltrade1en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\wallet_uiproen.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\send_ui_blackgruonden.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\grab_red_packeten.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\send_red_packeten.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\red_packet_poolen.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\send_bet_recorden.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\bet_recorden.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\p2p_dlgen.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\p2p_red_packeten.bmp">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="资源文件">

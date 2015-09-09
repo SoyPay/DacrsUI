@@ -346,8 +346,8 @@ int CSendDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 
 	// TODO:  在此添加您专用的创建代码
-	SetBkBmpNid(IDB_BITMAP_SENDUI_BJ);
-
+	//SetBkBmpNid(IDB_BITMAP_SENDUI_BJ);
+	SetBkBmpNid(UiFun::GetBmpId(IDB_BITMAP_SENDUI_BJ,IDB_BITMAP_SENDUI_BJEN,theApp.language()));
 	return 0;
 }
 
@@ -544,7 +544,7 @@ void CSendDlg::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL , (rc.Width()/100)*80 ,(rc.Height()/100)*12 , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL , (rc.Width()/100)*82 ,(rc.Height()/100)*12+2 , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
 		
 		pst = GetDlgItem( IDC_EDIT_DESADDRESS ) ;

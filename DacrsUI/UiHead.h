@@ -814,5 +814,6 @@ namespace UiFun
 	
 	bool IsCurrentAppId(string Curappid,string useAppid,string strShow);
 	void  GetCellName(int nRow, int nCol, CString &strName);
+	int   GetBmpId(int bmpCn,int bmpEn,int language);
 }
 #endif

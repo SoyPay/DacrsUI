@@ -35,6 +35,7 @@ public:
 	CNewMenu         newMenu;
 	CRoundButton     m_rCnButton;
 	CMenu         LanguageMenu;
+	CStatic          m_picture;
 public:
 	CToolTipCtrl     m_tooltip;			// 提示信息
 	HBITMAP		     m_pBmp; 
