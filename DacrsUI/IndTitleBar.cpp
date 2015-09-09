@@ -41,6 +41,7 @@ void CIndTitleBar::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BUTTON_MIN	, m_rBtnMin );
 	DDX_Control(pDX, IDC_MENUBAR	, m_rBtnMainMenu );
 	DDX_Control(pDX, IDC_CN	, m_rCnButton );
+	DDX_Control(pDX, IDC_STATIC_LOGO, m_picture );
 }
 
 
@@ -105,7 +106,7 @@ int CIndTitleBar::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// TODO:  在此添加您专用的创建代码
 	SetBkBmpNid( IDB_BITMAP_BAR ) ;
 	ModifyStyle(WS_BORDER,   0); 
-	ModifyStyleEx(WS_EX_WINDOWEDGE,   0); 
+	ModifyStyleEx(WS_EX_WINDOWEDGE,   0);
 
 	return 0;
 }
@@ -209,7 +210,8 @@ void CIndTitleBar::OnSize(UINT nType, int cx, int cy)
 void CIndTitleBar::MobileTip(UINT nButtonID , BOOL bFlag )
 {
 	if ( bFlag ) {   //第一次
-		m_rBtnMainUi.LoadBitmaps(IDB_BITMAP_MAINUI_2,IDB_BITMAP_MAINUI_2 , IDB_BITMAP_MAINUI_2 ,IDB_BITMAP_MAINUI_2);
+		//m_rBtnMainUi.LoadBitmaps(IDB_BITMAP_MAINUI_2,IDB_BITMAP_MAINUI_2 , IDB_BITMAP_MAINUI_2 ,IDB_BITMAP_MAINUI_2);
+		m_rBtnMainUi.LoadBitmaps(UiFun::GetBmpId(IDB_BITMAP_MAINUI_2,IDB_BITMAP_MAINUI_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_MAINUI_2,IDB_BITMAP_MAINUI_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_MAINUI_2,IDB_BITMAP_MAINUI_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_MAINUI_2,IDB_BITMAP_MAINUI_2en,theApp.language()));
 	}
 	if ( m_nButtonID == nButtonID  && !bFlag ) {
 		return ;
@@ -217,55 +219,71 @@ void CIndTitleBar::MobileTip(UINT nButtonID , BOOL bFlag )
 	switch(m_nButtonID)
 	{
 	case IDC_BUTTON_MAIN_UI:
-		m_rBtnMainUi.LoadBitmaps(IDB_BITMAP_MAINUI_1,IDB_BITMAP_MAINUI_3,IDB_BITMAP_MAINUI_2,IDB_BITMAP_MAINUI_1);
+		//m_rBtnMainUi.LoadBitmaps(IDB_BITMAP_MAINUI_1,IDB_BITMAP_MAINUI_3,IDB_BITMAP_MAINUI_2,IDB_BITMAP_MAINUI_1);
+		m_rBtnMainUi.LoadBitmaps(UiFun::GetBmpId(IDB_BITMAP_MAINUI_1,IDB_BITMAP_MAINUI_1en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_MAINUI_3,IDB_BITMAP_MAINUI_3en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_MAINUI_2,IDB_BITMAP_MAINUI_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_MAINUI_1,IDB_BITMAP_MAINUI_1en,theApp.language()));
 		break;
 	case IDC_BUTTON_SEND:
-		m_rBtnSend.LoadBitmaps(IDB_BITMAP_SEND_1,IDB_BITMAP_SEND_3,IDB_BITMAP_SEND_2,IDB_BITMAP_SEND_1);
+		//m_rBtnSend.LoadBitmaps(IDB_BITMAP_SEND_1,IDB_BITMAP_SEND_3,IDB_BITMAP_SEND_2,IDB_BITMAP_SEND_1);
+		m_rBtnSend.LoadBitmaps(UiFun::GetBmpId(IDB_BITMAP_SEND_1,IDB_BITMAP_SEND_1en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_SEND_3,IDB_BITMAP_SEND_3en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_SEND_2,IDB_BITMAP_SEND_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_SEND_1,IDB_BITMAP_SEND_1en,theApp.language()));
 		break;
 	case IDC_BUTTON_RECE:
-		m_rBtnRece.LoadBitmaps(IDB_BITMAP_REV_1,IDB_BITMAP_REV_3,IDB_BITMAP_REV_2,IDB_BITMAP_REV_1);
+		//m_rBtnRece.LoadBitmaps(IDB_BITMAP_REV_1,IDB_BITMAP_REV_3,IDB_BITMAP_REV_2,IDB_BITMAP_REV_1);
+		m_rBtnRece.LoadBitmaps(UiFun::GetBmpId(IDB_BITMAP_REV_1,IDB_BITMAP_REV_1en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_REV_3,IDB_BITMAP_REV_3en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_REV_2,IDB_BITMAP_REV_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_REV_1,IDB_BITMAP_REV_1en,theApp.language()));
 		break;
 	case IDC_BUTTON_TRAD_INFO:
-		m_rBtnTrad.LoadBitmaps(IDB_BITMAP_TRAD_1,IDB_BITMAP_TRAD_3,IDB_BITMAP_TRAD_2,IDB_BITMAP_TRAD_1);
+		//m_rBtnTrad.LoadBitmaps(IDB_BITMAP_TRAD_1,IDB_BITMAP_TRAD_3,IDB_BITMAP_TRAD_2,IDB_BITMAP_TRAD_1);
+		m_rBtnTrad.LoadBitmaps(UiFun::GetBmpId(IDB_BITMAP_TRAD_1,IDB_BITMAP_TRAD_1en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_TRAD_3,IDB_BITMAP_TRAD_3en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_TRAD_2,IDB_BITMAP_TRAD_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_TRAD_1,IDB_BITMAP_TRAD_1en,theApp.language()));
 		break;
 	case IDC_BUTTON_P2P:
-		m_rBtnP2p.LoadBitmaps(IDB_BITMAP_YOUR_1,IDB_BITMAP_YOUR_3,IDB_BITMAP_YOUR_2,IDB_BITMAP_YOUR_1);
+		//m_rBtnP2p.LoadBitmaps(IDB_BITMAP_YOUR_1,IDB_BITMAP_YOUR_3,IDB_BITMAP_YOUR_2,IDB_BITMAP_YOUR_1);
+		m_rBtnP2p.LoadBitmaps(UiFun::GetBmpId(IDB_BITMAP_YOUR_1,IDB_BITMAP_YOUR_1en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_YOUR_3,IDB_BITMAP_YOUR_3en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_YOUR_2,IDB_BITMAP_YOUR_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_YOUR_1,IDB_BITMAP_YOUR_1en,theApp.language()));
 		break;
 	case IDC_BUTTON_MORTGAGE:
-		m_rBtnMortgage.LoadBitmaps(IDB_BITMAP_GRAB_RP_1,IDB_BITMAP_GRAB_RP_3,IDB_BITMAP_GRAB_RP_2,IDB_BITMAP_GRAB_RP_1);
+		//m_rBtnMortgage.LoadBitmaps(IDB_BITMAP_GRAB_RP_1,IDB_BITMAP_GRAB_RP_3,IDB_BITMAP_GRAB_RP_2,IDB_BITMAP_GRAB_RP_1);
+		m_rBtnMortgage.LoadBitmaps(UiFun::GetBmpId(IDB_BITMAP_GRAB_RP_1,IDB_BITMAP_GRAB_RP_1en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_GRAB_RP_3,IDB_BITMAP_GRAB_RP_3en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_GRAB_RP_2,IDB_BITMAP_GRAB_RP_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_GRAB_RP_1,IDB_BITMAP_GRAB_RP_1en,theApp.language()));
 		break;
 	case IDC_BUTTON_IPO:
-		m_rBtnIpo.LoadBitmaps(IDB_BITMAP_IPO_1,IDB_BITMAP_IPO_3,IDB_BITMAP_IPO_2,IDB_BITMAP_IPO_1);
+		//m_rBtnIpo.LoadBitmaps(IDB_BITMAP_IPO_1,IDB_BITMAP_IPO_3,IDB_BITMAP_IPO_2,IDB_BITMAP_IPO_1);
+		m_rBtnIpo.LoadBitmaps(UiFun::GetBmpId(IDB_BITMAP_IPO_1,IDB_BITMAP_IPO_1en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_IPO_3,IDB_BITMAP_IPO_3en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_IPO_2,IDB_BITMAP_IPO_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_IPO_1,IDB_BITMAP_IPO_1en,theApp.language()));
 		break;
 	case IDC_BUTTON_ADDAPP:
-		m_rBtnAddApp.LoadBitmaps(IDB_BITMAP_ADDAPP_1 , IDB_BITMAP_ADDAPP_3 ,IDB_BITMAP_ADDAPP_2,IDB_BITMAP_ADDAPP_1);
+	//	m_rBtnAddApp.LoadBitmaps(IDB_BITMAP_ADDAPP_1 , IDB_BITMAP_ADDAPP_3 ,IDB_BITMAP_ADDAPP_2,IDB_BITMAP_ADDAPP_1);
+		m_rBtnAddApp.LoadBitmaps(UiFun::GetBmpId(IDB_BITMAP_ADDAPP_1,IDB_BITMAP_ADDAPP_1en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_ADDAPP_3,IDB_BITMAP_ADDAPP_3en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_ADDAPP_2,IDB_BITMAP_ADDAPP_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_ADDAPP_1,IDB_BITMAP_ADDAPP_1en,theApp.language()));
 		break;
 	}
 	switch(nButtonID)
 	{
 	case IDC_BUTTON_MAIN_UI:
-		m_rBtnMainUi.LoadBitmaps(IDB_BITMAP_MAINUI_2 , IDB_BITMAP_MAINUI_2 ,IDB_BITMAP_MAINUI_2,IDB_BITMAP_MAINUI_2);
+		//m_rBtnMainUi.LoadBitmaps(IDB_BITMAP_MAINUI_2 , IDB_BITMAP_MAINUI_2 ,IDB_BITMAP_MAINUI_2,IDB_BITMAP_MAINUI_2);
+		m_rBtnMainUi.LoadBitmaps(UiFun::GetBmpId(IDB_BITMAP_MAINUI_2,IDB_BITMAP_MAINUI_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_MAINUI_2,IDB_BITMAP_MAINUI_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_MAINUI_2,IDB_BITMAP_MAINUI_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_MAINUI_2,IDB_BITMAP_MAINUI_2en,theApp.language()));
 		break;
 	case IDC_BUTTON_SEND:
-		m_rBtnSend.LoadBitmaps(IDB_BITMAP_SEND_2,IDB_BITMAP_SEND_2,IDB_BITMAP_SEND_2,IDB_BITMAP_SEND_2);
+		//m_rBtnSend.LoadBitmaps(IDB_BITMAP_SEND_2,IDB_BITMAP_SEND_2,IDB_BITMAP_SEND_2,IDB_BITMAP_SEND_2);
+		m_rBtnSend.LoadBitmaps(UiFun::GetBmpId(IDB_BITMAP_SEND_2,IDB_BITMAP_SEND_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_SEND_2,IDB_BITMAP_SEND_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_SEND_2,IDB_BITMAP_SEND_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_SEND_2,IDB_BITMAP_SEND_2en,theApp.language()));
 		break;
 	case IDC_BUTTON_RECE:
-		m_rBtnRece.LoadBitmaps(IDB_BITMAP_REV_2,IDB_BITMAP_REV_2,IDB_BITMAP_REV_2,IDB_BITMAP_REV_2);
+		//m_rBtnRece.LoadBitmaps(IDB_BITMAP_REV_2,IDB_BITMAP_REV_2,IDB_BITMAP_REV_2,IDB_BITMAP_REV_2);
+		m_rBtnRece.LoadBitmaps(UiFun::GetBmpId(IDB_BITMAP_REV_2,IDB_BITMAP_REV_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_REV_2,IDB_BITMAP_REV_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_REV_2,IDB_BITMAP_REV_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_REV_2,IDB_BITMAP_REV_2en,theApp.language()));
 		break;
 	case IDC_BUTTON_TRAD_INFO:
-		m_rBtnTrad.LoadBitmaps(IDB_BITMAP_TRAD_2,IDB_BITMAP_TRAD_2,IDB_BITMAP_TRAD_2,IDB_BITMAP_TRAD_2);
+		//m_rBtnTrad.LoadBitmaps(IDB_BITMAP_TRAD_2,IDB_BITMAP_TRAD_2,IDB_BITMAP_TRAD_2,IDB_BITMAP_TRAD_2);
+		m_rBtnTrad.LoadBitmaps(UiFun::GetBmpId(IDB_BITMAP_TRAD_2,IDB_BITMAP_TRAD_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_TRAD_2,IDB_BITMAP_TRAD_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_TRAD_2,IDB_BITMAP_TRAD_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_TRAD_2,IDB_BITMAP_TRAD_2en,theApp.language()));
 		break;
 	case IDC_BUTTON_P2P:
-		m_rBtnP2p.LoadBitmaps(IDB_BITMAP_YOUR_2,IDB_BITMAP_YOUR_2,IDB_BITMAP_YOUR_2,IDB_BITMAP_YOUR_2);
+		//m_rBtnP2p.LoadBitmaps(IDB_BITMAP_YOUR_2,IDB_BITMAP_YOUR_2,IDB_BITMAP_YOUR_2,IDB_BITMAP_YOUR_2);
+		m_rBtnP2p.LoadBitmaps(UiFun::GetBmpId(IDB_BITMAP_YOUR_2,IDB_BITMAP_YOUR_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_YOUR_2,IDB_BITMAP_YOUR_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_YOUR_2,IDB_BITMAP_YOUR_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_YOUR_2,IDB_BITMAP_YOUR_2en,theApp.language()));
 		break;
 	case IDC_BUTTON_MORTGAGE:
-		m_rBtnMortgage.LoadBitmaps(IDB_BITMAP_GRAB_RP_2,IDB_BITMAP_GRAB_RP_2,IDB_BITMAP_GRAB_RP_2,IDB_BITMAP_GRAB_RP_2);
+		//m_rBtnMortgage.LoadBitmaps(IDB_BITMAP_GRAB_RP_2,IDB_BITMAP_GRAB_RP_2,IDB_BITMAP_GRAB_RP_2,IDB_BITMAP_GRAB_RP_2);
+		m_rBtnMortgage.LoadBitmaps(UiFun::GetBmpId(IDB_BITMAP_GRAB_RP_2,IDB_BITMAP_GRAB_RP_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_GRAB_RP_2,IDB_BITMAP_GRAB_RP_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_GRAB_RP_2,IDB_BITMAP_GRAB_RP_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_GRAB_RP_2,IDB_BITMAP_GRAB_RP_2en,theApp.language()));
 		break;
 	case IDC_BUTTON_IPO:
-		m_rBtnIpo.LoadBitmaps(IDB_BITMAP_IPO_2,IDB_BITMAP_IPO_2,IDB_BITMAP_IPO_2,IDB_BITMAP_IPO_2);
+		//m_rBtnIpo.LoadBitmaps(IDB_BITMAP_IPO_2,IDB_BITMAP_IPO_2,IDB_BITMAP_IPO_2,IDB_BITMAP_IPO_2);
+		m_rBtnIpo.LoadBitmaps(UiFun::GetBmpId(IDB_BITMAP_IPO_2,IDB_BITMAP_IPO_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_IPO_2,IDB_BITMAP_IPO_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_IPO_2,IDB_BITMAP_IPO_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_IPO_2,IDB_BITMAP_IPO_2en,theApp.language()));
 		break;
 	case IDC_BUTTON_ADDAPP:
-		m_rBtnAddApp.LoadBitmaps(IDB_BITMAP_ADDAPP_2,IDB_BITMAP_ADDAPP_2,IDB_BITMAP_ADDAPP_2,IDB_BITMAP_ADDAPP_2);
+		//m_rBtnAddApp.LoadBitmaps(IDB_BITMAP_ADDAPP_2,IDB_BITMAP_ADDAPP_2,IDB_BITMAP_ADDAPP_2,IDB_BITMAP_ADDAPP_2);
+		m_rBtnAddApp.LoadBitmaps(UiFun::GetBmpId(IDB_BITMAP_ADDAPP_2,IDB_BITMAP_ADDAPP_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_ADDAPP_2,IDB_BITMAP_ADDAPP_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_ADDAPP_2,IDB_BITMAP_ADDAPP_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_ADDAPP_2,IDB_BITMAP_ADDAPP_2en,theApp.language()));
 		break;
 	}
 	m_nButtonID = nButtonID ;
@@ -277,14 +295,22 @@ BOOL CIndTitleBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT 
 
 	BOOL bRes = CDialogBar::Create(pParentWnd, nIDTemplate, nStyle, nID);
 	if ( bRes ) {
-		m_rBtnMainUi.LoadBitmaps(IDB_BITMAP_MAINUI_1,IDB_BITMAP_MAINUI_3,IDB_BITMAP_MAINUI_2,IDB_BITMAP_MAINUI_1);
-		m_rBtnSend.LoadBitmaps(IDB_BITMAP_SEND_1,IDB_BITMAP_SEND_3,IDB_BITMAP_SEND_2,IDB_BITMAP_SEND_1);
-		m_rBtnRece.LoadBitmaps(IDB_BITMAP_REV_1,IDB_BITMAP_REV_3,IDB_BITMAP_REV_2,IDB_BITMAP_REV_1);
-		m_rBtnTrad.LoadBitmaps(IDB_BITMAP_TRAD_1,IDB_BITMAP_TRAD_3,IDB_BITMAP_TRAD_2,IDB_BITMAP_TRAD_1);
-		m_rBtnP2p.LoadBitmaps(IDB_BITMAP_YOUR_1,IDB_BITMAP_YOUR_3,IDB_BITMAP_YOUR_2,IDB_BITMAP_YOUR_1);
-		m_rBtnMortgage.LoadBitmaps(IDB_BITMAP_GRAB_RP_1,IDB_BITMAP_GRAB_RP_3,IDB_BITMAP_GRAB_RP_2,IDB_BITMAP_GRAB_RP_1);
-		m_rBtnIpo.LoadBitmaps(IDB_BITMAP_IPO_1,IDB_BITMAP_IPO_3,IDB_BITMAP_IPO_2,IDB_BITMAP_IPO_1);
-		m_rBtnAddApp.LoadBitmaps(IDB_BITMAP_ADDAPP_1 , IDB_BITMAP_ADDAPP_3 ,IDB_BITMAP_ADDAPP_2,IDB_BITMAP_ADDAPP_1);
+		//m_rBtnMainUi.LoadBitmaps(UiFun::GetBmpId(IDB_BITMAP_MAINUI_1,IDB_BITMAP_MAINUI_1en,theApp.language()),IDB_BITMAP_MAINUI_3,IDB_BITMAP_MAINUI_2,IDB_BITMAP_MAINUI_1);
+		m_rBtnMainUi.LoadBitmaps(UiFun::GetBmpId(IDB_BITMAP_MAINUI_1,IDB_BITMAP_MAINUI_1en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_MAINUI_3,IDB_BITMAP_MAINUI_3en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_MAINUI_2,IDB_BITMAP_MAINUI_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_MAINUI_1,IDB_BITMAP_MAINUI_1en,theApp.language()));
+		//m_rBtnSend.LoadBitmaps(IDB_BITMAP_SEND_1,IDB_BITMAP_SEND_3,IDB_BITMAP_SEND_2,IDB_BITMAP_SEND_1);
+		m_rBtnSend.LoadBitmaps(UiFun::GetBmpId(IDB_BITMAP_SEND_1,IDB_BITMAP_SEND_1en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_SEND_3,IDB_BITMAP_SEND_3en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_SEND_2,IDB_BITMAP_SEND_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_SEND_1,IDB_BITMAP_SEND_1en,theApp.language()));
+		//m_rBtnRece.LoadBitmaps(IDB_BITMAP_REV_1,IDB_BITMAP_REV_3,IDB_BITMAP_REV_2,IDB_BITMAP_REV_1);
+		m_rBtnRece.LoadBitmaps(UiFun::GetBmpId(IDB_BITMAP_REV_1,IDB_BITMAP_REV_1en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_REV_3,IDB_BITMAP_REV_3en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_REV_2,IDB_BITMAP_REV_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_REV_1,IDB_BITMAP_REV_1en,theApp.language()));
+		//m_rBtnTrad.LoadBitmaps(IDB_BITMAP_TRAD_1,IDB_BITMAP_TRAD_3,IDB_BITMAP_TRAD_2,IDB_BITMAP_TRAD_1);
+		m_rBtnTrad.LoadBitmaps(UiFun::GetBmpId(IDB_BITMAP_TRAD_1,IDB_BITMAP_TRAD_1en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_TRAD_3,IDB_BITMAP_TRAD_3en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_TRAD_2,IDB_BITMAP_TRAD_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_TRAD_1,IDB_BITMAP_TRAD_1en,theApp.language()));
+		//m_rBtnP2p.LoadBitmaps(IDB_BITMAP_YOUR_1,IDB_BITMAP_YOUR_3,IDB_BITMAP_YOUR_2,IDB_BITMAP_YOUR_1);
+		m_rBtnP2p.LoadBitmaps(UiFun::GetBmpId(IDB_BITMAP_YOUR_1,IDB_BITMAP_YOUR_1en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_YOUR_3,IDB_BITMAP_YOUR_3en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_YOUR_2,IDB_BITMAP_YOUR_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_YOUR_1,IDB_BITMAP_YOUR_1en,theApp.language()));
+		//m_rBtnMortgage.LoadBitmaps(IDB_BITMAP_GRAB_RP_1,IDB_BITMAP_GRAB_RP_3,IDB_BITMAP_GRAB_RP_2,IDB_BITMAP_GRAB_RP_1);
+		m_rBtnMortgage.LoadBitmaps(UiFun::GetBmpId(IDB_BITMAP_GRAB_RP_1,IDB_BITMAP_GRAB_RP_1en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_GRAB_RP_3,IDB_BITMAP_GRAB_RP_3en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_GRAB_RP_2,IDB_BITMAP_GRAB_RP_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_GRAB_RP_1,IDB_BITMAP_GRAB_RP_1en,theApp.language()));
+		//m_rBtnIpo.LoadBitmaps(IDB_BITMAP_IPO_1,IDB_BITMAP_IPO_3,IDB_BITMAP_IPO_2,IDB_BITMAP_IPO_1);
+		m_rBtnIpo.LoadBitmaps(UiFun::GetBmpId(IDB_BITMAP_IPO_1,IDB_BITMAP_IPO_1en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_IPO_3,IDB_BITMAP_IPO_3en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_IPO_2,IDB_BITMAP_IPO_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_IPO_1,IDB_BITMAP_IPO_1en,theApp.language()));
+		//m_rBtnAddApp.LoadBitmaps(IDB_BITMAP_ADDAPP_1 , IDB_BITMAP_ADDAPP_3 ,IDB_BITMAP_ADDAPP_2,IDB_BITMAP_ADDAPP_1);
+		m_rBtnAddApp.LoadBitmaps(UiFun::GetBmpId(IDB_BITMAP_ADDAPP_1,IDB_BITMAP_ADDAPP_1en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_ADDAPP_3,IDB_BITMAP_ADDAPP_3en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_ADDAPP_2,IDB_BITMAP_ADDAPP_2en,theApp.language()),UiFun::GetBmpId(IDB_BITMAP_ADDAPP_1,IDB_BITMAP_ADDAPP_1en,theApp.language()));
 
 		m_rBtnClose.LoadBitmaps(IDB_BITMAP_CLOSE , IDB_BITMAP_CLOSE2 ,IDB_BITMAP_CLOSE3,IDB_BITMAP_CLOSE);
 		m_rBtnMin.LoadBitmaps(IDB_BITMAP_MIN , IDB_BITMAP_MIN2 ,IDB_BITMAP_MIN3,IDB_BITMAP_MIN);
@@ -322,6 +348,11 @@ BOOL CIndTitleBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT 
 		}else{
 			pPopup->CheckMenuItem(ID_EN, MF_BYCOMMAND|MF_CHECKED);
 		}
+		
+		//加载指定位图资源 Bmp图片ID
+		HBITMAP hBitmap; 
+		hBitmap = ::LoadBitmap(AfxGetInstanceHandle(),MAKEINTRESOURCE(UiFun::GetBmpId(IDB_BITMAP_LOGO,IDB_BITMAP_LOGO_EN,theApp.language()))); 
+		m_picture.SetBitmap(hBitmap);
 	}
 	return bRes ;
 }

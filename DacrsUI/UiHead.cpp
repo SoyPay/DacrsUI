@@ -208,3 +208,14 @@ void UiFun::GetCellName(int nRow, int nCol, CString &strName)
 	strName += strRow;
 
 }
+int   UiFun::GetBmpId(int bmpCn,int bmpEn,int language)
+{
+	if (language == 1)
+	{
+		return bmpCn;
+	}else if (language == 2)
+	{
+		return bmpEn;
+	}
+	return bmpCn;
+}

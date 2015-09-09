@@ -102,7 +102,8 @@ int CSendRedPacketRecord::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 
 	// TODO:  在此添加您专用的创建代码
-	SetBkBmpNid(IDB_BITMAP_SENDREDPACKET) ;
+	//SetBkBmpNid(IDB_BITMAP_SENDREDPACKET) ;
+	SetBkBmpNid(UiFun::GetBmpId(IDB_BITMAP_SENDREDPACKET,IDB_BITMAP_SENDREDPACKETEN,theApp.language())) ;
 	return 0;
 }
 

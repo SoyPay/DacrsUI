@@ -235,7 +235,8 @@ int CProgStatusBar::ShowProgressCtrl(){
 		//设置进度条的值
 		m_progress.SetPos(setpos);
 		CString strText;
-		strText.AppendFormat("%s ~%d %s", UiFun::UI_LoadString("PROGSTATUS_MODULE"  , "PROGSTATUS_SURPLUS",theApp.gsLanguage ) , pBlockchanged.tips-pBlockchanged.high , UiFun::UI_LoadString("PROGSTATUS_MODULE"  , "PROGSTATUS_SYNLOCAL",theApp.gsLanguage ));
+		strText.AppendFormat("%s ~%d", UiFun::UI_LoadString("PROGSTATUS_MODULE"  , "PROGSTATUS_SURPLUS",theApp.gsLanguage ) , pBlockchanged.tips-pBlockchanged.high);
+		strText.AppendFormat(" %s",UiFun::UI_LoadString("PROGSTATUS_MODULE"  , "PROGSTATUS_SYNLOCAL",theApp.gsLanguage ));
 		m_progress.SetDefinedStr(strText);
 		m_bProgressType = TRUE;
 		m_nSigIndex =pBlockchanged.connections>3?3:pBlockchanged.connections;
@@ -268,7 +269,9 @@ int CProgStatusBar::ShowProgressCtrl(){
 	//设置进度条的值
 	m_progress.SetPos(setpos);
 	CString strText;
-	strText.AppendFormat("%s ~%d %s",UiFun::UI_LoadString("PROGSTATUS_MODULE"  , "PROGSTATUS_SURPLUS",theApp.gsLanguage ) , pBlockchanged.tips-pBlockchanged.high ,UiFun::UI_LoadString("PROGSTATUS_MODULE"  , "PROGSTATUS_SYNLOCAL",theApp.gsLanguage ));
+	//strText.AppendFormat("%s ~%d %s",UiFun::UI_LoadString("PROGSTATUS_MODULE"  , "PROGSTATUS_SURPLUS",theApp.gsLanguage ) , pBlockchanged.tips-pBlockchanged.high ,UiFun::UI_LoadString("PROGSTATUS_MODULE"  , "PROGSTATUS_SYNLOCAL",theApp.gsLanguage ));
+	strText.AppendFormat("%s ~%d", UiFun::UI_LoadString("PROGSTATUS_MODULE"  , "PROGSTATUS_SURPLUS",theApp.gsLanguage ) , pBlockchanged.tips-pBlockchanged.high);
+	strText.AppendFormat(" %s",UiFun::UI_LoadString("PROGSTATUS_MODULE"  , "PROGSTATUS_SYNLOCAL",theApp.gsLanguage ));
 	m_progress.SetDefinedStr(strText);
 	m_progress.Invalidate();
 
@@ -288,7 +291,7 @@ int CProgStatusBar::ShowProgressCtrl(){
 	}
 	if ( m_walletui && !m_prosshiden) {
 		string strTemp = "";
-		strTemp =strprintf("%s%s",netStr , UiFun::UI_LoadString("PROGSTATUS_MODULE"  , "PROGSTATUS_SURPLUS",theApp.gsLanguage ) );
+		strTemp =strprintf("%s%s",netStr , UiFun::UI_LoadString("PROGSTATUS_MODULE"  , "PROGSTATUS_NET",theApp.gsLanguage ) );
 		m_strNeting.SetWindowText(strTemp.c_str()) ;
 		m_strNeting.ShowWindow(SW_HIDE);
 		m_strNeting.ShowWindow(SW_SHOW);

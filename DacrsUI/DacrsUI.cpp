@@ -225,7 +225,14 @@ BOOL CDacrsUIApp::InitInstance()
 	theApp.StartblockThrd();  //¿ªÆôBlockÏß³Ì
 	//gif
 	m_ProgressGifFile =   str_InsPath + _T("\\gif\\progress.gif\0") ;
-	m_ProgressOutGifFile =   str_InsPath + _T("\\gif\\exit.gif\0") ;
+	if (theApp.language() == 2)
+	{
+		m_ProgressOutGifFile =   str_InsPath + _T("\\gif\\exit_en.gif\0") ;
+	}else
+	{
+		m_ProgressOutGifFile =   str_InsPath + _T("\\gif\\exit.gif\0") ;
+	}
+	
 	GdiplusStartupInput gdiplusStartupInput;
 	ULONG_PTR gdiplusToken;
 	Status state = GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL) ;
