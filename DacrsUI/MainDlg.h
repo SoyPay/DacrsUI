@@ -47,6 +47,7 @@ public:
 	CStaticTrans     m_strTranNum   ;
 
 	CRoundButton     m_rBtnAllTxdetail;
+	CStatic          m_sysWallet;
 	//CRoundButton     m_rBtnImportWallet;
 	//CRoundButton     m_rBtnDumpWallet;
 public:

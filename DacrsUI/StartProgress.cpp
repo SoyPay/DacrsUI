@@ -59,10 +59,16 @@ BOOL CStartProgress::OnInitDialog()
 		//m_ProgressWnd->SetWindowPos(NULL , x/2 - 175 + 250 , y/2+20 , 0 ,0 , SWP_NOSIZE) ;
 	}
 
-	m_ProgressBmp[0].LoadBitmap(IDB_BITMAP_PROG1);  
+/*	m_ProgressBmp[0].LoadBitmap(IDB_BITMAP_PROG1);  
 	m_ProgressBmp[1].LoadBitmap(IDB_BITMAP_PROG2);  
 	m_ProgressBmp[2].LoadBitmap(IDB_BITMAP_PROG3);  
-	m_ProgressBmp[3].LoadBitmap(IDB_BITMAP_PROG4);  
+	m_ProgressBmp[3].LoadBitmap(IDB_BITMAP_PROG4); */ 
+
+	
+	m_ProgressBmp[0].LoadBitmap(UiFun::GetBmpId(IDB_BITMAP_PROG1,IDB_BITMAP_PROG1_EN,theApp.language()));  
+	m_ProgressBmp[1].LoadBitmap(UiFun::GetBmpId(IDB_BITMAP_PROG2,IDB_BITMAP_PROG2_EN,theApp.language()));  
+	m_ProgressBmp[2].LoadBitmap(UiFun::GetBmpId(IDB_BITMAP_PROG3,IDB_BITMAP_PROG3_EN,theApp.language()));  
+	m_ProgressBmp[3].LoadBitmap(UiFun::GetBmpId(IDB_BITMAP_PROG4,IDB_BITMAP_PROG4_EN,theApp.language())); 
 
 	m_progress.SendMessage(PBM_SETBKCOLOR, 0, RGB(66, 65, 63));//±³¾°É«
 	m_progress.SendMessage(PBM_SETBARCOLOR, 0, RGB(254, 153, 0));//Ç°¾°É«
