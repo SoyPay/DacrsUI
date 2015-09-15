@@ -1,5 +1,6 @@
 #pragma once
-
+#include "DlgView.h"
+#include "DlgDocument.h"
 
 // CAddApp ¶Ô»°¿ò
 
@@ -24,4 +25,6 @@ public:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	virtual BOOL Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID);
+	void DeleteView();
+	CDlgView *pView;
 };

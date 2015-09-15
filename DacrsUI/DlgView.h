@@ -78,6 +78,7 @@ public:
 	void MoidfyListAndSaveToFile(int type,string key,ADD_APP_DATA ModifyData);
 	bool UnZipFile(string unzipfilename,string zipfilepath);
 	bool DownLoadFile(const string&UrpPath ,const string& strFilePath);
+	void CloseProcess();
 public:
 	CListCtrlCl m_Commctrl;
 	CListCtrlCl m_gameCtrl;
@@ -95,6 +96,7 @@ public:
 	map<string ,ADD_APP_DATA> m_commappUrl_list;
 	map<string ,ADD_APP_DATA> m_gameappUrl_list;
 	map<string ,ADD_APP_DATA> m_LargeappUrl_list;
+	vector<PROCESS_INFORMATION> m_process;
 public:
 	int largerHeight;
 	int smallHeight;

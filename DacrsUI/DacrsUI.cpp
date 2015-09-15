@@ -502,7 +502,6 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 		/// 消息处理完 才能够退出
 		if (theApp.m_msgAutoDelete && !pUiDemeDlg->m_MsgQueue.pop(Postmsg))
 		{
-			int b =5;
 			return 1;
 		}
 
