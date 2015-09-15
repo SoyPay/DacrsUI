@@ -212,17 +212,17 @@ void CSendListBox::updateListBoxButtonPos()
 				pData->pSta4->SetFont(110, _T("宋体"));				//设置显示字体和大小
 				pData->pSta4->ShowWindow( SW_SHOW );	
 				pData->pSta4->ModifyStyle(0,SS_CENTERIMAGE|SS_CENTER);
-				pData->pSta4->SetWindowPos(NULL , 475 , pData->nItem*28 +10 , 50 , 29 , SWP_SHOWWINDOW );
+				pData->pSta4->SetWindowPos(NULL , 475 , pData->nItem*28 +10 , 47 , 29 , SWP_SHOWWINDOW );
 
 				pData->pSta5->SetFont(110, _T("宋体"));				//设置显示字体和大小
 				pData->pSta5->ShowWindow( SW_SHOW );	
-				pData->pSta5->ModifyStyle(0,SS_CENTERIMAGE|SS_CENTER);
-				pData->pSta5->SetWindowPos(NULL , 540 , pData->nItem*28 +10 , 30 , 29 , SWP_SHOWWINDOW );
+				pData->pSta5->ModifyStyle(0,SS_CENTERIMAGE|SS_RIGHT);
+				pData->pSta5->SetWindowPos(NULL , 530 , pData->nItem*28 +10 ,58 , 29 , SWP_SHOWWINDOW );
 
 				pData->pSta6->SetFont(110, _T("宋体"));				//设置显示字体和大小
 				pData->pSta6->ShowWindow( SW_SHOW );	
 				pData->pSta6->ModifyStyle(0,SS_CENTERIMAGE|SS_CENTER);
-				pData->pSta6->SetWindowPos(NULL ,570 , pData->nItem*28 +10 , 140 , 29 , SWP_SHOWWINDOW );
+				pData->pSta6->SetWindowPos(NULL ,580 , pData->nItem*28 +10 , 130 , 29 , SWP_SHOWWINDOW );
 
 				pData->pSta7->SetFont(110, _T("宋体"));				//设置显示字体和大小
 				pData->pSta7->ShowWindow( SW_SHOW );	
@@ -230,7 +230,8 @@ void CSendListBox::updateListBoxButtonPos()
 				pData->pSta7->SetWindowPos(NULL ,710 , pData->nItem*28 +10 , 70 , 29 , SWP_SHOWWINDOW );
 
 				pData->pSta8->ShowWindow( SW_SHOW );
-				pData->pSta8->SetWindowPos(NULL , 810 , pData->nItem*28 +10+8 , 45 , 21 , SWP_SHOWWINDOW );
+				pData->pSta7->ModifyStyle(0,SS_CENTERIMAGE|SS_CENTER);
+				pData->pSta8->SetWindowPos(NULL , 800 , pData->nItem*28 +10+8 ,75 , 21 , SWP_SHOWWINDOW );
 
 			}
 			iLine++;

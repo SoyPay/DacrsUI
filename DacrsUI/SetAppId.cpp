@@ -86,7 +86,7 @@ void CSetAppId::OnBnClickedOk()
 		{
 			if (!IsRegId(strTemp))
 			{
-				UiFun::MessageBoxEx(_T("猜你妹AppID格式不正确") , _T("Error") ,MFB_OK|MFB_ERROR );
+				UiFun::MessageBoxEx(UiFun::UI_LoadString("SETAPPID" , "SETAPPFEE_GUEEOR" ,theApp.gsLanguage) , _T("Error") ,MFB_OK|MFB_ERROR );
 			}else
 			{
 				Json::Value setscriptid = root["script"];
@@ -102,7 +102,7 @@ void CSetAppId::OnBnClickedOk()
 		{
 			if (!IsRegId(strTemp))
 			{
-				UiFun::MessageBoxEx(_T("抢红包AppID格式不正确") , _T("Error") ,MFB_OK|MFB_ERROR );
+				UiFun::MessageBoxEx(UiFun::UI_LoadString("SETAPPID" , "SETAPPFEE_GIFTERROR" ,theApp.gsLanguage), _T("Error") ,MFB_OK|MFB_ERROR );
 			}else
 			{
 				Json::Value setscriptid = root["script"];
@@ -119,7 +119,7 @@ void CSetAppId::OnBnClickedOk()
 			if (!IsRegId(strTemp))
 			{
 				
-				UiFun::MessageBoxEx(_T("IPO AppID格式不正确") , _T("Error") ,MFB_OK|MFB_ERROR );
+				UiFun::MessageBoxEx(UiFun::UI_LoadString("SETAPPID" , "SETAPPFEE_IPOERROR" ,theApp.gsLanguage), _T("Error") ,MFB_OK|MFB_ERROR );
 			}else
 			{
 				Json::Value setscriptid = root["script"];
@@ -149,7 +149,8 @@ BOOL CSetAppId::OnInitDialog()
 
 	m_headText.SetFont(100, _T("微软雅黑"));
 	m_headText.SetTextColor(RGB(255,255,255));	
-
+	m_headText.SetWindowText(UiFun::UI_LoadString("SETAPPID" , "SETAPPID_HEAD" ,theApp.gsLanguage));
+	
 	m_rBtnClose.SetBitmaps( IDB_BITMAP_CLOSE , RGB(255, 255, 0) , IDB_BITMAP_CLOSE2 , RGB(255, 255, 255) );
 	m_rBtnClose.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
 	m_rBtnClose.SetWindowText("") ;
@@ -168,7 +169,7 @@ BOOL CSetAppId::OnInitDialog()
 
 	m_rBtnOk.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
 	m_rBtnOk.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-	m_rBtnOk.SetWindowText("确 定") ;
+	m_rBtnOk.SetWindowText(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_CONFIRM" ,theApp.gsLanguage)) ;
 	//m_rBtnOk.SetFontEx(20 , _T("微软雅黑"));
 	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
@@ -178,13 +179,17 @@ BOOL CSetAppId::OnInitDialog()
 
 	m_rBtnCancel.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
 	m_rBtnCancel.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-	m_rBtnCancel.SetWindowText("取 消") ;
+	m_rBtnCancel.SetWindowText(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_CANCEL" ,theApp.gsLanguage)) ;
 	//m_rBtnCancel.SetFontEx(20 , _T("微软雅黑"));
 	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
 	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
 	m_rBtnCancel.SizeToContent();
+
+	GetDlgItem(IDC_STATIC_BETID)->SetWindowText(UiFun::UI_LoadString("SETAPPID" , "SETAPPID_GUESSWHO" ,theApp.gsLanguage));
+	GetDlgItem(IDC_STATIC_GRBID)->SetWindowText(UiFun::UI_LoadString("SETAPPID" , "SETAPPFEE_GIFT" ,theApp.gsLanguage));
+
 	// TODO:  在此添加额外的初始化
 	SetDaluft();
 	return TRUE;  // return TRUE unless you set the focus to a control

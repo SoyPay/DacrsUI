@@ -244,6 +244,18 @@
     <ClCompile Include="CommonAddr.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="DlgDocument.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DlgView.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="zip\unzip.cpp">
+      <Filter>源文件\zip</Filter>
+    </ClCompile>
+    <ClCompile Include="zip\zip.cpp">
+      <Filter>源文件\zip</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BmpBtn.h">
@@ -545,6 +557,18 @@
     </ClInclude>
     <ClInclude Include="CommonAddr.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DlgDocument.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DlgView.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="zip\unzip.h">
+      <Filter>头文件\zip</Filter>
+    </ClInclude>
+    <ClInclude Include="zip\zip.h">
+      <Filter>头文件\zip</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1186,6 +1210,12 @@
     </Filter>
     <Filter Include="源文件\msg">
       <UniqueIdentifier>{e14db1a3-5898-49c5-bcd1-acca1e49268e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\zip">
+      <UniqueIdentifier>{96b8ba49-4612-4b7f-b1e5-21c05882e1b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\zip">
+      <UniqueIdentifier>{911aba4c-2c99-479d-9532-8197927bb1b7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

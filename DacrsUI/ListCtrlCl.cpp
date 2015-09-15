@@ -2,7 +2,6 @@
 //
 
 #include "stdafx.h"
-#include "DacrsUI.h"
 #include "ListCtrlCl.h"
 
 struct stColor
@@ -21,10 +20,13 @@ CListCtrlCl::CListCtrlCl()
 , m_fontWith(0)
 {
 	m_color = RGB(0,0,0);
+	m_uID = 0;
+	font.CreatePointFont(100,_T("宋体"));
 }
 
 CListCtrlCl::~CListCtrlCl()
 {
+	release();
 }
 
 
@@ -104,7 +106,9 @@ void CListCtrlCl::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 			rcTemp.left -=2;
 		}
 
-		if ( lpDrawItemStruct->itemState & ODS_SELECTED )
+		DWORD extstyle;
+		extstyle = GetExtendedStyle();
+		if ( (lpDrawItemStruct->itemState & ODS_SELECTED)&&( (GetStyle() & LVS_TYPEMASK) == LVS_REPORT&& (extstyle & (LVS_EX_GRIDLINES)) == LVS_EX_GRIDLINES) )
 		{
 			pDC->FillSolidRect(&rcTemp, GetSysColor(COLOR_HIGHLIGHT)) ;
 			pDC->SetTextColor(GetSysColor(COLOR_HIGHLIGHTTEXT)) ;
@@ -362,7 +366,10 @@ void CListCtrlCl::OnPaint()
 	// 不为绘图消息调用 CListCtrl::OnPaint()
 	const MSG *msg = GetCurrentMessage();
 	DefWindowProc( msg->message, msg->wParam, msg->lParam ); 
-	if( (GetStyle() & LVS_TYPEMASK) == LVS_REPORT ){
+	DWORD extstyle;
+	extstyle = GetExtendedStyle();
+	int style= (extstyle & (LVS_EX_GRIDLINES));
+	if( (GetStyle() & LVS_TYPEMASK) == LVS_REPORT  && (style == LVS_EX_GRIDLINES)){
 		CClientDC dc(this );
 		CHeaderCtrl* pHeader = (CHeaderCtrl*)GetDlgItem(0);
 		int nColumnCount = pHeader->GetItemCount();
@@ -406,4 +413,117 @@ BOOL CListCtrlCl::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
 	TRACE("X=%d, Y=%d\n", pt.x, pt.y);
 	return CListCtrl::OnMouseWheel(nFlags, zDelta, pt);
+}
+
+void CListCtrlCl::createItemButton( int nItem, int nSubItem, HWND hMain,LPCTSTR lpszCaption ,void * pData,HBITMAP nBitmapIn, COLORREF crTransColorIn, HBITMAP nBitmapOut, COLORREF crTransColorOut)
+{
+	CRect rect;
+
+	BOOL ret = GetSubItemRect(nItem, nSubItem, LVIR_LABEL, rect);
+	rect.bottom = rect.top+ m_nRowHeight;
+	if (nSubItem == 0)
+	{
+		rect.left = 0;
+	}
+	DWORD dwStyle =  WS_CHILD | WS_VISIBLE | BS_MULTILINE;
+	CButtonCtrl *pButton = new CButtonCtrl(nItem,nSubItem,rect,hMain,pData);
+	m_uID++;
+
+	pButton->Create(lpszCaption,dwStyle, rect, this, m_uID);
+	pButton->SetFont(&font);
+
+	pButton->SetBitmaps( nBitmapIn , crTransColorIn, nBitmapOut , crTransColorOut );
+	pButton->SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+	pButton->SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(41, 57, 85));
+	pButton->SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(41, 57, 85));
+	pButton->SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(41, 57, 85));
+	pButton->SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(41, 57, 85));
+	pButton->DrawTransparent(TRUE);
+	m_mButton.insert( make_pair( nSubItem, pButton ) ); //单行横向添加用
+
+	return;
+}
+// CListCtrlEx 消息处理程序
+void CListCtrlCl::createItemButton( int nItem, int nSubItem, HWND hMain,LPCTSTR lpszCaption ,void * pData,int nBitmapIn, COLORREF crTransColorIn, int nBitmapOut, COLORREF crTransColorOut)
+{
+	CRect rect;
+
+	BOOL ret = GetSubItemRect(nItem, nSubItem, LVIR_LABEL, rect);
+	rect.bottom = rect.top +m_nRowHeight;
+	DWORD dwStyle =  WS_CHILD | WS_VISIBLE | BS_MULTILINE;
+	CButtonCtrl *pButton = new CButtonCtrl(nItem,nSubItem,rect,hMain,pData);
+	m_uID++;
+
+	pButton->Create(lpszCaption,dwStyle, rect, this, m_uID);
+	pButton->SetFont(&font);
+
+	pButton->SetBitmaps( nBitmapIn , crTransColorIn, nBitmapOut , crTransColorOut );
+	pButton->SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+	pButton->SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(41, 57, 85));
+	pButton->SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(41, 57, 85));
+	pButton->SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(41, 57, 85));
+	pButton->SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(41, 57, 85));
+
+	m_mButton.insert( make_pair( nSubItem, pButton ) ); //单行横向添加用
+
+	return;
+}
+
+void CListCtrlCl::release()
+{
+	Button_map::iterator iter = m_mButton.begin();
+	while ( iter != m_mButton.end() )
+	{
+		delete iter->second;
+		iter->second = NULL;
+		iter++;
+	}
+	m_mButton.clear();
+}
+void  CListCtrlCl::updateListCtrlButtonPos()
+{
+	Button_map::iterator iter = m_mButton.begin();
+	Button_map::iterator itrEnd = m_mButton.end();
+	
+		CRect rect;
+	GetClientRect(rect);
+	LONG width = rect.right;
+	//调整横向的
+	int posx = GetScrollPos(SB_HORZ);//取得水平滚动条的位置
+	for (;iter != itrEnd;++iter)
+		{
+			iter->second->ShowWindow( SW_HIDE );
+
+			rect = iter->second->m_rect;
+			rect.left -= posx;
+			rect.right -= posx;
+			if (rect.right > 0)
+			{
+				if (rect.left > width)
+					{
+							//其他的都超出了显示范围
+								break;
+					}
+				iter->second->MoveWindow( &rect );
+				iter->second->ShowWindow( SW_SHOW );
+			}
+				              
+			/*if( iLine < iTopIndex )
+				{
+					iterUp->second->ShowWindow( SW_HIDE );
+				}*/
+			}
+	return;
+}
+
+CButtonCtrl*  CListCtrlCl::GetBtutton(int index)
+{
+	Button_map::iterator it = m_mButton.find(index) ;
+	if (it == m_mButton.end())
+	{
+		return NULL;
+	}
+
+	return it->second;
+
 }

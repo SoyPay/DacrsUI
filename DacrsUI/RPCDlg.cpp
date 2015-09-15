@@ -55,6 +55,7 @@ BOOL CRPCDlg::OnInitDialog()
 	// TODO:  在此添加额外的初始化
 	m_headText.SetFont(100, _T("微软雅黑"));
 	m_headText.SetTextColor(RGB(255,255,255));	
+	m_headText.SetWindowText(UiFun::UI_LoadString("RPC" , "RPC_COMMAND" ,theApp.gsLanguage));
 
 	m_rBtnClose.SetBitmaps( IDB_BITMAP_CLOSE , RGB(255, 255, 0) , IDB_BITMAP_CLOSE2 , RGB(255, 255, 255) );
 	m_rBtnClose.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
@@ -71,7 +72,7 @@ BOOL CRPCDlg::OnInitDialog()
 	RECT ret;
 	GetWindowRect(&ret);
 	m_rBtnClose.SetWindowPos(NULL ,(ret.right-ret.left)-rect.Width() , 2 , 0 , 0 , SWP_NOSIZE); 
-
+	m_rBtnClear.SetWindowText(UiFun::UI_LoadString("RPC" , "RPC_CLEAR" ,theApp.gsLanguage));
 	m_rBtnClear.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
 	m_rBtnClear.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
 	m_rBtnClear.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
@@ -80,6 +81,7 @@ BOOL CRPCDlg::OnInitDialog()
 	m_rBtnClear.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
 	m_rBtnClear.SizeToContent();
 
+	GetDlgItem(IDC_STATIC_INPUT)->SetWindowText(UiFun::UI_LoadString("RPC" , "RPC_INPUT" ,theApp.gsLanguage));
 	CRect rcClient;
 	GetClientRect(&rcClient);
 

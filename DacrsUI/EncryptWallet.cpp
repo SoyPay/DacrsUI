@@ -46,6 +46,7 @@ BOOL CEncryptWallet::OnInitDialog()
 
 	m_headText.SetFont(100, _T("微软雅黑"));
 	m_headText.SetTextColor(RGB(255,255,255));	
+	m_headText.SetWindowText(UiFun::UI_LoadString("MENU" , "MENU_PASSWORD" ,theApp.gsLanguage));
 
 	m_rBtnClose.SetBitmaps( IDB_BITMAP_CLOSE , RGB(255, 255, 0) , IDB_BITMAP_CLOSE2 , RGB(255, 255, 255) );
 	m_rBtnClose.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
@@ -65,7 +66,7 @@ BOOL CEncryptWallet::OnInitDialog()
 
 	m_rBtnOk.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
 	m_rBtnOk.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-	m_rBtnOk.SetWindowText("确 定") ;
+	m_rBtnOk.SetWindowText(UiFun::UI_LoadString("COMM_MODULE" , "COMM_CONFIRM" ,theApp.gsLanguage)) ;
 //	m_rBtnOk.SetFontEx(20 , _T("微软雅黑"));
 	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
@@ -75,7 +76,7 @@ BOOL CEncryptWallet::OnInitDialog()
 
 	m_rBtnCancel.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
 	m_rBtnCancel.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-	m_rBtnCancel.SetWindowText("取 消") ;
+	m_rBtnCancel.SetWindowText(UiFun::UI_LoadString("COMM_MODULE" , "COMM_CANCEL" ,theApp.gsLanguage)) ;
 	//m_rBtnCancel.SetFontEx(20 , _T("微软雅黑"));
 	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
@@ -98,32 +99,32 @@ void CEncryptWallet::OnBnClickedOk()
 	int pos = inputE.Find(_T(" "));
 	if (pos >=0)
 	{
-		UiFun::MessageBoxEx(_T("输入密码中不能有空格") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("ENCRPY_PASSWORD" , "ENCRPY_PASSWORDNULL" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
 	if (inputE == _T(""))
 	{
-		UiFun::MessageBoxEx(_T("输入密码") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("ENCRPY_PASSWORD" , "ENCRPY_PASSWORD_INPUT" ,theApp.gsLanguage) ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
 	if (confiedE == _T(""))
 	{
-		UiFun::MessageBoxEx(_T("请输入确认密码") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("ENCRPY_PASSWORD" , "ENCRPY_PASSWORD_CONFIRED" ,theApp.gsLanguage) ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
 	if (inputE.GetLength()<6)
 	{
-		UiFun::MessageBoxEx(_T("密码个数最少六位") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("PASS_MODIYWORD" , "PASS_MODIYWORD_COUNT" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
 	if (IsAllDigtal(inputE))
 	{
-		UiFun::MessageBoxEx(_T("密码不能全是数字") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("PASS_MODIYWORD" , "PASS_MODIYWORD_NOTDIGHT" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
 	if (strcmp(inputE,confiedE) != 0)
 	{
-		UiFun::MessageBoxEx(_T("确认密码和输入密码不一致") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("PASS_MODIYWORD" , "PASS_MODIYWORD_REEOR" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -143,10 +144,10 @@ void CEncryptWallet::OnBnClickedOk()
 	isClose = isEntryp;
 	if (isEntryp)
 	{
-		UiFun::MessageBoxEx(_T("钱包加密成功请重新启动钱包") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("ENCRPY_PASSWORD" , "ENCRPY_PASSWORD_OK" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 	}else
 	{
-		UiFun::MessageBoxEx(_T("钱包加密失败") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("ENCRPY_PASSWORD" , "ENCRPY_PASSWORD_ERROR" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 	}
 
 	CDialogBase::OnOK();

@@ -55,6 +55,7 @@ BOOL CReminderdlg::OnInitDialog()
 	m_Text.SetFont(100, _T("Î¢ÈíÑÅºÚ"));				//ÉèÖÃÏÔÊ¾×ÖÌåºÍ´óÐ¡
 	m_Text.SetTextColor(RGB(255,255,255));	    //×ÖÌåÑÕÉ«
 	m_Text.SetWindowPos( NULL , 3 , 3 , 200, 20  ,SWP_SHOWWINDOW ) ; 
+	m_Text.SetWindowText(UiFun::UI_LoadString("REMINDER" , "REMINDER_CLOSETIP" ,theApp.gsLanguage));
 
 	m_rBtnClose.SetBitmaps( IDB_BITMAP_CLOSE , RGB(255, 255, 0) , IDB_BITMAP_CLOSE2 , RGB(255, 255, 255) );
 	m_rBtnClose.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
@@ -69,6 +70,8 @@ BOOL CReminderdlg::OnInitDialog()
 
 	m_rBtnOk.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
 	m_rBtnOk.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+	m_rBtnOk.SetWindowText(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_CONFIRM" ,theApp.gsLanguage));
+	
 	m_rBtnOk.SetFontEx(20 , _T("Î¢ÈíÑÅºÚ"));
 	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
@@ -79,12 +82,17 @@ BOOL CReminderdlg::OnInitDialog()
 	m_rBtnCancel.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
 	m_rBtnCancel.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
 	m_rBtnCancel.SetFontEx(20 , _T("Î¢ÈíÑÅºÚ"));
+	m_rBtnCancel.SetWindowText(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_CANCEL" ,theApp.gsLanguage));
 	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
 	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
 	m_rBtnCancel.SizeToContent();
 	SetBkBmpNid( IDB_BITMAP_ADD_BOOK_BJ ) ;
+
+	GetDlgItem(IDC_RADIO_NOEXIT)->SetWindowText(UiFun::UI_LoadString("REMINDER" , "REMINDER_MIN" ,theApp.gsLanguage));
+	GetDlgItem(IDC_RADIO_EXIT)->SetWindowText(UiFun::UI_LoadString("REMINDER" , "REMINDER_EXIT" ,theApp.gsLanguage));
+	GetDlgItem(IDC_CHECK_NO)->SetWindowText(UiFun::UI_LoadString("REMINDER" , "REMINDER_NO" ,theApp.gsLanguage));
 
 	CButton* radio=(CButton*)GetDlgItem(IDC_RADIO_NOEXIT);
 	radio->SetCheck(TRUE);

@@ -192,7 +192,7 @@ void CRecordListBox::updateListBoxButtonPos()
 
 				pData->pSta4->SetFont(110, _T("宋体"));				//设置显示字体和大小
 				pData->pSta4->ShowWindow( SW_SHOW );	
-				pData->pSta4->SetWindowPos(NULL , 560 , pData->nItem*28 +10 , 50 , 29 , SWP_SHOWWINDOW );
+				pData->pSta4->SetWindowPos(NULL , 550 , pData->nItem*28 +10 , 60 , 29 , SWP_SHOWWINDOW );
 
 				pData->pSta5->SetFont(110, _T("宋体"));				//设置显示字体和大小
 				pData->pSta5->ShowWindow( SW_SHOW );	

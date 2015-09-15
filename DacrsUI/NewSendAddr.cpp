@@ -51,7 +51,7 @@ void CNewSendAddr::OnBnClickedOk()
 	GetDlgItem(IDC_EDIT_ADDR)->GetWindowText(addr);
 	if (addr == _T(""))
 	{
-		UiFun::MessageBoxEx(_T("地址不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("NEW_SENDADDR" , "NEW_SENDADDR_ADDR_NULL" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		return;
 	}
 	uistruct::ADDRBOOK_t sAddrBookItem;
@@ -61,7 +61,7 @@ void CNewSendAddr::OnBnClickedOk()
 	int  item = theApp.m_SqliteDeal.GetAddressBookItem(strCond, &sAddrBookItem);
 	if (sAddrBookItem.address != _T(""))
 	{
-		UiFun::MessageBoxEx(_T("地址簿中已存在此地址") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("NEW_SENDADDR" , "NEW_SENDADDR_TIP" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		return;
 	}
 	m_selectAddr.label = label;
@@ -77,6 +77,7 @@ BOOL CNewSendAddr::OnInitDialog()
 	CDialogBase::OnInitDialog();
 
 	// TODO:  在此添加额外的初始化
+	m_headText.SetWindowText(UiFun::UI_LoadString("NEW_SENDADDR" , "NEW_SENDADDR_HEAD" ,theApp.gsLanguage));
 	m_headText.SetFont(90, _T("微软雅黑"));
 	m_headText.SetTextColor(RGB(255,255,255));	
 
@@ -99,7 +100,7 @@ BOOL CNewSendAddr::OnInitDialog()
 
 	m_rBtnOk.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
 	m_rBtnOk.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-	m_rBtnOk.SetWindowText("确 定") ;
+	m_rBtnOk.SetWindowText(UiFun::UI_LoadString("COMM_MODULE" , "COMM_CONFIRM" ,theApp.gsLanguage)) ;
 	//m_rBtnOk.SetFontEx(20 , _T("微软雅黑"));
 	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
@@ -109,13 +110,18 @@ BOOL CNewSendAddr::OnInitDialog()
 
 	m_rBtnCancel.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
 	m_rBtnCancel.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-	m_rBtnCancel.SetWindowText("取 消") ;
+	m_rBtnCancel.SetWindowText(UiFun::UI_LoadString("COMM_MODULE" , "COMM_CANCEL" ,theApp.gsLanguage)) ;
 	//m_rBtnCancel.SetFontEx(20 , _T("微软雅黑"));
 	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
 	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
 	m_rBtnCancel.SizeToContent();
+
+	 
+	GetDlgItem(IDC_LABEL)->SetWindowText(UiFun::UI_LoadString("NEW_SENDADDR" , "NEW_SENDADDR_LABEL" ,theApp.gsLanguage));
+	GetDlgItem(IDC_ADDR)->SetWindowText(UiFun::UI_LoadString("NEW_SENDADDR" , "NEW_SENDADDR_ADDR" ,theApp.gsLanguage));
+
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE
 }

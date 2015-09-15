@@ -476,7 +476,6 @@ UINT __stdcall CDacrsUIApp::ProcessBetAcceptTx(LPVOID pParam)
 UINT __stdcall CDacrsUIApp::ProcessAppTx(LPVOID pParam)
 {
 	CDacrsUIApp * pUiDemeDlg  = (CDacrsUIApp*)pParam ;
-	CPostMsg Postmsg ;
 	while ( true)
 	{
 
@@ -496,12 +495,14 @@ UINT __stdcall CDacrsUIApp::ProcessAppTx(LPVOID pParam)
 }
 UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 	CDacrsUIApp * pUiDemeDlg  = (CDacrsUIApp*)pParam ;
-	CPostMsg Postmsg ;
+	
 	while ( true)
 	{
+		CPostMsg Postmsg ;
 		/// 消息处理完 才能够退出
 		if (theApp.m_msgAutoDelete && !pUiDemeDlg->m_MsgQueue.pop(Postmsg))
 		{
+			int b =5;
 			return 1;
 		}
 
@@ -1452,10 +1453,16 @@ int CDacrsUIApp::Update()
 	if (lResult == 0) return -1;
 	LogPrint("INFO","Updata lResult:%s\n",sPath);
 	CString sMsg;
-	//sMsg.Format(CLanguage::TranLanguage("MAIN","%d updates found at the website,now to upgrade?"),lResult);
-	sMsg.Format(CLanguage::TranLanguage("MAIN","检查有%d文件需要更新,现在是否要更新?"),lResult);
+	if (theApp.language() == 1)
+	{
+		sMsg.Format(CLanguage::TranLanguage("MAIN","检查有%d文件需要更新,现在是否要更新?"),lResult);
+	}else{
+		sMsg.Format(CLanguage::TranLanguage("MAIN","%d updates found at the website,now to upgrade?"),lResult);
+
+	}
+	
 	//if (AfxMessageBox(sMsg, MB_ICONQUESTION | MB_YESNO) != IDYES) return 0;
-	if ( IDYES != UiFun::MessageBoxEx(sMsg, _T("提示") , MFB_YESNO|MFB_TIP ) )
+	if ( IDYES != UiFun::MessageBoxEx(sMsg, UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) , MFB_YESNO|MFB_TIP ) )
 		return 0;
 
 	ShRun.lpParameters = NULL; 
@@ -1484,7 +1491,7 @@ DWORD WINAPI Update1(LPVOID lpParam){
 	CString sMsg;
 	sMsg.Format(CLanguage::TranLanguage("MAIN","%d updates found at the website,now to upgrade?"),lResult);
 	//if (AfxMessageBox(sMsg, MB_ICONQUESTION | MB_YESNO) != IDYES) return false;
-	if ( IDYES != UiFun::MessageBoxEx(sMsg, _T("提示") , MFB_YESNO|MFB_TIP ) )
+	if ( IDYES != UiFun::MessageBoxEx(sMsg, UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) , MFB_YESNO|MFB_TIP ) )
 		return false;
 	ShRun.lpParameters = NULL; 
 	ShellExecuteEx(&ShRun); 
@@ -1573,7 +1580,7 @@ BOOL CDacrsUIApp::RunOnlyOneApp()
 	if (GetLastError() == ERROR_ALREADY_EXISTS) 
 	{
 		CloseHandle(hMutex);
-		AfxMessageBox(_T("程序已经在运行了") ,MB_OK);
+		AfxMessageBox(UiFun::UI_LoadString("DACRSU" , "DACRSU_PROJECTRUN" ,theApp.gsLanguage) ,MB_OK);
 		exit(1);  
 
 		/*HWND hWndPrevious = ::GetWindow( ::GetDesktopWindow(), GW_CHILD );
@@ -1632,7 +1639,7 @@ void CDacrsUIApp::CheckPathValid(const string& strDir)
 
 	if (bExist)
 	{
-		UiFun::MessageBoxEx(_T("程序不可以放在含有空格的目录下\r\n!") , _T("Error") ,MFB_OK|MFB_ERROR );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("DACRSU" , "DACRSU_FILEPATH" ,theApp.gsLanguage)+"\r\n" , _T("Error") ,MFB_OK|MFB_ERROR );
 		exit(0);
 	}
 }

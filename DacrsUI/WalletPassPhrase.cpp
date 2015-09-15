@@ -55,19 +55,19 @@ void CWalletPassPhrase::OnBnClickedOk()
 	if (PassWord == _T(""))
 	{
 		
-		UiFun::MessageBoxEx(_T("请输入密码") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("PASS_WORD" , "PASS_WORD_INPUTE_PASSWORD" ,theApp.gsLanguage)  , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		return;
 	}
 	if (passtime == _T(""))
 	{
 		
-		UiFun::MessageBoxEx(_T("请输入时间") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("PASS_WORD" , "PASS_WORD_INPUTE_TIME" ,theApp.gsLanguage)  , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		return;
 	}
 	if (!IsAllDigtal(passtime))
 	{
 		
-		UiFun::MessageBoxEx(_T("时间必须数字") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("PASS_WORD" , "PASS_WORD_TIME_DIGHT" ,theApp.gsLanguage)  , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		return;
 	}
 	
@@ -78,7 +78,7 @@ void CWalletPassPhrase::OnBnClickedOk()
 	if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 	{
 		TRACE(" rpccmd walletpassphrase error");
-		UiFun::MessageBoxEx(_T("输入就密码不正确,请重新输入") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("PASS_WORD" , "PASS_WORD_ERROR" ,theApp.gsLanguage)  , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -86,10 +86,10 @@ void CWalletPassPhrase::OnBnClickedOk()
 	bool isEntryp = root["passphrase"].asBool();
 	if (!isEntryp)
 	{
-		UiFun::MessageBoxEx(_T("输入就密码不正确,请重新输入") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("PASS_WORD" , "PASS_WORD_ERROR" ,theApp.gsLanguage), UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		return;
 	}else{
-		UiFun::MessageBoxEx(_T("恭喜钱包解锁成功") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("PASS_WORD" , "PASS_WORD_CORRECT" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 	}
 
 	theApp.m_passlock = TRUE;
@@ -101,6 +101,7 @@ BOOL CWalletPassPhrase::OnInitDialog()
 {
 	CDialogBase::OnInitDialog();
 
+	m_headText.SetWindowText(UiFun::UI_LoadString("PASS_WORD" , "PASS_WORD_HEAD" ,theApp.gsLanguage));
 	m_headText.SetFont(100, _T("微软雅黑"));
 	m_headText.SetTextColor(RGB(255,255,255));	
 
@@ -122,7 +123,7 @@ BOOL CWalletPassPhrase::OnInitDialog()
 
 	m_rBtnOk.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
 	m_rBtnOk.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-	m_rBtnOk.SetWindowText("确 定") ;
+	m_rBtnOk.SetWindowText(UiFun::UI_LoadString("COMM_MODULE" , "COMM_CONFIRM" ,theApp.gsLanguage)) ;
 	//m_rBtnOk.SetFontEx(20 , _T("微软雅黑"));
 	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
@@ -132,7 +133,7 @@ BOOL CWalletPassPhrase::OnInitDialog()
 
 	m_rBtnCancel.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
 	m_rBtnCancel.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-	m_rBtnCancel.SetWindowText("取 消") ;
+	m_rBtnCancel.SetWindowText(UiFun::UI_LoadString("COMM_MODULE" , "COMM_CANCEL" ,theApp.gsLanguage)) ;
 	//m_rBtnCancel.SetFontEx(20 , _T("微软雅黑"));
 	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
@@ -142,6 +143,9 @@ BOOL CWalletPassPhrase::OnInitDialog()
 	// TODO:  在此添加额外的初始化
 	theApp.m_passlock = FALSE;
 	GetDlgItem(IDC_EDIT_TIEM)->SetWindowText(_T("60"));
+	GetDlgItem(IDC_PASSWORD)->SetWindowText(UiFun::UI_LoadString("PASS_WORD" , "PASS_WORD_PASSWORD" ,theApp.gsLanguage));
+	GetDlgItem(IDC_TIMEOUT)->SetWindowText(UiFun::UI_LoadString("PASS_WORD" , "PASS_WORD_TIME" ,theApp.gsLanguage));
+	GetDlgItem(IDC_MINUE)->SetWindowText(UiFun::UI_LoadString("PASS_WORD" , "PASS_WORD_MINUTE" ,theApp.gsLanguage));
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE
 }

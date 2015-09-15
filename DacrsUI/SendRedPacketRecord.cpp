@@ -148,7 +148,7 @@ BOOL CSendRedPacketRecord::Create(LPCTSTR lpszTemplateName, CWnd* pParentWnd)
 
 		m_sCountpage.SetFont(90, _T("黑体"));				//设置显示字体和大小
 		m_sCountpage.SetTextColor(RGB(0,0,0));			    //字体颜色	
-		m_sCountpage.SetWindowText(_T("共:"));
+		m_sCountpage.SetWindowText(UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TOTAL" ,theApp.gsLanguage));
 
 		m_rBtnUp.SetBitmaps( IDB_BITMAP_RED_UP , RGB(255, 255, 0) , IDB_BITMAP_RED_UP , RGB(255, 255, 255) );
 		m_rBtnUp.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
@@ -168,7 +168,7 @@ BOOL CSendRedPacketRecord::Create(LPCTSTR lpszTemplateName, CWnd* pParentWnd)
 		m_rBtnNext.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(255, 255, 255));
 		m_rBtnNext.SizeToContent();
 
-		GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(_T("共:0"));
+		GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TOTAL" ,theApp.gsLanguage)+"0");
 	}
 
 	/// listbox 背景颜色
@@ -192,7 +192,7 @@ void CSendRedPacketRecord::Showlistbox(CString address)
 	m_pagecount = (m_SendRedPacketList.size()%m_pagesize)==0?(m_SendRedPacketList.size()/m_pagesize):(m_SendRedPacketList.size()/m_pagesize)+1;
 
 	string temp;
-	temp = strprintf("共:%d",m_pagecount);
+	temp = strprintf("%s%d",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TOTAL" ,theApp.gsLanguage),m_pagecount);
 	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(temp.c_str());
 	GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T(""));
 	Invalidate();
@@ -231,22 +231,28 @@ void  CSendRedPacketRecord::OnShowPagePool(int page)
 		if (const_it.send_time == 0)
 		{
 			SendTime = "---";
-			state = "未开启";
+			//state = "未开启";
+			state = UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_UNOPEN" ,theApp.gsLanguage);
 
 		}else{
 			SYSTEMTIME curTime =UiFun::Time_tToSystemTime(const_it.send_time);
 			SendTime =strprintf("%02d-%02d %02d:%02d:%02d",curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
-			state = "已开启";
+			//state = "已开启";
+			state = UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_OPEN" ,theApp.gsLanguage);
+	
 		}
 		if (const_it.packet_type == 1)
 		{
-			type ="普通";
+			//type ="普通";
+			type =UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_COMMTYPE" ,theApp.gsLanguage);
 		}else{
-			type="接龙";
+			//type="接龙";
+			type=UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_COMMTYPEL" ,theApp.gsLanguage);
 		}
 		amount =strprintf("%.4f",const_it.amount);
 		numred =strprintf("%d",const_it.packet_num);
-		operate ="发";
+		//operate ="发";
+		operate=UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_SEND" ,theApp.gsLanguage);
 		m_listBox.InsertStr(i,this->GetSafeHwnd());
 		m_listBox.SetIndexString(i , const_it.send_acc_id.c_str(), type.c_str(),SendTime.c_str(),amount.c_str(), numred.c_str(),state.c_str());
 			
@@ -271,7 +277,7 @@ BOOL CSendRedPacketRecord::PreTranslateMessage(MSG* pMsg)
 				{
 					GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T(""));
 					
-					UiFun::MessageBoxEx(_T("输入有误,请输入数字") , _T("提示") ,MFB_OK|MFB_TIP );
+					UiFun::MessageBoxEx(UiFun::UI_LoadString("COMM_MODULE" , "COMM_INPUT_ERROR" ,theApp.gsLanguage)  , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 				}
 				return TRUE;
 			}
@@ -336,21 +342,26 @@ void CSendRedPacketRecord::GetExportCol(map<int,string> &item,uistruct::REDPACKE
 	if (const_it.send_time == 0)
 	{
 		SendTime = "---";
-		state = "未开启";
+		//state = "未开启";
+		state =  UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_UNOPEN" ,theApp.gsLanguage);
 	}else{
 		SYSTEMTIME curTime =UiFun::Time_tToSystemTime(const_it.send_time);
 		SendTime= strprintf("%02d-%02d %02d:%02d:%02d",curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
-		state = "已开启";
+		//state = "已开启";
+		state = UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_UNOPEN" ,theApp.gsLanguage);
 	}
 	if (const_it.packet_type == 1)
 	{
-		type ="普通";
+		//type ="普通";
+		type =UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_COMMTYPE" ,theApp.gsLanguage);
 	}else{
-		type="接龙";
+		//type="接龙";
+		type=UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_COMMTYPEL" ,theApp.gsLanguage);
 	}
 	amount = strprintf("%.4f",const_it.amount);
 	number =strprintf("%d",const_it.packet_num);
-	operate ="发";
+	//operate ="发";
+	operate=UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_SEND" ,theApp.gsLanguage);
 	item[i++]=const_it.send_hash;
 	item[i++]=const_it.send_acc_id;
 	item[i++]=type;
@@ -369,10 +380,10 @@ void CSendRedPacketRecord::ExportSendRedPacketToexel()
 	int nItem =  theApp.m_SqliteDeal.GetRedPacketSendRecordList(conditon ,&SendRedPacketList ) ;
 	if (SendRedPacketList.size() == 0)
 	{
-		UiFun::MessageBoxEx(_T("没有记录可以导出！") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_NOT_RECORD_OUT" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		return;
 	}
-	CFileDialog dlg(FALSE,NULL,"发起红包记录",OFN_HIDEREADONLY|OFN_FILEMUSTEXIST ,"文件 (*.xls)|*.xls||");
+	CFileDialog dlg(FALSE,NULL,UiFun::UI_LoadString("MENU" , "MENU_SENDRED" ,theApp.gsLanguage),OFN_HIDEREADONLY|OFN_FILEMUSTEXIST ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_FILE" ,theApp.gsLanguage)+" (*.xls)|*.xls||");
 	if (IDOK != dlg.DoModal())
 	{
 		return;
@@ -388,13 +399,13 @@ void CSendRedPacketRecord::ExportSendRedPacketToexel()
 		string		name ;
 		UINT		size ;
 	} listheadr[7]  = {
-		{"发红包hash" ,  70},
-		{"发起人" ,    30},
-		{"类型" ,    10},
-		{"发起时间" ,  20}, 
-		{"总金额" ,30},
-		{"个数" ,10},
-		{"状态" , 10}
+		{UiFun::UI_LoadString("P2P_MODULE" , "MORTTARD_SENDGIFT" ,theApp.gsLanguage) ,  70},
+		{UiFun::UI_LoadString("MORTTARD_MODULE" , "P2P_PROMOTER" ,theApp.gsLanguage),    30},
+		{UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_TYPE" ,theApp.gsLanguage) ,    10},
+		{UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_GRABTIME" ,theApp.gsLanguage)  ,  20}, 
+		{UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_TOTALMONEY" ,theApp.gsLanguage)  ,30},
+		{UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_COUNT" ,theApp.gsLanguage)  ,10},
+		{UiFun::UI_LoadString("RECEIVE_MODULE" , "RECEIVE_ACTIVATION_STATE" ,theApp.gsLanguage) , 10}
 
 	};
 
@@ -427,7 +438,7 @@ void CSendRedPacketRecord::ExportSendRedPacketToexel()
 	{
 
 		
-		UiFun::MessageBoxEx(_T("可能是没有装office 导致创建失败！") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_NOT_OFFICE" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage),MFB_OK|MFB_TIP );
 		return;
 
 	}

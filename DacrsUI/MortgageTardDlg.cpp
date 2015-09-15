@@ -411,7 +411,7 @@ void CMortgageTardDlg::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*30 , (rc.Height()/100)*9 ,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*28 , (rc.Height()/100)*9 ,  rect.Width()+15 , rect.Height() , SWP_SHOWWINDOW ) ; 
 		}
 
 		pst = GetDlgItem( IDC_BUTTON_RECH ) ;
@@ -602,7 +602,7 @@ void CMortgageTardDlg::OnBnClickedButtonCommred()
 {
 	// TODO: 在此添加控件通知处理程序代码
 
-	string strshow= "红包已经升级,请到菜单栏中选择恢复默认设置";
+	string strshow= UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_UPDATATIP" ,theApp.gsLanguage);
 	if (!UiFun::IsCurrentAppId(theApp.m_redPacketScriptid.c_str(),theApp.m_neststcriptid.strNewSrcriptRedPacektid.c_str(),strshow))
 	{
 		return;
@@ -793,7 +793,7 @@ void CMortgageTardDlg::OnCbnSelchangeComboAddres()
 	}
 }
 
-bool CMortgageTardDlg::CheckBalance(string strshow)
+bool CMortgageTardDlg::CheckBalance(CString strshow)
 {
 	OnCbnSelchangeComboAddres();
 	CString strMoney;
@@ -805,7 +805,7 @@ bool CMortgageTardDlg::CheckBalance(string strshow)
 		{
 			UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_ACCOUNT_RECHARGE" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage),MFB_OK|MFB_TIP );
 		}else{
-			UiFun::MessageBoxEx(strshow.c_str() ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
+			UiFun::MessageBoxEx(strshow ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		}
 		
 		return false;
@@ -1211,7 +1211,7 @@ void CMortgageTardDlg::OnBnClickedButtonSpecailred()
 {
 	// TODO: 在此添加控件通知处理程序代码
 
-	string strshow= "红包已经升级,请到菜单栏中选择恢复默认设置";
+	string strshow= UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_UPDATATIP" ,theApp.gsLanguage);
 	if (!UiFun::IsCurrentAppId(theApp.m_redPacketScriptid.c_str(),theApp.m_neststcriptid.strNewSrcriptRedPacektid.c_str(),strshow))
 	{
 		return;
@@ -1400,7 +1400,7 @@ void  CMortgageTardDlg::GetAppAccountSomeMoney()
 
 	if (!CheckRegIDValid( theApp.m_betScritptid )) return ;
 
-	if (!CheckBalance("账户金额为零不能提现"))
+	if (!CheckBalance(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_NOTWIHTDRAW" ,theApp.gsLanguage)))
 	{
 		return;
 	}

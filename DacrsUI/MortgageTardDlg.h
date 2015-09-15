@@ -54,7 +54,7 @@ public:
 	CShadeButtonST         m_rBtnSetCommonAddr;
 public:
 	BOOL AddListaddrDataBox();
-	bool CheckBalance(string strshow = "");
+	bool CheckBalance(CString strshow = _T(""));
 	bool CheckBalance(double dmoney);
 	afx_msg void OnBnClickedButtonWithd();
 	afx_msg void OnBnClickedButtonRech();
