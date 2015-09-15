@@ -5,8 +5,7 @@
 #include "DacrsUI.h"
 #include "AddApp.h"
 #include "afxdialogex.h"
-#include "DlgView.h"
-#include "DlgDocument.h"
+
 
 // CAddApp ¶Ô»°¿ò
 
@@ -15,6 +14,7 @@ IMPLEMENT_DYNAMIC(CAddApp, CDialogBar)
 CAddApp::CAddApp()
 {
 	m_pBmp = NULL ;
+	pView = NULL;
 }
 
 CAddApp::~CAddApp()
@@ -23,6 +23,7 @@ CAddApp::~CAddApp()
 		DeleteObject(m_pBmp) ;
 		m_pBmp = NULL ;
 	}
+	DeleteView();
 }
 
 void CAddApp::DoDataExchange(CDataExchange* pDX)
@@ -109,7 +110,8 @@ BOOL CAddApp::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		CWnd* pFrameWnd = this;
 		pContext.m_pCurrentDoc = new CDlgDocument;
 		pContext.m_pNewViewClass = RUNTIME_CLASS(CDlgView);
-		CDlgView *pView =(CDlgView *) ((CFrameWnd*)pFrameWnd)->CreateView(&pContext);
+		//CDlgView *
+		pView =(CDlgView *) ((CFrameWnd*)pFrameWnd)->CreateView(&pContext);
 		ASSERT(pView);
 		pView->m_nMapMode = MM_TEXT;
 
@@ -132,4 +134,13 @@ BOOL CAddApp::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		}
 	}
 	return bRes ;
+}
+void CAddApp::DeleteView()
+{
+	if (pView != NULL)
+	{
+		delete pView;
+		//pView->OnClose();
+		//pView->DestroyWindow();
+	}
 }

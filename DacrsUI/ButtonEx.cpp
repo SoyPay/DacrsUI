@@ -66,6 +66,7 @@ CButtonCtrl::CButtonCtrl( int nItem, int nSubItem, CRect rect, HWND hParent ,voi
 }
 CButtonCtrl::~CButtonCtrl()
 {
+	memset(&m_pData,0,sizeof(ADD_APP_DATA));
 }
 
 

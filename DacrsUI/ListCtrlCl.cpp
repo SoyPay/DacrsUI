@@ -438,7 +438,9 @@ void CListCtrlCl::createItemButton( int nItem, int nSubItem, HWND hMain,LPCTSTR 
 	pButton->SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(41, 57, 85));
 	pButton->SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(41, 57, 85));
 	pButton->SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(41, 57, 85));
-	pButton->DrawTransparent(TRUE);
+	//pButton->DrawTransparent(TRUE);
+
+	//delete pButton;
 	m_mButton.insert( make_pair( nSubItem, pButton ) ); //单行横向添加用
 
 	return;
@@ -466,6 +468,7 @@ void CListCtrlCl::createItemButton( int nItem, int nSubItem, HWND hMain,LPCTSTR 
 
 	m_mButton.insert( make_pair( nSubItem, pButton ) ); //单行横向添加用
 
+
 	return;
 }
 
@@ -474,8 +477,12 @@ void CListCtrlCl::release()
 	Button_map::iterator iter = m_mButton.begin();
 	while ( iter != m_mButton.end() )
 	{
-		delete iter->second;
-		iter->second = NULL;
+		CButtonCtrl* item = iter->second;
+		if (item != NULL)
+		{
+			delete item;
+			item = NULL;
+		}
 		iter++;
 	}
 	m_mButton.clear();
