@@ -102,11 +102,14 @@ BOOL CReCharge::OnInitDialog()
 	if (m_strHead != _T(""))
 	{
 		((CStatic*)GetDlgItem(IDC_STATIC_DW))->SetWindowText(m_strHead);
+		//((CStatic*)GetDlgItem(IDC_STATIC_DW))->SetWindowPos(0,(rc.Height()/100)*5,)
 	}
 
 	if (m_strSms != _T(""))
 	{
 		((CStatic*)GetDlgItem(IDC_STATIC))->SetWindowText(m_strSms);
+	}else{
+		((CStatic*)GetDlgItem(IDC_STATIC))->SetWindowText(UiFun::UI_LoadString("COMM_MODULE" , "COMM_MONEY" ,theApp.gsLanguage) + ":");
 	}
 
 	if (m_edit != _T(""))
@@ -150,6 +153,8 @@ BOOL CReCharge::OnInitDialog()
 	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
 	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
 	m_rBtnCancel.SizeToContent();
+
+	//GetDlgItem(IDC_STATIC)->SetWindowText(UiFun::UI_LoadString("COMM_MODULE" , "COMM_MONEY" ,theApp.gsLanguage) + ":");
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE
 }
@@ -167,16 +172,18 @@ void CReCharge::OnSize(UINT nType, int cx, int cy)
 
 
 		CWnd *pst = GetDlgItem( IDC_STATIC ) ;
+		int size = 0;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL , (rc.Width()/100)*3 , (rc.Height()/100)*5 , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL , 0 , (rc.Height()/100)*5 , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+			size = rect.Width();
 		}
 		pst = GetDlgItem( IDC_EDIT_MONEY ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*10 ,(rc.Height()/100)*5  , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,size,(rc.Height()/100)*5  , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
 
 

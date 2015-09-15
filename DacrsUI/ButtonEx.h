@@ -23,3 +23,23 @@ public:
 };
 
 
+
+class CButtonCtrl : public CShadeButtonST
+{
+	DECLARE_DYNAMIC(CButtonCtrl)
+public:
+	CButtonCtrl();
+	CButtonCtrl( int nItem, int nSubItem, CRect rect, HWND hParent ,void*pData);
+	virtual ~CButtonCtrl();
+
+protected:
+	DECLARE_MESSAGE_MAP()
+public:
+	afx_msg void OnBnClicked();
+	int m_inItem;
+	int m_inSubItem;
+	CRect m_rect;
+	HWND m_hParent;
+	BOOL bEnable;
+	ADD_APP_DATA m_pData;         //按钮带的用户自定义数据
+};

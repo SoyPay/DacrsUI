@@ -111,6 +111,7 @@ BOOL CSignAccountsDlg::OnInitDialog()
 {
 	CDialogBase::OnInitDialog();
 
+	m_headText.SetWindowText(UiFun::UI_LoadString("SIGN_MODULE" , "SIGN_ACTIVE_HEAD" ,theApp.gsLanguage));
 	m_headText.SetFont(90, _T("微软雅黑"));
 	m_headText.SetTextColor(RGB(255,255,255));	
 	// TODO:  在此添加额外的初始化
@@ -146,6 +147,9 @@ BOOL CSignAccountsDlg::OnInitDialog()
 	m_fontGrid.CreatePointFont(100,_T("新宋体"));
 
 	GetDlgItem(IDC_EDIT_FEE)->SetWindowTextA("0.0001");
+
+	GetDlgItem(IDC_FEE)->SetWindowText(UiFun::UI_LoadString("NEW_SENDADDR" , "NEW_SENDADDR_LABEL" ,theApp.gsLanguage));
+	GetDlgItem(IDC_ADDR)->SetWindowText(UiFun::UI_LoadString("NEW_SENDADDR" , "NEW_SENDADDR_ADDR" ,theApp.gsLanguage));
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE
 }

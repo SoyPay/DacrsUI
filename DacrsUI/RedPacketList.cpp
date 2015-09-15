@@ -99,7 +99,7 @@ void CRedPacketList::ShowTxDetail(CString txhash)
 	{
 		//showdata.Format(_T("接龙红包还未抢完"));
 		
-		UiFun::MessageBoxEx(_T("接龙红包还未抢完") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("COMM_MODULE" , "COMM_LISTTIP" ,theApp.gsLanguage), UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		CDialog::OnOK();
 	}else{
 		 //map<INT64,CString > mapindex;
@@ -163,6 +163,7 @@ BOOL CRedPacketList::OnInitDialog()
 
 	m_headText.SetFont(90, _T("微软雅黑"));
 	m_headText.SetTextColor(RGB(255,255,255));	
+	m_headText.SetWindowText(UiFun::UI_LoadString("COMM_MODULE" , "COMM_LIST" ,theApp.gsLanguage));
 
 	m_rBtnClose.SetBitmaps( IDB_BITMAP_CLOSE , RGB(255, 255, 0) , IDB_BITMAP_CLOSE2 , RGB(255, 255, 255) );
 	m_rBtnClose.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
@@ -177,7 +178,7 @@ BOOL CRedPacketList::OnInitDialog()
 
 	m_rBtnOk.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
 	m_rBtnOk.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-	m_rBtnOk.SetWindowText("确 定") ;
+	m_rBtnOk.SetWindowText(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_CONFIRM" ,theApp.gsLanguage)) ;
 	//m_rBtnOk.SetFontEx(20 , _T("微软雅黑"));
 	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
@@ -190,9 +191,9 @@ BOOL CRedPacketList::OnInitDialog()
 		CString		name ;
 		UINT		size ;
 	} listcol[3]  = {
-		{"序号",          70},
-		{"账户ID",          85},
-		{"金额" ,      180}
+		{UiFun::UI_LoadString("RECEIVE_MODULE" , "RECEIVE_SERIAL_NUMBER" ,theApp.gsLanguage),          70},
+		{UiFun::UI_LoadString("RECEIVE_MODULE" , "RECEIVE_ACCOUNT_ID" ,theApp.gsLanguage) ,          85},
+		{UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_MONEY" ,theApp.gsLanguage) ,      180}
 	};
 
 	for( int i = 0 ; i < 3 ; i++  ) {
@@ -200,6 +201,8 @@ BOOL CRedPacketList::OnInitDialog()
 	}
 	m_listCtrl.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_HEADERDRAGDROP );// |LVS_SINGLESEL  );
 	// TODO:  在此添加额外的初始化
+	
+	GetDlgItem(IDC_REDID)->SetWindowText(UiFun::UI_LoadString("TITLEBAR_MODULE" , "TITLEBAR_MORTGAGE" ,theApp.gsLanguage)+" id:");
 
 	CString strShow = theApp.m_strAddress.Left(30);
 	GetDlgItem(IDC_TXHASH)->SetWindowText(strShow);

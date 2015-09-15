@@ -18,6 +18,8 @@ CPostMsg::CPostMsg(void){
 
 CPostMsg::~CPostMsg(void)
 {
+	int b =5;
+	int c = 6;
 }
 void CPostMsg::SetStrType(string const &strTpye){
 	strType = strTpye;

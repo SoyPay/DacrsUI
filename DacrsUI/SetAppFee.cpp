@@ -101,7 +101,7 @@ void CSetAppFee::OnBnClickedOk()
 		{
 			if (!IsAllDigtal(strTemp))
 			{
-				UiFun::MessageBoxEx(_T("发送赌约小费必须是数字") , _T("Error") ,MFB_OK|MFB_ERROR );
+				UiFun::MessageBoxEx(UiFun::UI_LoadString("SETAPPFEE" , "SETAPPFEE_SENDTIP" ,theApp.gsLanguage) , _T("Error") ,MFB_OK|MFB_ERROR );
 			}else
 			{
 				CJsonConfigHelp::getInstance()->ModifyAppFeeCfgData(root,_T("p2pbet"),_T("SendBetFee"),strTemp);
@@ -114,7 +114,7 @@ void CSetAppFee::OnBnClickedOk()
 		{
 			if (!IsAllDigtal(strTemp))
 			{
-				UiFun::MessageBoxEx(_T("接赌约小费必须是数字") , _T("Error") ,MFB_OK|MFB_ERROR );
+				UiFun::MessageBoxEx(UiFun::UI_LoadString("SETAPPFEE" , "SETAPPFEE_ACCEPTTIP" ,theApp.gsLanguage) , _T("Error") ,MFB_OK|MFB_ERROR );
 			}else
 			{
 				CJsonConfigHelp::getInstance()->ModifyAppFeeCfgData(root,_T("p2pbet"),_T("AcceptBetnFee"),strTemp);
@@ -127,7 +127,7 @@ void CSetAppFee::OnBnClickedOk()
 		{
 			if (!IsAllDigtal(strTemp))
 			{
-				UiFun::MessageBoxEx(_T("开奖小费必须是数字") , _T("Error") ,MFB_OK|MFB_ERROR );
+				UiFun::MessageBoxEx(UiFun::UI_LoadString("SETAPPFEE" , "SETAPPFEE_OPENTIP" ,theApp.gsLanguage) , _T("Error") ,MFB_OK|MFB_ERROR );
 			}else
 			{
 				CJsonConfigHelp::getInstance()->ModifyAppFeeCfgData(root,_T("p2pbet"),_T("OpenBetnFee"),strTemp);
@@ -140,7 +140,7 @@ void CSetAppFee::OnBnClickedOk()
 		{
 			if (!IsAllDigtal(strTemp))
 			{
-				UiFun::MessageBoxEx(_T("发普通红包小费必须是数字") , _T("Error") ,MFB_OK|MFB_ERROR );
+				UiFun::MessageBoxEx(UiFun::UI_LoadString("SETAPPFEE" , "SETAPPFEE_SGIGTTIP" ,theApp.gsLanguage), _T("Error") ,MFB_OK|MFB_ERROR );
 			}else
 			{
 				CJsonConfigHelp::getInstance()->ModifyAppFeeCfgData(root,_T("redpacket"),_T("sendredcommFee"),strTemp);
@@ -153,7 +153,7 @@ void CSetAppFee::OnBnClickedOk()
 		{
 			if (!IsAllDigtal(strTemp))
 			{
-				UiFun::MessageBoxEx(_T("接普通红包小费必须是数字") , _T("Error") ,MFB_OK|MFB_ERROR );
+				UiFun::MessageBoxEx(UiFun::UI_LoadString("SETAPPFEE" , "SETAPPFEE_GRABGIFTTIP" ,theApp.gsLanguage) , _T("Error") ,MFB_OK|MFB_ERROR );
 			}else
 			{
 				CJsonConfigHelp::getInstance()->ModifyAppFeeCfgData(root,_T("redpacket"),_T("acceptredcommFee"),strTemp);
@@ -166,7 +166,7 @@ void CSetAppFee::OnBnClickedOk()
 		{
 			if (!IsAllDigtal(strTemp))
 			{
-				UiFun::MessageBoxEx(_T("发接龙红包小费必须是数字") , _T("Error") ,MFB_OK|MFB_ERROR );
+				UiFun::MessageBoxEx(UiFun::UI_LoadString("SETAPPFEE" , "SETAPPFEE_SENDSPETIP" ,theApp.gsLanguage), _T("Error") ,MFB_OK|MFB_ERROR );
 			}else
 			{
 				CJsonConfigHelp::getInstance()->ModifyAppFeeCfgData(root,_T("redpacket"),_T("sendredspecalFee"),strTemp);
@@ -179,7 +179,7 @@ void CSetAppFee::OnBnClickedOk()
 		{
 			if (!IsAllDigtal(strTemp))
 			{
-				UiFun::MessageBoxEx(_T("接接龙红包小费必须是数字") , _T("Error") ,MFB_OK|MFB_ERROR );
+				UiFun::MessageBoxEx(UiFun::UI_LoadString("SETAPPFEE" , "SETAPPFEE_GRABSEPTTIP" ,theApp.gsLanguage) , _T("Error") ,MFB_OK|MFB_ERROR );
 			}else
 			{
 				CJsonConfigHelp::getInstance()->ModifyAppFeeCfgData(root,_T("redpacket"),_T("acceptredspecalFee"),strTemp);
@@ -192,7 +192,7 @@ void CSetAppFee::OnBnClickedOk()
 		{
 			if (!IsAllDigtal(strTemp))
 			{
-				UiFun::MessageBoxEx(_T("充值小费必须是数字") , _T("Error") ,MFB_OK|MFB_ERROR );
+				UiFun::MessageBoxEx(UiFun::UI_LoadString("SETAPPFEE" , "SETAPPFEE_RECHANGTIP" ,theApp.gsLanguage)  , _T("Error") ,MFB_OK|MFB_ERROR );
 			}else
 			{
 				CJsonConfigHelp::getInstance()->ModifyAppFeeCfgData(root,_T("p2pbet"),_T("GetRechangeFee"),strTemp);
@@ -205,7 +205,7 @@ void CSetAppFee::OnBnClickedOk()
 		{
 			if (!IsAllDigtal(strTemp))
 			{
-				UiFun::MessageBoxEx(_T("提现小费必须是数字") , _T("Error") ,MFB_OK|MFB_ERROR );
+				UiFun::MessageBoxEx(UiFun::UI_LoadString("SETAPPFEE" , "SETAPPFEE_DRAWTIP" ,theApp.gsLanguage)  , _T("Error") ,MFB_OK|MFB_ERROR );
 			}else
 			{
 				CJsonConfigHelp::getInstance()->ModifyAppFeeCfgData(root,_T("p2pbet"),_T("GetAppAmountnFee"),strTemp);
@@ -269,8 +269,9 @@ BOOL CSetAppFee::OnInitDialog()
 	CDialogBase::OnInitDialog();
 
 	m_headText.SetFont(100, _T("微软雅黑"));
-	m_headText.SetTextColor(RGB(255,255,255));	
-
+	m_headText.SetTextColor(RGB(255,255,255));
+	m_headText.SetWindowText(UiFun::UI_LoadString("SETAPPFEE" , "SETAPPFEE_HEAD" ,theApp.gsLanguage));
+	
 	m_rBtnClose.SetBitmaps( IDB_BITMAP_CLOSE , RGB(255, 255, 0) , IDB_BITMAP_CLOSE2 , RGB(255, 255, 255) );
 	m_rBtnClose.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
 	m_rBtnClose.SetWindowText("") ;
@@ -289,7 +290,7 @@ BOOL CSetAppFee::OnInitDialog()
 
 	m_rBtnOk.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
 	m_rBtnOk.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-	m_rBtnOk.SetWindowText("确 定") ;
+	m_rBtnOk.SetWindowText(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_CONFIRM" ,theApp.gsLanguage)) ;
 	//m_rBtnOk.SetFontEx(20 , _T("微软雅黑"));
 	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 	m_rBtnOk.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
@@ -299,7 +300,7 @@ BOOL CSetAppFee::OnInitDialog()
 
 	m_rBtnCancel.SetBitmaps( IDB_BITMAP_BUT2 , RGB(255, 255, 0) , IDB_BITMAP_BUT1 , RGB(255, 255, 255) );
 	m_rBtnCancel.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
-	m_rBtnCancel.SetWindowText("取 消") ;
+	m_rBtnCancel.SetWindowText(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_CANCEL" ,theApp.gsLanguage)) ;
 //	m_rBtnCancel.SetFontEx(20 , _T("微软雅黑"));
 	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
@@ -307,6 +308,17 @@ BOOL CSetAppFee::OnInitDialog()
 	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
 	m_rBtnCancel.SizeToContent();
 
+	GetDlgItem(IDC_STATIC_LEAD)->SetWindowText(UiFun::UI_LoadString("SETAPPFEE" , "SETAPPFEE_SGHEAD" ,theApp.gsLanguage));
+	GetDlgItem(IDC_STATIC_SB)->SetWindowText(UiFun::UI_LoadString("SETAPPFEE" , "SETAPPFEE_SEND" ,theApp.gsLanguage));
+	GetDlgItem(IDC_STATIC_AB)->SetWindowText(UiFun::UI_LoadString("SETAPPFEE" , "SETAPPFEE_ACCEPT" ,theApp.gsLanguage));
+	GetDlgItem(IDC_STATIC_OB)->SetWindowText(UiFun::UI_LoadString("SETAPPFEE" , "SETAPPFEE_OPEN" ,theApp.gsLanguage));
+	GetDlgItem(IDC_STATIC_RLEAD)->SetWindowText(UiFun::UI_LoadString("SETAPPFEE" , "SETAPPFEE_RLEAD" ,theApp.gsLanguage));
+	GetDlgItem(IDC_STATIC_SCR)->SetWindowText(UiFun::UI_LoadString("SETAPPFEE" , "SETAPPFEE_SCR" ,theApp.gsLanguage));
+	GetDlgItem(IDC_STATIC_SSR)->SetWindowText(UiFun::UI_LoadString("SETAPPFEE" , "SETAPPFEE_SSR" ,theApp.gsLanguage));
+	GetDlgItem(IDC_STATIC_ASR)->SetWindowText(UiFun::UI_LoadString("SETAPPFEE" , "SETAPPFEE_ASR" ,theApp.gsLanguage));
+	GetDlgItem(IDC_STATIC_AR)->SetWindowText(UiFun::UI_LoadString("SETAPPFEE" , "SETAPPFEE_AR" ,theApp.gsLanguage));
+	GetDlgItem(IDC_STATIC_D)->SetWindowText(UiFun::UI_LoadString("SETAPPFEE" , "SETAPPFEE_D" ,theApp.gsLanguage));
+	GetDlgItem(IDC_STATIC_GCR)->SetWindowText(UiFun::UI_LoadString("SETAPPFEE" , "SETAPPFEE_GCR" ,theApp.gsLanguage));
 	SetDaluft();
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE

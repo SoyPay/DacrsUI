@@ -372,6 +372,7 @@ BOOL CTxDetailDlg::OnInitDialog()
 {
 	CDialogBase::OnInitDialog();
 
+	m_headText.SetWindowText(UiFun::UI_LoadString("TITLEBAR_MODULE"  , "TITLEBAR_TRAD",theApp.gsLanguage ));
 	m_headText.SetFont(100, _T("微软雅黑"));
 	m_headText.SetTextColor(RGB(255,255,255));	
 
@@ -412,3 +413,4 @@ void CTxDetailDlg::OnBnClickedClose()
 	// TODO: 在此添加控件通知处理程序代码
 	CDialogBase::OnCancel();
 }
+

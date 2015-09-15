@@ -450,18 +450,18 @@ void  CSendRecord::OnShowPagePool(int page)
 		
 			if (const_it.state == 2)
 			{
-				m_listBox.SetIndexString(i ,const_it.left_addr.c_str(), const_it.right_addr.c_str(),SendTime.c_str(),strTime.c_str(), result.c_str(),guess.c_str(), reward.c_str(),time.c_str(),_T("已开"),const_it.tx_hash.c_str());
+				m_listBox.SetIndexString(i ,const_it.left_addr.c_str(), const_it.right_addr.c_str(),SendTime.c_str(),strTime.c_str(), result.c_str(),guess.c_str(), reward.c_str(),time.c_str(),UiFun::UI_LoadString("COMM_MODULE" , "COMM_BEEN_OPEN" ,theApp.gsLanguage),const_it.tx_hash.c_str());
 			}else{
 				if ((const_it.time_out + const_it.height)> theApp.blocktipheight && theApp.IsSyncBlock)
 				{
 					reward =strprintf("%.4f",const_it.amount);
-					m_listBox.SetIndexString(i , const_it.left_addr.c_str(), const_it.right_addr.c_str(),SendTime.c_str(),strTime.c_str(), result.c_str(),_T("--"),reward.c_str(),time.c_str(), _T("待开"),const_it.tx_hash.c_str());
+					m_listBox.SetIndexString(i , const_it.left_addr.c_str(), const_it.right_addr.c_str(),SendTime.c_str(),strTime.c_str(), result.c_str(),_T("--"),reward.c_str(),time.c_str(),UiFun::UI_LoadString("COMM_MODULE" , "COMM_STAY_OPEN" ,theApp.gsLanguage),const_it.tx_hash.c_str());
 				}else if(theApp.IsSyncBlock && const_it.height != 0 &&(const_it.time_out + const_it.height)< theApp.blocktipheight){
 					m_listBox.SetIndexBackCol(i, 6, RGB(1,127,1));
 					reward =strprintf("-%.4f",const_it.amount);
-					m_listBox.SetIndexString(i , const_it.left_addr.c_str(), const_it.right_addr.c_str(),SendTime.c_str(),strTime.c_str(), result.c_str(),guess.c_str(),reward.c_str(),time.c_str(), _T("超时"),const_it.tx_hash.c_str());
+					m_listBox.SetIndexString(i , const_it.left_addr.c_str(), const_it.right_addr.c_str(),SendTime.c_str(),strTime.c_str(), result.c_str(),guess.c_str(),reward.c_str(),time.c_str(),UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIMEOUT" ,theApp.gsLanguage),const_it.tx_hash.c_str());
 				}else{
-					m_listBox.SetIndexString(i , const_it.left_addr.c_str(), const_it.right_addr.c_str(),SendTime.c_str(),strTime.c_str(), result.c_str(),_T("--"),reward.c_str(),time.c_str(), _T("待开"),const_it.tx_hash.c_str());
+					m_listBox.SetIndexString(i , const_it.left_addr.c_str(), const_it.right_addr.c_str(),SendTime.c_str(),strTime.c_str(), result.c_str(),_T("--"),reward.c_str(),time.c_str(), UiFun::UI_LoadString("COMM_MODULE" , "COMM_STAY_OPEN" ,theApp.gsLanguage),const_it.tx_hash.c_str());
 				}
 
 			}
@@ -472,12 +472,12 @@ void  CSendRecord::OnShowPagePool(int page)
 			reward =strprintf("%.4f",const_it.amount);
 			if (const_it.state == 0 &&(500 + const_it.height)> theApp.blocktipheight&& theApp.IsSyncBlock )
 			{
-				m_listBox.SetIndexString(i , const_it.left_addr.c_str(), const_it.right_addr.c_str(),SendTime.c_str(),_T("--"), result.c_str(),_T("--"),reward.c_str(),_T(""),_T("未接"),const_it.tx_hash.c_str());
+				m_listBox.SetIndexString(i , const_it.left_addr.c_str(), const_it.right_addr.c_str(),SendTime.c_str(),_T("--"), result.c_str(),_T("--"),reward.c_str(),_T(""),UiFun::UI_LoadString("COMM_MODULE" , "COMM_MISSED" ,theApp.gsLanguage),const_it.tx_hash.c_str());
 			}else if(theApp.IsSyncBlock&&const_it.height !=0 && (500 + const_it.height)< theApp.blocktipheight){
-				m_listBox.SetIndexString(i , const_it.left_addr.c_str(), const_it.right_addr.c_str(),SendTime.c_str(),_T("--"), result.c_str(),_T("--"),reward.c_str(),_T(""),_T("超时"),const_it.tx_hash.c_str());
+				m_listBox.SetIndexString(i , const_it.left_addr.c_str(), const_it.right_addr.c_str(),SendTime.c_str(),_T("--"), result.c_str(),_T("--"),reward.c_str(),_T(""),UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIMEOUT" ,theApp.gsLanguage),const_it.tx_hash.c_str());
 			}else
 			{
-				m_listBox.SetIndexString(i , const_it.left_addr.c_str(), const_it.right_addr.c_str(),SendTime.c_str(),_T("--"), result.c_str(),_T("--"),reward.c_str(),_T(""),_T("未接"),const_it.tx_hash.c_str());
+				m_listBox.SetIndexString(i , const_it.left_addr.c_str(), const_it.right_addr.c_str(),SendTime.c_str(),_T("--"), result.c_str(),_T("--"),reward.c_str(),_T(""),UiFun::UI_LoadString("COMM_MODULE" , "COMM_MISSED" ,theApp.gsLanguage),const_it.tx_hash.c_str());
 			}
 
 		}

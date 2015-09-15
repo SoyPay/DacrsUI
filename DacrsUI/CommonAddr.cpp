@@ -59,6 +59,7 @@ BOOL CCommonAddr::OnInitDialog()
 
 	m_head.SetFont(100, _T("微软雅黑"));
 	m_head.SetTextColor(RGB(255,255,255));	
+	m_head.SetWindowText(UiFun::UI_LoadString("ADDRBOOK_MODULE" , "ADDRBOOK_COMMMANAGE" ,theApp.gsLanguage));
 	// TODO:  在此添加额外的初始化
 	UpdateData(FALSE);
 
@@ -79,6 +80,11 @@ BOOL CCommonAddr::OnInitDialog()
 	CRect titleRect ;
 	m_ButClose.GetClientRect(titleRect);
 	m_ButClose.SetWindowPos(NULL ,(ret.right-ret.left)-titleRect.Width() , 2 , 0 , 0 , SWP_NOSIZE); 
+
+	GetDlgItem(IDC_BUTTON_ADD)->SetWindowText(UiFun::UI_LoadString("ADDRBOOK_MODULE" , "ADDRBOOK_ADD_ADDRESS" ,theApp.gsLanguage));
+	GetDlgItem(IDC_BUTTON_DELETE)->SetWindowText(UiFun::UI_LoadString("ADDRBOOK_MODULE" , "ADDRBOOK_DELETE_ADDRESS" ,theApp.gsLanguage));
+	GetDlgItem(IDC_ALL)->SetWindowText(UiFun::UI_LoadString("ADDRBOOK_MODULE" , "ADDRBOOK_ALLADDR" ,theApp.gsLanguage));
+	GetDlgItem(IDC_STATIC)->SetWindowText(UiFun::UI_LoadString("ADDRBOOK_MODULE" , "ADDRBOOK_COMMADDR" ,theApp.gsLanguage));
 
 	AddListaddrDataBox();
 

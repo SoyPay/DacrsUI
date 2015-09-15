@@ -53,6 +53,7 @@ class CShadeButtonST : public BASE_BTNST_CLASS
 	DECLARE_DYNAMIC(CShadeButtonST)
 public:
 	CShadeButtonST();
+	CShadeButtonST( int nItem, int nSubItem, CRect rect, HWND hParent,void * pData );
 	virtual ~CShadeButtonST();
 
 	enum	{	SHS_NOISE = 0,
@@ -73,6 +74,15 @@ private:
 protected:
 	virtual DWORD OnDrawBorder(CDC* pDC, CRect* pRect);
 	virtual DWORD OnDrawBackground(CDC* pDC, CRect* pRect);
+public:
+	int m_inItem;           //所属listctrl的行
+	int m_inSubItem;        //所属listctrl的列
+	CRect m_rect;           //按钮所在的位置
+	HWND m_hParent;         //按钮的父窗口
+	BOOL bEnable;
+	void * m_pData;         //按钮带的用户自定义数据
+	DECLARE_MESSAGE_MAP()
+	//afx_msg void OnBnClicked();
 };
 
 #endif

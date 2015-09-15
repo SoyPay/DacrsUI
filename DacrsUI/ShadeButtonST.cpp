@@ -13,7 +13,15 @@ IMPLEMENT_DYNAMIC(CShadeButtonST, BASE_BTNST_CLASS)
 CShadeButtonST::CShadeButtonST()
 {
 }
-
+CShadeButtonST::CShadeButtonST( int nItem, int nSubItem, CRect rect, HWND hParent,void * pData )   
+{
+	m_inItem = nItem;
+	m_inSubItem = nSubItem;
+	m_rect = rect;
+	m_hParent = hParent;
+	bEnable = TRUE;
+	m_pData = pData;
+}
 CShadeButtonST::~CShadeButtonST()
 {
 }
@@ -252,3 +260,13 @@ DWORD CShadeButtonST::OnDrawBorder(CDC* pDC, CRect* pRect)
 
 	return BTNST_OK;
 } // End of OnDrawBorder
+BEGIN_MESSAGE_MAP(CShadeButtonST, BASE_BTNST_CLASS)
+	//ON_CONTROL_REFLECT(BN_CLICKED, &CShadeButtonST::OnBnClicked)
+END_MESSAGE_MAP()
+
+
+//void CShadeButtonST::OnBnClicked()
+//{
+//	// TODO: 在此添加控件通知处理程序代码
+//	int b = 5;
+//}

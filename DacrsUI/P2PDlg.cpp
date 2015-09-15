@@ -255,6 +255,7 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_rBtnAddrWinerloser.SizeToContent();
 
 		m_rbCancelOrder.SetBitmaps( IDB_BITMAP_WINERLOUSER , RGB(255, 255, 0) , IDB_BITMAP_WINERLOUSER , RGB(255, 255, 255) );
+		m_rbCancelOrder.SetWindowText(UiFun::UI_LoadString("P2P_MODULE" , "P2P_BET_CANCEL_ORDER" ,theApp.gsLanguage));
 		m_rbCancelOrder.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
 		m_rbCancelOrder.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(41, 57, 85));
 		m_rbCancelOrder.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(41, 57, 85));
@@ -408,7 +409,7 @@ void CP2PDlg::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*30 , (rc.Height()/100)*9 ,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*28 , (rc.Height()/100)*9 ,  rect.Width()+15 , rect.Height() , SWP_SHOWWINDOW ) ; 
 		}
 		
 		pst = GetDlgItem( IDC_BUTTON_RECH ) ;
@@ -679,7 +680,7 @@ void CP2PDlg::OnBnClickedButtonWithd()
 		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_UNFINISHED_BUSINESS" ,theApp.gsLanguage) ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
-	if (!CheckBalance("账户金额为零,不能提现"))
+	if (!CheckBalance(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_NOTWIHTDRAW" ,theApp.gsLanguage)))
 	{
 		return;
 	}
@@ -760,7 +761,7 @@ void CP2PDlg::OnBnClickedButtonRech()
 {
 	// TODO: 在此添加控件通知处理程序代码
 
-	string strshow= "猜你妹已经升级,请到菜单栏中选择恢复默认设置";
+	string strshow= UiFun::UI_LoadString("P2P_MODULE" , "P2P_BET_UPDATA" ,theApp.gsLanguage) ;
 	if (!UiFun::IsCurrentAppId(theApp.m_betScritptid.c_str(),theApp.m_neststcriptid.strNewScriptBetid.c_str(),strshow))
 	{
 		return;
@@ -1006,7 +1007,7 @@ void CP2PDlg::OnBnClickedButtonMale()
 {
 	// TODO: 在此添加控件通知处理程序代码
 
-	string strshow= "猜你妹已经升级,请到菜单栏中选择恢复默认设置";
+	string strshow=UiFun::UI_LoadString("P2P_MODULE" , "P2P_BET_UPDATA" ,theApp.gsLanguage) ;
 	if (!UiFun::IsCurrentAppId(theApp.m_betScritptid.c_str(),theApp.m_neststcriptid.strNewScriptBetid.c_str(),strshow))
 	{
 		return;
@@ -1058,7 +1059,7 @@ void CP2PDlg::OnBnClickedButtonMale()
 void CP2PDlg::OnBnClickedButtonWoman()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	string strshow= "猜你妹已经升级,请到菜单栏中选择恢复默认设置";
+	string strshow= UiFun::UI_LoadString("P2P_MODULE" , "P2P_BET_UPDATA" ,theApp.gsLanguage) ;
 	if (!UiFun::IsCurrentAppId(theApp.m_betScritptid.c_str(),theApp.m_neststcriptid.strNewScriptBetid.c_str(),strshow))
 	{
 		return;
@@ -1151,7 +1152,7 @@ void CP2PDlg::OnListPool()
 }
 void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
  {
-	 string strshow= "猜你妹已经升级,请到菜单栏中选择恢复默认设置";
+	 string strshow=UiFun::UI_LoadString("P2P_MODULE" , "P2P_BET_UPDATA" ,theApp.gsLanguage) ;
 	 if (!UiFun::IsCurrentAppId(theApp.m_betScritptid.c_str(),theApp.m_neststcriptid.strNewScriptBetid.c_str(),strshow))
 	 {
 		 return;
@@ -1331,7 +1332,7 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 	
 	 UiFun::MessageBoxEx(strTip.c_str() , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
  }
- bool CP2PDlg::CheckBalance(string strshow)
+ bool CP2PDlg::CheckBalance(CString strshow)
  {
 	 OnCbnSelchangeComboAddres();
 	 CString strMoney;
@@ -1344,7 +1345,7 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 			
 			UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_ACCOUNT_RECHARGE" ,theApp.gsLanguage) ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		}else{
-			UiFun::MessageBoxEx(strshow.c_str() , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
+			UiFun::MessageBoxEx(strshow , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		}
 		
 		return false;
@@ -1590,7 +1591,7 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 
 		 m_BonusListBox.InsertStr(i,this->GetSafeHwnd());
 		 m_BonusListBox.SetIndexInage(i , IDB_BITMAP_P2P_LISTBOX_BUT);
-		 m_BonusListBox.SetIndexString(i , line.c_str(),const_it.sendbetid.c_str(), _T("接"), money.c_str(), const_it.hash.c_str(),strmoney.c_str());
+		 m_BonusListBox.SetIndexString(i , line.c_str(),const_it.sendbetid.c_str(), UiFun::UI_LoadString("COMM_MODULE" , "COMM_RECIVED" ,theApp.gsLanguage), money.c_str(), const_it.hash.c_str(),strmoney.c_str());
 		 i++;
 	 }
  }
@@ -2011,7 +2012,7 @@ void  CP2PDlg::AutoSendBet()
 
 BOOL CP2PDlg::AcceptBet(string hash,double dmoney,string sendaddr,int timeout,string addr)
 {
-	string strshow= "猜你妹已经升级,请到菜单栏中选择恢复默认设置";
+	string strshow=UiFun::UI_LoadString("P2P_MODULE" , "P2P_BET_UPDATA" ,theApp.gsLanguage) ;;
 	if (!UiFun::IsCurrentAppId(theApp.m_betScritptid.c_str(),theApp.m_neststcriptid.strNewScriptBetid.c_str(),strshow))
 	{
 		return FALSE;

@@ -734,9 +734,9 @@ void CDacrsUIDlg::OnBnClickedButtonClose()
 {
 	if (!IsP2pBetFinsh())
 	{
-		CString strDisplay;
-		strDisplay.Format(_T("猜你妹有些单还未接赌或开奖,关闭系统已接赌超时未开奖\r\n自动判输,是否关闭"));
-		if (IDYES == UiFun::MessageBoxEx(strDisplay , _T("提示") , MFB_YESNO|MFB_TIP ) )
+		CString strDisplay = UiFun::UI_LoadString("DACRSU" , "DACRSU_CLOSTIP" ,theApp.gsLanguage);
+		//strDisplay.Format(_T("猜你妹有些单还未接赌或开奖,关闭系统已接赌超时未开奖\r\n自动判输,是否关闭"));
+		if (IDYES == UiFun::MessageBoxEx(strDisplay , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) , MFB_YESNO|MFB_TIP ) )
 		{
 			ClosWallet();
 		}
@@ -847,7 +847,7 @@ bool CDacrsUIDlg::GetFileName(CString &fileName,CString strexe )
 	int spcace = fileName.Find(" ");
 	if (spcace >=0)
 	{
-		UiFun::MessageBoxEx(_T("路径不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("DACRSU" , "DACRSU_PATHNOTNULL" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return false;
 	}
 	int pos = fileName.Find(".",0);
@@ -860,8 +860,8 @@ bool CDacrsUIDlg::GetFileName(CString &fileName,CString strexe )
 	fileName.AppendFormat(strexe);
 	if(PathFileExistsA(fileName)){
 		CString strDisplay;
-		strDisplay.Format(_T("此文件已经存在是否要覆盖"));
-		if (IDOK == UiFun::MessageBoxEx(strDisplay , _T("提示") , MFB_OKCANCEL|MFB_TIP ) )
+		strDisplay=UiFun::UI_LoadString("DACRSU" , "DACRSU_INSTEAD" ,theApp.gsLanguage) ;
+		if (IDOK == UiFun::MessageBoxEx(strDisplay , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) , MFB_OKCANCEL|MFB_TIP ) )
 		{
 			return TRUE;
 		}
@@ -889,8 +889,8 @@ void CDacrsUIDlg::BakWallet()
 		CSoyPayHelp::getInstance()->SendRpc(strCommand,strSendData);
 
 		CString strShowData;
-		strShowData.Format(_T("钱包备份成功:%s"),strPath);
-		UiFun::MessageBoxEx(strShowData, _T("提示") ,MFB_OK|MFB_TIP );
+		strShowData.Format(_T("%s:%s"),UiFun::UI_LoadString("DACRSU" , "DACRSU_BACK" ,theApp.gsLanguage),strPath);
+		UiFun::MessageBoxEx(strShowData, UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 	}
 
 }
@@ -940,7 +940,7 @@ LRESULT CDacrsUIDlg::OnShowTask(WPARAM wParam,LPARAM lParam)
 				pPopup->EnableMenuItem(ID__ENCRYPTWALLET,MF_GRAYED);
 			}
 			pPopup->EnableMenuItem(ID__SET,MF_GRAYED);
-			pPopup->AppendMenu(MF_STRING,WM_CLOSEAPP,"  关闭");
+			pPopup->AppendMenu(MF_STRING,WM_CLOSEAPP,"  "+UiFun::UI_LoadString("DACRSU" , "DACRSU_CLOSE" ,theApp.gsLanguage));
 			//显示右键菜单，由视类窗口拥有。
 			pPopup->TrackPopupMenu(TPM_LEFTALIGN,lpoint->x,lpoint->y,this);
 			delete lpoint; 
@@ -1000,7 +1000,7 @@ void CDacrsUIDlg::encryptwallet()
 {
 	if (theApp.HaveLocked)
 	{
-		UiFun::MessageBoxEx(_T("已经加过密") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("DACRSU" , "DACRSU_HAVE" ,theApp.gsLanguage)  , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		return;
 	}
 	CEncryptWallet enwalletdlg;
@@ -1023,7 +1023,7 @@ void CDacrsUIDlg:: LockWallet()
 {
 	if (!theApp.HaveLocked)
 	{
-		UiFun::MessageBoxEx(_T("钱包没有加锁") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("DACRSU" , "DACRSU_NOTLOCK" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
 	string strCommand;
@@ -1040,7 +1040,7 @@ void CDacrsUIDlg:: LockWallet()
 	bool isEntryp = root["walletlock"].asBool();
 	if (!isEntryp)
 	{
-		UiFun::MessageBoxEx(_T("钱包锁定失败") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("DACRSU" , "DACRSU_LOCKERROR" ,theApp.gsLanguage)  , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -1216,9 +1216,9 @@ void CDacrsUIDlg:: ExportPriveKey()
 		string strSendData;
 		CSoyPayHelp::getInstance()->SendRpc(strCommand,strSendData);
 		CString strShowData;
-		strShowData.Format(_T("导出私钥成功:%s"),strPath);
+		strShowData.Format(_T("%s:%s"),UiFun::UI_LoadString("DACRSU" , "DACRSU_EXPORT" ,theApp.gsLanguage),strPath);
 		AddImportWalletAndBookAddr(strPath);
-		UiFun::MessageBoxEx(strShowData , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(strShowData , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 	}
 }
 void CDacrsUIDlg:: ImportPrvieKey()
@@ -1236,7 +1236,10 @@ void CDacrsUIDlg:: ImportPrvieKey()
 	ofn.lpstrFile = szFile;
 	ofn.lpstrFile[0] = TEXT('\0'); 
 	ofn.nMaxFile = sizeof(szFile); 
-	ofn.lpstrFilter =  "文本文件(*.smc)\0*.smc\0所有文件(*.*)\0*.*\0\0";  
+	ofn.lpstrFilter =  "文本文件(*.smc)\0*.smc\0所有文件(*.*)\0*.*\0\0"; 
+	CString strFormat;
+	strFormat.Format("%s(*.smc)\0*.smc\0%s(*.*)\0*.*\0\0",UiFun::UI_LoadString("DACRSU" , "DACRSU_FILE" ,theApp.gsLanguage),UiFun::UI_LoadString("DACRSU" , "DACRSU_ALLFILE" ,theApp.gsLanguage));
+	ofn.lpstrFilter=strFormat;
 	ofn.nFilterIndex = 1; 
 	ofn.lpstrFileTitle = NULL; 
 	ofn.nMaxFileTitle = 0; 
@@ -1259,12 +1262,12 @@ void CDacrsUIDlg:: ImportPrvieKey()
 			if (size > 0)
 			{
 				WriteExportWalletAndBookAddr(strPath);
-				UiFun::MessageBoxEx(_T("导入钱包成功请重新启动钱包") , _T("提示") ,MFB_OK|MFB_TIP );
+				UiFun::MessageBoxEx(UiFun::UI_LoadString("DACRSU" , "DACRSU_EXPORTTIP" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 				//ClosWallet();
 				//((CDacrsUIDlg*)(this->GetParent()))->Close();
 				ClosWalletWind();
 			}else{
-				UiFun::MessageBoxEx(_T("导入钱包失败") , _T("提示") ,MFB_OK|MFB_TIP );
+				UiFun::MessageBoxEx(UiFun::UI_LoadString("DACRSU" , "DACRSU_EXPORTREEOR" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 			}
 	}
 }
@@ -1381,7 +1384,7 @@ void CDacrsUIDlg::RestoreDefault()
 
 	CPostMsg redmsg(MSG_USER_REDPACKET_UI,WM_UP_ADDRESS);
 	theApp.m_MsgQueue.push(redmsg);
-	UiFun::MessageBoxEx(_T("恢复默认设置成功") , _T("提示") ,MFB_OK|MFB_TIP );
+	UiFun::MessageBoxEx(UiFun::UI_LoadString("DACRSU" , "DACRSU_SETDEAFLUT" ,theApp.gsLanguage) ,  UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 }
 
 LRESULT CDacrsUIDlg::OnPopupBar(WPARAM wParam,LPARAM lParam) 
