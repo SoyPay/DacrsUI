@@ -40,7 +40,7 @@ void CIndTitleBar::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BUTTON_CLOSE	, m_rBtnClose );
 	DDX_Control(pDX, IDC_BUTTON_MIN	, m_rBtnMin );
 	DDX_Control(pDX, IDC_MENUBAR	, m_rBtnMainMenu );
-	DDX_Control(pDX, IDC_CN	, m_rCnButton );
+	//DDX_Control(pDX, IDC_CN	, m_rCnButton );
 	DDX_Control(pDX, IDC_STATIC_LOGO, m_picture );
 }
 
@@ -53,11 +53,11 @@ BEGIN_MESSAGE_MAP(CIndTitleBar, CDialogBar)
 	ON_BN_CLICKED(IDC_MENUBAR, &CIndTitleBar::OnBnClickedMenubar)
 	ON_WM_MEASUREITEM()
 	ON_WM_DRAWITEM()
-	ON_BN_CLICKED(IDC_CN, &CIndTitleBar::OnBnClickedCn)
+	//ON_BN_CLICKED(IDC_CN, &CIndTitleBar::OnBnClickedCn)
 	ON_COMMAND(ID_CN,&CIndTitleBar::OnChinese)
 	ON_COMMAND(ID_EN,&CIndTitleBar::OnEnglish)
-	ON_UPDATE_COMMAND_UI(ID_EN, &CIndTitleBar::OnUpdateEn)
-	ON_UPDATE_COMMAND_UI(ID_CN, &CIndTitleBar::OnUpdateCn)
+	ON_UPDATE_COMMAND_UI(ID_ENL, &CIndTitleBar::OnUpdateEn)
+	ON_UPDATE_COMMAND_UI(ID_CNL, &CIndTitleBar::OnUpdateCn)
 END_MESSAGE_MAP()
 
 
@@ -192,12 +192,12 @@ void CIndTitleBar::OnSize(UINT nType, int cx, int cy)
 			m_rBtnMainMenu->SetWindowPos(NULL ,rect.Width() - 3*m_BtnRc.Width() - 8 /*rect.right-1*m_BtnRc.Width()-10*/ , 0 , 0 , 0 , SWP_NOSIZE);
 		}
 
-		CButton * m_rBtnCn = (CButton*)GetDlgItem(IDC_CN);
-		if( NULL != m_rBtnCn ) {	
-			CRect m_BtnRc ;
-			m_rBtnCn->GetWindowRect(&m_BtnRc);
-			m_rBtnCn->SetWindowPos(NULL ,rect.Width() - 4*m_BtnRc.Width() - 8, 0 , 0 , 0 , SWP_NOSIZE);
-		}
+		//CButton * m_rBtnCn = (CButton*)GetDlgItem(IDC_CN);
+		//if( NULL != m_rBtnCn ) {	
+		//	CRect m_BtnRc ;
+		//	m_rBtnCn->GetWindowRect(&m_BtnRc);
+		//	m_rBtnCn->SetWindowPos(NULL ,rect.Width() - 4*m_BtnRc.Width() - 8, 0 , 0 , 0 , SWP_NOSIZE);
+		//}
 
 		CStatic * pImage = (CStatic*)GetDlgItem(IDC_STATIC_LOGO);
 		if( NULL != pImage ) {	
@@ -315,7 +315,7 @@ BOOL CIndTitleBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT 
 		m_rBtnClose.LoadBitmaps(IDB_BITMAP_CLOSE , IDB_BITMAP_CLOSE2 ,IDB_BITMAP_CLOSE3,IDB_BITMAP_CLOSE);
 		m_rBtnMin.LoadBitmaps(IDB_BITMAP_MIN , IDB_BITMAP_MIN2 ,IDB_BITMAP_MIN3,IDB_BITMAP_MIN);
 		m_rBtnMainMenu.LoadBitmaps(IDB_BITMAP_NEMU1 , IDB_BITMAP_NEMU2 ,IDB_BITMAP_NEMU3,IDB_BITMAP_NEMU1);
-		m_rCnButton.LoadBitmaps(IDB_BITMAP_NEMU1 , IDB_BITMAP_NEMU2 ,IDB_BITMAP_NEMU3,IDB_BITMAP_NEMU1);
+		//m_rCnButton.LoadBitmaps(IDB_BITMAP_NEMU1 , IDB_BITMAP_NEMU2 ,IDB_BITMAP_NEMU3,IDB_BITMAP_NEMU1);
 		UpdateData(0);
 
 		m_tooltip.Create(this); 
@@ -341,12 +341,36 @@ BOOL CIndTitleBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT 
 		LanguageMenu.LoadMenu(IDR_MENU2);
 		SetMenu(&LanguageMenu);
 
-		CMenu *pPopup=LanguageMenu.GetSubMenu(0);
+		CMenu *pPopup=newMenu.GetSubMenu(0);
+		CMenu *pPopupChild=pPopup->GetSubMenu(11);
 		if (theApp.language() == 1)
 		{
-			pPopup->CheckMenuItem(ID_CN, MF_BYCOMMAND|MF_CHECKED);
+			pPopupChild->CheckMenuItem(ID_CNL, MF_BYCOMMAND|MF_CHECKED);
 		}else{
-			pPopup->CheckMenuItem(ID_EN, MF_BYCOMMAND|MF_CHECKED);
+			pPopupChild->CheckMenuItem(ID_ENL, MF_BYCOMMAND|MF_CHECKED);
+
+			pPopup->ModifyMenu(0, MF_BYPOSITION | MF_STRING, ID_RPC_CMD, UiFun::UI_LoadString("MENU" , "MENU_RPCCOMMAND" ,theApp.gsLanguage));
+			pPopup->ModifyMenu(1, MF_BYPOSITION | MF_STRING, ID__ENCRYPTWALLET, UiFun::UI_LoadString("MENU" , "MENU_PASSWORD" ,theApp.gsLanguage));
+			pPopup->ModifyMenu(2, MF_BYPOSITION | MF_STRING, ID_CHANGEPASSWORD,UiFun::UI_LoadString("MENU" , "MENU_MODIFYPASSWORD" ,theApp.gsLanguage));
+			pPopup->ModifyMenu(3, MF_BYPOSITION | MF_STRING, ID__LOCK, UiFun::UI_LoadString("MENU" , "MENU_LOCK" ,theApp.gsLanguage));
+			pPopup->ModifyMenu(4, MF_BYPOSITION | MF_STRING, ID__BAKWALLET,UiFun::UI_LoadString("MENU" , "MENU_BACK" ,theApp.gsLanguage));
+			pPopup->ModifyMenu(5, MF_BYPOSITION | MF_STRING, ID__EXPORTPRIVEKEY, UiFun::UI_LoadString("MENU" , "MENU_EXPORT" ,theApp.gsLanguage));
+			pPopup->ModifyMenu(6, MF_BYPOSITION | MF_STRING, ID__IMPORTPRIVEKEY, UiFun::UI_LoadString("MENU" , "MENU_IMPORT" ,theApp.gsLanguage));
+			pPopup->ModifyMenu(7, MF_BYPOSITION | MF_STRING, ID__SETAPPID, UiFun::UI_LoadString("MENU" , "MENU_SETAPPID" ,theApp.gsLanguage));
+			pPopup->ModifyMenu(8, MF_BYPOSITION | MF_STRING, ID__SET, UiFun::UI_LoadString("MENU" , "MENU_SET" ,theApp.gsLanguage));
+			pPopup->ModifyMenu(9, MF_BYPOSITION | MF_STRING, ID__SETDEFAULT, UiFun::UI_LoadString("MENU" , "MENU_RESTORY" ,theApp.gsLanguage));
+			pPopup->ModifyMenu(10, MF_BYPOSITION | MF_STRING, ID_RECORD, UiFun::UI_LoadString("MENU" , "MENU_HISTORYRECORD" ,theApp.gsLanguage));
+			pPopup->ModifyMenu(11, MF_BYPOSITION | MF_STRING, ID_RECORD, UiFun::UI_LoadString("MENU" , "MENU_LANGUAGE" ,theApp.gsLanguage));
+
+			CMenu *pPopupChild=pPopup->GetSubMenu(10);
+			pPopupChild->ModifyMenu(0, MF_BYPOSITION | MF_STRING, ID_SENDBET, UiFun::UI_LoadString("MENU" , "MENU_SENDBET" ,theApp.gsLanguage));
+			pPopupChild->ModifyMenu(1, MF_BYPOSITION | MF_STRING, ID_ACCEPTBET, UiFun::UI_LoadString("MENU" , "MENU_ACCEPTET" ,theApp.gsLanguage));
+			pPopupChild->ModifyMenu(2, MF_BYPOSITION | MF_STRING, ID_SENDREDPAKET, UiFun::UI_LoadString("MENU" , "MENU_SENDRED" ,theApp.gsLanguage));
+			pPopupChild->ModifyMenu(3, MF_BYPOSITION | MF_STRING, ID_GRABREDPACKE, UiFun::UI_LoadString("MENU" , "MENU_GRABRED" ,theApp.gsLanguage));
+
+			CMenu *pPopuplChild=pPopup->GetSubMenu(11);
+			pPopuplChild->ModifyMenu(ID_CNL, MF_BYCOMMAND, ID_CNL, UiFun::UI_LoadString("MENU" , "MENU_CNL" ,theApp.gsLanguage));
+			pPopuplChild->ModifyMenu(ID_ENL, MF_BYCOMMAND, ID_ENL, UiFun::UI_LoadString("MENU" , "MENU_ENL" ,theApp.gsLanguage));
 		}
 		
 		//加载指定位图资源 Bmp图片ID
@@ -389,8 +413,33 @@ void CIndTitleBar::OnBnClickedMenubar()
 		pPopup->EnableMenuItem(ID__ENCRYPTWALLET,MF_GRAYED);
 	}
 	int b =pPopup->EnableMenuItem(ID__SET,MF_GRAYED);
-	
-	pPopup->SetMenuItemBitmaps(0,MF_BYPOSITION, &pMenuBitmap, &pMenuBitmap);
+	//if (theApp.language() == 2)
+	//{
+	//	pPopup->ModifyMenu(0, MF_BYPOSITION | MF_STRING, ID_RPC_CMD, UiFun::UI_LoadString("MENU" , "MENU_RPCCOMMAND" ,theApp.gsLanguage));
+	//	pPopup->ModifyMenu(1, MF_BYPOSITION | MF_STRING, ID__ENCRYPTWALLET, UiFun::UI_LoadString("MENU" , "MENU_PASSWORD" ,theApp.gsLanguage));
+	//	pPopup->ModifyMenu(2, MF_BYPOSITION | MF_STRING, ID_CHANGEPASSWORD,UiFun::UI_LoadString("MENU" , "MENU_MODIFYPASSWORD" ,theApp.gsLanguage));
+	//	pPopup->ModifyMenu(3, MF_BYPOSITION | MF_STRING, ID__LOCK, UiFun::UI_LoadString("MENU" , "MENU_LOCK" ,theApp.gsLanguage));
+	//	pPopup->ModifyMenu(4, MF_BYPOSITION | MF_STRING, ID__BAKWALLET,UiFun::UI_LoadString("MENU" , "MENU_BACK" ,theApp.gsLanguage));
+	//	pPopup->ModifyMenu(5, MF_BYPOSITION | MF_STRING, ID__EXPORTPRIVEKEY, UiFun::UI_LoadString("MENU" , "MENU_EXPORT" ,theApp.gsLanguage));
+	//	pPopup->ModifyMenu(6, MF_BYPOSITION | MF_STRING, ID__IMPORTPRIVEKEY, UiFun::UI_LoadString("MENU" , "MENU_IMPORT" ,theApp.gsLanguage));
+	//	pPopup->ModifyMenu(7, MF_BYPOSITION | MF_STRING, ID__SETAPPID, UiFun::UI_LoadString("MENU" , "MENU_SETAPPID" ,theApp.gsLanguage));
+	//	pPopup->ModifyMenu(8, MF_BYPOSITION | MF_STRING, ID__SET, UiFun::UI_LoadString("MENU" , "MENU_SET" ,theApp.gsLanguage));
+	//	pPopup->ModifyMenu(9, MF_BYPOSITION | MF_STRING, ID__SETDEFAULT, UiFun::UI_LoadString("MENU" , "MENU_RESTORY" ,theApp.gsLanguage));
+	//	pPopup->ModifyMenu(10, MF_BYPOSITION | MF_STRING, ID_RECORD, UiFun::UI_LoadString("MENU" , "MENU_HISTORYRECORD" ,theApp.gsLanguage));
+	//	pPopup->ModifyMenu(11, MF_BYPOSITION | MF_STRING, ID_RECORD, UiFun::UI_LoadString("MENU" , "MENU_LANGUAGE" ,theApp.gsLanguage));
+
+	//	CMenu *pPopupChild=pPopup->GetSubMenu(10);
+	//	pPopupChild->ModifyMenu(0, MF_BYPOSITION | MF_STRING, ID_SENDBET, UiFun::UI_LoadString("MENU" , "MENU_SENDBET" ,theApp.gsLanguage));
+	//	pPopupChild->ModifyMenu(1, MF_BYPOSITION | MF_STRING, ID_ACCEPTBET, UiFun::UI_LoadString("MENU" , "MENU_ACCEPTET" ,theApp.gsLanguage));
+	//	pPopupChild->ModifyMenu(2, MF_BYPOSITION | MF_STRING, ID_SENDREDPAKET, UiFun::UI_LoadString("MENU" , "MENU_SENDRED" ,theApp.gsLanguage));
+	//	pPopupChild->ModifyMenu(3, MF_BYPOSITION | MF_STRING, ID_GRABREDPACKE, UiFun::UI_LoadString("MENU" , "MENU_GRABRED" ,theApp.gsLanguage));
+
+	//	CMenu *pPopuplChild=pPopup->GetSubMenu(11);
+	//	pPopuplChild->ModifyMenu(0, MF_BYPOSITION |MF_BYCOMMAND|MF_STRING, ID_CNL, UiFun::UI_LoadString("MENU" , "MENU_CNL" ,theApp.gsLanguage));
+	//	pPopuplChild->ModifyMenu(1, MF_BYPOSITION |MF_BYCOMMAND, ID_ENL, UiFun::UI_LoadString("MENU" , "MENU_ENL" ,theApp.gsLanguage));
+	//}
+
+	//pPopup->SetMenuItemBitmaps(0,MF_BYPOSITION, &pMenuBitmap, &pMenuBitmap);
 	//显示右键菜单，由视类窗口拥有。
 	pPopup->TrackPopupMenu(TPM_LEFTALIGN|TPM_RIGHTBUTTON,rect.left,rect.bottom,this);
 }
@@ -415,19 +464,19 @@ void CIndTitleBar::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct)
 }
 
 
-void CIndTitleBar::OnBnClickedCn()
-{
-	// TODO: 在此添加控件通知处理程序代码
-	RECT rect;
-	GetDlgItem(IDC_CN)->GetWindowRect(&rect);//获取控件基于全频的位置
-
-	CMenu *pPopup=LanguageMenu.GetSubMenu(0);
-
-	//pPopup->CheckMenuItem(ID_CN,MF_CHECKED);
-
-	//显示右键菜单，由视类窗口拥有。
-	pPopup->TrackPopupMenu(TPM_LEFTALIGN|TPM_RIGHTBUTTON,rect.left,rect.bottom,this);
-}
+//void CIndTitleBar::OnBnClickedCn()
+//{
+//	// TODO: 在此添加控件通知处理程序代码
+//	RECT rect;
+//	GetDlgItem(IDC_CN)->GetWindowRect(&rect);//获取控件基于全频的位置
+//
+//	CMenu *pPopup=LanguageMenu.GetSubMenu(0);
+//
+//	//pPopup->CheckMenuItem(ID_CN,MF_CHECKED);
+//
+//	//显示右键菜单，由视类窗口拥有。
+//	pPopup->TrackPopupMenu(TPM_LEFTALIGN|TPM_RIGHTBUTTON,rect.left,rect.bottom,this);
+//}
 void CIndTitleBar::OnChinese()
 {
 	/// 英文界面
@@ -457,26 +506,28 @@ void CIndTitleBar::OnEnglish()
 void CIndTitleBar::OnUpdateEn(CCmdUI *pCmdUI)
 {
 	// TODO: 在此添加命令更新用户界面处理程序代码
-	CMenu *pPopup=LanguageMenu.GetSubMenu(0);
-	if (pPopup->GetMenuState(ID_CN,MF_CHECKED) == MF_CHECKED)
+	CMenu *pPopup=newMenu.GetSubMenu(0);
+	CMenu *pPopupChild=pPopup->GetSubMenu(11);
+	//if (pPopupChild->GetMenuState(ID_CNL,MF_CHECKED) == MF_CHECKED)
 	{
-		pPopup->CheckMenuItem(ID_CN, MF_BYCOMMAND|MF_USECHECKBITMAPS );
+		pPopupChild->CheckMenuItem(ID_CNL, MF_BYCOMMAND|MF_USECHECKBITMAPS );
 	}
 
-	pPopup->CheckMenuItem(ID_EN, MF_BYCOMMAND|MF_CHECKED);
+	pPopupChild->CheckMenuItem(ID_ENL, MF_BYCOMMAND|MF_CHECKED);
 }
 
 
 void CIndTitleBar::OnUpdateCn(CCmdUI *pCmdUI)
 {
 	// TODO: 在此添加命令更新用户界面处理程序代码
-	CMenu *pPopup=LanguageMenu.GetSubMenu(0);
-	if (pPopup->GetMenuState(ID_EN,MF_CHECKED) == MF_CHECKED)
+	CMenu *pPopup=newMenu.GetSubMenu(0);
+	CMenu *pPopupChild=pPopup->GetSubMenu(11);
+	//if (pPopupChild->GetMenuState(ID_ENL,MF_CHECKED) == MF_CHECKED)
 	{
-		pPopup->CheckMenuItem(ID_EN, MF_BYCOMMAND|MF_USECHECKBITMAPS );
+		pPopupChild->CheckMenuItem(ID_ENL, MF_BYCOMMAND|MF_USECHECKBITMAPS );
 	}
 
-	pPopup->CheckMenuItem(ID_CN, MF_BYCOMMAND|MF_CHECKED);
+	pPopupChild->CheckMenuItem(ID_CNL, MF_BYCOMMAND|MF_CHECKED);
 }
 void CIndTitleBar::Setlanguage(int index)
 {
