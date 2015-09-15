@@ -81,7 +81,7 @@ void CRedPacketPoolListBox::InsertStr(int iIndex,HWND hMain)
 
 	pData->pSta5 = new CStaticTrans;
 	pData->pSta5->Create(_T(""),dwStyle, rcClient, this, ++m_uID);
-	pData->pSta5->ModifyStyle(SS_LEFT|SS_RIGHT,SS_CENTER,TRUE);
+	pData->pSta5->ModifyStyle(SS_LEFT|SS_RIGHT,SS_LEFT,TRUE);
 
 	m_mButton.insert( make_pair( iIndex, pData ) );
 
@@ -214,7 +214,7 @@ void CRedPacketPoolListBox::updateListBoxButtonPos()
 
 				pData->pSta5->SetFont(110, _T("宋体"));				//设置显示字体和大小
 				pData->pSta5->ShowWindow( SW_SHOW );
-				pData->pSta5->SetWindowPos(NULL , 660 , pData->nItem*28 +10 , 60 , 29 , SWP_SHOWWINDOW );
+				pData->pSta5->SetWindowPos(NULL , 660 , pData->nItem*28 +10 , 100 , 29 , SWP_SHOWWINDOW );
 			}
 			iLine++;
 		}

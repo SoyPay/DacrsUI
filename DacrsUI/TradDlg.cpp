@@ -242,6 +242,9 @@ BOOL CTradDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 
 		m_edit.SetWindowText(UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_ADDRESS_SEARCH" ,theApp.gsLanguage));
 
+		GetDlgItem(IDC_STATIC_PAGE)->SetWindowText(UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_EVERYPAGE" ,theApp.gsLanguage));
+		GetDlgItem(IDC_STATIC_ITEM)->SetWindowText(UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_ITEM" ,theApp.gsLanguage));
+
 		m_condition.SetCurSel(0);
 		m_time.SetCurSel(0);
 		m_pageitem.SetCurSel(0);
@@ -549,14 +552,14 @@ void CTradDlg::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/div)*99, (rc.Height()/div)*102+3, 70, 30  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/div)*99, (rc.Height()/div)*102, 70, 30  ,SWP_SHOWWINDOW ) ; 
 		}
 
 		pst = GetDlgItem( IDC_STATIC_PAGE ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/div)*73, (rc.Height()/div)*102+3, 25, 18 ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/div)*71, (rc.Height()/div)*102+3, 43, 18 ,SWP_SHOWWINDOW ) ; 
 		}
 		pst = GetDlgItem( IDC_COMBO_PAGE ) ;
 		if ( NULL != pst ) {
@@ -637,7 +640,7 @@ void CTradDlg::OnBnClickedExportExel()
 		UiFun::MessageBoxEx(UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_NOT_RECORD_OUT" ,theApp.gsLanguage) ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
-	CFileDialog dlg(FALSE,NULL,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_RECORD" ,theApp.gsLanguage),OFN_HIDEREADONLY|OFN_FILEMUSTEXIST ,"нд╪Ч (*.xls)|*.xls||");
+	CFileDialog dlg(FALSE,NULL,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_RECORD" ,theApp.gsLanguage),OFN_HIDEREADONLY|OFN_FILEMUSTEXIST ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_FILE" ,theApp.gsLanguage)+" (*.xls)|*.xls||");
 	if (IDOK != dlg.DoModal())
 	{
 		return;

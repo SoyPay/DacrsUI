@@ -112,6 +112,7 @@ BOOL CIpoCoin::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_rQueryAmout.SetBitmaps( IDB_BITMAP_BUTTON , RGB(255, 255, 0) , IDB_BITMAP_BUTTON , RGB(255, 255, 255) );
 		m_rQueryAmout.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
 		m_rQueryAmout.SetFontEx(20 , _T("微软雅黑"));
+		m_rQueryAmout.SetWindowText(UiFun::UI_LoadString("IPO_MODULE" , "IPO_USABLE_ACCOUNT" ,theApp.gsLanguage)) ;
 		m_rQueryAmout.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(0, 0, 0));
 		m_rQueryAmout.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(200, 75, 60));
 		m_rQueryAmout.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
@@ -124,6 +125,9 @@ BOOL CIpoCoin::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_strTx2.SetFont(120, _T("黑体"));				//设置显示字体和大小
 		m_strTx2.SetTextColor(RGB(0,0,0));	
 		m_strTx2.SetWindowText(_T(""));
+
+		
+		GetDlgItem(IDC_STATIC_ADDR)->SetWindowText(UiFun::UI_LoadString("NEW_SENDADDR" , "NEW_SENDADDR_ADDR" ,theApp.gsLanguage));
 
 		struct LISTCol {
 			CString		name ;
@@ -252,13 +256,13 @@ void CIpoCoin::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL , (rc.Width()/100)*3+10, (rc.Height()/100)*5+8 , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL , (rc.Width()/100)*3+5, (rc.Height()/100)*5+8 , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
 		pst = GetDlgItem( IDC_EDIT_ADDR ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*8+20 ,(rc.Height()/100)*5+6  , (rc.Width()/100)*40, (rc.Height()/100)*6+2 ,SWP_SHOWWINDOW ); 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*8+30 ,(rc.Height()/100)*5+6  , (rc.Width()/100)*40, (rc.Height()/100)*6+2 ,SWP_SHOWWINDOW ); 
 			pst->SetFont(&theApp.m_fontBlackbody);
 		}
 

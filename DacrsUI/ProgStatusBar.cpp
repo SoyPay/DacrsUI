@@ -489,7 +489,7 @@ void CProgStatusBar::OnMouseMove(UINT nFlags, CPoint point)
 		{
 			pDlg->m_BalloonTip=CBalloonTip::Show(
 				CPoint(ret.right -50, ret.bottom),         // Point on the screen where the tip will be shown
-				CSize(85, 60),          // Size of the total rectangle encompassing the balloon 
+				CSize(85, 80),          // Size of the total rectangle encompassing the balloon 
 				_T(strShow.c_str()), // Message to be shown in the balloon
 				lf,                               // LOGFONT structure for font properties 
 				30,                 // Time in seconds to show the balloon
@@ -498,7 +498,7 @@ void CProgStatusBar::OnMouseMove(UINT nFlags, CPoint point)
 				);
 		 }
 	}else if (pDlg->m_BalloonTip != NULL && pDlg->m_BalloonTip->nBalloonInstances ==1){
-		int pos = pDlg->m_BalloonTip->m_strMessage.Find("ÍøÂçÁ¬½Ó");
+		int pos = pDlg->m_BalloonTip->m_strMessage.Find(UiFun::UI_LoadString("PROGSTATUS_MODULE"  , "PROGSTATUS_NETWORK_CONN",theApp.gsLanguage ));
 		if (pos >=0)
 		{
 			CBalloonTip::Hide(pDlg->m_BalloonTip);

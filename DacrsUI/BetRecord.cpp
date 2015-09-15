@@ -116,7 +116,7 @@ BOOL CBetRecord::Create(LPCTSTR lpszTemplateName, CWnd* pParentWnd)
 	
 		m_sCountpage.SetFont(90, _T("黑体"));				//设置显示字体和大小
 		m_sCountpage.SetTextColor(RGB(0,0,0));			    //字体颜色	
-		m_sCountpage.SetWindowText(_T("共:"));
+		m_sCountpage.SetWindowText(UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TOTAL" ,theApp.gsLanguage));
 
 		m_rBtnUp.SetBitmaps( IDB_BITMAP_UP , RGB(255, 255, 0) , IDB_BITMAP_UP , RGB(255, 255, 255) );
 		m_rBtnUp.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
@@ -136,7 +136,7 @@ BOOL CBetRecord::Create(LPCTSTR lpszTemplateName, CWnd* pParentWnd)
 		m_rBtnNext.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(255, 255, 255));
 		m_rBtnNext.SizeToContent();
 
-		GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(_T("共:0"));
+		GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TOTAL" ,theApp.gsLanguage)+"0");
 	}
 	return bRes;
 }
@@ -281,13 +281,13 @@ void  CBetRecord::OnShowPagePool(int page)
 		}else{
 			if (const_it.height>0 &&(const_it.time_out + const_it.height)> theApp.blocktipheight&& theApp.IsSyncBlock)
 			{
-				m_ListBox.SetIndexString(i , const_it.left_addr.c_str(),const_it.right_addr.c_str(),sendTime.c_str(),reciveTime.c_str(), _T("未开奖"),guess.c_str(),reward.c_str());
+				m_ListBox.SetIndexString(i , const_it.left_addr.c_str(),const_it.right_addr.c_str(),sendTime.c_str(),reciveTime.c_str(), UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIMEOUT" ,theApp.gsLanguage),guess.c_str(),reward.c_str());
 			}else if(theApp.IsSyncBlock && const_it.height != 0){
 				m_ListBox.SetIndexBackCol(i , 6 , RGB(242,32,32));
 				reward =strprintf("+%.4f", const_it.amount);
-				m_ListBox.SetIndexString(i , const_it.left_addr.c_str(),const_it.right_addr.c_str(),sendTime.c_str(),reciveTime.c_str(), _T("超时"),guess.c_str(),reward.c_str());
+				m_ListBox.SetIndexString(i , const_it.left_addr.c_str(),const_it.right_addr.c_str(),sendTime.c_str(),reciveTime.c_str(), UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIMEOUT" ,theApp.gsLanguage),guess.c_str(),reward.c_str());
 			}else{
-				m_ListBox.SetIndexString(i , const_it.left_addr.c_str(),const_it.right_addr.c_str(),sendTime.c_str(),reciveTime.c_str(), _T("未开奖"),guess.c_str(),reward.c_str());
+				m_ListBox.SetIndexString(i , const_it.left_addr.c_str(),const_it.right_addr.c_str(),sendTime.c_str(),reciveTime.c_str(), UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIMEOUT" ,theApp.gsLanguage),guess.c_str(),reward.c_str());
 			}
 		}
 		i++;

@@ -114,7 +114,7 @@ BOOL CGrabSpecalRedPacket::Create(LPCTSTR lpszTemplateName, CWnd* pParentWnd)
 
 		m_sCountpage.SetFont(90, _T("黑体"));				//设置显示字体和大小
 		m_sCountpage.SetTextColor(RGB(0,0,0));			    //字体颜色	
-		m_sCountpage.SetWindowText(_T("共:"));
+		m_sCountpage.SetWindowText(UiFun::UI_LoadString("P2P_MODULE" , "P2P_TOTAL" ,theApp.gsLanguage));
 
 		m_rBtnUp.SetBitmaps( IDB_BITMAP_RED_UP , RGB(255, 255, 0) , IDB_BITMAP_RED_UP , RGB(255, 255, 255) );
 		m_rBtnUp.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
@@ -134,7 +134,7 @@ BOOL CGrabSpecalRedPacket::Create(LPCTSTR lpszTemplateName, CWnd* pParentWnd)
 		m_rBtnNext.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(255, 255, 255));
 		m_rBtnNext.SizeToContent();
 
-		GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(_T("共:0"));
+		GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(UiFun::UI_LoadString("P2P_MODULE" , "P2P_TOTAL" ,theApp.gsLanguage)+"0");
 	}
 
 	/// listbox 背景颜色
@@ -181,7 +181,7 @@ void CGrabSpecalRedPacket::Showlistbox()
 	m_pagecount = (m_PoolList.size()%m_pagesize)==0?(m_PoolList.size()/m_pagesize):(m_PoolList.size()/m_pagesize)+1;
 
 	string temp;
-	temp =strprintf("共:%d",m_pagecount);
+	temp =strprintf("%s:%d",UiFun::UI_LoadString("P2P_MODULE" , "P2P_TOTAL" ,theApp.gsLanguage),m_pagecount);
 	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(temp.c_str());
 	GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T(""));
 	Invalidate();
@@ -224,14 +224,14 @@ void  CGrabSpecalRedPacket::OnShowPagePool(int page)
 		//line.Format(_T("%d"),(i+1));
 		if (const_it.packet_type == 1)
 		{
-			strShow = "普通红包";
+			strShow = UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_GENERAL_ENVELOPE" ,theApp.gsLanguage);
 		}else if (const_it.packet_type == 2)
 		{
-			strShow = "接龙红包";
+			strShow = UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_RED_ENVELOPE" ,theApp.gsLanguage);
 		}
 		m_BonusListBox.InsertStr(i,this->GetSafeHwnd());
 		m_BonusListBox.SetotherIndexInage(i , IDB_BITMAP_GRAB_RED);
-		m_BonusListBox.SetIndexString(i , line.c_str(),const_it.send_acc_id.c_str(), _T("抢"), money.c_str(), const_it.send_hash.c_str(),strmoney.c_str());
+		m_BonusListBox.SetIndexString(i , line.c_str(),const_it.send_acc_id.c_str(), UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_GRABBUT" ,theApp.gsLanguage), money.c_str(), const_it.send_hash.c_str(),strmoney.c_str());
 		i++;
 	}
 }
@@ -252,7 +252,7 @@ BOOL CGrabSpecalRedPacket::PreTranslateMessage(MSG* pMsg)
 				}else
 				{
 					GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T(""));
-					UiFun::MessageBoxEx(_T("输入有误,请输入数字") , _T("提示") ,MFB_OK|MFB_TIP );
+					UiFun::MessageBoxEx(UiFun::UI_LoadString("COMM_MODULE" , "COMM_INPUT_ERROR" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage),MFB_OK|MFB_TIP );
 				}
 				return TRUE;
 			}
@@ -297,7 +297,7 @@ LRESULT CGrabSpecalRedPacket::onBnCLick( WPARAM wParam, LPARAM lParam )
 
 void   CGrabSpecalRedPacket::AcceptRedPackeSpecail(CString sendhash,uistruct::REDPACKETPOOL_t pPoolList)
 {
-	string strshow= "红包已经升级,请到菜单栏中选择恢复默认设置";
+	string strshow=UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_UPDATATIP" ,theApp.gsLanguage);
 	if (!UiFun::IsCurrentAppId(theApp.m_redPacketScriptid.c_str(),theApp.m_neststcriptid.strNewSrcriptRedPacektid.c_str(),strshow))
 	{
 		return;
@@ -305,7 +305,7 @@ void   CGrabSpecalRedPacket::AcceptRedPackeSpecail(CString sendhash,uistruct::RE
 
 	if (!theApp.IsSyncBlock )
 	{
-		UiFun::MessageBoxEx(_T("同步未完成,不能发送交易") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("SEND_MODULE" , "SEND_UNFINISHED_BUSINESS" ,theApp.gsLanguage)  , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage),MFB_OK|MFB_TIP );
 		return;
 	}
 
@@ -316,31 +316,31 @@ void   CGrabSpecalRedPacket::AcceptRedPackeSpecail(CString sendhash,uistruct::RE
 	INT64 sub = (INT64)(strtod(walletaddr,NULL)*COIN) - theApp.m_RedPacketCfg.AcceptRedPacketSpecailFee;
 	if (sub < 0)
 	{
-		UiFun::MessageBoxEx(_T("此钱包账户金额不足付小费,请先充值") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_FEETIP" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
 
 	if (strtod(m_balance,NULL) < pPoolList.total_amount)
 	{
-		UiFun::MessageBoxEx(_T("此钱包账户金额小于接龙红包金额,请先充值") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_REDMONEY_MORE_BALANCE" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage),MFB_OK|MFB_TIP );
 		return;
 	}
 	CString addr = m_addr;
 
 	if (addr == _T(""))
 	{
-		UiFun::MessageBoxEx(_T("地址不能为空") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_ADDRESS_NOT_NULL" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
 
 	if (strcmp(pPoolList.send_acc_id.c_str(),addr) == 0)
 	{
-		UiFun::MessageBoxEx(_T("发红包地址不能抢红包") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_SNOTG" ,theApp.gsLanguage)  , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
 	if (IsAcceptRedPacket(addr,pPoolList))
 	{
-		UiFun::MessageBoxEx(_T("此地址已经抢过红包") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_HAVEGRAB" ,theApp.gsLanguage)  , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage),MFB_OK|MFB_TIP );
 		return;
 	}
 	string strContractData,strHash;
@@ -349,7 +349,7 @@ void   CGrabSpecalRedPacket::AcceptRedPackeSpecail(CString sendhash,uistruct::RE
 
 	INT64 strTxFee = theApp.m_RedPacketCfg.AcceptRedPacketSpecailFee;
 	if (  strTxFee < 10000  ) {
-		UiFun::MessageBoxEx(_T("小费不足") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_TIP" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage),MFB_OK|MFB_TIP );
 		return ;
 	}
 	string strShowData ="";
@@ -380,9 +380,9 @@ void   CGrabSpecalRedPacket::AcceptRedPackeSpecail(CString sendhash,uistruct::RE
 	if ( pos >=0 ) {
 		bRes = TRUE ;
 		//strTip.Format( _T("恭喜发送赌约成功!\n%s") , root["hash"].asCString() ) ;
-		strTip ="抢红包成功，请等待1-2分钟确认交易\n";
+		strTip =UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_WITHDRAWALS_SEND_SUCCESS" ,theApp.gsLanguage) ;
 	}else{
-		strTip ="红包已被抢!" ;
+		strTip =UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_GRABERROR" ,theApp.gsLanguage) ;
 	}
 
 	//保存到数据库
@@ -403,7 +403,7 @@ void   CGrabSpecalRedPacket::AcceptRedPackeSpecail(CString sendhash,uistruct::RE
 		postmsg.SetData(strTemp);
 		theApp.m_MsgQueue.push(postmsg);
 	}
-	UiFun::MessageBoxEx(strTip.c_str() , _T("提示") ,MFB_OK|MFB_TIP );
+	UiFun::MessageBoxEx(strTip.c_str() , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 }
 
 bool  CGrabSpecalRedPacket::IsAcceptRedPacket(CString account,uistruct::REDPACKETPOOL_t pPoolList)
@@ -508,10 +508,10 @@ void CGrabSpecalRedPacket::OnLbnDblclkListBox()
 	if (count <=(int)m_PoolList.size())
 	{
 		uistruct::REDPACKETPOOL_t const_it = m_PoolList.at(count);
-		string temp = "接龙红包ID: ";
+		string temp = UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_JL_REDENVELOPE_ID" ,theApp.gsLanguage);
 		string strShowid = const_it.send_hash.substr(0,30); 
 		temp +=strprintf("%s" ,strShowid.c_str()) ;
-		UiFun::MessageBoxEx(temp.c_str() , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(temp.c_str() ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 	}
 }
 void CGrabSpecalRedPacket::ReadSpecailRedPacketPool()

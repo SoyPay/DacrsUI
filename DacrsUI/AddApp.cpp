@@ -5,7 +5,8 @@
 #include "DacrsUI.h"
 #include "AddApp.h"
 #include "afxdialogex.h"
-
+#include "DlgView.h"
+#include "DlgDocument.h"
 
 // CAddApp 对话框
 
@@ -22,22 +23,12 @@ CAddApp::~CAddApp()
 		DeleteObject(m_pBmp) ;
 		m_pBmp = NULL ;
 	}
-	v_linkCtrl1.InternalRelease();
-	v_linkCtrl1.ExternalRelease();
-	v_linkCtrl1.OnFinalRelease();
-	v_linkCtrl1.DestroyWindow();
-
-	v_linkCtrl2.InternalRelease();
-	v_linkCtrl2.ExternalRelease();
-	v_linkCtrl2.OnFinalRelease();
-	v_linkCtrl2.DestroyWindow();
 }
 
 void CAddApp::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogBar::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_PROGRESS, v_linkCtrl1);
-	DDX_Control(pDX, IDC_MFCLINK2, v_linkCtrl2);
+
 }
 
 
@@ -104,14 +95,41 @@ BOOL CAddApp::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 	BOOL bRes = CDialogBar::Create(pParentWnd, nIDTemplate, nStyle, nID);
 	if ( bRes ) {
 		UpdateData(0);
-		v_linkCtrl1.SetWindowText(_T(""));
-		v_linkCtrl2.SetWindowText(_T(""));
+		//v_linkCtrl1.SetWindowText(_T(""));
+		//v_linkCtrl2.SetWindowText(_T(""));
 
-		v_linkCtrl1.SetWindowText(UiFun::UI_LoadString("ADDAPP_MODULE" , "ADDAPP_DEVE_PROGESS" ,theApp.gsLanguage));
-		v_linkCtrl2.SetWindowText(UiFun::UI_LoadString("ADDAPP_MODULE" , "ADDAPP_QQ_GROUP" ,theApp.gsLanguage));
+		//v_linkCtrl1.SetWindowText(UiFun::UI_LoadString("ADDAPP_MODULE" , "ADDAPP_DEVE_PROGESS" ,theApp.gsLanguage));
+		//v_linkCtrl2.SetWindowText(UiFun::UI_LoadString("ADDAPP_MODULE" , "ADDAPP_QQ_GROUP" ,theApp.gsLanguage));
 
-		v_linkCtrl1.SetURL(_T("http://www.dacrs.com/forum.php?mod=viewthread&tid=2641"));
-		v_linkCtrl2.SetURL(_T("http://jq.qq.com/?_wv=1027&k=T5mlmd"));
+		//v_linkCtrl1.SetURL(_T("http://www.dacrs.com/forum.php?mod=viewthread&tid=2641"));
+		//v_linkCtrl2.SetURL(_T("http://jq.qq.com/?_wv=1027&k=T5mlmd"));
+
+		//用来连接组成文档的组件和他的数据的视图
+		CCreateContext pContext;
+		CWnd* pFrameWnd = this;
+		pContext.m_pCurrentDoc = new CDlgDocument;
+		pContext.m_pNewViewClass = RUNTIME_CLASS(CDlgView);
+		CDlgView *pView =(CDlgView *) ((CFrameWnd*)pFrameWnd)->CreateView(&pContext);
+		ASSERT(pView);
+		pView->m_nMapMode = MM_TEXT;
+
+		pView->ShowWindow(SW_NORMAL);
+
+		CRect rectWindow;
+		GetWindowRect(rectWindow);
+		//rectWindow.right -= 16;
+		//rectWindow.bottom -= 70;
+	//	pView->MoveWindow(rectWindow);
+
+		if (theApp.m_pMainWnd != NULL)
+		{
+			CRect rect;
+			theApp.m_pMainWnd->GetWindowRect(&rect);
+			//theApp.m_pMainWnd->ClientToScreen(rect);
+			rect.top =0;
+			rect.bottom -= (72+32);
+			pView->MoveWindow(rect);
+		}
 	}
 	return bRes ;
 }

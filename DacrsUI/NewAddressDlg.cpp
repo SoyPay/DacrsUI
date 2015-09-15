@@ -42,6 +42,7 @@ BOOL CNewAddressDlg::OnInitDialog()
 {
 	CDialogBase::OnInitDialog();
 
+	m_headText.SetWindowText(UiFun::UI_LoadString("NEWADDR_MODULE" , "NEWADDR_NEWADDR" ,theApp.gsLanguage));
 	m_headText.SetFont(100, _T("微软雅黑"));
 	m_headText.SetTextColor(RGB(255,255,255));	
 	// TODO:  在此添加额外的初始化
@@ -70,7 +71,11 @@ BOOL CNewAddressDlg::OnInitDialog()
 	m_rBtnNewAdd.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
 	m_rBtnNewAdd.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
 	m_rBtnNewAdd.SizeToContent();
-
+	
+	GetDlgItem(IDC_LABEL)->SetWindowText(UiFun::UI_LoadString("NEW_SENDADDR" , "NEW_SENDADDR_LABEL" ,theApp.gsLanguage));
+	GetDlgItem(IDC_CODE)->SetWindowText(UiFun::UI_LoadString("NEWADDR_MODULE" , "NEWADDR_COLD" ,theApp.gsLanguage));
+	GetDlgItem(IDC_RADIO_YES)->SetWindowText(UiFun::UI_LoadString("COMM_MODULE" , "COMM_SUPPORT" ,theApp.gsLanguage));
+	GetDlgItem(IDC_RADIO_NO)->SetWindowText(UiFun::UI_LoadString("COMM_MODULE" , "COMM_NOT_SUPPORT" ,theApp.gsLanguage));
 
 	CButton* radio=(CButton*)GetDlgItem(IDC_RADIO_YES);
 	radio->SetCheck(TRUE);

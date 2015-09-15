@@ -1,6 +1,12 @@
 #pragma once
 #include "HeaderCtrlCl.h"
+#include "ButtonEx.h"
+#include "ShadeButtonST.h"
+#include <map>
+using namespace std;
 // CListCtrlCl
+
+typedef map<int,CButtonCtrl*> Button_map;
 
 class CListCtrlCl : public CListCtrl
 {
@@ -56,6 +62,19 @@ public:
 	int m_fontWith;
 	afx_msg void OnPaint();
 	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
+public:
+	void createItemButton( int nItem, int nSubItem, HWND hMain,LPCTSTR lpszCaption ,void * pData,int nBitmapIn, COLORREF crTransColorIn, int nBitmapOut, COLORREF crTransColorOut);
+	void createItemButton( int nItem, int nSubItem, HWND hMain,LPCTSTR lpszCaption ,void * pData,HBITMAP nBitmapIn, COLORREF crTransColorIn, HBITMAP nBitmapOut, COLORREF crTransColorOut);
+	void updateListCtrlButtonPos();
+	//释放创建的Button
+	void release();
+	void deleteItemEx( int nItem );
+	CButtonCtrl*GetBtutton(int index);
+	Button_map m_mButton;
+
+public:
+	UINT m_uID;   
+	CFont font ;    //按钮上面的字体
 };
 
 

@@ -118,7 +118,7 @@ BOOL CAcceptRedPacketRecord::Create(LPCTSTR lpszTemplateName, CWnd* pParentWnd)
 
 		m_sCountpage.SetFont(90, _T("黑体"));				//设置显示字体和大小
 		m_sCountpage.SetTextColor(RGB(0,0,0));			    //字体颜色	
-		m_sCountpage.SetWindowText(_T("共:"));
+		m_sCountpage.SetWindowText(UiFun::UI_LoadString("P2P_MODULE" , "P2P_TOTAL" ,theApp.gsLanguage));
 
 		m_rBtnUp.SetBitmaps( IDB_BITMAP_RED_UP , RGB(255, 255, 0) , IDB_BITMAP_RED_UP , RGB(255, 255, 255) );
 		m_rBtnUp.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
@@ -138,7 +138,7 @@ BOOL CAcceptRedPacketRecord::Create(LPCTSTR lpszTemplateName, CWnd* pParentWnd)
 		m_rBtnNext.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(255, 255, 255));
 		m_rBtnNext.SizeToContent();
 
-		GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(_T("共:0"));
+		GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(UiFun::UI_LoadString("P2P_MODULE" , "P2P_TOTAL" ,theApp.gsLanguage)+"0");
 	}
 	/// listbox 背景颜色
 	//m_hbrush = CreateSolidBrush(RGB(255,252,247));RGB(255,236,229)
@@ -191,7 +191,7 @@ void CAcceptRedPacketRecord::Showlistbox(CString address)
 	m_pagecount = (m_AcceptRedPacketList.size()%m_pagesize)==0?(m_AcceptRedPacketList.size()/m_pagesize):(m_AcceptRedPacketList.size()/m_pagesize)+1;
 
 	string temp;
-	temp =strprintf("共:%d",m_pagecount);
+	temp =strprintf("%s%d",UiFun::UI_LoadString("P2P_MODULE" , "P2P_TOTAL" ,theApp.gsLanguage),m_pagecount);
 
 	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(temp.c_str());
 	GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T(""));
@@ -229,10 +229,12 @@ void  CAcceptRedPacketRecord::OnShowPagePool(int page)
 
 		if (const_it.packet_type == 1)
 		{
-			type="普通";
+			//type="普通";
+			type=UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_COMMTYPE" ,theApp.gsLanguage);
 		}else if (const_it.packet_type == 2)
 		{
-			type="接龙";
+			//type="接龙";
+			type=UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_COMMTYPEL" ,theApp.gsLanguage);
 
 		}
 
@@ -250,10 +252,12 @@ void  CAcceptRedPacketRecord::OnShowPagePool(int page)
 
 		if (const_it.lucky_fortune == 1)
 		{
-			luckeValue="普通";
+			//luckeValue="普通";
+			luckeValue=UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_COMMTYPE" ,theApp.gsLanguage);
 		}else if (const_it.lucky_fortune == 2)
 		{
-			luckeValue="运气王";
+			//luckeValue="运气王";
+			luckeValue=UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_LUCKLY" ,theApp.gsLanguage);
 		}else
 		{
 			luckeValue="--";
@@ -282,7 +286,7 @@ BOOL CAcceptRedPacketRecord::PreTranslateMessage(MSG* pMsg)
 				}else
 				{
 					GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T(""));
-					UiFun::MessageBoxEx(_T("输入有误,请输入数字") , _T("提示") ,MFB_OK|MFB_TIP );
+					UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_INPUT_ERROR" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 				}
 				return TRUE;
 			}
@@ -347,10 +351,12 @@ void CAcceptRedPacketRecord::GetExportCol(map<int,string> &item,uistruct::REDPAC
 
 	if (const_it.packet_type == 1)
 	{
-		type="普通";
+		//type="普通";
+		type=UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_COMMTYPE" ,theApp.gsLanguage);
 	}else if (const_it.packet_type == 2)
 	{
-		type="接龙";
+		//type="接龙";
+		type=UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_COMMTYPEL" ,theApp.gsLanguage);
 	}
 
 	if (const_it.grab_time == 0)
@@ -367,10 +373,12 @@ void CAcceptRedPacketRecord::GetExportCol(map<int,string> &item,uistruct::REDPAC
 
 	if (const_it.lucky_fortune == 1)
 	{
-		luckeValue="普通";
+		//luckeValue="普通";
+		luckeValue=UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_COMMTYPE" ,theApp.gsLanguage);
 	}else if (const_it.lucky_fortune == 2)
 	{
-		luckeValue="运气王";
+		//luckeValue="运气王";
+		luckeValue =UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_LUCKLY" ,theApp.gsLanguage);
 	}else
 	{
 		luckeValue="--";
@@ -399,10 +407,10 @@ void CAcceptRedPacketRecord::ExportAcceptRedPacektToexel()
 	int nItem =  theApp.m_SqliteDeal.GetRedPacketGrabRecordList(conditon.c_str() ,&AcceptRedPacketList ) ;
 	if (AcceptRedPacketList.size() == 0)
 	{
-		UiFun::MessageBoxEx(_T("没有记录可以导出！") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_NO_RECORDS_EXPORT" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
-	CFileDialog dlg(FALSE,NULL,"抢到红包记录",OFN_HIDEREADONLY|OFN_FILEMUSTEXIST ,"文件 (*.xls)|*.xls||");
+	CFileDialog dlg(FALSE,NULL,UiFun::UI_LoadString("MENU" , "MENU_GRABRED" ,theApp.gsLanguage),OFN_HIDEREADONLY|OFN_FILEMUSTEXIST ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_FILE" ,theApp.gsLanguage)+" (*.xls)|*.xls||");
 	if (IDOK != dlg.DoModal())
 	{
 		return;
@@ -418,15 +426,15 @@ void CAcceptRedPacketRecord::ExportAcceptRedPacektToexel()
 		string		name ;
 		UINT		size ;
 	} listheadr[9]  = {
-		{"抢红包hash" ,  70},
-		{"抢红包人" ,    30},
-		{"发起人" ,    30},
-		{"类型" ,    10},
-		{"抢到时间" ,  20}, 
-		{"总金额" ,30},
-		{"个数" ,10},
-		{"运气值" ,10},
-		{"抢到金额" , 30}
+		{UiFun::UI_LoadString("TITLEBAR_MODULE" , "TITLEBAR_MORTGAGE" ,theApp.gsLanguage)+" hash" ,  70},
+		{UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_GRABER" ,theApp.gsLanguage) ,    30},
+		{UiFun::UI_LoadString("P2P_MODULE" , "P2P_PROMOTER" ,theApp.gsLanguage) ,    30},
+		{UiFun::UI_LoadString("MORTTARD_MODULE" , "Type" ,theApp.gsLanguage) ,    10},
+		{UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_GRABTIME" ,theApp.gsLanguage)  ,  20}, 
+		{UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_TOTALMONEY" ,theApp.gsLanguage) ,30},
+		{UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_COUNT" ,theApp.gsLanguage) ,10},
+		{UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_LUCKVALUE" ,theApp.gsLanguage) ,10},
+		{UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_GRABMONEY" ,theApp.gsLanguage) , 30}
 	};
 
 	COleVariant
@@ -457,7 +465,7 @@ void CAcceptRedPacketRecord::ExportAcceptRedPacektToexel()
 
 	{
 
-		UiFun::MessageBoxEx(_T("可能是没有装office 导致创建失败！") , _T("提示") ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_NOT_OFFICE" ,theApp.gsLanguage)  , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP ) ;
 		return;
 
 	}

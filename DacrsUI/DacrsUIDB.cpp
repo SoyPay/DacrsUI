@@ -984,37 +984,38 @@ void CDacrsUIApp::PopupCommBalloonTip(string hash)//)
 	string strShow = "";
 	if (strcmp(commtx.txtype.c_str(),"REWARD_TX") == 0)
 	{
-		strShow ="  流入交易\r\n";
+		//strShow ="  流入交易\r\n";
+		strShow =strprintf("  %s\r\n",UiFun::UI_LoadString("DACRSU" , "DACRSU_INPUTTX" ,theApp.gsLanguage));
 
 		SYSTEMTIME curTime =UiFun::Time_tToSystemTime(commtx.confirmedtime);
-		strShow += strprintf("日期: %04d-%02d-%02d %02d:%02d:%02d\r\n",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
-		strShow += strprintf("金额: +%.8f\r\n",commtx.money);
-		strShow += strprintf("类别: %s\r\n","挖矿");
-		strShow += strprintf("地址: (%s)\r\n",commtx.addr.c_str());
+		strShow += strprintf("%s: %04d-%02d-%02d %02d:%02d:%02d\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_OK_TIME" ,theApp.gsLanguage),curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+		strShow += strprintf("%s: +%.8f\r\n",UiFun::UI_LoadString("COMM_MODULE" , "COMM_MONEY" ,theApp.gsLanguage),commtx.money);
+		strShow += strprintf("%s: %s\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TYPE" ,theApp.gsLanguage),UiFun::UI_LoadString("COMM_MODULE" , "COMM_MINING" ,theApp.gsLanguage));
+		strShow += strprintf("%s: (%s)\r\n",UiFun::UI_LoadString("RECEIVE_MODULE" , "RECEIVE_ADDRESS" ,theApp.gsLanguage) ,commtx.addr.c_str());
 	}else if(strcmp(commtx.txtype.c_str(),"COMMON_TX") == 0 && commtx.state == 1){
-		strShow ="  流出交易\r\n";
-
+		//strShow ="  流出交易\r\n";
+		strShow =strprintf("  %s\r\n",UiFun::UI_LoadString("RECEIVE_MODULE" , "RECEIVE_ADDRESS" ,theApp.gsLanguage));
 		SYSTEMTIME curTime =UiFun::Time_tToSystemTime(commtx.confirmedtime);
-		strShow += strprintf("日期: %04d-%02d-%02d %02d:%02d:%02d\r\n",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
-		strShow += strprintf("金额: -%.8f\r\n",commtx.money);
-		strShow += strprintf("类别: %s\r\n","转账");
-		strShow += strprintf("地址: (%s)\r\n",commtx.addr.c_str());
+		strShow += strprintf("%s: %04d-%02d-%02d %02d:%02d:%02d\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_OK_TIME" ,theApp.gsLanguage),curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+		strShow += strprintf("%s: -%.8f\r\n",UiFun::UI_LoadString("COMM_MODULE" , "COMM_MONEY" ,theApp.gsLanguage),commtx.money);
+		strShow += strprintf("%s: %s\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TYPE" ,theApp.gsLanguage),UiFun::UI_LoadString("COMM_MODULE" , "COMM_TRAN" ,theApp.gsLanguage));
+		strShow += strprintf("%s: (%s)\r\n",UiFun::UI_LoadString("RECEIVE_MODULE" , "RECEIVE_ADDRESS" ,theApp.gsLanguage),commtx.addr.c_str());
 	}else if(strcmp(commtx.txtype.c_str(),"COMMON_TX") == 0 && commtx.state == 2){
-		strShow ="  流入交易\r\n";
-
+		//strShow ="  流入交易\r\n";
+		strShow =strprintf("  %s\r\n",UiFun::UI_LoadString("DACRSU" , "DACRSU_INPUTTX" ,theApp.gsLanguage));
 		SYSTEMTIME curTime =UiFun::Time_tToSystemTime(commtx.confirmedtime);
-		strShow += strprintf("日期: %04d-%02d-%02d %02d:%02d:%02d\r\n",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
-		strShow += strprintf("金额: +%.8f\r\n",commtx.money);
-		strShow += strprintf("类别: %s\r\n","接受于");
-		strShow += strprintf("地址: (%s)\r\n",commtx.addr.c_str());
+		strShow += strprintf("%s: %04d-%02d-%02d %02d:%02d:%02d\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_OK_TIME" ,theApp.gsLanguage),curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+		strShow += strprintf("%s: +%.8f\r\n",UiFun::UI_LoadString("COMM_MODULE" , "COMM_MONEY" ,theApp.gsLanguage),commtx.money);
+		strShow += strprintf("%s: %s\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TYPE" ,theApp.gsLanguage),UiFun::UI_LoadString("DACRSU" , "DACRSU_STIPTYPE" ,theApp.gsLanguage));
+		strShow += strprintf("%s: (%s)\r\n",UiFun::UI_LoadString("RECEIVE_MODULE" , "RECEIVE_ADDRESS" ,theApp.gsLanguage),commtx.addr.c_str());
 	}else if(strcmp(commtx.txtype.c_str(),"COMMON_TX") == 0 && commtx.state == 3){
-		strShow =" 转账交易\r\n";
-
+		//strShow =" 转账交易\r\n";
+		strShow =strprintf("  %s\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TRANSF_TRANSA" ,theApp.gsLanguage));
 		SYSTEMTIME curTime =UiFun::Time_tToSystemTime(commtx.confirmedtime);
-		strShow += strprintf("日期: %04d-%02d-%02d %02d:%02d:%02d\r\n",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
-		strShow += strprintf("金额: %.8f\r\n",commtx.money);
-		strShow += strprintf("类别: %s","平账\r\n");
-		strShow += strprintf("地址: %s\r\n",commtx.addr.c_str());
+		strShow += strprintf("%s: %04d-%02d-%02d %02d:%02d:%02d\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_OK_TIME" ,theApp.gsLanguage),curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+		strShow += strprintf("%s: %.8f\r\n",UiFun::UI_LoadString("COMM_MODULE" , "COMM_MONEY" ,theApp.gsLanguage),commtx.money);
+		strShow += strprintf("%s: %s\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TYPE" ,theApp.gsLanguage),UiFun::UI_LoadString("DACRSU" , "DACRSU_TIPTYPE" ,theApp.gsLanguage));
+		strShow += strprintf("%s: %s\r\n",UiFun::UI_LoadString("RECEIVE_MODULE" , "RECEIVE_ADDRESS" ,theApp.gsLanguage),commtx.addr.c_str());
 	}
 	if(strShow != "")
 	::SendMessage(theApp.m_pMainWnd->m_hWnd,WM_POPUPBAR,0,(LPARAM)strShow.c_str());
@@ -1041,7 +1042,8 @@ void CDacrsUIApp::PopupContactBalloonTip(uistruct::REVTRANSACTION_t tx,int appty
 	string strShow = "";
 	if (apptype ==0)
 	{
-		strShow = "猜你妹交易";
+		//strShow = "猜你妹交易";
+		strShow =UiFun::UI_LoadString("DACRSU" , "DACRSU_TRANTYPE" ,theApp.gsLanguage);
 		if (txtype == 1)  /// 表示开奖
 		{
 			string nValue = tx.Contract;
@@ -1070,37 +1072,44 @@ void CDacrsUIApp::PopupContactBalloonTip(uistruct::REVTRANSACTION_t tx,int appty
 				{
 					if (pPoolItem.content[32] != pPoolItem.guess_num)
 					{
-						strShow +="(恭喜赢了)\r\n" ;
-						amount=strprintf("金额:+%.8f\r\n",pPoolItem.amount);
+						//strShow +="(恭喜赢了)\r\n" ;
+						strShow +=strprintf("(%s)\r\n",UiFun::UI_LoadString("DACRSU" , "DACRSU_WINER" ,theApp.gsLanguage));
+						amount=strprintf("%s:+%.8f\r\n",UiFun::UI_LoadString("COMM_MODULE" , "COMM_MONEY" ,theApp.gsLanguage),pPoolItem.amount);
 					}else{
-						strShow +="(输了)\r\n" ;
-						amount=strprintf("金额:-%.8f\r\n",pPoolItem.amount);
+						//strShow +="(输了)\r\n" ;
+						strShow +=strprintf("(%s)\r\n",UiFun::UI_LoadString("DACRSU" , "DACRSU_LOSER" ,theApp.gsLanguage));
+						amount=strprintf("%s:-%.8f\r\n",UiFun::UI_LoadString("COMM_MODULE" , "COMM_MONEY" ,theApp.gsLanguage),pPoolItem.amount);
 					}
-					acotor = "类别:发竞猜\r\n";
+					//acotor = "类别:发竞猜\r\n";
+					acotor=strprintf("%s:%S\r\n",UiFun::UI_LoadString("COMM_MODULE" , "COMM_MONEY" ,theApp.gsLanguage),UiFun::UI_LoadString("DACRSU" , "DACRSU_SENDTYPE" ,theApp.gsLanguage));
 					addr= pPoolItem.left_addr;
 				}else if (pPoolItem.actor == 1)
 				{
 					if (pPoolItem.content[32] == pPoolItem.guess_num)
 					{
-						strShow +="(恭喜赢了)\r\n" ;
-						amount=strprintf("金额:+%.8f\r\n",pPoolItem.amount);
+						strShow +=strprintf("(%s)\r\n",UiFun::UI_LoadString("DACRSU" , "DACRSU_WINER" ,theApp.gsLanguage));
+						amount=strprintf("%s:+%.8f\r\n",UiFun::UI_LoadString("COMM_MODULE" , "COMM_MONEY" ,theApp.gsLanguage),pPoolItem.amount);
 					}else{
-						strShow +="(输了)\r\n" ;
-						amount=strprintf("金额:-%.8f\r\n",pPoolItem.amount);
+						strShow +=strprintf("(%s)\r\n",UiFun::UI_LoadString("DACRSU" , "DACRSU_LOSER" ,theApp.gsLanguage));
+						amount=strprintf("%s:-%.8f\r\n",UiFun::UI_LoadString("COMM_MODULE" , "COMM_MONEY" ,theApp.gsLanguage),pPoolItem.amount);
 					}
-					acotor = "类别:接单\r\n";
+					//acotor = "类别:接单\r\n";
+					acotor=strprintf("%s:%s\r\n",UiFun::UI_LoadString("COMM_MODULE" , "COMM_MONEY" ,theApp.gsLanguage),UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_ORDERS_TRADID" ,theApp.gsLanguage));
 					addr= pPoolItem.right_addr;
 				}else{
-					strShow +="(持平)\r\n" ;
-					amount=strprintf("金额:%.8f\r\n",pPoolItem.amount);
-					acotor = "类别:即是发竞猜也是接单\r\n";
+					//strShow +="(持平)\r\n" ;
+					strShow +=strprintf("(%s)\r\n",UiFun::UI_LoadString("DACRSU" , "DACRSU_EQUAL" ,theApp.gsLanguage));
+					amount=strprintf("%s:%.8f\r\n",UiFun::UI_LoadString("COMM_MODULE" , "COMM_MONEY" ,theApp.gsLanguage),pPoolItem.amount);
+					//acotor = "类别:即是发竞猜也是接单\r\n";
+					acotor=strprintf("%s:%s\r\n",UiFun::UI_LoadString("COMM_MODULE" , "COMM_MONEY" ,theApp.gsLanguage),UiFun::UI_LoadString("COMM_MODULE" , "DACRSU_ALLTYPE" ,theApp.gsLanguage));
+					
 					addr= pPoolItem.right_addr;
 				}
 				SYSTEMTIME curTime =UiFun::Time_tToSystemTime(tx.confirmedtime);
-				strShow += strprintf("日期: %04d-%02d-%02d %02d:%02d:%02d\r\n",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+				strShow += strprintf("%s: %04d-%02d-%02d %02d:%02d:%02d\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_OK_TIME" ,theApp.gsLanguage),curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
 				strShow += amount;
 				strShow += acotor;
-				strShow += strprintf("地址:%s",addr);
+				strShow += strprintf("%s:%s",UiFun::UI_LoadString("RECEIVE_MODULE" , "RECEIVE_ADDRESS" ,theApp.gsLanguage),addr);
 			}
 		}
 	}else if (apptype == 1)
@@ -1108,12 +1117,12 @@ void CDacrsUIApp::PopupContactBalloonTip(uistruct::REVTRANSACTION_t tx,int appty
 		if (txtype ==1 || txtype ==3)
 		{
 			if(txtype ==1)
-			strShow = "普通红包交易\r\n";
+			strShow = UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_SEND_REDENVELOPE" ,theApp.gsLanguage)+"\r\n";//"发普通红包交易\r\n";
 			if(txtype ==3)
-			strShow = "接龙红包交易\r\n";
+			strShow =strShow = UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_SEND_JL_REDENVELOPE" ,theApp.gsLanguage)+"\r\n";// "发接龙红包交易\r\n";
 
 			SYSTEMTIME curTime =UiFun::Time_tToSystemTime(tx.confirmedtime);
-			strShow += strprintf("日期: %04d-%02d-%02d %02d:%02d:%02d\r\n",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+			strShow += strprintf("%s: %04d-%02d-%02d %02d:%02d:%02d\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_OK_TIME" ,theApp.gsLanguage),curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
 
 			string nValue = tx.Contract;
 			std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue);
@@ -1121,18 +1130,18 @@ void CDacrsUIApp::PopupContactBalloonTip(uistruct::REVTRANSACTION_t tx,int appty
 			memset(&redpacket,0,sizeof(RED_PACKET));
 			memcpy(&redpacket, &vTemp[0],sizeof(SEND_DATA));
 
-			strShow += strprintf("金额:-%.8f\r\n",(redpacket.money*1.0)/COIN);
-			strShow += strprintf("类别:%s","发红包\r\n");
-			strShow += strprintf("地址:%s",tx.regid);
+			strShow += strprintf("%s:-%.8f\r\n",UiFun::UI_LoadString("COMM_MODULE" , "COMM_MONEY" ,theApp.gsLanguage),(redpacket.money*1.0)/COIN);
+			strShow += strprintf("%s:%s\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TYPE" ,theApp.gsLanguage),UiFun::UI_LoadString("DACRSU" , "DACRSU_SENDGIFT" ,theApp.gsLanguage));
+			strShow += strprintf("%s:%s",UiFun::UI_LoadString("RECEIVE_MODULE" , "RECEIVE_ADDRESS" ,theApp.gsLanguage),tx.regid);
 		}else if (txtype ==2 || txtype ==4)
 		{
 			if(txtype ==2)
-				strShow = "普通红包交易\r\n";
+				strShow =UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_GRAB_PT_REDENVELOPE" ,theApp.gsLanguage)+"\r\n";// "抢普通红包交易\r\n";
 			if(txtype ==4)
-				strShow = "接龙红包交易\r\n";
+				strShow =UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_GRAB_JL_REDENVELOPE" ,theApp.gsLanguage)+"\r\n";//"抢接龙红包交易\r\n";
 
 			SYSTEMTIME curTime =UiFun::Time_tToSystemTime(tx.confirmedtime);
-			strShow += strprintf("日期: %04d-%02d-%02d %02d:%02d:%02d\r\n",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+			strShow += strprintf("%s: %04d-%02d-%02d %02d:%02d:%02d\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_OK_TIME" ,theApp.gsLanguage),curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
 
 			string conditon;
 			conditon =strprintf("grab_hash='%s'",tx.txhash);
@@ -1140,11 +1149,11 @@ void CDacrsUIApp::PopupContactBalloonTip(uistruct::REVTRANSACTION_t tx,int appty
 			theApp.m_SqliteDeal.GetRedPacketGrabItem(conditon,&redpacket);
 			if (redpacket.send_hash != "")
 			{
-				strShow += strprintf("金额:+%.8f\r\n",redpacket.lucky_amount);
+				strShow += strprintf("%s:+%.8f\r\n",UiFun::UI_LoadString("COMM_MODULE" , "COMM_MONEY" ,theApp.gsLanguage),redpacket.lucky_amount);
 			
 			}
-			strShow += strprintf("类别:%s","抢红包\r\n");
-			strShow += strprintf("地址:%s",tx.regid);
+			strShow += strprintf("%s:%s\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TYPE" ,theApp.gsLanguage),UiFun::UI_LoadString("TITLEBAR_MODULE" , "TITLEBAR_MORTGAGE" ,theApp.gsLanguage));
+			strShow += strprintf("%s:%s",UiFun::UI_LoadString("RECEIVE_MODULE" , "RECEIVE_ADDRESS" ,theApp.gsLanguage),tx.regid);
 		 }
 
 	}
@@ -1153,13 +1162,14 @@ void CDacrsUIApp::PopupContactBalloonTip(uistruct::REVTRANSACTION_t tx,int appty
 	{
 		if (apptype == 0)
 		{
-			strShow = "猜你妹交易\r\n";
+			strShow =UiFun::UI_LoadString("DACRSU" , "DACRSU_TRANTYPE" ,theApp.gsLanguage)+"\r\n"; //"猜你妹交易\r\n";
 		}else if (apptype == 1)
 		{
-			strShow = "红包交易\r\n";
+			strShow = UiFun::UI_LoadString("DACRSU" , "DACRSU_REDTX" ,theApp.gsLanguage)+"\r\n";
 		}else if (apptype == 2)
 		{
-			strShow = "IPO领币\r\n";
+			//strShow = "IPO领币\r\n";
+			strShow = UiFun::UI_LoadString("DACRSU" , "DACRSU_IPOTX" ,theApp.gsLanguage)+"\r\n";
 		}
 		string nValue = tx.Contract;
 		std::vector<unsigned char> vTemp = CSoyPayHelp::getInstance()->ParseHex(nValue);
@@ -1169,21 +1179,21 @@ void CDacrsUIApp::PopupContactBalloonTip(uistruct::REVTRANSACTION_t tx,int appty
 			if (vTemp[1] == 0x02)    /// 充值
 			{
 				SYSTEMTIME curTime =UiFun::Time_tToSystemTime(tx.confirmedtime);
-				strShow += strprintf("日期: %04d-%02d-%02d %02d:%02d:%02d\r\n",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
-				strShow+=strprintf("金额:  %.8f\r\n",tx.money );
-				strShow+=strprintf("类别:  %s\r\n","充值" );
-				strShow+=strprintf("地址:  %s\r\n",tx.regid );
+				strShow += strprintf("%s: %04d-%02d-%02d %02d:%02d:%02d\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_OK_TIME" ,theApp.gsLanguage),curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+				strShow+=strprintf("%s:  %.8f\r\n",UiFun::UI_LoadString("COMM_MODULE" , "COMM_MONEY" ,theApp.gsLanguage),tx.money );
+				strShow+=strprintf("%s:  %s\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TYPE" ,theApp.gsLanguage),UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_RECHARGE" ,theApp.gsLanguage) );
+				strShow+=strprintf("%s:  %s\r\n",UiFun::UI_LoadString("RECEIVE_MODULE" , "RECEIVE_ADDRESS" ,theApp.gsLanguage),tx.regid );
 			}else if (vTemp[1] == 0x03 ||vTemp[1] == 0x02 )   /// 提现
 			{
 				SYSTEMTIME curTime =UiFun::Time_tToSystemTime(tx.confirmedtime);
-				strShow += strprintf("日期: %04d-%02d-%02d %02d:%02d:%02d\r\n",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+				strShow += strprintf("%s: %04d-%02d-%02d %02d:%02d:%02d\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_OK_TIME" ,theApp.gsLanguage),curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
 				if (vTemp.size() == sizeof(APPACC))
 				{
 					APPACC drawtx;
 					memcpy(&drawtx, &vTemp[0],sizeof(APPACC));
-					strShow+=strprintf("金额:  %.8f\r\n",(drawtx.money*1.0)/COIN );
-					strShow+=strprintf("类别:  %s\r\n","提现" );
-					strShow+=strprintf("地址:  %s\r\n",tx.regid );
+					strShow+=strprintf("%s:  %.8f\r\n",UiFun::UI_LoadString("COMM_MODULE" , "COMM_MONEY" ,theApp.gsLanguage),(drawtx.money*1.0)/COIN );
+					strShow+=strprintf("%s:  %s\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TYPE" ,theApp.gsLanguage),UiFun::UI_LoadString("IPO_MODULE" , "IPO_WITHDRAWALS" ,theApp.gsLanguage));
+					strShow+=strprintf("%s:  %s\r\n",UiFun::UI_LoadString("RECEIVE_MODULE" , "RECEIVE_ADDRESS" ,theApp.gsLanguage),tx.regid );
 				}else{
 					strShow="";
 				}
