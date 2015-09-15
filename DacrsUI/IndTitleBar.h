@@ -33,6 +33,7 @@ public:
 	CRoundButton     m_rBtnMin;
 	CRoundButton     m_rBtnMainMenu;
 	CNewMenu         newMenu;
+	//CMenu			newMenu;
 	CRoundButton     m_rCnButton;
 	CMenu         LanguageMenu;
 	CStatic          m_picture;
@@ -56,7 +57,7 @@ public:
 	afx_msg void OnBnClickedMenubar();
 	afx_msg void OnMeasureItem(int nIDCtl, LPMEASUREITEMSTRUCT lpMeasureItemStruct);
 	afx_msg void OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct);
-	afx_msg void OnBnClickedCn();
+	//afx_msg void OnBnClickedCn();
 	afx_msg void OnChinese();
 	afx_msg void OnEnglish();
 	afx_msg void OnUpdateEn(CCmdUI *pCmdUI);

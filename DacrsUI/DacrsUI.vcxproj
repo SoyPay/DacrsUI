@@ -327,6 +327,7 @@
     <ClInclude Include="CFont0.h" />
     <ClInclude Include="ChangeDPI.h" />
     <ClInclude Include="ChangPassWord.h" />
+    <ClInclude Include="ChoseLanguage.h" />
     <ClInclude Include="CommonAddr.h" />
     <ClInclude Include="CommonStruct.h" />
     <ClInclude Include="CRange.h" />
@@ -431,6 +432,7 @@
     <ClCompile Include="CeXDib.cpp" />
     <ClCompile Include="ChangeDPI.cpp" />
     <ClCompile Include="ChangPassWord.cpp" />
+    <ClCompile Include="ChoseLanguage.cpp" />
     <ClCompile Include="CommonAddr.cpp" />
     <ClCompile Include="CommonStruct.cpp" />
     <ClCompile Include="DacrsUI.cpp" />
