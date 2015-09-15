@@ -39,6 +39,7 @@ CDlgView::CDlgView()
 
 CDlgView::~CDlgView()
 {
+	CloseProcess();
 }
 
 
@@ -87,7 +88,7 @@ void CDlgView::OnDraw(CDC* pDC)
 	sizeTotal.cx = 262;
 	sizeTotal.cy = GetAllCtrlHeight();
 	SetScrollSizes(MM_TEXT, sizeTotal);
-	updateListCtrlPos();
+	//updateListCtrlPos();
 	// TODO: add draw code here
 }
 
@@ -197,6 +198,8 @@ void CDlgView::InitListCtrl()
 
 		m_LargeList.createItemButton(nRow,ncount++,this->GetSafeHwnd(),_T(""),&data,hbmp , RGB(255, 255, 255) , hbmp , RGB(255, 255, 255));
 	}
+	//m_LargeList.release();
+
 	map<string ,ADD_APP_DATA>::const_iterator item = m_commapp_list.begin();
 	ncount = 0;
 	int nSubIdx =0;
@@ -863,7 +866,7 @@ void CDlgView::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
 
 	CScrollView::OnHScroll(nSBCode, nPos, pScrollBar);
-	updateListCtrlPos();
+	//updateListCtrlPos();
 }
 void CDlgView::updateListCtrlPos()
 {
@@ -1118,7 +1121,7 @@ void CDlgView::MoidfyListAndSaveToFile(int type,string key,ADD_APP_DATA ModifyDa
 		}
 	}
 
-	string strFile=theApp.str_InsPath;
+	string strFile=m_apppath;
 	strFile +="\\"+m_configName;
 	WriteCoinfig(strFile);
 }
@@ -1170,11 +1173,10 @@ LRESULT CDlgView::onBnCLick( WPARAM wParam, LPARAM lParam )
 				}  
 				CloseHandle(app_pi.hProcess);
 				CloseHandle(app_pi.hThread);
-
-				HANDLE hProcessHandle; 
-				hProcessHandle = ::OpenProcess( PROCESS_ALL_ACCESS, FALSE, app_pi.dwProcessId );
-
-				TerminateProcess( hProcessHandle,0);
+				m_process.push_back(app_pi);
+				//HANDLE hProcessHandle; 
+				//hProcessHandle = ::OpenProcess( PROCESS_ALL_ACCESS, FALSE, app_pi.dwProcessId );
+				//TerminateProcess( hProcessHandle,0);
 		}
 	}else{  /// 下载可执行程序
 		string dowloufilepath = m_apppath + "\\"+strprintf("%s",itemdata.appname);
@@ -1211,4 +1213,18 @@ bool CDlgView::UnZipFile(string unzipfilename,string zipfilepath)
 	}
 	CloseZip(hz);
 	return true;
+}
+void CDlgView::CloseProcess()
+{
+	vector<PROCESS_INFORMATION>::iterator it = m_process.begin();
+	for (;it!=m_process.end();it++)
+	{
+		HANDLE hProcessHandle; 
+		hProcessHandle = ::OpenProcess( PROCESS_ALL_ACCESS, FALSE, it->dwProcessId );
+		if (hProcessHandle != NULL)
+		{
+			TerminateProcess( hProcessHandle,0);
+		}
+		
+	}
 }
