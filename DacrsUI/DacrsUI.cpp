@@ -10,6 +10,7 @@
 #include "Language.h"
 #include "StartProgress.h"
 #include "WalletPassPhrase.h"
+#include "ChoseLanguage.h"
 
 #include  <io.h>
 #include  <stdio.h>
@@ -163,6 +164,9 @@ BOOL CDacrsUIApp::InitInstance()
 
 	gsLanguage = language();
 
+	CChoseLanguage chosedlg;
+	chosedlg.DoModal();
+	gsLanguage = language();
 
 	string temprpc = m_rpcport;
 	string tempuiport = m_uirpcport;

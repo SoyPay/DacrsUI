@@ -256,6 +256,9 @@
     <ClCompile Include="zip\zip.cpp">
       <Filter>源文件\zip</Filter>
     </ClCompile>
+    <ClCompile Include="ChoseLanguage.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BmpBtn.h">
@@ -569,6 +572,9 @@
     </ClInclude>
     <ClInclude Include="zip\zip.h">
       <Filter>头文件\zip</Filter>
+    </ClInclude>
+    <ClInclude Include="ChoseLanguage.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
