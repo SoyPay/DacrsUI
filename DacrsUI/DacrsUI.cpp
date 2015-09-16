@@ -165,9 +165,14 @@ BOOL CDacrsUIApp::InitInstance()
 
 	gsLanguage = language();
 
-	CChoseLanguage chosedlg;
-	chosedlg.DoModal();
-	gsLanguage = language();
+	if (gsLanguage == 0)
+	{
+		gsLanguage = 1;
+		CChoseLanguage chosedlg;
+		chosedlg.DoModal();
+		gsLanguage = language();
+	}
+
 
 	string temprpc = m_rpcport;
 	string tempuiport = m_uirpcport;
