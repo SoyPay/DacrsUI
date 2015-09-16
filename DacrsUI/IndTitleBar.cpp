@@ -497,9 +497,9 @@ void CIndTitleBar::OnChinese()
 	/// 英文界面
    if (theApp.gsLanguage == 2)
    {
-	   theApp.gsLanguage = 1;
-	   Setlanguage(theApp.gsLanguage);
-	   if (UiFun::MessageBoxEx(_T("修改语言坏境请重新启动钱包") , _T("提示") ,MFB_OK|MFB_TIP ) == IDOK)
+	   //theApp.gsLanguage = 1;
+	   UiFun::Setlanguage(theApp.gsLanguage-1);
+	   if (UiFun::MessageBoxEx(UiFun::UI_LoadString("SETAPPID" , "SETAPPFEE_LANGAGE" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP ) == IDOK)
 	   {
 		   ((CDacrsUIDlg*)(theApp.m_pMainWnd))->ClosWalletWind();
 		   theApp.gsLanguage = 1;
@@ -515,8 +515,8 @@ void CIndTitleBar::OnEnglish()
 	if (theApp.gsLanguage == 1)
 	{
 		
-		Setlanguage(theApp.gsLanguage);
-		if (UiFun::MessageBoxEx(_T("修改语言坏境请重新启动钱包") , _T("提示") ,MFB_OK|MFB_TIP ) == IDOK)
+		UiFun::Setlanguage(theApp.gsLanguage+1);
+		if (UiFun::MessageBoxEx(UiFun::UI_LoadString("SETAPPID" , "SETAPPFEE_LANGAGE" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP ) == IDOK)
 		{
 			((CDacrsUIDlg*)(theApp.m_pMainWnd))->ClosWalletWind();
 			theApp.gsLanguage = 2;
@@ -554,57 +554,11 @@ void CIndTitleBar::OnUpdateCn(CCmdUI *pCmdUI)
 
 	pPopupChild->CheckMenuItem(ID_CNL, MF_BYCOMMAND|MF_CHECKED);
 }
-void CIndTitleBar::Setlanguage(int index)
-{
-	// 取默认语言索引
-	string strTemp = strprintf("%d",index);;
-	string  strG;
-	string strAppIni = theApp.str_InsPath;// + (CString)LANGUAGE_FILE;
-	strAppIni += LANGUAGE_FILE;
-	::WritePrivateProfileString("Language1","gsLanguage",strTemp.c_str(),(LPCTSTR)strAppIni.c_str());
-}
-void  CIndTitleBar::WriteClosConfig(bool tips)
-{
-	if (PathFileExistsA(theApp.str_InsPath.c_str()))
-	{
-		string configpath = "";
-		configpath = strprintf("%s",theApp.str_InsPath);
-		configpath+= strprintf("\\%s","dacrsclient.conf");
-		string strFile = CJsonConfigHelp::getInstance()->GetConfigRootStr(configpath);
-		if (strFile == _T(""))
-		{
-			return;
-		}
-		Json::Reader reader;  
-		Json::Value root; 
 
-		if (!reader.parse(strFile, root)) 
-			return;
-		int pos = strFile.find("closeconf");
-		if (pos>=0)
-		{
-			Json::Value p2pbet = root["closeconf"];
-			ASSERT(!p2pbet.isNull());
-			p2pbet["tip"]= tips;
-			root["closeconf"]=p2pbet;
-		}else{
-			Json::Value obj;
-			obj["tip"]=tips;
-			root["closeconf"]=obj;
-		}
-		CStdioFile  File;
-		string strpathe=theApp.str_InsPath;
-		strpathe +="\\dacrsclient.conf";
-		File.Open((LPCTSTR)(LPSTR)strpathe.c_str(),CFile::modeWrite | CFile::modeCreate); 
-		string strfile = root.toStyledString();
-		File.WriteString(strfile.c_str());
-		File.Close();
-	}
-}
 void CIndTitleBar::OnPopTips()
 {
 	theApp.m_poptips = !theApp.m_poptips ;
-	WriteClosConfig(theApp.m_poptips );
+	UiFun::WriteClosConfig(theApp.m_poptips,theApp.str_InsPath);
 	CMenu *pPopup=newMenu.GetSubMenu(0);
 	if (!theApp.m_poptips)
 	{

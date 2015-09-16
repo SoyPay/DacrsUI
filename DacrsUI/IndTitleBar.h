@@ -64,6 +64,4 @@ public:
 	afx_msg void OnUpdateEn(CCmdUI *pCmdUI);
 	afx_msg void OnUpdateCn(CCmdUI *pCmdUI);
 	afx_msg void OnUpdatePopTips(CCmdUI *pCmdUI);
-	void Setlanguage(int index);
-	void  WriteClosConfig(bool tips);
 };
