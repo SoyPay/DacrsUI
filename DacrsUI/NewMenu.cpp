@@ -44,7 +44,7 @@ void CNewMenu::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 		 dc.LineTo(rect.left+10,rect.bottom-5);
 		 dc.MoveTo(rect.left+10,rect.bottom-5);
 		 dc.LineTo(rect.left+20,rect.top+5);
-		 rect.left = rect.left+30;
+		 rect.left = rect.left+22;
 		 CString showText=*pText;
 		 showText.TrimLeft(" ");
 		 dc.DrawText(showText,rect,DT_VCENTER|DT_LEFT|DT_SINGLELINE);
@@ -79,8 +79,10 @@ void CNewMenu::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 		// m_bitmap.DeleteObject();
 		// rect.left +=m_size.bmWidth ; 
 	 //}
-  
-	 dc.DrawText(*pText,rect,DT_VCENTER|DT_LEFT|DT_SINGLELINE);
+	 rect.left = rect.left+22;
+	 CString showText=*pText;
+	 showText.TrimLeft(" ");
+	 dc.DrawText(showText,rect,DT_VCENTER|DT_LEFT|DT_SINGLELINE);
 	 dc.Detach(); 
 }
 
@@ -90,7 +92,8 @@ void CNewMenu::MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct)
 
 	// TODO:  添加您的代码以确定指定项的大小
 	lpMeasureItemStruct->itemHeight=25;//项高
-	lpMeasureItemStruct->itemWidth=80;//项宽
+	//lpMeasureItemStruct->itemWidth=80;//项宽
+	lpMeasureItemStruct->itemWidth=102;//项宽
 	//lpMeasureItemStruct->itemWidth=120;//项宽
 }
 void CNewMenu::ChangeMenuItem(CMenu *pMenu)
