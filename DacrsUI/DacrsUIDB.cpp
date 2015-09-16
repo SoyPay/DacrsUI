@@ -699,7 +699,8 @@ void CDacrsUIApp::UpdateRedPacketPoolData()
 	}
 
 	////////////////////通知更新红包池数据界面
-	m_readReadPacketPool = FALSE;
+	m_readReadCommPacketPool = TRUE;;        
+	m_readReadSpecalPacketPool = TRUE;; 
 	//::SendMessage(theApp.m_pMainWnd->m_hWnd,WM_REFRESHREDPACKET,0,0);
 }
 
@@ -1262,4 +1263,16 @@ void CDacrsUIApp::ScanQUIZNotAcceptBet()
 		
 	}
 
+}
+void CDacrsUIApp::InsertAppTransaction(string txdetail)
+{
+	uistruct::REVTRANSACTION_t transcion;
+	if (transcion.JsonToStruct(txdetail))
+	{
+		string strSourceData;
+		strSourceData = strprintf("'%s' , '%s' ,'%d' ,'%s' ,'%s' , '%.8f' ,'%d' ,'%s' ,'%s', '%.8f' ,'%s' ,'%d','%d','%s'" , transcion.txhash.c_str() ,\
+			transcion.txtype.c_str() ,transcion.ver ,transcion.addr.c_str() ,transcion.regid,transcion.fees,transcion.height,\
+			transcion.desaddr.c_str(), transcion.desregid.c_str(),transcion.money,transcion.Contract.c_str(),transcion.confirmedHeight,transcion.confirmedtime,transcion.blockhash.c_str()) ;
+		m_SqliteDeal.InsertTableItem(_T("t_app_transaction") ,strSourceData ) ;
+	}
 }

@@ -69,7 +69,8 @@ CDacrsUIApp::CDacrsUIApp()
 	m_syncHight = 0;
 	m_commitdb = FALSE;
 	m_readQuizPool = FALSE;
-	m_readReadPacketPool = FALSE;
+	m_readReadCommPacketPool = FALSE;;        
+	m_readReadSpecalPacketPool = FALSE;; 
 }
 
 
@@ -589,6 +590,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 						string txDetail = Postmsg.GetData();
 						if ( "" != txDetail ) {
 							((CDacrsUIApp*)pParam)->UpdateAppRecord(txDetail);
+							((CDacrsUIApp*)pParam)->InsertAppTransaction(txDetail);
 						}
 						LogPrint("PROCESSMSG", "WM_APP_TRANSATION 收取跟钱包有关的应用交易:%s\n",txDetail.c_str());
 					}
@@ -680,8 +682,14 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 							int nItem =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.GetTableCountItem(_T("t_transaction") ,strCondition);
 							if (nItem != 0)
 							{
+								string updataValue="confirm_height=0,confirmed_time=0,block_hash=''";
 								LogPrint("INFO","WM_RELEASETX:%s",pHash.c_str());
-								((CDacrsUIApp*)pParam)->InsertTransaction(pHash ) ;
+								((CDacrsUIApp*)pParam)->m_SqliteDeal.UpdateTableItem(_T("t_transaction") , strCondition , updataValue ) ;
+								nItem =  ((CDacrsUIApp*)pParam)->m_SqliteDeal.GetTableCountItem(_T("t_app_transaction") ,strCondition);
+								if (nItem != 0)
+								{
+									((CDacrsUIApp*)pParam)->m_SqliteDeal.UpdateTableItem(_T("t_app_transaction") , strCondition , updataValue ) ;
+								}
 								theApp.m_SqliteDeal.UpdataAllTableData();   /// 更新应用表格
 							}
 						}
@@ -699,6 +707,8 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 							{
 								LogPrint("INFO","WM_REMOVETX:%s",pHash.c_str());
 								((CDacrsUIApp*)pParam)->m_SqliteDeal.DeleteTableItem(_T("t_transaction"),strCondition);
+								///删除跟app相关的交易
+								((CDacrsUIApp*)pParam)->m_SqliteDeal.DeleteTableItem(_T("t_app_transaction"),strCondition);
 								theApp.m_SqliteDeal.UpdataAllTableData();   /// 更新应用表格
 							}
 						}

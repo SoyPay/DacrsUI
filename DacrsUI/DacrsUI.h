@@ -153,6 +153,7 @@ public:
 	void UpdateQuizPoolData();
 	void UpdateAddressData();
 	void InsertTransaction(string hash);
+	void InsertAppTransaction(string txdetail);
 	void UpdateTransaction(string hash);
 	void SyncTransaction(string obj);
 	void UpdateAppRecord(string txdetail);
@@ -205,7 +206,8 @@ public:
 	int   m_syncHight;
 	bool  m_commitdb;
 	bool  m_readQuizPool;         /// TURE 可以从数据库中读 赌约池的数据 FALSE 不可以读
-	bool  m_readReadPacketPool;         /// TURE 可以从数据库中读 红包池的数据 FALSE 不可以读
+	bool  m_readReadCommPacketPool;         /// TURE 可以从数据库中读 红包池的数据 FALSE 不可以读
+	bool  m_readReadSpecalPacketPool;         /// TURE 可以从数据库中读 红包池的数据 FALSE 不可以读
 };
 
 
