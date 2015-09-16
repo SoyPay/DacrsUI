@@ -216,7 +216,7 @@ void CSendListBox::updateListBoxButtonPos()
 
 				pData->pSta5->SetFont(110, _T("宋体"));				//设置显示字体和大小
 				pData->pSta5->ShowWindow( SW_SHOW );	
-				pData->pSta5->ModifyStyle(0,SS_CENTERIMAGE|SS_RIGHT);
+				pData->pSta5->ModifyStyle(0,SS_CENTERIMAGE|SS_CENTER);
 				pData->pSta5->SetWindowPos(NULL , 530 , pData->nItem*28 +10 ,58 , 29 , SWP_SHOWWINDOW );
 
 				pData->pSta6->SetFont(110, _T("宋体"));				//设置显示字体和大小

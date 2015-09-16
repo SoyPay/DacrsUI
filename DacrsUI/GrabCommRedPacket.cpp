@@ -511,11 +511,11 @@ void CGrabCommRedPacket::OnLbnDblclkListBox()
 }
 void CGrabCommRedPacket::ReadComRedPacketPool()
 {
-	if (theApp.m_readReadPacketPool)
+	if (theApp.m_readReadCommPacketPool)
 	{
 		m_PoolList.clear();
 		theApp.m_SqliteDeal.GetRedPacketPoolRecordList(_T(" packet_type = 1 order by average_amount desc"), &m_PoolList);
-		theApp.m_readReadPacketPool = false;
+		theApp.m_readReadCommPacketPool = false;
 	}
 
 	Showlistbox();
