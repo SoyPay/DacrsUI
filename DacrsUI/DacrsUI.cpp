@@ -70,7 +70,8 @@ CDacrsUIApp::CDacrsUIApp()
 	m_commitdb = FALSE;
 	m_readQuizPool = FALSE;
 	m_readReadCommPacketPool = FALSE;;        
-	m_readReadSpecalPacketPool = FALSE;; 
+	m_readReadSpecalPacketPool = FALSE;
+	m_poptips = true;
 }
 
 
@@ -1347,6 +1348,7 @@ void  CDacrsUIApp::ParseUIConfigFile(const string& strExeDir){
 		CJsonConfigHelp::getInstance()->GetP2PBetCfgData(m_P2PBetCfg);
 		CJsonConfigHelp::getInstance()->GetRedPacketCfgData(m_RedPacketCfg);
 		CJsonConfigHelp::getInstance()->GetClosConfig(m_reminder);
+		CJsonConfigHelp::getInstance()->GetPopTipsConfig(m_poptips);
 		CJsonConfigHelp::getInstance()->GetNewestScriptData(m_neststcriptid);
 		CJsonConfigHelp::getInstance()->GetP2pBetStep(m_p2pbetstep);
 		CJsonConfigHelp::getInstance()->GetRedPacketStep(m_redPackestep);

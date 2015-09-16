@@ -150,6 +150,7 @@ public:
 	void GetLogParamCfg(CLogParamCfg &logCfg);
 	void GetRedPacketCfgData(CRedPacketCfg &redpacketcfg);
 	void GetClosConfig(int &closeconf);
+	void GetPopTipsConfig(bool &flag);
 	void AddItemString(const CString& strFilePath,CAutoComplete &m_comboxinput);
 	string  GetConfigRootStr(const string& strFilePath);
 	void GetNewestScriptData(CNewestScriptCfg &newScript);
@@ -188,5 +189,6 @@ private:
 	CNewestScriptCfg m_newScript;
 	CRedPacketStepCfg m_redPackestep;
 	CP2PBetStepCfg    m_p2pbetstep;
+	bool              m_poptip;
 };
 
