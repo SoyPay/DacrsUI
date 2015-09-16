@@ -1371,9 +1371,9 @@ string CRedPacketHelp::PacketSendSecpailContract(int64_t nMoney,int num,const st
 	m_sendContract.money = nMoney;
 	m_sendContract.number = num;
 	m_sendContract.nType = TX_SPECIAL_SENDREDPACKET;
-	memcpy(m_sendContract.message,message.c_str(),sizeof(m_sendContract.message));
+	//memcpy(m_sendContract.message,message.c_str(),sizeof(m_sendContract.message));
 
-	return CSoyPayHelp::getInstance()->GetHexData((const char*)&m_sendContract,sizeof(RED_PACKET));
+	return CSoyPayHelp::getInstance()->GetHexData((const char*)&m_sendContract,HEAD_LEN+1);
 }
 string CRedPacketHelp::PacketAcceptSecpailContract(const string& strSendHash){
 

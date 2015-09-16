@@ -138,6 +138,17 @@ BOOL CSqliteDeal::InitializationDB(){
 		LogPrint("INFO", "Create table redpacket failed\n");
 		return FALSE;
 	}
+	/// 创建与app所有相关的交易数据库
+	strCondition = "type='table' and name='t_app_transaction'";
+	if(!GetTableCountItem(strTableName, strCondition))
+	{
+		string createSQL= "CREATE TABLE t_app_transaction(hash TEXT PRIMARY KEY, tx_type TEXT,version INT, src_addr TEXT, src_regid TEXT, fees DOUBLE, height INT, desr_addr TEXT,desr_regid TEXT, money DOUBLE, contract TEXT, confirm_height INT, confirmed_time INT, block_hash TEXT)";
+		if(!ExcuteSQL(pDBConn, NULL, createSQL, NULL))
+		{
+			LogPrint("INFO", "Create table t_app_transaction failed\n");
+			return FALSE;
+		}
+	}
 	return TRUE ;
 }
 

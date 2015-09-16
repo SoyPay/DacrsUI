@@ -54,8 +54,8 @@ BEGIN_MESSAGE_MAP(CIndTitleBar, CDialogBar)
 	ON_WM_MEASUREITEM()
 	ON_WM_DRAWITEM()
 	//ON_BN_CLICKED(IDC_CN, &CIndTitleBar::OnBnClickedCn)
-	ON_COMMAND(ID_CN,&CIndTitleBar::OnChinese)
-	ON_COMMAND(ID_EN,&CIndTitleBar::OnEnglish)
+	ON_COMMAND(ID_CNL,&CIndTitleBar::OnChinese)
+	ON_COMMAND(ID_ENL,&CIndTitleBar::OnEnglish)
 	ON_UPDATE_COMMAND_UI(ID_ENL, &CIndTitleBar::OnUpdateEn)
 	ON_UPDATE_COMMAND_UI(ID_CNL, &CIndTitleBar::OnUpdateCn)
 END_MESSAGE_MAP()
@@ -347,8 +347,6 @@ BOOL CIndTitleBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT 
 		{
 			pPopupChild->CheckMenuItem(ID_CNL, MF_BYCOMMAND|MF_CHECKED);
 		}else{
-			pPopupChild->CheckMenuItem(ID_ENL, MF_BYCOMMAND|MF_CHECKED);
-
 			pPopup->ModifyMenu(0, MF_BYPOSITION | MF_STRING, ID_RPC_CMD, UiFun::UI_LoadString("MENU" , "MENU_RPCCOMMAND" ,theApp.gsLanguage));
 			pPopup->ModifyMenu(1, MF_BYPOSITION | MF_STRING, ID__ENCRYPTWALLET, UiFun::UI_LoadString("MENU" , "MENU_PASSWORD" ,theApp.gsLanguage));
 			pPopup->ModifyMenu(2, MF_BYPOSITION | MF_STRING, ID_CHANGEPASSWORD,UiFun::UI_LoadString("MENU" , "MENU_MODIFYPASSWORD" ,theApp.gsLanguage));
@@ -371,6 +369,7 @@ BOOL CIndTitleBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT 
 			CMenu *pPopuplChild=pPopup->GetSubMenu(11);
 			pPopuplChild->ModifyMenu(ID_CNL, MF_BYCOMMAND, ID_CNL, UiFun::UI_LoadString("MENU" , "MENU_CNL" ,theApp.gsLanguage));
 			pPopuplChild->ModifyMenu(ID_ENL, MF_BYCOMMAND, ID_ENL, UiFun::UI_LoadString("MENU" , "MENU_ENL" ,theApp.gsLanguage));
+			pPopuplChild->CheckMenuItem(ID_ENL, MF_BYCOMMAND|MF_CHECKED);
 		}
 		
 		//加载指定位图资源 Bmp图片ID
@@ -484,8 +483,13 @@ void CIndTitleBar::OnChinese()
    {
 	   theApp.gsLanguage = 1;
 	   Setlanguage(theApp.gsLanguage);
-	  UiFun::MessageBoxEx(_T("修改语言坏境请重新启动钱包") , _T("提示") ,MFB_OK|MFB_TIP );
-	  ((CDacrsUIDlg*)(theApp.m_pMainWnd))->ClosWalletWind();
+	   if (UiFun::MessageBoxEx(_T("修改语言坏境请重新启动钱包") , _T("提示") ,MFB_OK|MFB_TIP ) == IDOK)
+	   {
+		   ((CDacrsUIDlg*)(theApp.m_pMainWnd))->ClosWalletWind();
+		   theApp.gsLanguage = 1;
+	   }
+	 // UiFun::MessageBoxEx(_T("修改语言坏境请重新启动钱包") , _T("提示") ,MFB_OK|MFB_TIP );
+	  //((CDacrsUIDlg*)(theApp.m_pMainWnd))->ClosWalletWind();
 	 
    }
 }
@@ -494,10 +498,15 @@ void CIndTitleBar::OnEnglish()
 	/// 中文界面
 	if (theApp.gsLanguage == 1)
 	{
-		theApp.gsLanguage = 2;
+		
 		Setlanguage(theApp.gsLanguage);
-		UiFun::MessageBoxEx(_T("修改语言坏境请重新启动钱包") , _T("提示") ,MFB_OK|MFB_TIP );
-		((CDacrsUIDlg*)(theApp.m_pMainWnd))->ClosWalletWind();
+		if (UiFun::MessageBoxEx(_T("修改语言坏境请重新启动钱包") , _T("提示") ,MFB_OK|MFB_TIP ) == IDOK)
+		{
+			((CDacrsUIDlg*)(theApp.m_pMainWnd))->ClosWalletWind();
+			theApp.gsLanguage = 2;
+		}
+		//UiFun::MessageBoxEx(_T("修改语言坏境请重新启动钱包") , _T("提示") ,MFB_OK|MFB_TIP );
+		//((CDacrsUIDlg*)(theApp.m_pMainWnd))->ClosWalletWind();
 	}
 }
 
