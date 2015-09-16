@@ -60,7 +60,10 @@ public:
 	//afx_msg void OnBnClickedCn();
 	afx_msg void OnChinese();
 	afx_msg void OnEnglish();
+	afx_msg void OnPopTips();
 	afx_msg void OnUpdateEn(CCmdUI *pCmdUI);
 	afx_msg void OnUpdateCn(CCmdUI *pCmdUI);
+	afx_msg void OnUpdatePopTips(CCmdUI *pCmdUI);
 	void Setlanguage(int index);
+	void  WriteClosConfig(bool tips);
 };

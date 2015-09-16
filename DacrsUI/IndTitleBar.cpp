@@ -56,8 +56,10 @@ BEGIN_MESSAGE_MAP(CIndTitleBar, CDialogBar)
 	//ON_BN_CLICKED(IDC_CN, &CIndTitleBar::OnBnClickedCn)
 	ON_COMMAND(ID_CNL,&CIndTitleBar::OnChinese)
 	ON_COMMAND(ID_ENL,&CIndTitleBar::OnEnglish)
+	ON_COMMAND(ID__CLOSEPOP,&CIndTitleBar::OnPopTips)
 	ON_UPDATE_COMMAND_UI(ID_ENL, &CIndTitleBar::OnUpdateEn)
 	ON_UPDATE_COMMAND_UI(ID_CNL, &CIndTitleBar::OnUpdateCn)
+	ON_UPDATE_COMMAND_UI(ID__CLOSEPOP, &CIndTitleBar::OnUpdatePopTips)
 END_MESSAGE_MAP()
 
 
@@ -346,6 +348,12 @@ BOOL CIndTitleBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT 
 		if (theApp.language() == 1)
 		{
 			pPopupChild->CheckMenuItem(ID_CNL, MF_BYCOMMAND|MF_CHECKED);
+			if (!theApp.m_poptips)
+			{
+				pPopup->CheckMenuItem(ID__CLOSEPOP, MF_BYCOMMAND|MF_CHECKED);
+			}else{
+				pPopup->CheckMenuItem(ID__CLOSEPOP, MF_BYCOMMAND|MF_USECHECKBITMAPS );
+			}
 		}else{
 			pPopup->ModifyMenu(0, MF_BYPOSITION | MF_STRING, ID_RPC_CMD, UiFun::UI_LoadString("MENU" , "MENU_RPCCOMMAND" ,theApp.gsLanguage));
 			pPopup->ModifyMenu(1, MF_BYPOSITION | MF_STRING, ID__ENCRYPTWALLET, UiFun::UI_LoadString("MENU" , "MENU_PASSWORD" ,theApp.gsLanguage));
@@ -358,7 +366,15 @@ BOOL CIndTitleBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT 
 			pPopup->ModifyMenu(8, MF_BYPOSITION | MF_STRING, ID__SET, UiFun::UI_LoadString("MENU" , "MENU_SET" ,theApp.gsLanguage));
 			pPopup->ModifyMenu(9, MF_BYPOSITION | MF_STRING, ID__SETDEFAULT, UiFun::UI_LoadString("MENU" , "MENU_RESTORY" ,theApp.gsLanguage));
 			pPopup->ModifyMenu(10, MF_BYPOSITION | MF_STRING, ID_RECORD, UiFun::UI_LoadString("MENU" , "MENU_HISTORYRECORD" ,theApp.gsLanguage));
-			pPopup->ModifyMenu(11, MF_BYPOSITION | MF_STRING, ID_RECORD, UiFun::UI_LoadString("MENU" , "MENU_LANGUAGE" ,theApp.gsLanguage));
+			pPopup->ModifyMenu(11, MF_BYPOSITION | MF_STRING, ID__LANGUAGE, UiFun::UI_LoadString("MENU" , "MENU_LANGUAGE" ,theApp.gsLanguage));
+			pPopup->ModifyMenu(12, MF_BYPOSITION | MF_STRING, ID__CLOSEPOP, UiFun::UI_LoadString("MENU" , "MENU_CLOSEPOP" ,theApp.gsLanguage));
+			//pPopup->CheckMenuItem(ID__CLOSEPOP, MF_BYCOMMAND|MF_CHECKED);
+			if (theApp.m_poptips)
+			{
+				pPopup->CheckMenuItem(ID__CLOSEPOP, MF_BYCOMMAND|MF_CHECKED);
+			}else{
+				pPopup->CheckMenuItem(ID__CLOSEPOP, MF_BYCOMMAND|MF_USECHECKBITMAPS );
+			}
 
 			CMenu *pPopupChild=pPopup->GetSubMenu(10);
 			pPopupChild->ModifyMenu(0, MF_BYPOSITION | MF_STRING, ID_SENDBET, UiFun::UI_LoadString("MENU" , "MENU_SENDBET" ,theApp.gsLanguage));
@@ -546,4 +562,64 @@ void CIndTitleBar::Setlanguage(int index)
 	string strAppIni = theApp.str_InsPath;// + (CString)LANGUAGE_FILE;
 	strAppIni += LANGUAGE_FILE;
 	::WritePrivateProfileString("Language1","gsLanguage",strTemp.c_str(),(LPCTSTR)strAppIni.c_str());
+}
+void  CIndTitleBar::WriteClosConfig(bool tips)
+{
+	if (PathFileExistsA(theApp.str_InsPath.c_str()))
+	{
+		string configpath = "";
+		configpath = strprintf("%s",theApp.str_InsPath);
+		configpath+= strprintf("\\%s","dacrsclient.conf");
+		string strFile = CJsonConfigHelp::getInstance()->GetConfigRootStr(configpath);
+		if (strFile == _T(""))
+		{
+			return;
+		}
+		Json::Reader reader;  
+		Json::Value root; 
+
+		if (!reader.parse(strFile, root)) 
+			return;
+		int pos = strFile.find("closeconf");
+		if (pos>=0)
+		{
+			Json::Value p2pbet = root["closeconf"];
+			ASSERT(!p2pbet.isNull());
+			p2pbet["tip"]= tips;
+			root["closeconf"]=p2pbet;
+		}else{
+			Json::Value obj;
+			obj["tip"]=tips;
+			root["closeconf"]=obj;
+		}
+		CStdioFile  File;
+		string strpathe=theApp.str_InsPath;
+		strpathe +="\\dacrsclient.conf";
+		File.Open((LPCTSTR)(LPSTR)strpathe.c_str(),CFile::modeWrite | CFile::modeCreate); 
+		string strfile = root.toStyledString();
+		File.WriteString(strfile.c_str());
+		File.Close();
+	}
+}
+void CIndTitleBar::OnPopTips()
+{
+	theApp.m_poptips = !theApp.m_poptips ;
+	WriteClosConfig(theApp.m_poptips );
+	CMenu *pPopup=newMenu.GetSubMenu(0);
+	if (!theApp.m_poptips)
+	{
+		pPopup->CheckMenuItem(ID__CLOSEPOP, MF_BYCOMMAND|MF_CHECKED);
+	}else{
+		pPopup->CheckMenuItem(ID__CLOSEPOP, MF_BYCOMMAND|MF_USECHECKBITMAPS );
+	}
+}
+void CIndTitleBar::OnUpdatePopTips(CCmdUI *pCmdUI)
+{
+	CMenu *pPopup=newMenu.GetSubMenu(0);
+	if (!theApp.m_poptips)
+	{
+		pPopup->CheckMenuItem(ID__CLOSEPOP, MF_BYCOMMAND|MF_CHECKED);
+	}else{
+		pPopup->CheckMenuItem(ID__CLOSEPOP, MF_BYCOMMAND|MF_USECHECKBITMAPS );
+	}
 }

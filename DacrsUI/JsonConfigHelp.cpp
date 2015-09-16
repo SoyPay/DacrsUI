@@ -5,6 +5,7 @@ IMPLEMENT_SINGLETON(CJsonConfigHelp)
 void CJsonConfigHelp::Init()
 {
 		m_close = 0;
+		m_poptip = true;
 		//memset(&m_MainCfg,0,sizeof(CMainCfg));
 		//memset(&m_DarkCfg,0,sizeof(CDarkTxCfg));
 		//memset(&m_AnonymCfg,0,sizeof(CAnonmyCfg));
@@ -337,6 +338,7 @@ void CJsonConfigHelp::ReadCloseCfgData(const Json::Value &root)
 	Json::Value closeconfig = root["closeconf"];
 	ASSERT(!closeconfig.isNull());
 	m_close = closeconfig["colse"].asInt();
+	m_poptip= closeconfig["tip"].asBool();
 }
 void CJsonConfigHelp::GetRedPacketCfgData(CRedPacketCfg &redpacketcfg){
 	redpacketcfg = m_RedPacketCfg;
@@ -344,6 +346,10 @@ void CJsonConfigHelp::GetRedPacketCfgData(CRedPacketCfg &redpacketcfg){
 void CJsonConfigHelp::GetClosConfig(int &closeconf)
 {
 	closeconf = m_close;
+}
+void CJsonConfigHelp::GetPopTipsConfig(bool &flag)
+{
+	flag=m_poptip;
 }
 string  CJsonConfigHelp::GetConfigRootStr(const string& strFilePath){
 	ifstream ifs;

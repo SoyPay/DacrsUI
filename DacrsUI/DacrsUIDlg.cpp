@@ -1330,6 +1330,7 @@ void CDacrsUIDlg::RestoreDefault()
 			Json::Value setclose = root["closeconf"];
 			ASSERT(!setclose.isNull());
 			setclose["colse"]= 0;
+			setclose["tip"]= true;
 			root["closeconf"]=setclose;
 		}
 		pos =strFile.find("script");
@@ -1389,6 +1390,11 @@ void CDacrsUIDlg::RestoreDefault()
 
 LRESULT CDacrsUIDlg::OnPopupBar(WPARAM wParam,LPARAM lParam) 
 {
+	///设置了不提示信息
+	if (!theApp.m_poptips)
+	{
+		return 0;
+	}
 	char* message = (char*)(lParam);
 	string strmessage =strprintf("%s",message);
 
