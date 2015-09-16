@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <assert.h>
 #include "UiHead.h"
+#include "DacrsUI.h"
 using namespace std;
 
 UINT UiFun::MallocP( void * * p , UINT size )
@@ -218,4 +219,53 @@ int   UiFun::GetBmpId(int bmpCn,int bmpEn,int language)
 		return bmpEn;
 	}
 	return bmpCn;
+}
+
+void  UiFun::WriteClosConfig(bool tips,string path)
+{
+	if (PathFileExistsA(path.c_str()))
+	{
+		string configpath = "";
+		configpath = strprintf("%s",path);
+		configpath+= strprintf("\\%s","dacrsclient.conf");
+		string strFile = CJsonConfigHelp::getInstance()->GetConfigRootStr(configpath);
+		if (strFile == _T(""))
+		{
+			return;
+		}
+		Json::Reader reader;  
+		Json::Value root; 
+
+		if (!reader.parse(strFile, root)) 
+			return;
+		int pos = strFile.find("closeconf");
+		if (pos>=0)
+		{
+			Json::Value p2pbet = root["closeconf"];
+			ASSERT(!p2pbet.isNull());
+			p2pbet["tip"]= tips;
+			root["closeconf"]=p2pbet;
+		}else{
+			Json::Value obj;
+			obj["tip"]=tips;
+			root["closeconf"]=obj;
+		}
+		CStdioFile  File;
+		string strpathe=theApp.str_InsPath;
+		strpathe +="\\dacrsclient.conf";
+		File.Open((LPCTSTR)(LPSTR)strpathe.c_str(),CFile::modeWrite | CFile::modeCreate); 
+		string strfile = root.toStyledString();
+		File.WriteString(strfile.c_str());
+		File.Close();
+	}
+}
+
+void UiFun::Setlanguage(int index)
+{
+	// È¡Ä¬ÈÏÓïÑÔË÷Òý
+	string strTemp = strprintf("%d",index);;
+	string  strG;
+	string strAppIni = theApp.str_InsPath;// + (CString)LANGUAGE_FILE;
+	strAppIni += LANGUAGE_FILE;
+	::WritePrivateProfileString("Language1","gsLanguage",strTemp.c_str(),(LPCTSTR)strAppIni.c_str());
 }

@@ -121,10 +121,15 @@ public:
 	afx_msg void OnSendRedPacketExportHistory();
 	afx_msg void OnGrabRedPacketExportHistory();
 
-
+	afx_msg void OnChinese();
+	afx_msg void OnEnglish();
+	afx_msg void OnPopTips();
+	afx_msg void OnUpdateEn(CCmdUI *pCmdUI);
+	afx_msg void OnUpdateCn(CCmdUI *pCmdUI);
+	afx_msg void OnUpdatePopTips(CCmdUI *pCmdUI);
 public:
 	CBalloonTip*  m_BalloonTip;
 	afx_msg void OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized);
 	CMyQueue m_barpoomesg;
-
+	CMenu newMenu;
 };
