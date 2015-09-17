@@ -66,14 +66,18 @@ public:
 	UINT            m_uProAppTxThreadId;
 	HANDLE          m_hProcessBet;
 	UINT            m_uProBetxThreadId;
+	HANDLE          m_hProcessUpadata;
+	UINT            m_uProUpadataThreadId;
 	bool            m_blockAutoDelete;
 	bool            m_msgAutoDelete;
+	bool            m_msgprocessexit;   //true 接受消息的进程退出了 false 没有退出
 	void            StartblockThrd();  
 	static UINT __stdcall blockProc(LPVOID pParam);
 	static UINT __stdcall ProcessMsg(LPVOID pParam);
 	static UINT __stdcall ProcessNoUiMsg(LPVOID pParam);
 	static UINT __stdcall ProcessAppTx(LPVOID pParam);
 	static UINT __stdcall ProcessBetAcceptTx(LPVOID pParam);
+	static UINT __stdcall  UpdateProcess(LPVOID lpParam);
 public:
 	CMyMutex		cs_MsgDisptch ;    //消息订阅临界
 	CMyMutex        cs_SqlData ;       //数据列表临界
@@ -127,7 +131,6 @@ public:
 public:
 	void StartSeverProcess(const string& strdir);
 	void CloseProcess(const string& exename);
-	void CheckUpdate();
 	int Update();
 	bool GetVersionFromServer(string& strVersion);
 	BOOL					m_bStartServer;
