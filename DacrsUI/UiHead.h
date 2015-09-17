@@ -812,6 +812,16 @@ typedef struct ADD_APP{
 	}
 }ADD_APP_DATA;
 
+typedef struct CONFIG_APP{
+	string   appname;  
+	string   appnameen; 
+	string     appid;         
+	CONFIG_APP(){
+		appname ="";   //address
+		appid ="";
+	}
+}CONFIG_APP_DATA;
+
 #pragma pack(pop)
 //UiFun
 namespace UiFun 

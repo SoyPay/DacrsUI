@@ -156,6 +156,8 @@ public:
 	void GetNewestScriptData(CNewestScriptCfg &newScript);
 	void GetRedPacketStep(CRedPacketStepCfg &redPackestep);
 	void GetP2pBetStep(CP2PBetStepCfg &p2pbetstep);
+	CONFIG_APP_DATA GetAppValue(const Json::Value &root);
+	void GetListAppConfig(map<string,CONFIG_APP_DATA> &mlisapp);
 private:
 	void ReadMainCfgData(const Json::Value& root);
 	void ReadSesureTradeCfgData(const Json::Value& root);
@@ -171,6 +173,8 @@ private:
 	void ReadRedPacketStep(const Json::Value &root);
 	void ReadP2pBetStep(const Json::Value &root);
 	void AddString(const Json::Value& root,CAutoComplete &m_comboxinput);
+	void ReadListAppConfig(const Json::Value &root);
+
 public:
 	void ModifyAppFeeCfgData( Json::Value& root,const CString &LeaderKey,const CString &Key,const CString &KeyValue);
 
@@ -190,5 +194,6 @@ private:
 	CRedPacketStepCfg m_redPackestep;
 	CP2PBetStepCfg    m_p2pbetstep;
 	bool              m_poptip;
+	map<string,CONFIG_APP_DATA> m_listapp;
 };
 

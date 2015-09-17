@@ -1352,7 +1352,7 @@ void  CDacrsUIApp::ParseUIConfigFile(const string& strExeDir){
 		CJsonConfigHelp::getInstance()->GetNewestScriptData(m_neststcriptid);
 		CJsonConfigHelp::getInstance()->GetP2pBetStep(m_p2pbetstep);
 		CJsonConfigHelp::getInstance()->GetRedPacketStep(m_redPackestep);
-
+		CJsonConfigHelp::getInstance()->GetListAppConfig(m_listapp);
 		CNetParamCfg netParm;
 		CJsonConfigHelp::getInstance()->GetNetParamCfgData(netParm);
 		m_severip = netParm.server_ip;
