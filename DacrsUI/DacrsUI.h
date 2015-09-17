@@ -209,6 +209,7 @@ public:
 	bool  m_readQuizPool;         /// TURE 可以从数据库中读 赌约池的数据 FALSE 不可以读
 	bool  m_readReadCommPacketPool;         /// TURE 可以从数据库中读 红包池的数据 FALSE 不可以读
 	bool  m_readReadSpecalPacketPool;         /// TURE 可以从数据库中读 红包池的数据 FALSE 不可以读
+	map<string,CONFIG_APP_DATA> m_listapp;
 };
 
 

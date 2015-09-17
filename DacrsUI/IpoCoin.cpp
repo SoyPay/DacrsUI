@@ -14,6 +14,7 @@ IMPLEMENT_DYNAMIC(CIpoCoin, CDialogBar)
 CIpoCoin::CIpoCoin()
 {
 	m_pBmp = NULL ;
+	m_appid = "";
 }
 
 CIpoCoin::~CIpoCoin()
@@ -29,9 +30,10 @@ void CIpoCoin::DoDataExchange(CDataExchange* pDX)
 	CDialogBar::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_STATIC_ADDR , m_strTx1);
 	DDX_Control(pDX, IDC_LIST_SHOW , m_listCtrl);
-	DDX_Control(pDX, IDC_STATIC_AMOUNT , m_strTx2);
 	DDX_Control(pDX, IDC_BUTTON_DRAWAL , m_rBtnSend);
 	DDX_Control(pDX, IDC_BUTTON_QUERY , m_rQueryAmout);
+	DDX_Control(pDX, IDC_AppID , m_strTx2);
+	DDX_Control(pDX, IDC_COMBOAPPID , m_listapp);
 }
 
 
@@ -41,6 +43,7 @@ BEGIN_MESSAGE_MAP(CIpoCoin, CDialogBar)
 	ON_BN_CLICKED(IDC_BUTTON_DRAWAL, &CIpoCoin::OnBnClickedButtonDrawal)
 	ON_WM_SIZE()
 	ON_BN_CLICKED(IDC_BUTTON_QUERY, &CIpoCoin::OnBnClickedButtonQuery)
+	ON_CBN_SELCHANGE(IDC_COMBOAPPID, &CIpoCoin::OnCbnSelchangeComboappid)
 END_MESSAGE_MAP()
 
 
@@ -126,7 +129,7 @@ BOOL CIpoCoin::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_strTx2.SetTextColor(RGB(0,0,0));	
 		m_strTx2.SetWindowText(_T(""));
 
-		
+		m_strTx2.SetWindowText(UiFun::UI_LoadString("IPO_MODULE" , "IPO_USABLE_APPID" ,theApp.gsLanguage));
 		GetDlgItem(IDC_STATIC_ADDR)->SetWindowText(UiFun::UI_LoadString("NEW_SENDADDR" , "NEW_SENDADDR_ADDR" ,theApp.gsLanguage));
 
 		struct LISTCol {
@@ -144,6 +147,17 @@ BOOL CIpoCoin::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_listCtrl.SetHeaderBKColor(32,30,32,8); 
 		m_listCtrl.SetHeaderTextColor(RGB(255,255,255)); //设置头部字体颜色
 		m_listCtrl.SetTextColor(RGB(0,0,0));  
+		InitCombox();
+		m_listapp.SetCurSel(0);
+		int sel =m_listapp.GetCurSel();
+		if (sel != -1)
+		{
+			CString curText =_T("");
+			m_listapp.GetLBText(sel,curText);
+			string appname =strprintf("%s",curText);
+			m_appid = GetAppID(appname);
+		}
+			
 		for( int i = 0 ; i < 3 ; i++  ) {
 			m_listCtrl.InsertColumn(i,listcol[i].name,LVCFMT_CENTER,listcol[i].size);
 		}
@@ -163,7 +177,7 @@ void CIpoCoin::OnBnClickedButtonDrawal()
 	if ( IDNO == UiFun::MessageBoxEx(UiFun::UI_LoadString("IPO_MODULE" , "IPO_WITHDRAWALS_OK" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) , MFB_YESNO|MFB_TIP ) )
 		return;
 
-	if (!CheckRegIDValid( theApp.m_ipoScritptid )) return ;
+	if (!CheckRegIDValid( m_appid )) return ;
 
 	string  strShowData = _T("");
 
@@ -208,7 +222,7 @@ void CIpoCoin::OnBnClickedButtonDrawal()
 		return ;
 	}
 
-	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_ipoScritptid,addr.GetString(),strContractData,0,(INT64)REAL_MONEY((strtod(strTxFee,NULL))),0);
+	string strData = CSoyPayHelp::getInstance()->CreateContractTx( m_appid,addr.GetString(),strContractData,0,(INT64)REAL_MONEY((strtod(strTxFee,NULL))),0);
 	CSoyPayHelp::getInstance()->SendContacrRpc(strData,strShowData);
 
 	if (strShowData =="")
@@ -258,26 +272,35 @@ void CIpoCoin::OnSize(UINT nType, int cx, int cy)
 			pst->GetClientRect( rect ) ;
 			pst->SetWindowPos( NULL , (rc.Width()/100)*3+5, (rc.Height()/100)*5+8 , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
+		int curwith = 0;
 		pst = GetDlgItem( IDC_EDIT_ADDR ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
 			pst->SetWindowPos( NULL ,(rc.Width()/100)*8+30 ,(rc.Height()/100)*5+6  , (rc.Width()/100)*40, (rc.Height()/100)*6+2 ,SWP_SHOWWINDOW ); 
 			pst->SetFont(&theApp.m_fontBlackbody);
+			curwith = (rc.Width()/100)*8+30+(rc.Width()/100)*40;
 		}
 
-		pst = GetDlgItem( IDC_STATIC_AMOUNT ) ;
+		pst = GetDlgItem( IDC_AppID ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*50+15 ,(rc.Height()/100)*5+8  , (rc.Width()/100)*30, (rc.Height()/100)*6  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,curwith ,(rc.Height()/100)*5+6  , rect.Width(), rect.Height(),SWP_SHOWWINDOW ); 
+			curwith+=rect.Width();
+		}
+		pst = GetDlgItem( IDC_COMBOAPPID ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,curwith ,(rc.Height()/100)*5+6  , rect.Width(), rect.Height(),SWP_SHOWWINDOW ); 
 		}
 
 		pst = GetDlgItem( IDC_BUTTON_QUERY ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*80+10 ,(rc.Height()/100)*5, rect.Width(), rect.Height(), SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*83 ,(rc.Height()/100)*5, rect.Width(), rect.Height(), SWP_SHOWWINDOW ) ; 
 		}
 
 		//
@@ -286,7 +309,7 @@ void CIpoCoin::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect(rect) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*95 ,(rc.Height()/100)*5, rect.Width(), rect.Height(), SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*97 ,(rc.Height()/100)*5, rect.Width(), rect.Height(), SWP_SHOWWINDOW ) ; 
 		}
 
 		pst = GetDlgItem( IDC_LIST_SHOW ) ;
@@ -300,7 +323,7 @@ void CIpoCoin::OnSize(UINT nType, int cx, int cy)
 double CIpoCoin::GetFreeMoney(CString addr)
 {
 	string strCommand,strShowData ="";
-	strCommand =strprintf("%s %s %s","getappaccinfo" , theApp.m_ipoScritptid ,addr);
+	strCommand =strprintf("%s %s %s","getappaccinfo" , m_appid ,addr);
 	Json::Value root; 
 	if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 	{
@@ -318,7 +341,7 @@ double CIpoCoin::GetFreeMoney(CString addr)
 void CIpoCoin::OnShowListCtrol(CString addr)
 {
 	string strCommand,strShowData ="";
-	strCommand =strprintf("%s %s %s","getappaccinfo" , theApp.m_ipoScritptid ,addr);
+	strCommand =strprintf("%s %s %s","getappaccinfo" , m_appid ,addr);
 	Json::Value root; 
 	if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
 	{
@@ -335,20 +358,31 @@ void CIpoCoin::OnShowListCtrol(CString addr)
 	{
 		nMoney = root["FreeValues"].asInt64() ;
 	}
-	
-	double money = (nMoney*1.0/COIN);
-	strShowData = strprintf("%s:%.8f",UiFun::UI_LoadString("IPO_MODULE" , "IPO_USABLE_MONEY" ,theApp.gsLanguage) ,money);
-	((CStatic*)GetDlgItem(IDC_STATIC_AMOUNT))->SetWindowText(strShowData.c_str());
-	
-	Invalidate();
-	Json::Value valuearray = root["vFreezedFund"]; 
-
+	double money = 0.0;
 	int coulum = 0;
+	int index = 0;
+	if (nMoney != 0)
+	{
+		money = (nMoney*1.0/COIN);
+		strShowData = strprintf("%.8f",money);
+		string strOrder ="";
+		int nSubIdx = 0;
+		strOrder= strprintf("%d", 1);
+		m_listCtrl.InsertItem(coulum,strOrder.c_str());
+		m_listCtrl.SetItemText( coulum , ++nSubIdx, strShowData.c_str()) ;
+		strOrder= "0";
+		m_listCtrl.SetItemText(coulum , ++nSubIdx , strOrder.c_str() ) ;
+		coulum = 1;
+		index =1;
+	}
+
+
+	Json::Value valuearray = root["vFreezedFund"]; 
 	for(unsigned int i =0;i<valuearray.size();i++)
 	{
 		int nSubIdx = 0;
 		string strOrder ="";
-		strOrder= strprintf("%d", i+1);
+		strOrder= strprintf("%d", index+1);
 		m_listCtrl.InsertItem(coulum,strOrder.c_str());
 
 		nMoney = valuearray[i]["value"].asInt64() ;
@@ -359,6 +393,7 @@ void CIpoCoin::OnShowListCtrol(CString addr)
 		strShowData =strprintf("%d" , valuearray[i]["nHeight"].asInt()) ;
 		m_listCtrl.SetItemText(coulum , ++nSubIdx , strShowData.c_str() ) ;
 		coulum++;
+		index++;
 	}
 }
 
@@ -374,4 +409,56 @@ void CIpoCoin::OnBnClickedButtonQuery()
 		return;
 	}
 	OnShowListCtrol(addr);
+}
+void CIpoCoin::InitCombox()
+{
+    map<string,CONFIG_APP_DATA>::iterator it= theApp.m_listapp.begin();
+	for(;it != theApp.m_listapp.end();it++)
+	{
+		CONFIG_APP_DATA data=it->second;
+		CString temp;
+		if (theApp.language() == 1)
+		{
+			temp.Format(_T("%s"),data.appname.c_str());
+		}else{
+			temp.Format(_T("%s"),data.appnameen.c_str());
+		}
+		
+		m_listapp.AddString(temp);
+	}
+
+}
+string CIpoCoin::GetAppID(string AppName)
+{
+	map<string,CONFIG_APP_DATA>::iterator it= theApp.m_listapp.begin();
+	for(;it != theApp.m_listapp.end();it++)
+	{
+		CONFIG_APP_DATA data=it->second;
+		if (theApp.language() == 1)
+		{
+			if (strcmp(data.appname.c_str(),AppName.c_str()) ==0)
+			{
+				return data.appid;
+			}
+		}else{
+			if (strcmp(data.appnameen.c_str(),AppName.c_str()) ==0)
+			{
+				return data.appid;
+			}
+		}
+	}
+	return "";
+}
+
+void CIpoCoin::OnCbnSelchangeComboappid()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	int sel =m_listapp.GetCurSel();
+	if (sel != -1)
+	{
+		CString curText =_T("");
+		m_listapp.GetLBText(sel,curText);
+		string appname =strprintf("%s",curText);
+		m_appid = GetAppID(appname);
+	}
 }
