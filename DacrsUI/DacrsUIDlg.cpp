@@ -393,6 +393,7 @@ int CDacrsUIDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	}
 	//SetTimer( 0x11 , 30000 , NULL);   //半分钟
 	SetTimer( 0x11 , 15000 , NULL); 
+	SetTimer( 0x12 , 15000 , NULL ) ; 
 	return 0;
 }
 void CDacrsUIDlg::ShowDialog(UINT dlgid) 
@@ -672,6 +673,18 @@ void CDacrsUIDlg::CloseThread()
 		Sleep(100);
 	}
 	CloseHandle(theApp.m_hProcessBet);
+
+	while( ::GetExitCodeThread( theApp.m_hProcessUpadata , &exc ) ) {
+
+		if( STILL_ACTIVE == exc ) {
+			;
+		}else {
+			TRACE( "EXC = %d \n" , exc ) ;
+			break;
+		}
+		Sleep(100);
+	}
+	CloseHandle(theApp.m_hProcessUpadata);
 	//delete theApp.pSplashThread;
 }
 
@@ -844,6 +857,18 @@ void CDacrsUIDlg::OnTimer(UINT_PTR nIDEvent)
 			string message = Postmsg.GetData();
 			 ::SendMessage(theApp.m_pMainWnd->m_hWnd,WM_POPUPBAR,0,(LPARAM)message.c_str());	
 		}
+	}else if (0x12  == nIDEvent) /// 检查是任务栏中是否有托盘没有添加
+	{
+		NOTIFYICONDATA nid; 
+		nid.cbSize=(DWORD)sizeof(NOTIFYICONDATA); 
+		nid.hWnd=this->m_hWnd; 
+		nid.uID=IDR_MAINFRAME; 
+		nid.uFlags=NIF_ICON|NIF_MESSAGE|NIF_TIP ; 
+		nid.uCallbackMessage=WM_SHOWTASK;//自定义的消息名称 
+		nid.hIcon=LoadIcon(AfxGetInstanceHandle(),MAKEINTRESOURCE(IDR_MAINFRAME)); 
+		if ( !Shell_NotifyIcon( NIM_MODIFY, &nid ) )  
+			   Shell_NotifyIcon( NIM_ADD, &nid );  
+
 	}
 	CDialogEx::OnTimer(nIDEvent);
 }
