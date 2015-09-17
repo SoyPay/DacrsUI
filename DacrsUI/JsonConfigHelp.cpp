@@ -25,6 +25,7 @@ void CJsonConfigHelp::ReadJsonConfig(const string& strFilePath)
 	{
 		return ;
 	}
+
 	//ifs.read()
 	Json::Reader reader;  
 	Json::Value root;  
@@ -104,6 +105,12 @@ void CJsonConfigHelp::ReadJsonConfig(const string& strFilePath)
 		if (pos >0)
 		{
 			ReadRedPacketStep(root);
+		}
+		
+		pos = strTemp.find("listapp");
+		if (pos >0)
+		{
+			ReadListAppConfig(root);
 		}
 	}
 	ifs.close();
@@ -421,4 +428,29 @@ void CJsonConfigHelp::GetRedPacketStep(CRedPacketStepCfg &redPackestep)
 void CJsonConfigHelp::GetP2pBetStep(CP2PBetStepCfg &p2pbetstep)
 {
 	p2pbetstep = m_p2pbetstep;
+}
+CONFIG_APP_DATA CJsonConfigHelp::GetAppValue(const Json::Value &root)
+{
+	CONFIG_APP_DATA ret;
+	ret.appname = root["name"].asString();
+	ret.appnameen =root["nameen"].asString();
+	ret.appid = root["appid"].asString();
+	return ret;
+}
+void CJsonConfigHelp::ReadListAppConfig(const Json::Value &root)
+{
+	Json::Value listapp = root["listapp"];
+	if (listapp.isNull())
+	{
+		return;
+	}
+	for(unsigned int i=0; i<listapp.size();++i)
+	{
+		CONFIG_APP_DATA appdata = GetAppValue(listapp[i]);
+		m_listapp[appdata.appid]=appdata;
+	}
+}
+void CJsonConfigHelp::GetListAppConfig(map<string,CONFIG_APP_DATA> &mlisapp)
+{
+	mlisapp=m_listapp;
 }

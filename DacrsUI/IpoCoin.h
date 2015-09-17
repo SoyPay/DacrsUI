@@ -37,11 +37,16 @@ public:
 	CShadeButtonST         m_rQueryAmout;
 	void OnShowListCtrol(CString addr);
 	double GetFreeMoney(CString addr);
+	CComboBox             m_listapp;
 private:
 	CListCtrlCl                          m_listCtrl;
 	CP2PBetHelp		                    m_P2PBetHelp;
+	string                              m_appid;
 public:
 	afx_msg void OnBnClickedButtonQuery();
 	void  GetAppAccountSomeMoney();
 	void CheckBalance(double dmoney);
+	void InitCombox();
+	string GetAppID(string AppName);
+	afx_msg void OnCbnSelchangeComboappid();
 };
