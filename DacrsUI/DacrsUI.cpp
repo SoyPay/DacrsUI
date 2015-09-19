@@ -452,64 +452,70 @@ UINT __stdcall CDacrsUIApp::UpdateProcess(LPVOID lpParam){
 	while(TRUE)
 	{
 		///一分钟
-		Sleep(60000); 
+		static int nCount = 0;
+		Sleep(1);
 		if (theApp.m_msgAutoDelete)
 		{
 			return 1;
 		}
-		CDacrsUIApp * pUiDemeDlg  = (CDacrsUIApp*)lpParam ;
-		CString sPath;
-		sPath.Format(_T("%s\\qupdater.exe"),pUiDemeDlg->str_InsPath.c_str());
-		sPath.Replace("\\\\","\\");
-		CFileFind find;
-		if(!find.FindFile(sPath)) return false;
-		SHELLEXECUTEINFO ShRun = {0}; 
-		ShRun.cbSize = sizeof(SHELLEXECUTEINFO); 
-		ShRun.fMask = SEE_MASK_NOCLOSEPROCESS; 
-		ShRun.hwnd = NULL; 
-		ShRun.lpVerb = NULL; 
-		ShRun.lpFile = sPath;
-		ShRun.lpParameters = _T("-checkforupdates"); 
-		ShRun.nShow = SW_SHOW; 
-		ShRun.hInstApp = NULL; 
-		ShellExecuteEx(&ShRun); 
-		WaitForSingleObject(ShRun.hProcess, 120000); 
-		ULONG lResult = 0; 
-		if (!GetExitCodeProcess(ShRun.hProcess, &lResult)) return false;
-		if (lResult == 0) continue;
-		CString sMsg;
-		if (theApp.language() == 1)
-		{
-			sMsg.Format(_T("检查有%d文件需要更新,现在是否要更新?"),lResult);
-		}else{
-			sMsg.Format(_T("%d updates found at the website,now to upgrade?"),lResult);
+		nCount++;
+		if(nCount == 60000 ){
+				nCount =0;
 
-		}
-		//if (AfxMessageBox(sMsg, MB_ICONQUESTION | MB_YESNO) != IDYES) return false;
-		if ( IDYES != UiFun::MessageBoxEx(sMsg, UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) , MFB_YESNO|MFB_TIP ) ){
-			((CDacrsUIDlg*)(pUiDemeDlg->m_pMainWnd))->ClosWalletWind();
-			return false;
-		}
-		//((CDacrsUIDlg*)(theApp.m_pMainWnd))->ClosWalletWind();
-		pUiDemeDlg->CloseProcess("dacrs-d.exe");
-		DWORD exc;
-		pUiDemeDlg->m_msgAutoDelete= true;
-		pUiDemeDlg->m_blockAutoDelete = true;
-		closesocket(theApp.m_blockSock);
-		/// 等待处理消息进程退出
-		while( ::GetExitCodeThread( theApp.m_msgThread , &exc ) ) {
+			CDacrsUIApp * pUiDemeDlg  = (CDacrsUIApp*)lpParam ;
+			CString sPath;
+			sPath.Format(_T("%s\\qupdater.exe"),pUiDemeDlg->str_InsPath.c_str());
+			sPath.Replace("\\\\","\\");
+			CFileFind find;
+			if(!find.FindFile(sPath)) return false;
+			SHELLEXECUTEINFO ShRun = {0}; 
+			ShRun.cbSize = sizeof(SHELLEXECUTEINFO); 
+			ShRun.fMask = SEE_MASK_NOCLOSEPROCESS; 
+			ShRun.hwnd = NULL; 
+			ShRun.lpVerb = NULL; 
+			ShRun.lpFile = sPath;
+			ShRun.lpParameters = _T("-checkforupdates"); 
+			ShRun.nShow = SW_HIDE; 
+			ShRun.hInstApp = NULL; 
+			ShellExecuteEx(&ShRun); 
+			WaitForSingleObject(ShRun.hProcess, 120000); 
+			ULONG lResult = 0; 
+			if (!GetExitCodeProcess(ShRun.hProcess, &lResult)) return false;
+			if (lResult == 0) continue;
+			CString sMsg;
+			if (theApp.language() == 1)
+			{
+				sMsg.Format(_T("检查有%d文件需要更新,现在是否要更新?"),lResult);
+			}else{
+				sMsg.Format(_T("%d updates found at the website,now to upgrade?"),lResult);
 
-			if( STILL_ACTIVE == exc ) {
-				;
-			}else {
-				TRACE( "EXC = %d \n" , exc ) ;
-				break;
 			}
-			Sleep(100);
+			//if (AfxMessageBox(sMsg, MB_ICONQUESTION | MB_YESNO) != IDYES) return false;
+			if ( IDYES != UiFun::MessageBoxEx(sMsg, UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) , MFB_YESNO|MFB_TIP ) ){
+				((CDacrsUIDlg*)(pUiDemeDlg->m_pMainWnd))->ClosWalletWind();
+				return false;
+			}
+			//((CDacrsUIDlg*)(theApp.m_pMainWnd))->ClosWalletWind();
+			pUiDemeDlg->CloseProcess("dacrs-d.exe");
+			DWORD exc;
+			pUiDemeDlg->m_msgAutoDelete= true;
+			pUiDemeDlg->m_blockAutoDelete = true;
+			closesocket(theApp.m_blockSock);
+			/// 等待处理消息进程退出
+			while( ::GetExitCodeThread( theApp.m_msgThread , &exc ) ) {
+
+				if( STILL_ACTIVE == exc ) {
+					;
+				}else {
+					TRACE( "EXC = %d \n" , exc ) ;
+					break;
+				}
+				Sleep(100);
+			}
+			ShRun.lpParameters = NULL; 
+			ShellExecuteEx(&ShRun);
+			pUiDemeDlg->CloseProcess("DacrsUI.exe");
 		}
-		ShRun.lpParameters = NULL; 
-		ShellExecuteEx(&ShRun);
-		pUiDemeDlg->CloseProcess("DacrsUI.exe");
 	}
 	return true;
 }

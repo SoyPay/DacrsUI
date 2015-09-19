@@ -647,13 +647,20 @@ void  CP2PDlg::QueryNotDrawBalance(CString addr)
 	for ( const_it = pPoolList.begin() ; const_it != pPoolList.end() ; const_it++ ) {
 		if (theApp.IsSyncBlock)
 		{
-			if (const_it->state ==0 &&(500 + const_it->height)< theApp.blocktipheight || const_it->state ==3
+			if ((const_it->state ==0 &&(500 + const_it->height)< theApp.blocktipheight) || const_it->state ==3
 				|| ((const_it->state ==1 || const_it->state ==4) &&(const_it->time_out + const_it->height)< theApp.blocktipheight))
 			{
-				continue;;
+				continue;
 			}
 		}
-		money += const_it->amount; 
+		if (const_it->actor == 0)
+		{
+			money += const_it->amount;
+		}else if (const_it->actor ==1)
+		{
+			money += const_it->accept_amount;
+		}
+		 
 	}
 
 	string srtShow ="";
@@ -891,6 +898,20 @@ void CP2PDlg::SendBet(int rewardnum)
 		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_ADDRESS_NOT_NULL" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		return;
 	}
+
+	CReCharge outdlg(NULL,UiFun::UI_LoadString("P2P_MODULE" , "P2P_SET_ACCEPTAMOUNT" ,theApp.gsLanguage),_T(""),_T("  "));
+	if (outdlg.DoModal() == IDCANCEL)
+	{
+		return;
+	}
+
+	double acceptmoney =strtod(theApp.m_strAddress,NULL);
+	double money = strtod(strTxMoney,NULL);
+	if (acceptmoney <=0 || acceptmoney >=money*2 )
+	{
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_ADDRESS_NOT_NULL" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
+		return;
+	}
 	//// 查询地址是否激活
 	CString strCond;
 
@@ -920,10 +941,10 @@ void CP2PDlg::SendBet(int rewardnum)
 	string strContractData;
 	string strRamdHash = CSoyPayHelp::getInstance()->GetReverseHash(strHash);
 
-	double money = strtod(strTxMoney,NULL);
+
 	CString nTemp;
 	nTemp.Format(_T("%.8f"),money);
-	strContractData = m_P2PBetHelp.PacketP2PSendContract((INT64)REAL_MONEY(strtod(nTemp,NULL)),OUT_HEIGHT ,strRamdHash );
+	strContractData = m_P2PBetHelp.PacketP2PSendContract((INT64)REAL_MONEY(strtod(nTemp,NULL)),OUT_HEIGHT ,strRamdHash ,(INT64)REAL_MONEY(acceptmoney));
 
 	INT64 strTxFee = theApp.m_P2PBetCfg.SendBetFee;
 	if (  strTxFee < 10000  ) {
@@ -990,6 +1011,7 @@ void CP2PDlg::SendBet(int rewardnum)
 		strSourceData += strprintf(",'%s' ,'%d','%d','%d','%d','%s','%d'",p2pbetrecord.content ,p2pbetrecord.actor ,p2pbetrecord.confirmed ,p2pbetrecord.height ,p2pbetrecord.state ,\
 			p2pbetrecord.relate_hash.c_str() ,p2pbetrecord.guess_num ) ;
 		strSourceData += strprintf(" ,'%d'",p2pbetrecord.deleteflag);
+		strSourceData += strprintf(" ,'%lf'",acceptmoney);
 		uistruct::DATABASEINFO_t   pDatabase;
 		pDatabase.strSource = strSourceData;
 		pDatabase.strTabName =  _T("t_p2p_quiz");
@@ -1123,7 +1145,7 @@ void CP2PDlg::OnListPool()
 }
  LRESULT CP2PDlg::onBnCLick( WPARAM wParam, LPARAM lParam )
  {
-	List_AppendData* pinf = m_BonusListBox.GetAppendDataInfo((int)wParam);
+	PoolBox_AppendData* pinf = m_BonusListBox.GetAppendDataInfo((int)wParam);
 	if ( NULL != pinf ) { 
 		CString hash = pinf->pstr;
 		int index = ((m_curpage-1)*m_pagesize)+pinf->nItem;
@@ -1143,14 +1165,14 @@ void CP2PDlg::OnListPool()
 			money = pinf->pstr1;
 			//pinf->pSta2->GetWindowText(money);
 			pinf->pSta1->GetWindowText(adddr);
-			AcceptBet(hash,money,adddr,item.outheight);
+			AcceptBet(item.hash.c_str(),item.nAcceptMoney,adddr,item.outheight,item.nPayMoney);
 		}
 		
 	}
 	return 0;
 
 }
-void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
+void CP2PDlg::AcceptBet(CString hash,INT64 money,CString sendaddr,int timeout,INT64 sendmoney)
  {
 	 string strshow=UiFun::UI_LoadString("P2P_MODULE" , "P2P_BET_UPDATA" ,theApp.gsLanguage) ;
 	 if (!UiFun::IsCurrentAppId(theApp.m_betScritptid.c_str(),theApp.m_neststcriptid.strNewScriptBetid.c_str(),strshow))
@@ -1173,7 +1195,8 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 	 CString strTxMoney;
 	 GetDlgItem(IDC_STATIC_BALANCE)->GetWindowText(strTxMoney) ;
 
-	 if (strtod(strTxMoney,NULL) < strtod(money,NULL))
+	 double dmoney = (money*1.0)/COIN;
+	 if (strtod(strTxMoney,NULL) < dmoney)
 	 {
 		 UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_ORDERS_MORE_BALANCE" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		 return ;
@@ -1205,7 +1228,7 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 
 	 string strContractData,strHash;
 	 strHash= CSoyPayHelp::getInstance()->GetReverseHash(hash.GetString());
-	 strContractData = m_P2PBetHelp.PacketP2PAcceptContract((INT64)REAL_MONEY(strtod(money,NULL)) ,strHash,guess);
+	 strContractData = m_P2PBetHelp.PacketP2PAcceptContract(money ,strHash,guess);
 
 	 if (  theApp.m_P2PBetCfg.AcceptBetnFee < 10000  ) {
 		 return ;
@@ -1285,7 +1308,8 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 
 			 p2pbetrecord.right_addr = strprintf("%s",addr);
 			 p2pbetrecord.left_addr = strprintf("%s",sendaddr);
-			 p2pbetrecord.amount = strtod(money,NULL);
+			 p2pbetrecord.amount = (sendmoney*1.0)/COIN;
+			 p2pbetrecord.accept_amount =(money*1.0)/COIN;
 
 			 p2pbetrecord.state = 4;
 			 p2pbetrecord.actor  = 1 ;
@@ -1299,7 +1323,7 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 			 strSourceData+=strprintf(",'%s' ,'%d','%d','%d','%d','%s','%d'",p2pbetrecord.content ,p2pbetrecord.actor ,p2pbetrecord.confirmed ,p2pbetrecord.height ,p2pbetrecord.state ,\
 				 p2pbetrecord.relate_hash ,p2pbetrecord.guess_num ) ;
 
-			 strSourceData += strprintf(" ,'%d'",p2pbetrecord.deleteflag);
+			 strSourceData += strprintf(" ,'%d','%lf'",p2pbetrecord.deleteflag, p2pbetrecord.accept_amount);
 
 			 uistruct::DATABASEINFO_t   pDatabase;
 			 pDatabase.strSource = strSourceData;
@@ -1431,10 +1455,10 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 				int rewardnum = (int)const_it->content[32];
 				if (const_it->guess_num == const_it->content[32])
 				{
-					winer += const_it->amount;
+					winer +=const_it->accept_amount; //const_it->amount;
 				}else
 				{
-					loser += const_it->amount;
+					loser += const_it->accept_amount;;//const_it->amount;
 				}
 
 			}else{
@@ -1475,10 +1499,10 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 				 int rewardnum = (int)const_it->content[32];
 				 if (const_it->guess_num == const_it->content[32])
 				 {
-					 winer += const_it->amount;
+					 winer +=const_it->accept_amount;// const_it->amount;
 				 }else
 				 {
-					 loser += const_it->amount;
+					 loser += const_it->accept_amount;//const_it->amount;
 				 }
 
 			 }else{
@@ -1488,7 +1512,7 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 				 }
 			 }
 		 }else if(strcmp(const_it->left_addr.c_str(),const_it->right_addr.c_str()) != 0){
-			 if (strcmp(const_it->left_addr.c_str(),addr) == 0)
+			 if (strcmp(const_it->left_addr.c_str(),addr) == 0)  /// 这个地址发赌约
 			 {
 				 if (const_it->state == 2){       
 					 if (const_it->guess_num == const_it->content[32])
@@ -1510,10 +1534,10 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 					 int rewardnum = (int)const_it->content[32];
 					 if (const_it->guess_num == const_it->content[32])
 					 {
-						 winer += const_it->amount;
+						 winer +=const_it->accept_amount;// const_it->amount;
 					 }else
 					 {
-						 loser += const_it->amount;
+						 loser += const_it->accept_amount;//const_it->amount;
 					 }
 
 				 }else{
@@ -1571,7 +1595,7 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 	 int i =0;
 
 	 string strmoney;
-	 string addr,money;
+	 string addr,money,acceptmoney;
 	 string txhash, line;
 
 	 string temp = "";
@@ -1586,12 +1610,13 @@ void CP2PDlg::AcceptBet(CString hash,CString money,CString sendaddr,int timeout)
 	
 		 strmoney =strprintf("%.8f",dmoney);
 
+		 acceptmoney =strprintf("%.4f",(const_it.nAcceptMoney*1.0)/COIN);
 		 temp = const_it.hash.substr(0,6);
 		 line = temp;
 
 		 m_BonusListBox.InsertStr(i,this->GetSafeHwnd());
 		 m_BonusListBox.SetIndexInage(i , IDB_BITMAP_P2P_LISTBOX_BUT);
-		 m_BonusListBox.SetIndexString(i , line.c_str(),const_it.sendbetid.c_str(), UiFun::UI_LoadString("COMM_MODULE" , "COMM_RECIVED" ,theApp.gsLanguage), money.c_str(), const_it.hash.c_str(),strmoney.c_str());
+		 m_BonusListBox.SetIndexString(i , line.c_str(),const_it.sendbetid.c_str(), UiFun::UI_LoadString("COMM_MODULE" , "COMM_RECIVED" ,theApp.gsLanguage), money.c_str(), acceptmoney.c_str(),strmoney.c_str());
 		 i++;
 	 }
  }
@@ -1930,7 +1955,7 @@ void  CP2PDlg::AutoSendBet()
 		double money = strtod(strTxMoney,NULL);
 		CString nTemp;
 		nTemp.Format(_T("%.8f"),money);
-		strContractData = m_P2PBetHelp.PacketP2PSendContract((INT64)REAL_MONEY(strtod(nTemp,NULL)),OUT_HEIGHT ,strRamdHash );
+		strContractData = m_P2PBetHelp.PacketP2PSendContract((INT64)REAL_MONEY(strtod(nTemp,NULL)),OUT_HEIGHT ,strRamdHash ,0);
 
 		INT64 strTxFee = theApp.m_P2PBetCfg.SendBetFee;
 		if (  strTxFee < 10000  ) {

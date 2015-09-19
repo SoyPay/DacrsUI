@@ -210,6 +210,7 @@ namespace uistruct {
 		string   relate_hash;          //接赌hash
 		int    guess_num;      //接猜的数字
 		int    deleteflag;      //接猜的数字 0 没有删除 1 删除标志
+		double  accept_amount  ;				//金额
 		P2P_QUIZ_RECORD(){
 			send_time = 0;
 			recv_time = 0;
@@ -226,6 +227,7 @@ namespace uistruct {
 			relate_hash = "";
 			guess_num = 0;
 			deleteflag = 0;
+			accept_amount = 0;
 		}
 		string ToJson(){
 			Json::Value root;
@@ -244,6 +246,7 @@ namespace uistruct {
 			root["state"] = state;
 			root["guess_num"] = guess_num;
 			root["deleteflag"] = deleteflag;
+			root["accept_amount"] = accept_amount;
 			return root.toStyledString();
 		}
 		bool JsonToStruct(string json){
@@ -277,6 +280,7 @@ namespace uistruct {
 			this->state = root["state"].asInt();
 			this->guess_num = root["guess_num"].asInt() ;
 			this->deleteflag=root["deleteflag"].asInt() ;
+			this->accept_amount=root["accept_amount"].asDouble() ;
 			return true;
 		}
 	}P2P_QUIZ_RECORD_t;
@@ -285,13 +289,14 @@ namespace uistruct {
 
 	typedef struct {                 //赌约应用数据库结构
 		unsigned char betstate;        //00未接赌 01接赌
-		INT64 money;
+		INT64         money;
 		unsigned short hight;
 		unsigned char dhash[32];//32 + one byte checksum
 		unsigned char accepthash[32];//32 + one byte checksum
 		unsigned char sendbetid[6];
 		unsigned char acceptbetid[6];
 		unsigned char acceptebetdata;
+		INT64         accept_money;
 
 	}DBBET_DATA;
 	typedef std::vector<DBBET_DATA> DBBETDATALIST ;
@@ -515,6 +520,7 @@ namespace uistruct {
 		string  accepthash;
 		int     guess;
 		int     state;
+		INT64   nAcceptMoney;
 		string ToJson(){
 			Json::Value root;
 			root["hash"] = hash;

@@ -1,6 +1,6 @@
 #pragma once
 #include "RoundButton.h"
-#include "UseListBox.h"
+#include "BetPoolListBox.h"
 #include "CommonStruct.h"
 #include "TabCtrl.h"
 #include "BetRecord.h"
@@ -48,7 +48,7 @@ public:
 	CShadeButtonST         m_rBtnNext;
 	CShadeButtonST         m_rbCancelOrder;
 
-	CUseListBox            m_BonusListBox;
+	CBetPoolListBox            m_BonusListBox;
 	//CRecordListBox         m_RecordListBox;
 	CComboBox			   m_addrbook;
 	CP2PBetHelp		       m_P2PBetHelp;
@@ -81,10 +81,9 @@ public:
 	void SendBet(int rewardnum);
 	afx_msg void OnBnClickedButtonWoman();
 	void OnListPool();
-	void AcceptBet(CString hash,CString money,CString sendaddr,int timeout);
+	void AcceptBet(CString hash,INT64 money,CString sendaddr,int timeout,INT64 sendmoney);
 	bool CheckBalance(CString strshow = _T(""));
 	bool CheckBalance(double dmoney);
-	CCTabCtrl m_tab;
 	afx_msg void OnTcnSelchangeTab(NMHDR *pNMHDR, LRESULT *pResult);
 	void   ShowListItem(int seltab);
 	afx_msg void OnBnClickedButtonRefresh2();
@@ -103,8 +102,9 @@ public:
 private:
 	int                   m_pagecount;
 	int                   m_curpage;
-	unsigned int                   m_pagesize;
+	unsigned int          m_pagesize;
 	uistruct::P2PLIST     m_PoolList;
+	CCTabCtrl             m_tab;
 public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	

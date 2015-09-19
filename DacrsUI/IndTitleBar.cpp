@@ -502,7 +502,7 @@ void CIndTitleBar::OnChinese()
 	   if (UiFun::MessageBoxEx(UiFun::UI_LoadString("SETAPPID" , "SETAPPFEE_LANGAGE" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP ) == IDOK)
 	   {
 		   ((CDacrsUIDlg*)(theApp.m_pMainWnd))->ClosWalletWind();
-		   theApp.gsLanguage = 1;
+		   //theApp.gsLanguage = 1;
 	   }
 	 // UiFun::MessageBoxEx(_T("修改语言坏境请重新启动钱包") , _T("提示") ,MFB_OK|MFB_TIP );
 	  //((CDacrsUIDlg*)(theApp.m_pMainWnd))->ClosWalletWind();
@@ -519,7 +519,7 @@ void CIndTitleBar::OnEnglish()
 		if (UiFun::MessageBoxEx(UiFun::UI_LoadString("SETAPPID" , "SETAPPFEE_LANGAGE" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP ) == IDOK)
 		{
 			((CDacrsUIDlg*)(theApp.m_pMainWnd))->ClosWalletWind();
-			theApp.gsLanguage = 2;
+			//theApp.gsLanguage = 2;
 		}
 		//UiFun::MessageBoxEx(_T("修改语言坏境请重新启动钱包") , _T("提示") ,MFB_OK|MFB_TIP );
 		//((CDacrsUIDlg*)(theApp.m_pMainWnd))->ClosWalletWind();

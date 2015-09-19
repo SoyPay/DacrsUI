@@ -1166,13 +1166,14 @@ string CAnonymTxHelp::PackAnonymContract(const string& strSender,int nSendMoney,
 }
 
 //********************************P2P对赌************************************
-string CP2PBetHelp::PacketP2PSendContract(int64_t nMoney,int nHeight ,const string& strRandomHash)
+string CP2PBetHelp::PacketP2PSendContract(int64_t nMoney,int nHeight ,const string& strRandomHash,int64_t nAcceptMoney)
 {
 	//strRandomHash: 32 个随机数 + 中奖数
 	memset(&m_sendContract,0,sizeof(SEND_DATA));
 	m_sendContract.type = TX_SENDBET;
 	m_sendContract.hight = nHeight;
 	m_sendContract.money = nMoney;
+	m_sendContract.accept_money =nAcceptMoney;
 	memcpy(m_sendContract.dhash,strRandomHash.c_str(),HASH_SIZE);
 
 	return CSoyPayHelp::getInstance()->GetHexData((const char*)&m_sendContract,sizeof(SEND_DATA));

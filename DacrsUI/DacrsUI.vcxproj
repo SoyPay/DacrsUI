@@ -56,7 +56,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <OutputFile>..\bin\DacrsUI.exe</OutputFile>
+      <OutputFile>D:\dacrstest\test1\DacrsUI.exe</OutputFile>
       <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>
       </AdditionalDependencies>
@@ -318,6 +318,7 @@
     <ClInclude Include="AutoComplete.h" />
     <ClInclude Include="BalloonTip.h" />
     <ClInclude Include="BetInformation.h" />
+    <ClInclude Include="BetPoolListBox.h" />
     <ClInclude Include="BetRecord.h" />
     <ClInclude Include="BmpBtn.h" />
     <ClInclude Include="BtnST.h" />
@@ -425,6 +426,7 @@
     <ClCompile Include="AutoComplete.cpp" />
     <ClCompile Include="BalloonTip.cpp" />
     <ClCompile Include="BetInformation.cpp" />
+    <ClCompile Include="BetPoolListBox.cpp" />
     <ClCompile Include="BetRecord.cpp" />
     <ClCompile Include="BmpBtn.cpp" />
     <ClCompile Include="BtnST.cpp" />

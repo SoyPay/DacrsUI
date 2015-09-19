@@ -142,6 +142,7 @@ string CTxDetailDlg::GetContacrDetail(uistruct::REVTRANSACTION_t tx)
 			txdetail+=strprintf("%s:  %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_APP_NAME" ,theApp.gsLanguage),UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_GUESS_SISTER" ,theApp.gsLanguage) );
 			txdetail+=strprintf("%s:   %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_CONTRACT_TYPE" ,theApp.gsLanguage),UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_SEND_QUIZ" ,theApp.gsLanguage) );
 			txdetail+=strprintf("%s:%.8f\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_MONEY" ,theApp.gsLanguage),(sendbetdata.money*1.0)/COIN );
+			txdetail+=strprintf("%s%s:%.8f\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_ORDERS" ,theApp.gsLanguage),UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_MONEY" ,theApp.gsLanguage),(sendbetdata.accept_money*1.0)/COIN );
 		}else if (vTemp[0] == 0xff)
 		{
 			if (vTemp[1] == 0x02)    /// ≥‰÷µ
