@@ -94,7 +94,7 @@ void CDacrsUIApp::UpdateQuizPoolData()
 					
 
 					string strSourceData;
-					strSourceData=strprintf("'%s' , '%s',%ld,%d,'%s','%s',%d,%d" , strTemp.c_str(), regid.c_str(),DBbet.money,DBbet.hight,acceptid,accepthash,DBbet.acceptebetdata,DBbet.betstate);
+					strSourceData=strprintf("'%s' , '%s',%ld,%ld,%d,'%s','%s',%d,%d" , strTemp.c_str(), regid.c_str(),DBbet.money,DBbet.accept_money,DBbet.hight,acceptid,accepthash,DBbet.acceptebetdata,DBbet.betstate);
 					m_SqliteDeal.InsertTableItem(_T("t_quiz_pool") ,strSourceData);
 				}
 			}

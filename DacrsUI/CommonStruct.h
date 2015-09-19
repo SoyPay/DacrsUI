@@ -225,6 +225,7 @@ typedef struct {
 	ULONGLONG     money;
 	unsigned short hight;
 	unsigned char dhash[32];
+	ULONGLONG     accept_money;
 } SEND_DATA;
 
 typedef struct {
@@ -430,7 +431,7 @@ private:
 class CP2PBetHelp
 {
 public:
-	string PacketP2PSendContract(int64_t nMoney,int nHeight,const string& strRandomHash);
+	string PacketP2PSendContract(int64_t nMoney,int nHeight,const string& strRandomHash,int64_t nAcceptMoney);
 	string PacketP2PAcceptContract(int64_t nMoney, const string& strSendHash,char nData );
 	string PacketP2PExposeContract(const string& SendHash,const string& strRandomHash,const string& AcceptHash,int outheight);
 	string GetAppAccountMoneyContract(const string& straccid,int type,int typeaddr,int64_t nMoney);

@@ -259,6 +259,9 @@
     <ClCompile Include="ChoseLanguage.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="BetPoolListBox.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BmpBtn.h">
@@ -574,6 +577,9 @@
       <Filter>头文件\zip</Filter>
     </ClInclude>
     <ClInclude Include="ChoseLanguage.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BetPoolListBox.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
