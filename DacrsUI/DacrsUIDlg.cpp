@@ -373,7 +373,7 @@ int CDacrsUIDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		pPopup->ModifyMenu(11, MF_BYPOSITION | MF_STRING, ID__LANGUAGE, UiFun::UI_LoadString("MENU" , "MENU_LANGUAGE" ,theApp.gsLanguage));
 		pPopup->ModifyMenu(12, MF_BYPOSITION | MF_STRING, ID__CLOSEPOP, UiFun::UI_LoadString("MENU" , "MENU_CLOSEPOP" ,theApp.gsLanguage));
 		//pPopup->CheckMenuItem(ID__CLOSEPOP, MF_BYCOMMAND|MF_CHECKED);
-		if (theApp.m_poptips)
+		if (!theApp.m_poptips)
 		{
 			pPopup->CheckMenuItem(ID__CLOSEPOP, MF_BYCOMMAND|MF_CHECKED);
 		}else{
