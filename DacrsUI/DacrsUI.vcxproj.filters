@@ -1197,6 +1197,9 @@
     <None Include="res\p2p_red_packeten.bmp">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="res\nemu.bmp">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="资源文件">

@@ -335,7 +335,7 @@ BOOL CIndTitleBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT 
 		SetMenu(&newMenu);
 		//只更改下主菜单下的第一项，更改全部：newMenu.ChangeMenuItem(&newMenu);
 		newMenu.ChangeMenuItem(newMenu.GetSubMenu(0));
-
+		
 		//LanguageMenu.LoadMenu(IDR_MENU2);
 		//SetMenu(&LanguageMenu);
 		////只更改下主菜单下的第一项，更改全部：newMenu.ChangeMenuItem(&newMenu);
@@ -347,6 +347,7 @@ BOOL CIndTitleBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT 
 		CMenu *pPopupChild=pPopup->GetSubMenu(11);
 		if (theApp.language() == 1)
 		{
+			newMenu.SetWith(102);
 			pPopupChild->CheckMenuItem(ID_CNL, MF_BYCOMMAND|MF_CHECKED);
 			if (!theApp.m_poptips)
 			{
@@ -355,6 +356,7 @@ BOOL CIndTitleBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT 
 				pPopup->CheckMenuItem(ID__CLOSEPOP, MF_BYCOMMAND|MF_USECHECKBITMAPS );
 			}
 		}else{
+			newMenu.SetWith(160);
 			pPopup->ModifyMenu(0, MF_BYPOSITION | MF_STRING, ID_RPC_CMD, UiFun::UI_LoadString("MENU" , "MENU_RPCCOMMAND" ,theApp.gsLanguage));
 			pPopup->ModifyMenu(1, MF_BYPOSITION | MF_STRING, ID__ENCRYPTWALLET, UiFun::UI_LoadString("MENU" , "MENU_PASSWORD" ,theApp.gsLanguage));
 			pPopup->ModifyMenu(2, MF_BYPOSITION | MF_STRING, ID_CHANGEPASSWORD,UiFun::UI_LoadString("MENU" , "MENU_MODIFYPASSWORD" ,theApp.gsLanguage));
@@ -369,12 +371,6 @@ BOOL CIndTitleBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT 
 			pPopup->ModifyMenu(11, MF_BYPOSITION | MF_STRING, ID__LANGUAGE, UiFun::UI_LoadString("MENU" , "MENU_LANGUAGE" ,theApp.gsLanguage));
 			pPopup->ModifyMenu(12, MF_BYPOSITION | MF_STRING, ID__CLOSEPOP, UiFun::UI_LoadString("MENU" , "MENU_CLOSEPOP" ,theApp.gsLanguage));
 			//pPopup->CheckMenuItem(ID__CLOSEPOP, MF_BYCOMMAND|MF_CHECKED);
-			if (theApp.m_poptips)
-			{
-				pPopup->CheckMenuItem(ID__CLOSEPOP, MF_BYCOMMAND|MF_CHECKED);
-			}else{
-				pPopup->CheckMenuItem(ID__CLOSEPOP, MF_BYCOMMAND|MF_USECHECKBITMAPS );
-			}
 
 			CMenu *pPopupChild=pPopup->GetSubMenu(10);
 			pPopupChild->ModifyMenu(0, MF_BYPOSITION | MF_STRING, ID_SENDBET, UiFun::UI_LoadString("MENU" , "MENU_SENDBET" ,theApp.gsLanguage));
@@ -385,7 +381,19 @@ BOOL CIndTitleBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT 
 			CMenu *pPopuplChild=pPopup->GetSubMenu(11);
 			pPopuplChild->ModifyMenu(ID_CNL, MF_BYCOMMAND, ID_CNL, UiFun::UI_LoadString("MENU" , "MENU_CNL" ,theApp.gsLanguage));
 			pPopuplChild->ModifyMenu(ID_ENL, MF_BYCOMMAND, ID_ENL, UiFun::UI_LoadString("MENU" , "MENU_ENL" ,theApp.gsLanguage));
+			
+
+			SetMenu(&newMenu);
+			//只更改下主菜单下的第一项，更改全部：newMenu.ChangeMenuItem(&newMenu);
+			newMenu.ChangeMenuItem(pPopup);
 			pPopuplChild->CheckMenuItem(ID_ENL, MF_BYCOMMAND|MF_CHECKED);
+
+			if (!theApp.m_poptips)
+			{
+				pPopup->CheckMenuItem(ID__CLOSEPOP, MF_BYCOMMAND|MF_CHECKED);
+			}else{
+				pPopup->CheckMenuItem(ID__CLOSEPOP, MF_BYCOMMAND|MF_USECHECKBITMAPS );
+			}
 		}
 		
 		//加载指定位图资源 Bmp图片ID
@@ -428,32 +436,6 @@ void CIndTitleBar::OnBnClickedMenubar()
 		pPopup->EnableMenuItem(ID__ENCRYPTWALLET,MF_GRAYED);
 	}
 	int b =pPopup->EnableMenuItem(ID__SET,MF_GRAYED);
-	//if (theApp.language() == 2)
-	//{
-	//	pPopup->ModifyMenu(0, MF_BYPOSITION | MF_STRING, ID_RPC_CMD, UiFun::UI_LoadString("MENU" , "MENU_RPCCOMMAND" ,theApp.gsLanguage));
-	//	pPopup->ModifyMenu(1, MF_BYPOSITION | MF_STRING, ID__ENCRYPTWALLET, UiFun::UI_LoadString("MENU" , "MENU_PASSWORD" ,theApp.gsLanguage));
-	//	pPopup->ModifyMenu(2, MF_BYPOSITION | MF_STRING, ID_CHANGEPASSWORD,UiFun::UI_LoadString("MENU" , "MENU_MODIFYPASSWORD" ,theApp.gsLanguage));
-	//	pPopup->ModifyMenu(3, MF_BYPOSITION | MF_STRING, ID__LOCK, UiFun::UI_LoadString("MENU" , "MENU_LOCK" ,theApp.gsLanguage));
-	//	pPopup->ModifyMenu(4, MF_BYPOSITION | MF_STRING, ID__BAKWALLET,UiFun::UI_LoadString("MENU" , "MENU_BACK" ,theApp.gsLanguage));
-	//	pPopup->ModifyMenu(5, MF_BYPOSITION | MF_STRING, ID__EXPORTPRIVEKEY, UiFun::UI_LoadString("MENU" , "MENU_EXPORT" ,theApp.gsLanguage));
-	//	pPopup->ModifyMenu(6, MF_BYPOSITION | MF_STRING, ID__IMPORTPRIVEKEY, UiFun::UI_LoadString("MENU" , "MENU_IMPORT" ,theApp.gsLanguage));
-	//	pPopup->ModifyMenu(7, MF_BYPOSITION | MF_STRING, ID__SETAPPID, UiFun::UI_LoadString("MENU" , "MENU_SETAPPID" ,theApp.gsLanguage));
-	//	pPopup->ModifyMenu(8, MF_BYPOSITION | MF_STRING, ID__SET, UiFun::UI_LoadString("MENU" , "MENU_SET" ,theApp.gsLanguage));
-	//	pPopup->ModifyMenu(9, MF_BYPOSITION | MF_STRING, ID__SETDEFAULT, UiFun::UI_LoadString("MENU" , "MENU_RESTORY" ,theApp.gsLanguage));
-	//	pPopup->ModifyMenu(10, MF_BYPOSITION | MF_STRING, ID_RECORD, UiFun::UI_LoadString("MENU" , "MENU_HISTORYRECORD" ,theApp.gsLanguage));
-	//	pPopup->ModifyMenu(11, MF_BYPOSITION | MF_STRING, ID_RECORD, UiFun::UI_LoadString("MENU" , "MENU_LANGUAGE" ,theApp.gsLanguage));
-
-	//	CMenu *pPopupChild=pPopup->GetSubMenu(10);
-	//	pPopupChild->ModifyMenu(0, MF_BYPOSITION | MF_STRING, ID_SENDBET, UiFun::UI_LoadString("MENU" , "MENU_SENDBET" ,theApp.gsLanguage));
-	//	pPopupChild->ModifyMenu(1, MF_BYPOSITION | MF_STRING, ID_ACCEPTBET, UiFun::UI_LoadString("MENU" , "MENU_ACCEPTET" ,theApp.gsLanguage));
-	//	pPopupChild->ModifyMenu(2, MF_BYPOSITION | MF_STRING, ID_SENDREDPAKET, UiFun::UI_LoadString("MENU" , "MENU_SENDRED" ,theApp.gsLanguage));
-	//	pPopupChild->ModifyMenu(3, MF_BYPOSITION | MF_STRING, ID_GRABREDPACKE, UiFun::UI_LoadString("MENU" , "MENU_GRABRED" ,theApp.gsLanguage));
-
-	//	CMenu *pPopuplChild=pPopup->GetSubMenu(11);
-	//	pPopuplChild->ModifyMenu(0, MF_BYPOSITION |MF_BYCOMMAND|MF_STRING, ID_CNL, UiFun::UI_LoadString("MENU" , "MENU_CNL" ,theApp.gsLanguage));
-	//	pPopuplChild->ModifyMenu(1, MF_BYPOSITION |MF_BYCOMMAND, ID_ENL, UiFun::UI_LoadString("MENU" , "MENU_ENL" ,theApp.gsLanguage));
-	//}
-
 	//pPopup->SetMenuItemBitmaps(0,MF_BYPOSITION, &pMenuBitmap, &pMenuBitmap);
 	//显示右键菜单，由视类窗口拥有。
 	pPopup->TrackPopupMenu(TPM_LEFTALIGN|TPM_RIGHTBUTTON,rect.left,rect.bottom,this);

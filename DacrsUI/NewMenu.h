@@ -9,5 +9,8 @@ public:
 	virtual void DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct);
 	virtual void MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct);
 	void ChangeMenuItem(CMenu *pMenu);
+	void SetWith(int with);
+private:
+	int with;
 };
 
