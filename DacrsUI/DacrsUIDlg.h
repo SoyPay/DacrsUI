@@ -50,11 +50,11 @@ public:
 	CTradDlg            *m_pTradDlg  ; //交易
 	CP2PDlg             *m_pP2PDlg    ;//P2P
 	CMortgageTardDlg    *m_pMortgageTardDlg;// 抵押
-	CIpoCoin             *m_pIpoCoinDlg;    //IPO
+	CIpoCoin            *m_pIpoCoinDlg;    //IPO
 	CAddApp             *m_pAddApp;    //添加应用
 	//
 	COutGifDlg          *m_pOutGifDlg;
-	CRPCDlg*				m_pRPCDlg;
+	CRPCDlg             *m_pRPCDlg;
 public:
 	std::map< UINT , CDialogBar * >  m_dlgMap ; 
 	void       ShowDialog(UINT dlgid)  ;
@@ -98,8 +98,8 @@ public:
 	afx_msg LRESULT OnShowTask(WPARAM wParam,LPARAM lParam) ; 
 	afx_msg LRESULT OnPopupBar(WPARAM wParam,LPARAM lParam) ; 
 	afx_msg LRESULT OnRefreshRedPacketPool(WPARAM wParam,LPARAM lParam) ; 
-	void ToTray();
-	void DeleteTray();
+	void    ToTray();
+	void    DeleteTray();
 	afx_msg void SetAppID();
 	afx_msg void RestoreDefault();
 	afx_msg void encryptwallet();

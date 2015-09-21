@@ -11,7 +11,7 @@ public:
 	bool Unlock();
 private:
 	CRITICAL_SECTION m_cs;
-	bool m_leave;
+	int m_leave;
 };
 
 class CAutoMutex
