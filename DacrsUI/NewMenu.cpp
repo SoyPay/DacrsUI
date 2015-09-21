@@ -4,6 +4,7 @@
 
 CNewMenu::CNewMenu(void)
 {
+	 with = 102;
 }
 
 
@@ -36,22 +37,43 @@ void CNewMenu::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	 }
 	 if (lpDrawItemStruct->itemState&ODS_CHECKED)
 	 {
-		 CBrush *brush = new CBrush;  
-		 CPen *pen = new CPen;  
-		 dc.SelectObject(pen);  
-		 dc.SelectObject(brush); 
-		 dc.MoveTo(rect.left+5, rect.top+10);
-		 dc.LineTo(rect.left+10,rect.bottom-5);
-		 dc.MoveTo(rect.left+10,rect.bottom-5);
-		 dc.LineTo(rect.left+20,rect.top+5);
-		 rect.left = rect.left+22;
-		 CString showText=*pText;
-		 showText.TrimLeft(" ");
-		 dc.DrawText(showText,rect,DT_VCENTER|DT_LEFT|DT_SINGLELINE);
-		 dc.Detach();
-		 delete brush;  
-		 delete pen;  
-		 return;
+		 //CBrush *brush = new CBrush;  
+		 //CPen *pen = new CPen;  
+		 //dc.SelectObject(pen);  
+		 //dc.SelectObject(brush); 
+		 //dc.MoveTo(rect.left+5, rect.top+15);
+		 //dc.LineTo(rect.left+8,rect.bottom-7);
+		 //dc.MoveTo(rect.left+8,rect.bottom-7);
+		 //dc.LineTo(rect.left+15,rect.top+10);
+		 //rect.left = rect.left+22;
+		 //CString showText=*pText;
+		 //showText.TrimLeft(" ");
+		 //dc.DrawText(showText,rect,DT_VCENTER|DT_LEFT|DT_SINGLELINE);
+		 //dc.Detach();
+		 //delete brush;  
+		 //delete pen; 
+
+		  CBitmap m_bitmap;
+
+		  m_bitmap.LoadBitmap(IDB_CHECKED);
+
+		  BITMAP m_size;
+
+		  m_bitmap.GetBitmap(&m_size);
+
+		  CDC m_memdc;
+
+		  m_memdc.CreateCompatibleDC(&dc);
+
+		  CGdiObject* m_oldobject;
+
+		  m_oldobject = m_memdc.SelectObject(&m_bitmap);
+
+		  dc.StretchBlt(0,rect.top,22,rect.bottom-rect.top,&m_memdc,0,0,m_size.bmWidth,m_size.bmHeight,SRCCOPY);
+
+		  m_bitmap.DeleteObject();
+		  //rect.left +=m_size.bmWidth ; 
+		//return;
 	 }
 	
 
@@ -93,7 +115,13 @@ void CNewMenu::MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct)
 	// TODO:  添加您的代码以确定指定项的大小
 	lpMeasureItemStruct->itemHeight=25;//项高
 	//lpMeasureItemStruct->itemWidth=80;//项宽
-	lpMeasureItemStruct->itemWidth=102;//项宽
+	if (with != 0)
+	{
+		lpMeasureItemStruct->itemWidth=with;
+	}else{
+		lpMeasureItemStruct->itemWidth=160;//项宽
+	}
+	
 	//lpMeasureItemStruct->itemWidth=120;//项宽
 }
 void CNewMenu::ChangeMenuItem(CMenu *pMenu)
@@ -113,4 +141,8 @@ void CNewMenu::ChangeMenuItem(CMenu *pMenu)
 			ChangeMenuItem(pMenu->GetSubMenu(i));
 		}
 	}  
+}
+void CNewMenu::SetWith(int twith)
+{
+	with = twith;
 }
