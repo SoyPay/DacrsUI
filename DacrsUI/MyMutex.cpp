@@ -5,13 +5,13 @@
 CMyMutex::CMyMutex(void)
 {
 	InitializeCriticalSection(&m_cs);
-	m_leave = false;
+	m_leave = 0;
 }
 
 
 CMyMutex::~CMyMutex(void)
 {
-	if (!m_leave)
+	if (m_leave == 2)
 	{
 		LeaveCriticalSection(&m_cs);
 	}
@@ -22,12 +22,13 @@ CMyMutex::~CMyMutex(void)
 bool CMyMutex::Lock()
 {
 	EnterCriticalSection(&m_cs);
+	m_leave = 2;
 	return true;
 }
 
 bool CMyMutex::Unlock()
 {
 	LeaveCriticalSection(&m_cs);
-	m_leave = true;
+	m_leave = 1;
 	return true;
 }
