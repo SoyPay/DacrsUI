@@ -186,6 +186,7 @@ public:
 	void PopupCommBalloonTip(string hash);
 	void PopupContactBalloonTip(uistruct::REVTRANSACTION_t,int apptype,int txtype);
 	void ScanQUIZNotAcceptBet();
+	void SetUpdataLanguage();
 public:
 	bool isStartMainDlg;
 	CNoUiMsgBuffer m_noUiMsgBuffer;
