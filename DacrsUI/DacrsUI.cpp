@@ -141,6 +141,8 @@ BOOL CDacrsUIApp::InitInstance()
 	//初始化日志配置参数
 	InitLogCfg();
 
+	gsLanguage = language();
+
 	LogPrint("INFO", "启动DacrsUI程序\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 	//检测自动升级
 	int nResult = Update();
@@ -165,7 +167,6 @@ BOOL CDacrsUIApp::InitInstance()
 
 	//CheckUpdate();
 
-	gsLanguage = language();
 
 	if (gsLanguage == 0)
 	{

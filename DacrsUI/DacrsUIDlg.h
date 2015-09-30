@@ -132,4 +132,5 @@ public:
 	afx_msg void OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized);
 	CMyQueue m_barpoomesg;
 	CMenu newMenu;
+	NOTIFYICONDATA nid; 
 };
