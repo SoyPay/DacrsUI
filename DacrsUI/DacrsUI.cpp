@@ -98,6 +98,18 @@ BOOL CDacrsUIApp::InitInstance()
 
 	CWinApp::InitInstance();
 
+	GetMoFilename( str_InsPath , str_ModuleFilename ); //获取文件路径和文件名称
+	gsLanguage = language();
+	if (gsLanguage == 0)
+	{
+		gsLanguage = 1;
+		CChoseLanguage chosedlg;
+		chosedlg.DoModal();
+		gsLanguage = language();
+	}
+	//设置升级软件的语言包
+	SetUpdataLanguage();
+
 	if (!RunOnlyOneApp())
 	{
 		return FALSE;
@@ -129,7 +141,6 @@ BOOL CDacrsUIApp::InitInstance()
 
 	m_blockAutoDelete = false;
 	m_msgAutoDelete= false;
-	GetMoFilename( str_InsPath , str_ModuleFilename ); //获取文件路径和文件名称
 	CheckPathValid( str_InsPath );
 	////创建维护线程
 	//if( !CreateMaintainThrd() ) {
@@ -141,7 +152,6 @@ BOOL CDacrsUIApp::InitInstance()
 	//初始化日志配置参数
 	InitLogCfg();
 
-	gsLanguage = language();
 
 	LogPrint("INFO", "启动DacrsUI程序\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 	//检测自动升级
@@ -167,14 +177,6 @@ BOOL CDacrsUIApp::InitInstance()
 
 	//CheckUpdate();
 
-
-	if (gsLanguage == 0)
-	{
-		gsLanguage = 1;
-		CChoseLanguage chosedlg;
-		chosedlg.DoModal();
-		gsLanguage = language();
-	}
 
 
 	string temprpc = m_rpcport;
@@ -1724,4 +1726,15 @@ bool CDacrsUIApp::IsLockWallet(){
 	}
 
 	return IsWalletLocked;
+}
+void CDacrsUIApp::SetUpdataLanguage()
+{
+	string strAppIni = theApp.str_InsPath;// + (CString)LANGUAGE_FILE;
+	strAppIni += "\\qupdater.ini";
+	if (language() == 2)
+	{
+		::WritePrivateProfileString("QUpdater","Langage","QUpdateren.lan",(LPCTSTR)strAppIni.c_str());
+	}else{
+		::WritePrivateProfileString("QUpdater","Langage","QUpdatercn.lan",(LPCTSTR)strAppIni.c_str());
+	}
 }
