@@ -1538,7 +1538,7 @@ void  CTradDlg::ShowPageCotent(int pageIndex)
 		nPage =  nItem/m_pagesize ;
 	}
 	string temp;
-	temp =strprintf("%s%d %s",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TOTAL" ,theApp.gsLanguage) ,nPage ,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_PAGE" ,theApp.gsLanguage));
+	temp =strprintf("%s%d",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TOTAL" ,theApp.gsLanguage) ,nPage);
 	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(temp.c_str());
 	GetDlgItem(IDC_EDIT_PAGE)->SetWindowText(_T(""));
 
@@ -1581,7 +1581,7 @@ void    CTradDlg::ShowComboxCotent()
 		nPage =  nItem/m_pagesize ;
 	}
 	string temp;
-	temp =strprintf("%s%d %s",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TOTAL" ,theApp.gsLanguage) ,nPage ,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_PAGE" ,theApp.gsLanguage));
+	temp =strprintf("%s%d",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TOTAL" ,theApp.gsLanguage) ,nPage );
 	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(temp.c_str());
 	if (nPage > 0)
 	{
