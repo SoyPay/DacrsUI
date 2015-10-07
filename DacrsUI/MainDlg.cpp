@@ -465,19 +465,59 @@ bool CMainDlg::GetUrlServer()
 	Json::Reader reader;  
 	Json::Value root; 
 
-	if (reader.parse(strHtml, root)) 
+	//if (reader.parse(strHtml, root)) 
+	//{
+	//	int index = root.size();
+	//	for (int i = 0;i <index;i++)
+	//	{
+	//		Json::Value  msgroot = root[i];
+	//		CString key = msgroot["msn"].asCString();
+	//		CString valuetemp = msgroot["url"].asCString();
+	//		m_url[key] = valuetemp;
+	//	}
+	//	//strVersion = root["version"].asString();
+	//	//ShellExecuteW(NULL, L"open", _T("http://bbs.dspay.org/portal.php"), NULL, NULL, SW_SHOWNORMAL);
+	//	return true;
+	//}
+
+	if (reader.parse(strHtml, root))
 	{
-		int index = root.size();
-		for (int i = 0;i <index;i++)
+		if (!root.isObject())
 		{
-			Json::Value  msgroot = root[i];
-			CString key = msgroot["msn"].asCString();
-			CString valuetemp = msgroot["url"].asCString();
-			m_url[key] = valuetemp;
+			return false;
 		}
-		//strVersion = root["version"].asString();
-		//ShellExecuteW(NULL, L"open", _T("http://bbs.dspay.org/portal.php"), NULL, NULL, SW_SHOWNORMAL);
-		return true;
+		if (theApp.gsLanguage == 2)
+		{
+			Json::Value rooten = root["English"];
+			if (rooten.isNull())
+			{
+				return false;
+			}
+			int index = rooten.size();
+			for (int i = 0;i <index;i++)
+			{
+				Json::Value  msgroot = rooten[i];
+				CString key = msgroot["msn"].asCString();
+				CString valuetemp = msgroot["url"].asCString();
+				m_url[key] = valuetemp;
+			}
+			return true;
+		}else{
+			Json::Value rooten = root["Chinese"];
+			if (rooten.isNull())
+			{
+				return false;
+			}
+			int index = rooten.size();
+			for (int i = 0;i <index;i++)
+			{
+				Json::Value  msgroot = rooten[i];
+				CString key = msgroot["msn"].asCString();
+				CString valuetemp = msgroot["url"].asCString();
+				m_url[key] = valuetemp;
+			}
+				return true;
+		}
 	}
 	return false;
 }
