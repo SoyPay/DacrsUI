@@ -760,7 +760,7 @@ void CP2PDlg::OnBnClickedButtonWithd()
 		strTip = UiFun::UI_LoadString("P2P_MODULE" , "P2P_WITHDRAWALS_FAIL" ,theApp.gsLanguage) ;
 	}
 	
-	UiFun::MessageBoxEx(strTip.c_str(), UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
+	UiFun::MessageBoxEx(  strTip.c_str(),UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage),MFB_OK|MFB_TIP );
 }
 
 
