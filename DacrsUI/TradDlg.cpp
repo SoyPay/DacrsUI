@@ -590,8 +590,8 @@ void CTradDlg:: GetExportCol(int index,map<int,string> &item,uistruct::REVTRANSA
 		string txtype = const_it.txtype;
 
 		int i = 0;
-		strShowData= strprintf("%d" , index) ;
-		item[i++] =strShowData;
+		//strShowData= strprintf("%d" , index) ;
+		//item[i++] =strShowData;
 		if (!strcmp(txtype.c_str(),"REWARD_TX"))
 		{
 			strShowData = UiFun::UI_LoadString("COMM_MODULE" , "COMM_MINING" ,theApp.gsLanguage) ;
@@ -655,8 +655,8 @@ void CTradDlg::OnBnClickedExportExel()
 	struct LISTCol {
 		string		name ;
 		UINT		size ;
-	} listheadr[6]  = {
-		{UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_SERIAL_NUMBER" ,theApp.gsLanguage) ,    10},
+	} listheadr[5]  = {
+		//{UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_SERIAL_NUMBER" ,theApp.gsLanguage) ,    10},
 		{UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TYPE" ,theApp.gsLanguage) ,    30},
 		{UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_SOURCE_ADDRESS" ,theApp.gsLanguage) ,    40},
 		{UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_MONEY" ,theApp.gsLanguage) ,    10},
@@ -723,7 +723,7 @@ void CTradDlg::OnBnClickedExportExel()
 
 	int   iRow,iCol;
 
-	int   m_cols   =   6;
+	int   m_cols   =   5;
 
 	int   m_rows = pListInfo.size();
 
