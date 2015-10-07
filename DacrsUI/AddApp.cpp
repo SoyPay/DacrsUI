@@ -106,32 +106,32 @@ BOOL CAddApp::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		//v_linkCtrl2.SetURL(_T("http://jq.qq.com/?_wv=1027&k=T5mlmd"));
 
 		//用来连接组成文档的组件和他的数据的视图
-		CCreateContext pContext;
-		CWnd* pFrameWnd = this;
-		pContext.m_pCurrentDoc = new CDlgDocument;
-		pContext.m_pNewViewClass = RUNTIME_CLASS(CDlgView);
-		//CDlgView *
-		pView =(CDlgView *) ((CFrameWnd*)pFrameWnd)->CreateView(&pContext);
-		ASSERT(pView);
-		pView->m_nMapMode = MM_TEXT;
+	//	CCreateContext pContext;
+	//	CWnd* pFrameWnd = this;
+	//	pContext.m_pCurrentDoc = new CDlgDocument;
+	//	pContext.m_pNewViewClass = RUNTIME_CLASS(CDlgView);
+	//	//CDlgView *
+	//	pView =(CDlgView *) ((CFrameWnd*)pFrameWnd)->CreateView(&pContext);
+	//	ASSERT(pView);
+	//	pView->m_nMapMode = MM_TEXT;
 
-		pView->ShowWindow(SW_NORMAL);
+	//	pView->ShowWindow(SW_NORMAL);
 
-		CRect rectWindow;
-		GetWindowRect(rectWindow);
-		//rectWindow.right -= 16;
-		//rectWindow.bottom -= 70;
-	//	pView->MoveWindow(rectWindow);
+	//	CRect rectWindow;
+	//	GetWindowRect(rectWindow);
+	//	//rectWindow.right -= 16;
+	//	//rectWindow.bottom -= 70;
+	////	pView->MoveWindow(rectWindow);
 
-		if (theApp.m_pMainWnd != NULL)
-		{
-			CRect rect;
-			theApp.m_pMainWnd->GetWindowRect(&rect);
-			//theApp.m_pMainWnd->ClientToScreen(rect);
-			rect.top =0;
-			rect.bottom -= (72+32);
-			pView->MoveWindow(rect);
-		}
+	//	if (theApp.m_pMainWnd != NULL)
+	//	{
+	//		CRect rect;
+	//		theApp.m_pMainWnd->GetWindowRect(&rect);
+	//		//theApp.m_pMainWnd->ClientToScreen(rect);
+	//		rect.top =0;
+	//		rect.bottom -= (72+32);
+	//		pView->MoveWindow(rect);
+	//	}
 	}
 	return bRes ;
 }

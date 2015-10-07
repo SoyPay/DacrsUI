@@ -1682,7 +1682,13 @@ void CP2PDlg::AcceptBet(CString hash,INT64 money,CString sendaddr,int timeout,IN
  void  CP2PDlg::onShowLink()
  {
 	 v_linkCtrl.SetWindowText(UiFun::UI_LoadString("COMM_MODULE" , "COMM_HELP" ,theApp.gsLanguage));
-	 v_linkCtrl.SetURL("http://www.dacrs.com/forum.php?mod=viewthread&tid=3487&extra=page%3D1");
+	 if (theApp.gsLanguage ==2)
+	 {
+		  v_linkCtrl.SetURL(theApp.helpurlen.c_str());
+	 }else{
+		 v_linkCtrl.SetURL(theApp.helpurlcn.c_str());
+	 }
+	
  }
 
  void CP2PDlg::OnLbnDblclkListBonus()
