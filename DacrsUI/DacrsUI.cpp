@@ -73,6 +73,8 @@ CDacrsUIApp::CDacrsUIApp()
 	m_readReadSpecalPacketPool = FALSE;
 	m_poptips = true;
 	m_msgprocessexit = false;
+	helpurlcn = "";
+	helpurlen = "";
 }
 
 
@@ -1431,6 +1433,7 @@ void  CDacrsUIApp::ParseUIConfigFile(const string& strExeDir){
 		CJsonConfigHelp::getInstance()->GetP2pBetStep(m_p2pbetstep);
 		CJsonConfigHelp::getInstance()->GetRedPacketStep(m_redPackestep);
 		CJsonConfigHelp::getInstance()->GetListAppConfig(m_listapp);
+		CJsonConfigHelp::getInstance()->GetHelpUrl(helpurlen,helpurlcn);
 		CNetParamCfg netParm;
 		CJsonConfigHelp::getInstance()->GetNetParamCfgData(netParm);
 		m_severip = netParm.server_ip;
