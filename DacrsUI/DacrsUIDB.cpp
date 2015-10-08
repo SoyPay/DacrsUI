@@ -367,6 +367,7 @@ void CDacrsUIApp::AcceptBetRecord(vector<unsigned char> acceptbet,uistruct::REVT
 	
 	strField +=strprintf(" right_addr = '%s' ,",transcion.regid.c_str() );
 	strField+=strprintf("recv_time = '%s' ,height = %d ,state = %d ,relate_hash = '%s' ,guess_num = %d " ,strTime ,transcion.confirmedHeight ,1 ,transcion.txhash ,(int)acceptcbet.data) ;
+	strField +=strprintf(" ,accept_amount = %lf ",(acceptcbet.money*1.0)/COIN );
 
 	int item = m_SqliteDeal.GetTableCountItem(_T("t_p2p_quiz"),strCond);
 	if (item != 0)
