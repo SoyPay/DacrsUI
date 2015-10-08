@@ -815,6 +815,11 @@ void CP2PDlg::OnBnClickedButtonRech()
 	uistruct::LISTADDR_t pAddr;
 	theApp.m_SqliteDeal.GetWalletAddressItem(strCondition,&pAddr);
 	double sub = pAddr.fMoney - strtod(theApp.m_strAddress,NULL);
+	if (sub<0)
+	{
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_SET_RECHANGEMONEY" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
+		return;
+	}
 	if (sub <1.0)
 	{
 		
@@ -907,6 +912,7 @@ void CP2PDlg::SendBet(int rewardnum)
 
 	double acceptmoney =strtod(theApp.m_strAddress,NULL);
 	double money = strtod(strTxMoney,NULL);
+	
 	if (acceptmoney <=0 || acceptmoney >=money*1.1 )
 	{
 		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_SET_ACCEPTAMOUNTRANGE" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
