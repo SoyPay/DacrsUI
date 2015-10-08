@@ -760,7 +760,7 @@ void CP2PDlg::OnBnClickedButtonWithd()
 		strTip = UiFun::UI_LoadString("P2P_MODULE" , "P2P_WITHDRAWALS_FAIL" ,theApp.gsLanguage) ;
 	}
 	
-	UiFun::MessageBoxEx(strTip.c_str(), UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
+	UiFun::MessageBoxEx(  strTip.c_str(),UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage),MFB_OK|MFB_TIP );
 }
 
 
@@ -815,6 +815,11 @@ void CP2PDlg::OnBnClickedButtonRech()
 	uistruct::LISTADDR_t pAddr;
 	theApp.m_SqliteDeal.GetWalletAddressItem(strCondition,&pAddr);
 	double sub = pAddr.fMoney - strtod(theApp.m_strAddress,NULL);
+	if (sub<0)
+	{
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_SET_RECHANGEMONEY" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
+		return;
+	}
 	if (sub <1.0)
 	{
 		
@@ -858,7 +863,7 @@ void CP2PDlg::OnBnClickedButtonRech()
 	if ( pos >=0 ) {
 		bRes = TRUE ;
 		//strTip.Format( _T("恭喜充值成功!\n%s") , root["hash"].asCString() ) ;
-		strTip = UiFun::UI_LoadString("P2P_MODULE" , "P2P_WITHDRAWALS_SUCCESS" ,theApp.gsLanguage) ;
+		strTip = UiFun::UI_LoadString("P2P_MODULE" , "MORTTARD_WITHDRAWALS_RECHARGE_SUCCESS" ,theApp.gsLanguage) ;
 	}else{
 		strTip = UiFun::UI_LoadString("P2P_MODULE" , "P2P_RECHARGE_FAIL" ,theApp.gsLanguage);
 	}
@@ -907,9 +912,10 @@ void CP2PDlg::SendBet(int rewardnum)
 
 	double acceptmoney =strtod(theApp.m_strAddress,NULL);
 	double money = strtod(strTxMoney,NULL);
-	if (acceptmoney <=0 || acceptmoney >=money*2 )
+	
+	if (acceptmoney <=0 || acceptmoney >=money*1.1 )
 	{
-		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_ADDRESS_NOT_NULL" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_SET_ACCEPTAMOUNTRANGE" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		return;
 	}
 	//// 查询地址是否激活
@@ -979,7 +985,7 @@ void CP2PDlg::SendBet(int rewardnum)
 	if ( pos >=0 ) {
 		bRes = TRUE ;
 		//strTip.Format( _T("恭喜发送赌约成功!\n%s") , root["hash"].asCString() ) ;
-		strTip.Format(UiFun::UI_LoadString("P2P_MODULE" , "P2P_WITHDRAWALS_SUCCESS" ,theApp.gsLanguage)) ;
+		strTip.Format(UiFun::UI_LoadString("P2P_MODULE" , "P2P_WITHDRAWALS_SEND_SUCCESS" ,theApp.gsLanguage)) ;
 	}else{
 		strTip.Format( UiFun::UI_LoadString("P2P_MODULE" , "P2P_SEND_BET_FAIL" ,theApp.gsLanguage) ) ;
 	}
@@ -1260,7 +1266,7 @@ void CP2PDlg::AcceptBet(CString hash,INT64 money,CString sendaddr,int timeout,IN
 	 if ( pos >=0 ) {
 		 bRes = TRUE ;
 		 //strTip.Format( _T("恭喜接赌成功!\n%s") , root["hash"].asCString() ) ;
-		 strTip=UiFun::UI_LoadString("P2P_MODULE" , "P2P_WITHDRAWALS_SUCCESS" ,theApp.gsLanguage);
+		 strTip=UiFun::UI_LoadString("P2P_MODULE" , "P2P_WITHDRAWALS_SEND_SUCCESS" ,theApp.gsLanguage);
 	 }else{
 		 strTip= UiFun::UI_LoadString("P2P_MODULE" , "P2P_THIS_ALONE_OK" ,theApp.gsLanguage) ;
 	 }
@@ -1682,7 +1688,13 @@ void CP2PDlg::AcceptBet(CString hash,INT64 money,CString sendaddr,int timeout,IN
  void  CP2PDlg::onShowLink()
  {
 	 v_linkCtrl.SetWindowText(UiFun::UI_LoadString("COMM_MODULE" , "COMM_HELP" ,theApp.gsLanguage));
-	 v_linkCtrl.SetURL("http://www.dacrs.com/forum.php?mod=viewthread&tid=3487&extra=page%3D1");
+	 if (theApp.gsLanguage ==2)
+	 {
+		  v_linkCtrl.SetURL(theApp.helpurlen.c_str());
+	 }else{
+		 v_linkCtrl.SetURL(theApp.helpurlcn.c_str());
+	 }
+	
  }
 
  void CP2PDlg::OnLbnDblclkListBonus()

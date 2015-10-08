@@ -214,6 +214,8 @@ public:
 	bool  m_readReadCommPacketPool;         /// TURE 可以从数据库中读 红包池的数据 FALSE 不可以读
 	bool  m_readReadSpecalPacketPool;         /// TURE 可以从数据库中读 红包池的数据 FALSE 不可以读
 	map<string,CONFIG_APP_DATA> m_listapp;
+	string helpurlcn;
+	string helpurlen;
 };
 
 

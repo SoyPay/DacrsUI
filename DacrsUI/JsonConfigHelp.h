@@ -158,6 +158,7 @@ public:
 	void GetP2pBetStep(CP2PBetStepCfg &p2pbetstep);
 	CONFIG_APP_DATA GetAppValue(const Json::Value &root);
 	void GetListAppConfig(map<string,CONFIG_APP_DATA> &mlisapp);
+	void GetHelpUrl(string &helpen,string &helpcn);
 private:
 	void ReadMainCfgData(const Json::Value& root);
 	void ReadSesureTradeCfgData(const Json::Value& root);
@@ -174,7 +175,7 @@ private:
 	void ReadP2pBetStep(const Json::Value &root);
 	void AddString(const Json::Value& root,CAutoComplete &m_comboxinput);
 	void ReadListAppConfig(const Json::Value &root);
-
+	void ReadHelpUrl(const Json::Value &root);
 public:
 	void ModifyAppFeeCfgData( Json::Value& root,const CString &LeaderKey,const CString &Key,const CString &KeyValue);
 
@@ -195,5 +196,7 @@ private:
 	CP2PBetStepCfg    m_p2pbetstep;
 	bool              m_poptip;
 	map<string,CONFIG_APP_DATA> m_listapp;
+	string            m_helpcn;
+	string            m_helpen;
 };
 
