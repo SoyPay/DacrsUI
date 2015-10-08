@@ -6,6 +6,8 @@ void CJsonConfigHelp::Init()
 {
 		m_close = 0;
 		m_poptip = true;
+		m_helpcn = "";
+		m_helpen = "";
 		//memset(&m_MainCfg,0,sizeof(CMainCfg));
 		//memset(&m_DarkCfg,0,sizeof(CDarkTxCfg));
 		//memset(&m_AnonymCfg,0,sizeof(CAnonmyCfg));
@@ -111,6 +113,11 @@ void CJsonConfigHelp::ReadJsonConfig(const string& strFilePath)
 		if (pos >0)
 		{
 			ReadListAppConfig(root);
+		}
+		pos = strTemp.find("help");
+		if (pos >0)
+		{
+			ReadHelpUrl(root);
 		}
 	}
 	ifs.close();
@@ -453,4 +460,21 @@ void CJsonConfigHelp::ReadListAppConfig(const Json::Value &root)
 void CJsonConfigHelp::GetListAppConfig(map<string,CONFIG_APP_DATA> &mlisapp)
 {
 	mlisapp=m_listapp;
+}
+
+void CJsonConfigHelp::GetHelpUrl(string &helpen,string &helpcn)
+{
+	helpen =m_helpen;
+	helpcn =m_helpcn;
+}
+
+void CJsonConfigHelp::ReadHelpUrl(const Json::Value &root)
+{
+	Json::Value help = root["help"];
+	if (help.isNull()|| !help.isObject())
+	{
+		return;
+	}
+	m_helpcn = help["helpcn"].asString();
+	m_helpen = help["helpen"].asString();
 }

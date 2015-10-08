@@ -859,6 +859,16 @@ void CDacrsUIDlg::OnTimer(UINT_PTR nIDEvent)
 		}
 	}else if (0x12  == nIDEvent) /// 检查是任务栏中是否有托盘没有添加
 	{
+		NOTIFYICONDATA nid; 
+		memset(&nid,0,sizeof(NOTIFYICONDATA));
+		nid.cbSize=(DWORD)sizeof(NOTIFYICONDATA); 
+		nid.hWnd=this->m_hWnd; 
+		nid.uID=IDR_MAINFRAME; 
+		nid.uFlags=NIF_ICON|NIF_TIP|NIF_MESSAGE ; //NIF_MESSAGE|
+		nid.uCallbackMessage=WM_SHOWTASK;//自定义的消息名称 
+		nid.hIcon=LoadIcon(AfxGetInstanceHandle(),MAKEINTRESOURCE(IDR_MAINFRAME)); 
+		memset(nid.szTip,0,128);
+		strcpy_s(nid.szTip,"dacrs"); //信息提示条 
 		if ( !Shell_NotifyIcon( NIM_MODIFY, &nid ) )  
 			   Shell_NotifyIcon( NIM_ADD, &nid );  
 
@@ -974,12 +984,12 @@ void CDacrsUIDlg::ToTray()
 	{
 		CBalloonTip::Hide(m_BalloonTip);
 	}
-	//NOTIFYICONDATA nid; 
+	NOTIFYICONDATA nid; 
 	memset(&nid,0,sizeof(NOTIFYICONDATA));
 	nid.cbSize=(DWORD)sizeof(NOTIFYICONDATA); 
 	nid.hWnd=this->m_hWnd; 
 	nid.uID=IDR_MAINFRAME; 
-	nid.uFlags=NIF_ICON|NIF_TIP ; //NIF_MESSAGE|
+	nid.uFlags=NIF_ICON|NIF_TIP|NIF_MESSAGE ; //NIF_MESSAGE|
 	nid.uCallbackMessage=WM_SHOWTASK;//自定义的消息名称 
 	nid.hIcon=LoadIcon(AfxGetInstanceHandle(),MAKEINTRESOURCE(IDR_MAINFRAME)); 
 	memset(nid.szTip,0,128);
@@ -1053,14 +1063,14 @@ void CDacrsUIDlg::OnCloseApp()
 }
 void CDacrsUIDlg::DeleteTray() 
 { 
-	//NOTIFYICONDATA nid; 
-	//nid.cbSize=(DWORD)sizeof(NOTIFYICONDATA); 
-	//nid.hWnd=this->m_hWnd; 
-	//nid.uID=IDR_MAINFRAME; 
-	//nid.uFlags=NIF_ICON|NIF_MESSAGE|NIF_TIP ; 
-	//nid.uCallbackMessage=WM_SHOWTASK; //自定义的消息名称 
-	//nid.hIcon=LoadIcon(AfxGetInstanceHandle(),MAKEINTRESOURCE(IDR_MAINFRAME)); 
-	//strcpy_s(nid.szTip,"dacrs"); //信息提示条为“计划任务提醒” 
+	NOTIFYICONDATA nid; 
+	nid.cbSize=(DWORD)sizeof(NOTIFYICONDATA); 
+	nid.hWnd=this->m_hWnd; 
+	nid.uID=IDR_MAINFRAME; 
+	nid.uFlags=NIF_ICON|NIF_MESSAGE|NIF_TIP ; 
+	nid.uCallbackMessage=WM_SHOWTASK; //自定义的消息名称 
+	nid.hIcon=LoadIcon(AfxGetInstanceHandle(),MAKEINTRESOURCE(IDR_MAINFRAME)); 
+	strcpy_s(nid.szTip,"dacrs"); //信息提示条为“计划任务提醒” 
 	Shell_NotifyIcon(NIM_DELETE,&nid); //在托盘区删除图标 
 } 
 void CDacrsUIDlg::SetAppFee()
