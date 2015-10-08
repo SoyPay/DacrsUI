@@ -1234,6 +1234,7 @@ BOOL CSqliteDeal::IsExistField(const string tablename,const string filed , const
 	sqlite3 ** pDBConn = GetDBConnect(); //获取数据库连接
 	string strSQL("");
 	strSQL =strprintf("SELECT * FROM %s",tablename);
+	//strSQL =strprintf("SELECT sqlite_master where type = 'table' and name ='%s'",tablename);
 
 	//strSQL =strprintf("SELECT * FROM USER_TAB_COLUMNS WHERE TABLE_NAME = '%s' AND COLUMN_NAME = '%s'",tablename,filed);
 	BOOL isExist = false;
