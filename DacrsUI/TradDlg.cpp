@@ -841,10 +841,17 @@ void CTradDlg::OnBnClickedExportExel()
 
 	book.put_Saved(true);
 
-	book.ReleaseDispatch();  
+	range.ReleaseDispatch();
+	sheet.ReleaseDispatch();
+	sheets.ReleaseDispatch();
+	book.ReleaseDispatch();
+	books.ReleaseDispatch();
 
-	books.ReleaseDispatch();  
+	//book.ReleaseDispatch();  
 
+	//books.ReleaseDispatch();  
+	book.Close (covOptional, covOptional,covOptional);// πÿ±’Workbook∂‘œÛ
+	books.Close(); 
 	app.Quit();
 
 	app.ReleaseDispatch();
