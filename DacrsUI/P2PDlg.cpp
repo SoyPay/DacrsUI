@@ -863,7 +863,7 @@ void CP2PDlg::OnBnClickedButtonRech()
 	if ( pos >=0 ) {
 		bRes = TRUE ;
 		//strTip.Format( _T("恭喜充值成功!\n%s") , root["hash"].asCString() ) ;
-		strTip = UiFun::UI_LoadString("P2P_MODULE" , "P2P_WITHDRAWALS_SUCCESS" ,theApp.gsLanguage) ;
+		strTip = UiFun::UI_LoadString("P2P_MODULE" , "MORTTARD_WITHDRAWALS_RECHARGE_SUCCESS" ,theApp.gsLanguage) ;
 	}else{
 		strTip = UiFun::UI_LoadString("P2P_MODULE" , "P2P_RECHARGE_FAIL" ,theApp.gsLanguage);
 	}
@@ -985,7 +985,7 @@ void CP2PDlg::SendBet(int rewardnum)
 	if ( pos >=0 ) {
 		bRes = TRUE ;
 		//strTip.Format( _T("恭喜发送赌约成功!\n%s") , root["hash"].asCString() ) ;
-		strTip.Format(UiFun::UI_LoadString("P2P_MODULE" , "P2P_WITHDRAWALS_SUCCESS" ,theApp.gsLanguage)) ;
+		strTip.Format(UiFun::UI_LoadString("P2P_MODULE" , "P2P_WITHDRAWALS_SEND_SUCCESS" ,theApp.gsLanguage)) ;
 	}else{
 		strTip.Format( UiFun::UI_LoadString("P2P_MODULE" , "P2P_SEND_BET_FAIL" ,theApp.gsLanguage) ) ;
 	}
@@ -1266,7 +1266,7 @@ void CP2PDlg::AcceptBet(CString hash,INT64 money,CString sendaddr,int timeout,IN
 	 if ( pos >=0 ) {
 		 bRes = TRUE ;
 		 //strTip.Format( _T("恭喜接赌成功!\n%s") , root["hash"].asCString() ) ;
-		 strTip=UiFun::UI_LoadString("P2P_MODULE" , "P2P_WITHDRAWALS_SUCCESS" ,theApp.gsLanguage);
+		 strTip=UiFun::UI_LoadString("P2P_MODULE" , "P2P_WITHDRAWALS_SEND_SUCCESS" ,theApp.gsLanguage);
 	 }else{
 		 strTip= UiFun::UI_LoadString("P2P_MODULE" , "P2P_THIS_ALONE_OK" ,theApp.gsLanguage) ;
 	 }
