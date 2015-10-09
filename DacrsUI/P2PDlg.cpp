@@ -863,7 +863,7 @@ void CP2PDlg::OnBnClickedButtonRech()
 	if ( pos >=0 ) {
 		bRes = TRUE ;
 		//strTip.Format( _T("πßœ≤≥‰÷µ≥…π¶!\n%s") , root["hash"].asCString() ) ;
-		strTip = UiFun::UI_LoadString("P2P_MODULE" , "MORTTARD_WITHDRAWALS_RECHARGE_SUCCESS" ,theApp.gsLanguage) ;
+		strTip = UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_WITHDRAWALS_RECHARGE_SUCCESS" ,theApp.gsLanguage) ;
 	}else{
 		strTip = UiFun::UI_LoadString("P2P_MODULE" , "P2P_RECHARGE_FAIL" ,theApp.gsLanguage);
 	}
