@@ -496,7 +496,7 @@ bool CMainDlg::GetUrlServer()
 		if (theApp.gsLanguage == 2)
 		{
 			Json::Value rooten = root["English"];
-			if (rooten.isNull())
+			if (rooten.isNull() && !rooten.isArray())
 			{
 				return false;
 			}
@@ -504,22 +504,42 @@ bool CMainDlg::GetUrlServer()
 			for (int i = 0;i <index;i++)
 			{
 				Json::Value  msgroot = rooten[i];
+				Json::Value value = msgroot["msn"];
+				if (value.isNull())
+				{
+					return false;
+				}
 				CString key = msgroot["msn"].asCString();
+				value = msgroot["url"];
+				if (value.isNull())
+				{
+					return false;
+				}
 				CString valuetemp = msgroot["url"].asCString();
 				m_url[key] = valuetemp;
 			}
 			return true;
 		}else{
-			Json::Value rooten = root["Chinese"];
-			if (rooten.isNull())
+			Json::Value rootcn = root["Chinese"];
+			if (rootcn.isNull()&& !rootcn.isArray())
 			{
 				return false;
 			}
-			int index = rooten.size();
+			int index = rootcn.size();
 			for (int i = 0;i <index;i++)
 			{
-				Json::Value  msgroot = rooten[i];
+				Json::Value  msgroot = rootcn[i];
+				Json::Value value = msgroot["msn"];
+				if (value.isNull())
+				{
+					return false;
+				}
 				CString key = msgroot["msn"].asCString();
+				value = msgroot["url"];
+				if (value.isNull())
+				{
+					return false;
+				}
 				CString valuetemp = msgroot["url"].asCString();
 				m_url[key] = valuetemp;
 			}
