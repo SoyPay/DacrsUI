@@ -1200,6 +1200,9 @@
     <None Include="res\nemu.bmp">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="res\mort_dlgen.bmp">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="资源文件">

@@ -219,6 +219,7 @@
     <None Include="res\more3.bmp" />
     <None Include="res\Mortgage.bmp" />
     <None Include="res\mort_dlg.bmp" />
+    <None Include="res\mort_dlgen.bmp" />
     <None Include="res\nemu.bmp" />
     <None Include="res\newaddr-1.bmp" />
     <None Include="res\newaddr-2.bmp" />

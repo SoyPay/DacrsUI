@@ -60,8 +60,8 @@ int CAddApp::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 
 	// TODO:  在此添加您专用的创建代码
-	SetBkBmpNid(IDB_BITMAP_ADDAPP_BJ);
-
+	//SetBkBmpNid(IDB_BITMAP_ADDAPP_BJ);
+	SetBkBmpNid(UiFun::GetBmpId(IDB_BITMAP_ADDAPP_BJ,IDB_BITMAP_IPO_BJEN,theApp.language()));
 	return 0;
 }
 
