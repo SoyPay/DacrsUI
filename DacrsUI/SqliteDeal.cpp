@@ -1233,10 +1233,9 @@ BOOL CSqliteDeal::IsExistField(const string tablename,const string filed , const
 {
 	sqlite3 ** pDBConn = GetDBConnect(); //获取数据库连接
 	string strSQL("");
-	strSQL =strprintf("SELECT * FROM %s",tablename);
-	//strSQL =strprintf("SELECT sqlite_master where type = 'table' and name ='%s'",tablename);
+	strSQL =strprintf("select * from sqlite_master where type='table'and name='%s'",tablename);
 
-	//strSQL =strprintf("SELECT * FROM USER_TAB_COLUMNS WHERE TABLE_NAME = '%s' AND COLUMN_NAME = '%s'",tablename,filed);
+
 	BOOL isExist = false;
 	char **pazResult;
 	char *zErrMsg = NULL;
@@ -1247,15 +1246,53 @@ BOOL CSqliteDeal::IsExistField(const string tablename,const string filed , const
 		fprintf(stderr, "SQL error: %s\n", zErrMsg);
 		return FALSE;
 	}
-	for(int i=0; i<nCol;++i) {
-		string strValue ;
-		strValue = strprintf("%s" , pazResult[i] ) ;
-		if (strcmp(filed.c_str(),strValue.c_str()) == 0)
+	if (nCol<=0 || nRow<=0)
+	{
+		sqlite3_free_table(pazResult);
+		return isExist;
+	}
+	string strValue ;
+	strValue = strprintf("%s" , pazResult[nCol+nCol-1] ) ;
+    
+	int pos = strValue.find("(");
+	strValue = strValue.substr(pos+1,strValue.length());
+
+	pos = strValue.find(",");
+	string keyValue="";
+	while(pos >=0)
+	{
+		keyValue = strValue.substr(0,pos);
+		UiFun::trimleft(keyValue);
+		int index = keyValue.find(" ");
+		if (index >=0)
+		{
+			keyValue=keyValue.substr(0,index);
+			UiFun::trimleft(keyValue);
+			UiFun::trimright(keyValue);
+			if (strcmp(keyValue.c_str(),filed.c_str()) == 0)
+			{
+				isExist = TRUE;
+				break;
+			}
+		}
+		strValue=strValue.substr(pos+1,strValue.length());
+		pos = strValue.find(",");
+	}
+
+
+	keyValue = strValue.substr(0,pos);
+	UiFun::trimleft(keyValue);
+	pos = keyValue.find(" ");
+	if (!isExist &&pos >=0)
+	{
+		keyValue=keyValue.substr(0,pos);
+		UiFun::trimright(keyValue);
+		if (strcmp(keyValue.c_str(),filed.c_str()) == 0)
 		{
 			isExist = TRUE;
-			break;
 		}
 	}
+
 	sqlite3_free_table(pazResult);
 	return isExist;
 }
