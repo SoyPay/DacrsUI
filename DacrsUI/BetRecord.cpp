@@ -221,7 +221,7 @@ void  CBetRecord::OnShowPagePool(int page)
 	{
 		uistruct::P2P_QUIZ_RECORD_t const_it = m_PoolList.at(k);
 		
-		dmoney =strprintf("%.4f",const_it.amount);
+		dmoney =strprintf("%.4f",const_it.accept_amount);
 
 		if (const_it.guess_num == 1)
 		{
