@@ -1083,7 +1083,7 @@ void CDacrsUIApp::PopupContactBalloonTip(uistruct::REVTRANSACTION_t tx,int appty
 						amount=strprintf("%s:-%.8f\r\n",UiFun::UI_LoadString("COMM_MODULE" , "COMM_MONEY" ,theApp.gsLanguage),pPoolItem.amount);
 					}
 					//acotor = "类别:发竞猜\r\n";
-					acotor=strprintf("%s:%S\r\n",UiFun::UI_LoadString("COMM_MODULE" , "COMM_MONEY" ,theApp.gsLanguage),UiFun::UI_LoadString("DACRSU" , "DACRSU_SENDTYPE" ,theApp.gsLanguage));
+					acotor=strprintf("%s:%S\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TYPE" ,theApp.gsLanguage),UiFun::UI_LoadString("DACRSU" , "DACRSU_SENDTYPE" ,theApp.gsLanguage));
 					addr= pPoolItem.left_addr;
 				}else if (pPoolItem.actor == 1)
 				{
@@ -1096,14 +1096,14 @@ void CDacrsUIApp::PopupContactBalloonTip(uistruct::REVTRANSACTION_t tx,int appty
 						amount=strprintf("%s:-%.8f\r\n",UiFun::UI_LoadString("COMM_MODULE" , "COMM_MONEY" ,theApp.gsLanguage),pPoolItem.amount);
 					}
 					//acotor = "类别:接单\r\n";
-					acotor=strprintf("%s:%s\r\n",UiFun::UI_LoadString("COMM_MODULE" , "COMM_MONEY" ,theApp.gsLanguage),UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_ORDERS_TRADID" ,theApp.gsLanguage));
+					acotor=strprintf("%s:%s\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TYPE" ,theApp.gsLanguage),UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_ORDERS" ,theApp.gsLanguage));
 					addr= pPoolItem.right_addr;
 				}else{
 					//strShow +="(持平)\r\n" ;
 					strShow +=strprintf("(%s)\r\n",UiFun::UI_LoadString("DACRSU" , "DACRSU_EQUAL" ,theApp.gsLanguage));
 					amount=strprintf("%s:%.8f\r\n",UiFun::UI_LoadString("COMM_MODULE" , "COMM_MONEY" ,theApp.gsLanguage),pPoolItem.amount);
 					//acotor = "类别:即是发竞猜也是接单\r\n";
-					acotor=strprintf("%s:%s\r\n",UiFun::UI_LoadString("COMM_MODULE" , "COMM_MONEY" ,theApp.gsLanguage),UiFun::UI_LoadString("COMM_MODULE" , "DACRSU_ALLTYPE" ,theApp.gsLanguage));
+					acotor=strprintf("%s:%s\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TYPE" ,theApp.gsLanguage),UiFun::UI_LoadString("DACRSU" , "DACRSU_ALLTYPE" ,theApp.gsLanguage));
 					
 					addr= pPoolItem.right_addr;
 				}
