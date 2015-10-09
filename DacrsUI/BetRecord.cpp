@@ -236,14 +236,14 @@ void  CBetRecord::OnShowPagePool(int page)
 
 		
 
-		if (const_it.send_time == 0)
+		if (const_it.send_time <= 0)
 		{
 			sendTime = "--";
 		}else{
 			SYSTEMTIME curTime =UiFun::Time_tToSystemTime(const_it.send_time);
 			sendTime =strprintf("%02d-%02d %02d:%02d:%02d", curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
 		}
-		if (const_it.recv_time == 0)
+		if (const_it.recv_time <= 0)
 		{
 			reciveTime = "--";
 		}else{
