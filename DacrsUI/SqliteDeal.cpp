@@ -119,7 +119,7 @@ BOOL CSqliteDeal::InitializationDB(){
 	strCondition = _T("type='table' and name='t_quiz_pool'");
 	if(!GetTableCountItem(strTableName, strCondition))
 	{
-		string createSQL="CREATE TABLE t_quiz_pool(hash TEXT PRIMARY KEY,send_acct_id TEXT,total_amount INT,,accetp_amount INT,height INT,acceptid TEXT,accepthash TEXT,guess INT,state INT)";
+		string createSQL="CREATE TABLE t_quiz_pool(hash TEXT PRIMARY KEY,send_acct_id TEXT,total_amount INT,accetp_amount INT,height INT,acceptid TEXT,accepthash TEXT,guess INT,state INT)";
 		if(!ExcuteSQL(pDBConn, NULL, createSQL, NULL))
 		{
 			LogPrint("INFO", "Create table t_p2p_quiz failed\n");
