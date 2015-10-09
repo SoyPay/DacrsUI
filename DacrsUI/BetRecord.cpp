@@ -211,7 +211,7 @@ void  CBetRecord::OnShowPagePool(int page)
 	int index = (page-1)*m_pagesize;
 	unsigned int count = (m_PoolList.size() -index)>=m_pagesize?m_pagesize:(m_PoolList.size() -index);
 
-	string dmoney,reward,result,guess,Sendaddr,address;
+	string reward,result,guess,Sendaddr,address;
 	string sendTime,reciveTime;
 	
 	char buffer[1024] ={0};
@@ -221,7 +221,6 @@ void  CBetRecord::OnShowPagePool(int page)
 	{
 		uistruct::P2P_QUIZ_RECORD_t const_it = m_PoolList.at(k);
 		
-		dmoney =strprintf("%.4f",const_it.amount);
 
 		if (const_it.guess_num == 1)
 		{
@@ -236,14 +235,14 @@ void  CBetRecord::OnShowPagePool(int page)
 
 		
 
-		if (const_it.send_time == 0)
+		if (const_it.send_time <= 0)
 		{
 			sendTime = "--";
 		}else{
 			SYSTEMTIME curTime =UiFun::Time_tToSystemTime(const_it.send_time);
 			sendTime =strprintf("%02d-%02d %02d:%02d:%02d", curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
 		}
-		if (const_it.recv_time == 0)
+		if (const_it.recv_time <= 0)
 		{
 			reciveTime = "--";
 		}else{
@@ -251,7 +250,7 @@ void  CBetRecord::OnShowPagePool(int page)
 			reciveTime =strprintf("%02d-%02d %02d:%02d:%02d", rTime.wMonth, rTime.wDay, rTime.wHour, rTime.wMinute, rTime.wSecond);
 		}
 
-		reward =strprintf("%.4f", const_it.amount);
+		reward =strprintf("%.4f", const_it.accept_amount);
 		
 		///说明开奖了
 		if (const_it.state == 2)

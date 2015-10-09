@@ -392,7 +392,7 @@ void  CSendRecord::OnShowPagePool(int page)
 		uistruct::P2P_QUIZ_RECORD_t const_it = m_PoolList.at(k);
 
 
-		if (const_it.send_time != 0)
+		if (const_it.send_time > 0)
 		{
 			SYSTEMTIME curTime =UiFun::Time_tToSystemTime(const_it.send_time);
 			SendTime =strprintf("%02d-%02d %02d:%02d:%02d",curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
@@ -419,9 +419,15 @@ void  CSendRecord::OnShowPagePool(int page)
 		///说明开奖了
 		if (const_it.state == 2 || const_it.state == 1 || const_it.state == 5)
 		{
-			SYSTEMTIME curTime =UiFun::Time_tToSystemTime(const_it.recv_time);
+			if (const_it.recv_time >0)
+			{
+				SYSTEMTIME curTime =UiFun::Time_tToSystemTime(const_it.recv_time);
 
-			strTime =strprintf("%02d-%02d %02d:%02d:%02d",curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+				strTime =strprintf("%02d-%02d %02d:%02d:%02d",curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+			}else{
+				strTime = "--";
+			}
+
 		
 			if (const_it.guess_num == 1)
 			{
