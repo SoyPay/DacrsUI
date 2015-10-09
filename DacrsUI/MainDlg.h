@@ -66,6 +66,7 @@ private:
 	CMFCLinkCtrl v_linkCtrl2;
 	CMFCLinkCtrl v_linkCtrl3;
 	CMFCLinkCtrl v_linkCtrlQQ;
+	CMFCLinkCtrl v_linkCtrlBlock;
 public:
 	afx_msg void OnPaint();
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);

@@ -52,6 +52,12 @@ CMainDlg::~CMainDlg()
 	v_linkCtrlQQ.ExternalRelease();
 	v_linkCtrlQQ.OnFinalRelease();
 	v_linkCtrlQQ.DestroyWindow();
+
+	v_linkCtrlBlock.InternalRelease();
+	v_linkCtrlBlock.ExternalRelease();
+	v_linkCtrlBlock.OnFinalRelease();
+	v_linkCtrlBlock.DestroyWindow();
+	
 }
 
 void CMainDlg::DoDataExchange(CDataExchange* pDX)
@@ -79,7 +85,8 @@ void CMainDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_MFCLINK4, v_linkCtrl2);
 	DDX_Control(pDX, IDC_MFCLINK5, v_linkCtrl3);
 	DDX_Control(pDX, IDC_MFCLINK_QQ, v_linkCtrlQQ);
-
+	DDX_Control(pDX, IDC_MFCLINK_BLOCK, v_linkCtrlBlock);
+	
 	//DDX_Control(pDX, IDC_BUTTON_IMPORTWALLET, m_rBtnImportWallet);
 	//DDX_Control(pDX, IDC_BUTTON_DUMPWALLET, m_rBtnDumpWallet);
 
@@ -588,6 +595,9 @@ void CMainDlg::onnitLinkText()
    v_linkCtrl3.SetWindowText(_T(""));
    v_linkCtrlQQ.SetWindowText(UiFun::UI_LoadString("WALLET_MODULE" , "WALLET_OFFICIAL_CUSTOMER" , theApp.gsLanguage ));
    v_linkCtrlQQ.SetURL("http://wpa.qq.com/msgrd?v=3&uin=1578215488&site=qq&menu=yes");
+
+   v_linkCtrlBlock.SetWindowText("Block chain");
+   v_linkCtrlBlock.SetURL("http://block.dacrs.com/index");
    int i = 1;
 	map<CString,CString>::iterator it;
 	for(it=m_url.begin();it!=m_url.end();++it)
@@ -846,6 +856,13 @@ void CMainDlg::OnSize(UINT nType, int cx, int cy)
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
 			pst->SetWindowPos( NULL ,rc.Width()-rect.Width() ,rc.Height()-rect.Height()-10   , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
+
+		pst = GetDlgItem( IDC_MFCLINK_BLOCK ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,rc.Width()-rect.Width() ,rc.Height()-2*rect.Height()-10   , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
 
 		pst = GetDlgItem( IDC_ALLTXDETAIL ) ;
