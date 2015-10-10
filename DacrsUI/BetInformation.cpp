@@ -91,7 +91,7 @@ void CBetInformation::ShowBetRecordDetail(CString jsontx)
 	string txdetail,strShowData;
 	txdetail= strprintf("%s: %s\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_SEND_TRADID" ,theApp.gsLanguage) ,betrecord.tx_hash.c_str());
 	txdetail += strprintf("%S: %s \r\n\r\n",UiFun::UI_LoadString("GUESS_SISTERLIST" , "GUESS_SISTERLIST_SEND" ,theApp.gsLanguage),betrecord.left_addr.c_str());
-	txdetail += strprintf("%s: %.4f \r\n\r\n",UiFun::UI_LoadString("COMM_MODULE" , "COMM_MONEY" ,theApp.gsLanguage),betrecord.amount);
+	txdetail += strprintf("%s: %.8f \r\n\r\n",UiFun::UI_LoadString("COMM_MODULE" , "COMM_MONEY" ,theApp.gsLanguage),betrecord.amount);
 	txdetail += strprintf("%s: %d  %s\r\n\r\n",UiFun::UI_LoadString("GUESS_SISTERLIST" , "GUESS_SISTERLIST_TIMEOUT" ,theApp.gsLanguage),betrecord.time_out,UiFun::UI_LoadString("PASS_WORD" , "PASS_WORD_MINUTE" ,theApp.gsLanguage));
 	txdetail+=strprintf("%s%s:%.8f\r\n\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_ORDERS" ,theApp.gsLanguage),UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_MONEY" ,theApp.gsLanguage),betrecord.accept_amount );
 	//// 只是发了赌约，还没有接单
