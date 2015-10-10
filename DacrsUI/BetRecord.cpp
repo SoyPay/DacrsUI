@@ -280,13 +280,15 @@ void  CBetRecord::OnShowPagePool(int page)
 		}else{
 			if (const_it.height>0 &&(const_it.time_out + const_it.height)> theApp.blocktipheight&& theApp.IsSyncBlock)
 			{
-				m_ListBox.SetIndexString(i , const_it.left_addr.c_str(),const_it.right_addr.c_str(),sendTime.c_str(),reciveTime.c_str(), UiFun::UI_LoadString("COMM_MODULE" , "COMM_NO_LOTTERY" ,theApp.gsLanguage),guess.c_str(),reward.c_str());
+				//m_ListBox.SetIndexString(i , const_it.left_addr.c_str(),const_it.right_addr.c_str(),sendTime.c_str(),reciveTime.c_str(), UiFun::UI_LoadString("COMM_MODULE" , "COMM_NO_LOTTERY" ,theApp.gsLanguage),guess.c_str(),reward.c_str());
+				m_ListBox.SetIndexString(i , const_it.left_addr.c_str(),const_it.right_addr.c_str(),sendTime.c_str(),reciveTime.c_str(),"--",guess.c_str(),reward.c_str());
 			}else if(theApp.IsSyncBlock && const_it.height != 0){
 				m_ListBox.SetIndexBackCol(i , 6 , RGB(242,32,32));
 				reward =strprintf("+%.4f", const_it.amount);
 				m_ListBox.SetIndexString(i , const_it.left_addr.c_str(),const_it.right_addr.c_str(),sendTime.c_str(),reciveTime.c_str(), UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIMEOUT" ,theApp.gsLanguage),guess.c_str(),reward.c_str());
 			}else{
-				m_ListBox.SetIndexString(i , const_it.left_addr.c_str(),const_it.right_addr.c_str(),sendTime.c_str(),reciveTime.c_str(), UiFun::UI_LoadString("COMM_MODULE" , "COMM_NO_LOTTERY" ,theApp.gsLanguage),guess.c_str(),reward.c_str());
+				//m_ListBox.SetIndexString(i , const_it.left_addr.c_str(),const_it.right_addr.c_str(),sendTime.c_str(),reciveTime.c_str(), UiFun::UI_LoadString("COMM_MODULE" , "COMM_NO_LOTTERY" ,theApp.gsLanguage),guess.c_str(),reward.c_str());
+				m_ListBox.SetIndexString(i , const_it.left_addr.c_str(),const_it.right_addr.c_str(),sendTime.c_str(),reciveTime.c_str(), "--",guess.c_str(),reward.c_str());
 			}
 		}
 		i++;
