@@ -134,7 +134,7 @@ BOOL CSqliteDeal::InitializationDB(){
 			LogPrint("INFO", "Create table t_quiz_pool failed\n");
 			return FALSE;
 		}
-	}else if(!IsExistField(_T("accetp_amount"),_T("acceptid"),_T("1=1")))
+	}else if(!IsExistField(_T("t_quiz_pool"),_T("accetp_amount"),_T("1=1")))
 	{
 		DeleteTable(_T("t_quiz_pool"));
 		string createSQL="CREATE TABLE t_quiz_pool(hash TEXT PRIMARY KEY,send_acct_id TEXT,total_amount INT,accetp_amount INT,height INT,acceptid TEXT,accepthash TEXT,guess INT,state INT)";
