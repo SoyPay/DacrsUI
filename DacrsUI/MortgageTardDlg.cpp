@@ -1420,6 +1420,12 @@ void  CMortgageTardDlg::GetAppAccountSomeMoney()
 	}
 
 	double money = strtod(theApp.m_strAddress,NULL);
+	if (money <0.0000000000000001)
+	{
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_WITHDRAWALS_NULL" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
+		return ;
+	}
+
 	if (!CheckBalance(money))
 	{
 		return;
