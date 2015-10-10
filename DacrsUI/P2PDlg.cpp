@@ -913,7 +913,10 @@ void CP2PDlg::SendBet(int rewardnum)
 	double acceptmoney =strtod(theApp.m_strAddress,NULL);
 	double money = strtod(strTxMoney,NULL);
 	
-	if (acceptmoney <=0 || acceptmoney >=money*1.1 )
+    INT64 accept64=(INT64)REAL_MONEY(acceptmoney);
+	INT64 send64=(INT64)REAL_MONEY(money);
+
+	if (accept64 <=0 || accept64 >=send64*1.1 )
 	{
 		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_SET_ACCEPTAMOUNTRANGE" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		return;
