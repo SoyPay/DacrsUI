@@ -445,7 +445,7 @@ void  CSendRecord::OnShowPagePool(int page)
 				}else
 				{
 					m_listBox.SetIndexBackCol(i, 6, RGB(242,32,32));
-					reward =strprintf("+%.4f",const_it.amount);
+					reward =strprintf("+%.4f",const_it.accept_amount);
 				}
 			}
 
