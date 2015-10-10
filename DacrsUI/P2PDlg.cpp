@@ -1709,7 +1709,7 @@ void CP2PDlg::AcceptBet(CString hash,INT64 money,CString sendaddr,int timeout,IN
 	 if (count <=(int)m_PoolList.size())
 	 {
 		 uistruct::LISTP2POOL_T const_it = m_PoolList.at(count);
-		 string temp = UiFun::UI_LoadString("P2P_MODULE" , "P2P_QUIZ_TRAD_ID" ,theApp.gsLanguage);
+		 string temp = UiFun::UI_LoadString("P2P_MODULE" , "P2P_QUIZ_TRAD_ID" ,theApp.gsLanguage)+":";
 	    temp +=const_it.hash ;
 		 UiFun::MessageBoxEx(temp.c_str() , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 	 }
