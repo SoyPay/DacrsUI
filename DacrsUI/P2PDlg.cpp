@@ -1452,7 +1452,7 @@ void CP2PDlg::AcceptBet(CString hash,INT64 money,CString sendaddr,int timeout,IN
 					loser += const_it->amount;
 				}else
 				{
-					winer += const_it->amount;
+					winer += const_it->accept_amount;
 				}
 			}else if (const_it->state == 1){
 				if(const_it->height != 0 &&(const_it->time_out + const_it->height)< theApp.blocktipheight){
@@ -1465,7 +1465,7 @@ void CP2PDlg::AcceptBet(CString hash,INT64 money,CString sendaddr,int timeout,IN
 				int rewardnum = (int)const_it->content[32];
 				if (const_it->guess_num == const_it->content[32])
 				{
-					winer +=const_it->accept_amount; //const_it->amount;
+					winer +=const_it->amount; //const_it->amount;
 				}else
 				{
 					loser += const_it->accept_amount;;//const_it->amount;
@@ -1496,7 +1496,7 @@ void CP2PDlg::AcceptBet(CString hash,INT64 money,CString sendaddr,int timeout,IN
 					 loser += const_it->amount;
 				 }else
 				 {
-					 winer += const_it->amount;
+					 winer += const_it->accept_amount;
 				 }
 			 }else if (const_it->state == 1){
 				 if(const_it->height != 0 &&(const_it->time_out + const_it->height)< theApp.blocktipheight){
@@ -1509,7 +1509,7 @@ void CP2PDlg::AcceptBet(CString hash,INT64 money,CString sendaddr,int timeout,IN
 				 int rewardnum = (int)const_it->content[32];
 				 if (const_it->guess_num == const_it->content[32])
 				 {
-					 winer +=const_it->accept_amount;// const_it->amount;
+					 winer +=const_it->amount;// const_it->amount;
 				 }else
 				 {
 					 loser += const_it->accept_amount;//const_it->amount;
@@ -1530,9 +1530,9 @@ void CP2PDlg::AcceptBet(CString hash,INT64 money,CString sendaddr,int timeout,IN
 						 loser += const_it->amount;
 					 }else
 					 {
-						 winer += const_it->amount;
+						 winer += const_it->accept_amount;
 					 }
-				 }else if (const_it->state == 1){
+				 }else if (const_it->state == 1){/// ³¬Ê±
 					 if(const_it->height != 0 &&(const_it->time_out + const_it->height)< theApp.blocktipheight){
 						 loser += const_it->amount;
 					 }
@@ -1544,13 +1544,13 @@ void CP2PDlg::AcceptBet(CString hash,INT64 money,CString sendaddr,int timeout,IN
 					 int rewardnum = (int)const_it->content[32];
 					 if (const_it->guess_num == const_it->content[32])
 					 {
-						 winer +=const_it->accept_amount;// const_it->amount;
+						 winer +=const_it->amount;// const_it->amount;
 					 }else
 					 {
 						 loser += const_it->accept_amount;//const_it->amount;
 					 }
 
-				 }else{
+				 }else{  /// ³¬Ê±
 					 if (const_it->height>0 &&(const_it->time_out + const_it->height)< theApp.blocktipheight)
 					 {
 						 winer += const_it->amount;
