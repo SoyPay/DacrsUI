@@ -113,7 +113,7 @@ BOOL CGuessNum::OnInitDialog()
 	
 	GetDlgItem(IDC_RADIO_MAN)->SetWindowText(UiFun::UI_LoadString("COMM_MODULE" , "COMM_BROTHER" ,theApp.gsLanguage));
 	GetDlgItem(IDC_RADIO_WOMAN)->SetWindowText(UiFun::UI_LoadString("COMM_MODULE" , "COMM_SISTER" ,theApp.gsLanguage));
-	GetDlgItem(IDC_STATIC)->SetWindowText(UiFun::UI_LoadString("GUESS_DILOG" , "GUESS_NUMBER" ,theApp.gsLanguage));
+	GetDlgItem(IDC_STATIC)->SetWindowText(UiFun::UI_LoadString("GUESS_DILOG" , "GUESS_NUMBER01" ,theApp.gsLanguage));
 	CButton* radio=(CButton*)GetDlgItem(IDC_RADIO_MAN);
 	radio->SetCheck(TRUE);
 	return TRUE;  // return TRUE unless you set the focus to a control
