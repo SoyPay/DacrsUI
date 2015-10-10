@@ -916,7 +916,7 @@ void CP2PDlg::SendBet(int rewardnum)
     INT64 accept64=(INT64)REAL_MONEY(acceptmoney);
 	INT64 send64=(INT64)REAL_MONEY(money);
 
-	if (accept64 <=0 || accept64 >=send64*1.1 )
+	if (accept64 <=0 || accept64 >=(INT64)(send64*1.1) )
 	{
 		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_SET_ACCEPTAMOUNTRANGE" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		return;
