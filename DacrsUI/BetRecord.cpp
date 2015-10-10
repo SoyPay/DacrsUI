@@ -260,7 +260,7 @@ void  CBetRecord::OnShowPagePool(int page)
 			{
 				m_ListBox.SetIndexBackCol(i , 6 , RGB(242,32,32));
 
-				reward =strprintf("+%.4f", const_it.accept_amount);
+				reward =strprintf("+%.4f", const_it.amount);
 			}else
 			{
 				m_ListBox.SetIndexBackCol(i , 6 , RGB(1,127,1));
