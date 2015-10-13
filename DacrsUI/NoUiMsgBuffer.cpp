@@ -65,7 +65,7 @@ bool CNoUiMsgBuffer::AddBytesToBuffer(char *pCh, int nLen)
 		if(nStart + nDataLen + 1 > m_nLength)
 			break;
 
-		char cMsgData[10*1024]= {0};
+		char cMsgData[65*1024]= {0};
 		memcpy(&cMsgData, m_Recvbuffer+nStart, nDataLen);
 		//TRACE("prase no ui msg:");
 		//for(int i=0; i<nDataLen; ++i)
