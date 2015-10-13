@@ -53,10 +53,19 @@ BOOL CSqliteDeal::InitializationDB(){
 	strCondition = "type='table' and name= 't_chain_tip'";
 	if(!GetTableCountItem(strTableName, strCondition))
 	{
-		string createSQL="CREATE TABLE t_chain_tip(block_hash TEXT PRIMARY KEY);";
+		string createSQL="CREATE TABLE t_chain_tip(block_hash TEXT PRIMARY KEY,block_height INT,confired_time INT)";
 		if(!ExcuteSQL(pDBConn, NULL, createSQL, NULL))
 		{
 			LogPrint("INFO", "Create table t_chain_tip failed\n");
+			return FALSE;
+		}
+	}else if (!IsExistField(_T("t_chain_tip"),_T("block_height"),_T("1=1"))  )
+	{
+		DeleteTable(_T("t_chain_tip"));
+		string createSQL="CREATE TABLE t_chain_tip(block_hash TEXT PRIMARY KEY,block_height INT,confired_time INT)";
+		if(!ExcuteSQL(pDBConn, NULL, createSQL, NULL))
+		{
+			LogPrint("INFO", "Create table t_p2p_quiz failed\n");
 			return FALSE;
 		}
 	}
@@ -172,6 +181,9 @@ BOOL CSqliteDeal::InitializationDB(){
 			return FALSE;
 		}
 	}
+
+	///清空blcokchain
+	ClearTableData(_T("t_chain_tip") );
 	return TRUE ;
 }
 
@@ -746,6 +758,7 @@ BOOL CSqliteDeal::UpdateTableItem(const string &strTabName , const string &strSo
 //判断blocktip是否还在主链上
 BOOL CSqliteDeal::IsBlockTipInChain()
 {
+	return TRUE;
 	char cTipBlockHash[35];
 	memset(cTipBlockHash, 0, 35);
 	GetTipBlockHash(cTipBlockHash);
