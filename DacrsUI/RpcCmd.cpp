@@ -263,7 +263,7 @@ void CRpcCmd::RPCCommandToJson(const string& strRPCCommand,string& strSendData)
 			pos = rpcCommand.find(" ");
 		}
 
-		if (IsAllDigtal(rpcCommand.c_str()) && (method != _T("gethash"))) //&& rpcCommand.GetLength() != 12)
+		if (IsAllDigtal(rpcCommand.c_str()) && (method !="verifymessage")&&(method != _T("gethash"))) //&& rpcCommand.GetLength() != 12)
 		{
 			INT64 param;
 			sscanf_s(rpcCommand.c_str(),"%lld",&param);

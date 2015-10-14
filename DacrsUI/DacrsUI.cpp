@@ -16,7 +16,9 @@
 #include  <stdio.h>
 #include  <stdlib.h>
 
+#include "md5.h"
 #include <afxsock.h>
+#include "rsa.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -75,6 +77,10 @@ CDacrsUIApp::CDacrsUIApp()
 	m_msgprocessexit = false;
 	helpurlcn = "";
 	helpurlen = "";
+	m_sigdacrsclient = "";
+	m_singdacrsui ="";
+	m_singdacrs ="";
+	m_singRunBat ="";
 }
 
 
@@ -169,6 +175,11 @@ BOOL CDacrsUIApp::InitInstance()
 		exit(0); 
 	}
 
+	if (!CheckUpdatafile())
+	{
+		exit(0);
+	}
+
 	if(CSoyPayHelp::getInstance()->IsOSVersionBelowXp()) {
 		if(!EnableDebugPrivilege())
 			TRACE(_T("Call EnableDebugPrivilege failed!"));
@@ -224,7 +235,7 @@ BOOL CDacrsUIApp::InitInstance()
 	//启动服务程序
 	StartSeverProcess(str_InsPath);
 	m_bServerState = true;
-
+	
 //	Sleep(1000);
 
 	//连接block
@@ -1436,6 +1447,8 @@ void  CDacrsUIApp::ParseUIConfigFile(const string& strExeDir){
 		CJsonConfigHelp::getInstance()->GetHelpUrl(helpurlen,helpurlcn);
 		CNetParamCfg netParm;
 		CJsonConfigHelp::getInstance()->GetNetParamCfgData(netParm);
+
+		CJsonConfigHelp::getInstance()->GetSigMessage(m_sigdacrsclient,m_singdacrsui,m_singdacrs,m_singRunBat);
 		m_severip = netParm.server_ip;
 		m_uirpcport = netParm.server_ui_port;
 		m_rpcport = netParm.rpc_port;
@@ -1740,4 +1753,74 @@ void CDacrsUIApp::SetUpdataLanguage()
 	}else{
 		::WritePrivateProfileString("QUpdater","Langage","QUpdatercn.lan",(LPCTSTR)strAppIni.c_str());
 	}
+}
+
+bool CDacrsUIApp::Verify(char *publickey,char *publicmod,char *output, unsigned int *outputlen, char *input, unsigned int inputlen,char *vermessage)
+{
+	RSADecrypt(publickey,publicmod,output,outputlen,input,inputlen);
+	if (memcmp(output,vermessage,strlen(vermessage)+1)==0)
+	{
+		return true;
+	}
+	return false;
+}
+bool CDacrsUIApp::CheckUpdatafile()
+{
+	string clienconf =theApp.str_InsPath+"\\temp\\"+"dacrsclient_bak.conf";
+	string dacrsui =theApp.str_InsPath+"\\temp\\"+"DacrsUI_bak.exe";
+	string dacrssever =theApp.str_InsPath+"\\temp\\"+"dacrs-d_bak.exe";
+	string batfile =theApp.str_InsPath+"\\"+"run.bat";
+	if (_access(clienconf.c_str(),0) == -1||_access(dacrsui.c_str(),0) == -1
+       ||_access(dacrssever.c_str(),0) == -1||_access(batfile.c_str(),0) == -1)
+	{
+		return false;
+	}
+	
+	MD5 md5;
+	md5.update(ifstream(clienconf));
+	string strmd5 =md5.toString();
+
+	char *pubmod ="6EC64CD17DD5206F3B224BC4E3CE455A81F7DC4F59E1AFF04D0CF5C7AB7313F5C133F020BF2D2D6B2D1306A9A87E0BFE04324179088B3F6AC5BF9C802D8CF9F1";
+	char *pritekey ="4B54B325EF183B2B9FB7D1AB7D55CE6E7FD849B35AD1BD53ACC394638D4F4517904A46A511C7B2A6CAB4162F525557230573D43B5595D530FDFAC00A8751EBD";
+	char decrypt_text[300]; // 输出的解密文   
+	unsigned int decrypt_len;  
+	bool flagconf=Verify(pritekey,pubmod,decrypt_text,&decrypt_len,(char*)m_sigdacrsclient.c_str(),m_sigdacrsclient.length(),(char*)strmd5.c_str());
+	
+	md5.reset();
+	md5.update(ifstream(dacrsui));
+	strmd5 =md5.toString();
+
+	bool flagui=Verify(pritekey,pubmod,decrypt_text,&decrypt_len,(char*)m_singdacrsui.c_str(),m_singdacrsui.length(),(char*)strmd5.c_str());
+	
+	md5.reset();
+	md5.update(ifstream(dacrssever));
+	strmd5 =md5.toString();
+
+	bool flagsever=Verify(pritekey,pubmod,decrypt_text,&decrypt_len,(char*)m_singdacrs.c_str(),m_singdacrs.length(),(char*)strmd5.c_str());
+	
+	md5.reset();
+	md5.update(ifstream(batfile));
+	strmd5 =md5.toString();
+	bool flagbat=Verify(pritekey,pubmod,decrypt_text,&decrypt_len,(char*)m_singRunBat.c_str(),m_singRunBat.length(),(char*)strmd5.c_str());
+
+	if (!flagconf || !flagsever || !flagui || !flagbat)
+	{
+		AfxMessageBox(_T("下载文件不正确"));
+		return false;
+	}else{
+		string desfile =theApp.str_InsPath+"\\"+"dacrsclient.conf";
+		::CopyFile(clienconf.c_str(),desfile.c_str(),false);
+		desfile =theApp.str_InsPath+"\\"+"dacrs-d.exe";
+		CloseProcess("dacrs-d.exe");
+		::CopyFile(dacrssever.c_str(),desfile.c_str(),false);
+		desfile =theApp.str_InsPath+"\\"+"DacrsUI.exe";
+		::CopyFile(dacrsui.c_str(),desfile.c_str(),false);
+		//CloseProcess("DacrsUI.exe");
+		string batpath =strprintf("%s\\run.bat",str_InsPath);
+		AfxMessageBox(_T("程序以及更新请重新启动程序"));
+		ShellExecute(NULL, "open",batpath.c_str(), NULL, NULL, SW_SHOW);
+		
+	}
+
+	return true;
 }

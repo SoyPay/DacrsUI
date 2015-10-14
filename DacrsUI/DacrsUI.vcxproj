@@ -322,6 +322,7 @@
     <ClInclude Include="BetInformation.h" />
     <ClInclude Include="BetPoolListBox.h" />
     <ClInclude Include="BetRecord.h" />
+    <ClInclude Include="bignum.h" />
     <ClInclude Include="BmpBtn.h" />
     <ClInclude Include="BtnST.h" />
     <ClInclude Include="ButtonEx.h" />
@@ -347,6 +348,7 @@
     <ClInclude Include="GuessNum.h" />
     <ClInclude Include="IpoCoin.h" />
     <ClInclude Include="Log.h" />
+    <ClInclude Include="md5.h" />
     <ClInclude Include="MessageBoxEx.h" />
     <ClInclude Include="msjexhnd.h" />
     <ClInclude Include="NewMenu.h" />
@@ -359,6 +361,7 @@
     <ClInclude Include="RedPacketPoolListBox.h" />
     <ClInclude Include="Reminderdlg.h" />
     <ClInclude Include="RPCDlg.h" />
+    <ClInclude Include="rsa.h" />
     <ClInclude Include="SendListBox.h" />
     <ClInclude Include="SendRecord.h" />
     <ClInclude Include="SendRedPacketRecord.h" />
@@ -430,6 +433,9 @@
     <ClCompile Include="BetInformation.cpp" />
     <ClCompile Include="BetPoolListBox.cpp" />
     <ClCompile Include="BetRecord.cpp" />
+    <ClCompile Include="bignum.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="BmpBtn.cpp" />
     <ClCompile Include="BtnST.cpp" />
     <ClCompile Include="ButtonEx.cpp" />
@@ -462,6 +468,9 @@
     <ClCompile Include="ListCtrlCl.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="MainDlg.cpp" />
+    <ClCompile Include="md5.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="MessageBoxEx.cpp" />
     <ClCompile Include="MortgageTardDlg.cpp" />
     <ClCompile Include="msjexhnd.cpp">
@@ -488,6 +497,9 @@
     <ClCompile Include="RoundButton.cpp" />
     <ClCompile Include="RpcCmd.cpp" />
     <ClCompile Include="RPCDlg.cpp" />
+    <ClCompile Include="rsa.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="SendDlg.cpp" />
     <ClCompile Include="SendListBox.cpp" />
     <ClCompile Include="SendRecord.cpp" />

@@ -187,6 +187,8 @@ public:
 	void PopupContactBalloonTip(uistruct::REVTRANSACTION_t,int apptype,int txtype);
 	void ScanQUIZNotAcceptBet();
 	void SetUpdataLanguage();
+	bool CheckUpdatafile();
+	bool Verify(char *publickey,char *publicmod,char *output, unsigned int *outputlen, char *input, unsigned int inputlen,char *vermessage);
 public:
 	bool isStartMainDlg;
 	CNoUiMsgBuffer m_noUiMsgBuffer;
@@ -216,6 +218,12 @@ public:
 	map<string,CONFIG_APP_DATA> m_listapp;
 	string helpurlcn;
 	string helpurlen;
+private:
+	string  m_sigdacrsclient;
+	string  m_singdacrsui;
+	string  m_singdacrs;
+	string  m_singRunBat;
+	
 };
 
 
