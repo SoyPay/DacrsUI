@@ -262,6 +262,15 @@
     <ClCompile Include="BetPoolListBox.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="md5.cpp">
+      <Filter>头文件\md5</Filter>
+    </ClCompile>
+    <ClCompile Include="bignum.cpp">
+      <Filter>头文件\md5</Filter>
+    </ClCompile>
+    <ClCompile Include="rsa.cpp">
+      <Filter>头文件\md5</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BmpBtn.h">
@@ -581,6 +590,15 @@
     </ClInclude>
     <ClInclude Include="BetPoolListBox.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="md5.h">
+      <Filter>头文件\md5</Filter>
+    </ClInclude>
+    <ClInclude Include="bignum.h">
+      <Filter>头文件\md5</Filter>
+    </ClInclude>
+    <ClInclude Include="rsa.h">
+      <Filter>头文件\md5</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1234,6 +1252,9 @@
     </Filter>
     <Filter Include="源文件\zip">
       <UniqueIdentifier>{911aba4c-2c99-479d-9532-8197927bb1b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\md5">
+      <UniqueIdentifier>{8af82c86-45ec-4c28-93a9-73749e58f4cd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
