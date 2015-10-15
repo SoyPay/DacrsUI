@@ -159,7 +159,6 @@ public:
 	CONFIG_APP_DATA GetAppValue(const Json::Value &root);
 	void GetListAppConfig(map<string,CONFIG_APP_DATA> &mlisapp);
 	void GetHelpUrl(string &helpen,string &helpcn);
-	void GetSigMessage(string &sigconf,string &sigdacrsui,string &sigdacrs,string &sigbat);
 private:
 	void ReadMainCfgData(const Json::Value& root);
 	void ReadSesureTradeCfgData(const Json::Value& root);
@@ -177,7 +176,6 @@ private:
 	void AddString(const Json::Value& root,CAutoComplete &m_comboxinput);
 	void ReadListAppConfig(const Json::Value &root);
 	void ReadHelpUrl(const Json::Value &root);
-	void ReadSigMessage(const Json::Value &root);
 public:
 	void ModifyAppFeeCfgData( Json::Value& root,const CString &LeaderKey,const CString &Key,const CString &KeyValue);
 
@@ -200,9 +198,5 @@ private:
 	map<string,CONFIG_APP_DATA> m_listapp;
 	string            m_helpcn;
 	string            m_helpen;
-	string            m_dacrsclient;
-	string            m_dacrsui;
-	string            m_dacrs;
-	string            m_bat;
 };
 
