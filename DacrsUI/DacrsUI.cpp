@@ -175,10 +175,11 @@ BOOL CDacrsUIApp::InitInstance()
 		exit(0); 
 	}
 
-	if (!CheckUpdatafile())
-	{
-		exit(0);
-	}
+	CheckUpdatafile();
+	//{
+	//	exit(0);
+	//}
+	
 
 	if(CSoyPayHelp::getInstance()->IsOSVersionBelowXp()) {
 		if(!EnableDebugPrivilege())
@@ -1448,7 +1449,6 @@ void  CDacrsUIApp::ParseUIConfigFile(const string& strExeDir){
 		CNetParamCfg netParm;
 		CJsonConfigHelp::getInstance()->GetNetParamCfgData(netParm);
 
-		CJsonConfigHelp::getInstance()->GetSigMessage(m_sigdacrsclient,m_singdacrsui,m_singdacrs,m_singRunBat);
 		m_severip = netParm.server_ip;
 		m_uirpcport = netParm.server_ui_port;
 		m_rpcport = netParm.rpc_port;
@@ -1764,8 +1764,42 @@ bool CDacrsUIApp::Verify(char *publickey,char *publicmod,char *output, unsigned 
 	}
 	return false;
 }
+int CDacrsUIApp::InitEncrypt()
+{
+	char szText[400] ={0};
+
+	string strAppIni = str_InsPath;// + (CString)LANGUAGE_FILE;
+	strAppIni += "\\encrypt.ini";
+	::GetPrivateProfileString("sigmessage", "sigclienconf", "NOT FOUNT", szText, 400,	(LPCTSTR)strAppIni.c_str());
+	m_sigdacrsclient =strprintf("%s",szText);
+
+	memset(szText,0,400);
+	::GetPrivateProfileString("sigmessage", "sigdacrsui", "NOT FOUNT", szText, 400,	(LPCTSTR)strAppIni.c_str());
+	m_singdacrsui =strprintf("%s",szText);
+
+	memset(szText,0,400);
+	::GetPrivateProfileString("sigmessage", "sigdacrs", "NOT FOUNT", szText, 400,	(LPCTSTR)strAppIni.c_str());
+	m_singdacrs =strprintf("%s",szText);
+
+	memset(szText,0,400);
+	::GetPrivateProfileString("sigmessage", "sigrunbat", "NOT FOUNT", szText, 400,	(LPCTSTR)strAppIni.c_str());
+	m_singRunBat =strprintf("%s",szText);
+
+	memset(szText,0,400);
+	::GetPrivateProfileString("sigmessage", "index", "NOT FOUNT", szText, 400,	(LPCTSTR)strAppIni.c_str());
+
+	int index =atoi(szText);
+	string writestr=strprintf("%d",index+1);
+	::WritePrivateProfileString("sigmessage","index",writestr.c_str(),(LPCTSTR)strAppIni.c_str());
+	return atoi(szText);
+}
 bool CDacrsUIApp::CheckUpdatafile()
 {
+	int index =InitEncrypt();
+	if (index != 1)
+	{
+		return true;
+	}
 	string clienconf =theApp.str_InsPath+"\\temp\\"+"dacrsclient_bak.conf";
 	string dacrsui =theApp.str_InsPath+"\\temp\\"+"DacrsUI_bak.exe";
 	string dacrssever =theApp.str_InsPath+"\\temp\\"+"dacrs-d_bak.exe";
@@ -1817,9 +1851,10 @@ bool CDacrsUIApp::CheckUpdatafile()
 		::CopyFile(dacrsui.c_str(),desfile.c_str(),false);
 		//CloseProcess("DacrsUI.exe");
 		string batpath =strprintf("%s\\run.bat",str_InsPath);
+		::CopyFile(dacrsui.c_str(),desfile.c_str(),false);
 		AfxMessageBox(_T("程序以及更新请重新启动程序"));
 		ShellExecute(NULL, "open",batpath.c_str(), NULL, NULL, SW_SHOW);
-		
+		//exit(0);
 	}
 
 	return true;

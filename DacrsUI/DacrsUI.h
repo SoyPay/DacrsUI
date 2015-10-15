@@ -188,6 +188,7 @@ public:
 	void ScanQUIZNotAcceptBet();
 	void SetUpdataLanguage();
 	bool CheckUpdatafile();
+	int InitEncrypt();
 	bool Verify(char *publickey,char *publicmod,char *output, unsigned int *outputlen, char *input, unsigned int inputlen,char *vermessage);
 public:
 	bool isStartMainDlg;
