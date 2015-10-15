@@ -2,17 +2,20 @@
 <update>
   <files>
     <file ver="v1.0.0.1" path="qupdater.exe"/>
-    <file ver="v1.1.1.4" path="dacrs-d.exe"/>
-    <file ver="v1.0.0.8" path="dacrs.conf"/>
+    <file ver="v1.1.1.5" path="dacrs-d.exe"/>
+    <file ver="v1.0.0.9" path="dacrs.conf"/>
     <file ver="v1.0.0.2" path="qupdater.ini"/>
     <file ver="v1.0.0.1" path="sqlite3.dll"/>
-    <file ver="v1.0.2.4" path="DacrsUI.exe"/>
-    <file ver="v1.0.0.7" path="dacrsclient.conf"/>
+    <file ver="v1.0.2.5" path="DacrsUI.exe"/>
+    <file ver="v1.0.0.8" path="dacrsclient.conf"/>
     <file ver="v1.0.0.1" path="gif\init.gif"/>
     <file ver="v1.0.0.1" path="gif\progress.gif"/>
 	<file ver="v1.0.0.1" path="gif\exit.gif"/>
+	<file ver="v1.0.0.1" path="gif\exit_en.gif"/>
 	<file ver="v1.0.0.17" path="updatelog.txt"/>	
 	<file ver="v1.0.0.4" path="clear.bat" />
+	<file ver="v1.0.0.1" path="config\Language_CN.ini"/>
+	<file ver="v1.0.0.1" path="config\Language_EN.ini"/>
 	<file ver="v1.0.0.1" path="DacrsUi.exe" shortcut="{commonprograms}\QUpdater\QUpdater DacrsUI.ilk"/>  
   </files>
 </update>

@@ -119,7 +119,6 @@ void CJsonConfigHelp::ReadJsonConfig(const string& strFilePath)
 		{
 			ReadHelpUrl(root);
 		}
-		ReadSigMessage(root);
 	}
 	ifs.close();
 }
@@ -478,41 +477,4 @@ void CJsonConfigHelp::ReadHelpUrl(const Json::Value &root)
 	}
 	m_helpcn = help["helpcn"].asString();
 	m_helpen = help["helpen"].asString();
-}
-
-void CJsonConfigHelp::GetSigMessage(string &sigconf,string &sigdacrsui,string &sigdacrs,string &sigbat)
-{
-	sigconf =m_dacrsclient;
-	sigdacrsui= m_dacrsui;
-	sigdacrs= m_dacrs;
-	sigbat =m_bat;
-}
-
-void CJsonConfigHelp::ReadSigMessage(const Json::Value &root)
-{
-	Json::Value message = root["sigmessage"];
-	if (message.isNull()|| !message.isObject())
-	{
-		return;
-	}
-	Json::Value value=message["sigclienconf"];
-	if (!value.isNull())
-	{
-		m_dacrsclient = message["sigclienconf"].asString();
-	}
-	value=message["sigdacrsui"];
-	if (!value.isNull())
-	{
-		m_dacrsui = message["sigdacrsui"].asString();
-	}
-	value=message["sigdacrs"];
-	if (!value.isNull())
-	{
-		m_dacrs = message["sigdacrs"].asString();
-	}
-	value=message["sigdacrs"];
-	if (!value.isNull())
-	{
-		m_bat = message["sigrunbat"].asString();
-	}
 }
