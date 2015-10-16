@@ -105,7 +105,6 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="..\..\dacrs_ui_test\bin\db\data.db" />
     <None Include="json\json_internalarray.inl" />
     <None Include="json\json_internalmap.inl" />
     <None Include="json\json_valueiterator.inl" />
