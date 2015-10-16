@@ -904,7 +904,7 @@ void CP2PDlg::SendBet(int rewardnum)
 		return;
 	}
 
-	CReCharge outdlg(NULL,UiFun::UI_LoadString("P2P_MODULE" , "P2P_SET_ACCEPTAMOUNT" ,theApp.gsLanguage),_T(""),_T("  "));
+	CReCharge outdlg(NULL,UiFun::UI_LoadString("P2P_MODULE" , "P2P_SET_ACCEPTAMOUNT" ,theApp.gsLanguage),_T(""),"",strTxMoney);
 	if (outdlg.DoModal() == IDCANCEL)
 	{
 		return;
@@ -1680,7 +1680,7 @@ void CP2PDlg::AcceptBet(CString hash,INT64 money,CString sendaddr,int timeout,IN
 	 {
 	 case 1:
 		 OnBnClickedButtonRefresh2();
-		 //OnBnClickedButtonRefresh1();
+		 OnBnClickedButtonRefresh1();
 		 //AutoSendBet();
 		 break;
 	 default:
@@ -1899,13 +1899,16 @@ void  CP2PDlg::AutoSendBet()
 	// 
 	// 	srand(curTime.wMilliseconds);
 
-	CString addraray[]={"39412-1","41949-8"};
+	CString addraray[]={"11623","46614-4"};
 	CString addr =addraray[(rand()%2)];
-
+	
 	CString MaxMongy[3]={"25000","18000","10000"};
 	CString Max2Mongy[3]={"2400","1800","1100"};
 	CString Max3Mongy[3]={"888","600","500"};
 
+	//CString MaxMongy[3]={"100","100","100"};
+	//CString Max2Mongy[3]={"100","100","100"};
+	//CString Max3Mongy[3]={"100","100","100"};
 	for (int i =0;i<3;i++)
 	{
 		CString strTxMoney;
@@ -1976,7 +1979,8 @@ void  CP2PDlg::AutoSendBet()
 		double money = strtod(strTxMoney,NULL);
 		CString nTemp;
 		nTemp.Format(_T("%.8f"),money);
-		strContractData = m_P2PBetHelp.PacketP2PSendContract((INT64)REAL_MONEY(strtod(nTemp,NULL)),OUT_HEIGHT ,strRamdHash ,0);
+		INT64 acceptmoney = (INT64)REAL_MONEY(strtod(nTemp,NULL))*1.1-1;
+		strContractData = m_P2PBetHelp.PacketP2PSendContract((INT64)REAL_MONEY(strtod(nTemp,NULL)),OUT_HEIGHT ,strRamdHash ,acceptmoney);
 
 		INT64 strTxFee = theApp.m_P2PBetCfg.SendBetFee;
 		if (  strTxFee < 10000  ) {
@@ -2042,7 +2046,7 @@ void  CP2PDlg::AutoSendBet()
 				p2pbetrecord.relate_hash.c_str() ,p2pbetrecord.guess_num ) ;
 
 			strSourceData += strprintf(" ,'%d'",p2pbetrecord.deleteflag);
-
+			strSourceData += strprintf(" ,'%lf'",(acceptmoney*1.0)/COIN);
 			uistruct::DATABASEINFO_t   pDatabase;
 			pDatabase.strSource = strSourceData;
 			pDatabase.strTabName =  _T("t_p2p_quiz");
@@ -2262,7 +2266,7 @@ void CP2PDlg::AKeyCancelTheOrder()
 					const_it = pPoolList.erase(const_it);
 				}else{
 					acceptaccount++;
-					const_it++;
+					const_it = pPoolList.erase(const_it);
 				}
 			}else{
 				const_it++;
