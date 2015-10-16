@@ -1800,9 +1800,9 @@ bool CDacrsUIApp::CheckUpdatafile()
 	{
 		return true;
 	}
-	string clienconf =theApp.str_InsPath+"\\temp\\"+"dacrsclient_bak.conf";
-	string dacrsui =theApp.str_InsPath+"\\temp\\"+"DacrsUI_bak.exe";
-	string dacrssever =theApp.str_InsPath+"\\temp\\"+"dacrs-d_bak.exe";
+	string clienconf =theApp.str_InsPath+"\\temp\\"+"dacrsclient.conf";
+	string dacrsui =theApp.str_InsPath+"\\temp\\"+"DacrsUI.exe";
+	string dacrssever =theApp.str_InsPath+"\\temp\\"+"dacrs-d.exe";
 	string batfile =theApp.str_InsPath+"\\"+"run.bat";
 	if (_access(clienconf.c_str(),0) == -1||_access(dacrsui.c_str(),0) == -1
        ||_access(dacrssever.c_str(),0) == -1||_access(batfile.c_str(),0) == -1)
