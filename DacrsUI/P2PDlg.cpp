@@ -703,6 +703,7 @@ void CP2PDlg::OnBnClickedButtonWithd()
 	int sel = m_addrbook.GetCurSel();
 	if (sel < 0)
 	{
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_ADDRESS_NOT_NULL" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return ;
 	}
 	m_addrbook.GetLBText(sel,addr);
@@ -779,6 +780,21 @@ void CP2PDlg::OnBnClickedButtonRech()
 		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_UNFINISHED_BUSINESS" ,theApp.gsLanguage) ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
+	CString addr;
+	int sel = m_addrbook.GetCurSel();
+	if (sel < 0)
+	{
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_ADDRESS_NOT_NULL" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
+		return ;
+	}
+	m_addrbook.GetLBText(sel,addr);
+
+	if (addr == _T(""))
+	{
+
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_ADDRESS_NOT_NULL" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
+		return;
+	}
 
 	CReCharge outdlg;
 	if ( IDOK != outdlg.DoModal()){
@@ -795,20 +811,7 @@ void CP2PDlg::OnBnClickedButtonRech()
 	}
 
 	string strShowData ="" ;
-	CString addr;
-	int sel = m_addrbook.GetCurSel();
-	if (sel < 0)
-	{
-		return ;
-	}
-	m_addrbook.GetLBText(sel,addr);
 
-	if (addr == _T(""))
-	{
-		
-		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_ADDRESS_NOT_NULL" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
-		return;
-	}
 
 	string strCondition;
 	strCondition = strprintf("reg_id = '%s'",addr);
@@ -893,6 +896,7 @@ void CP2PDlg::SendBet(int rewardnum)
 	int sel = m_addrbook.GetCurSel();
 	if (sel < 0)
 	{
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_ADDRESS_NOT_NULL" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return ;
 	}
 	m_addrbook.GetLBText(sel,addr);
@@ -1217,6 +1221,7 @@ void CP2PDlg::AcceptBet(CString hash,INT64 money,CString sendaddr,int timeout,IN
 
 	 if (sel < 0)
 	 {
+		 UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_ADDRESS_NOT_NULL" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		 return ;
 	 }
 	 m_addrbook.GetLBText(sel,addr);
@@ -1788,6 +1793,7 @@ void  CP2PDlg::GetAppAccountSomeMoney()
 	int sel = m_addrbook.GetCurSel();
 	if (sel < 0)
 	{
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_ADDRESS_NOT_NULL" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return ;
 	}
 	m_addrbook.GetLBText(sel,addr);
@@ -2261,13 +2267,11 @@ void CP2PDlg::AKeyCancelTheOrder()
 			double balance = (nMoney*1.0/COIN);
 			if (balance > const_it->amount)
 			{
-				if (AcceptBet(const_it->tx_hash,const_it->amount,const_it->left_addr,const_it->time_out,it->second.RegID))
+				if (!AcceptBet(const_it->tx_hash,const_it->accept_amount,const_it->left_addr,const_it->time_out,it->second.RegID))
 				{
-					const_it = pPoolList.erase(const_it);
-				}else{
 					acceptaccount++;
-					const_it = pPoolList.erase(const_it);
 				}
+				const_it = pPoolList.erase(const_it);
 			}else{
 				const_it++;
 			}

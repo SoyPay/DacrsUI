@@ -706,6 +706,7 @@ BOOL CMortgageTardDlg::AddListaddrDataBox(){
 	int sel = m_addrbook.GetCurSel();
 	if (sel < 0)
 	{
+		//UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_ADDRESS_NOT_NULL" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return FALSE;
 	}
 	m_addrbook.GetLBText(sel,address);
@@ -720,6 +721,7 @@ void CMortgageTardDlg::OnCbnSelchangeComboAddres()
 	int sel = m_addrbook.GetCurSel();
 	if (sel < 0)
 	{
+		//UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_ADDRESS_NOT_NULL" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
 	m_addrbook.GetLBText(sel,text);
@@ -827,6 +829,20 @@ void CMortgageTardDlg::OnBnClickedButtonWithd()
 		return;
 	}
 
+	CString addr;
+	int sel = m_addrbook.GetCurSel();
+	if (sel < 0)
+	{
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_ADDRESS_NOT_NULL" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
+		return ;
+	}
+	m_addrbook.GetLBText(sel,addr);
+
+	if (addr == _T(""))
+	{
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_ADDRESS_NOT_NULL" ,theApp.gsLanguage), UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
+		return;
+	}
 	if (!CheckBalance("账户金额为零,不能提现"))
 	{
 		return;
@@ -838,21 +854,6 @@ void CMortgageTardDlg::OnBnClickedButtonWithd()
 	if (!CheckRegIDValid( theApp.m_redPacketScriptid)) return ;
 
 	string strShowData = _T("");
-
-
-	CString addr;
-	int sel = m_addrbook.GetCurSel();
-	if (sel < 0)
-	{
-		return ;
-	}
-	m_addrbook.GetLBText(sel,addr);
-
-	if (addr == _T(""))
-	{
-		UiFun::MessageBoxEx(UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_ADDRESS_NOT_NULL" ,theApp.gsLanguage), UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
-		return;
-	}
 
 	CString Money = _T("");
 	GetDlgItem(IDC_STATIC_BALANCE)->GetWindowText(Money);
@@ -935,6 +936,7 @@ void CMortgageTardDlg::OnBnClickedButtonRech()
 	int sel = m_addrbook.GetCurSel();
 	if (sel < 0)
 	{
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_ADDRESS_NOT_NULL" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return ;
 	}
 	m_addrbook.GetLBText(sel,addr);
@@ -1134,6 +1136,11 @@ void   CMortgageTardDlg::SendRedPackeSpecail(){
 	CString addr;
 	int sel = m_addrbook.GetCurSel();
 
+	if (sel <0)
+	{
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_ADDRESS_NOT_NULL" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
+		return ;
+	}
 	m_addrbook.GetLBText(sel,addr);
 
 
