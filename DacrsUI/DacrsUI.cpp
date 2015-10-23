@@ -724,14 +724,27 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 					{
 						LogPrint("PROCESSMSG", "WM_UP_BlLOCKTIP 更新block最新高度\n");
 						//更新最新blocktip数据库
+						string data = Postmsg.GetData();
+						if (data == "")
+						{
+							break;
+						}
 						if ( ((CDacrsUIApp*)pParam)->m_SqliteDeal.ClearTableData(_T("t_chain_tip") ) ) {
 
-							string pHash = Postmsg.GetData();
-							if ( _T("") != pHash ) {
+							
+							uistruct::BLOCKCHANGED_t block;
+							if (block.JsonToStruct(data))
+							{
 								string strinsert;
-								strinsert = strprintf("'%s'",pHash);
-								((CDacrsUIApp*)pParam)->m_SqliteDeal.InsertTableItem(_T("t_chain_tip") ,strinsert ) ;
+								strinsert = strprintf("'%s','%d','%d','%d'",block.hash,block.high,block.time,block.fuelrate);
+								if (!((CDacrsUIApp*)pParam)->m_SqliteDeal.InsertTableItem(_T("t_chain_tip") ,strinsert ))
+								{
+									TRACE("insert into table t_chain_tip error");
+								}
+						
+							
 							}
+							
 						}
 					}
 					break;
@@ -1126,7 +1139,7 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 			{	
 				/// 更新tipblock hash
 				CPostMsg postblockmsg(MSG_USER_GET_UPDATABASE,WM_UP_BlLOCKTIP);
-				string msg = msgValue["hash"].asString();
+				string msg = msgValue.toStyledString();
 				postblockmsg.SetData(msg);
 				pApp->m_MsgQueue.push(postblockmsg);  
 

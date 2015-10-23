@@ -1686,7 +1686,7 @@ void CP2PDlg::AcceptBet(CString hash,INT64 money,CString sendaddr,int timeout,IN
 	 case 1:
 		 OnBnClickedButtonRefresh2();
 		 OnBnClickedButtonRefresh1();
-		 //AutoSendBet();
+		 AutoSendBet();
 		 break;
 	 default:
 		 break;
@@ -1871,20 +1871,39 @@ void  CP2PDlg::AutoSendBet()
 	BOOL bsend2 = TRUE;
 	BOOL bsend3 = TRUE;
 	vector<uistruct::LISTP2POOL_T>::const_iterator const_it = PoolList.begin();
+	//for(;const_it != PoolList.end();const_it++)
+	//{
+	//	double dmoney = (const_it->nPayMoney*1.0)/COIN;
+	//	if (dmoney >= 10000.0)
+	//	{
+	//		bsend1 = FALSE;
+	//	}
+
+	//	if (dmoney > 1000.0 && dmoney <= 3000.0)
+	//	{
+	//		bsend2 = FALSE;
+	//	}
+
+	//	if (dmoney >= 300.0 && dmoney <= 1000.0)
+	//	{
+	//		bsend3 = FALSE;
+	//	}
+	//}
+
 	for(;const_it != PoolList.end();const_it++)
 	{
 		double dmoney = (const_it->nPayMoney*1.0)/COIN;
-		if (dmoney >= 10000.0)
+		if (dmoney >= 300.0)
 		{
 			bsend1 = FALSE;
 		}
 
-		if (dmoney >= 1000.0 && dmoney <= 2000.0)
+		if (dmoney >= 1.0 && dmoney <= 100.0)
 		{
 			bsend2 = FALSE;
 		}
 
-		if (dmoney >= 300.0 && dmoney <= 1000.0)
+		if (dmoney > 100.0 && dmoney < 300.0)
 		{
 			bsend3 = FALSE;
 		}
@@ -1905,12 +1924,17 @@ void  CP2PDlg::AutoSendBet()
 	// 
 	// 	srand(curTime.wMilliseconds);
 
-	CString addraray[]={"11623","46614-4"};
+	CString addraray[]={"219-1","1138-2"};
 	CString addr =addraray[(rand()%2)];
 	
-	CString MaxMongy[3]={"25000","18000","10000"};
-	CString Max2Mongy[3]={"2400","1800","1100"};
-	CString Max3Mongy[3]={"888","600","500"};
+	//CString MaxMongy[3]={"25000","18000","10000"};
+	//CString Max2Mongy[3]={"2400","1800","1100"};
+	//CString Max3Mongy[3]={"888","600","500"};
+
+
+	CString MaxMongy[3]={"310","330","350"};
+	CString Max2Mongy[3]={"110","160","180"};
+	CString Max3Mongy[3]={"20","40","50"};
 
 	//CString MaxMongy[3]={"100","100","100"};
 	//CString Max2Mongy[3]={"100","100","100"};
