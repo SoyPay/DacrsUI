@@ -53,7 +53,7 @@ BOOL CSqliteDeal::InitializationDB(){
 	strCondition = "type='table' and name= 't_chain_tip'";
 	if(!GetTableCountItem(strTableName, strCondition))
 	{
-		string createSQL="CREATE TABLE t_chain_tip(block_hash TEXT PRIMARY KEY,block_height INT,confired_time INT)";
+		string createSQL="CREATE TABLE t_chain_tip(block_hash TEXT PRIMARY KEY,block_height INT,confired_time INT,fuelrate INT)";
 		if(!ExcuteSQL(pDBConn, NULL, createSQL, NULL))
 		{
 			LogPrint("INFO", "Create table t_chain_tip failed\n");
@@ -62,7 +62,7 @@ BOOL CSqliteDeal::InitializationDB(){
 	}else if (!IsExistField(_T("t_chain_tip"),_T("block_height"),_T("1=1"))  )
 	{
 		DeleteTable(_T("t_chain_tip"));
-		string createSQL="CREATE TABLE t_chain_tip(block_hash TEXT PRIMARY KEY,block_height INT,confired_time INT)";
+		string createSQL="CREATE TABLE t_chain_tip(block_hash TEXT PRIMARY KEY,block_height INT,confired_time INT,fuelrate INT)";
 		if(!ExcuteSQL(pDBConn, NULL, createSQL, NULL))
 		{
 			LogPrint("INFO", "Create table t_p2p_quiz failed\n");

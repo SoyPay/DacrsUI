@@ -150,6 +150,10 @@ void CCommonAddr::OnBnClickedButtonAdd()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	int curSel = m_AllAddrlistBox.GetCurSel() ;
+	if (curSel <=0)
+	{
+		return;
+	}
 	uistruct::LISTADDR_t * pAddrList = (uistruct::LISTADDR_t*)m_AllAddrlistBox.GetItemData( curSel ) ;
 	if ( NULL == pAddrList ) return ;
 
@@ -218,6 +222,10 @@ void CCommonAddr::OnBnClickedButtonDelete()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	int curSel = m_CommonAddrListBox.GetCurSel() ;
+	if (curSel <=0)
+	{
+		return;
+	}
 	uistruct::COMMONLISTADDR_t * pAddrList = (uistruct::COMMONLISTADDR_t*)m_CommonAddrListBox.GetItemData( curSel ) ;
 	if ( NULL == pAddrList ) return ;
 
