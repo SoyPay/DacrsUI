@@ -455,6 +455,7 @@ namespace uistruct {
 		INT64  high  ;
 		string   hash;
 		int connections;
+		int time;
 		int fuelrate;
 		string ToJson(){
 			Json::Value root;
@@ -464,6 +465,7 @@ namespace uistruct {
 			root["hash"] = hash;
 			root["connections"] = connections;
 			root["fuelrate"] = fuelrate;
+			root["time"] = time;
 			return root.toStyledString();
 		}
 	bool JsonToStruct(string json){
@@ -478,6 +480,10 @@ namespace uistruct {
 		this->hash = root["hash"].asString();
 		this->connections = root["connections"].asInt();
 		this->fuelrate = root["fuelrate"].asInt();
+		if (json.find("time") >=0)
+		{
+			this->time =root["time"].asInt();
+		}
 		return true;
 	}
 	}BLOCKCHANGED_t;

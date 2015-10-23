@@ -56,7 +56,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <OutputFile>..\bin\DacrsUI.exe</OutputFile>
+      <OutputFile>D:\cppwork\Guarantee_view\dacrs_ui_test\DacrsUI.exe</OutputFile>
       <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>
       </AdditionalDependencies>
