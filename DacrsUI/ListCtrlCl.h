@@ -75,6 +75,7 @@ public:
 public:
 	UINT m_uID;   
 	CFont font ;    //按钮上面的字体
+	afx_msg void OnHdnBegintrack(NMHDR *pNMHDR, LRESULT *pResult);
 };
 
 
