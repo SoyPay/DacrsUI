@@ -1,63 +1,37 @@
-#if !defined(AFX_DLGVIEW_H__4BDEBFEB_9C39_44D2_B68C_CD551696D69C__INCLUDED_)
-#define AFX_DLGVIEW_H__4BDEBFEB_9C39_44D2_B68C_CD551696D69C__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-// DlgView.h : header file
-//
+#include "afxcmn.h"
+
 #include <map>
 #include "UiHead.h"
 #include "json\json.h"
 #include <fstream>
 #include "ListCtrlCl.h"
 #include "StaticTrans.h"
-class CAddApp;
-/////////////////////////////////////////////////////////////////////////////
-// CDlgView view
+// CDisplayApp 对话框
 
-class CDlgView : public CScrollView
+class CDisplayApp : public CDialogEx
 {
-	friend class CAddApp;
-protected:
-	CDlgView();           // protected constructor used by dynamic creation
-	DECLARE_DYNCREATE(CDlgView)
+	DECLARE_DYNAMIC(CDisplayApp)
 
-// Attributes
 public:
+	CDisplayApp(CWnd* pParent = NULL);   // 标准构造函数
+	virtual ~CDisplayApp();
 
-// Operations
-public:
+// 对话框数据
+	enum { IDD = IDD_DIALOG_APP };
 
-// Overrides
-	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CDlgView)
-	protected:
-	virtual void OnDraw(CDC* pDC);      // overridden to draw this view
-	virtual void OnInitialUpdate();     // first time after construct
-	//}}AFX_VIRTUAL
-
-// Implementation
 protected:
-	virtual ~CDlgView();
-#ifdef _DEBUG
-	virtual void AssertValid() const;
-	virtual void Dump(CDumpContext& dc) const;
-#endif
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
 
-	// Generated message map functions
-	//{{AFX_MSG(CDlgView)
-		// NOTE - the ClassWizard will add and remove member functions here.
-	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 public:
-	static int m_nColWidths[];// 用于保存列宽度  
-	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
-	afx_msg void OnSize(UINT nType, int cx, int cy);
-	void InitListCtrl();
+	//CListCtrl m_LargeList;
+	//CListCtrl m_Commctrl;
+	//CListCtrl m_gameCtrl;
+	
 public:
 	//	CSplitButton m_split_button;
-
+	void InitListCtrl();
 	BOOL  Download(const CString& strFileURLInServer, //待下载文件的URL
 		const CString & strFileLocalFullPath);
 	void InitAppListFromNetWork();
@@ -85,7 +59,6 @@ public:
 	CListCtrlCl m_LargeList;  
 	CStaticTrans     m_commstatic;
 	CStaticTrans     m_gamestatic;
-	CStatic          m_prebmp;
 	int comm_app_count;
 	int game_app_count;
 	int comm_app_Line;
@@ -111,11 +84,6 @@ public:
 	string m_apppath;
 	string m_configName;
 	string m_urlpath;
+	afx_msg void OnSize(UINT nType, int cx, int cy);
+	virtual BOOL OnInitDialog();
 };
-
-/////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // !defined(AFX_DLGVIEW_H__4BDEBFEB_9C39_44D2_B68C_CD551696D69C__INCLUDED_)

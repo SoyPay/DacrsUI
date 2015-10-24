@@ -35,6 +35,8 @@ BEGIN_MESSAGE_MAP(CListCtrlCl, CListCtrl)
 	ON_WM_MEASUREITEM_REFLECT()
 	ON_WM_PAINT()
 	ON_WM_MOUSEWHEEL()
+	ON_NOTIFY(HDN_BEGINTRACKA, 0, &CListCtrlCl::OnHdnBegintrack)
+	ON_NOTIFY(HDN_BEGINTRACKW, 0, &CListCtrlCl::OnHdnBegintrack)
 END_MESSAGE_MAP()
 
 
@@ -168,6 +170,15 @@ void CListCtrlCl::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 			&rcItem, uFormat) ;
 
 		pDC->SelectStockObject(SYSTEM_FONT) ;
+
+		CPen pen(PS_DASH ,2,RGB(168,168,168));//可以设置画笔粗细
+		pDC->SelectObject(&pen);
+		for (int i = rtClient.left;i <=rtClient.right;)
+		{
+			pDC->MoveTo(i,rtClient.bottom);
+			pDC->LineTo(i+1,rtClient.bottom);
+			i +=3;
+		}
 	}
 
 }
@@ -420,10 +431,20 @@ void CListCtrlCl::createItemButton( int nItem, int nSubItem, HWND hMain,LPCTSTR 
 	CRect rect;
 
 	BOOL ret = GetSubItemRect(nItem, nSubItem, LVIR_LABEL, rect);
-	rect.bottom = rect.top+ m_nRowHeight;
+	BITMAP   bm; 
+	CDC   dcMem; 
+	::GetObject(nBitmapIn,sizeof(BITMAP),   (LPVOID)&bm); 
+	int with = bm.bmWidth;
+	int height = bm.bmHeight;
+
 	if (nSubItem == 0)
 	{
 		rect.left = 0;
+		rect.right = with;
+		rect.bottom = rect.top+ height;
+	}else{
+		rect.right =rect.left+ with;
+		rect.bottom = rect.top+ height;
 	}
 	DWORD dwStyle =  WS_CHILD | WS_VISIBLE | BS_MULTILINE;
 	CButtonCtrl *pButton = new CButtonCtrl(nItem,nSubItem,rect,hMain,pData);
@@ -438,7 +459,7 @@ void CListCtrlCl::createItemButton( int nItem, int nSubItem, HWND hMain,LPCTSTR 
 	pButton->SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(41, 57, 85));
 	pButton->SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(41, 57, 85));
 	pButton->SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(41, 57, 85));
-	//pButton->DrawTransparent(TRUE);
+	pButton->DrawTransparent(TRUE);
 
 	//delete pButton;
 	m_mButton.insert( make_pair( nSubItem, pButton ) ); //单行横向添加用
@@ -533,4 +554,11 @@ CButtonCtrl*  CListCtrlCl::GetBtutton(int index)
 
 	return it->second;
 
+}
+void CListCtrlCl::OnHdnBegintrack(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	LPNMHEADER phdr = reinterpret_cast<LPNMHEADER>(pNMHDR);
+	// TODO: 在此添加控件通知处理程序代码
+	*pResult = 1;
+	return;
 }
