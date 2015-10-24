@@ -1139,7 +1139,7 @@ LRESULT CDlgView::onBnCLick( WPARAM wParam, LPARAM lParam )
 				}
 			}
 		}else{
-				string appfileexe = m_apppath + "\\"+strprintf("%s",itemdata.appname)+strprintf("\\%s",itemdata.appname)+".exe";
+				string appfileexe = m_apppath + "\\"+strprintf("%s",itemdata.appname)+"\\"+strprintf("%s",itemdata.appname)+strprintf("\\%s",itemdata.appname)+".exe";
 				/// 配置文件安装了,但是找不到exe，重新设置配置文件没有安装
 				if (_access(appfileexe.c_str(),0) == -1)
 				{

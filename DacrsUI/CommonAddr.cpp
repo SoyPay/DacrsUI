@@ -222,7 +222,7 @@ void CCommonAddr::OnBnClickedButtonDelete()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	int curSel = m_CommonAddrListBox.GetCurSel() ;
-	if (curSel <=0)
+	if (curSel <0)
 	{
 		return;
 	}
