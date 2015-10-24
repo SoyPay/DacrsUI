@@ -10,6 +10,7 @@
 #include "GuessNum.h"
 #include "RpcCmd.h"
 #include "CommonAddr.h"
+#include "P2pTip.h"
 
 #define OUT_HEIGHT  60
 
@@ -908,12 +909,18 @@ void CP2PDlg::SendBet(int rewardnum)
 		return;
 	}
 
-	CReCharge outdlg(NULL,UiFun::UI_LoadString("P2P_MODULE" , "P2P_SET_ACCEPTAMOUNT" ,theApp.gsLanguage),_T(""),"",strTxMoney);
-	if (outdlg.DoModal() == IDCANCEL)
+	//CReCharge outdlg(NULL,UiFun::UI_LoadString("P2P_MODULE" , "P2P_SET_ACCEPTAMOUNT" ,theApp.gsLanguage),_T(""),"",strTxMoney);
+	//if (outdlg.DoModal() == IDCANCEL)
+	//{
+	//	return;
+	//}
+	CString strDisplay;
+	strDisplay.Format(_T("%s:%s"), UiFun::UI_LoadString("P2P_MODULE" , "P2P_SENDSIS_MONEY" ,theApp.gsLanguage) ,strTxMoney);
+	CP2pTip tipsdlg(NULL,strDisplay,strTxMoney);
+	if (tipsdlg.DoModal() == IDCANCEL)
 	{
 		return;
 	}
-
 	double acceptmoney =strtod(theApp.m_strAddress,NULL);
 	double money = strtod(strTxMoney,NULL);
 	
@@ -1080,12 +1087,12 @@ void CP2PDlg::OnBnClickedButtonMale()
 		return ;
 	}
 
-	CString strDisplay;
-	strDisplay.Format(_T("%s:%s"), UiFun::UI_LoadString("P2P_MODULE" , "P2P_SENDSIS_MONEY" ,theApp.gsLanguage) ,strTxMoney);
-	if (IDCANCEL == UiFun::MessageBoxEx(strDisplay , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  , MFB_OKCANCEL|MFB_TIP ) )
-	{
-		return;
-	}
+	//CString strDisplay;
+	//strDisplay.Format(_T("%s:%s"), UiFun::UI_LoadString("P2P_MODULE" , "P2P_SENDSIS_MONEY" ,theApp.gsLanguage) ,strTxMoney);
+	//if (IDCANCEL == UiFun::MessageBoxEx(strDisplay , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  , MFB_OKCANCEL|MFB_TIP ) )
+	//{
+	//	return;
+	//}
 	SendBet(1);
 	OnBnClickedButtonRefresh2();
 }

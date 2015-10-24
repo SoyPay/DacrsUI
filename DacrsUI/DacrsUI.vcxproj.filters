@@ -271,6 +271,12 @@
     <ClCompile Include="rsa.cpp">
       <Filter>头文件\md5</Filter>
     </ClCompile>
+    <ClCompile Include="P2pTip.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DisplayApp.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BmpBtn.h">
@@ -599,6 +605,12 @@
     </ClInclude>
     <ClInclude Include="rsa.h">
       <Filter>头文件\md5</Filter>
+    </ClInclude>
+    <ClInclude Include="P2pTip.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DisplayApp.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1219,6 +1231,9 @@
       <Filter>资源文件</Filter>
     </None>
     <None Include="res\mort_dlgen.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\splite.bmp">
       <Filter>资源文件</Filter>
     </None>
   </ItemGroup>
