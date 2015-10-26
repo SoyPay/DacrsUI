@@ -3,6 +3,7 @@
 #include "StaticTrans.h"
 #include "BmpBtn.h"
 #include "ShadeButtonST.h"
+#include "afxwin.h"
 
 // CP2pTip ¶Ô»°¿ò
 
@@ -41,4 +42,5 @@ public:
 	afx_msg void OnBnClickedCancel();
 	bool IsAllDigtal(const char* pData);
 	afx_msg void OnEnUpdatePercent();
+	CEdit m_Edit;
 };

@@ -896,7 +896,7 @@ void CDlgView::InitConfigAndList()
 		map<string ,ADD_APP_DATA>::const_iterator itfind = m_commappUrl_list.find(item->first);
 		if (itfind == m_commappUrl_list.end())
 		{
-			item =m_commapp_list.erase(itfind);
+			item =m_commapp_list.erase(item);
 			flag = true;
 		}else{
 			item++;
@@ -934,7 +934,7 @@ void CDlgView::InitConfigAndList()
 		map<string ,ADD_APP_DATA>::const_iterator itfind = m_gameappUrl_list.find(item->first);
 		if (itfind == m_gameappUrl_list.end())
 		{
-			item =m_gameapp_list.erase(itfind);
+			item =m_gameapp_list.erase(item);
 			flag = true;
 		}else{
 			item++;
@@ -973,7 +973,7 @@ void CDlgView::InitConfigAndList()
 		map<string ,ADD_APP_DATA>::const_iterator itfind = m_LargeappUrl_list.find(item->first);
 		if (itfind == m_LargeappUrl_list.end())
 		{
-			item =m_Largeapp_list.erase(itfind);
+			item =m_Largeapp_list.erase(item);
 			flag = true;
 		}else{
 			item++;

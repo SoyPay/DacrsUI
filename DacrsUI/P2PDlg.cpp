@@ -915,7 +915,13 @@ void CP2PDlg::SendBet(int rewardnum)
 	//	return;
 	//}
 	CString strDisplay;
-	strDisplay.Format(_T("%s:%s"), UiFun::UI_LoadString("P2P_MODULE" , "P2P_SENDSIS_MONEY" ,theApp.gsLanguage) ,strTxMoney);
+	if (rewardnum == 1)
+	{
+		strDisplay.Format(_T("%s:%s"), UiFun::UI_LoadString("P2P_MODULE" , "P2P_SENDSIS_MONEY" ,theApp.gsLanguage) ,strTxMoney);
+	}else{
+		strDisplay.Format(_T("%s:%s"), UiFun::UI_LoadString("P2P_MODULE" , "P2P_SENDBRO_MONEY" ,theApp.gsLanguage) ,strTxMoney);
+	}
+	
 	CP2pTip tipsdlg(NULL,strDisplay,strTxMoney);
 	if (tipsdlg.DoModal() == IDCANCEL)
 	{
@@ -1139,13 +1145,13 @@ void CP2PDlg::OnBnClickedButtonWoman()
 		return ;
 	}
 
-	CString strDisplay;
-	//strDisplay.Format(UiFun::UI_LoadString("P2P_MODULE" , "P2P_SENDBRO_MONEY" ,theApp.gsLanguage), strTxMoney);
-	strDisplay.Format(_T("%s:%s"), UiFun::UI_LoadString("P2P_MODULE" , "P2P_SENDBRO_MONEY" ,theApp.gsLanguage) ,strTxMoney);
-	if (IDCANCEL == UiFun::MessageBoxEx(strDisplay ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  , MFB_OKCANCEL|MFB_TIP ) )
-	{
-		return;
-	}
+	//CString strDisplay;
+	////strDisplay.Format(UiFun::UI_LoadString("P2P_MODULE" , "P2P_SENDBRO_MONEY" ,theApp.gsLanguage), strTxMoney);
+	//strDisplay.Format(_T("%s:%s"), UiFun::UI_LoadString("P2P_MODULE" , "P2P_SENDBRO_MONEY" ,theApp.gsLanguage) ,strTxMoney);
+	//if (IDCANCEL == UiFun::MessageBoxEx(strDisplay ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  , MFB_OKCANCEL|MFB_TIP ) )
+	//{
+	//	return;
+	//}
 	SendBet(2);
 	OnBnClickedButtonRefresh2();
 }
@@ -1693,7 +1699,7 @@ void CP2PDlg::AcceptBet(CString hash,INT64 money,CString sendaddr,int timeout,IN
 	 case 1:
 		 OnBnClickedButtonRefresh2();
 		 OnBnClickedButtonRefresh1();
-		 AutoSendBet();
+		 //AutoSendBet();
 		 break;
 	 default:
 		 break;
