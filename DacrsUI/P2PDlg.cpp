@@ -933,11 +933,11 @@ void CP2PDlg::SendBet(int rewardnum)
     INT64 accept64=(INT64)REAL_MONEY(acceptmoney);
 	INT64 send64=(INT64)REAL_MONEY(money);
 
-	if (accept64 <=0 || accept64 >=(INT64)(send64*1.1) )
-	{
-		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_SET_ACCEPTAMOUNTRANGE" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
-		return;
-	}
+	//if (accept64 <=0 || accept64 >=(INT64)(send64*1.1) )
+	//{
+	//	UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_SET_ACCEPTAMOUNTRANGE" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
+	//	return;
+	//}
 	//// 查询地址是否激活
 	CString strCond;
 
@@ -1193,6 +1193,7 @@ void CP2PDlg::OnListPool()
 			//pinf->pSta2->GetWindowText(money);
 			pinf->pSta1->GetWindowText(adddr);
 			AcceptBet(item.hash.c_str(),item.nAcceptMoney,adddr,item.outheight,item.nPayMoney);
+			OnBnClickedButtonRefresh2();
 		}
 		
 	}
