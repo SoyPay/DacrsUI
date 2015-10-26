@@ -34,6 +34,7 @@ void CP2pTip::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_PER, m_per);
 	DDX_Control(pDX, IDC_GETAMOUNT, m_amount);
 
+	DDX_Control(pDX, IDC_PERCENT, m_Edit);
 }
 
 
@@ -92,6 +93,7 @@ BOOL CP2pTip::OnInitDialog()
 	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
 	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
 	m_rBtnCancel.SizeToContent();
+	m_Edit.SetLimitText(3);
 
 	m_tips.SetWindowText(m_strtips);
 	m_set.SetWindowText(UiFun::UI_LoadString("P2P_MODULE" , "P2P_SET_ACCEPTAMOUNT" ,theApp.gsLanguage)+":");
@@ -135,9 +137,10 @@ void CP2pTip::OnBnClickedOk()
 		UiFun::MessageBoxEx(UiFun::UI_LoadString("SETAPPID" , "SETAPPFEE_PER" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return ;
 	}
-	if (atoi(strTxMoney)<0 || atoi(strTxMoney)>110)
+
+	if (atoi(strTxMoney)<0 || atoi(strTxMoney)>110||!IsAllDigtal(strTxMoney))
 	{
-		string error=UiFun::UI_LoadString("SETAPPID" , "SETAPPFEE_SETPER" ,theApp.gsLanguage)+"error";
+		string error=UiFun::UI_LoadString("SETAPPID" , "SETAPPFEE_SETPER" ,theApp.gsLanguage);
 		UiFun::MessageBoxEx(error.c_str(), UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
