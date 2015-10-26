@@ -317,7 +317,7 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 
 		/// 设置定时器刷新界面 一分钟
 		//SetTimer(1,30000,NULL);
-		SetTimer(1,60000,NULL);
+		SetTimer(1,40000,NULL);
 	}
 	return bRes ;
 }
