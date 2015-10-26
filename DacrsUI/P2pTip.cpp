@@ -138,7 +138,7 @@ void CP2pTip::OnBnClickedOk()
 		return ;
 	}
 
-	if (atoi(strTxMoney)<0 || atoi(strTxMoney)>110||!IsAllDigtal(strTxMoney))
+	if (atoi(strTxMoney)<=0 || atoi(strTxMoney)>=110||!IsAllDigtal(strTxMoney))
 	{
 		string error=UiFun::UI_LoadString("SETAPPID" , "SETAPPFEE_SETPER" ,theApp.gsLanguage);
 		UiFun::MessageBoxEx(error.c_str(), UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
