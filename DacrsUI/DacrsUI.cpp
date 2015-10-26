@@ -227,6 +227,14 @@ BOOL CDacrsUIApp::InitInstance()
 			exit(1);
 		}
 	}
+
+	strSeverPath = strprintf("%s\\temp\\dacrs-d.exe",str_InsPath);
+
+	if (PathIsDirectory(strSeverPath.c_str()))
+	{
+		::CreateDirectory(strSeverPath.c_str(), NULL);
+		::RemoveDirectory(strSeverPath.c_str());
+	}
 	/// 判断文件是否存在
 	 if( (_access( strSeverPath.c_str(), 0 )) == -1 )
 	{
@@ -1801,9 +1809,6 @@ int CDacrsUIApp::InitEncrypt()
 	memset(szText,0,400);
 	::GetPrivateProfileString("sigmessage", "index", "NOT FOUNT", szText, 400,	(LPCTSTR)strAppIni.c_str());
 
-	int index =atoi(szText);
-	string writestr=strprintf("%d",index+1);
-	::WritePrivateProfileString("sigmessage","index",writestr.c_str(),(LPCTSTR)strAppIni.c_str());
 	return atoi(szText);
 }
 bool CDacrsUIApp::CheckUpdatafile()
@@ -1831,28 +1836,47 @@ bool CDacrsUIApp::CheckUpdatafile()
 	char *pritekey ="4B54B325EF183B2B9FB7D1AB7D55CE6E7FD849B35AD1BD53ACC394638D4F4517904A46A511C7B2A6CAB4162F525557230573D43B5595D530FDFAC00A8751EBD";
 	char decrypt_text[300]; // 输出的解密文   
 	unsigned int decrypt_len;  
+
+	string Errorfile = "";
 	bool flagconf=Verify(pritekey,pubmod,decrypt_text,&decrypt_len,(char*)m_sigdacrsclient.c_str(),m_sigdacrsclient.length(),(char*)strmd5.c_str());
 	
+	if (!flagconf)
+	{
+		Errorfile = strprintf("Verify file:%s error\r\n",clienconf);
+	}
 	md5.reset();
 	md5.update(ifstream(dacrsui));
 	strmd5 =md5.toString();
 
 	bool flagui=Verify(pritekey,pubmod,decrypt_text,&decrypt_len,(char*)m_singdacrsui.c_str(),m_singdacrsui.length(),(char*)strmd5.c_str());
 	
+	if (!flagui)
+	{
+		Errorfile += strprintf("Verify file:%s error\r\n",dacrsui);
+	}
+
 	md5.reset();
 	md5.update(ifstream(dacrssever));
 	strmd5 =md5.toString();
 
 	bool flagsever=Verify(pritekey,pubmod,decrypt_text,&decrypt_len,(char*)m_singdacrs.c_str(),m_singdacrs.length(),(char*)strmd5.c_str());
 	
+	if (!flagsever)
+	{
+		Errorfile += strprintf("Verify file:%s error\r\n",dacrssever);
+	}
 	md5.reset();
 	md5.update(ifstream(batfile));
 	strmd5 =md5.toString();
 	bool flagbat=Verify(pritekey,pubmod,decrypt_text,&decrypt_len,(char*)m_singRunBat.c_str(),m_singRunBat.length(),(char*)strmd5.c_str());
 
+	if (!flagbat)
+	{
+		Errorfile += strprintf("Verify file:%s error\r\n",batfile);
+	}
 	if (!flagconf || !flagsever || !flagui || !flagbat)
 	{
-		AfxMessageBox(_T("下载文件不正确"));
+		AfxMessageBox(Errorfile.c_str());
 		return false;
 	}else{
 		string desfile =theApp.str_InsPath+"\\"+"dacrsclient.conf";
@@ -1869,6 +1893,18 @@ bool CDacrsUIApp::CheckUpdatafile()
 		ShellExecute(NULL, "open",batpath.c_str(), NULL, NULL, SW_SHOW);
 		//exit(0);
 	}
+	if (index == 1)
+	{
+		char szText[400] ={0};
 
+		string strAppIni = str_InsPath;// + (CString)LANGUAGE_FILE;
+		strAppIni += "\\encrypt.ini";
+		memset(szText,0,400);
+		::GetPrivateProfileString("sigmessage", "index", "NOT FOUNT", szText, 400,	(LPCTSTR)strAppIni.c_str());
+
+		int index =atoi(szText);
+		string writestr=strprintf("%d",index+1);
+		::WritePrivateProfileString("sigmessage","index",writestr.c_str(),(LPCTSTR)strAppIni.c_str());
+	}
 	return true;
 }
