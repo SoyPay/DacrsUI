@@ -178,9 +178,14 @@ void CBetRecord::Showlistbox(CString address)
 	m_curpage = 0;
 	GetDlgItem(IDC_STATIC_COUNT_PAGE)->SetWindowText(_T(""));
 	string conditon;
-	conditon = strprintf("right_addr ='%s' and (actor = 1 or actor = 2) and deleteflag = 0 order by recv_time desc" , address);
+	conditon = strprintf("right_addr ='%s' and (actor = 1 or actor = 2) and recv_time ='%s' and deleteflag = 0 order by recv_time desc" , address,"");
 
 	int nItem =  theApp.m_SqliteDeal.GetP2PQuizRecordList(conditon.c_str() ,&m_PoolList ) ;
+
+	conditon = strprintf("right_addr ='%s' and (actor = 1 or actor = 2) and recv_time !='%s' and deleteflag = 0 order by recv_time desc" , address,"");
+	uistruct::P2PBETRECORDLIST     PoolList;
+	theApp.m_SqliteDeal.GetP2PQuizRecordList(conditon.c_str() ,&PoolList ) ;
+	m_PoolList.insert(m_PoolList.end(),PoolList.begin(),PoolList.end());
 
 	m_pagecount = (m_PoolList.size()%m_pagesize)==0?(m_PoolList.size()/m_pagesize):(m_PoolList.size()/m_pagesize)+1;
 
