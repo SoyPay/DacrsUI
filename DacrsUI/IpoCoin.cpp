@@ -270,7 +270,7 @@ void CIpoCoin::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL , (rc.Width()/100)*3+5, (rc.Height()/100)*5+8 , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL , (rc.Width()/100)*3+2, (rc.Height()/100)*5+8 , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
 		int curwith = 0;
 		pst = GetDlgItem( IDC_EDIT_ADDR ) ;
