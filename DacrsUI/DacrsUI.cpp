@@ -1889,7 +1889,7 @@ bool CDacrsUIApp::CheckUpdatafile()
 		//CloseProcess("DacrsUI.exe");
 		string batpath =strprintf("%s\\run.bat",str_InsPath);
 		::CopyFile(dacrsui.c_str(),desfile.c_str(),false);
-		AfxMessageBox(_T("程序以及更新请重新启动程序"));
+		AfxMessageBox(_T("钱包已成功更新到最新版本,请重启!"),MB_ICONASTERISK|MB_OK);
 		ShellExecute(NULL, "open",batpath.c_str(), NULL, NULL, SW_SHOW);
 		//exit(0);
 	}

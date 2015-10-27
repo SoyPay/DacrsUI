@@ -25,7 +25,7 @@ CTradDlg::CTradDlg()
 	m_pBmp = NULL ;
 	m_seteditcolor = TRUE;
 	m_nConut = 0 ;
-	m_pagesize = 13;
+	m_pagesize = 14;
 	m_offset = 0;
 }
 
@@ -156,7 +156,7 @@ BOOL CTradDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 			{UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_SOURCE_ADDRESS" ,theApp.gsLanguage) ,       220}, 
 			{UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_MONEY" ,theApp.gsLanguage),          100},
 			{UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_DESTINATION_ADDRESS" ,theApp.gsLanguage) ,     220},
-			{UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_ID" ,theApp.gsLanguage) ,     400}
+			{UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_ID" ,theApp.gsLanguage) ,     183}
 			
 		};
 		m_listCtrl.SetBkColor(RGB(240,240,240));       
@@ -233,7 +233,7 @@ BOOL CTradDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_time.InsertString(5,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_THIS_YEAR" ,theApp.gsLanguage));
 		m_time.InsertString(6,UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_YESTERDAY" ,theApp.gsLanguage));
 
-		m_pageitem.InsertString(0,_T("13"));
+		m_pageitem.InsertString(0,_T("14"));
 		m_pageitem.InsertString(1,_T("20"));
 		m_pageitem.InsertString(2,_T("30"));
 		m_pageitem.InsertString(3,_T("50"));
@@ -344,8 +344,8 @@ void  CTradDlg::ShowListCtrl(uistruct::TRANSRECORDLIST* pListInfo)
 		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData.c_str() );   //目的地址
 
 		
-
-		strShowData = strprintf("%s", const_it->txhash.c_str()); 
+		string txhash= const_it->txhash.substr(0,25)+"...";
+		strShowData = strprintf("%s", txhash.c_str()); 
 		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData.c_str() );  //交易hash
 
 		i++;
@@ -442,7 +442,8 @@ void CTradDlg::InsertItemData()
 	
 	m_listCtrl.SetItemText(count , ++nSubIdx , txdetail.desaddr.c_str() );//目的地址
 
-	strShowData = strprintf("%s", txdetail.txhash.c_str());
+	string txhash= txdetail.txhash.substr(0,25)+"...";
+	strShowData = strprintf("%s", txhash.c_str()); 
 	m_listCtrl.SetItemText( count , ++nSubIdx, strShowData.c_str()); //交易hash
 
     m_listCtrl.EnsureVisible(count, FALSE);
@@ -509,7 +510,7 @@ void CTradDlg::OnSize(UINT nType, int cx, int cy)
 		CButton *pList = (CButton*)GetDlgItem(IDC_LIST_LISTTX);
 		if( NULL != pList ) {	
 			//pList->SetWindowPos(NULL ,32, 50 , 837 , 380 , SWP_SHOWWINDOW);
-			pList->SetWindowPos(NULL ,32, 50 , 837 , 350 , SWP_SHOWWINDOW);
+			pList->SetWindowPos(NULL ,32, 50 , 837 , 353 , SWP_SHOWWINDOW);
 		}
 		CButton *pButton = (CButton*)GetDlgItem(IDC_BUTTON_TXDETAIL);
 		if( NULL != pButton ) {	
@@ -914,8 +915,8 @@ void CTradDlg::OnShowListCtrl(uistruct::TRANSRECORDLIST pListInfo){
 		m_listCtrl.SetItemText(i , ++nSubIdx , const_it->desaddr.c_str() );   //目的地址
 
 
-
-		strShowData = strprintf("%s", const_it->txhash.c_str()); 
+		string txhash= const_it->txhash.substr(0,25)+"...";
+		strShowData = strprintf("%s", txhash.c_str()); 
 		m_listCtrl.SetItemText(i , ++nSubIdx , strShowData.c_str() );  //交易hash
 
 		i++;
