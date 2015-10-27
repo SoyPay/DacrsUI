@@ -1134,11 +1134,15 @@ LRESULT CDlgView::onBnCLick( WPARAM wParam, LPARAM lParam )
 				if (Download(dowlouUrName.c_str(),dowloufileName.c_str()))
 				{
 					UnZipFile(dowloufileName,dowloufilepath);
+					///删除下载的临时文件
+					DeleteFile(dowloufileName.c_str());
 					button->m_pData.version = BtData.version;
 					MoidfyListAndSaveToFile(itemdata.type ,itemdata.appname,button->m_pData);
 				}
 			}
-		}else{
+		}
+		///打开应用程序
+		{
 				string appfileexe = m_apppath + "\\"+strprintf("%s",itemdata.appname)+"\\"+strprintf("%s",itemdata.appname)+strprintf("\\%s",itemdata.appname)+".exe";
 				/// 配置文件安装了,但是找不到exe，重新设置配置文件没有安装
 				if (_access(appfileexe.c_str(),0) == -1)
@@ -1163,9 +1167,6 @@ LRESULT CDlgView::onBnCLick( WPARAM wParam, LPARAM lParam )
 				CloseHandle(app_pi.hProcess);
 				CloseHandle(app_pi.hThread);
 				m_process.push_back(app_pi);
-				//HANDLE hProcessHandle; 
-				//hProcessHandle = ::OpenProcess( PROCESS_ALL_ACCESS, FALSE, app_pi.dwProcessId );
-				//TerminateProcess( hProcessHandle,0);
 		}
 	}else{  /// 下载可执行程序
 		string dowloufilepath = m_apppath + "\\"+strprintf("%s",itemdata.appname);
