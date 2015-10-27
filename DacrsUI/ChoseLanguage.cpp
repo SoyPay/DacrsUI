@@ -106,6 +106,9 @@ BOOL CChoseLanguage::OnInitDialog()
 	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
 	m_rBtnCancel.SizeToContent();
 
+	m_laguabox.InsertString(0,_T("中文简体"));
+	m_laguabox.InsertString(1,_T("English"));
+
 	// TODO:  在此添加额外的初始化
 	if (m_language == 2)
 	{
