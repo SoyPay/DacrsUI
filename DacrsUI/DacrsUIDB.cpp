@@ -996,7 +996,7 @@ void CDacrsUIApp::PopupCommBalloonTip(string hash)//)
 		strShow += strprintf("%s: (%s)\r\n",UiFun::UI_LoadString("RECEIVE_MODULE" , "RECEIVE_ADDRESS" ,theApp.gsLanguage) ,commtx.addr.c_str());
 	}else if(strcmp(commtx.txtype.c_str(),"COMMON_TX") == 0 && commtx.state == 1){
 		//strShow ="  流出交易\r\n";
-		strShow =strprintf("  %s\r\n",UiFun::UI_LoadString("RECEIVE_MODULE" , "RECEIVE_ADDRESS" ,theApp.gsLanguage));
+		strShow =strprintf("  %s\r\n",UiFun::UI_LoadString("RECEIVE_MODULE" , "DACRSU_OUTTX" ,theApp.gsLanguage));
 		SYSTEMTIME curTime =UiFun::Time_tToSystemTime(commtx.confirmedtime);
 		strShow += strprintf("%s: %04d-%02d-%02d %02d:%02d:%02d\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_OK_TIME" ,theApp.gsLanguage),curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
 		strShow += strprintf("%s: -%.8f\r\n",UiFun::UI_LoadString("COMM_MODULE" , "COMM_MONEY" ,theApp.gsLanguage),commtx.money);
