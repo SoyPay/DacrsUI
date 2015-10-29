@@ -159,6 +159,7 @@ public:
 	CONFIG_APP_DATA GetAppValue(const Json::Value &root);
 	void GetListAppConfig(map<string,CONFIG_APP_DATA> &mlisapp);
 	void GetHelpUrl(string &helpen,string &helpcn);
+	void GetInsertAppId(map<string,string> &listappid);
 private:
 	void ReadMainCfgData(const Json::Value& root);
 	void ReadSesureTradeCfgData(const Json::Value& root);
@@ -176,6 +177,7 @@ private:
 	void AddString(const Json::Value& root,CAutoComplete &m_comboxinput);
 	void ReadListAppConfig(const Json::Value &root);
 	void ReadHelpUrl(const Json::Value &root);
+	void ReadInsertAppId(const Json::Value &root);
 public:
 	void ModifyAppFeeCfgData( Json::Value& root,const CString &LeaderKey,const CString &Key,const CString &KeyValue);
 
@@ -198,5 +200,6 @@ private:
 	map<string,CONFIG_APP_DATA> m_listapp;
 	string            m_helpcn;
 	string            m_helpen;
+	map<string,string> m_listappid;
 };
 

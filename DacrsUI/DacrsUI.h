@@ -136,13 +136,13 @@ public:
 	BOOL					m_bStartServer;
 	PROCESS_INFORMATION		sever_pi; 
 	string				m_rpcport;
-	string					m_strServerCfgFileName;
+	string				m_strServerCfgFileName;
 	string				m_sendPreHeadstr;
 	string				m_sendendHeadstr;
-	string                m_uirpcport;
-	string                 m_severip;
-	string                m_rpcUser;
-	string                m_rpcPassWord;
+	string              m_uirpcport;
+	string              m_severip;
+	string              m_rpcUser;
+	string              m_rpcPassWord;
 public:
 	CMyQueue m_MsgQueue;
 	CMyQueue m_UimsgQueue;
@@ -224,6 +224,7 @@ private:
 	string  m_singdacrsui;
 	string  m_singdacrs;
 	string  m_singRunBat;
+	map<string,string>  m_listappid;
 	
 };
 

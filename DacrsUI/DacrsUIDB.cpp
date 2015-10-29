@@ -1270,6 +1270,12 @@ void CDacrsUIApp::InsertAppTransaction(string txdetail)
 	uistruct::REVTRANSACTION_t transcion;
 	if (transcion.JsonToStruct(txdetail))
 	{
+		/// 插入配置的相关的id
+		map<string,string>::const_iterator item = m_listappid.find(transcion.desregid);
+		if (item == m_listappid.end())
+		{
+			return;
+		}
 		string strSourceData;
 		strSourceData = strprintf("'%s' , '%s' ,'%d' ,'%s' ,'%s' , '%.8f' ,'%d' ,'%s' ,'%s', '%.8f' ,'%s' ,'%d','%d','%s'" , transcion.txhash.c_str() ,\
 			transcion.txtype.c_str() ,transcion.ver ,transcion.addr.c_str() ,transcion.regid,transcion.fees,transcion.height,\

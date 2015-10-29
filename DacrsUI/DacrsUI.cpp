@@ -1469,6 +1469,7 @@ void  CDacrsUIApp::ParseUIConfigFile(const string& strExeDir){
 		CJsonConfigHelp::getInstance()->GetHelpUrl(helpurlen,helpurlcn);
 		CNetParamCfg netParm;
 		CJsonConfigHelp::getInstance()->GetNetParamCfgData(netParm);
+		CJsonConfigHelp::getInstance()->GetInsertAppId(m_listappid);
 
 		m_severip = netParm.server_ip;
 		m_uirpcport = netParm.server_ui_port;
