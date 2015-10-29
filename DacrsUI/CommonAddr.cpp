@@ -150,7 +150,7 @@ void CCommonAddr::OnBnClickedButtonAdd()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	int curSel = m_AllAddrlistBox.GetCurSel() ;
-	if (curSel <=0)
+	if (curSel <0)
 	{
 		return;
 	}

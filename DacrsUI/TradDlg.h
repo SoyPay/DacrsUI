@@ -45,6 +45,7 @@ private:
 	CEdit		       m_edit;
 	COLORREF          m_colorEditText;
 	bool              m_seteditcolor;
+	uistruct::TRANSRECORDLIST m_pListInfo ;
 public:
 	CStaticTrans           m_sCountpage  ;
 	CShadeButtonST         m_rBtnUp;

@@ -363,11 +363,13 @@ void CTradDlg::OnNMDblclkListListtx(NMHDR *pNMHDR, LRESULT *pResult)
 	if(-1 != pNMItemActivate->iItem) 
 	{  
 		int nRow = pNMItemActivate->iItem;
-		CString strtxhash =m_listCtrl.GetItemText(nRow, 5);
-		uistruct::REVTRANSACTION_t  txdetail;
-		string strCond;
-		strCond = strprintf(" hash='%s' ", strtxhash);
-		int nItem =  theApp.m_SqliteDeal.GetTransactionItem( strCond ,&txdetail ) ;
+
+		if (nRow <0 || nRow > m_pListInfo.size())
+		{
+			return ;
+		}
+		uistruct::REVTRANSACTION_t  txdetail =m_pListInfo.at(nRow);
+
 		if (txdetail.txhash != _T(""))
 		{
 			theApp.m_strAddress.Format(_T("%s") ,txdetail.ToJson().c_str() ) ;
@@ -865,6 +867,10 @@ void CTradDlg::OnShowListCtrl(uistruct::TRANSRECORDLIST pListInfo){
 	{
 		return;
 	}
+
+	m_pListInfo.clear();
+	m_pListInfo.insert(m_pListInfo.begin(),pListInfo.begin(),pListInfo.end());
+
 	int count = (m_nConut)*m_pagesize+1;
 	int nSubIdx = 0 , i = 0 ;
 	string strShowData = "";
@@ -1518,7 +1524,7 @@ void  CTradDlg::ShowPageCotent(int pageIndex)
 		return;
 	}
 	string strCond ;
-	uistruct::TRANSRECORDLIST pListInfo ;
+	uistruct::TRANSRECORDLIST pListInfo;
 	int num = (pageIndex * m_pagesize - m_offset)<0?0:(pageIndex * m_pagesize - m_offset);
 	std::stringstream strTemp;  
 	string str;
@@ -1556,7 +1562,7 @@ void  CTradDlg::ShowPageCotent(int pageIndex)
 
 	Invalidate();
 
-	ShowListCtrl(&pListInfo);
+	OnShowListCtrl(pListInfo);
 }
 void    CTradDlg::ShowComboxCotent()
 {
