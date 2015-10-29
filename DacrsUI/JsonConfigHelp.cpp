@@ -119,6 +119,7 @@ void CJsonConfigHelp::ReadJsonConfig(const string& strFilePath)
 		{
 			ReadHelpUrl(root);
 		}
+		ReadInsertAppId(root);
 	}
 	ifs.close();
 }
@@ -477,4 +478,22 @@ void CJsonConfigHelp::ReadHelpUrl(const Json::Value &root)
 	}
 	m_helpcn = help["helpcn"].asString();
 	m_helpen = help["helpen"].asString();
+}
+
+
+void CJsonConfigHelp::GetInsertAppId(map<string,string> &listappid)
+{
+	listappid =m_listappid;
+}
+void CJsonConfigHelp::ReadInsertAppId(const Json::Value &root){
+	Json::Value listapp = root["listappid"];
+	if (listapp.isNull())
+	{
+		return;
+	}
+	for(unsigned int i=0; i<listapp.size();++i)
+	{
+		string key = listapp[i]["appid"].asString();
+		m_listappid[key]=key;
+	}
 }
