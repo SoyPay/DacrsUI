@@ -99,7 +99,7 @@ void CDacrsUIApp::UpdateQuizPoolData()
 				}
 			}
 
-			if (root.size() < requiredCount ||root.size()>requiredCount )
+			if ((int)root.size() < requiredCount ||(int)root.size()>requiredCount )
 			{
 				break;
 			}
@@ -692,7 +692,7 @@ void CDacrsUIApp::UpdateRedPacketPoolData()
 					m_SqliteDeal.InsertTableItem(_T("t_red_packets_pool") ,strSourceData);
 				}
 			}
-			if (root.size() < requiredCount ||root.size()>requiredCount )
+			if ((int)root.size() < requiredCount ||(int)root.size()>requiredCount )
 			{
 				break;
 			}
