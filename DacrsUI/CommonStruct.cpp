@@ -697,7 +697,7 @@ std::string CSoyPayHelp::HexStr(const T itbegin, const T itend, bool fSpaces) {
 string CSoyPayHelp::DisPlayMoney(string &strMoney)
 {
 	int iStart = strMoney.find(".");
-	if(strMoney.length() > iStart + 4)
+	if((int)strMoney.length() > iStart + 4)
 		return strMoney.substr(iStart+4);
 	return strMoney;
 }

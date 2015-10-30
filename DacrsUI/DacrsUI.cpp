@@ -1194,7 +1194,7 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 				postmsg.SetStrType(msg);
 				pApp->m_MsgQueue.push(postmsg);
 				pApp->IsWalletLocked = FALSE;
-			}else if (!msg.find("connections")>=0)
+			}else if (msg.find("connections")>=0)
 			{
 				CPostMsg postmsg(MSG_USER_UP_PROGRESS,WM_CONNECTNET);
 				postmsg.SetStrType(msg);
@@ -1732,7 +1732,7 @@ void CDacrsUIApp::SendUIMsg(int message,string jsonaddr){
 void CDacrsUIApp::CheckPathValid(const string& strDir)
 {
 	BOOL bExist = FALSE;
-	for(int i = 0;i < strDir.length();i++)
+	for(int i = 0;i < (int)strDir.length();i++)
 	{
 		BYTE bchar = (BYTE)strDir.at(i);
 		if(bchar == ' ')

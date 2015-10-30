@@ -1176,7 +1176,7 @@ void CP2PDlg::OnListPool()
 	if ( NULL != pinf ) { 
 		CString hash = pinf->pstr;
 		int index = ((m_curpage-1)*m_pagesize)+pinf->nItem;
-		if (index > m_PoolList.size())
+		if (index > (int)m_PoolList.size())
 		{
 			UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_THIS_ALONE_NOT" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 			return 0;
@@ -2422,7 +2422,7 @@ void CP2PDlg::ReadP2pPoolFromCmd(uistruct::P2PLIST &PoolList)
 					PoolList.push_back(item);
 				}
 			}
-			if (root.size() < requiredCount ||root.size()>requiredCount )
+			if ((int)root.size() < requiredCount ||(int)root.size()>requiredCount )
 			{
 				break;
 			}

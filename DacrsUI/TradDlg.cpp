@@ -364,7 +364,7 @@ void CTradDlg::OnNMDblclkListListtx(NMHDR *pNMHDR, LRESULT *pResult)
 	{  
 		int nRow = pNMItemActivate->iItem;
 
-		if (nRow <0 || nRow > m_pListInfo.size())
+		if (nRow <0 || nRow > (int)m_pListInfo.size())
 		{
 			return ;
 		}

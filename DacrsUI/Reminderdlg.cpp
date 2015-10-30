@@ -11,10 +11,11 @@
 
 IMPLEMENT_DYNAMIC(CReminderdlg, CDialogEx)
 
-CReminderdlg::CReminderdlg(CWnd* pParent /*=NULL*/)
+CReminderdlg::CReminderdlg(CWnd* pParent /*=NULL*/,int index)
 	: CDialogEx(CReminderdlg::IDD, pParent)
 {
 	m_pBmp = NULL ;
+	m_index = index;
 }
 
 CReminderdlg::~CReminderdlg()
@@ -94,8 +95,16 @@ BOOL CReminderdlg::OnInitDialog()
 	GetDlgItem(IDC_RADIO_EXIT)->SetWindowText(UiFun::UI_LoadString("REMINDER" , "REMINDER_EXIT" ,theApp.gsLanguage));
 	GetDlgItem(IDC_CHECK_NO)->SetWindowText(UiFun::UI_LoadString("REMINDER" , "REMINDER_NO" ,theApp.gsLanguage));
 
-	CButton* radio=(CButton*)GetDlgItem(IDC_RADIO_NOEXIT);
-	radio->SetCheck(TRUE);
+	if (m_index == 0)
+	{
+		CButton* radio=(CButton*)GetDlgItem(IDC_RADIO_NOEXIT);
+		radio->SetCheck(TRUE);
+	}else if (m_index == 2)
+	{
+		CButton* radio=(CButton*)GetDlgItem(IDC_RADIO_EXIT);
+		radio->SetCheck(TRUE);
+	}
+	
 	
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE
@@ -185,23 +194,26 @@ void CReminderdlg::OnBnClickedOk()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	int close = 0;
+	int reminder = false;
 	if (((CButton *)GetDlgItem(IDC_CHECK_NO))->GetCheck())
 	{
-		theApp.m_reminder = 0;
+		reminder = true;
 	}
 	if (((CButton *)GetDlgItem(IDC_RADIO_NOEXIT))->GetCheck())
 	{
-		if (!theApp.m_reminder)
+		if (reminder)
 		{
 			close = 1;
 		}
+		theApp.m_reminder = close;
 		WriteClosConfig(close);
 	   ((CDacrsUIDlg*)(theApp.m_pMainWnd))->ToTray();
 	}else if (((CButton *)GetDlgItem(IDC_RADIO_EXIT))->GetCheck())
 	{
-		if (!theApp.m_reminder)
+		close = 2;
+		if (reminder)
 		{
-			close = 2;
+			close = 3;
 		}
 		WriteClosConfig(close);
 		((CDacrsUIDlg*)(theApp.m_pMainWnd))->ClosWalletWind();
