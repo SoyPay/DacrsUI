@@ -204,7 +204,7 @@ public:
 	bool IsWalletLocked; //钱包锁定状态 TRUE : 不锁定状态 FALSE
 	bool HaveLocked; // 有锁TRUE : 无锁 FALSE
 	int  netWork;  /// 0 是main网络(正式网络)  1 regtest网络(局域网络) 2testnet(测试网络) 
-	int m_reminder;    //是否要弹出提示框，关闭的时候 false不弹出 true弹出
+	int m_reminder;    //是否要弹出提示框，0 弹出默认最小化 1最下化不弹出   2 关闭弹出  3关闭 不弹出
 	bool m_poptips;
 	BOOL m_passlock;    //是否要弹出提示框，关闭的时候 false不弹出，存在解锁框 true弹出,不存在解锁框
 	BOOL m_dlgCreatfinsh;   // 主对话框框的所有dlg是否创建完

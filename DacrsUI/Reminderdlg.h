@@ -10,7 +10,7 @@ class CReminderdlg : public CDialogEx
 	DECLARE_DYNAMIC(CReminderdlg)
 
 public:
-	CReminderdlg(CWnd* pParent = NULL);   // 标准构造函数
+	CReminderdlg(CWnd* pParent = NULL,int index =0);   // 标准构造函数
 	virtual ~CReminderdlg();
 
 // 对话框数据
@@ -29,6 +29,7 @@ private:
 	HBITMAP		     m_pBmp; 
 	CShadeButtonST   m_rBtnCancel;
 	CShadeButtonST   m_rBtnOk;
+	int              m_index;
 public:
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	afx_msg void OnBnClickedButtonClose();

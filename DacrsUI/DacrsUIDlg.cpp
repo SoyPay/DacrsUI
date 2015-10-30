@@ -759,14 +759,14 @@ bool  CDacrsUIDlg::IsP2pBetFinsh()
 }
 void  CDacrsUIDlg::ClosWallet()
 {
-	if (theApp.m_reminder == 0)
+	if (theApp.m_reminder == 0 || theApp.m_reminder == 2)
 	{
-		CReminderdlg remindgl;
+		CReminderdlg remindgl(this,theApp.m_reminder);
 		remindgl.DoModal();
-	}else if (theApp.m_reminder == 1)
+	}else if (theApp.m_reminder == 1)  ///最小化
 	{
 		ToTray();                              /// 最小化
-	}else if (theApp.m_reminder == 2){        /// 关闭程序
+	}else if (theApp.m_reminder == 3){        /// 关闭程序
 		OnCloseWriteAppFee();
 		BeginWaitCursor();
 		if ( NULL != m_pOutGifDlg ) {
