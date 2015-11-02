@@ -122,9 +122,10 @@ void CDacrsUIApp::UpdateAddressData(){
 		return;
 	}
 
-	uistruct::LISTADDR_t listaddr;
+	
 	for(unsigned int i = 0; i < root.size(); ++i){
-		memset(&listaddr , 0 , sizeof(uistruct::LISTADDR_t));
+		//memset(&listaddr , 0 , sizeof(uistruct::LISTADDR_t));
+		uistruct::LISTADDR_t listaddr;
 		//address
 		listaddr.address = root[i]["addr"].asString();
 		//RegID
@@ -273,6 +274,7 @@ void CDacrsUIApp::OpenBet(CString txhash,BOOL Flag)
 	string strShowData = _T(""),txaccepthash;
 	txaccepthash = strprintf("%s",pPoolItem.relate_hash.c_str());
 	string sendhash = CSoyPayHelp::getInstance()->GetReverseHash(txhash.GetBuffer());
+	txhash.ReleaseBuffer(txhash.GetLength());
 	string accepthash = CSoyPayHelp::getInstance()->GetReverseHash(txaccepthash);
 
 	string number;

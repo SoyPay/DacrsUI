@@ -164,7 +164,10 @@ BOOL CDacrsUIDlg::OnInitDialog()
 
 	// TODO: 在此添加额外的初始化代码
 	if ( ((CDacrsUIApp*)AfxGetApp())->pSplashThread != NULL)
-		((CDacrsUIApp*)AfxGetApp())->pSplashThread->HideSplash();   
+	{
+		//((CDacrsUIApp*)AfxGetApp())->pSplashThread->HideSplash();   
+	    ((CDacrsUIApp*)AfxGetApp())->pSplashThread->PostThreadMessage(WM_QUIT,NULL,NULL);
+	}
 
 	CDC* dc = GetDC();
 	int dpiX = GetDeviceCaps(dc->GetSafeHdc(), LOGPIXELSX);
@@ -233,7 +236,55 @@ LRESULT CDacrsUIDlg::OnBeginMoveWnd(WPARAM wParam, LPARAM lParam)
 	PostMessage(WM_NCLBUTTONDOWN,wParam,lParam);
 	return 1 ;
 }
+void CDacrsUIDlg::OnInitMunu()
+{
+	newMenu.LoadMenu(IDR_MENU1);
+	CMenu *pPopup=newMenu.GetSubMenu(0);
+	pPopup->AppendMenu(MF_STRING,WM_CLOSEAPP,"  "+UiFun::UI_LoadString("DACRSU" , "DACRSU_CLOSE" ,theApp.gsLanguage));
+	CMenu *pPopupChild=pPopup->GetSubMenu(11);
+	if (theApp.language() == 1)
+	{
+		pPopupChild->CheckMenuItem(ID_CNL, MF_BYCOMMAND|MF_CHECKED);
+		if (!theApp.m_poptips)
+		{
+			pPopup->CheckMenuItem(ID__CLOSEPOP, MF_BYCOMMAND|MF_CHECKED);
+		}else{
+			pPopup->CheckMenuItem(ID__CLOSEPOP, MF_BYCOMMAND|MF_USECHECKBITMAPS );
+		}
+	}else{
+		pPopup->ModifyMenu(0, MF_BYPOSITION | MF_STRING, ID_RPC_CMD, UiFun::UI_LoadString("MENU" , "MENU_RPCCOMMAND" ,theApp.gsLanguage));
+		pPopup->ModifyMenu(1, MF_BYPOSITION | MF_STRING, ID__ENCRYPTWALLET, UiFun::UI_LoadString("MENU" , "MENU_PASSWORD" ,theApp.gsLanguage));
+		pPopup->ModifyMenu(2, MF_BYPOSITION | MF_STRING, ID_CHANGEPASSWORD,UiFun::UI_LoadString("MENU" , "MENU_MODIFYPASSWORD" ,theApp.gsLanguage));
+		pPopup->ModifyMenu(3, MF_BYPOSITION | MF_STRING, ID__LOCK, UiFun::UI_LoadString("MENU" , "MENU_LOCK" ,theApp.gsLanguage));
+		pPopup->ModifyMenu(4, MF_BYPOSITION | MF_STRING, ID__BAKWALLET,UiFun::UI_LoadString("MENU" , "MENU_BACK" ,theApp.gsLanguage));
+		pPopup->ModifyMenu(5, MF_BYPOSITION | MF_STRING, ID__EXPORTPRIVEKEY, UiFun::UI_LoadString("MENU" , "MENU_EXPORT" ,theApp.gsLanguage));
+		pPopup->ModifyMenu(6, MF_BYPOSITION | MF_STRING, ID__IMPORTPRIVEKEY, UiFun::UI_LoadString("MENU" , "MENU_IMPORT" ,theApp.gsLanguage));
+		pPopup->ModifyMenu(7, MF_BYPOSITION | MF_STRING, ID__SETAPPID, UiFun::UI_LoadString("MENU" , "MENU_SETAPPID" ,theApp.gsLanguage));
+		pPopup->ModifyMenu(8, MF_BYPOSITION | MF_STRING, ID__SET, UiFun::UI_LoadString("MENU" , "MENU_SET" ,theApp.gsLanguage));
+		pPopup->ModifyMenu(9, MF_BYPOSITION | MF_STRING, ID__SETDEFAULT, UiFun::UI_LoadString("MENU" , "MENU_RESTORY" ,theApp.gsLanguage));
+		pPopup->ModifyMenu(10, MF_BYPOSITION | MF_STRING, ID_RECORD, UiFun::UI_LoadString("MENU" , "MENU_HISTORYRECORD" ,theApp.gsLanguage));
+		pPopup->ModifyMenu(11, MF_BYPOSITION | MF_STRING, ID__LANGUAGE, UiFun::UI_LoadString("MENU" , "MENU_LANGUAGE" ,theApp.gsLanguage));
+		pPopup->ModifyMenu(12, MF_BYPOSITION | MF_STRING, ID__CLOSEPOP, UiFun::UI_LoadString("MENU" , "MENU_CLOSEPOP" ,theApp.gsLanguage));
+		//pPopup->CheckMenuItem(ID__CLOSEPOP, MF_BYCOMMAND|MF_CHECKED);
+		if (!theApp.m_poptips)
+		{
+			pPopup->CheckMenuItem(ID__CLOSEPOP, MF_BYCOMMAND|MF_CHECKED);
+		}else{
+			pPopup->CheckMenuItem(ID__CLOSEPOP, MF_BYCOMMAND|MF_USECHECKBITMAPS );
+		}
 
+		CMenu *pPopupChild=pPopup->GetSubMenu(10);
+		pPopupChild->ModifyMenu(0, MF_BYPOSITION | MF_STRING, ID_SENDBET, UiFun::UI_LoadString("MENU" , "MENU_SENDBET" ,theApp.gsLanguage));
+		pPopupChild->ModifyMenu(1, MF_BYPOSITION | MF_STRING, ID_ACCEPTBET, UiFun::UI_LoadString("MENU" , "MENU_ACCEPTET" ,theApp.gsLanguage));
+		pPopupChild->ModifyMenu(2, MF_BYPOSITION | MF_STRING, ID_SENDREDPAKET, UiFun::UI_LoadString("MENU" , "MENU_SENDRED" ,theApp.gsLanguage));
+		pPopupChild->ModifyMenu(3, MF_BYPOSITION | MF_STRING, ID_GRABREDPACKE, UiFun::UI_LoadString("MENU" , "MENU_GRABRED" ,theApp.gsLanguage));
+
+		CMenu *pPopuplChild=pPopup->GetSubMenu(11);
+		pPopuplChild->ModifyMenu(ID_CNL, MF_BYCOMMAND, ID_CNL, UiFun::UI_LoadString("MENU" , "MENU_CNL" ,theApp.gsLanguage));
+		pPopuplChild->ModifyMenu(ID_ENL, MF_BYCOMMAND, ID_ENL, UiFun::UI_LoadString("MENU" , "MENU_ENL" ,theApp.gsLanguage));
+		pPopuplChild->CheckMenuItem(ID_ENL, MF_BYCOMMAND|MF_CHECKED);
+	}
+}
 int CDacrsUIDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CDialogEx::OnCreate(lpCreateStruct) == -1)
@@ -241,6 +292,7 @@ int CDacrsUIDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	// TODO:  在此添加您专用的创建代码
 	SetWindowPos(NULL, 0, 0, 900/*1024*/, 600/*768*/, 0);
+	OnInitMunu();
 
 	//SetWindowLong(m_hWnd,   GWL_STYLE,GetWindowLong(m_hWnd,   GWL_STYLE)   &   
 	//	(~(WS_CAPTION   |   WS_BORDER)));  
@@ -345,52 +397,7 @@ int CDacrsUIDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	ShowDialog(CMainDlg::IDD) ;
 	theApp.m_dlgCreatfinsh = TRUE;
 
-	newMenu.LoadMenu(IDR_MENU1);
-	CMenu *pPopup=newMenu.GetSubMenu(0);
-	pPopup->AppendMenu(MF_STRING,WM_CLOSEAPP,"  "+UiFun::UI_LoadString("DACRSU" , "DACRSU_CLOSE" ,theApp.gsLanguage));
-	CMenu *pPopupChild=pPopup->GetSubMenu(11);
-	if (theApp.language() == 1)
-	{
-		pPopupChild->CheckMenuItem(ID_CNL, MF_BYCOMMAND|MF_CHECKED);
-		if (!theApp.m_poptips)
-		{
-			pPopup->CheckMenuItem(ID__CLOSEPOP, MF_BYCOMMAND|MF_CHECKED);
-		}else{
-			pPopup->CheckMenuItem(ID__CLOSEPOP, MF_BYCOMMAND|MF_USECHECKBITMAPS );
-		}
-	}else{
-		pPopup->ModifyMenu(0, MF_BYPOSITION | MF_STRING, ID_RPC_CMD, UiFun::UI_LoadString("MENU" , "MENU_RPCCOMMAND" ,theApp.gsLanguage));
-		pPopup->ModifyMenu(1, MF_BYPOSITION | MF_STRING, ID__ENCRYPTWALLET, UiFun::UI_LoadString("MENU" , "MENU_PASSWORD" ,theApp.gsLanguage));
-		pPopup->ModifyMenu(2, MF_BYPOSITION | MF_STRING, ID_CHANGEPASSWORD,UiFun::UI_LoadString("MENU" , "MENU_MODIFYPASSWORD" ,theApp.gsLanguage));
-		pPopup->ModifyMenu(3, MF_BYPOSITION | MF_STRING, ID__LOCK, UiFun::UI_LoadString("MENU" , "MENU_LOCK" ,theApp.gsLanguage));
-		pPopup->ModifyMenu(4, MF_BYPOSITION | MF_STRING, ID__BAKWALLET,UiFun::UI_LoadString("MENU" , "MENU_BACK" ,theApp.gsLanguage));
-		pPopup->ModifyMenu(5, MF_BYPOSITION | MF_STRING, ID__EXPORTPRIVEKEY, UiFun::UI_LoadString("MENU" , "MENU_EXPORT" ,theApp.gsLanguage));
-		pPopup->ModifyMenu(6, MF_BYPOSITION | MF_STRING, ID__IMPORTPRIVEKEY, UiFun::UI_LoadString("MENU" , "MENU_IMPORT" ,theApp.gsLanguage));
-		pPopup->ModifyMenu(7, MF_BYPOSITION | MF_STRING, ID__SETAPPID, UiFun::UI_LoadString("MENU" , "MENU_SETAPPID" ,theApp.gsLanguage));
-		pPopup->ModifyMenu(8, MF_BYPOSITION | MF_STRING, ID__SET, UiFun::UI_LoadString("MENU" , "MENU_SET" ,theApp.gsLanguage));
-		pPopup->ModifyMenu(9, MF_BYPOSITION | MF_STRING, ID__SETDEFAULT, UiFun::UI_LoadString("MENU" , "MENU_RESTORY" ,theApp.gsLanguage));
-		pPopup->ModifyMenu(10, MF_BYPOSITION | MF_STRING, ID_RECORD, UiFun::UI_LoadString("MENU" , "MENU_HISTORYRECORD" ,theApp.gsLanguage));
-		pPopup->ModifyMenu(11, MF_BYPOSITION | MF_STRING, ID__LANGUAGE, UiFun::UI_LoadString("MENU" , "MENU_LANGUAGE" ,theApp.gsLanguage));
-		pPopup->ModifyMenu(12, MF_BYPOSITION | MF_STRING, ID__CLOSEPOP, UiFun::UI_LoadString("MENU" , "MENU_CLOSEPOP" ,theApp.gsLanguage));
-		//pPopup->CheckMenuItem(ID__CLOSEPOP, MF_BYCOMMAND|MF_CHECKED);
-		if (!theApp.m_poptips)
-		{
-			pPopup->CheckMenuItem(ID__CLOSEPOP, MF_BYCOMMAND|MF_CHECKED);
-		}else{
-			pPopup->CheckMenuItem(ID__CLOSEPOP, MF_BYCOMMAND|MF_USECHECKBITMAPS );
-		}
-
-		CMenu *pPopupChild=pPopup->GetSubMenu(10);
-		pPopupChild->ModifyMenu(0, MF_BYPOSITION | MF_STRING, ID_SENDBET, UiFun::UI_LoadString("MENU" , "MENU_SENDBET" ,theApp.gsLanguage));
-		pPopupChild->ModifyMenu(1, MF_BYPOSITION | MF_STRING, ID_ACCEPTBET, UiFun::UI_LoadString("MENU" , "MENU_ACCEPTET" ,theApp.gsLanguage));
-		pPopupChild->ModifyMenu(2, MF_BYPOSITION | MF_STRING, ID_SENDREDPAKET, UiFun::UI_LoadString("MENU" , "MENU_SENDRED" ,theApp.gsLanguage));
-		pPopupChild->ModifyMenu(3, MF_BYPOSITION | MF_STRING, ID_GRABREDPACKE, UiFun::UI_LoadString("MENU" , "MENU_GRABRED" ,theApp.gsLanguage));
-
-		CMenu *pPopuplChild=pPopup->GetSubMenu(11);
-		pPopuplChild->ModifyMenu(ID_CNL, MF_BYCOMMAND, ID_CNL, UiFun::UI_LoadString("MENU" , "MENU_CNL" ,theApp.gsLanguage));
-		pPopuplChild->ModifyMenu(ID_ENL, MF_BYCOMMAND, ID_ENL, UiFun::UI_LoadString("MENU" , "MENU_ENL" ,theApp.gsLanguage));
-		pPopuplChild->CheckMenuItem(ID_ENL, MF_BYCOMMAND|MF_CHECKED);
-	}
+	
 	//SetTimer( 0x11 , 30000 , NULL);   //半分钟
 	SetTimer( 0x11 , 15000 , NULL); 
 	SetTimer( 0x12 , 15000 , NULL ) ; 
@@ -541,21 +548,22 @@ void    CDacrsUIDlg::SyncAddrInfo()
 		TRACE("SyncAddrInfo rpccmd listaddr error");
 		return;
 	}
-
+	
 	map<string,uistruct::LISTADDR_t> pListInfo;
 	theApp.m_SqliteDeal.GetWalletAddressList(_T(" 1=1 "), (&pListInfo));
-
+	
 	/// 数据库中没有的地址要插入
 	map<string,int> SListInfo;
-	uistruct::LISTADDR_t listaddr;
+	
 	for(unsigned int i = 0; i < root.size(); ++i){
 		//address
+		uistruct::LISTADDR_t listaddr;
 		string address = root[i]["addr"].asString();	
 		SListInfo[address] = i;
 
-		memset(&listaddr , 0 , sizeof(uistruct::LISTADDR_t));
+		//memset(&listaddr , 0 , sizeof(uistruct::LISTADDR_t));
 		//address
-	
+		
 		listaddr.address = root[i]["addr"].asString(); ;
 		//RegID
 
@@ -573,12 +581,12 @@ void    CDacrsUIDlg::SyncAddrInfo()
 		}else{
 			listaddr.bSign   = 0 ;
 		}
-	
+		
 		string strCond;
 		strCond=strprintf(" address = '%s' ", listaddr.address.c_str());
 		uistruct::LISTADDR_t addrsql;
 		int item = theApp.m_SqliteDeal.GetWalletAddressItem(strCond, &addrsql) ;
-
+	
 		if (addrsql.address.length() == 0 )
 		{
 			string strData;
@@ -599,7 +607,7 @@ void    CDacrsUIDlg::SyncAddrInfo()
 			}
 		}
 	}
-
+	
 	////// 剔除数据库中钱包没有的地址
 	map<string,uistruct::LISTADDR_t>::const_iterator it;
 	for (it= pListInfo.begin();it != pListInfo.end();it++)
@@ -611,6 +619,7 @@ void    CDacrsUIDlg::SyncAddrInfo()
 			int item = theApp.m_SqliteDeal.DeleteTableItem(_T("t_wallet_address"), strCond);
 		}
 	}
+
 }
 void  CDacrsUIDlg::LoadListDataInfo()
 {

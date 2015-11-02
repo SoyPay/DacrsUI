@@ -190,6 +190,9 @@ public:
 	bool CheckUpdatafile();
 	int InitEncrypt();
 	bool Verify(char *publickey,char *publicmod,char *output, unsigned int *outputlen, char *input, unsigned int inputlen,char *vermessage);
+	bool OnCheckUpdataEnvirment();
+	void OnitSetLaguage();
+	void OnCheckSeverfile();
 public:
 	bool isStartMainDlg;
 	CNoUiMsgBuffer m_noUiMsgBuffer;
@@ -226,6 +229,8 @@ private:
 	string  m_singRunBat;
 	map<string,string>  m_listappid;
 	
+public:
+	virtual int ExitInstance();
 };
 
 

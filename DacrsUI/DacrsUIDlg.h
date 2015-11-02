@@ -130,6 +130,7 @@ public:
 public:
 	CBalloonTip*  m_BalloonTip;
 	afx_msg void OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized);
+	void OnInitMunu();
 	CMyQueue m_barpoomesg;
 	CMenu newMenu;
 	//NOTIFYICONDATA nid; 

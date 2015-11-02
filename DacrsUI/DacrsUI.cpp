@@ -107,16 +107,8 @@ BOOL CDacrsUIApp::InitInstance()
 	CWinApp::InitInstance();
 
 	GetMoFilename( str_InsPath , str_ModuleFilename ); //获取文件路径和文件名称
-	gsLanguage = language();
-	if (gsLanguage == 0)
-	{
-		gsLanguage = 1;
-		CChoseLanguage chosedlg;
-		chosedlg.DoModal();
-		gsLanguage = language();
-	}
-	//设置升级软件的语言包
-	SetUpdataLanguage();
+
+	OnitSetLaguage();
 
 	if (!RunOnlyOneApp())
 	{
@@ -126,7 +118,7 @@ BOOL CDacrsUIApp::InitInstance()
 	//创建字体
 	m_fontSong.CreateFont (15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "宋体");
 	m_fontBlackbody.CreateFont(15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "黑体");
-		
+	
 
 	AfxEnableControlContainer();
 
@@ -146,52 +138,24 @@ BOOL CDacrsUIApp::InitInstance()
 		return FALSE ;
 	}
 
-
+	
 	m_blockAutoDelete = false;
 	m_msgAutoDelete= false;
 	CheckPathValid( str_InsPath );
-	////创建维护线程
-	//if( !CreateMaintainThrd() ) {
-	//	return FALSE ;
-	//}
 
+	
 	/// 加载配置文件
 	ParseUIConfigFile(str_InsPath);
 	//初始化日志配置参数
 	InitLogCfg();
 
-
 	LogPrint("INFO", "启动DacrsUI程序\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-	//检测自动升级
-	int nResult = Update();
-	if(-1 == nResult) {
-		nResult = Update();
-	}
-	if (nResult == 1)
+
+	if (OnCheckUpdataEnvirment())
 	{
 		return TRUE;
-	}else if(nResult == 0){
-		//// 不更新直接退出
-		exit(0); 
 	}
-
-	CheckUpdatafile();
-	//{
-	//	exit(0);
-	//}
 	
-
-	if(CSoyPayHelp::getInstance()->IsOSVersionBelowXp()) {
-		if(!EnableDebugPrivilege())
-			TRACE(_T("Call EnableDebugPrivilege failed!"));
-		//				AfxMessageBox(_T("Call EnableDebugPrivilege failed!"));
-		//// 不更新直接退出
-		exit(0); 
-	}
-
-	//CheckUpdate();
-
-
 
 	string temprpc = m_rpcport;
 	string tempuiport = m_uirpcport;
@@ -205,42 +169,14 @@ BOOL CDacrsUIApp::InitInstance()
 	//打开sqlite3数据库
 	m_SqliteDeal.InitializationDB();
 
-	/// 清空交易记录
-	//ClearTransaction();
-
 
 	if (strcmp(m_severip.c_str(),_T("127.0.0.1")))
 	{
 		m_rpcport = temprpc;
 		m_uirpcport = tempuiport;
 	}
+	OnCheckSeverfile();
 
-	string strSeverPath = strprintf("%s\\dacrs-d.exe",str_InsPath);
-
-	if (PathIsDirectory(strSeverPath.c_str()))
-	{
-		::CreateDirectory(strSeverPath.c_str(), NULL);
-		::RemoveDirectory(strSeverPath.c_str());
-		if( (_access( strSeverPath.c_str(), 0 )) == -1 )
-		{
-			UiFun::MessageBoxEx(_T("dacrs-d 文件不存在,请重新启动钱包\r\n") , _T("Error") ,MFB_OK|MFB_ERROR );
-			exit(1);
-		}
-	}
-
-	strSeverPath = strprintf("%s\\temp\\dacrs-d.exe",str_InsPath);
-
-	if (PathIsDirectory(strSeverPath.c_str()))
-	{
-		::CreateDirectory(strSeverPath.c_str(), NULL);
-		::RemoveDirectory(strSeverPath.c_str());
-	}
-	/// 判断文件是否存在
-	 if( (_access( strSeverPath.c_str(), 0 )) == -1 )
-	{
-		UiFun::MessageBoxEx(_T("dacrs-d 文件不存在,请重新下载\r\n") , _T("Error") ,MFB_OK|MFB_ERROR );
-		exit(1);
-	}
 	//启动服务程序
 	StartSeverProcess(str_InsPath);
 	m_bServerState = true;
@@ -261,13 +197,13 @@ BOOL CDacrsUIApp::InitInstance()
 	}
 	theApp.StartblockThrd();  //开启Block线程
 	//gif
-	m_ProgressGifFile =   str_InsPath + _T("\\gif\\progress.gif\0") ;
+	m_ProgressGifFile =   str_InsPath + "\\gif\\progress.gif\0" ;
 	if (theApp.language() == 2)
 	{
-		m_ProgressOutGifFile =   str_InsPath + _T("\\gif\\exit_en.gif\0") ;
+		m_ProgressOutGifFile =   str_InsPath + "\\gif\\exit_en.gif\0" ;
 	}else
 	{
-		m_ProgressOutGifFile =   str_InsPath + _T("\\gif\\exit.gif\0") ;
+		m_ProgressOutGifFile =   str_InsPath + "\\gif\\exit.gif\0" ;
 	}
 	
 	GdiplusStartupInput gdiplusStartupInput;
@@ -285,9 +221,7 @@ BOOL CDacrsUIApp::InitInstance()
 		}
 		return FALSE ;
 	}
-	
-	//CStartProgress  progdlg ;
-	//progdlg.DoModal();
+
 	pSplashThread = (CSplashThread*) AfxBeginThread(RUNTIME_CLASS(CSplashThread),THREAD_PRIORITY_NORMAL,0, CREATE_SUSPENDED); 
 	ASSERT(pSplashThread->IsKindOf(RUNTIME_CLASS(CSplashThread)));
 	pSplashThread->ResumeThread(); 
@@ -324,7 +258,7 @@ BOOL CDacrsUIApp::InitInstance()
 		}
 		Sleep(100);
 	}
-
+	
 	CDacrsUIDlg dlg;
 	m_pMainWnd = &dlg;
 	
@@ -349,6 +283,75 @@ BOOL CDacrsUIApp::InitInstance()
 	// 由于对话框已关闭，所以将返回 FALSE 以便退出应用程序，
 	//  而不是启动应用程序的消息泵。
 	return FALSE;
+}
+
+bool CDacrsUIApp::OnCheckUpdataEnvirment()
+{
+	//检测自动升级
+	int nResult = Update();
+	if(-1 == nResult) {
+		nResult = Update();
+	}
+	if (nResult == 1)
+	{
+		return TRUE;
+	}else if(nResult == 0){
+		//// 不更新直接退出
+		exit(0); 
+	}
+
+	CheckUpdatafile();
+
+	if(CSoyPayHelp::getInstance()->IsOSVersionBelowXp()) {
+		if(!EnableDebugPrivilege())
+			TRACE(_T("Call EnableDebugPrivilege failed!"));
+		//				AfxMessageBox(_T("Call EnableDebugPrivilege failed!"));
+		//// 不更新直接退出
+		exit(0); 
+	}
+	return false;
+}
+void CDacrsUIApp::OnitSetLaguage()
+{
+	gsLanguage = language();
+	if (gsLanguage == 0)
+	{
+		gsLanguage = 1;
+		CChoseLanguage chosedlg;
+		chosedlg.DoModal();
+		gsLanguage = language();
+	}
+	//设置升级软件的语言包
+	SetUpdataLanguage();
+}
+void CDacrsUIApp::OnCheckSeverfile()
+{
+	string strSeverPath = strprintf("%s\\dacrs-d.exe",str_InsPath);
+
+	if (PathIsDirectory(strSeverPath.c_str()))
+	{
+		::CreateDirectory(strSeverPath.c_str(), NULL);
+		::RemoveDirectory(strSeverPath.c_str());
+		if( (_access( strSeverPath.c_str(), 0 )) == -1 )
+		{
+			UiFun::MessageBoxEx(_T("dacrs-d 文件不存在,请重新启动钱包\r\n") , _T("Error") ,MFB_OK|MFB_ERROR );
+			exit(1);
+		}
+	}
+
+	strSeverPath = strprintf("%s\\temp\\dacrs-d.exe",str_InsPath);
+
+	if (PathIsDirectory(strSeverPath.c_str()))
+	{
+		::CreateDirectory(strSeverPath.c_str(), NULL);
+		::RemoveDirectory(strSeverPath.c_str());
+	}
+	/// 判断文件是否存在
+	if( (_access( strSeverPath.c_str(), 0 )) == -1 )
+	{
+		UiFun::MessageBoxEx(_T("dacrs-d 文件不存在,请重新下载\r\n") , _T("Error") ,MFB_OK|MFB_ERROR );
+		exit(1);
+	}
 }
 /*
 提升程序运行权限，解决xp系统下调用OpenProcess()API返回失败码：5的问题。
@@ -1489,7 +1492,7 @@ void CDacrsUIApp::StartSeverProcess(const string& strdir){
 	si.dwFlags = STARTF_USESHOWWINDOW;  
 	si.wShowWindow =SW_HIDE;//SW_HIDE; //SW_SHOW;  
 
-	string str = _T("dacrs-d.exe -datadir=");
+	string str = "dacrs-d.exe -datadir=";
 	str +=strprintf("%s",strdir);
 	str+=strprintf(" %s",_T("-ui=1"));
 	if(m_bReIndexServer)
@@ -1908,4 +1911,11 @@ bool CDacrsUIApp::CheckUpdatafile()
 		::WritePrivateProfileString("sigmessage","index",writestr.c_str(),(LPCTSTR)strAppIni.c_str());
 	}
 	return true;
+}
+
+int CDacrsUIApp::ExitInstance()
+{
+	// TODO: 在此添加专用代码和/或调用基类
+	 CMFCVisualManager::DestroyInstance();
+	return CWinApp::ExitInstance();
 }
