@@ -12,6 +12,7 @@ IMPLEMENT_DYNCREATE(CSplashThread, CWinThread)
 
 CSplashThread::CSplashThread()
 {
+		m_pSplashDlg = NULL;
 }
 
 CSplashThread::~CSplashThread()
@@ -27,7 +28,6 @@ BOOL CSplashThread::InitInstance()
 {
 	// TODO: 在此执行任意逐线程初始化
 	m_pSplashDlg=new CStartProgress;   
-	//m_pSplashDlg->SetEnable(true);
 	m_pSplashDlg->Create(IDD_DIALOG_INIT);
 	m_pSplashDlg->ShowWindow(SW_SHOW);
 	return TRUE;
@@ -36,9 +36,13 @@ BOOL CSplashThread::InitInstance()
 int CSplashThread::ExitInstance()
 {
 	// TODO: 在此执行任意逐线程清理
-	m_pSplashDlg->DestroyWindow();
-	delete m_pSplashDlg;
-	m_pSplashDlg = NULL;
+	if (m_pSplashDlg != NULL)
+	{
+		m_pSplashDlg->DestroyWindow();
+		delete m_pSplashDlg;
+		m_pSplashDlg = NULL;
+	}
+
 	return CWinThread::ExitInstance();
 }
 
@@ -49,5 +53,9 @@ END_MESSAGE_MAP()
 // CSplashThread 消息处理程序
 void CSplashThread::HideSplash()
 {
-	m_pSplashDlg->SendMessage(WM_CLOSE);
+	if (m_pSplashDlg != NULL)
+	{
+			m_pSplashDlg->SendMessage(WM_CLOSE);
+	}
+
 }

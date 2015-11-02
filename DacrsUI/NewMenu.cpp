@@ -10,6 +10,16 @@ CNewMenu::CNewMenu(void)
 
 CNewMenu::~CNewMenu(void)
 {
+	vector<CString *>::const_iterator item = m_relea.begin(); 
+	for (;item != m_relea.end();item++)
+	{
+		CString * pTemp= *item;
+		if (pTemp != NULL)
+		{
+			delete pTemp;
+			pTemp = NULL;
+		}
+	}
 }
 
 
@@ -140,6 +150,7 @@ void CNewMenu::ChangeMenuItem(CMenu *pMenu)
 		{
 			ChangeMenuItem(pMenu->GetSubMenu(i));
 		}
+		m_relea.push_back(pText);
 	}  
 }
 void CNewMenu::SetWith(int twith)

@@ -22,8 +22,9 @@ CStartProgress::CStartProgress(CWnd* pParent /*=NULL*/)
 CStartProgress::~CStartProgress()
 {
 	if ( NULL != m_ProgressWnd ) {
-		delete m_ProgressWnd ;
-		m_ProgressWnd = NULL ;
+		CGIFControl *gifcontrol=(CGIFControl*)m_ProgressWnd;
+		delete gifcontrol ;
+		gifcontrol = NULL ;
 	}
 }
 
@@ -59,12 +60,6 @@ BOOL CStartProgress::OnInitDialog()
 		//m_ProgressWnd->SetWindowPos(NULL , x/2 - 175 + 250 , y/2+20 , 0 ,0 , SWP_NOSIZE) ;
 	}
 
-/*	m_ProgressBmp[0].LoadBitmap(IDB_BITMAP_PROG1);  
-	m_ProgressBmp[1].LoadBitmap(IDB_BITMAP_PROG2);  
-	m_ProgressBmp[2].LoadBitmap(IDB_BITMAP_PROG3);  
-	m_ProgressBmp[3].LoadBitmap(IDB_BITMAP_PROG4); */ 
-
-	
 	m_ProgressBmp[0].LoadBitmap(UiFun::GetBmpId(IDB_BITMAP_PROG1,IDB_BITMAP_PROG1_EN,theApp.language()));  
 	m_ProgressBmp[1].LoadBitmap(UiFun::GetBmpId(IDB_BITMAP_PROG2,IDB_BITMAP_PROG2_EN,theApp.language()));  
 	m_ProgressBmp[2].LoadBitmap(UiFun::GetBmpId(IDB_BITMAP_PROG3,IDB_BITMAP_PROG3_EN,theApp.language()));  
@@ -103,9 +98,10 @@ void CStartProgress::LoadGifing( BOOL bState )
 	if( NULL != m_ProgressWnd ) {
 		if( m_ProgressWnd->GetSafeHwnd() ) {
 			if( TRUE == bState ) {
-				CString gifpath;
-				gifpath.Format(_T("%s\\gif\\init.gif\0"),theApp.str_InsPath.c_str());
-				if( TRUE == ((CGIFControl*)m_ProgressWnd)->Load(gifpath.GetBuffer())) {
+				string gifpath;
+				gifpath =strprintf("%s\\gif\\init.gif\0",theApp.str_InsPath);
+				
+				if( TRUE == ((CGIFControl*)m_ProgressWnd)->Load((char*)gifpath.c_str())) {
 					CRect rc ;
 					GetClientRect( rc ) ;
 					Invalidate() ;

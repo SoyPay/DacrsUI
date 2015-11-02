@@ -42,6 +42,7 @@ CGIFControl::~CGIFControl()
 	if(m_pImage)
 	{
 		delete m_pImage;
+		m_pImage = NULL;
 	}
 }
 
