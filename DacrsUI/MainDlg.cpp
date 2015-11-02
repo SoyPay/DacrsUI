@@ -24,10 +24,10 @@ CMainDlg::~CMainDlg()
 		DeleteObject(m_pBmp) ;
 		m_pBmp = NULL ;
 	}
-	if (CMFCVisualManager::GetInstance() != NULL)
+	/*if (CMFCVisualManager::GetInstance() != NULL)
 	{
 		delete CMFCVisualManager::GetInstance();
-	}
+	}*/
 	v_linkCtrl.InternalRelease();
 	v_linkCtrl.ExternalRelease();
 	v_linkCtrl.OnFinalRelease();

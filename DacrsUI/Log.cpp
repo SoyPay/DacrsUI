@@ -79,6 +79,7 @@ static void DebugPrintInit() {
 		pathDebug.AppendFormat(_T("\\%s"),fileName);
 		//pathDebug +=  "\\" + fileName;
 		fileout = fopen(pathDebug.GetBuffer(pathDebug.GetLength()), "a");
+		pathDebug.ReleaseBuffer(pathDebug.GetLength());
 	/*  if( (fopen_s( &fileout, pathDebug.GetBuffer(pathDebug.GetLength()), "a" )) !=0 )
 			printf( "The file %s was not opened\n", pathDebug);
 		else

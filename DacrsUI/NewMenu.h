@@ -12,5 +12,6 @@ public:
 	void SetWith(int with);
 private:
 	int with;
+	vector<CString *> m_relea;
 };
 

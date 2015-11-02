@@ -94,6 +94,7 @@ BOOL CAddApp::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 	// TODO: 在此添加专用代码和/或调用基类
 
 	BOOL bRes = CDialogBar::Create(pParentWnd, nIDTemplate, nStyle, nID);
+	return bRes;
 	if ( bRes ) {
 		UpdateData(0);
 		//v_linkCtrl1.SetWindowText(_T(""));
