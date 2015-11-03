@@ -27,8 +27,6 @@ public:
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	virtual BOOL Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID);
 public:
-	//CMFCLinkCtrl v_linkCtrl1;
-	//CMFCLinkCtrl v_linkCtrl2;
 	afx_msg void OnBnClickedButtonTxdetail();
 	afx_msg LRESULT OnShowListCtrl(  WPARAM wParam, LPARAM lParam ) ;
 	void    OninitializeList();

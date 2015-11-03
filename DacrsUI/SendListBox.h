@@ -25,12 +25,12 @@ typedef struct _SendListBox_Data
 		pSta0 = NULL ;
 		pSta1 = NULL ;
 		pSta2 = NULL ;
-		pSta8 = NULL ;
 		pSta3= NULL ;
 		pSta4= NULL ;
 		pSta5= NULL ;
 		pSta6= NULL ;
 		pSta7= NULL ;
+		pSta8 =NULL;
 		pstr = _T("");
 	}
 } List_SendAppendData;

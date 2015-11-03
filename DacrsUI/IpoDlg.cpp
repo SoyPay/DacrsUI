@@ -22,15 +22,6 @@ CIpoDlg::~CIpoDlg()
 		DeleteObject(m_pBmp) ;
 		m_pBmp = NULL ;
 	}
-	//v_linkCtrl1.InternalRelease();
-	//v_linkCtrl1.ExternalRelease();
-	//v_linkCtrl1.OnFinalRelease();
-	//v_linkCtrl1.DestroyWindow();
-
-	//v_linkCtrl2.InternalRelease();
-	//v_linkCtrl2.ExternalRelease();
-	//v_linkCtrl2.OnFinalRelease();
-	//v_linkCtrl2.DestroyWindow();
 }
 
 void CIpoDlg::DoDataExchange(CDataExchange* pDX)

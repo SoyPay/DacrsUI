@@ -26,6 +26,7 @@ CP2PDlg::CP2PDlg()
 	m_curpage = 0;
 	m_PoolList.clear();
 	m_pagesize = 5;
+	v_linkCtrl = NULL;
 }
 
 CP2PDlg::~CP2PDlg()
@@ -35,10 +36,11 @@ CP2PDlg::~CP2PDlg()
 		m_pBmp = NULL ;
 	}
 
-	v_linkCtrl.InternalRelease();
-	v_linkCtrl.ExternalRelease();
-	v_linkCtrl.OnFinalRelease();
-	v_linkCtrl.DestroyWindow();
+	if (v_linkCtrl != NULL)
+	{
+		delete v_linkCtrl;
+		v_linkCtrl= NULL;
+	}
 }
 
 void CP2PDlg::DoDataExchange(CDataExchange* pDX)
@@ -63,7 +65,6 @@ void CP2PDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BUTTON_NEXT, m_rBtnNext);
 	DDX_Control(pDX ,IDC_STATIC_COUNT_PAGE ,m_sCountpage ) ;
 	DDX_Control(pDX ,IDC_STATIC_MONEY ,m_money ) ;
-	DDX_Control(pDX, IDC_MFCLINK1, v_linkCtrl);
 
 	DDX_Control(pDX, IDC_WINERLOSER, m_rBtnWinerloser);
 	DDX_Control(pDX, IDC_ONEWINER, m_rBtnAddrWinerloser);
@@ -122,6 +123,15 @@ int CP2PDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// TODO:  在此添加您专用的创建代码
 	//SetBkBmpNid(IDB_BITMAP_P2P_BJ);IDB_BITMAP_P2P_BJEN
     SetBkBmpNid(UiFun::GetBmpId(IDB_BITMAP_P2P_BJ,IDB_BITMAP_P2P_BJEN,theApp.language()));
+	if (v_linkCtrl == NULL)
+	{
+		v_linkCtrl = new CMFCLinkCtrl;
+		v_linkCtrl->Create(_T(""), 
+			WS_VISIBLE, 
+			CRect(5, 5, 30, 20), 
+			this, 
+			IDC_MFCLINK1);
+	}
 	return 0;
 }
 
@@ -483,7 +493,7 @@ void CP2PDlg::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*51 ,  (rc.Height()/100)*59,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*51 ,  (rc.Height()/100)*59,  30 ,20 , SWP_SHOWWINDOW ) ; 
 		}
 		pst = GetDlgItem( IDC_CANCELORDE ) ;
 		if ( NULL != pst ) {
@@ -1710,12 +1720,12 @@ void CP2PDlg::AcceptBet(CString hash,INT64 money,CString sendaddr,int timeout,IN
  }
  void  CP2PDlg::onShowLink()
  {
-	 v_linkCtrl.SetWindowText(UiFun::UI_LoadString("COMM_MODULE" , "COMM_HELP" ,theApp.gsLanguage));
+	 v_linkCtrl->SetWindowText(UiFun::UI_LoadString("COMM_MODULE" , "COMM_HELP" ,theApp.gsLanguage));
 	 if (theApp.gsLanguage ==2)
 	 {
-		  v_linkCtrl.SetURL(theApp.helpurlen.c_str());
+		  v_linkCtrl->SetURL(theApp.helpurlen.c_str());
 	 }else{
-		 v_linkCtrl.SetURL(theApp.helpurlcn.c_str());
+		 v_linkCtrl->SetURL(theApp.helpurlcn.c_str());
 	 }
 	
  }

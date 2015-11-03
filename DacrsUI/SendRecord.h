@@ -29,17 +29,17 @@ public:
 	CStaticTrans           m_sCountpage  ;
 	CShadeButtonST         m_rBtnUp;
 	CShadeButtonST         m_rBtnNext;
-	CSendListBox    m_listBox ;
+	CSendListBox           m_listBox ;
 	virtual BOOL Create(LPCTSTR lpszTemplateName, CWnd* pParentWnd = NULL);
 	void Showlistbox(CString address);
 	void OpenBet(CString txhash);
 private:
 	CString          m_addr;
-	CP2PBetHelp		                    m_P2PBetHelp;
+	CP2PBetHelp		 m_P2PBetHelp;
 private:
-	int                              m_pagecount;
-	int                              m_curpage;
-	unsigned int                              m_pagesize;
+	int              m_pagecount;
+	int              m_curpage;
+	unsigned int     m_pagesize;
 	uistruct::P2PBETRECORDLIST       m_PoolList;
 public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);

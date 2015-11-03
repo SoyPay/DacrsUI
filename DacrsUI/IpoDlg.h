@@ -27,8 +27,6 @@ public:
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	virtual BOOL Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID);
 public:
-	//CMFCLinkCtrl v_linkCtrl1;
-	//CMFCLinkCtrl v_linkCtrl2;
 	BOOL AddListaddrDataBox();
 	afx_msg void OnBnClickedButtonDrawal();
 	afx_msg void OnSize(UINT nType, int cx, int cy);
@@ -37,11 +35,8 @@ public:
 	CStaticTrans           m_strTx3 ;
 	CShadeButtonST         m_rBtnSend;
 	CShadeButtonST         m_rQueryAmout;
-//	afx_msg void OnCbnSelchangeComboAddr();
 	void OnShowListCtrol(CString addr);
 private:
-	//	map<CString,uistruct::LISTADDR_t>    m_mapAddrInfo;
-		//CComboBox			                 m_addrbook;
 		CListCtrlCl                          m_listCtrl;
 		CP2PBetHelp		                    m_P2PBetHelp;
 public:

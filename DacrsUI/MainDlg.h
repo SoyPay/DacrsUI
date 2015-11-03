@@ -48,32 +48,27 @@ public:
 
 	CRoundButton     m_rBtnAllTxdetail;
 	CStatic          m_sysWallet;
-	//CRoundButton     m_rBtnImportWallet;
-	//CRoundButton     m_rBtnDumpWallet;
 public:
 	afx_msg void OnBnClickedAlltxdetail();
 	afx_msg LRESULT OnShowListCtorl(  WPARAM wParam, LPARAM lParam ) ;
+	virtual BOOL Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID);
+	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+	afx_msg void OnSize(UINT nType, int cx, int cy);
+	afx_msg void OnPaint();
+	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 public:
 	void SetCtrlText();
 	void ClearCtrlText();
-	virtual BOOL Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID);
-	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+	void OnnitCtrlText();
+	void onnitLinkText();
+	void SetShowCtrol();
 private:
 	bool GetUrlServer();
 	map<CString,CString> m_url;
-	CMFCLinkCtrl v_linkCtrl;
-	CMFCLinkCtrl v_linkCtrl1;
-	CMFCLinkCtrl v_linkCtrl2;
-	CMFCLinkCtrl v_linkCtrl3;
-	CMFCLinkCtrl v_linkCtrlQQ;
-	CMFCLinkCtrl v_linkCtrlBlock;
-public:
-	afx_msg void OnPaint();
-	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
-	void OnnitCtrlText();
-	void onnitLinkText();
-	//afx_msg void OnBnClickedButtonImportwallet();
-	//afx_msg void OnBnClickedButtonDumpwallet();
-	afx_msg void OnSize(UINT nType, int cx, int cy);
-	void SetShowCtrol();
+	CMFCLinkCtrl *v_linkCtrl;
+	CMFCLinkCtrl *v_linkCtrl1;
+	CMFCLinkCtrl *v_linkCtrl2;
+	CMFCLinkCtrl *v_linkCtrl3;
+	CMFCLinkCtrl *v_linkCtrlQQ;
+	CMFCLinkCtrl *v_linkCtrlBlock;
 };
