@@ -319,6 +319,7 @@ int CDacrsUIDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		m_pTitleBar->SetWindowPos(NULL , 0 , 0  , rect.Width() ,72 , SWP_SHOWWINDOW) ;
 		m_pTitleBar->ShowWindow(SW_SHOW) ;
 	}
+	
 	//TRACE("wwwwwCIndTitleBar\r\n");
 	//BOTTOM
 	if( NULL == m_pStatusBar ){
@@ -327,18 +328,21 @@ int CDacrsUIDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		m_pStatusBar->SetWindowPos(NULL , 0 , rect.Height() - 32  , rect.Width() ,32 , SWP_SHOWWINDOW) ;
 		m_pStatusBar->ShowWindow(SW_SHOW) ;
 	}
+	
 	//TRACE("wwwwwCProgStatusBar\r\n");
 	if( NULL == m_pMainDlg ){
 		m_pMainDlg = new CMainDlg ;
 		m_pMainDlg->Create(this, CMainDlg::IDD, CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_HIDE_INPLACE,3) ;
 		m_pMainDlg->ShowWindow(SW_HIDE) ;
 	}
+	
 	//TRACE("wwwwwCMainDlg\r\n");
 	if( NULL == m_pSendDlg ){
 		m_pSendDlg = new CSendDlg ;
 		m_pSendDlg->Create(this, CSendDlg::IDD, CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_HIDE_INPLACE,4) ;
 		m_pSendDlg->ShowWindow(SW_HIDE) ;
 	}
+	
 	//TRACE("wwwwwCSendDlg\r\n");
 	//
 	if( NULL == m_pReceiveDlg ){
@@ -346,17 +350,20 @@ int CDacrsUIDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		m_pReceiveDlg->Create(this, CReceiveDlg::IDD, CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_HIDE_INPLACE,5) ;
 		m_pReceiveDlg->ShowWindow(SW_HIDE) ;
 	}
+	
 	//TRACE("wwwwwCReceiveDlg\r\n");
 	if( NULL == m_pTradDlg ){
 		m_pTradDlg = new CTradDlg ;
 		m_pTradDlg->Create(this, CTradDlg::IDD, CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_HIDE_INPLACE,6) ;
 		m_pTradDlg->ShowWindow(SW_HIDE) ;
 	}
+
 	if( NULL == m_pP2PDlg ){
 		m_pP2PDlg = new CP2PDlg ;
 		m_pP2PDlg->Create(this, CP2PDlg::IDD, CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_HIDE_INPLACE,7) ;
 		m_pP2PDlg->ShowWindow(SW_HIDE) ;
 	}
+		
 	if( NULL == m_pMortgageTardDlg ){
 		m_pMortgageTardDlg = new CMortgageTardDlg ;
 		m_pMortgageTardDlg->Create(this, CMortgageTardDlg::IDD, CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_HIDE_INPLACE,8) ;
@@ -1621,10 +1628,13 @@ void CDacrsUIDlg::OnCloseWriteAppFee()
 		CStdioFile  File;
 		string strpath = theApp.str_InsPath;
 		strpath+="\\dacrsclient.conf";
-		File.Open((LPCTSTR)(LPSTR)strpath.c_str(),CFile::modeWrite | CFile::modeCreate); 
-		string strfile = root.toStyledString();
-		File.WriteString(strfile.c_str());
-		File.Close();
+		if (File.Open((LPCTSTR)(LPSTR)strpath.c_str(),CFile::modeWrite | CFile::modeCreate))
+		{
+			string strfile = root.toStyledString();
+			File.WriteString(strfile.c_str());
+			File.Close();
+		} 
+
 	}
 }
 

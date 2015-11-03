@@ -43,5 +43,6 @@ public:
 	afx_msg void OnBnClickedButtonNo();
 	afx_msg void OnBnClickedButtonOk();
 	void       onShowLink();
-	CMFCLinkCtrl v_linkCtrl;
+	CMFCLinkCtrl  *v_linkCtrl;
+	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 };

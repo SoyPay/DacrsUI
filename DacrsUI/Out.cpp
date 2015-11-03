@@ -19,14 +19,16 @@ COut::COut(CWnd* pParent /*=NULL*/, CString strDisplay, int nFontSize,CString st
 	m_strok = strok;
 	m_strno = strNo;
 	m_showLink = showlink;
+	v_linkCtrl = NULL;
 }
 
 COut::~COut()
 {
-	v_linkCtrl.InternalRelease();
-	v_linkCtrl.ExternalRelease();
-	v_linkCtrl.OnFinalRelease();
-	v_linkCtrl.DestroyWindow();
+	if (v_linkCtrl != NULL)
+	{
+		delete v_linkCtrl;
+		v_linkCtrl = NULL;
+	}
 }
 
 void COut::DoDataExchange(CDataExchange* pDX)
@@ -35,7 +37,6 @@ void COut::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_STATIC_TEXT, m_Text);
 	DDX_Control(pDX, IDC_BUTTON_OK, m_rBtnOK);
 	DDX_Control(pDX, IDC_BUTTON_NO, m_rBtnNO);
-	DDX_Control(pDX, IDC_MFCLINK1, v_linkCtrl);
 }
 
 
@@ -47,6 +48,7 @@ BEGIN_MESSAGE_MAP(COut, CDialogEx)
 	ON_WM_LBUTTONDOWN()
 	ON_BN_CLICKED(IDC_BUTTON_NO, &COut::OnBnClickedButtonNo)
 	ON_BN_CLICKED(IDC_BUTTON_OK, &COut::OnBnClickedButtonOk)
+	ON_WM_CREATE()
 END_MESSAGE_MAP()
 
 
@@ -105,7 +107,7 @@ BOOL COut::OnInitDialog()
 	SetBkBmpNid( IDB_BITMAP_DLG_BALCK ) ;
 	m_fontGrid.CreatePointFont(100,_T("新宋体"));
 
-	v_linkCtrl.SetWindowText(_T(""));
+	v_linkCtrl->SetWindowText(_T(""));
 	if (m_showLink)
 	{
 		m_rBtnOK.ShowWindow(SW_HIDE);
@@ -117,6 +119,12 @@ BOOL COut::OnInitDialog()
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
 			pst->SetWindowPos( NULL ,(rc.Width()/100)*45 , (rc.Height()/100)*100+15, rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}
+
+		pst = GetDlgItem( IDC_MFCLINK1 ) ;
+		if ( NULL != pst ) {
+	
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*32 , (rc.Height()/100)*80, 200, 30  ,SWP_SHOWWINDOW ) ; 
 		}
 	}
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -214,6 +222,26 @@ void COut::OnBnClickedButtonOk()
 }
 void  COut::onShowLink()
 {
-	v_linkCtrl.SetWindowText(UiFun::UI_LoadString("OUT_MODULE" , "OUT_WHY_XP" ,theApp.gsLanguage));
-	v_linkCtrl.SetURL("www.baidu.com");
+	v_linkCtrl->SetWindowText(UiFun::UI_LoadString("OUT_MODULE" , "OUT_WHY_XP" ,theApp.gsLanguage));
+	v_linkCtrl->SetURL("www.baidu.com");
+}
+
+
+
+int COut::OnCreate(LPCREATESTRUCT lpCreateStruct)
+{
+	if (CDialogEx::OnCreate(lpCreateStruct) == -1)
+		return -1;
+
+	// TODO:  在此添加您专用的创建代码
+	if (v_linkCtrl == NULL)
+	{
+		v_linkCtrl = new CMFCLinkCtrl;
+		v_linkCtrl->Create(_T(""), 
+			WS_VISIBLE, 
+			CRect(5, 5, 30, 20), 
+			this, 
+			IDC_MFCLINK1);
+	}
+	return 0;
 }

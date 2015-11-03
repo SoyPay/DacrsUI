@@ -186,6 +186,11 @@ BOOL CGIFControl::Load(char* sFileName)
 	m_pItem = (PropertyItem*)malloc(TotalBuffer);
 	m_pImage->GetPropertyItem(PropertyTagFrameDelay,TotalBuffer,m_pItem);
 
+	if (pPath != NULL)
+	{
+		delete pPath;
+		pPath = NULL;
+	}
 	return TRUE ;
 }
 

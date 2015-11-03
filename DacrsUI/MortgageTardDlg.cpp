@@ -22,6 +22,7 @@ CMortgageTardDlg::CMortgageTardDlg()
 	m_PoolList.clear();
 	m_pagesize = 5;
 	m_selPooltab =0;
+	v_linkCtrl = NULL;
 }
 
 CMortgageTardDlg::~CMortgageTardDlg()
@@ -30,11 +31,11 @@ CMortgageTardDlg::~CMortgageTardDlg()
 		DeleteObject(m_pBmp) ;
 		m_pBmp = NULL ;
 	}	
-
-	v_linkCtrl.InternalRelease();
-	v_linkCtrl.ExternalRelease();
-	v_linkCtrl.OnFinalRelease();
-	v_linkCtrl.DestroyWindow();
+   if (v_linkCtrl != NULL)
+   {
+	   delete v_linkCtrl;
+	   v_linkCtrl = NULL;
+   }
 }
 
 void CMortgageTardDlg::DoDataExchange(CDataExchange* pDX)
@@ -55,7 +56,6 @@ void CMortgageTardDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_TAB1, m_tabpool);
 
 	DDX_Control(pDX ,IDC_STATIC_MONEY4 ,m_money ) ;
-	DDX_Control(pDX, IDC_MFCLINK1, v_linkCtrl);
 	
 	DDX_Control(pDX, IDC_WINERLOUSER, m_rBtnWinerloser);
 	DDX_Control(pDX, IDC_ONEWINER, m_rBtnAddrWinerloser);
@@ -106,6 +106,16 @@ int CMortgageTardDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// TODO:  在此添加您专用的创建代码
 	//SetBkBmpNid(IDB_BITMAP_REDPACKET);
 	SetBkBmpNid(UiFun::GetBmpId(IDB_BITMAP_REDPACKET,IDB_BITMAP_REDPACKETEN,theApp.language()));
+
+	if (v_linkCtrl == NULL)
+	{
+		v_linkCtrl = new CMFCLinkCtrl;
+		v_linkCtrl->Create(_T(""), 
+			WS_VISIBLE, 
+			CRect(5, 5, 80, 50), 
+			this, 
+			IDC_MFCLINK1);
+	}
 	return 0;
 }
 
@@ -487,7 +497,7 @@ void CMortgageTardDlg::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*51 ,  (rc.Height()/100)*59,  rect.Width() , rect.Height() , SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*51 ,  (rc.Height()/100)*59, 30 , 20, SWP_SHOWWINDOW ) ; 
 		}
 
 		pst = GetDlgItem( IDC_BUTTON_SPECAILRED ) ;
@@ -1324,8 +1334,8 @@ void CMortgageTardDlg::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult)
 
 void  CMortgageTardDlg::onShowLink()
 {
-	v_linkCtrl.SetWindowText(UiFun::UI_LoadString("COMM_MODULE" , "COMM_HELP" ,theApp.gsLanguage));
-	v_linkCtrl.SetURL("http://www.dacrs.com/forum.php?mod=viewthread&tid=3503&extra=page%3D1");
+	v_linkCtrl->SetWindowText(UiFun::UI_LoadString("COMM_MODULE" , "COMM_HELP" ,theApp.gsLanguage));
+	v_linkCtrl->SetURL("http://www.dacrs.com/forum.php?mod=viewthread&tid=3503&extra=page%3D1");
 }
 
 double  CMortgageTardDlg::ComputeSpecailRedPacket(uistruct::REDPACKETGRABLIST  RedPackeGrabRecordList)

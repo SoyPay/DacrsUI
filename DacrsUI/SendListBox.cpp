@@ -100,8 +100,8 @@ void CSendListBox::OnDestroy()
 			delete pData->pSta5;
 			pData->pSta5 = NULL ;
 
-			delete pData->pSta5;
-			pData->pSta5 = NULL ;
+			delete pData->pSta6;
+			pData->pSta6 = NULL ;
 
 			delete pData->pSta7;
 			pData->pSta7 = NULL ;

@@ -16,6 +16,12 @@ CMainDlg::CMainDlg()
 {
 	m_pBmp = NULL ;
 	m_url.clear();
+	v_linkCtrl = NULL;
+	v_linkCtrl1 = NULL;
+	v_linkCtrl2= NULL;
+	v_linkCtrl3= NULL;
+	v_linkCtrlQQ= NULL;
+	v_linkCtrlBlock= NULL;
 }
 
 CMainDlg::~CMainDlg()
@@ -24,40 +30,41 @@ CMainDlg::~CMainDlg()
 		DeleteObject(m_pBmp) ;
 		m_pBmp = NULL ;
 	}
-	/*if (CMFCVisualManager::GetInstance() != NULL)
+
+	if (v_linkCtrl != NULL)
 	{
-		delete CMFCVisualManager::GetInstance();
-	}*/
-	v_linkCtrl.InternalRelease();
-	v_linkCtrl.ExternalRelease();
-	v_linkCtrl.OnFinalRelease();
-	v_linkCtrl.DestroyWindow();
+		delete v_linkCtrl;
+		v_linkCtrl = NULL;
+	}
+	if (v_linkCtrl1 != NULL)
+	{
+		delete v_linkCtrl1;
+		v_linkCtrl1 = NULL;
+	}
 
-	v_linkCtrl1.InternalRelease();
-	v_linkCtrl1.ExternalRelease();
-	v_linkCtrl1.OnFinalRelease();
-	v_linkCtrl1.DestroyWindow();
+	if (v_linkCtrl2 != NULL)
+	{
+		delete v_linkCtrl2;
+		v_linkCtrl2 = NULL;
+	}
 
-	v_linkCtrl2.InternalRelease();
-	v_linkCtrl2.ExternalRelease();
-	v_linkCtrl2.OnFinalRelease();
-	v_linkCtrl2.DestroyWindow();
+	if (v_linkCtrl3 != NULL)
+	{
+		delete v_linkCtrl3;
+		v_linkCtrl3 = NULL;
+	}
 
-	v_linkCtrl3.InternalRelease();
-	v_linkCtrl3.ExternalRelease();
-	v_linkCtrl3.OnFinalRelease();
-	v_linkCtrl3.DestroyWindow();
+	if (v_linkCtrlQQ != NULL)
+	{
+		delete v_linkCtrlQQ;
+		v_linkCtrlQQ = NULL;
+	}
 
-	v_linkCtrlQQ.InternalRelease();
-	v_linkCtrlQQ.ExternalRelease();
-	v_linkCtrlQQ.OnFinalRelease();
-	v_linkCtrlQQ.DestroyWindow();
-
-	v_linkCtrlBlock.InternalRelease();
-	v_linkCtrlBlock.ExternalRelease();
-	v_linkCtrlBlock.OnFinalRelease();
-	v_linkCtrlBlock.DestroyWindow();
-	
+	if (v_linkCtrlBlock != NULL)
+	{
+		delete v_linkCtrlBlock;
+		v_linkCtrlBlock = NULL;
+	}	
 }
 
 void CMainDlg::DoDataExchange(CDataExchange* pDX)
@@ -80,15 +87,6 @@ void CMainDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_STATIC_NOTCOF , m_strOking);
 	DDX_Control(pDX, IDC_STATIC_COUNT , m_strTranNum);
 
-	DDX_Control(pDX, IDC_MFCLINK1, v_linkCtrl);
-	DDX_Control(pDX, IDC_MFCLINK3, v_linkCtrl1);
-	DDX_Control(pDX, IDC_MFCLINK4, v_linkCtrl2);
-	DDX_Control(pDX, IDC_MFCLINK5, v_linkCtrl3);
-	DDX_Control(pDX, IDC_MFCLINK_QQ, v_linkCtrlQQ);
-	DDX_Control(pDX, IDC_MFCLINK_BLOCK, v_linkCtrlBlock);
-	
-	//DDX_Control(pDX, IDC_BUTTON_IMPORTWALLET, m_rBtnImportWallet);
-	//DDX_Control(pDX, IDC_BUTTON_DUMPWALLET, m_rBtnDumpWallet);
 
 	DDX_Control(pDX, IDC_STATIC_DES1 , m_strDesTx1);
 	DDX_Control(pDX, IDC_STATIC_DES2 , m_strDesTx2);
@@ -364,11 +362,7 @@ BOOL CMainDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_strDesTx3.SetFont(88, _T("Calibri"));
 		m_strDesTx4.SetFont(88, _T("Calibri")); 
 		m_strDesTx5.SetFont(88, _T("Calibri")); 
-		//m_strOver.SetFont(120, _T("微软雅黑"));				//设置显示字体和大小
-		//m_strTx1.SetTextColor(RGB(192,192,192));			    //字体颜色
-		//m_strTx1.SetWindowText(_T("方斌")) ;
-		//v_linkCtrl.SetURL(_T("www.hao123.com"));
-		//v_linkCtrl.SetURLPrefix(_T("http://"));
+
 
 		//加载指定位图资源 Bmp图片ID
 		HBITMAP hBitmap; 
@@ -403,6 +397,65 @@ int CMainDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_strOver.SetFont(90, _T("Arial"));				//设置显示字体和大小
 	m_strOking.SetFont(90, _T("Arial"));	   
 	m_strTranNum.SetFont(90, _T("Arial"));	
+	if (v_linkCtrl == NULL)
+	{
+		v_linkCtrl = new CMFCLinkCtrl;
+		v_linkCtrl->Create(_T(""), 
+			WS_VISIBLE, 
+			CRect(5, 5, 80, 50), 
+			this, 
+			IDC_MFCLINK1);
+	}
+
+	if (v_linkCtrl1 == NULL)
+	{
+		v_linkCtrl1 = new CMFCLinkCtrl;
+		v_linkCtrl1->Create(_T(""), 
+			WS_VISIBLE, 
+			CRect(5, 5, 80, 50), 
+			this, 
+			IDC_MFCLINK3);
+	}
+
+	if (v_linkCtrl2 == NULL)
+	{
+		v_linkCtrl2 = new CMFCLinkCtrl;
+		v_linkCtrl2->Create(_T(""), 
+			WS_VISIBLE, 
+			CRect(5, 5, 80, 50), 
+			this, 
+			IDC_MFCLINK4);
+	}
+
+	if (v_linkCtrl3 == NULL)
+	{
+		v_linkCtrl3 = new CMFCLinkCtrl;
+		v_linkCtrl3->Create(_T(""), 
+			WS_VISIBLE, 
+			CRect(5, 5, 80, 50), 
+			this, 
+			IDC_MFCLINK5);
+	}
+
+	if (v_linkCtrlQQ == NULL)
+	{
+		v_linkCtrlQQ = new CMFCLinkCtrl;
+		v_linkCtrlQQ->Create(_T(""), 
+			WS_VISIBLE, 
+			CRect(5, 5, 80, 50), 
+			this, 
+			IDC_MFCLINK_QQ);
+	}
+
+	if (v_linkCtrlBlock == NULL)
+	{
+		v_linkCtrlBlock = new CMFCLinkCtrl;
+		v_linkCtrlBlock->Create(_T(""), 
+			WS_VISIBLE, 
+			CRect(5, 5, 80, 50), 
+			this, 
+			IDC_MFCLINK_BLOCK);
+	}
 	return 0;
 }
 bool CMainDlg::GetUrlServer()
@@ -609,38 +662,38 @@ void CMainDlg::ClearCtrlText()
 
 void CMainDlg::onnitLinkText()
 {
-   v_linkCtrl.SetWindowText(_T(""));
-   v_linkCtrl1.SetWindowText(_T(""));
-   v_linkCtrl2.SetWindowText(_T(""));
-   v_linkCtrl3.SetWindowText(_T(""));
-   v_linkCtrlQQ.SetWindowText(UiFun::UI_LoadString("WALLET_MODULE" , "WALLET_OFFICIAL_CUSTOMER" , theApp.gsLanguage ));
-   v_linkCtrlQQ.SetURL("http://wpa.qq.com/msgrd?v=3&uin=1578215488&site=qq&menu=yes");
+   v_linkCtrl->SetWindowText(_T(""));
+   v_linkCtrl1->SetWindowText(_T(""));
+   v_linkCtrl2->SetWindowText(_T(""));
+   v_linkCtrl3->SetWindowText(_T(""));
+   v_linkCtrlQQ->SetWindowText(UiFun::UI_LoadString("WALLET_MODULE" , "WALLET_OFFICIAL_CUSTOMER" , theApp.gsLanguage ));
+   v_linkCtrlQQ->SetURL("http://wpa.qq.com/msgrd?v=3&uin=1578215488&site=qq&menu=yes");
 
-   v_linkCtrlBlock.SetWindowText("Block chain");
-   v_linkCtrlBlock.SetURL("http://block.dacrs.com/index");
+   v_linkCtrlBlock->SetWindowText("Block chain");
+   v_linkCtrlBlock->SetURL("http://block.dacrs.com/index");
    int i = 1;
 	map<CString,CString>::iterator it;
 	for(it=m_url.begin();it!=m_url.end();++it)
 	{
 		if (i == 1)
 		{
-			v_linkCtrl.SetWindowText(it->first);
-			v_linkCtrl.SetURL(it->second);
+			v_linkCtrl->SetWindowText(it->first);
+			v_linkCtrl->SetURL(it->second);
 		}
 		if (i == 2)
 		{
-			v_linkCtrl1.SetWindowText(it->first);
-			v_linkCtrl1.SetURL(it->second);
+			v_linkCtrl1->SetWindowText(it->first);
+			v_linkCtrl1->SetURL(it->second);
 		}
 		if (i == 3)
 		{
-			v_linkCtrl2.SetWindowText(it->first);
-			v_linkCtrl2.SetURL(it->second);
+			v_linkCtrl2->SetWindowText(it->first);
+			v_linkCtrl2->SetURL(it->second);
 		}
 		if (i == 4)
 		{
-			v_linkCtrl3.SetWindowText(it->first);
-			v_linkCtrl3.SetURL(it->second);
+			v_linkCtrl3->SetWindowText(it->first);
+			v_linkCtrl3->SetURL(it->second);
 			break;
 		}
 		i++;
@@ -702,7 +755,7 @@ void CMainDlg::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*63 ,(rc.Height()/100)*15  , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*63 ,(rc.Height()/100)*15  , 294, 20  ,SWP_SHOWWINDOW ) ; 
 		}
 
 
@@ -710,14 +763,14 @@ void CMainDlg::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*63 ,(rc.Height()/100)*23 , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*63 ,(rc.Height()/100)*23 , 294, 20  ,SWP_SHOWWINDOW ) ; 
 		}
 
 		pst = GetDlgItem( IDC_MFCLINK4 ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*63 ,(rc.Height()/100)*30, rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*63 ,(rc.Height()/100)*30, 294, 20  ,SWP_SHOWWINDOW ) ; 
 		}
 
 
@@ -725,7 +778,7 @@ void CMainDlg::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,(rc.Width()/100)*63 ,(rc.Height()/100)*38, rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*63 ,(rc.Height()/100)*38, 294, 20 ,SWP_SHOWWINDOW ) ; 
 		}
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	 
@@ -800,12 +853,6 @@ void CMainDlg::OnSize(UINT nType, int cx, int cy)
 			pst->SetWindowPos( NULL ,(rc.Width()/100)*35+4 ,(rc.Height()/100)*82  , (rc.Width()/100)*30, rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
 
-		//pst = GetDlgItem( IDC_STATIC_TARGET3) ;
-		//if ( NULL != pst ) {
-		//	CRect rect ;
-		//	pst->GetClientRect( rect ) ;
-		//	pst->SetWindowPos( NULL ,(rc.Width()/100)*33+4 ,(rc.Height()/100)*82  , (rc.Width()/100)*3, rect.Height()  ,SWP_SHOWWINDOW ) ; 
-		//}
 
 		pst = GetDlgItem( IDC_TX_JY4 ) ;
 		if ( NULL != pst ) {
@@ -828,12 +875,6 @@ void CMainDlg::OnSize(UINT nType, int cx, int cy)
 			pst->SetWindowPos( NULL ,(rc.Width()/100)*35+4 ,(rc.Height()/100)*89  , (rc.Width()/100)*30, rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
 
-		//pst = GetDlgItem( IDC_STATIC_TARGET4) ;
-		//if ( NULL != pst ) {
-		//	CRect rect ;
-		//	pst->GetClientRect( rect ) ;
-		//	pst->SetWindowPos( NULL ,(rc.Width()/100)*33+4 ,(rc.Height()/100)*89  , (rc.Width()/100)*3, rect.Height()  ,SWP_SHOWWINDOW ) ; 
-		//}
 
 		pst = GetDlgItem( IDC_TX_JY5 ) ;
 		if ( NULL != pst ) {
@@ -856,13 +897,6 @@ void CMainDlg::OnSize(UINT nType, int cx, int cy)
 			pst->SetWindowPos( NULL ,(rc.Width()/100)*35+4 ,(rc.Height()/100)*97  , (rc.Width()/100)*30, rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
 
-		
-		//pst = GetDlgItem( IDC_STATIC_TARGET5) ;
-		//if ( NULL != pst ) {
-		//	CRect rect ;
-		//	pst->GetClientRect( rect ) ;
-		//	pst->SetWindowPos( NULL ,(rc.Width()/100)*33+4 ,(rc.Height()/100)*97, (rc.Width()/100)*3, rect.Height()  ,SWP_SHOWWINDOW ) ; 
-		//}
 
 		pst = GetDlgItem( IDC_TX_JY7 ) ;
 		if ( NULL != pst ) {
@@ -875,14 +909,14 @@ void CMainDlg::OnSize(UINT nType, int cx, int cy)
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,rc.Width()-rect.Width() ,rc.Height()-rect.Height()-10   , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,rc.Width()-180 ,rc.Height()-20-10   ,180, 20  ,SWP_SHOWWINDOW ) ; 
 		}
 
 		pst = GetDlgItem( IDC_MFCLINK_BLOCK ) ;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
-			pst->SetWindowPos( NULL ,rc.Width()-rect.Width() ,rc.Height()-2*rect.Height()-10   , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+			pst->SetWindowPos( NULL ,rc.Width()-180 ,rc.Height()-2*20-10   , 180, 20  ,SWP_SHOWWINDOW ) ; 
 		}
 
 		pst = GetDlgItem( IDC_ALLTXDETAIL ) ;

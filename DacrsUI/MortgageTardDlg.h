@@ -91,7 +91,7 @@ private:
 	int                             m_curpage;
 	int                             m_pagesize;
 	uistruct::REDPACKETPOOLLIST     m_PoolList;
-	CMFCLinkCtrl                    v_linkCtrl;
+	CMFCLinkCtrl                    *v_linkCtrl;
 public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 
