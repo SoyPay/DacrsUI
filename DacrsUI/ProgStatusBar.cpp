@@ -36,8 +36,9 @@ CProgStatusBar::~CProgStatusBar()
 		m_pBmp = NULL ;
 	}
 	if ( NULL != m_ProgressWnd ) {
-		delete m_ProgressWnd ;
-		m_ProgressWnd = NULL ;
+		CGIFControl *gifcontrol= ((CGIFControl*)m_ProgressWnd);
+		delete gifcontrol ;
+		gifcontrol = NULL ;
 	}
 }
 

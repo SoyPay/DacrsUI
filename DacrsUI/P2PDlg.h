@@ -29,6 +29,30 @@ public:
 	void		     SetBkBmpNid( UINT nBitmapIn ) ;
 	afx_msg int      OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg BOOL     OnEraseBkgnd(CDC* pDC);
+
+public:
+	virtual BOOL Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID);
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	afx_msg LRESULT onBnCLick( WPARAM wParam, LPARAM lParam );
+	afx_msg LRESULT OnShowListCtrol(  WPARAM wParam, LPARAM lParam ) ;
+	afx_msg LRESULT OnUpAddressCombo(  WPARAM wParam, LPARAM lParam ) ;
+	afx_msg void OnBnClickedButtonUp();
+	afx_msg void OnBnClickedButtonNext();
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
+	afx_msg void OnSize(UINT nType, int cx, int cy);
+	afx_msg void OnCbnSelchangeComboAddres();
+	afx_msg void OnBnClickedButtonWithd();
+	afx_msg void OnBnClickedButtonRech();
+	afx_msg void OnBnClickedButtonMale();
+	afx_msg void OnTcnSelchangeTab(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnBnClickedButtonWoman();
+	afx_msg void OnBnClickedButtonRefresh2();
+	afx_msg void OnBnClickedButtonRefresh1();
+	afx_msg void OnNMThemeChangedListBonus(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnLbnDblclkListBonus();
+
+	afx_msg void OnBnClickedCancelorde();
+	afx_msg void OnBnClickedButtonSetaddr();
 public:
 	CStaticTrans           m_Balance  ; 
 	CStaticTrans           m_NotDraw  ;
@@ -56,39 +80,23 @@ public:
 	CShadeButtonST         m_rBtnAddrWinerloser;
 
 	CShadeButtonST         m_rBtnSetCommonAddr;
-public:
+
 	CBetRecord            m_BetRecord     ;
 	CSendRecord           m_SendRecord    ;
 	int                   m_seltab;
 
 	std::vector<CDialog*> m_pDialog;
+public:	
 	void      OnSelectShowWin(int nCurSelTab);
 	void      OnShowPagePool(int page);
-public:
-	afx_msg LRESULT onBnCLick( WPARAM wParam, LPARAM lParam );
-	afx_msg LRESULT OnShowListCtrol(  WPARAM wParam, LPARAM lParam ) ;
-	afx_msg LRESULT OnUpAddressCombo(  WPARAM wParam, LPARAM lParam ) ;
-public:
-	virtual BOOL Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID);
-	afx_msg void OnSize(UINT nType, int cx, int cy);
-	afx_msg void OnCbnSelchangeComboAddres();
 	BOOL AddListaddrDataBox();
 	void QueryNotDrawBalance(CString addr);
-	afx_msg void OnBnClickedButtonWithd();
-	afx_msg void OnBnClickedButtonRech();
-	afx_msg void OnBnClickedButtonMale();
-public:
 	void SendBet(int rewardnum);
-	afx_msg void OnBnClickedButtonWoman();
 	void OnListPool();
 	void AcceptBet(CString hash,INT64 money,CString sendaddr,int timeout,INT64 sendmoney);
 	bool CheckBalance(CString strshow = _T(""));
 	bool CheckBalance(double dmoney);
-	afx_msg void OnTcnSelchangeTab(NMHDR *pNMHDR, LRESULT *pResult);
 	void   ShowListItem(int seltab);
-	afx_msg void OnBnClickedButtonRefresh2();
-	afx_msg void OnBnClickedButtonRefresh1();
-	afx_msg void OnNMThemeChangedListBonus(NMHDR *pNMHDR, LRESULT *pResult);
 	double ComPuteBetWinAandLoser(uistruct::P2PBETRECORDLIST  m_P2pBetTxList);
 	double ComPuteAddrBetWinAandLoser(uistruct::P2PBETRECORDLIST  m_P2pBetTxList,CString addr);
 	void   ShowAllBetWinAndLoss();
@@ -99,22 +107,13 @@ public:
 	void AKeyCancelTheOrder();
 	void ReadP2pPoolFromDB();
 	void ReadP2pPoolFromCmd(uistruct::P2PLIST &m_PoolList);
+	void       onShowLink();
 private:
 	int                   m_pagecount;
 	int                   m_curpage;
 	unsigned int          m_pagesize;
 	uistruct::P2PLIST     m_PoolList;
 	CCTabCtrl             m_tab;
-public:
-	virtual BOOL PreTranslateMessage(MSG* pMsg);
-	
-	afx_msg void OnBnClickedButtonUp();
-	afx_msg void OnBnClickedButtonNext();
-	afx_msg void OnTimer(UINT_PTR nIDEvent);
-	void       onShowLink();
-	CMFCLinkCtrl v_linkCtrl;
-	afx_msg void OnLbnDblclkListBonus();
+	CMFCLinkCtrl          *v_linkCtrl;
 
-	afx_msg void OnBnClickedCancelorde();
-	afx_msg void OnBnClickedButtonSetaddr();
 };

@@ -137,8 +137,7 @@ BOOL CDacrsUIApp::InitInstance()
 	if (!AfxSocketInit()){   //≥ı ºªØSOCKET
 		return FALSE ;
 	}
-
-	
+		
 	m_blockAutoDelete = false;
 	m_msgAutoDelete= false;
 	CheckPathValid( str_InsPath );
