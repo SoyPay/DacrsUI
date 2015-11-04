@@ -313,7 +313,7 @@ int CDlgView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 
 	dwStyle =  WS_CHILD | WS_VISIBLE;
-	m_commstatic.Create(_T("普通工具"),dwStyle, rect, this, ctrid++);
+	m_commstatic.Create(_T("应用中心"),dwStyle, rect, this, ctrid++);
 	m_commstatic.ModifyStyle(SS_LEFT|SS_LEFT,SS_LEFT,TRUE);
 	m_commstatic.SetFont(130,_T("黑体"));	
 
@@ -477,7 +477,7 @@ BOOL  CDlgView::Download(const CString& strFileURLInServer, //待下载文件的URL
 	{
 		AfxParseURL(strFileURLInServer, dwType, strServer, strObject, wPort);
 		pHttpConnection = session.GetHttpConnection(strServer, wPort);
-		pHttpFile = pHttpConnection->OpenRequest(CHttpConnection::HTTP_VERB_GET, strObject);
+		pHttpFile = pHttpConnection->OpenRequest(CHttpConnection::HTTP_VERB_GET, strObject,NULL,1,NULL,NULL,INTERNET_FLAG_TRANSFER_ASCII|INTERNET_FLAG_RELOAD);
 		if(pHttpFile->SendRequest() == FALSE)
 			return false;
 		DWORD dwStateCode;
