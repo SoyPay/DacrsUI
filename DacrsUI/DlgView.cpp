@@ -1114,6 +1114,30 @@ void CDlgView::MoidfyListAndSaveToFile(int type,string key,ADD_APP_DATA ModifyDa
 	strFile +="\\"+m_configName;
 	WriteCoinfig(strFile);
 }
+struct ProcessWindow  
+{  
+	DWORD dwProcessId;  
+	HWND hwndWindow;  
+};  
+// 查找进程主窗口的回调函数  
+BOOL CALLBACK EnumWindowCallBack(HWND hWnd, LPARAM lParam)  
+{  
+	ProcessWindow *pProcessWindow = (ProcessWindow *)lParam;  
+
+	DWORD dwProcessId;  
+	GetWindowThreadProcessId(hWnd, &dwProcessId);  
+
+	// 判断是否是指定进程的主窗口  
+	if (pProcessWindow->dwProcessId == dwProcessId && IsWindowVisible(hWnd) && GetParent(hWnd) == NULL)  
+	{  
+		pProcessWindow->hwndWindow = hWnd;  
+
+		return FALSE;  
+	}  
+
+	return TRUE;  
+}  
+
 LRESULT CDlgView::onBnCLick( WPARAM wParam, LPARAM lParam )
 {
 	CButtonCtrl *button = (CButtonCtrl*)lParam;
@@ -1143,6 +1167,26 @@ LRESULT CDlgView::onBnCLick( WPARAM wParam, LPARAM lParam )
 		}
 		///打开应用程序
 		{
+				string appname = strprintf("%s",itemdata.appname)+".exe";
+				map<string,PROCESS_INFORMATION>::iterator it = m_process.find(itemdata.appname);
+				if (it != m_process.end()) /// 此应用程序已经打开，置顶
+				{
+					PROCESS_INFORMATION item = it->second;
+					HANDLE processHandle = OpenProcess(PROCESS_ALL_ACCESS,FALSE,item.dwProcessId);  
+					if(NULL != processHandle)
+					{
+						ProcessWindow procwin;  
+						procwin.dwProcessId = item.dwProcessId;  
+						procwin.hwndWindow = NULL;  
+
+						// 查找主窗口  
+						EnumWindows(EnumWindowCallBack, (LPARAM)&procwin);  
+ 
+						 ::SetWindowPos( procwin.hwndWindow ,HWND_TOPMOST,0,0,0,0,SWP_NOMOVE|SWP_NOSIZE);
+						return 0;
+					}
+
+				}
 				string appfileexe = m_apppath + "\\"+strprintf("%s",itemdata.appname)+"\\"+strprintf("%s",itemdata.appname)+strprintf("\\%s",itemdata.appname)+".exe";
 				/// 配置文件安装了,但是找不到exe，重新设置配置文件没有安装
 				if (_access(appfileexe.c_str(),0) == -1)
@@ -1166,7 +1210,7 @@ LRESULT CDlgView::onBnCLick( WPARAM wParam, LPARAM lParam )
 				}  
 				CloseHandle(app_pi.hProcess);
 				CloseHandle(app_pi.hThread);
-				m_process.push_back(app_pi);
+				m_process[itemdata.appname]=app_pi;
 		}
 	}else{  /// 下载可执行程序
 		string dowloufilepath = m_apppath + "\\"+strprintf("%s",itemdata.appname);
@@ -1181,6 +1225,7 @@ LRESULT CDlgView::onBnCLick( WPARAM wParam, LPARAM lParam )
 			DeleteFile(dowloufileName.c_str());
 			button->m_pData.isInstall = true;
 			MoidfyListAndSaveToFile(itemdata.type ,itemdata.appname,button->m_pData);
+			AfxMessageBox(_T("已经下载完成!"));
 		}
 	}
 	return 0;
@@ -1206,11 +1251,12 @@ bool CDlgView::UnZipFile(string unzipfilename,string zipfilepath)
 }
 void CDlgView::CloseProcess()
 {
-	vector<PROCESS_INFORMATION>::iterator it = m_process.begin();
+	map<string,PROCESS_INFORMATION>::iterator it = m_process.begin();
 	for (;it!=m_process.end();it++)
 	{
 		HANDLE hProcessHandle; 
-		hProcessHandle = ::OpenProcess( PROCESS_ALL_ACCESS, FALSE, it->dwProcessId );
+		PROCESS_INFORMATION item=it->second;
+		hProcessHandle = ::OpenProcess( PROCESS_ALL_ACCESS, FALSE,item.dwProcessId );
 		if (hProcessHandle != NULL)
 		{
 			TerminateProcess( hProcessHandle,0);
