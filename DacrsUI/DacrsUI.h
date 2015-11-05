@@ -131,6 +131,7 @@ public:
 public:
 	void StartSeverProcess(const string& strdir);
 	void CloseProcess(const string& exename);
+	bool IsExistProcess(const string& exename);
 	int Update();
 	bool GetVersionFromServer(string& strVersion);
 	BOOL					m_bStartServer;

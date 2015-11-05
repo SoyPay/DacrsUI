@@ -97,7 +97,7 @@ public:
 	map<string ,ADD_APP_DATA> m_commappUrl_list;
 	map<string ,ADD_APP_DATA> m_gameappUrl_list;
 	map<string ,ADD_APP_DATA> m_LargeappUrl_list;
-	vector<PROCESS_INFORMATION> m_process;
+	map<string,PROCESS_INFORMATION> m_process;
 public:
 	int largerHeight;
 	int smallHeight;

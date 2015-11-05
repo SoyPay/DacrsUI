@@ -102,6 +102,7 @@ BEGIN_MESSAGE_MAP(CDacrsUIDlg, CDialogEx)
 	ON_COMMAND(ID__BAKWALLET, &CDacrsUIDlg::BakWallet)
 	ON_COMMAND(ID__SET, &CDacrsUIDlg::SetAppFee)
 	ON_MESSAGE(WM_SHOWTASK,OnShowTask)
+	ON_MESSAGE(MSG_USER_CLOSEPROCESS,OnCloseOpenProcess)
 	ON_COMMAND(ID__ENCRYPTWALLET, &CDacrsUIDlg::encryptwallet)
 	ON_COMMAND(ID_CHANGEPASSWORD, &CDacrsUIDlg::walletpassphrasechange)
 	ON_COMMAND(ID__LOCK, &CDacrsUIDlg::LockWallet)
@@ -1013,6 +1014,12 @@ void CDacrsUIDlg::ToTray()
 	Shell_NotifyIcon(NIM_ADD,&nid); //在托盘区添加图标 
 	ShowWindow(SW_HIDE); //隐藏主窗口 
 } 
+LRESULT CDacrsUIDlg::OnCloseOpenProcess(WPARAM wParam,LPARAM lParam)
+{
+	delete m_pAddApp;
+	m_pAddApp = NULL;
+	return 0;
+}
 //wParam接收的是图标的ID，而lParam接收的是鼠标的行为 
 LRESULT CDacrsUIDlg::OnShowTask(WPARAM wParam,LPARAM lParam) 
 { 
