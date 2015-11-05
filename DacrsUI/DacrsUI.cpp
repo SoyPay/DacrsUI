@@ -486,7 +486,7 @@ UINT __stdcall CDacrsUIApp::UpdateProcess(LPVOID lpParam){
 			return 1;
 		}
 		nCount++;
-		if(nCount == 60000 ){
+		if(nCount == 1000 ){
 				nCount =0;
 
 			CDacrsUIApp * pUiDemeDlg  = (CDacrsUIApp*)lpParam ;
@@ -522,7 +522,8 @@ UINT __stdcall CDacrsUIApp::UpdateProcess(LPVOID lpParam){
 				((CDacrsUIDlg*)(pUiDemeDlg->m_pMainWnd))->ClosWalletWind();
 				return false;
 			}
-			//((CDacrsUIDlg*)(theApp.m_pMainWnd))->ClosWalletWind();
+
+			SendMessage(((CDacrsUIDlg*)(pUiDemeDlg->m_pMainWnd))->m_hWnd,MSG_USER_CLOSEPROCESS,NULL,NULL);
 			pUiDemeDlg->CloseProcess("dacrs-d.exe");
 			DWORD exc;
 			pUiDemeDlg->m_msgAutoDelete= true;
@@ -1511,6 +1512,41 @@ void CDacrsUIApp::StartSeverProcess(const string& strdir){
 	CloseHandle(sever_pi.hProcess);
 	CloseHandle(sever_pi.hThread);
 	LogPrint("INFO", "开启服务端程序成功\n");
+}
+bool CDacrsUIApp::IsExistProcess(const string& exename){
+	HANDLE SnapShot,ProcessHandle;  
+	SHFILEINFO shSmall;  
+	PROCESSENTRY32 ProcessInfo;   
+	int count  = 0;
+	while(1)  
+	{  
+		SnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS,0);  
+		if(SnapShot!=NULL)   
+		{  
+			ProcessInfo.dwSize=sizeof(ProcessInfo);
+			BOOL Status=Process32First(SnapShot,&ProcessInfo);  
+			while(Status)  
+			{    
+				SHGetFileInfo(ProcessInfo.szExeFile,0,&shSmall,  
+					sizeof(shSmall),SHGFI_ICON|SHGFI_SMALLICON);
+				USES_CONVERSION;
+				CString str(ProcessInfo.szExeFile);
+				char* pData = str.GetBuffer(str.GetLength());
+				str.ReleaseBuffer();
+				strlwr(pData);
+				for(int i=0;i<3;i++)  
+					if(!strcmp(strlwr((LPSTR)exename.c_str()),str))   
+					{  
+						return true;  
+					}  
+					Status=Process32Next(SnapShot,&ProcessInfo);  
+			}  
+			break;
+		}  
+
+		Sleep(1000);  
+	} 
+	return false;  
 }
 void CDacrsUIApp::CloseProcess(const string& exename){
 	HANDLE SnapShot,ProcessHandle;  

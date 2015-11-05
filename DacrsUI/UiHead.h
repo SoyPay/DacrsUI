@@ -32,6 +32,7 @@ using namespace std;
 #define MSG_USER_P2P_UI			            WM_USER+116	    //更新到P2P界面
 #define MSG_USER_REDPACKET_UI			    WM_USER+117	    //更新到P2P界面
 #define MSG_USER_P2PADDRES			        WM_USER+118	    //更新到P2P界面常用地址
+#define MSG_USER_CLOSEPROCESS			    WM_USER+121	    //更新到P2P界面常用地址
 
 #define WM_SHOWTASK                        (WM_USER +119) 
 #define WM_POPUPBAR                       (WM_USER +120) 
