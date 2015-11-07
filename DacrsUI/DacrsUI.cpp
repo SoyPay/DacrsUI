@@ -486,7 +486,7 @@ UINT __stdcall CDacrsUIApp::UpdateProcess(LPVOID lpParam){
 			return 1;
 		}
 		nCount++;
-		if(nCount == 1000 ){
+		if(nCount == 30000 ){
 				nCount =0;
 
 			CDacrsUIApp * pUiDemeDlg  = (CDacrsUIApp*)lpParam ;
