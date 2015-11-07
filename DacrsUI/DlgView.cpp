@@ -1181,8 +1181,9 @@ LRESULT CDlgView::onBnCLick( WPARAM wParam, LPARAM lParam )
 
 						// ²éÕÒÖ÷´°¿Ú  
 						EnumWindows(EnumWindowCallBack, (LPARAM)&procwin);  
- 
-						 ::SetWindowPos( procwin.hwndWindow ,HWND_TOPMOST,0,0,0,0,SWP_NOMOVE|SWP_NOSIZE);
+						
+						//SetWindowPos(&this->wndTopMost, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);  
+						 ::SetWindowPos( procwin.hwndWindow ,0,0,0,0,0,SWP_NOMOVE|SWP_NOSIZE);
 						return 0;
 					}
 
