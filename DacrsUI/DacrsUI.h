@@ -223,13 +223,14 @@ public:
 	map<string,CONFIG_APP_DATA> m_listapp;
 	string helpurlcn;
 	string helpurlen;
+	int      m_lockstate;
 private:
 	string  m_sigdacrsclient;
 	string  m_singdacrsui;
 	string  m_singdacrs;
 	string  m_singRunBat;
 	map<string,string>  m_listappid;
-	
+
 public:
 	virtual int ExitInstance();
 };

@@ -42,4 +42,6 @@ public:
 	HWND m_hParent;
 	BOOL bEnable;
 	ADD_APP_DATA m_pData;         //按钮带的用户自定义数据
+
+	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 };

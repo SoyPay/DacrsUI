@@ -267,9 +267,14 @@ void CTradDlg::OnBnClickedButtonTxdetail()
 	if ( pos ) {
 		int nRow = m_listCtrl.GetNextSelectedItem(pos) ;
 		CString strtxhash = m_listCtrl.GetItemText(nRow, 5);
-		uistruct::REVTRANSACTION_t  txdetail;
+
+		if (nRow <0 || nRow > (int)m_pListInfo.size())
+		{
+			return ;
+		}
+		uistruct::REVTRANSACTION_t  txdetail =m_pListInfo.at(nRow);
 	    string strCond;
-		strCond = strprintf(" hash='%s' ", strtxhash);
+		strCond = strprintf(" hash='%s' ", txdetail.txhash);
 		int nItem =  theApp.m_SqliteDeal.GetTransactionItem( strCond ,&txdetail ) ;
 		if (txdetail.txhash != _T(""))
 		{

@@ -52,6 +52,7 @@ static const ULONGLONG COIN = 100000000;
 #define WM_RELEASETX            WM_USER+32
 #define WM_REMOVETX             WM_USER+33
 #define WM_CONNECTNET           WM_USER+34
+#define WM_UP_UPDATABlLOCK      WM_USER+35
 
 
 
