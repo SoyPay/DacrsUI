@@ -72,6 +72,7 @@ CButtonCtrl::~CButtonCtrl()
 
 BEGIN_MESSAGE_MAP(CButtonCtrl, CShadeButtonST)
 	ON_CONTROL_REFLECT(BN_CLICKED, &CButtonCtrl::OnBnClicked)
+	ON_WM_MOUSEMOVE()
 END_MESSAGE_MAP()
 
 
@@ -84,3 +85,14 @@ void CButtonCtrl::OnBnClicked()
 {
 	::SendMessage( m_hParent, WM_BN_CLICK, m_inItem, (LPARAM)this );
 }
+
+
+void CButtonCtrl::OnMouseMove(UINT nFlags, CPoint point)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	//HCURSOR hCur = LoadCursor( NULL , IDC_HAND ) ;
+
+	//SetCursor(hCur);
+	CShadeButtonST::OnMouseMove(nFlags, point);
+}
+

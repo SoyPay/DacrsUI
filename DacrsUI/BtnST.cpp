@@ -627,7 +627,40 @@ void CButtonST::PaintBk(CDC* pDC)
 
 	pDC->BitBlt(0, 0, rect.Width(), rect.Height(), &m_dcBk, 0, 0, SRCCOPY);
 } // End of PaintBk
-
+//void CButtonST::PaintBk(CDC* pDC)
+//{
+//	CRect rect;
+//	CRect rect1;
+//
+//	GetClientRect(rect);
+//	CDC   MemDC;   //首先定义一个显示设备对象   
+//	CBitmap   MemBitmap;//定义一个位图对象   
+//
+//	//随后建立与屏幕显示兼容的内存显示设备   
+//	MemDC.CreateCompatibleDC(NULL);   
+//	//这时还不能绘图，因为没有地方画   ^_^   
+//	//下面建立一个与屏幕显示兼容的位图，至于位图的大小嘛，可以用窗口的大小   
+//	MemBitmap.CreateCompatibleBitmap(pDC,rect.Width(),rect.Height());   
+//
+//	//将位图选入到内存显示设备中   
+//	//只有选入了位图的内存显示设备才有地方绘图，画到指定的位图上   
+//	CBitmap   *pOldBit=MemDC.SelectObject(&MemBitmap);   
+//
+//	//先用背景色将位图清除干净，这里我用的是白色作为背景   
+//	//你也可以用自己应该用的颜色   
+//	MemDC.FillSolidRect(0,0,rect.Width(),rect.Height(),RGB(255,255,255));   
+//
+//	//绘图   
+//	//MemDC.MoveTo(……);   
+//	//MemDC.LineTo(……);   
+//
+//	//将内存中的图拷贝到屏幕上进行显示   
+//	pDC->BitBlt(0,0,rect.Width(),rect.Height(),&MemDC,0,0,SRCCOPY);   
+//
+//	//绘图完成后的清理   
+//	MemBitmap.DeleteObject();   
+//	MemDC.DeleteDC();   
+//} // End of PaintBk
 HBITMAP CButtonST::CreateBitmapMask(HBITMAP hSourceBitmap, DWORD dwWidth, DWORD dwHeight, COLORREF crTransColor)
 {
 	HBITMAP		hMask		= NULL;

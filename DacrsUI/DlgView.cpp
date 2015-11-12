@@ -25,7 +25,7 @@ CDlgView::CDlgView()
 	SetScrollSizes(MM_TEXT,size);
 	comm_app_count = 0;
 	game_app_count = 0;
-	largerHeight = 144;
+	largerHeight = 156;
 	smallHeight = 72;
 	largerWith = 285;
 	smallWith = 285;
@@ -148,7 +148,7 @@ void CDlgView::InitListCtrl()
 	}
 
 	//m_apppath = "D:\\cppwork\\dacrs_ui_new\\bin\\应用程序";
-	m_LargeList.SetRowHeigt(136);
+	m_LargeList.SetRowHeigt(154);
 	m_gameCtrl.SetRowHeigt(68);
 	m_Commctrl.SetRowHeigt(68);
 	int ncount = 0;
@@ -163,11 +163,10 @@ void CDlgView::InitListCtrl()
 
 		CString FileName;
 		FileName.AppendFormat(_T("%s"),filepathe.c_str());
-		//image.Load(FileName,CXIMAGE_FORMAT_PNG|CXIMAGE_FORMAT_JPG|CXIMAGE_SUPPORT_BMP|CXIMAGE_SUPPORT_GIF|CXIMAGE_SUPPORT_ICO);
 		HBITMAP hbmp = (HBITMAP)::LoadImage(AfxGetInstanceHandle(), FileName, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION | LR_DEFAULTSIZE);  
-		//HBITMAP hbmp = image.MakeBitmap();
+		HBITMAP hbmp2 = (HBITMAP)::LoadImage(AfxGetInstanceHandle(), FileName, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION | LR_DEFAULTSIZE);
 
-		m_LargeList.createItemButton(nRow,ncount++,this->GetSafeHwnd(),_T(""),&data,hbmp , RGB(255, 255, 255) , hbmp , RGB(255, 255, 255));
+		m_LargeList.createItemButton(nRow,ncount++,this->GetSafeHwnd(),_T(""),&data,hbmp , RGB(255, 255, 255) , hbmp2 , RGB(255, 255, 255));
 	}
 	//m_LargeList.release();
 
@@ -210,7 +209,11 @@ void CDlgView::InitListCtrl()
 			hbmp2 = (HBITMAP)::LoadImage(AfxGetInstanceHandle(), FileName, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION | LR_DEFAULTSIZE); 
 		}
 		//hbmp2 = image.MakeBitmap();
-		m_Commctrl.createItemButton(CurRow,ncount++,this->GetSafeHwnd(),_T(""),&data,hbmp2 , RGB(255, 255, 255) , hbmp , RGB(255, 255, 255));
+		if (hbmp2 != NULL && hbmp != NULL)
+		{
+			m_Commctrl.createItemButton(CurRow,ncount++,this->GetSafeHwnd(),_T(""),&data,hbmp2 , RGB(255, 255, 255) , hbmp , RGB(255, 255, 255));
+		}
+	
 	}
 
 	map<string ,ADD_APP_DATA>::const_iterator item1 = m_gameapp_list.begin();
@@ -360,7 +363,7 @@ void CDlgView::OnSize(UINT nType, int cx, int cy)
 		m_LargeList.LockWindowUpdate();
 
 		int with = (largerWith)*3;
-		m_LargeList.MoveWindow(20, 20, with, largerHeight);
+		m_LargeList.MoveWindow(20, 14, with, largerHeight);
 		CurHeight = 30 + largerHeight;
 
 		CRect rect;
@@ -1142,6 +1145,11 @@ LRESULT CDlgView::onBnCLick( WPARAM wParam, LPARAM lParam )
 {
 	CButtonCtrl *button = (CButtonCtrl*)lParam;
 	ADD_APP_DATA itemdata =(ADD_APP_DATA)button->m_pData;
+	if (itemdata.isLagerPic)
+	{
+		ShellExecute(NULL,"open",TEXT("http://8btc.com/thread-25079-1-1.html"),NULL,NULL, SW_SHOWNORMAL);  
+		return 0;
+	}
 	if (itemdata.isInstall)
 	{
 		ADD_APP_DATA BtData;
@@ -1183,10 +1191,15 @@ LRESULT CDlgView::onBnCLick( WPARAM wParam, LPARAM lParam )
 						EnumWindows(EnumWindowCallBack, (LPARAM)&procwin);  
 						
 						//SetWindowPos(&this->wndTopMost, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);  
+						//显示窗口
+						::ShowWindow(procwin.hwndWindow , SW_NORMAL);
+						//前端显示
+						::SetForegroundWindow(procwin.hwndWindow );
 						 ::SetWindowPos( procwin.hwndWindow ,0,0,0,0,0,SWP_NOMOVE|SWP_NOSIZE);
+						 CloseHandle(processHandle);
 						return 0;
 					}
-
+					
 				}
 				string appfileexe = m_apppath + "\\"+strprintf("%s",itemdata.appname)+"\\"+strprintf("%s",itemdata.appname)+strprintf("\\%s",itemdata.appname)+".exe";
 				/// 配置文件安装了,但是找不到exe，重新设置配置文件没有安装
@@ -1225,6 +1238,24 @@ LRESULT CDlgView::onBnCLick( WPARAM wParam, LPARAM lParam )
 			///删除下载的临时文件
 			DeleteFile(dowloufileName.c_str());
 			button->m_pData.isInstall = true;
+			//// 替换图片
+			{
+				string filepathe;
+				filepathe = m_apppath +"\\"+itemdata.appname+"\\ini.bmp";
+
+				CString FileName;
+				FileName.AppendFormat(_T("%s"),filepathe.c_str());
+				HBITMAP hbmp = (HBITMAP)::LoadImage(AfxGetInstanceHandle(), FileName, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION | LR_DEFAULTSIZE);  
+				HBITMAP hbmp2;
+				FileName.Format(_T("%s\\%s\\Install.bmp"),m_apppath.c_str(),itemdata.appname.c_str());
+				hbmp2 = (HBITMAP)::LoadImage(AfxGetInstanceHandle(), FileName, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION | LR_DEFAULTSIZE); 
+				
+				if (hbmp2 != NULL && hbmp != NULL)
+				{
+					button->SetBitmaps( hbmp2 ,  RGB(255, 255, 255), hbmp ,  RGB(255, 255, 255) );
+					
+				}
+			}
 			MoidfyListAndSaveToFile(itemdata.type ,itemdata.appname,button->m_pData);
 			AfxMessageBox(_T("已经下载完成!"));
 		}
@@ -1235,7 +1266,7 @@ LRESULT CDlgView::onBnCLick( WPARAM wParam, LPARAM lParam )
 
 bool CDlgView::UnZipFile(string unzipfilename,string zipfilepath)
 {
-	HZIP hz; DWORD writ;
+	HZIP hz; //DWORD writ;
 
 	// EXAMPLE 2 - unzip it with the names suggested in the zip
 	hz = OpenZip(unzipfilename.c_str(),0);
@@ -1265,3 +1296,4 @@ void CDlgView::CloseProcess()
 		
 	}
 }
+
