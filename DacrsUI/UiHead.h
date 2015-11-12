@@ -780,6 +780,14 @@ namespace uistruct {
 	}REDPACKETPOOL_t;
 	typedef std::vector<REDPACKETPOOL_t> REDPACKETPOOLLIST ;
 
+	typedef struct CHAIN_TIP{
+		string blockhash;         //block hash
+		int block_height;        //确认高度
+		int confired_time;      // 确认时间
+		int fuelrate;
+		int lock;
+	}CHAIN_TIP_T;
+
 	typedef struct {
 		char          sendRedid[6] ;        //// 发起钱包的id
 		INT64         amount;                     //发起钱包的金额

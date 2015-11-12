@@ -37,6 +37,7 @@ BEGIN_MESSAGE_MAP(CListCtrlCl, CListCtrl)
 	ON_WM_MOUSEWHEEL()
 	ON_NOTIFY(HDN_BEGINTRACKA, 0, &CListCtrlCl::OnHdnBegintrack)
 	ON_NOTIFY(HDN_BEGINTRACKW, 0, &CListCtrlCl::OnHdnBegintrack)
+	ON_WM_MOUSEMOVE()
 END_MESSAGE_MAP()
 
 
@@ -459,6 +460,7 @@ void CListCtrlCl::createItemButton( int nItem, int nSubItem, HWND hMain,LPCTSTR 
 	pButton->SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(41, 57, 85));
 	pButton->SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(41, 57, 85));
 	pButton->SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(41, 57, 85));
+
 	pButton->DrawTransparent(TRUE);
 
 	//delete pButton;
@@ -561,4 +563,13 @@ void CListCtrlCl::OnHdnBegintrack(NMHDR *pNMHDR, LRESULT *pResult)
 	// TODO: 在此添加控件通知处理程序代码
 	*pResult = 1;
 	return;
+}
+
+void CListCtrlCl::OnMouseMove(UINT nFlags, CPoint point)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	//HCURSOR hCur = LoadCursor( NULL , IDC_ARROW ) ;
+
+	//SetCursor(hCur);
+	CListCtrl::OnMouseMove(nFlags, point);
 }

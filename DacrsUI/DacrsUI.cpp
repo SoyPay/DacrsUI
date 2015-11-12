@@ -81,6 +81,7 @@ CDacrsUIApp::CDacrsUIApp()
 	m_singdacrsui ="";
 	m_singdacrs ="";
 	m_singRunBat ="";
+	m_lockstate = 0;
 }
 
 
@@ -747,7 +748,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 							if (block.JsonToStruct(data))
 							{
 								string strinsert;
-								strinsert = strprintf("'%s','%d','%d','%d'",block.hash,block.high,block.time,block.fuelrate);
+								strinsert = strprintf("'%s','%d','%d','%d','%d'",block.hash,block.high,block.time,block.fuelrate,((CDacrsUIApp*)pParam)->m_lockstate);
 								if (!((CDacrsUIApp*)pParam)->m_SqliteDeal.InsertTableItem(_T("t_chain_tip") ,strinsert ))
 								{
 									TRACE("insert into table t_chain_tip error");
@@ -756,6 +757,18 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 							
 							}
 							
+						}
+					}
+					break;
+				case WM_UP_UPDATABlLOCK:
+					{
+						uistruct::CHAIN_TIP_T chainblock;
+						((CDacrsUIApp*)pParam)->m_SqliteDeal.GetTipBlockHash(&chainblock);
+						string strWhere =strprintf("block_hash='%s'",chainblock.blockhash);
+						string updatastr = strprintf("lock=%d",((CDacrsUIApp*)pParam)->m_lockstate);
+						if (!((CDacrsUIApp*)pParam)->m_SqliteDeal.UpdateTableItem(_T("t_chain_tip") ,updatastr,strWhere ))
+						{
+							TRACE("insert into table t_chain_tip error");
 						}
 					}
 					break;
@@ -1191,12 +1204,22 @@ bool ProcessMsgJson(Json::Value &msgValue, CDacrsUIApp* pApp)
 				postmsg.SetStrType(msg);
 				pApp->m_MsgQueue.push(postmsg);
 				pApp->IsWalletLocked = TRUE;
+				pApp->m_lockstate =2;
+
+				//// 更新block
+				CPostMsg postblockmsg(MSG_USER_GET_UPDATABASE,WM_UP_UPDATABlLOCK);
+				pApp->m_MsgQueue.push(postblockmsg);  
 			}else if (!strcmp(msg.c_str(),"UnLock"))
 			{
 				CPostMsg postmsg(MSG_USER_UP_PROGRESS,WM_LOCKSTATE);
 				postmsg.SetStrType(msg);
 				pApp->m_MsgQueue.push(postmsg);
 				pApp->IsWalletLocked = FALSE;
+				pApp->m_lockstate =1;
+
+				//// 更新block
+				CPostMsg postblockmsg(MSG_USER_GET_UPDATABASE,WM_UP_UPDATABlLOCK);
+				pApp->m_MsgQueue.push(postblockmsg);  
 			}else if (msg.find("connections")>=0)
 			{
 				CPostMsg postmsg(MSG_USER_UP_PROGRESS,WM_CONNECTNET);

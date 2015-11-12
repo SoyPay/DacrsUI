@@ -440,12 +440,11 @@ void CProgStatusBar::OnIniLockParam()
 		m_nLockIndex = 0;
 		theApp.HaveLocked = TRUE;
 	}
-		//theApp.IsWalletLocked = root["islock"].asBool();
-		//if (!theApp.IsWalletLocked)
-		//{
-		//	m_nLockIndex = 1;
-		//}
 
+	theApp.m_lockstate =state; 
+	//// ¸üÐÂblock
+	CPostMsg postblockmsg(MSG_USER_GET_UPDATABASE,WM_UP_UPDATABlLOCK);
+	theApp.m_MsgQueue.push(postblockmsg);  
 }
 
 void CProgStatusBar::SetAppStepfee(int fuelrate)

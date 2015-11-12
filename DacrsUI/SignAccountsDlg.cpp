@@ -148,7 +148,7 @@ BOOL CSignAccountsDlg::OnInitDialog()
 
 	GetDlgItem(IDC_EDIT_FEE)->SetWindowTextA("0.0001");
 
-	GetDlgItem(IDC_FEE)->SetWindowText(UiFun::UI_LoadString("NEW_SENDADDR" , "NEW_SENDADDR_LABEL" ,theApp.gsLanguage));
+	GetDlgItem(IDC_FEE)->SetWindowText(UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TIP" ,theApp.gsLanguage));
 	GetDlgItem(IDC_ADDR)->SetWindowText(UiFun::UI_LoadString("NEW_SENDADDR" , "NEW_SENDADDR_ADDR" ,theApp.gsLanguage));
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE

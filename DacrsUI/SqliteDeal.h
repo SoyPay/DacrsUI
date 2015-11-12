@@ -37,7 +37,7 @@ public:
 	int        GetP2PQuizRecordList(const string &strCondition, uistruct::P2PBETRECORDLIST * p2pQuizRecordList);
 	int        GetP2PQuizPoolItem(const string &strCondition, uistruct::LISTP2POOL_T* pPoolItem);
 	int        GetP2PQuizPoolList(const string &strCondition, uistruct::P2PLIST* pPoolList);
-	int        GetTipBlockHash(char *pBlockHash);
+
 	BOOL       IsBlockTipInChain();
 	double     GetTableItemSum(const string &strTabName, const string &stdFieldName, const string &strCond);
 	BOOL       GetAddressBookItem(const string &strCond, uistruct::ADDRBOOK_t *pAddrBook);
@@ -55,6 +55,7 @@ public:
 	BOOL       DeleteTable(const string tablename);
 	int       GetCommonWalletAddressItem(const string &strCondition, uistruct::COMMONLISTADDR_t *pAddr);
 	int       GetCommonWalletAddressList(const string &strCondition, map<int,uistruct::COMMONLISTADDR_t> *pListInfo);
+	int       GetTipBlockHash(uistruct::CHAIN_TIP_T *pBlockHash);
 };
 
 

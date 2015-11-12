@@ -53,16 +53,16 @@ BOOL CSqliteDeal::InitializationDB(){
 	strCondition = "type='table' and name= 't_chain_tip'";
 	if(!GetTableCountItem(strTableName, strCondition))
 	{
-		string createSQL="CREATE TABLE t_chain_tip(block_hash TEXT PRIMARY KEY,block_height INT,confired_time INT,fuelrate INT)";
+		string createSQL="CREATE TABLE t_chain_tip(block_hash TEXT PRIMARY KEY,block_height INT,confired_time INT,fuelrate INT,lock INT)";
 		if(!ExcuteSQL(pDBConn, NULL, createSQL, NULL))
 		{
 			LogPrint("INFO", "Create table t_chain_tip failed\n");
 			return FALSE;
 		}
-	}else if (!IsExistField(_T("t_chain_tip"),_T("block_height"),_T("1=1"))  )
+	}else if (!IsExistField(_T("t_chain_tip"),_T("lock"),_T("1=1"))  )
 	{
 		DeleteTable(_T("t_chain_tip"));
-		string createSQL="CREATE TABLE t_chain_tip(block_hash TEXT PRIMARY KEY,block_height INT,confired_time INT,fuelrate INT)";
+		string createSQL="CREATE TABLE t_chain_tip(block_hash TEXT PRIMARY KEY,block_height INT,confired_time INT,fuelrate INT,lock INT)";
 		if(!ExcuteSQL(pDBConn, NULL, createSQL, NULL))
 		{
 			LogPrint("INFO", "Create table t_p2p_quiz failed\n");
@@ -569,19 +569,7 @@ int CallCountTableItem(void *para, int n_column, char ** column_value, char ** c
 		*(int *)para = atoi(column_value[0]);
 	return 0;
 }
-//获取tip block hash
-int CallGetTipBlockHash(void *para, int n_column, char ** column_value, char ** column_name)
-{
 
-	if(NULL == column_value[0])
-		return -1;
-	if(n_column != 1)
-	{
-		return -1;
-	}
-	memcpy(para, column_value[0], strlen(column_value[0]));
-	return 0;
-}
 //获取指定表某个字段的总和
 int CallGetTableItemSum(void *para, int n_column, char ** column_value, char ** column_name)
 {
@@ -706,13 +694,6 @@ int CSqliteDeal::GetP2PQuizPoolList(const string &strCondition, uistruct::P2PLIS
 	return 0;
 }
 
-int CSqliteDeal::GetTipBlockHash(char *pBlockHash)
-{	
-	sqlite3** pDBConn = GetDBConnect();
-	string strSQL ="SELECT * FROM t_chain_tip";
-	ExcuteSQL(pDBConn, &CallGetTipBlockHash, strSQL, (void *)pBlockHash);
-	return 0;
-}
 
 
 //删除数据库表记录
@@ -761,12 +742,13 @@ BOOL CSqliteDeal::IsBlockTipInChain()
 	return TRUE;
 	char cTipBlockHash[35];
 	memset(cTipBlockHash, 0, 35);
-	GetTipBlockHash(cTipBlockHash);
+	uistruct::CHAIN_TIP_T blockchain;
+	GetTipBlockHash(&blockchain);
 	string strShowData, strCommand;
-	if(strlen(cTipBlockHash) == 0){
+	if(blockchain.blockhash.length() == 0){
 		strCommand = strprintf("%s %d","getblock" ,-1 );
 	}else{
-		strCommand = strprintf("%s %s",_T("getblock") ,cTipBlockHash );
+		strCommand = strprintf("%s %s",_T("getblock") ,blockchain.blockhash );
 	}
 	Json::Value root; 
 	if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
@@ -1324,4 +1306,32 @@ BOOL CSqliteDeal::DeleteTable(const string tablename){
 	string strSQL("");
 	strSQL = strprintf("drop table %s",(LPSTR)(LPCTSTR)tablename.c_str());
 	return ExcuteSQL(pDBConn , &CallTableItem, strSQL, NULL);
+}
+
+//获取tip block hash
+int CallGetTipBlockHash(void *para, int n_column, char ** column_value, char ** column_name)
+{
+	uistruct::CHAIN_TIP_T * pitem =  (uistruct::CHAIN_TIP_T *)para;
+	if(NULL == column_value[0])
+		return -1;
+	if(n_column != 5)
+	{
+		return -1;
+	}
+	pitem->blockhash =strprintf("%s",column_value[0]);
+	pitem->block_height =atoi(column_value[1]);
+	pitem->confired_time = atoi(column_value[2]);
+	pitem->fuelrate = atoi(column_value[3]);
+	pitem->lock = atoi(column_value[4]);
+	return 0;
+}
+
+int CSqliteDeal::GetTipBlockHash(uistruct::CHAIN_TIP_T *pBlockHash)
+{
+	sqlite3 ** pDBConn = GetDBConnect(); //获取数据库连接
+
+	string strSQL="";
+	strSQL = "SELECT * FROM t_chain_tip  ";
+	ExcuteSQL(pDBConn, &CallGetTipBlockHash, strSQL, (void *)(pBlockHash));
+	return 0;
 }
