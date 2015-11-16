@@ -476,9 +476,12 @@ void  CSendRecord::OnShowPagePool(int page)
 		}else
 		{
 			reward =strprintf("%.4f",const_it.amount);
+			time_t timeout =const_it.recv_time+500*60; 
+			SYSTEMTIME curTimeOut =UiFun::Time_tToSystemTime(timeout);
+			time =strprintf("%02d:%02d:%02d",curTimeOut.wHour, curTimeOut.wMinute, curTimeOut.wSecond);
 			if (const_it.state == 0 &&(500 + const_it.height)> theApp.blocktipheight&& theApp.IsSyncBlock )
 			{
-				m_listBox.SetIndexString(i , const_it.left_addr.c_str(), const_it.right_addr.c_str(),SendTime.c_str(),_T("--"), result.c_str(),_T("--"),reward.c_str(),_T(""),UiFun::UI_LoadString("COMM_MODULE" , "COMM_MISSED" ,theApp.gsLanguage),const_it.tx_hash.c_str());
+				m_listBox.SetIndexString(i , const_it.left_addr.c_str(), const_it.right_addr.c_str(),SendTime.c_str(),_T("--"), result.c_str(),_T("--"),reward.c_str(),time.c_str(),UiFun::UI_LoadString("COMM_MODULE" , "COMM_MISSED" ,theApp.gsLanguage),const_it.tx_hash.c_str());
 			}else if(theApp.IsSyncBlock&&const_it.height !=0 && (500 + const_it.height)< theApp.blocktipheight){
 				m_listBox.SetIndexString(i , const_it.left_addr.c_str(), const_it.right_addr.c_str(),SendTime.c_str(),_T("--"), result.c_str(),_T("--"),reward.c_str(),_T(""),UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIMEOUT" ,theApp.gsLanguage),const_it.tx_hash.c_str());
 			}else

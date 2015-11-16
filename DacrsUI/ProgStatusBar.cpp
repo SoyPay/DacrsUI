@@ -270,7 +270,6 @@ int CProgStatusBar::ShowProgressCtrl(){
 	//设置进度条的值
 	m_progress.SetPos(setpos);
 	CString strText;
-	//strText.AppendFormat("%s ~%d %s",UiFun::UI_LoadString("PROGSTATUS_MODULE"  , "PROGSTATUS_SURPLUS",theApp.gsLanguage ) , pBlockchanged.tips-pBlockchanged.high ,UiFun::UI_LoadString("PROGSTATUS_MODULE"  , "PROGSTATUS_SYNLOCAL",theApp.gsLanguage ));
 	strText.AppendFormat("%s ~%d", UiFun::UI_LoadString("PROGSTATUS_MODULE"  , "PROGSTATUS_SURPLUS",theApp.gsLanguage ) , pBlockchanged.tips-pBlockchanged.high);
 	strText.AppendFormat(" %s",UiFun::UI_LoadString("PROGSTATUS_MODULE"  , "PROGSTATUS_SYNLOCAL",theApp.gsLanguage ));
 	m_progress.SetDefinedStr(strText);
@@ -301,7 +300,12 @@ int CProgStatusBar::ShowProgressCtrl(){
 		if ( NULL != m_ProgressWnd ) {
 			m_ProgressWnd->ShowWindow(SW_HIDE) ;
 		}
-		m_prosshiden = !m_prosshiden ;
+		if (m_prosshiden == false)
+		{
+			m_prosshiden =true;
+		}else{
+			m_prosshiden =false;
+		}
 	}
 
 	if (m_walletui && m_prosshiden)
