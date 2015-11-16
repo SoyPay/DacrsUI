@@ -56,7 +56,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <OutputFile>..\bin\DacrsUI.exe</OutputFile>
+      <OutputFile>D:\cppwork\dacrs_app\Guarantee_view\dacrs_ui_test\DacrsUI.exe</OutputFile>
       <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>
       </AdditionalDependencies>
@@ -370,6 +370,7 @@
     <ClInclude Include="SendRedPacketRecord.h" />
     <ClInclude Include="SetAppFee.h" />
     <ClInclude Include="SetAppId.h" />
+    <ClInclude Include="SetAutoSendp2p.h" />
     <ClInclude Include="Subclass.h" />
     <ClInclude Include="TabCtrl.h" />
     <ClInclude Include="TxDetailDlg.h" />
@@ -511,6 +512,7 @@
     <ClCompile Include="SendRedPacketRecord.cpp" />
     <ClCompile Include="SetAppFee.cpp" />
     <ClCompile Include="SetAppId.cpp" />
+    <ClCompile Include="SetAutoSendp2p.cpp" />
     <ClCompile Include="ShadeButtonST.cpp" />
     <ClCompile Include="SignAccountsDlg.cpp" />
     <ClCompile Include="SplashThread.cpp" />

@@ -52,7 +52,7 @@ public:
 	afx_msg void OnPaint();
 	CRect  m_bmpsig;
 	bool   m_walletui;
-	bool   m_prosshiden;
+	bool   m_prosshiden;    /// false 出现进度条 true 不显示进度条
 	CRect  m_bmplock;
 	CString netStr;
 	int  m_connectCount;

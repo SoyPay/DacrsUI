@@ -71,6 +71,8 @@ public:
 	CShadeButtonST         m_rBtnUp;
 	CShadeButtonST         m_rBtnNext;
 	CShadeButtonST         m_rbCancelOrder;
+	CShadeButtonST         m_rbSetAtuoBet;
+	CShadeButtonST         m_rbCancelAtuoBet;
 
 	CBetPoolListBox            m_BonusListBox;
 	//CRecordListBox         m_RecordListBox;
@@ -115,5 +117,12 @@ private:
 	uistruct::P2PLIST     m_PoolList;
 	CCTabCtrl             m_tab;
 	CMFCLinkCtrl          *v_linkCtrl;
-
+	bool                  is_atuosendbet;   //// false  不自动发单 true 自动发单
+	string                m_sendbethash;
+	INT64                 m_acceptmoney;       /// 接单的百分比
+	INT64                 m_sendbetmoney;  /// 发单金额
+public:
+	afx_msg void OnBnClickedSetautobet();
+	void  AutoSendClinetBet();
+	afx_msg void OnBnClickedCancelautobet();
 };
