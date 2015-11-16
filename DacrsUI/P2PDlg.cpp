@@ -11,6 +11,7 @@
 #include "RpcCmd.h"
 #include "CommonAddr.h"
 #include "P2pTip.h"
+#include "SetAutoSendp2p.h"
 
 #define OUT_HEIGHT  60
 
@@ -27,6 +28,10 @@ CP2PDlg::CP2PDlg()
 	m_PoolList.clear();
 	m_pagesize = 5;
 	v_linkCtrl = NULL;
+	is_atuosendbet = false;   //// false  不自动发单 true 自动发单
+	m_sendbethash = "";
+	m_acceptmoney = 0.0;       /// 接单的百分比
+	m_sendbetmoney =0;
 }
 
 CP2PDlg::~CP2PDlg()
@@ -72,6 +77,8 @@ void CP2PDlg::DoDataExchange(CDataExchange* pDX)
 	
 
 	DDX_Control(pDX, IDC_BUTTON_SETADDR, m_rBtnSetCommonAddr);
+	DDX_Control(pDX, IDC_SETAUTOBET, m_rbSetAtuoBet);
+	DDX_Control(pDX, IDC_CANCELAUTOBET, m_rbCancelAtuoBet);
 }
 
 
@@ -97,6 +104,8 @@ BEGIN_MESSAGE_MAP(CP2PDlg, CDialogBar)
 	ON_LBN_DBLCLK(IDC_LIST_BONUS, &CP2PDlg::OnLbnDblclkListBonus)
 	ON_BN_CLICKED(IDC_CANCELORDE, &CP2PDlg::OnBnClickedCancelorde)
 	ON_BN_CLICKED(IDC_BUTTON_SETADDR, &CP2PDlg::OnBnClickedButtonSetaddr)
+	ON_BN_CLICKED(IDC_SETAUTOBET, &CP2PDlg::OnBnClickedSetautobet)
+	ON_BN_CLICKED(IDC_CANCELAUTOBET, &CP2PDlg::OnBnClickedCancelautobet)
 END_MESSAGE_MAP()
 
 
@@ -274,6 +283,24 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		m_rbCancelOrder.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(41, 57, 85));
 		m_rbCancelOrder.SizeToContent();
 
+		m_rbSetAtuoBet.SetBitmaps( IDB_BITMAP_WINERLOUSER , RGB(255, 255, 0) , IDB_BITMAP_WINERLOUSER , RGB(255, 255, 255) );
+		m_rbSetAtuoBet.SetWindowText(UiFun::UI_LoadString("P2P_MODULE" , "P2P_BET_AUTO_SENDBET" ,theApp.gsLanguage));
+		m_rbSetAtuoBet.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+		m_rbSetAtuoBet.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(41, 57, 85));
+		m_rbSetAtuoBet.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(41, 57, 85));
+		m_rbSetAtuoBet.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(41, 57, 85));
+		m_rbSetAtuoBet.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(41, 57, 85));
+		m_rbSetAtuoBet.SizeToContent();
+
+		m_rbCancelAtuoBet.SetBitmaps( IDB_BITMAP_WINERLOUSER , RGB(255, 255, 0) , IDB_BITMAP_WINERLOUSER , RGB(255, 255, 255) );
+		m_rbCancelAtuoBet.SetWindowText(UiFun::UI_LoadString("P2P_MODULE" , "P2P_BET_CANCEL_SENDBET" ,theApp.gsLanguage));
+		m_rbCancelAtuoBet.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
+		m_rbCancelAtuoBet.SetColor(CButtonST::BTNST_COLOR_FG_OUT , RGB(41, 57, 85));
+		m_rbCancelAtuoBet.SetColor(CButtonST::BTNST_COLOR_FG_IN , RGB(41, 57, 85));
+		m_rbCancelAtuoBet.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(41, 57, 85));
+		m_rbCancelAtuoBet.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(41, 57, 85));
+		m_rbCancelAtuoBet.SizeToContent();
+
 
 		m_rBtnSetCommonAddr.SetBitmaps( IDB_BITMAP_P2PBUTTON_2 , RGB(255, 255, 0) , IDB_BITMAP_P2PBUTTON_2 , RGB(255, 255, 255) );
 		m_rBtnSetCommonAddr.SetAlign(CButtonST::ST_ALIGN_OVERLAP);
@@ -325,6 +352,7 @@ BOOL CP2PDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		theApp.SubscribeMsg( theApp.GetMtHthrdId() , GetSafeHwnd() , MSG_USER_P2P_UI ) ;
 		theApp.SubscribeMsg( theApp.GetMtHthrdId() , GetSafeHwnd() , MSG_USER_P2PADDRES ) ;
 
+//		m_rbCancelAtuoBet.ShowWindow(SW_HIDE);
 		/// 设置定时器刷新界面 一分钟
 		//SetTimer(1,30000,NULL);
 		SetTimer(1,40000,NULL);
@@ -496,12 +524,27 @@ void CP2PDlg::OnSize(UINT nType, int cx, int cy)
 			pst->SetWindowPos( NULL ,(rc.Width()/100)*51 ,  (rc.Height()/100)*59,  30 ,20 , SWP_SHOWWINDOW ) ; 
 		}
 		pst = GetDlgItem( IDC_CANCELORDE ) ;
+		int ctrlwith =0;
 		if ( NULL != pst ) {
 			CRect rect ;
 			pst->GetClientRect( rect ) ;
 			pst->SetWindowPos( NULL ,440 , 270 ,rect.Width() ,rect.Height(), SWP_SHOWWINDOW ) ; 
+			ctrlwith=rect.Width();
 		}
 
+		pst = GetDlgItem( IDC_SETAUTOBET ) ;
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,440-ctrlwith, 270 ,rect.Width() ,rect.Height(), SWP_SHOWWINDOW ) ; 
+		}
+
+		//pst = GetDlgItem( IDC_CANCELAUTOBET ) ;
+		//if ( NULL != pst ) {
+		//	CRect rect ;
+		//	pst->GetClientRect( rect ) ;
+		//	pst->SetWindowPos( NULL ,440-ctrlwith, 270 ,rect.Width() ,rect.Height(), SWP_SHOWWINDOW ) ; 
+		//}
 	}
 }
 
@@ -1710,6 +1753,7 @@ void CP2PDlg::AcceptBet(CString hash,INT64 money,CString sendaddr,int timeout,IN
 	 case 1:
 		 OnBnClickedButtonRefresh2();
 		 OnBnClickedButtonRefresh1();
+		 AutoSendClinetBet();
 		 //AutoSendBet();
 		 break;
 	 default:
@@ -2444,4 +2488,203 @@ void CP2PDlg::OnBnClickedButtonSetaddr()
 	// TODO: 在此添加控件通知处理程序代码
 	CCommonAddr addDlg(UI_SENDP2P_RECORD);
 	addDlg.DoModal() ;
+}
+
+
+void CP2PDlg::OnBnClickedSetautobet()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CSetAutoSendp2p dlg;
+	if (dlg.DoModal()==IDOK)
+	{
+		is_atuosendbet = true;   //// false  不自动发单 true 自动发单
+		string mony,perenct;
+		dlg.GetSendBetParam(mony,perenct);
+
+		m_sendbetmoney = (INT64)REAL_MONEY(strtod(mony.c_str(),NULL)) ;
+
+		double dpecent = (atoi(perenct.c_str())*1.0)/100;
+		m_acceptmoney = (INT64)m_sendbetmoney*dpecent;
+
+		m_rbSetAtuoBet.ShowWindow(SW_HIDE);
+		m_rbCancelAtuoBet.ShowWindow(SW_SHOW);
+
+		CRect rect ;
+		m_rbCancelAtuoBet.GetClientRect(rect);
+
+		m_rbCancelAtuoBet.SetWindowPos(NULL ,350-13 , 270 ,rect.Width() , rect.Height() , SWP_SHOWWINDOW); 
+	}
+
+}
+
+void  CP2PDlg::AutoSendClinetBet()
+{
+	if (theApp.IsSyncBlock == 0 )
+	{
+		return;
+	}
+	if (!is_atuosendbet)
+	{
+		return;
+	}
+	int count = m_addrbook.GetCount();
+	if (count ==0)
+	{
+		return;
+	}
+	string conditon;
+	conditon = strprintf("tx_hash ='%s'", m_sendbethash );
+	uistruct::P2P_QUIZ_RECORD_t pPoolItem;
+	theApp.m_SqliteDeal.GetP2PQuizRecordItem(conditon ,&pPoolItem ) ;
+	/// 第一次发单或者上一次发的单以及开奖了 或者超时了
+	if (pPoolItem.tx_hash.length()!=0 && (pPoolItem.state==2|| (pPoolItem.height!=0&&(pPoolItem.height+pPoolItem.time_out<=theApp.blocktipheight))))
+	{
+		m_sendbethash ="";
+	}
+	if (m_sendbethash != "")
+	{
+		return;
+	}
+	static int lastrandom = 0 ;
+
+
+	CTime t1( 1980, 3, 19, 22, 15, 0 );
+
+	CTime t = CTime::GetCurrentTime();
+
+	CTimeSpan span=t-t1; //计算当前系统时间与时间t1的间隔
+
+	srand(span.GetTotalSeconds()+theApp.blocktipheight+lastrandom);
+
+	lastrandom = rand()%count;
+	CString addr;
+	m_addrbook.GetLBText(lastrandom,addr);
+
+	CString strMoney;
+	((CStatic*)GetDlgItem(IDC_STATIC_BALANCE))->GetWindowText(strMoney);
+	double balance =strtod(strMoney,NULL);
+	double dsendmoney = (m_sendbetmoney*1.0)/COIN;
+	if (dsendmoney > balance)
+	{
+		return ;
+	}
+
+	int rewardnum =(rand()%2+1);
+	//// 查询地址是否激活
+	CString strCond;
+
+	char strTemp[34];
+	memset(strTemp , 0 , 34 );
+	memcpy(strTemp , UiFun::Rnd32() , 32 );
+	strTemp[32] =rewardnum ;
+
+
+	string temp(strTemp,strTemp+33);
+	int aa = temp.length() ;
+	string strCommand;
+	strCommand = strprintf("%s %s","gethash" , strTemp );
+	string strShowData ;
+
+	CSoyPayHelp::getInstance()->SendRpc(strCommand,strShowData);
+	int pos = strShowData.find("hash");
+	if ( pos < 0 ) return ;
+
+	Json::Reader reader;  
+	Json::Value root; 
+	if (!reader.parse(strShowData, root)) 
+		return  ;
+
+	string  strHash = root["hash"].asString() ;
+
+	string strContractData;
+	string strRamdHash = CSoyPayHelp::getInstance()->GetReverseHash(strHash);
+
+
+	strContractData = m_P2PBetHelp.PacketP2PSendContract(m_sendbetmoney,OUT_HEIGHT ,strRamdHash ,m_acceptmoney);
+
+	INT64 strTxFee = theApp.m_P2PBetCfg.SendBetFee;
+	if (  strTxFee < 10000  ) {
+		//::MessageBox( this->GetSafeHwnd() ,UiFun::UI_LoadString("P2P_MODULE" , "P2P_TIP_INSU" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) , MB_ICONINFORMATION ) ;
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_TIP_INSU" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
+		return ;
+	}
+
+	string strData = CSoyPayHelp::getInstance()->CreateContractTx( theApp.m_betScritptid,addr.GetString(),strContractData,0,strTxFee,0);
+	strShowData = "";
+	CSoyPayHelp::getInstance()->SendContacrRpc(strData.c_str(),strShowData);
+	if (strShowData == "")
+	{
+		return;
+	}
+	if (!reader.parse(strShowData, root)) 
+		return  ;
+	BOOL bRes = FALSE ;
+	CString strTip;
+	pos = strShowData.find("hash");
+
+	if ( pos >=0 ) {
+		//插入到交易记录数据库
+		string strHash = root["hash"].asString();
+		CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_REVTRANSACTION);
+		postmsg.SetData(strHash);
+		theApp.m_MsgQueue.push(postmsg);
+	}
+
+	if ( pos >=0 ) {
+		bRes = TRUE ;
+		//strTip.Format( _T("恭喜发送赌约成功!\n%s") , root["hash"].asCString() ) ;
+		strTip.Format( UiFun::UI_LoadString("P2P_MODULE" , "P2P_WITHDRAWALS_SEND_SUCCESS" ,theApp.gsLanguage)) ;
+	}else{
+		strTip.Format( UiFun::UI_LoadString("P2P_MODULE" , "P2P_SEND_BET_FAIL" ,theApp.gsLanguage) ) ;
+	}
+
+	//// 保存发单的hash
+	m_sendbethash = root["hash"].asString();
+
+	//保存到数据库
+	if ( bRes ) {
+		uistruct::P2P_QUIZ_RECORD_t p2pbetrecord ;
+		memset(&p2pbetrecord , 0 , sizeof(uistruct::P2P_QUIZ_RECORD_t));
+		SYSTEMTIME curTime ;
+		memset( &curTime , 0 , sizeof(SYSTEMTIME) ) ;
+		GetLocalTime( &curTime ) ;
+		string strSendTime;
+		strSendTime= strprintf("%04d-%02d-%02d %02d:%02d:%02d",curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
+		p2pbetrecord.send_time = UiFun::SystemTimeToTimet(curTime);
+		p2pbetrecord.time_out  = OUT_HEIGHT ;
+		p2pbetrecord.tx_hash = root["hash"].asString();
+		p2pbetrecord.left_addr = strprintf("%s",addr);
+		p2pbetrecord.amount = dsendmoney ;
+		memcpy(p2pbetrecord.content ,strTemp , sizeof(p2pbetrecord.content));
+
+		p2pbetrecord.actor  = 0 ;
+		p2pbetrecord.state  = 0 ;
+		//插入到数据库
+		string strSourceData;
+		strSourceData = strprintf("'%s','%s','%d','%s' , '%s' , '%s' , '%lf'" , \
+			strSendTime.c_str() , _T("") , p2pbetrecord.time_out , \
+			p2pbetrecord.tx_hash.c_str() ,  p2pbetrecord.left_addr.c_str() , p2pbetrecord.right_addr.c_str() ,p2pbetrecord.amount);
+
+		strSourceData += strprintf(",'%s' ,'%d','%d','%d','%d','%s','%d'",p2pbetrecord.content ,p2pbetrecord.actor ,p2pbetrecord.confirmed ,p2pbetrecord.height ,p2pbetrecord.state ,\
+			p2pbetrecord.relate_hash.c_str() ,p2pbetrecord.guess_num ) ;
+
+		strSourceData += strprintf(" ,'%d'",p2pbetrecord.deleteflag);
+		strSourceData += strprintf(" ,'%lf'",(m_acceptmoney*1.0)/COIN);
+		uistruct::DATABASEINFO_t   pDatabase;
+		pDatabase.strSource = strSourceData;
+		pDatabase.strTabName =  _T("t_p2p_quiz");
+		CPostMsg postmsg(MSG_USER_INSERT_DATA,0);
+		string strTemp = pDatabase.ToJson();
+
+		postmsg.SetData(strTemp);
+		theApp.m_MsgQueue.push(postmsg);
+	}
+}
+
+void CP2PDlg::OnBnClickedCancelautobet()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	is_atuosendbet = true; 
+	m_rbSetAtuoBet.ShowWindow(SW_SHOW);
+	m_rbCancelAtuoBet.ShowWindow(SW_HIDE);
 }

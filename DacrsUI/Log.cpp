@@ -136,7 +136,7 @@ int LogFilePreProcess(const char *path, size_t len, FILE** stream)
         FILE *fileout = NULL;
         fclose(*stream);
 
-		char bkFile[50] = {0};
+		char bkFile[1024] = {0};
 		sprintf(bkFile, "%sbak", path);
         rename(path, bkFile);  //原文件重命名
 		fileout = fopen(path, "a");   //重新打开， 类似于删除文件.

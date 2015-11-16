@@ -277,6 +277,9 @@
     <ClCompile Include="DisplayApp.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="SetAutoSendp2p.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BmpBtn.h">
@@ -610,6 +613,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="DisplayApp.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SetAutoSendp2p.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
