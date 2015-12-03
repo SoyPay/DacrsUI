@@ -2512,7 +2512,9 @@ void CP2PDlg::OnBnClickedSetautobet()
 		CRect rect ;
 		m_rbCancelAtuoBet.GetClientRect(rect);
 
-		m_rbCancelAtuoBet.SetWindowPos(NULL ,350-13 , 270 ,rect.Width() , rect.Height() , SWP_SHOWWINDOW); 
+		m_rbCancelAtuoBet.SetWindowPos(NULL ,350-13 , 270 ,rect.Width() , rect.Height() , SWP_SHOWWINDOW);
+		string strShow ="自动发单已设置成功,请确保账户ID中有足够的金额";
+		UiFun::MessageBoxEx(strShow.c_str()  , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 	}
 
 }
