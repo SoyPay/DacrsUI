@@ -528,6 +528,7 @@ namespace uistruct {
 		int     guess;
 		int     state;
 		INT64   nAcceptMoney;
+		int    award_rate;
 		string ToJson(){
 			Json::Value root;
 			root["hash"] = hash;
