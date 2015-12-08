@@ -1687,12 +1687,13 @@ void CP2PDlg::AcceptBet(CString hash,INT64 money,CString sendaddr,int timeout,IN
 	 {
 		 uistruct::LISTP2POOL_T const_it = m_PoolList.at(k);
 
-		 double dmoney = (const_it.nPayMoney*1.0)/COIN;
+		 double dmoney = (const_it.nAcceptMoney*1.0)/COIN;
 		 money =strprintf("%.4f",dmoney);
 	
 		 strmoney =strprintf("%.8f",dmoney);
 
-		 acceptmoney =strprintf("%.4f",(const_it.nAcceptMoney*1.0)/COIN);
+		 int returnward= (const_it.nPayMoney*1.0/const_it.nAcceptMoney)*100;
+		 acceptmoney =strprintf("%d",returnward)+"%";
 		 temp = const_it.hash.substr(0,6);
 		 line = temp;
 
@@ -1754,7 +1755,7 @@ void CP2PDlg::AcceptBet(CString hash,INT64 money,CString sendaddr,int timeout,IN
 		 OnBnClickedButtonRefresh2();
 		 OnBnClickedButtonRefresh1();
 		 AutoSendClinetBet();
-		 //AutoSendBet();
+		// AutoSendBet();
 		 break;
 	 default:
 		 break;
@@ -2400,7 +2401,7 @@ void CP2PDlg::ReadP2pPoolFromDB()
 	if (theApp.m_readQuizPool)
 	{
 		m_PoolList.clear();
-		theApp.m_SqliteDeal.GetP2PQuizPoolList(_T(" state =0 order by total_amount desc"), &m_PoolList);
+		theApp.m_SqliteDeal.GetP2PQuizPoolList(_T(" state =0 order by award_rate desc"), &m_PoolList);
 		theApp.m_readQuizPool = false;
 	}
 	OnListPool();	
@@ -2501,10 +2502,10 @@ void CP2PDlg::OnBnClickedSetautobet()
 		string mony,perenct;
 		dlg.GetSendBetParam(mony,perenct);
 
-		m_sendbetmoney = (INT64)REAL_MONEY(strtod(mony.c_str(),NULL)) ;
+		m_acceptmoney= (INT64)REAL_MONEY(strtod(mony.c_str(),NULL)) ;
 
 		double dpecent = (atoi(perenct.c_str())*1.0)/100;
-		m_acceptmoney = (INT64)m_sendbetmoney*dpecent;
+		m_sendbetmoney = (INT64)m_acceptmoney*dpecent;
 
 		m_rbSetAtuoBet.ShowWindow(SW_HIDE);
 		m_rbCancelAtuoBet.ShowWindow(SW_SHOW);
@@ -2686,7 +2687,7 @@ void  CP2PDlg::AutoSendClinetBet()
 void CP2PDlg::OnBnClickedCancelautobet()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	is_atuosendbet = true; 
+	is_atuosendbet = false; 
 	m_rbSetAtuoBet.ShowWindow(SW_SHOW);
 	m_rbCancelAtuoBet.ShowWindow(SW_HIDE);
 }

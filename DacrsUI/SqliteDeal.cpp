@@ -128,31 +128,23 @@ BOOL CSqliteDeal::InitializationDB(){
 	strCondition = _T("type='table' and name='t_quiz_pool'");
 	if(!GetTableCountItem(strTableName, strCondition))
 	{
-		string createSQL="CREATE TABLE t_quiz_pool(hash TEXT PRIMARY KEY,send_acct_id TEXT,total_amount INT,accetp_amount INT,height INT,acceptid TEXT,accepthash TEXT,guess INT,state INT)";
+		string createSQL="CREATE TABLE t_quiz_pool(hash TEXT PRIMARY KEY,send_acct_id TEXT,total_amount INT,accetp_amount INT,height INT,acceptid TEXT,accepthash TEXT,guess INT,state INT,award_rate INT)";
 		if(!ExcuteSQL(pDBConn, NULL, createSQL, NULL))
 		{
 			LogPrint("INFO", "Create table t_p2p_quiz failed\n");
 			return FALSE;
 		}
-	}else if (!IsExistField(_T("t_quiz_pool"),_T("acceptid"),_T("1=1")))
+	}else if (!IsExistField(_T("t_quiz_pool"),_T("award_rate"),_T("1=1")))
 	{
 		DeleteTable(_T("t_quiz_pool"));
-		string createSQL="CREATE TABLE t_quiz_pool(hash TEXT PRIMARY KEY,send_acct_id TEXT,total_amount INT,accetp_amount INT,height INT,acceptid TEXT,accepthash TEXT,guess INT,state INT)";
-		if(!ExcuteSQL(pDBConn, NULL, createSQL, NULL))
-		{
-			LogPrint("INFO", "Create table t_quiz_pool failed\n");
-			return FALSE;
-		}
-	}else if(!IsExistField(_T("t_quiz_pool"),_T("accetp_amount"),_T("1=1")))
-	{
-		DeleteTable(_T("t_quiz_pool"));
-		string createSQL="CREATE TABLE t_quiz_pool(hash TEXT PRIMARY KEY,send_acct_id TEXT,total_amount INT,accetp_amount INT,height INT,acceptid TEXT,accepthash TEXT,guess INT,state INT)";
+		string createSQL="CREATE TABLE t_quiz_pool(hash TEXT PRIMARY KEY,send_acct_id TEXT,total_amount INT,accetp_amount INT,height INT,acceptid TEXT,accepthash TEXT,guess INT,state INT,award_rate INT)";
 		if(!ExcuteSQL(pDBConn, NULL, createSQL, NULL))
 		{
 			LogPrint("INFO", "Create table t_quiz_pool failed\n");
 			return FALSE;
 		}
 	}
+	
 
 	strCondition = "type='table' and name='t_transaction'";
 	if(!GetTableCountItem(strTableName, strCondition))
@@ -464,7 +456,7 @@ int CallGetP2PQuizPoolItem(void *para, int n_column, char ** column_value, char 
 	uistruct::LISTP2POOL_T* pPoolInfo = (uistruct::LISTP2POOL_T*)para;
 	if(NULL == column_value[0])
 		return -1;
-	if(n_column != 9)
+	if(n_column != 10)
 		return -1;
 	string strValue ;
 	strValue = strprintf("%s" , column_value[0]) ;
@@ -482,6 +474,7 @@ int CallGetP2PQuizPoolItem(void *para, int n_column, char ** column_value, char 
 	pPoolInfo->accepthash = strprintf("%s" , column_value[6] ) ;
 	pPoolInfo->guess =atoi(column_value[7]);
 	pPoolInfo->state = atoi(column_value[8]);
+	pPoolInfo->acceptid= atoi(column_value[9]);
 	return 0;
 }
 //获取quiz pool列表

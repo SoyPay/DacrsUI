@@ -92,9 +92,9 @@ void CDacrsUIApp::UpdateQuizPoolData()
 
 					}
 					
-
+					int returnward= (DBbet.money*1.0/DBbet.accept_money)*100;
 					string strSourceData;
-					strSourceData=strprintf("'%s' , '%s',%ld,%ld,%d,'%s','%s',%d,%d" , strTemp.c_str(), regid.c_str(),DBbet.money,DBbet.accept_money,DBbet.hight,acceptid,accepthash,DBbet.acceptebetdata,DBbet.betstate);
+					strSourceData=strprintf("'%s' , '%s',%ld,%ld,%d,'%s','%s',%d,%d,%d" , strTemp.c_str(), regid.c_str(),DBbet.money,DBbet.accept_money,DBbet.hight,acceptid,accepthash,DBbet.acceptebetdata,DBbet.betstate,returnward);
 					m_SqliteDeal.InsertTableItem(_T("t_quiz_pool") ,strSourceData);
 				}
 			}
