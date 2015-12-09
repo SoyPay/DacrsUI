@@ -96,13 +96,13 @@ BOOL CP2pTip::OnInitDialog()
 	m_Edit.SetLimitText(3);
 
 	m_tips.SetWindowText(m_strtips);
-	m_set.SetWindowText(UiFun::UI_LoadString("P2P_MODULE" , "P2P_SET_ACCEPTAMOUNT" ,theApp.gsLanguage)+":");
+	m_set.SetWindowText(UiFun::UI_LoadString("P2P_MODULE" , "P2P_SET_RETURNPEE" ,theApp.gsLanguage)+":");
 
 	GetDlgItem(IDC_PERCENT)->SetWindowText(m_percentage);
 	double percent = (atoi(m_percentage)*1.0)/100;
 
 	double money = strtod(m_money,NULL)*percent;
-	string strTemp = strprintf("%.4f",money);
+	string strTemp = strprintf("冻结:%.4f",money);
 	GetDlgItem(IDC_GETAMOUNT)->SetWindowText(strTemp.c_str());
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE
@@ -138,9 +138,9 @@ void CP2pTip::OnBnClickedOk()
 		return ;
 	}
 
-	if (atoi(strTxMoney)<=0 || atoi(strTxMoney)>=110||!IsAllDigtal(strTxMoney))
+	if (atoi(strTxMoney)<=90 || atoi(strTxMoney)>=200||!IsAllDigtal(strTxMoney))
 	{
-		string error=UiFun::UI_LoadString("SETAPPID" , "SETAPPFEE_SETPER" ,theApp.gsLanguage);
+		string error=UiFun::UI_LoadString("SETAPPID" , "P2P_SET_RETURNEVALUE" ,theApp.gsLanguage);
 		UiFun::MessageBoxEx(error.c_str(), UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
@@ -179,7 +179,7 @@ void CP2pTip::OnEnUpdatePercent()
 		double percent = (atoi(num)*1.0)/100;
 
 		double money = strtod(m_money,NULL)*percent;
-		string strMoney = strprintf("%.4f",money);
+		string strMoney = strprintf("冻结:%.4f",money);
 		GetDlgItem(IDC_GETAMOUNT)->SetWindowText(strMoney.c_str());
 		Invalidate();
 	}
