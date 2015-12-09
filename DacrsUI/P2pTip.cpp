@@ -140,7 +140,7 @@ void CP2pTip::OnBnClickedOk()
 
 	if (atoi(strTxMoney)<=90 || atoi(strTxMoney)>=200||!IsAllDigtal(strTxMoney))
 	{
-		string error=UiFun::UI_LoadString("SETAPPID" , "P2P_SET_RETURNEVALUE" ,theApp.gsLanguage);
+		string error=UiFun::UI_LoadString("P2P_MODULE" , "P2P_SET_RETURNEVALUE" ,theApp.gsLanguage);
 		UiFun::MessageBoxEx(error.c_str(), UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
