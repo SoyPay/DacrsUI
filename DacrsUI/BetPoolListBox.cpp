@@ -189,11 +189,11 @@ void CBetPoolListBox::updateListBoxButtonPos()
 
 			  pData->pSta2->SetFont(110, _T("宋体"));				//设置显示字体和大小
 			  pData->pSta2->ShowWindow( SW_SHOW );
-			  pData->pSta2->SetWindowPos(NULL , 180 , pData->nItem*28 +10 , 115 , 25 , SWP_SHOWWINDOW );
+			  pData->pSta2->SetWindowPos(NULL , 190, pData->nItem*28 +10 , 140 , 25 , SWP_SHOWWINDOW );
 
 			  pData->pSta3->SetFont(110, _T("宋体"));				//设置显示字体和大小
 			  pData->pSta3->ShowWindow( SW_SHOW );
-			  pData->pSta3->SetWindowPos(NULL , 310 , pData->nItem*28 +10 , 80 , 25 , SWP_SHOWWINDOW );
+			  pData->pSta3->SetWindowPos(NULL , 330 , pData->nItem*28 +10 , 50 , 25 , SWP_SHOWWINDOW );
 
 			  pData->pBut2->ShowWindow( SW_SHOW );
 			  pData->pBut2->SetWindowPos(NULL , 390 , pData->nItem*28 + 8 , 28 , 21 , SWP_SHOWWINDOW );
