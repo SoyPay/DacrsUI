@@ -68,7 +68,7 @@ void CBetPoolListBox::InsertStr(int iIndex,HWND hMain)
 
 	CStaticTrans *pSta = new CStaticTrans;
 	pSta->Create(_T("") , WS_CHILD | WS_VISIBLE , rcClient, this, ++m_uID) ;
-	pSta->ModifyStyle(SS_LEFT|SS_RIGHT,SS_CENTER,TRUE);
+	pSta->ModifyStyle(SS_LEFT|SS_RIGHT,SS_RIGHT,TRUE);
 	pData->pSta1 = pSta ;
 
 	pData->pSta2 = new CStaticTrans;
@@ -185,18 +185,18 @@ void CBetPoolListBox::updateListBoxButtonPos()
 
 			  pData->pSta1->SetFont(110, _T("宋体"));				//设置显示字体和大小
 			  pData->pSta1->ShowWindow( SW_SHOW );
-			  pData->pSta1->SetWindowPos(NULL , 70 , pData->nItem*28 +10 , 100 , 25 , SWP_SHOWWINDOW );
+			  pData->pSta1->SetWindowPos(NULL , 80 , pData->nItem*28 +10 , 100 , 25 , SWP_SHOWWINDOW );
 
 			  pData->pSta2->SetFont(110, _T("宋体"));				//设置显示字体和大小
 			  pData->pSta2->ShowWindow( SW_SHOW );
-			  pData->pSta2->SetWindowPos(NULL , 170 , pData->nItem*28 +10 , 115 , 25 , SWP_SHOWWINDOW );
+			  pData->pSta2->SetWindowPos(NULL , 180 , pData->nItem*28 +10 , 115 , 25 , SWP_SHOWWINDOW );
 
 			  pData->pSta3->SetFont(110, _T("宋体"));				//设置显示字体和大小
 			  pData->pSta3->ShowWindow( SW_SHOW );
-			  pData->pSta3->SetWindowPos(NULL , 285 , pData->nItem*28 +10 , 115 , 25 , SWP_SHOWWINDOW );
+			  pData->pSta3->SetWindowPos(NULL , 310 , pData->nItem*28 +10 , 80 , 25 , SWP_SHOWWINDOW );
 
 			  pData->pBut2->ShowWindow( SW_SHOW );
-			  pData->pBut2->SetWindowPos(NULL , 400 , pData->nItem*28 + 10 , 28 , 21 , SWP_SHOWWINDOW );
+			  pData->pBut2->SetWindowPos(NULL , 390 , pData->nItem*28 + 8 , 28 , 21 , SWP_SHOWWINDOW );
 		   }
 		   iLine++;
 		}

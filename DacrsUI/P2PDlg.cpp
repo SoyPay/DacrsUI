@@ -980,8 +980,8 @@ void CP2PDlg::SendBet(int rewardnum)
 	{
 		return;
 	}
-	double acceptmoney =strtod(theApp.m_strAddress,NULL);
-	double money = strtod(strTxMoney,NULL);
+	double money =strtod(theApp.m_strAddress,NULL);
+	double  acceptmoney= strtod(strTxMoney,NULL);
 	
     INT64 accept64=(INT64)REAL_MONEY(acceptmoney);
 	INT64 send64=(INT64)REAL_MONEY(money);
@@ -1076,7 +1076,7 @@ void CP2PDlg::SendBet(int rewardnum)
 		p2pbetrecord.time_out  = OUT_HEIGHT ;
 		p2pbetrecord.tx_hash = root["hash"].asString();
 		p2pbetrecord.left_addr = strprintf("%s",addr);
-		p2pbetrecord.amount = strtod(strTxMoney,NULL) ;
+		p2pbetrecord.amount = money ;
 		memcpy(p2pbetrecord.content ,strTemp , sizeof(p2pbetrecord.content));
 
 		p2pbetrecord.actor  = 0 ;
@@ -2401,7 +2401,7 @@ void CP2PDlg::ReadP2pPoolFromDB()
 	if (theApp.m_readQuizPool)
 	{
 		m_PoolList.clear();
-		theApp.m_SqliteDeal.GetP2PQuizPoolList(_T(" state =0 order by award_rate desc"), &m_PoolList);
+		theApp.m_SqliteDeal.GetP2PQuizPoolList(_T(" state =0 order by award_rate desc,accetp_amount desc"), &m_PoolList);
 		theApp.m_readQuizPool = false;
 	}
 	OnListPool();	
