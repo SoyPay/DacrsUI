@@ -512,6 +512,8 @@ void CDacrsUIDlg::OnBnClickedButtonTrad()
 void CDacrsUIDlg::OnBnClickedButtonP2P()
 {
 	ShowDialog(CP2PDlg::IDD) ;
+	//// 刷新赌约池
+	m_pP2PDlg->OnBnClickedButtonRefresh1();
 	ShowStateTip(IDC_BUTTON_P2P);
 }
 //抵押交易
