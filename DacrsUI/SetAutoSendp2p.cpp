@@ -91,7 +91,7 @@ BOOL CSetAutoSendp2p::OnInitDialog()
 	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_FG_FOCUS, RGB(0, 0, 0));
 	m_rBtnCancel.SetColor(CButtonST::BTNST_COLOR_BK_IN, RGB(0, 0, 0));
 	m_rBtnCancel.SizeToContent();
-	m_Edit.SetLimitText(2);
+	m_Edit.SetLimitText(3);
 
 	m_tips.SetWindowText(UiFun::UI_LoadString("P2P_MODULE" , "P2P_BET_SEND_MONEY" ,theApp.gsLanguage)+":");
 	m_set.SetWindowText(UiFun::UI_LoadString("P2P_MODULE" , "P2P_SET_RETURNPEE" ,theApp.gsLanguage)+":");
@@ -136,7 +136,7 @@ void CSetAutoSendp2p::OnBnClickedOk()
 		return ;
 	}
 
-	if (atoi(percentage)<=0 || atoi(percentage)>=100||!IsAllDigtal(percentage))
+	if (atoi(percentage)<=90 || atoi(percentage)>=200||!IsAllDigtal(percentage))
 	{
 		string error=UiFun::UI_LoadString("P2P_MODULE" , "P2P_SET_RETURNEVALUE" ,theApp.gsLanguage);
 		UiFun::MessageBoxEx(error.c_str(), UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
@@ -175,7 +175,7 @@ void CSetAutoSendp2p::OnEnUpdatePercent()
 		double percent = (atoi(num)*1.0)/100;
 
 		double money = strtod(m_money,NULL)*percent;
-		string strMoney = strprintf("%.4f",money);
+		string strMoney = strprintf("¶³½á:%.4f",money);
 		GetDlgItem(IDC_GETAMOUNT)->SetWindowText(strMoney.c_str());
 		Invalidate();
 	}
