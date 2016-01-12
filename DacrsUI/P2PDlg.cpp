@@ -1754,7 +1754,7 @@ void CP2PDlg::AcceptBet(CString hash,INT64 money,CString sendaddr,int timeout,IN
 	 case 1:
 		 OnBnClickedButtonRefresh2();
 		 OnBnClickedButtonRefresh1();
-		 AutoSendClinetBet();
+		AutoSendClinetBet();
 		// AutoSendBet();
 		 break;
 	 default:
@@ -2075,7 +2075,7 @@ void  CP2PDlg::AutoSendBet()
 		double money = strtod(strTxMoney,NULL);
 		CString nTemp;
 		nTemp.Format(_T("%.8f"),money);
-		INT64 acceptmoney = (INT64)REAL_MONEY(strtod(nTemp,NULL))*1.1-1;
+		INT64 acceptmoney = (INT64)REAL_MONEY(strtod(nTemp,NULL))*1.05-1;
 		strContractData = m_P2PBetHelp.PacketP2PSendContract((INT64)REAL_MONEY(strtod(nTemp,NULL)),OUT_HEIGHT ,strRamdHash ,acceptmoney);
 
 		INT64 strTxFee = theApp.m_P2PBetCfg.SendBetFee;

@@ -1187,7 +1187,7 @@ void CDacrsUIApp::PopupContactBalloonTip(uistruct::REVTRANSACTION_t tx,int appty
 				strShow+=strprintf("%s:  %.8f\r\n",UiFun::UI_LoadString("COMM_MODULE" , "COMM_MONEY" ,theApp.gsLanguage),tx.money );
 				strShow+=strprintf("%s:  %s\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_TYPE" ,theApp.gsLanguage),UiFun::UI_LoadString("MORTTARD_MODULE" , "MORTTARD_RECHARGE" ,theApp.gsLanguage) );
 				strShow+=strprintf("%s:  %s\r\n",UiFun::UI_LoadString("RECEIVE_MODULE" , "RECEIVE_ADDRESS" ,theApp.gsLanguage),tx.regid );
-			}else if (vTemp[1] == 0x03 ||vTemp[1] == 0x02 )   /// 提现
+			}else if (vTemp[1] == 0x03 ||vTemp[1] == 0x01 )   /// 提现
 			{
 				SYSTEMTIME curTime =UiFun::Time_tToSystemTime(tx.confirmedtime);
 				strShow += strprintf("%s: %04d-%02d-%02d %02d:%02d:%02d\r\n",UiFun::UI_LoadString("TRAD_MODULE" , "TRAD_OK_TIME" ,theApp.gsLanguage),curTime.wYear, curTime.wMonth, curTime.wDay, curTime.wHour, curTime.wMinute, curTime.wSecond);
