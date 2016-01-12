@@ -493,9 +493,8 @@ BOOL CSendDlg::PreTranslateMessage(MSG* pMsg)
 						string addr = strprintf("%s",message);
 						if(m_mapAddrInfo.count(addr)<=0)
 						{
-							//TRACE("map OnCbnSelchangeCombo1 error");
-							
-							UiFun::MessageBoxEx(UiFun::UI_LoadString("SEND_MODULE" , "SEND_SOPY_ADDR_ERROR" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
+							 MessageBox(UiFun::UI_LoadString("SEND_MODULE" , "SEND_SOPY_ADDR_ERROR" ,theApp.gsLanguage),UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage), MB_OK);
+							//UiFun::MessageBoxEx(UiFun::UI_LoadString("SEND_MODULE" , "SEND_SOPY_ADDR_ERROR" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 						}else{
 							//uistruct::LISTADDR_t te = m_pListaddrInfo[text];
 							CString strshow;
