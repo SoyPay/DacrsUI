@@ -190,7 +190,7 @@ void CIpoCoin::OnBnClickedButtonDrawal()
 	}
 
 	string strCond;
-	strCond = strprintf(" address='%s' ", addr);
+	strCond = strprintf(" address='%s' or  reg_id='%s'", addr,addr);
 	uistruct::LISTADDR_t pAddr;
 	int nItem =  theApp.m_SqliteDeal.GetWalletAddressItem(strCond, &pAddr) ;
 	if (pAddr.address == "")
@@ -210,7 +210,13 @@ void CIpoCoin::OnBnClickedButtonDrawal()
 		UiFun::MessageBoxEx(UiFun::UI_LoadString("IPO_MODULE" , "IPO_MONEY_ADDRESS_NOT" ,theApp.gsLanguage) ,  UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
-	string strContractData = m_P2PBetHelp.GetAppAccountMoneyContract(addr.GetString(),1,2,REAL_MONEY(dmoney));
+	string strContractData ="";
+	if (CheckRegIDValid( addr.GetString() )){
+		strContractData=m_P2PBetHelp.GetAppAccountMoneyContract(addr.GetString(),1,1,REAL_MONEY(dmoney));
+	}else{
+		strContractData=m_P2PBetHelp.GetAppAccountMoneyContract(addr.GetString(),1,2,REAL_MONEY(dmoney));
+	}
+	
 
 	CString strTxFee;
 	INT64 minFee = theApp.m_P2PBetCfg.GetAppAmountnFee; //45266;theApp.m_P2PBetCfg.GetAppAmountnFee

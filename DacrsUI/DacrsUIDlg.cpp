@@ -1347,10 +1347,12 @@ void CDacrsUIDlg:: ImportPrvieKey()
 	ofn.lpstrFile = szFile;
 	ofn.lpstrFile[0] = TEXT('\0'); 
 	ofn.nMaxFile = sizeof(szFile); 
-	ofn.lpstrFilter =  "文本文件(*.smc)\0*.smc\0所有文件(*.*)\0*.*\0\0"; 
-	CString strFormat;
-	strFormat.Format("%s(*.smc)\0*.smc\0%s(*.*)\0*.*\0\0",UiFun::UI_LoadString("DACRSU" , "DACRSU_FILE" ,theApp.gsLanguage),UiFun::UI_LoadString("DACRSU" , "DACRSU_ALLFILE" ,theApp.gsLanguage));
-	ofn.lpstrFilter=strFormat;
+	//CString strFormat;
+	//strFormat.Format("%s(*.smc)\0*.smc\0",UiFun::UI_LoadString("DACRSU" , "DACRSU_FILE" ,theApp.gsLanguage));
+	//strFormat.AppendFormat("%s(*.*)\0*.*\0\0",UiFun::UI_LoadString("DACRSU" , "DACRSU_ALLFILE" ,theApp.gsLanguage));
+
+	//ofn.lpstrFilter =  "文本文件(*.smc)\0*.smc\0所有文件(*.*)\0*.*\0\0"; 
+	ofn.lpstrFilter =  "All Files(*.smc)\0*.smc\0All Files(*.*)\0*.*\0\0"; 
 	ofn.nFilterIndex = 1; 
 	ofn.lpstrFileTitle = NULL; 
 	ofn.nMaxFileTitle = 0; 
