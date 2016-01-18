@@ -2540,7 +2540,9 @@ void  CP2PDlg::AutoSendClinetBet()
 	uistruct::P2P_QUIZ_RECORD_t pPoolItem;
 	theApp.m_SqliteDeal.GetP2PQuizRecordItem(conditon ,&pPoolItem ) ;
 	/// 第一次发单或者上一次发的单以及开奖了 或者超时了
-	if (pPoolItem.tx_hash.length()!=0 && (pPoolItem.state==2|| (pPoolItem.height!=0&&(pPoolItem.height+pPoolItem.time_out<=theApp.blocktipheight))))
+	if (pPoolItem.tx_hash.length()!=0 && (pPoolItem.state==2||                                                                            ///已经开奖
+		(pPoolItem.height!=0&&(pPoolItem.state==0|| pPoolItem.state == 4)&&pPoolItem.height+500<=theApp.blocktipheight)||  ///接单超时
+		(pPoolItem.height!=0&&(pPoolItem.state==1|| pPoolItem.state == 5)&&pPoolItem.height+pPoolItem.time_out<=theApp.blocktipheight)))  /// 开奖超时
 	{
 		m_sendbethash ="";
 	}
