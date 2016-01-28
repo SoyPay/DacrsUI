@@ -1191,10 +1191,10 @@ void CP2PDlg::OnBnClickedButtonWoman()
 		return ;
 	}
 
-	if (strtod(strTxMoney,NULL)<1)
+	if (strtod(strTxMoney,NULL)<100)
 	{
 		
-		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_BET_MONEY_MORE_1" ,theApp.gsLanguage) ,UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("P2P_MODULE" , "P2P_BET_MONEY_MORE_100" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage)  ,MFB_OK|MFB_TIP );
 		return ;
 	}
 
