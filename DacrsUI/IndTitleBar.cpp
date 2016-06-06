@@ -11,7 +11,7 @@
 
 IMPLEMENT_DYNAMIC(CIndTitleBar, CDialogBar)
 
-	CIndTitleBar::CIndTitleBar()
+CIndTitleBar::CIndTitleBar()
 {
 	m_pBmp = NULL ;
 	m_nButtonID = IDC_BUTTON_MAIN_UI ;
