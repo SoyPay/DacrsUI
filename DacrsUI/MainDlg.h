@@ -45,6 +45,7 @@ public:
 	CStaticTrans     m_strOver      ;
 	CStaticTrans     m_strOking     ;
 	CStaticTrans     m_strTranNum   ;
+	//CStaticTrans	 m_strRecvOking;
 
 	CRoundButton     m_rBtnAllTxdetail;
 	CStatic          m_sysWallet;
@@ -71,4 +72,7 @@ private:
 	CMFCLinkCtrl *v_linkCtrl3;
 	CMFCLinkCtrl *v_linkCtrlQQ;
 	CMFCLinkCtrl *v_linkCtrlBlock;
+public:
+	// 接收金额确认add by lbf 2016-06-02
+	
 };

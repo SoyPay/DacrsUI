@@ -165,6 +165,18 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 			TRACE("OnBnClickedSendtrnsfer rpccmd sendtoaddress error");
 			return;
 		}
+
+		/*string strCommand1 = strprintf("%s", "listunconfirmedtx");
+		Json::Value root1;
+		if(!CSoyPayHelp::getInstance()->SendRpc(strCommand1,root1))
+		{
+		TRACE("OnBnClickedSendtrnsfer rpccmd sendtoaddress error");
+		return;
+		}
+
+		string strShowData1 = root1.toStyledString();
+		int pos1 = strShowData1.find("hash");*/
+
 		BOOL bRes = FALSE ;
 		strShowData = root.toStyledString();
 		int pos = strShowData.find("hash");

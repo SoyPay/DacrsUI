@@ -563,6 +563,7 @@ namespace uistruct {
 	typedef struct MINDLG{   
 		string   money ;   //address
 		string   unconfirmmoney ;   //RegID
+		//string   unconfirmrecvmoney; //接收确认
 		string   itemcount;
 		string   addr1;
 		string   addr2;
@@ -572,6 +573,7 @@ namespace uistruct {
 		MINDLG(){
 			money = "" ;   //address
 			unconfirmmoney = "";   //RegID
+			//unconfirmrecvmoney = "";
 			itemcount = "";
 			addr1 = "";
 			addr2 = "";
@@ -583,6 +585,7 @@ namespace uistruct {
 			Json::Value root;
 			root["money"] = money;
 			root["unconfirmmoney"] = unconfirmmoney;
+			//root["unconfirmrecvmoney"] = unconfirmrecvmoney;
 			root["itemcount"] = itemcount;
 			root["addr1"] = addr1;
 			root["addr2"] = addr2;
@@ -599,6 +602,7 @@ namespace uistruct {
 
 			this->money = root["money"].asString();
 			this->unconfirmmoney = root["unconfirmmoney"].asString();
+			//this->unconfirmrecvmoney = root["unconfirmrecvmoney"].asString();
 			this->itemcount = root["itemcount"].asString();
 			this->addr1 = root["addr1"].asString();
 			this->addr2 = root["addr2"].asString();

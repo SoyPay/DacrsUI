@@ -293,7 +293,7 @@ int CDacrsUIDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	// TODO:  在此添加您专用的创建代码
 	SetWindowPos(NULL, 0, 0, 900/*1024*/, 600/*768*/, 0);
-	OnInitMunu();
+	//OnInitMunu();
 
 	//SetWindowLong(m_hWnd,   GWL_STYLE,GetWindowLong(m_hWnd,   GWL_STYLE)   &   
 	//	(~(WS_CAPTION   |   WS_BORDER)));  
@@ -1015,7 +1015,8 @@ void CDacrsUIDlg::ToTray()
 	strcpy_s(nid.szTip,"dacrs"); //信息提示条 
 	Shell_NotifyIcon(NIM_ADD,&nid); //在托盘区添加图标 
 	ShowWindow(SW_HIDE); //隐藏主窗口 
-} 
+}
+
 LRESULT CDacrsUIDlg::OnCloseOpenProcess(WPARAM wParam,LPARAM lParam)
 {
 	delete m_pAddApp;
