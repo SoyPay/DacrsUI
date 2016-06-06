@@ -4,6 +4,8 @@
 #include "ShadeButtonST.h"
 // CReceiveDlg ¶Ô»°¿ò
 
+#define TIMER_RECVTRANSTION 1000
+
 class CReceiveDlg : public CDialogBar
 {
 	DECLARE_DYNAMIC(CReceiveDlg)
@@ -48,4 +50,6 @@ public:
 	void    InsertListCtrlItem();
 	afx_msg void OnNMDblclkListShow(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnNMClickListShow(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
+//	afx_msg void OnDestroy();
 };

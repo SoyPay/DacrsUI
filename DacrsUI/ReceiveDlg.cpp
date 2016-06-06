@@ -49,6 +49,8 @@ BEGIN_MESSAGE_MAP(CReceiveDlg, CDialogBar)
 	ON_WM_ERASEBKGND()
 	ON_NOTIFY(NM_DBLCLK, IDC_LIST_SHOW, &CReceiveDlg::OnNMDblclkListShow)
 	ON_NOTIFY(NM_CLICK, IDC_LIST_SHOW, &CReceiveDlg::OnNMClickListShow)
+	ON_WM_TIMER()
+//	ON_WM_DESTROY()
 END_MESSAGE_MAP()
 
 
@@ -56,8 +58,6 @@ END_MESSAGE_MAP()
 
 void CReceiveDlg::ShowListInfo()
 {
-
-
 	theApp.m_SqliteDeal.GetWalletAddressList(_T(" 1=1 order by reg_id"), &m_MapAddrInfo);
 
 	if ( 0 == m_MapAddrInfo.size() ) return  ;
@@ -116,6 +116,7 @@ void CReceiveDlg::ShowListInfo()
 BOOL CReceiveDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 {
 	// TODO: 在此添加专用代码和/或调用基类
+
 	BOOL bRes =   CDialogBar::Create(pParentWnd, nIDTemplate, nStyle, nID);
 	if (bRes)
 	{
@@ -184,6 +185,7 @@ BOOL CReceiveDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT n
 		}*/
 
 		theApp.SubscribeMsg( theApp.GetMtHthrdId() , GetSafeHwnd() , MSG_USER_RECIVE_UI ) ;
+
 	}
 	return bRes;
 }
@@ -384,6 +386,7 @@ int CReceiveDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	// TODO:  在此添加您专用的创建代码
 	SetBkBmpNid(IDB_BITMAP_RECEIVE);
+	SetTimer(TIMER_RECVTRANSTION, 5000, NULL);
 
 	return 0;
 }
@@ -458,7 +461,6 @@ void   CReceiveDlg::ModifyListCtrlItem()
 	
 			m_listCtrl.SetItemText(i , ++nSubIdx , addr.Label.c_str() ) ;
 			//m_listCtrl.SetItemData(i , (DWORD_PTR)&(*m_pListaddrInfo.rbegin())) ;
-
 
 			m_listCtrl.SetItemText(i , ++nSubIdx , addr.address.c_str() ) ;
 
@@ -632,3 +634,73 @@ void CReceiveDlg::OnNMClickListShow(NMHDR *pNMHDR, LRESULT *pResult)
 	hitCol  =  hitRow  =   - 1 ;
 	*pResult = 0;
 }
+
+
+void CReceiveDlg::OnTimer(UINT_PTR nIDEvent)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+
+	switch(nIDEvent)
+	{
+	case TIMER_RECVTRANSTION:
+		{
+			string strCommand = strprintf("%s", "getrawmempool false");
+			Json::Value root;
+			if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
+			{
+				TRACE("OnBnClickedSendtrnsfer rpccmd sendtoaddress error");
+				break;
+			}
+
+			int nCount = root.size();
+
+			for(int i = 0; i < nCount; i++)
+			{
+				int nItem = 0;
+				int nItem1 = 0;
+				string strHash = root[i].asString();
+
+				string strCond;
+				strCond = strprintf(" hash='%s' ", strHash.c_str());
+				nItem =  theApp.m_SqliteDeal.GetTableCountItem(_T("t_transaction") , strCond) ;
+
+				string strCommand,strShowData;
+				strCommand = strprintf("%s %s",_T("gettxdetail") ,strHash.c_str() );
+				Json::Value root; 
+				if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root))
+				{
+					TRACE("InsertTransaction rpccmd gettxdetail error");
+					return;
+				}
+
+				uistruct::REVTRANSACTION_t transcion;
+				if (transcion.JsonToStruct(root.toStyledString()))
+				{
+					strCond = strprintf(" address='%s' ", transcion.desaddr.c_str());
+					
+					nItem1 = theApp.m_SqliteDeal.GetTableCountItem(_T("t_wallet_address"), strCond);
+				}
+
+				if ( (0 == nItem) && (0 != nItem1)) {
+					CPostMsg postmsg(MSG_USER_GET_UPDATABASE,WM_REVTRANSACTION);
+					postmsg.SetData(strHash);
+					theApp.m_MsgQueue.push(postmsg);
+				}
+			}
+		}
+		break;
+	default:
+		{
+			break;
+		}
+	}
+}
+
+
+//void CReceiveDlg::OnDestroy()
+//{
+//	CDialogBar::OnDestroy();
+//
+//	// TODO: 在此处添加消息处理程序代码
+//	KillTimer(TIMER_RECVTRANSTION);
+//}

@@ -86,7 +86,7 @@ void CMainDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_STATIC_AMOUNT , m_strOver);
 	DDX_Control(pDX, IDC_STATIC_NOTCOF , m_strOking);
 	DDX_Control(pDX, IDC_STATIC_COUNT , m_strTranNum);
-
+	//DDX_Control(pDX, IDC_STATIC_NOTCOF_RECV , m_strRecvOking);
 
 	DDX_Control(pDX, IDC_STATIC_DES1 , m_strDesTx1);
 	DDX_Control(pDX, IDC_STATIC_DES2 , m_strDesTx2);
@@ -155,7 +155,25 @@ void CMainDlg::OnnitCtrlText()
 	}
 
 	string strCond;
-	strCond=" confirm_height = 0 ";
+
+	//add by lbf 2016-06-02
+	//加入接收确认
+	strCond = " confirm_height = 0 and state = 2";
+	
+	dmoney =  theApp.m_SqliteDeal.GetTableItemSum("t_transaction" , _T("money") , strCond) ;
+
+
+	/*if (dmoney<0)
+	{
+		GetDlgItem(IDC_STATIC_NOTCOF_RECV)->SetWindowText(_T("0.0")) ;
+	}else{
+		string strMoney;
+		strMoney = strprintf("%.3lf", dmoney);
+		GetDlgItem(IDC_STATIC_NOTCOF_RECV)->SetWindowText(strMoney.c_str()) ;
+	}*/
+
+	//加入接收确认
+	strCond=" confirm_height = 0 and state = 1";
 
 	dmoney =  theApp.m_SqliteDeal.GetTableItemSum("t_transaction" , _T("money") , strCond) ;
 
@@ -241,6 +259,11 @@ void CMainDlg::SetCtrlText()
 	strMoney = strprintf("%s",maindlg.unconfirmmoney.c_str());
 	strMoney = CSoyPayHelp::getInstance()->DisPlayMoney(strMoney);
 	GetDlgItem(IDC_STATIC_NOTCOF)->SetWindowText(strMoney.c_str());
+
+	/*strMoney = strprintf("%s",maindlg.unconfirmrecvmoney.c_str());
+	strMoney = CSoyPayHelp::getInstance()->DisPlayMoney(strMoney);
+	GetDlgItem(IDC_STATIC_NOTCOF_RECV)->SetWindowText(strMoney.c_str());*/
+
 
 	m_strTranNum.SetWindowText(maindlg.itemcount.c_str()) ;
 
@@ -343,6 +366,7 @@ BOOL CMainDlg::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 		onnitLinkText();
 		m_strOver.SetFont(120, _T("黑体"));
 		m_strOking.SetFont(120, _T("黑体"));
+		//m_strRecvOking.SetFont(120, _T("黑体"));
 		m_strTranNum.SetFont(120, _T("黑体"));
 
 		m_strTrading.SetFont(95, _T("Calibri"));
@@ -395,7 +419,8 @@ int CMainDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	//SetBkBmpNid( IDB_BITMAP_MAINUI_BJ ) ;
 	SetBkBmpNid(UiFun::GetBmpId(IDB_BITMAP_MAINUI_BJ,IDB_BITMAP_MAINUI_BJEN,theApp.language()));
 	m_strOver.SetFont(90, _T("Arial"));				//设置显示字体和大小
-	m_strOking.SetFont(90, _T("Arial"));	   
+	m_strOking.SetFont(90, _T("Arial"));
+	//m_strRecvOking.SetFont(90, _T("Arial"));
 	m_strTranNum.SetFont(90, _T("Arial"));	
 	if (v_linkCtrl == NULL)
 	{
@@ -638,6 +663,8 @@ void CMainDlg::ClearCtrlText()
 
 	GetDlgItem(IDC_STATIC_NOTCOF)->SetWindowText(_T("")) ;
 
+	//GetDlgItem(IDC_STATIC_NOTCOF_RECV)->SetWindowTextA(_T(""));
+
 	m_strTranNum.SetWindowText(_T("")) ;
 
 
@@ -743,6 +770,13 @@ void CMainDlg::OnSize(UINT nType, int cx, int cy)
 			pst->GetClientRect( rect ) ;
 			pst->SetWindowPos( NULL ,(rc.Width()/100)*15 ,(rc.Height()/100)*25+2  , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
 		}
+
+		/*pst = GetDlgItem(IDC_STATIC_NOTCOF_RECV);
+		if ( NULL != pst ) {
+			CRect rect ;
+			pst->GetClientRect( rect ) ;
+			pst->SetWindowPos( NULL ,(rc.Width()/100)*15 ,(rc.Height()/100)*42  , rect.Width(), rect.Height()  ,SWP_SHOWWINDOW ) ; 
+		}*/
 
 		pst = GetDlgItem( IDC_STATIC_COUNT ) ;
 		if ( NULL != pst ) {
@@ -936,3 +970,5 @@ void CMainDlg::SetShowCtrol()
 	GetDlgItem(IDC_STATIC_TARGET4)->ShowWindow(SW_HIDE);
 	GetDlgItem(IDC_STATIC_TARGET5)->ShowWindow(SW_HIDE);*/
 }
+
+

@@ -864,6 +864,17 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 				//string strTemp = Postmsg.GetData();
 				//uistruct::BLOCKCHANGED_t      m_Blockchanged;
 				//m_Blockchanged.JsonToStruct(strTemp.c_str());
+				/*string strCommand1 = strprintf("%s", "listunconfirmedtx");
+				Json::Value root1;
+				if(!CSoyPayHelp::getInstance()->SendRpc(strCommand1,root1))
+				{
+					TRACE("OnBnClickedSendtrnsfer rpccmd sendtoaddress error");
+					break;
+				}
+
+				string strShowData1 = root1.toStyledString();
+				int pos1 = strShowData1.find("hash");*/
+
 				switch(Postmsg.GetDatatype())
 				{
 				case WM_LOCKSTATE:
@@ -881,6 +892,8 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 				default:
 					{
 						TRACE("change:%s\r\n","MSG_USER_UP_PROGRESS");
+
+						//listunconfirmedtx
 						//pUiDemeDlg->m_MsgQueue.ClearMessageType(MSG_USER_UP_PROGRESS);
 						pUiDemeDlg->m_UimsgQueue.push(Postmsg);
 						LogPrint("PROCESSMSG", "MSG_USER_UP_PROGRESS  更新进度条消息:%s\n",Postmsg.GetData().c_str());
@@ -915,7 +928,7 @@ UINT __stdcall CDacrsUIApp::ProcessMsg(LPVOID pParam) {
 			break;
 		case MSG_USER_UPDATA_DATA:   /// 更新数据库
 			{
-					LogPrint("PROCESSMSG", "MSG_USER_UPDATA_DATA 更新数据消息\n");
+				LogPrint("PROCESSMSG", "MSG_USER_UPDATA_DATA 更新数据消息\n");
 				uistruct::DATABASEINFO_t pDatabase;// = (uistruct::DATABASEINFO_t *)Postmsg.GetStrPoint();
 				string strTemp = Postmsg.GetData();
 				pDatabase.JsonToStruct(strTemp);
@@ -1685,19 +1698,29 @@ void CDacrsUIApp::GetMainDlgStruct()
 		maindlg.money = strmoney;
 	}
 
-	string strCond;
-	strCond = " confirm_height = 0 ";
 
-	nmoney =  theApp.m_SqliteDeal.GetTableItemSum(_T("t_transaction") , _T("money") , strCond) ;
+	//在这里进行判断是接收确认还是发送确认
+	string strCond;
+
+	strCond = " confirm_height = 0 and state = 2";
+	double nmoneyRecv =  theApp.m_SqliteDeal.GetTableItemSum(_T("t_transaction") , _T("money") , strCond) ;
+	if (nmoneyRecv <0)
+	{
+		//maindlg.unconfirmrecvmoney = _T("0.0");
+		nmoneyRecv = 0.0;
+	}
+
+	strCond = " confirm_height = 0 and state = 1";					//加入状态判断
+	double nmoneySend =  theApp.m_SqliteDeal.GetTableItemSum(_T("t_transaction") , _T("money") , strCond) ;
 
 	if (nmoney <0)
 	{
-		maindlg.unconfirmmoney = _T("0.0");
-	}else{
-		CString strmoney;
-		strmoney.Format(_T("%.3lf"),nmoney);
-		maindlg.unconfirmmoney = strmoney;
+		nmoneySend = 0.0;
 	}
+
+	CString strmoney;
+	strmoney.Format(_T("%.3lf"),nmoneyRecv - nmoneySend);
+	maindlg.unconfirmmoney = strmoney;
 
 	int nItem =  theApp.m_SqliteDeal.GetTableCountItem(_T("t_transaction"), _T(" 1=1 "));
 

@@ -39,8 +39,8 @@ public:
 	virtual BOOL InitInstance();
 public:
 	UINT          gsLanguage            ;   //语言类型
-	string		  str_InsPath	        ;   
-	string		  str_ModuleFilename	;    
+	string		  str_InsPath	        ;	//应用程序的当前路径 
+	string		  str_ModuleFilename	;   //应用程序的文件名
 	string		  m_ProgressGifFile	;		//进度GIF文件
 	string		  m_ProgressOutGifFile	;	//进度GIF文件
 	void          GetMoFilename( string & path , string & filename ) ;// 获取文件名和路径
@@ -225,7 +225,7 @@ public:
 	string helpurlen;
 	int      m_lockstate;
 private:
-	string  m_sigdacrsclient;
+	string  m_sigdacrsclient;				//encrypt.ini中配置文件数据
 	string  m_singdacrsui;
 	string  m_singdacrs;
 	string  m_singRunBat;
