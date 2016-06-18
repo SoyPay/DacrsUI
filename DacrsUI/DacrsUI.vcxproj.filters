@@ -1,0 +1,1286 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="BmpBtn.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CommonStruct.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DacrsUI.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DacrsUIDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GIFControl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="IndTitleBar.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="IpoDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonConfigHelp.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Language.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MainDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MortgageTardDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="P2PDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ProgStatusBar.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ReceiveDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RoundButton.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RpcCmd.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SendDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SignAccountsDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SqliteDeal.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticTrans.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SynchronousSocket.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="TradDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="UiHead.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMutex.cpp">
+      <Filter>源文件\msg</Filter>
+    </ClCompile>
+    <ClCompile Include="MyQueue.cpp">
+      <Filter>源文件\msg</Filter>
+    </ClCompile>
+    <ClCompile Include="PostMsg.cpp">
+      <Filter>源文件\msg</Filter>
+    </ClCompile>
+    <ClCompile Include="json\json_reader.cpp">
+      <Filter>源文件\json</Filter>
+    </ClCompile>
+    <ClCompile Include="json\json_value.cpp">
+      <Filter>源文件\json</Filter>
+    </ClCompile>
+    <ClCompile Include="json\json_writer.cpp">
+      <Filter>源文件\json</Filter>
+    </ClCompile>
+    <ClCompile Include="CeXDib.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ShadeButtonST.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="BtnST.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="NoUiMsgBuffer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="StartProgress.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SplashThread.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="HeaderCtrlCl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ListCtrlCl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="NewAddressDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="AddApp.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="XProgressCtrl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Out.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="OutGifDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ChangeDPI.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="AddrBook.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="NewSendAddr.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DacrsUIDB.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Log.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="TxDetailDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ButtonEx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="UseListBox.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ReCharge.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GuessNum.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="TabCtrl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="BetRecord.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SendRecord.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RecordListBox.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SendListBox.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SendRedPacketRecord.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="AcceptRedPacketRecord.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RedPacketPoolListBox.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GrabSpecalRedPacket.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GrabCommRedPacket.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RedPacketList.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="NewMenu.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RPCDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="AutoComplete.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Subclass.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SetAppFee.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EncryptWallet.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ChangPassWord.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="WalletPassPhrase.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="IpoCoin.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Reminderdlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="BetInformation.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SetAppId.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="BalloonTip.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="msjexhnd.cpp">
+      <Filter>头文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MessageBoxEx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DialogBase.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CommonAddr.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DlgDocument.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DlgView.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="zip\unzip.cpp">
+      <Filter>源文件\zip</Filter>
+    </ClCompile>
+    <ClCompile Include="zip\zip.cpp">
+      <Filter>源文件\zip</Filter>
+    </ClCompile>
+    <ClCompile Include="ChoseLanguage.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="BetPoolListBox.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="md5.cpp">
+      <Filter>头文件\md5</Filter>
+    </ClCompile>
+    <ClCompile Include="bignum.cpp">
+      <Filter>头文件\md5</Filter>
+    </ClCompile>
+    <ClCompile Include="rsa.cpp">
+      <Filter>头文件\md5</Filter>
+    </ClCompile>
+    <ClCompile Include="P2pTip.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DisplayApp.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SetAutoSendp2p.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BmpBtn.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonStruct.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DacrsUI.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DacrsUIDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GIFControl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="IndTitleBar.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="IpoDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonConfigHelp.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Language.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MainDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MortgageTardDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="P2PDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ProgStatusBar.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="json\reader.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ReceiveDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RoundButton.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RpcCmd.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SendDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SignAccountsDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="sqlite3.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SqliteDeal.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticTrans.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SynchronousSocket.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="TradDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="UiHead.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="json\value.h">
+      <Filter>头文件\json</Filter>
+    </ClInclude>
+    <ClInclude Include="json\version.h">
+      <Filter>头文件\json</Filter>
+    </ClInclude>
+    <ClInclude Include="json\writer.h">
+      <Filter>头文件\json</Filter>
+    </ClInclude>
+    <ClInclude Include="PostMsg.h">
+      <Filter>头文件\msg</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMutex.h">
+      <Filter>头文件\msg</Filter>
+    </ClInclude>
+    <ClInclude Include="MyQueue.h">
+      <Filter>头文件\msg</Filter>
+    </ClInclude>
+    <ClInclude Include="json\json_batchallocator.h">
+      <Filter>头文件\json</Filter>
+    </ClInclude>
+    <ClInclude Include="json\json_tool.h">
+      <Filter>头文件\json</Filter>
+    </ClInclude>
+    <ClInclude Include="json\json.h">
+      <Filter>头文件\json</Filter>
+    </ClInclude>
+    <ClInclude Include="json\forwards.h">
+      <Filter>头文件\json</Filter>
+    </ClInclude>
+    <ClInclude Include="json\features.h">
+      <Filter>头文件\json</Filter>
+    </ClInclude>
+    <ClInclude Include="json\config.h">
+      <Filter>头文件\json</Filter>
+    </ClInclude>
+    <ClInclude Include="json\autolink.h">
+      <Filter>头文件\json</Filter>
+    </ClInclude>
+    <ClInclude Include="json\assertions.h">
+      <Filter>头文件\json</Filter>
+    </ClInclude>
+    <ClInclude Include="CeXDib.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadeButtonST.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BtnST.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="NoUiMsgBuffer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="StartProgress.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SplashThread.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="HeaderCtrlCl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ListCtrlCl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="NewAddressDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="AddApp.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="XProgressCtrl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Out.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="OutGifDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ChangeDPI.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="AddrBook.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="NewSendAddr.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Log.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="TxDetailDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Z:\dacrs_release\dacrs\src\tinyformat.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonEx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="UseListBox.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ReCharge.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GuessNum.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="TabCtrl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BetRecord.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SendRecord.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RecordListBox.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SendListBox.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SendRedPacketRecord.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="AcceptRedPacketRecord.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RedPacketPoolListBox.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GrabSpecalRedPacket.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GrabCommRedPacket.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RedPacketList.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="NewMenu.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RPCDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoComplete.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Subclass.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CApplication.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CWorkbook.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CWorksheet.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CFont0.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CRange.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CWorkbooks.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CWorksheets.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SetAppFee.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EncryptWallet.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ChangPassWord.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="WalletPassPhrase.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="IpoCoin.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Reminderdlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BetInformation.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SetAppId.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BalloonTip.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="msjexhnd.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageBoxEx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DialogBase.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonAddr.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DlgDocument.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DlgView.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="zip\unzip.h">
+      <Filter>头文件\zip</Filter>
+    </ClInclude>
+    <ClInclude Include="zip\zip.h">
+      <Filter>头文件\zip</Filter>
+    </ClInclude>
+    <ClInclude Include="ChoseLanguage.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BetPoolListBox.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="md5.h">
+      <Filter>头文件\md5</Filter>
+    </ClInclude>
+    <ClInclude Include="bignum.h">
+      <Filter>头文件\md5</Filter>
+    </ClInclude>
+    <ClInclude Include="rsa.h">
+      <Filter>头文件\md5</Filter>
+    </ClInclude>
+    <ClInclude Include="P2pTip.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DisplayApp.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SetAutoSendp2p.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+    <None Include="res\bitmap1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\button_black_ground.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\DacrsUI.ico">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\DacrsUI.rc2">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\Deals.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\IPO.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\Logo.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\MainUI.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\MainUI_1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\MainUI_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\Mortgage.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\P2P.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\Receive.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\Send.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\Tip.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\wndtitlebk.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\xh_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\xh_3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="json\json_valueiterator.inl">
+      <Filter>头文件\json</Filter>
+    </None>
+    <None Include="json\json_internalmap.inl">
+      <Filter>头文件\json</Filter>
+    </None>
+    <None Include="json\json_internalarray.inl">
+      <Filter>头文件\json</Filter>
+    </None>
+    <None Include="res\main_ui_background.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\alltrade1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\send_ui_blackgruond.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\address_book.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\main_log_1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\main_log_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\button_bar.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\add_app_1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\add_app_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\diya_logo_1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\diya_logo_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\ipo_app_1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\ipo_app_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\rev_logo_1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\rev_logo_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\send_logo_1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\send_logo_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\tradedetail_logo_1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\tradedetail_logo_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\your_sister_1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\your_sister_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\close.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\close2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\close3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\min1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\min2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\min3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\button_bar_3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\sig_0.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\sig_1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\sig_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\sig_3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\bitmap4.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\progress1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\progress2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\progress3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\progress4.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\button_send_1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\button_send_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\button_send_3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\activate_addr_1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\activate_addr_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\activate_addr_3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\newaddr-1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\newaddr-2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\newaddr-3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\copy_addr_1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\copy_addr_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\copy_addr_3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\wallet_uipro.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\main_log_3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\send_logo_3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\send_logo_4.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\rev_logo_3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\rev_logo_4.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\tradedetail_logo_3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\tradedetail_logo_4.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\your_sister_3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\your_sister_4.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\diya_logo_3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\diya_logo_4.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\ipo_1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\ipo_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\ipo_3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\add_app_3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\add_app_4.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\ipo_4.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\main_log_4.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\button_image_1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\button_image_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\button_image.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\dlg_bj.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\kuang.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\dlg_balck_ground.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\Trad_dlg.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\addapp_dlg.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\ipo_dlg.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\mort_dlg.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\p2p_dlg.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\import_wallet.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\bak_wallet.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\addr_book_black_ground.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\target.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\exit_bj.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\bitmap11.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\p2p_button_1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\p2p_button_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\bother_1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\bother_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\bother_3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\sister_1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\sister_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\sister_3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\p2p_list_box_but.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\360_tabctrlex.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\bet_record.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\green_long_button.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\red_long_button.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\send_bet_record.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\Bitmap_begin.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\Bitmap_end.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\Bitmap_next.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\Bitmap_up.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\p2p_list.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\p2p_button_3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\out_buttom.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\p2p_red_packet.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\red_long_button .bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\grab_red_packet.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\send_red_packet.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\red_packet_draw.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\redpacket_type.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\red_packet_pool.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\rp_up.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\rp_next.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\red_fresh.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\grab_bt.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\red_recharge.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\grab_rp_log.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\grab_rp_log_2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\grab_rp_log_3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\profit_bakgrd.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\more1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\more2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\bitmap13.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\more3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\bitmap14.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\lock.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\unlock.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\CLOSE_BUTTON.BMP">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\btn1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\btn2.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\btn3.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\message.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\red.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\contentbk.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\title.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\error_icon.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\tip_icon.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\warning_icon.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\trade__up.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\trade_next.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\Logo_En.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\progress1_EN.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\progress2_EN.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\progress3_EN.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\progress4_EN.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\main_log_1en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\main_log_2en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\main_log_3en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\send_logo_1en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\send_logo_2en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\send_logo_3en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\rev_logo_1en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\rev_logo_2en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\rev_logo_3en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\tradedetail_logo_1en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\tradedetail_logo_2en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\bitmap15.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\tradedetail_logo_3en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\your_sister_1en .bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\your_sister_2en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\your_sister_3en .bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\grab_rp_log_en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\grab_rp_log_2_en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\grab_rp_log_3_en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\ipo_1en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\ipo_2en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\ipo_3en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\add_app_1en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\add_app_2en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\add_app_3en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\main_ui_backgrounden.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\alltrade1en.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\wallet_uiproen.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\send_ui_blackgruonden.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\grab_red_packeten.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\send_red_packeten.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\red_packet_poolen.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\send_bet_recorden.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\bet_recorden.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\p2p_dlgen.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\p2p_red_packeten.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\nemu.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\mort_dlgen.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\splite.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{7bce047d-0467-4b28-bae6-a024331f6f6c}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{ec201e24-e86b-4607-aec9-7c2e8330d1fd}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="头文件\json">
+      <UniqueIdentifier>{5f004141-de15-4a3d-a974-cc6c48ec1bda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\msg">
+      <UniqueIdentifier>{faef8a66-4a98-46ca-b712-13f695c23e8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{cf59a430-779f-4c05-82f9-7d8ca97c04b4}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="源文件\json">
+      <UniqueIdentifier>{72cf6d76-d474-4653-8e7f-660e55cc2e1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\msg">
+      <UniqueIdentifier>{e14db1a3-5898-49c5-bcd1-acca1e49268e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\zip">
+      <UniqueIdentifier>{96b8ba49-4612-4b7f-b1e5-21c05882e1b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\zip">
+      <UniqueIdentifier>{911aba4c-2c99-479d-9532-8197927bb1b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\md5">
+      <UniqueIdentifier>{8af82c86-45ec-4c28-93a9-73749e58f4cd}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="DacrsUI.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
