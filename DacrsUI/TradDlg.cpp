@@ -1575,13 +1575,14 @@ void    CTradDlg::ShowComboxCotent()
 	string condtion = GetConditonStr(operate);
 	uistruct::TRANSRECORDLIST pListInfo;
 
-	string strCond0 =  condtion;
+	//×¢ÊÍby lbf 2016/07/17
+	/*string strCond0 =  condtion;
 
 	string tempConditon = "confirm_height=0 and ";
 	tempConditon +=strCond0;
 	strCond0 = tempConditon;
 
-	theApp.m_SqliteDeal.GetTransactionList(strCond0, &pListInfo); 
+	theApp.m_SqliteDeal.GetTransactionList(strCond0, &pListInfo); */
 
 	uistruct::TRANSRECORDLIST pListInfo1;
 	string strCond =  condtion;// + _T(" LIMIT 17 OFFSET 0") ;
