@@ -99,6 +99,7 @@ void CChangPassWord::OnBnClickedOk()
 	if (!CSoyPayHelp::getInstance()->SendRpc(strCommand.c_str(),root))
 	{
 		TRACE("rpccmd walletpassphrasechange error");
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("PASS_MODIYWORD" , "PASS_MODIYWORD_OLDREEOR" ,theApp.gsLanguage) ,  UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 		return;
 	}
 

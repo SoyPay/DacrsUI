@@ -93,8 +93,26 @@ void CSendDlg::OnBnClickedSendtrnsfer()
 	{
 		return;
 	}
+
+	Json::Value root0;
+
+	string strCommand = strprintf("%s %s", "validateaddress", text.GetBuffer());
+	if(!CSoyPayHelp::getInstance()->SendRpc(strCommand,root0))
+	{
+		TRACE("OnBnClickedSendtrnsfer rpccmd sendtoaddress error");
+		return;
+	}
+
+	string strData1 = root0["ret"].toStyledString();
+
+	if( 0 ==  strncmp(strData1.c_str(), "false", strlen("false")))
+	{
+		UiFun::MessageBoxEx(UiFun::UI_LoadString("SEND_MODULE" , "SEND_ADDR_NOT_MODULE_ADDR" ,theApp.gsLanguage) , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
+		return;
+	}
+
 	uistruct::LISTADDR_t data;
-	string strCommand  ;CString strMoney,strMaddress;
+	CString strMoney,strMaddress;
 	if(text!=_T(""))
 	{
 		string strAddr =strprintf("%s",text);

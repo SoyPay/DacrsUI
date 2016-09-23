@@ -293,7 +293,7 @@ int CDacrsUIDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	// TODO:  在此添加您专用的创建代码
 	SetWindowPos(NULL, 0, 0, 900/*1024*/, 600/*768*/, 0);
-	//OnInitMunu();
+	OnInitMunu();
 
 	//SetWindowLong(m_hWnd,   GWL_STYLE,GetWindowLong(m_hWnd,   GWL_STYLE)   &   
 	//	(~(WS_CAPTION   |   WS_BORDER)));  
