@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<update>
+  <files>
+    <file id = "1"  ver="vv1.0.3.3" path="temp" filename="DacrsUI.exe"/>
+	<file id = "2"  ver="v1.1.2.7" path="temp" filename="dacrs-d.exe"/>
+	<file id = "3"  ver="v1.0.0.1" path="gif" filename="progress.gif"/>
+	<file id = "4"  ver="v1.0.0.1" path="gif" filename="init.gif"/>
+	<file id = "5"  ver="v1.0.0.1" path="gif" filename="exit_en.gif"/>
+	<file id = "6"  ver="v1.0.0.1" path="gif" filename="exit.gif"/>
+	<file id = "7"  ver="v1.0.0.4" path="config" filename="Language_EN.ini"/>
+	<file id = "8"  ver="v1.0.0.4" path="config" filename="Language_CN.ini"/>
+	<file id = "9"  ver="v1.0.0.1" path="" filename="updater.ini"/>
+	<file id = "10"  ver="v1.0.0.27" path="" filename="updatelog.txt"/>
+	<file id = "11"  ver="v1.0.0.1" path="" filename="sqlite3.dll"/>
+	<file id = "12"  ver="v1.0.2.3" path="" filename="run.bat"/>
+	<file id = "13"  ver="v1.0.0.6" path="" filename="dacrsclient.conf"/>
+	<file id = "14"  ver="v1.0.0.12" path="" filename="dacrs.conf"/>
+	<file id = "15"  ver="v1.0.0.5" path="" filename="clear.bat"/>
+	<file id = "16"  ver="v1.1.0.5" path="" filename="update.exe" />
+  </files>
+</update>

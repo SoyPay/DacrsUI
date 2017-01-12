@@ -3,7 +3,7 @@
   <files>
     <file ver="v1.0.0.1" path="qupdater.exe"/>
     <file ver="v1.1.1.6" path="dacrs-d.exe"/>
-    <file ver="v1.0.0.10" path="dacrs.conf"/>
+    <file ver="v1.0.0.12" path="dacrs.conf"/>
     <file ver="v1.0.0.2" path="qupdater.ini"/>
     <file ver="v1.0.0.1" path="sqlite3.dll"/>
     <file ver="v1.0.2.6" path="DacrsUI.exe"/>
@@ -12,15 +12,18 @@
     <file ver="v1.0.0.1" path="gif\progress.gif"/>
     <file ver="v1.0.0.1" path="gif\exit.gif"/>
     <file ver="v1.0.0.1" path="gif\exit_en.gif"/>
-    <file ver="v1.0.0.19" path="updatelog.txt"/>	
+    <file ver="v1.0.0.27" path="updatelog.txt"/>	
     <file ver="v1.0.0.4" path="clear.bat" />
-    <file ver="v1.0.0.2" path="config\Language_CN.ini"/>
-    <file ver="v1.0.0.2" path="config\Language_EN.ini"/>
-    <file ver="v1.0.2.4" path="temp\DacrsUI.exe"/>
-    <file ver="v1.0.2.2" path="temp\dacrs-d.exe"/>
-    <file ver="v1.0.2.3" path="temp\dacrsclient.conf"/>
-    <file ver="v1.0.2.3" path="encrypt.ini"/>
-    <file ver="v1.0.2.2" path="run.bat"/>
+    <file ver="v1.0.0.4" path="config\Language_CN.ini"/>
+    <file ver="v1.0.0.4" path="config\Language_EN.ini"/>
+    <file ver="v1.0.3.3" path="temp\DacrsUI.exe"/>
+    <file ver="v1.1.2.7" path="temp\dacrs-d.exe"/>
+    <file ver="v1.0.2.6" path="temp\dacrsclient.conf"/>
+    <file ver="v1.0.2.15" path="encrypt.ini"/>
+    <file ver="v1.0.2.3" path="run.bat"/>
    <file ver="v1.0.0.1" path="DacrsUi.exe" shortcut="{commonprograms}\QUpdater\QUpdater DacrsUI.ilk"/>  
+   <file ver="v1.0.0.5" path="update.exe"/>
+   <file ver="v1.0.0.1" path="updater.ini"/>
+   <file ver="v1.0.0.1" path="updater.xml"/>
   </files>
 </update>
