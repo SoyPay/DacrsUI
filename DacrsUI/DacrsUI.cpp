@@ -289,19 +289,11 @@ BOOL CDacrsUIApp::InitInstance()
 bool CDacrsUIApp::OnCheckUpdataEnvirment()
 {
 	//检测自动升级
-	int nResult = Update();
-	if(-1 == nResult) {
-		nResult = Update();
-	}
-	if (nResult == 1)
-	{
-		return TRUE;
-	}else if(nResult == 0){
-		//// 不更新直接退出
-		exit(0); 
-	}
+	Update();
+	
+	Sleep(1000);
 
-	CheckUpdatafile();
+	//CheckUpdatafile();
 
 	if(CSoyPayHelp::getInstance()->IsOSVersionBelowXp()) {
 		if(!EnableDebugPrivilege())
@@ -340,7 +332,7 @@ void CDacrsUIApp::OnCheckSeverfile()
 		}
 	}
 
-	strSeverPath = strprintf("%s\\temp\\dacrs-d.exe",str_InsPath);
+	/*strSeverPath = strprintf("%s\\temp\\dacrs-d.exe",str_InsPath);
 
 	if (PathIsDirectory(strSeverPath.c_str()))
 	{
@@ -352,7 +344,7 @@ void CDacrsUIApp::OnCheckSeverfile()
 	{
 		UiFun::MessageBoxEx(_T("dacrs-d 文件不存在,请重新下载\r\n") , _T("Error") ,MFB_OK|MFB_ERROR );
 		exit(1);
-	}
+	}*/
 }
 /*
 提升程序运行权限，解决xp系统下调用OpenProcess()API返回失败码：5的问题。
@@ -391,7 +383,7 @@ int CDacrsUIApp::language()
 	// 取默认语言索引
 	char szText[256];
 	string  strG;
-	string strAppIni = str_InsPath;// + (CString)LANGUAGE_FILE;
+	string strAppIni = str_InsPath;
 	strAppIni += LANGUAGE_FILE;
 	::GetPrivateProfileString("Default", "Index", "1", szText, 256,	(LPCTSTR)strAppIni.c_str());
 
@@ -493,7 +485,7 @@ UINT __stdcall CDacrsUIApp::UpdateProcess(LPVOID lpParam){
 
 			CDacrsUIApp * pUiDemeDlg  = (CDacrsUIApp*)lpParam ;
 			CString sPath;
-			sPath.Format(_T("%s\\qupdater.exe"),pUiDemeDlg->str_InsPath.c_str());
+			sPath.Format(_T("%s\\update.exe"),pUiDemeDlg->str_InsPath.c_str());
 			sPath.Replace("\\\\","\\");
 			CFileFind find;
 			if(!find.FindFile(sPath)) return false;
@@ -519,7 +511,7 @@ UINT __stdcall CDacrsUIApp::UpdateProcess(LPVOID lpParam){
 				sMsg.Format(_T("%d updates found at the website,now to upgrade?"),lResult);
 
 			}
-			//if (AfxMessageBox(sMsg, MB_ICONQUESTION | MB_YESNO) != IDYES) return false;
+		
 			if ( IDYES != UiFun::MessageBoxEx(sMsg, UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) , MFB_YESNO|MFB_TIP ) ){
 				((CDacrsUIDlg*)(pUiDemeDlg->m_pMainWnd))->ClosWalletWind();
 				return false;
@@ -1469,7 +1461,6 @@ int CDacrsUIApp::SendPostThread(DWORD msgtype)
 		{
 			GetMainDlgStruct();
 			//DispatchMsg( theApp.GetMtHthrdId() , MSG_USER_MAIN_UI , 0,0);
-
 		}
 		break;
 	case WM_UPWALLET:
@@ -1636,15 +1627,18 @@ CString GetAppPath()
 	__apppath=csDir;
 	return csDir;
 }
+
 int CDacrsUIApp::Update()
 {
-	CString sPath;//=str_InsPath+"\\qupdater.exe";
-	sPath.Format(_T("%s\\qupdater.exe"),str_InsPath.c_str());
+	CString sPath;
+	sPath.Format(_T("%s\\update.exe"),str_InsPath.c_str());
 	LogPrint("INFO","Updata:%s\n",sPath);
 	sPath.Replace("\\\\","\\");
 	LogPrint("INFO","Updata:%s\n",sPath);
 	CFileFind find;
-	if(!find.FindFile(sPath)) return false;
+	if(!find.FindFile(sPath)) {
+		return false;
+	}
 	LogPrint("INFO","Updata start:%s\n",sPath);
 	SHELLEXECUTEINFO ShRun = {0}; 
 	ShRun.cbSize = sizeof(SHELLEXECUTEINFO); 
@@ -1653,15 +1647,21 @@ int CDacrsUIApp::Update()
 	ShRun.lpVerb = NULL; 
 	ShRun.lpFile = sPath;
 	ShRun.lpParameters = _T("-checkforupdates"); 
-	ShRun.nShow = SW_SHOW; 
+	ShRun.nShow = SW_HIDE; 
 	ShRun.hInstApp = NULL; 
 	ShellExecuteEx(&ShRun); 
 	WaitForSingleObject(ShRun.hProcess, 120000); 
 	ULONG lResult = 0; 
 	LogPrint("INFO","Updata OpenProcess:%0x\n",ShRun.hProcess);
-	if (!GetExitCodeProcess(ShRun.hProcess, &lResult)) return false;
+	if (!GetExitCodeProcess(ShRun.hProcess, &lResult)) {
+		CloseHandle(ShRun.hProcess);
+		return false;
+	}
 	LogPrint("INFO","Updata GetExitCodeProcess:%s\n",sPath);
-	if (lResult == 0) return -1;
+	if (lResult == 0 || lResult == 0xFFFFFFFF) {
+		CloseHandle(ShRun.hProcess);
+		return false;
+	}
 	LogPrint("INFO","Updata lResult:%s\n",sPath);
 	CString sMsg;
 	if (theApp.language() == 1)
@@ -1671,14 +1671,32 @@ int CDacrsUIApp::Update()
 		sMsg.Format(_T("%d updates found at the website,now to upgrade?"),lResult);
 
 	}
-	
-	//if (AfxMessageBox(sMsg, MB_ICONQUESTION | MB_YESNO) != IDYES) return 0;
-	if ( IDYES != UiFun::MessageBoxEx(sMsg, UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) , MFB_YESNO|MFB_TIP ) )
-		return 0;
 
+	/*if ( IDYES != UiFun::MessageBoxEx(sMsg, UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) , MFB_YESNO|MFB_TIP ) ) {
+	return 0;
+	}*/
+
+	CloseProcess("dacrs-d.exe");
+	DWORD exc;
+
+	while (::GetExitCodeThread(theApp.m_msgThread, &exc)) {
+		if( STILL_ACTIVE == exc ) {
+			;
+		}else {
+			TRACE( "EXC = %d \n" , exc ) ;
+			break;
+		}
+		Sleep(100);
+	}
+	
 	ShRun.lpParameters = NULL; 
+	ShRun.nShow = SW_SHOW;
 	ShellExecuteEx(&ShRun); 
-	return 1;
+	CloseHandle(ShRun.hProcess);
+
+	CloseProcess("DacrsUI.exe");
+
+	return true;
 }
 
 
@@ -1773,25 +1791,6 @@ BOOL CDacrsUIApp::RunOnlyOneApp()
 		AfxMessageBox(UiFun::UI_LoadString("DACRSU" , "DACRSU_PROJECTRUN" ,theApp.gsLanguage) ,MB_OK);
 		exit(1);  
 
-		/*HWND hWndPrevious = ::GetWindow( ::GetDesktopWindow(), GW_CHILD );
-		while(::IsWindow(hWndPrevious))
-		{
-			if (::GetProp(hWndPrevious, WINDOW_TAG))
-			{
-				if (::IsIconic(hWndPrevious))
-				{
-					::ShowWindow(hWndPrevious, SW_RESTORE);
-					::SetForegroundWindow(hWndPrevious);
-				}
-				else
-				{
-					::SetForegroundWindow(::GetLastActivePopup(hWndPrevious));
-				}
-				return FALSE;
-			}
-			hWndPrevious = ::GetWindow( hWndPrevious, GW_HWNDNEXT );
-		}*/
-
 		return FALSE;
 	}
 
@@ -1852,7 +1851,7 @@ bool CDacrsUIApp::IsLockWallet(){
 }
 void CDacrsUIApp::SetUpdataLanguage()
 {
-	string strAppIni = theApp.str_InsPath;// + (CString)LANGUAGE_FILE;
+	string strAppIni = theApp.str_InsPath;
 	strAppIni += "\\qupdater.ini";
 	if (language() == 2)
 	{

@@ -48,7 +48,7 @@ public:
 
 	CComboBox			   m_addrbook;
 	CRedPacketHelp		   m_RedPacketHelp;
-	CP2PBetHelp		                    m_P2PBetHelp;
+	CP2PBetHelp		       m_P2PBetHelp;
 	CShadeButtonST         m_rBtnWinerloser;
 	CShadeButtonST         m_rBtnAddrWinerloser;
 	CShadeButtonST         m_rBtnSetCommonAddr;

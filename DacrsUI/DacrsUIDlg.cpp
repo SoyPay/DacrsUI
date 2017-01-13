@@ -54,8 +54,6 @@ END_MESSAGE_MAP()
 // CDacrsUIDlg 对话框
 
 
-
-
 CDacrsUIDlg::CDacrsUIDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CDacrsUIDlg::IDD, pParent)
 {
@@ -1333,7 +1331,7 @@ void CDacrsUIDlg:: ExportPriveKey()
 		UiFun::MessageBoxEx(strShowData , UiFun::UI_LoadString("COMM_MODULE" , "COMM_TIP" ,theApp.gsLanguage) ,MFB_OK|MFB_TIP );
 	}
 }
-void CDacrsUIDlg:: ImportPrvieKey()
+void CDacrsUIDlg::ImportPrvieKey()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	// TODO: 在此添加命令处理程序代码

@@ -285,6 +285,11 @@ void CJsonConfigHelp::AddString(const Json::Value& root,CAutoComplete &m_comboxi
 	m_comboxinput.GetStringList().Add(rpccommand["sigstr"].asCString());
 	m_comboxinput.GetStringList().Add(rpccommand["getappaccinfo"].asCString());
 	m_comboxinput.GetStringList().Add(rpccommand["getappkeyvalue"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["getassets"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["getappinfo"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["gettotalassets"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["dispersebalance"].asCString());
+	m_comboxinput.GetStringList().Add(rpccommand["notionalpoolingbalance"].asCString());
 }
 void CJsonConfigHelp::AddItemString(const CString& strFilePath,CAutoComplete &m_comboxinput){
 

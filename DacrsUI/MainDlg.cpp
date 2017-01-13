@@ -697,7 +697,7 @@ void CMainDlg::onnitLinkText()
    v_linkCtrlQQ->SetURL("http://wpa.qq.com/msgrd?v=3&uin=1578215488&site=qq&menu=yes");
 
    v_linkCtrlBlock->SetWindowText("Block chain");
-   v_linkCtrlBlock->SetURL("http://block.dacrs.com/index");
+   v_linkCtrlBlock->SetURL("http://block.dacrs.com/");
    int i = 1;
 	map<CString,CString>::iterator it;
 	for(it=m_url.begin();it!=m_url.end();++it)

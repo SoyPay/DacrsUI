@@ -1335,7 +1335,7 @@ void CMortgageTardDlg::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult)
 void  CMortgageTardDlg::onShowLink()
 {
 	v_linkCtrl->SetWindowText(UiFun::UI_LoadString("COMM_MODULE" , "COMM_HELP" ,theApp.gsLanguage));
-	v_linkCtrl->SetURL("http://www.dacrs.com/forum.php?mod=viewthread&tid=3503&extra=page%3D1");
+	v_linkCtrl->SetURL("http://8btc.com/thread-20738-1-1.html");
 }
 
 double  CMortgageTardDlg::ComputeSpecailRedPacket(uistruct::REDPACKETGRABLIST  RedPackeGrabRecordList)
